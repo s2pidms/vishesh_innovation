@@ -1,0 +1,153 @@
+<Form [formGroup]="form" class="formCard card">
+    <div class="container">
+        <div class="row form-header">
+            <div class="col heading">
+                <label>{{ this.action | titlecase }} Maintenance Warranty Master</label>
+            </div>
+        </div>
+        <div class="form-body">
+            <div class="row">
+                <div class="col-md-3">
+                    <label class="form-label"> Warranty Code <span class="text-danger"></span> </label>
+                    <input class="form-control" type="text" formControlName="warrantyCode" readonly />
+                </div>
+                <div class="col-md-3">
+                    <label class="form-label">
+                        Warranty Name
+                        <span class="text-danger"></span>
+                    </label>
+                    <input class="form-control" type="text" formControlName="warrantyName" />
+                </div>
+                <div class="col-md-3">
+                    <label class="form-label"> Equipment<span class="text-danger"></span> </label>
+                    <ng-select
+                        placeholder="Select Equipment Name"
+                        [items]="masterData.equipmentOptions"
+                        bindLabel="assetName"
+                        bindValue="_id"
+                        formControlName="equipment"
+                        [clearable]="false"
+                    >
+                    </ng-select>
+                </div>
+                <div class="col-md-3 pe-5">
+                    <label class="form-label"> Vendor<span class="text-danger"></span> </label>
+
+                    <div class="d-flex align-items-center">
+                        <div class="col-11">
+                            <ng-select
+                                [items]="masterData.suppliersOptions"
+                                bindLabel="supplierName"
+                                bindValue="_id"
+                                [clearable]="false"
+                                formControlName="supplier"
+                                placeholder="Select Vendor Name"
+                            >
+                            </ng-select>
+                        </div>
+                        <div
+                            style="height: 2.9rem"
+                            class="input-group-text bg-primary pointer col-auto fs-4"
+                            id="basic-addon1"
+                            (click)="openSupplierDetailsModal()"
+                        >
+                            <i class="fa fa-search text-white" aria-hidden="true"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-3">
+                    <label class="form-label"> Warranty Type<span class="text-danger"></span> </label>
+                    <ng-select
+                        [items]="masterData.warrantyTypeOptions"
+                        bindLabel="label"
+                        bindValue="value"
+                        formControlName="warrantyType"
+                        [clearable]="false"
+                        placeholder="Select Warranty Type"
+                    >
+                    </ng-select>
+                </div>
+                <div class="col-md-3">
+                    <label class="form-label">
+                        Warranty Start Date
+
+                        <span class="text-danger"></span>
+                    </label>
+                    <input class="form-control" type="date" formControlName="warrantyStartDate" />
+                </div>
+                <div class="col-md-3">
+                    <label class="form-label">
+                        Warranty End Date
+
+                        <span class="text-danger"></span>
+                    </label>
+                    <input class="form-control" type="date" formControlName="warrantyEndDate" />
+                </div>
+                <div class="col-md-3">
+                    <label class="form-label">
+                        Warranty Description
+
+                        <span class="text-danger"></span>
+                    </label>
+                    <input class="form-control" type="text" formControlName="warrantyDescription" />
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-3">
+                    <label class="form-label">
+                        Contact Person
+
+                        <span class="text-danger"></span>
+                    </label>
+                    <input class="form-control" type="text" formControlName="contactPerson" />
+                </div>
+                <div class="col-md-3">
+                    <label class="form-label">
+                        AMC Start Date
+
+                        <span class="text-danger"></span>
+                    </label>
+                    <input class="form-control" type="date" formControlName="AMCStartDate" />
+                </div>
+                <div class="col-md-3">
+                    <label class="form-label">
+                        AMC End Date
+
+                        <span class="text-danger"></span>
+                    </label>
+                    <input class="form-control" type="date" formControlName="AMCEndDate" />
+                </div>
+                <div class="col-md-3">
+                    <label class="form-label">
+                        Warranty Status
+                        <span class="text-danger"></span>
+                    </label>
+                    <div class="d-flex inputGroup skuForm">
+                        <select class="form-select statusSelectBorder" formControlName="warrantyStatus">
+                            <option [value]="null" selected disabled>Select Warranty Status</option>
+                            <option [value]="'Active'">Active</option>
+                            <option [value]="'Expired'">Expired</option>
+                        </select>
+                        <div class="input-group-text bg-white">
+                            <div class="col-md-auto align-self-center">
+                                <div *ngIf="form.value['warrantyStatus'] == 'Active'" class="statusActive"></div>
+                                <div *ngIf="form.value['warrantyStatus'] == 'Expired'" class="statusInActive"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <hr *ngIf="action !== 'view'" class="row line-border" />
+        <div *ngIf="action !== 'view'" class="d-flex justify-content-center mb-3">
+            <div class="d-grid col-md-1 me-5" [ngClass]="{'d-none': action == 'View'}">
+                <button class="btn btn-primary" type="button" (click)="reset()">Reset</button>
+            </div>
+            <div class="d-grid col-md-1" [ngClass]="{'d-none': action == 'View'}">
+                <button class="btn btn-primary" type="button" (click)="submit()">Save</button>
+            </div>
+        </div>
+    </div>
+</Form>

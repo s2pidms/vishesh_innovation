@@ -1,0 +1,188 @@
+<div class="modelPage">
+    <div class="modal-header">
+        <div class="heading">Direct Asset Cost</div>
+        <div>
+            <button type="button" class="btn btn-cross btn-sm" aria-label="Close" (click)="this.activeModal.close()">
+                <i class="fa fa-times-circle" aria-hidden="true"></i>
+            </button>
+        </div>
+    </div>
+
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-12 px-5">
+                <app-setting-header
+                    [data]="{page,pageSize,collection,search, excelDisplay : 'none'}"
+                    (dataChange)="eventHeader($event)"
+                >
+                </app-setting-header>
+                <div class="table-responsive" style="min-height: 25rem">
+                    <table class="table table-bordered table-sticky mt-1">
+                        <thead class="bg-primary">
+                            <tr class="text-white">
+                                <th sortable="PFSeq" (sort)="onSort($event)">PF Seq.</th>
+                                <th sortable="processId" (sort)="onSort($event)">Process ID</th>
+                                <th class="text-start" sortable="processName" (sort)="onSort($event)">Process Name</th>
+                                <th class="text-start" sortable="unitProcessOutput" (sort)="onSort($event)">
+                                    Output Unit
+                                </th>
+                                <th sortable="specQuantity" (sort)="onSort($event)">Spec. Qty.</th>
+                                <!-- <th sortable="outputPerHr" (sort)="onSort($event)">Output/Hr</th> -->
+                                <th sortable="processHrs" (sort)="onSort($event)">Process Hrs</th>
+                                <th sortable="assetRatePerHr" (sort)="onSort($event)">Asset Rate/Hr</th>
+                                <th sortable="assetCost" (sort)="onSort($event)">Asset Cost</th>
+                                <th sortable="CAUnits" (sort)="onSort($event)">CA Units</th>
+                                <th sortable="assetCostPerUnit" (sort)="onSort($event)">Asset Cost/Unit</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr
+                                *ngFor="
+                                    let g of processList
+                                        | searchFi1ter : search
+                                        | slice : (page - 1) * pageSize : (page - 1) * pageSize + pageSize;
+                                    trackBy: trackByFn
+                                "
+                            >
+                                <td>
+                                    <div class="d-flex justify-content-center">
+                                        <input
+                                            class="form-control form-control-ls-xs"
+                                            type="number"
+                                            [(ngModel)]="g.PFSeq"
+                                            [disabled]="['view'].includes(action)"
+                                        />
+                                    </div>
+                                </td>
+                                <td>{{ g.processId }}</td>
+                                <td class="text-start" [style.width]="processName.clientWidth" #processName>
+                                    <span class="pointer" [ngbTooltip]="g.processName" [positionTarget]="processName">
+                                        {{ g.processName }}
+                                    </span>
+                                </td>
+                                <td>{{ g.unitProcessOutput }}</td>
+                                <td>
+                                    <div class="d-flex justify-content-center">
+                                        <input
+                                            class="form-control form-control-ls-sm"
+                                            type="number"
+                                            [(ngModel)]="g.specQuantity"
+                                            (input)="setAssetCostData($event, g)"
+                                            [disabled]="['view'].includes(action)"
+                                        />
+                                    </div>
+                                </td>
+                                <!-- <td>
+                                    <div class="d-flex justify-content-center">
+                                        <input
+                                            class="form-control form-control-ls-sm"
+                                            type="number"
+                                            [(ngModel)]="g.outputPerHr"
+                                            (input)="setAssetCostData($event, g)"
+                                            [disabled]="['view'].includes(action)"
+                                        />
+                                    </div>
+                                </td> -->
+                                <td>{{ g.processHrs }}</td>
+                                <td class="py-0 text-center">
+                                    <div class="d-flex justify-content-center align-items-center">
+                                        <span class="input-group-text text-secondary combine-INR  border-0">
+                                            {{ "INR" | companyCurrency }}
+                                            <div class="vr ms-3"></div>
+                                        </span>
+                                        <span class="total-cost-color">
+                                            {{ g?.assetRatePerHr | number : "1.2-2" }}
+                                        </span>
+                                    </div>
+                                </td>
+                                <td class="py-0 text-center">
+                                    <div class="d-flex justify-content-center align-items-center">
+                                        <span class="input-group-text text-secondary combine-INR  border-0">
+                                            {{ "INR" | companyCurrency }}
+                                            <div class="vr ms-3"></div>
+                                        </span>
+                                        <span class="total-cost-color">
+                                            {{ g?.assetCost | number : "1.2-2" }}
+                                        </span>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="d-flex justify-content-center">
+                                        <input
+                                            class="form-control form-control-ls-sm"
+                                            type="number"
+                                            [(ngModel)]="g.CAUnits"
+                                            (input)="setAssetCostData($event, g)"
+                                            [disabled]="['view'].includes(action)"
+                                            readonly
+                                        />
+                                    </div>
+                                </td>
+                                <td class="py-0 text-center">
+                                    <div class="d-flex justify-content-center align-items-center">
+                                        <span class="input-group-text text-secondary combine-INR  border-0">
+                                            {{ "INR" | companyCurrency }}
+                                            <div class="vr ms-3"></div>
+                                        </span>
+                                        <span class="total-cost-color">
+                                            {{ g?.assetCostPerUnit | number : "1.2-2" }}
+                                        </span>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <div class="row mt-4">
+            <div class="col px-0">
+                <hr class="line-border mt-0" />
+            </div>
+        </div>
+        <div class="row px-4 mb-3">
+            <div class="col-5">
+                <div class="d-flex align-items-center">
+                    <div class="col-form-label text-nowrap">
+                        Total Asset Cost/Unit
+                        <i class="fa fa-caret-right fs-3 mx-2"></i>
+                    </div>
+                    <div class="d-flex">
+                        <span class="input-group-text text-secondary combine-INR ">
+                            {{ "INR" | companyCurrency }}
+                            <div class="vr ms-3"></div>
+                        </span>
+                        <input
+                            [(ngModel)]="totalAssetCostPerUnit"
+                            class="form-control border-start-0"
+                            type="number"
+                            readonly
+                        />
+                    </div>
+                </div>
+            </div>
+            <div *ngIf="action !== 'view'" class="col-7 d-flex justify-content-end">
+                <button type="button" class="btn btn-primary px-5 me-3" (click)="reset()">&nbsp; Reset &nbsp;</button>
+                <button
+                    type="button"
+                    class="btn btn-primary px-3 me-1"
+                    [disabled]="!isESCPreview"
+                    (click)="ESCPreview()"
+                >
+                    Esc
+                </button>
+                <button
+                    type="button"
+                    class="btn btn-primary px-5 me-3"
+                    [disabled]="isConditionPreview"
+                    (click)="preview()"
+                >
+                    Preview
+                </button>
+                <button type="button" class="btn btn-primary px-4" (click)="dismissModel()" [disabled]="!isPreview">
+                    Save & Close
+                </button>
+            </div>
+        </div>
+    </div>
+</div>

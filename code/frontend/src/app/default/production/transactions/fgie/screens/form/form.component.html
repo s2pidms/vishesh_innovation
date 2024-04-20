@@ -1,0 +1,95 @@
+<form [formGroup]="form">
+    <div class="row justify-content-center form-page">
+        <div class="col-md-11 card-form">
+            <div class="row form-header">
+                <div class="col heading">
+                    <label>Finished Goods Inward Entry</label>
+                </div>
+            </div>
+            <div class="form-body">
+                <div class="row mb-4">
+                    <div class="col-md-3">
+                        <label class="form-label">FG Inward Date <span class="text-danger">*</span> </label>
+                        <input class="form-control" type="date" formControlName="FGINDate" readonly />
+                    </div>
+                    <div class="col-md-3">
+                        <label class="form-label">SKU No <span class="text-danger">*</span> </label>
+                        <ng-select
+                            [items]="SKUOption"
+                            [clearable]="false"
+                            bindLabel="skuNum"
+                            bindValue="value"
+                            (change)="setDetails($event)"
+                            formControlName="SKUId"
+                        >
+                        </ng-select>
+                    </div>
+                    <div class="col-md-3">
+                        <label class="form-label"
+                            >{{ "SKU Name" | labelTranslate }}
+                            <span class="text-danger">*</span>
+                        </label>
+                        <ng-select
+                            [items]="SKUOption"
+                            bindLabel="label"
+                            bindValue="value"
+                            [clearable]="false"
+                            (change)="setDetails($event)"
+                            formControlName="SKUId"
+                        >
+                        </ng-select>
+                    </div>
+                    <div class="col-md-3">
+                        <label class="form-label"
+                            >{{ "SKU Description" | labelTranslate }}
+                            <span class="text-danger">*</span>
+                        </label>
+                        <input class="form-control" type="text" formControlName="SKUDescription" readonly />
+                    </div>
+                </div>
+                <div class="row mb-4">
+                    <div class="col-md-3">
+                        <label class="form-label">UoM <span class="text-danger">*</span> </label>
+                        <select class="form-select" formControlName="UOM">
+                            <option [value]="null" selected disabled>Select UoM</option>
+                            <option [value]="u.value" *ngFor="let u of UOMOption">
+                                {{ u.label }}
+                            </option>
+                        </select>
+                    </div>
+                    <div class="col-md-3">
+                        <label class="form-label">Inward Quantity <span class="text-danger">*</span></label>
+                        <input class="form-control" type="number" formControlName="FGINQuantity" />
+                    </div>
+                    <div class="col-md-3">
+                        <label class="form-label">Batch No./Lot No. <span class="text-danger">*</span></label>
+                        <input class="form-control" type="text" formControlName="batchNo" />
+                    </div>
+                    <div class="col-md-3">
+                        <label class="form-label">Batch Date/MFG Date <span class="text-danger">*</span> </label>
+                        <input
+                            class="form-control"
+                            type="date"
+                            (change)="changeMFG()"
+                            formControlName="manufacturingDate"
+                        />
+                    </div>
+                </div>
+                <div class="row justify-content-center py-3">
+                    <div class="col-4 d-flex justify-content-center">
+                        <button class="btn btn-primary me-4" (click)="reset()" type="button">Reset</button>
+                        <button
+                            appAccessControl
+                            [accessType]="rolePermissionActions.createAction"
+                            class="btn btn-primary"
+                            (click)="submit()"
+                            type="button"
+                        >
+                            Save
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>

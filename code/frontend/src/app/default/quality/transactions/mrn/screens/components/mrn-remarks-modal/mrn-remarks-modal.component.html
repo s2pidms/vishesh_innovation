@@ -1,0 +1,39 @@
+<div class="modelPage">
+  <div class="">
+    <div class="container-fluid px-0">
+      <div
+        style="min-height: 28.5rem"
+        class="row px-5 mt-4 mb-5 form-page px-5"
+      >
+        <div class="col-12 px-5">
+          <div class="row px-3">
+            <div class="col-12 px-0">
+              <div class="col pt-3">
+                <textarea
+                  class="form-control form-text-area"
+                  [(ngModel)]="MRNRemarks"
+                  [ngModelOptions]="{ standalone: true }"
+                  rows="10"
+                ></textarea>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <hr class="line-border  px-5" />
+
+      <div class="text-center">
+        <div *ngIf="['create', 'edit'].includes(action)" class="text-center">
+          <button
+            class="btn bg-primary px-5 mb-2"
+            type="button"
+            (click)="dismissModel()"
+          >
+            Save
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

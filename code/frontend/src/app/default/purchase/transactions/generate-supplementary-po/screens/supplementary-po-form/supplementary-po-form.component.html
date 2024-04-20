@@ -1,0 +1,133 @@
+<Form [formGroup]="form" class="formCard card">
+    <div class="container">
+        <div class="row form-header">
+            <div class="col heading">
+                <label class="">Generate Supplementary PO</label>
+            </div>
+        </div>
+        <div class="form-body">
+            <!-- <form [formGroup]="form"> -->
+            <div class="row mb-2">
+                <div class="col">
+                    <div class="row">
+                        <div class="col-2">
+                            <label for="" class="form-label">GRN No.<span class="text-danger">*</span></label>
+                            <ng-select
+                                [items]="GRNNumbersArr"
+                                bindLabel="GRNNumber"
+                                bindValue="_id"
+                                [(ngModel)]="GRNNumberId"
+                                [ngModelOptions]="{standalone: true}"
+                                [clearable]="false"
+                                (change)="goodRequisitionById()"
+                            >
+                            </ng-select>
+                        </div>
+
+                        <div class="col-2">
+                            <label for="" class="form-label">GRN Date</label>
+                            <input type="date" class="form-control" formControlName="GRNDate" readonly />
+                        </div>
+
+                        <div class="col-2">
+                            <label class="form-label"> Supplier Name<span class="text-danger">*</span></label>
+                            <input type="text" class="form-control" formControlName="supplierName" readonly />
+                        </div>
+                        <div class="col-2">
+                            <label class="form-label"> PO No.<span class="text-danger">*</span></label>
+                            <input
+                                type="text"
+                                class="form-control"
+                                [(ngModel)]="oldPONumber"
+                                [ngModelOptions]="{standalone: true}"
+                                readonly
+                            />
+                        </div>
+                        <div class="col-2">
+                            <label class="form-label">PO Date</label>
+                            <input type="date" class="form-control" formControlName="PODate" readonly />
+                        </div>
+                        <div class="col-2">
+                            <label class="form-label">Supplementary PO #</label>
+                            <input type="text" formControlName="PONumber" class="form-control" readonly />
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <hr class="row line-border" />
+        <app-setting-header
+            [data]="{page,pageSize,collection,search, excelDisplay : 'none'}"
+            (dataChange)="eventHeader($event)"
+        >
+        </app-setting-header>
+        <div class="table-responsive" style="min-height: 22rem">
+            <table class="table table-bordered table-sticky">
+                <thead class="bg-primary">
+                    <tr class="text-white">
+                        <th sortable="GRNLineNumber" (sort)="onSort($event)">#</th>
+                        <th sortable="itemCode" (sort)="onSort($event)">Item Code</th>
+                        <th class="text-start" sortable="itemName" (sort)="onSort($event)">Item Name</th>
+                        <th class="text-start" sortable="itemDescription" (sort)="onSort($event)">Item Description</th>
+                        <th sortable="UOM" (sort)="onSort($event)">Unit Conversion</th>
+                        <th sortable="UOM" (sort)="onSort($event)">UoM</th>
+                        <th sortable="balancedQty" (sort)="onSort($event)">PO Qty</th>
+                        <th sortable="invoicedQty" (sort)="onSort($event)">Purchase Rate</th>
+                        <th sortable="GRNQty" (sort)="onSort($event)">Line Value</th>
+                        <th sortable="GRNQty" (sort)="onSort($event)">Delivery Dt.</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr
+                        *ngFor="
+                            let item of GRNDetailsArray
+                                | searchFi1ter : search
+                                | slice : (page - 1) * pageSize : (page - 1) * pageSize + pageSize;
+                            let v = index;
+                            trackBy: trackByFn
+                        "
+                    >
+                        <td>{{ item?.POLineNumber }}</td>
+                        <td>{{ item?.itemCode }}</td>
+                        <td class="text-start" [style.width]="itemName.clientWidth" #itemName>
+                            <span class="pointer" [positionTarget]="itemName" [ngbTooltip]="item.itemName">
+                                {{ item?.itemName }}
+                            </span>
+                        </td>
+                        <td class="text-start" [style.width]="itemDescription.clientWidth" #itemDescription>
+                            <span
+                                class="pointer"
+                                [positionTarget]="itemDescription"
+                                [ngbTooltip]="item.itemDescription"
+                            >
+                                {{ item?.itemDescription }}
+                            </span>
+                        </td>
+                        <td>{{ item?.unitConversion }}</td>
+
+                        <td>
+                            {{ item.orderInfoUOM ? item.orderInfoUOM : item.primaryUnit }}
+                        </td>
+                        <td>{{ item?.POQty | number : "1.2-2" }}</td>
+                        <td>{{ item?.purchaseRate | number : "1.2-2" }}</td>
+                        <td>
+                            {{ item.lineValue | number : "1.2-2" }}
+                        </td>
+                        <td>
+                            {{ item.deliveryDate | date : "dd-MM-YYYY" }}
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <hr class="row line-border" />
+        <div class="row" class="col d-flex justify-content-center mb-3">
+            <div>
+                <div appAccessControl [accessType]="rolePermissionActions.createAction">
+                    <button class="btn btn-primary px-5 me-4" type="button" (click)="reset()">Reset</button>
+                    <button (click)="submit()" type="button" class="btn btn-primary px-5">Save</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</Form>

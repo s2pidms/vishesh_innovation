@@ -1,0 +1,42 @@
+<div class="reportTablePage">
+    <div class="table-body pb-0 shadow-none">
+        <div class="row table-header">
+            <div class="col">
+                <label class="heading">Employee Exit Report</label>
+            </div>
+        </div>
+
+        <div style="min-height: 40.6rem" class="table-responsive mb-0">
+            <app-setting-header
+                [data]="{page,pageSize,collection,search,type: 'list',pdfDisplay:true}"
+                (dataChange)="eventHeader($event)"
+            >
+            </app-setting-header>
+            <table class="table table-bordered table-sticky">
+                <thead class="bg-primary">
+                    <tr class="text-white">
+                        <th sortable="empCode" (sort)="onSort($event)">Employee Code</th>
+                        <th class="text-start" sortable="empFullName" (sort)="onSort($event)">Employee Name</th>
+                        <th sortable="empJoiningDate" (sort)="onSort($event)">Joining Date</th>
+                        <th sortable="empDepartment" (sort)="onSort($event)">Department</th>
+                        <th sortable="empGrade" (sort)="onSort($event)">Grade</th>
+                        <th sortable="empDateOfResignation" (sort)="onSort($event)">Exit Date</th>
+                        <th sortable="reasonOfLeaving" (sort)="onSort($event)">Reason for Leaving</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    <tr *ngFor="let u of tableData; trackBy: trackByFn">
+                        <td>{{ u?.empCode }}</td>
+                        <td class="text-start">{{ u?.empFullName }}</td>
+                        <td>{{ u?.empJoiningDateS }}</td>
+                        <td>{{ u?.empDepartment }}</td>
+                        <td>{{ u?.empGrade }}</td>
+                        <td>{{ u?.empDateOfResignationS }}</td>
+                        <td>{{ u?.reasonOfLeaving }}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

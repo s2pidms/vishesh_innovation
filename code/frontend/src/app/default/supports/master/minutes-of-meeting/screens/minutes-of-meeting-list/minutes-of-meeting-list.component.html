@@ -1,0 +1,80 @@
+<div class="listCard card">
+    <div class="table-header">
+        <label class="heading">Minutes of Meeting (Entry)</label>
+    </div>
+
+    <div class="text-center">
+        <button
+            class="btn btn-primary btn-add"
+            type="button"
+            (click)="navigateTo('/default/supports/master/minutes_of_meeting/form', {}, 'create')"
+        >
+            <i class="fa fa-plus-square fa-lg me-2" aria-hidden="true"></i>
+            Minutes of Meeting
+        </button>
+    </div>
+
+    <hr class="line-border" />
+    <div class="table-responsive">
+        <app-setting-header [data]="{page,pageSize,collection,search}" (dataChange)="eventHeader($event)">
+        </app-setting-header>
+        <table class="table table-bordered">
+            <thead class="bg-primary">
+                <tr class="text-white">
+                    <th sortable="MOMCode" (sort)="onSort($event)">MoM Code</th>
+                    <th sortable="MOMDateS" (sort)="onSort($event)">MoM Date</th>
+                    <th sortable="MOMTitle" (sort)="onSort($event)" class="text-start">MoM Title</th>
+                    <th sortable="meetingType" (sort)="onSort($event)">Meeting Type</th>
+                    <th sortable="organizer" (sort)="onSort($event)">Organizer</th>
+                    <th sortable="status" (sort)="onSort($event)">Action</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                <tr *ngFor="let u of tableData; trackBy: trackByFn">
+                    <td>{{ u?.MOMCode }}</td>
+                    <td>{{ u?.MOMDateS }}</td>
+                    <td class="text-start" [style.width]="MOMTitle.clientWidth" #MOMTitle>
+                        <span class="pointer" [positionTarget]="MOMTitle" [ngbTooltip]="u.MOMTitle">
+                            {{ u.MOMTitle }}
+                        </span>
+                    </td>
+                    <td>
+                        {{ u?.meetingType }}
+                    </td>
+                    <td>{{ u?.organizer }}</td>
+                    <td>
+                        <div class="dropdown">
+                            <button class="dropbtn"></button>
+                            <div class="dropdown-content">
+                                <a
+                                    [class.disable]="u?.createdBy != userId"
+                                    href="javascript:void(0)"
+                                    (click)="navigateTo('/default/supports/master/minutes_of_meeting/form', u, 'view')"
+                                >
+                                    <i class="fa fa-eye fa-lg me-2 text-primary" aria-hidden="true"></i>
+                                    View
+                                </a>
+                                <a
+                                    [class.disable]="u?.createdBy != userId"
+                                    href="javascript:void(0)"
+                                    (click)="navigateTo('/default/supports/master/minutes_of_meeting/form', u, 'edit')"
+                                >
+                                    <i class="fa fa-pencil-square-o fa-lg me-2 text-primary" aria-hidden="true"></i>
+                                    Edit
+                                </a>
+                                <a
+                                    href="javascript:void(0)"
+                                    (click)="navigateToPrint('/#/print/mom_print', u, 'print', '')"
+                                >
+                                    <i class="fa fa-print fa-lg me-3 text-primary" aria-hidden="true"></i>
+                                    Print
+                                </a>
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>

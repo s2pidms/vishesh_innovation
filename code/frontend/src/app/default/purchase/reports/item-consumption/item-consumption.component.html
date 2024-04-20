@@ -1,0 +1,89 @@
+<div class="reportTablePage">
+    <div class="table-body pb-0 shadow-none">
+        <div class="row table-header">
+            <div class="col">
+                <label class="heading">Item Consumption Report</label>
+            </div>
+        </div>
+        <div class="row my-4">
+            <div class="col-3 ps-5">
+                <label class="form-label"> From Date <span class="text-danger">*</span> </label>
+                <select class="form-select" [(ngModel)]="year">
+                    <option [value]="null" selected disabled>Select Payment Mode</option>
+                    <option [value]="i" *ngFor="let item of fiscalYears; let i = index">
+                        {{ item }}
+                    </option>
+                </select>
+            </div>
+            <div class="col-3 align-self-end separate-image">
+                <span class="image-position">
+                    <img src="./assets/new_icons/redstroke.svg" alt="" height="27" width="8" />
+                </span>
+                <button type="button" class="btn btn-primary px-4 me-3" (click)="getAll()">Apply Filter</button>
+                <button type="button" class="btn btn-primary px-4 ms-4" (click)="reset()">Reset Filter</button>
+            </div>
+        </div>
+        <hr class="row line-border" />
+        <div class="table-responsive mb-0">
+            <app-setting-header
+                [data]="{page,pageSize,collection,search,type: 'list',pdfDisplay : true}"
+                (dataChange)="eventHeader($event)"
+            >
+            </app-setting-header>
+            <table class="table table-bordered table-sticky">
+                <thead class="bg-primary">
+                    <tr class="text-white">
+                        <th sortable="itemCode" (sort)="onSort($event)">Item Code</th>
+                        <th sortable="itemName" (sort)="onSort($event)" class="text-start">Item Name</th>
+                        <th sortable="itemDescription" (sort)="onSort($event)" class="text-start">Item Description</th>
+                        <th sortable="UOM" (sort)="onSort($event)">UoM</th>
+                        <th sortable="apr" (sort)="onSort($event)">Apr</th>
+                        <th sortable="may" (sort)="onSort($event)">May</th>
+                        <th sortable="jun" (sort)="onSort($event)">Jun</th>
+                        <th sortable="jul" (sort)="onSort($event)">Jul</th>
+                        <th sortable="aug" (sort)="onSort($event)">Aug</th>
+                        <th sortable="sep" (sort)="onSort($event)">Sep</th>
+                        <th sortable="oct" (sort)="onSort($event)">Oct</th>
+                        <th sortable="nov" (sort)="onSort($event)">Nov</th>
+                        <th sortable="dec" (sort)="onSort($event)">Dec</th>
+                        <th sortable="jan" (sort)="onSort($event)">Jan</th>
+                        <th sortable="feb" (sort)="onSort($event)">Feb</th>
+                        <th sortable="mar" (sort)="onSort($event)">Mar</th>
+                        <th sortable="avg" (sort)="onSort($event)">Avg.</th>
+                        <th sortable="total" (sort)="onSort($event)">Total</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let u of tableData; trackBy: trackByFn">
+                        <td>{{ u?.itemCode }}</td>
+                        <td class="text-start" [style.width]="itemName.clientWidth" #itemName>
+                            <span class="pointer" [positionTarget]="itemName" [ngbTooltip]="u.itemName">
+                                {{ u.itemName }}
+                            </span>
+                        </td>
+                        <td class="text-start" [style.width]="itemDescription.clientWidth" #itemDescription>
+                            <span class="pointer" [positionTarget]="itemDescription" [ngbTooltip]="u.itemDescription">
+                                {{ u.itemDescription }}
+                            </span>
+                        </td>
+                        <td>{{ u?.UOM | UOMUnitsMaster }}</td>
+                        <td>{{ u?.apr }}</td>
+                        <td>{{ u?.may }}</td>
+                        <td>{{ u?.jun }}</td>
+                        <td>{{ u?.jul }}</td>
+                        <td>{{ u?.aug }}</td>
+                        <td>{{ u?.sep }}</td>
+                        <td>{{ u?.oct }}</td>
+                        <td>{{ u?.nov }}</td>
+                        <td>{{ u?.dec }}</td>
+                        <td>{{ u?.jan }}</td>
+                        <td>{{ u?.feb }}</td>
+                        <td>{{ u?.mar }}</td>
+                        <td>{{ u?.avg }}</td>
+                        <td>{{ u?.total }}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

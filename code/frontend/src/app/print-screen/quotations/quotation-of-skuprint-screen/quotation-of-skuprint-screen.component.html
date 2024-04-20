@@ -1,0 +1,228 @@
+<div class="container-fluid printScreen">
+    <div class="row">
+        <div class="col-12 text-center px-0">
+            <div *ngIf="buttonCondition == 'true'">
+                <button class="btn btn-primary" type="button" (click)="windowPrint()" *ngIf="pdfAction != 'pdf'">
+                    <img src="./assets/images/print.png" width="20px" height="14px" class="mb-2" />&nbsp;&nbsp; Print
+                </button>
+            </div>
+            <div class="page py-3">
+                <div class="page py-3">
+                    <div class="container-fluid printScreen px-0">
+                        <div class="row">
+                            <div class="col-12 text-center px-0">
+                                <div class="table-responsive shadow printScreen">
+                                    <table #mainTable class="table">
+                                        <tr>
+                                            <td colspan="12">
+                                                <div class="text-center">
+                                                    <img src="{{ tableData?.SOPdfHeaderUrl }}" class="img-pdfHeader" />
+                                                </div>
+                                            </td>
+                                        </tr>
+
+                                        <tr class="head-row">
+                                            <td colspan="12" class="text-center">
+                                                <h1 class="fs-1">Quotation</h1>
+                                            </td>
+                                        </tr>
+                                        <tr class="head-row">
+                                            <th colspan="6" class="bg-grey">
+                                                <label class="heading">Customer/Prospect Details </label>
+                                            </th>
+                                            <th colspan="6" class="bg-grey">
+                                                <label class="heading">Documents Details</label>
+                                            </th>
+                                        </tr>
+                                        <tr>
+                                            <td colspan="6" rowspan="2">
+                                                <p class="">
+                                                    {{ tableData?.customerBillingAddress?.contactPersonName }}
+                                                </p>
+                                                <p>
+                                                    {{ tableData?.customerBillingAddress?.line1 }}
+                                                </p>
+                                                <p>
+                                                    {{ tableData?.customerBillingAddress?.line2 }}
+                                                </p>
+                                                <p>
+                                                    {{ tableData?.customerBillingAddress?.line3 }}
+                                                </p>
+                                                <p>
+                                                    {{ tableData?.customerBillingAddress?.city }}
+                                                    ,
+                                                    {{ tableData?.customerBillingAddress?.state }}
+                                                    ,
+                                                    {{ tableData?.customerBillingAddress?.pinCode }}
+                                                </p>
+                                                <p>{{ tableData?.customerBillingAddress?.country }}</p>
+                                            </td>
+                                            <td colspan="6">
+                                                <p class="">Quotation Number: {{ tableData?.quotationNo }}</p>
+                                                <p class="">
+                                                    Quotation Date:
+                                                    {{ tableData?.quotationDate }}
+                                                </p>
+                                                <p class="">RFQ Reference: {{ tableData?.RFQReference }}</p>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td colspan="6">
+                                                <p class="">
+                                                    Category:
+                                                    <span class="text-primary">{{ tableData?.customerCategory }}</span>
+                                                </p>
+                                                <p class="">
+                                                    Currency: <b class="text-primary"> {{ tableData?.currency }}</b>
+                                                </p>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td colspan="12">
+                                                <div class="row">
+                                                    <div class="col-12">
+                                                        <p class="fs-3">
+                                                            Kind Attn:
+                                                            {{ tableData?.contactPersonName }}
+                                                        </p>
+                                                        <p class="sub-text">Dear Sir/Madam,</p>
+                                                        <p class="sub-text">
+                                                            With reference to your RFQ, we are pleased to submit our
+                                                            best price as follows:
+                                                        </p>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        <tr class="head-row text-center w-100 text-nowrap">
+                                            <th colspan="1" class="text-center">#</th>
+                                            <th colspan="5" class="text-start">Product Description</th>
+                                            <th colspan="2" class="text-center">Drawing Ref.</th>
+                                            <th colspan="1" class="text-center">UoM</th>
+                                            <th colspan="1" class="text-center">MOQ</th>
+                                            <th colspan="2" class="text-center">Rate/Unit</th>
+                                        </tr>
+                                        <tr
+                                            class="text-wrap"
+                                            *ngFor="let p of tableData?.quotationDetails; let i = index"
+                                        >
+                                            <td colspan="1" class="text-center">
+                                                <label>{{ i + 1 }}</label>
+                                            </td>
+                                            <td colspan="5">
+                                                <p>
+                                                    Part No.:
+                                                    {{ p?.partNo }}
+                                                </p>
+                                                <p>
+                                                    Part Name:
+                                                    {{ p?.SKUName }}
+                                                </p>
+                                                <p>
+                                                    Part Description/Size:
+                                                    {{ p?.SKUDescription }}
+                                                </p>
+                                                <br />
+                                                <p>Development Cost:</p>
+                                            </td>
+
+                                            <td colspan="2" class="text-center">
+                                                <div class="h-100 d-flex align-items-start justify-content-center">
+                                                    {{ p?.drawingRef }}
+                                                </div>
+                                            </td>
+                                            <td colspan="1" class="text-center">
+                                                <div class="h-100 d-flex align-items-start justify-content-center">
+                                                    {{ p?.UOM }}
+                                                </div>
+                                            </td>
+                                            <td colspan="1">
+                                                <div class="h-100 d-flex align-items-start justify-content-center">
+                                                    {{ p?.MOQ | number : "1.2-2" }}
+                                                </div>
+                                            </td>
+                                            <td colspan="2">
+                                                <div
+                                                    class="h-100 d-flex flex-column justify-content-between align-items-center"
+                                                >
+                                                    <div>
+                                                        {{ p?.QPrice | number : "1.2-2" }}
+                                                    </div>
+                                                    <div>
+                                                        {{ p?.developmentCost }}
+                                                    </div>
+                                                </div>
+                                            </td>
+                                        </tr>
+
+                                        <tr class="py-1">
+                                            <td colspan="12">
+                                                <div class="row mt-4">
+                                                    <div class="col-12">
+                                                        <p *ngIf="!isDomestic">
+                                                            Note: We have considered the costing based on an exchange
+                                                            rate of
+                                                            <span class="text-primary">
+                                                                {{ tableData?.exchangeRate }}
+                                                            </span>
+                                                            INR to USD, and the cost will be subject to change in the
+                                                            event of any variation in the Dollar price trend
+                                                        </p>
+                                                        <br *ngIf="!isDomestic" />
+                                                        Thank you, and we assure you of the best quality and services
+                                                        from our end at all times. <br />
+                                                        If you have any clarifications, please feel free to contact us.
+                                                        <br /><br />
+                                                        We look forward to the release of your purchase order at the
+                                                        earliest convenience.
+                                                        <br /><br />
+                                                        Best regards,
+                                                        <br />
+                                                    </div>
+                                                </div>
+
+                                                <div class="row justify-content-between my-4">
+                                                    <div class="col-4">
+                                                        <img
+                                                            src="{{ tableData?.SOSignatureUrl }}"
+                                                            class="img-sign"
+                                                            alt="Signature"
+                                                        />
+                                                    </div>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                    <table class="table">
+                                        <tr>
+                                            <td
+                                                colspan="12"
+                                                class="text-center border-top-0"
+                                                [style.height]="calculateHeight(mainTable.clientHeight)"
+                                            >
+                                                <div class="h-100 d-flex align-items-start justify-content-center">
+                                                    ** End of document **
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row page-break">
+                            <div class="col-12 text-center px-0">
+                                <app-terms-of-cond-of-supply
+                                    [termsAndCondOfQuotation]="tableData.termsAndCond"
+                                    [tableData]="tableData"
+                                    [display]="display"
+                                ></app-terms-of-cond-of-supply>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<ng-template #hashBlock> <span>-</span> </ng-template>

@@ -1,0 +1,38 @@
+<div class="row justify-content-center">
+  <div class="col-md-11">
+    <app-setting-header
+      [data]="{page,pageSize,collection,search,type: 'list'}"
+      (dataChange)="eventHeader($event)"
+    >
+    </app-setting-header>
+
+    <div class="table-responsive">
+      <table class="table table-bordered table-sticky">
+        <thead class="bg-primary">
+          <tr class="text-white">
+            <th>Lead ID</th>
+            <th sortable="" (sort)="onSort($event)">Lead Name</th>
+            <th sortable="" (sort)="onSort($event)">Contact Number</th>
+            <th sortable="" (sort)="onSort($event)">Email</th>
+            <th sortable="" (sort)="onSort($event)">Lead Source</th>
+            <th sortable="" (sort)="onSort($event)">Lead Status</th>
+            <th sortable="" (sort)="onSort($event)">Assigned Salesperson</th>
+            <th sortable="" (sort)="onSort($event)">Lead Rating</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>{{ 0 }}</td>
+            <td>{{ 0 }}</td>
+            <td>{{ 0 }}</td>
+            <td>{{ 00 }}</td>
+            <td>{{ 0 }}</td>
+            <td>{{ 0 }}</td>
+            <td>{{ 00 }}</td>
+            <td>{{ 00 }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>

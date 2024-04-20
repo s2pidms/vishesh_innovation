@@ -1,0 +1,129 @@
+<div style="min-height: 54rem" class="modelPage">
+    <div class="modal-header">
+        <div class="heading">Sub - Processes Details</div>
+        <div>
+            <button
+                type="button"
+                class="btn btn-cross btn-sm"
+                aria-label="Close"
+                (click)="activeModal.close(defineSubProcessesList)"
+            >
+                <i class="fa fa-times-circle" aria-hidden="true"></i>
+            </button>
+        </div>
+    </div>
+    <div class="">
+        <div class="container-fluid">
+            <div class="row">
+                <form [formGroup]="form">
+                    <div class="row px-5 mt-4">
+                        <div class="col-3 ps-0">
+                            <label class="form-label"> Sub - Process Code <span class="text-danger">*</span> </label>
+                            <input class="form-control" type="text" formControlName="subProcessCode" />
+                        </div>
+                        <div class="col-3">
+                            <label class="form-label"> Sub - Process Name <span class="text-danger">*</span> </label>
+                            <input class="form-control" type="text" formControlName="subProcessName" />
+                        </div>
+                        <div class="col-3">
+                            <label class="form-label">
+                                Order
+                                <span class="text-danger">*</span>
+                            </label>
+                            <input class="form-control" type="number" formControlName="order" />
+                        </div>
+                        <div class="col-3">
+                            <label class="form-label"> Status <span class="text-danger">*</span> </label>
+                            <select class="form-select" formControlName="status">
+                                <option [value]="null" selected disabled>Select Status</option>
+                                <option [value]="'Active'">Active</option>
+                                <option [value]="'Inactive'">Inactive</option>
+                            </select>
+                        </div>
+                    </div>
+                </form>
+                <div class="col text-center my-4">
+                    <button
+                        class="btn bg-primary px-5"
+                        type="button"
+                        [disabled]="btnDisable || action == 'view'"
+                        (click)="save()"
+                    >
+                        Add
+                    </button>
+                </div>
+                <hr class="line-border mb-0" />
+                <div class="mt-0 px-5">
+                    <app-setting-header
+                        [data]="{page,pageSize,collection,search ,excelDisplay : 'none'}"
+                        (dataChange)="eventHeader($event)"
+                    >
+                    </app-setting-header>
+                </div>
+                <div class="table-responsive px-5">
+                    <table class="table table-bordered table-sticky">
+                        <thead class="bg-primary">
+                            <tr class="text-white">
+                                <th>Sub - Process Code</th>
+                                <th class="text-start">Sub - Process Name</th>
+                                <th>Order</th>
+                                <th>Status</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr
+                                *ngFor="
+                                    let u of defineSubProcessesList
+                                        | searchFi1ter : search
+                                        | slice : (page - 1) * pageSize : (page - 1) * pageSize + pageSize;
+                                    let i = index
+                                "
+                            >
+                                <td>{{ u?.subProcessCode }}</td>
+                                <td class="text-start">{{ u?.subProcessName }}</td>
+                                <td>{{ u?.order }}</td>
+                                <td>{{ u?.status }}</td>
+
+                                <td>
+                                    <div class="dropdown">
+                                        <button class="dropbtn"></button>
+                                        <div class="dropdown-content">
+                                            <a
+                                                [class.disable]="this.action == 'view'"
+                                                href="javascript:void(0)"
+                                                (click)="patchItem(u, i, 'view')"
+                                            >
+                                                <i class="fa fa-eye fa-lg me-2 text-primary" aria-hidden="true"></i>
+                                                View
+                                            </a>
+                                            <a
+                                                [class.disable]="this.action == 'view'"
+                                                href="javascript:void(0)"
+                                                (click)="patchItem(u, i, 'edit')"
+                                            >
+                                                <i
+                                                    class="fa fa-pencil-square-o fa-lg me-2 text-primary"
+                                                    aria-hidden="true"
+                                                ></i>
+                                                Edit
+                                            </a>
+                                            <a
+                                                [class.disable]="this.action == 'view'"
+                                                href="javascript:void(0)"
+                                                (click)="deleteItem(i)"
+                                            >
+                                                <i class="fa fa-trash me-2 text-primary" aria-hidden="true"></i>
+                                                Delete
+                                            </a>
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

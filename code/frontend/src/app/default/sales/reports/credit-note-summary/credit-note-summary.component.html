@@ -1,0 +1,89 @@
+<div class="row justify-content-center">
+  <div class="col-md-12">
+    <div class="row pb-4 mb-4 border-bottom mx-0">
+      <div class="col mt-1 ps-0 pe-3">
+        <label class="form-label mb-2"> Select Customer</label>
+        <ng-select
+          [items]="customerOptions"
+          bindLabel="customerName"
+          bindValue="_id"
+          [clearable]="false"
+          [(ngModel)]="customerId"
+        >
+        </ng-select>
+      </div>
+      <div class="col mt-1 px-3">
+        <label class="form-label mb-2">
+          Select Status <span class="text-danger">*</span>
+        </label>
+        <ng-select
+          [items]="statusOptions"
+          bindLabel="statusOptions"
+          bindValue="statusOptions"
+          [clearable]="false"
+          [(ngModel)]="status"
+        >
+        </ng-select>
+      </div>
+      <div class="col mt-1 px-3">
+        <label class="form-label mb-2">
+          From Date <span class="text-danger">*</span>
+        </label>
+        <input class="form-control" type="date" [(ngModel)]="fromDate" />
+      </div>
+
+      <div class="col mt-1 px-3">
+        <label class="form-label mb-2">
+          To Date <span class="text-danger">*</span>
+        </label>
+        <input class="form-control" type="date" [(ngModel)]="toDate" />
+      </div>
+
+      <div class="col-auto align-self-end ps-3 pe-0">
+        <button type="button" class="btn btn-primary" (click)="getAll()">
+          Apply Filter
+        </button>
+      </div>
+
+      <div class="col-auto align-self-end ps-3 pe-0">
+        <button type="button" class="btn btn-primary" (click)="reset()">
+          Reset Filter
+        </button>
+      </div>
+    </div>
+
+    <app-setting-header
+      [data]="{page,pageSize,collection,search,type: 'list'}"
+      (dataChange)="eventHeader($event)"
+    >
+    </app-setting-header>
+    <div class="table-responsive mb-0">
+      <table class="table table-bordered table-sticky">
+        <thead class="bg-primary">
+          <tr class="text-white">
+            <th
+              class="text-start"
+              sortable="customerName"
+              (sort)="onSort($event)"
+            >
+              Customer
+            </th>
+            <th sortable="totalCreditNotes" (sort)="onSort($event)">
+              Total Credit Notes
+            </th>
+            <th sortable="totalAmountCredited" (sort)="onSort($event)">
+              Total Amount Credited
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let u of tableData; trackBy: trackByFn">
+            <td class="text-start">{{ u?.customerName }}</td>
+            <td>{{ u?.totalCreditNotes }}</td>
+            <td>{{ u?.totalAmountCredited }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>

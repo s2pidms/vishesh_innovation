@@ -1,0 +1,91 @@
+<div class="listCard card">
+    <div class="table-header">
+        <label class="heading">Specification Summary</label>
+    </div>
+
+    <div appAccessControl [accessType]="rolePermissionActions.createAction" class="text-center">
+        <button class="plusIconSvg btn btn-primary me-1"></button>
+        <button
+            class="btn btn-primary btn-add"
+            type="button"
+            (click)="navigateTo('/default/quality/master/product_specifications/form', null, 'create')"
+        >
+            Prod. Specification
+        </button>
+    </div>
+    <hr class="line-border" />
+    <div class="table-responsive">
+        <app-setting-header [data]="{page,pageSize,collection,search,type: 'list'}" (dataChange)="eventHeader($event)">
+        </app-setting-header>
+        <table class="table table-bordered">
+            <thead class="bg-primary">
+                <tr class="text-white">
+                    <th sortable="SKUNo" (sort)="onSort($event)">SKU Code</th>
+                    <th class="text-start" sortable="SKUName" (sort)="onSort($event)">
+                        {{ "SKU Name" | labelTranslate }}
+                    </th>
+                    <th class="text-start" sortable="SKUDescription" (sort)="onSort($event)">
+                        {{ "SKU Description" | labelTranslate }}
+                    </th>
+                    <th class="text-start" sortable="productCategory" (sort)="onSort($event)">Product code</th>
+                    <th sortable="UOM" (sort)="onSort($event)">UoM</th>
+                    <th sortable="UOM" (sort)="onSort($event)">Status</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let u of tableData; trackBy: trackByFn">
+                    <td>{{ u?.SKUNo }}</td>
+                    <td class="text-start">{{ u?.SKUName }}</td>
+                    <td class="text-start">{{ u?.SKUDescription }}</td>
+                    <td class="text-start">{{ u?.productCategory }}</td>
+                    <td>{{ u?.UOM | UOMUnitsMaster }}</td>
+                    <td>
+                        <span class="d-flex justify-content-center">
+                            <div *ngIf="u?.status == 'Active'" class="statusActive"></div>
+                            <div *ngIf="u?.status == 'Inactive'" class="statusYellow"></div>
+                        </span>
+                    </td>
+
+                    <td>
+                        <div class="dropdown">
+                            <button class="dropbtn"></button>
+                            <div class="dropdown-content">
+                                <a
+                                    appAccessControl
+                                    [accessType]="rolePermissionActions.viewAction"
+                                    href="javascript:void(0)"
+                                    (click)="
+                                        navigateTo(
+                                            '/default/quality/master/product_specifications/form',
+                                            u?._id,
+                                            'view'
+                                        )
+                                    "
+                                >
+                                    <i class="fa fa-eye fa-lg me-2 text-primary" aria-hidden="true"></i>
+                                    View
+                                </a>
+                                <a
+                                    appAccessControl
+                                    [accessType]="rolePermissionActions.editAction"
+                                    href="javascript:void(0)"
+                                    (click)="
+                                        navigateTo(
+                                            '/default/quality/master/product_specifications/form',
+                                            u?._id,
+                                            'edit'
+                                        )
+                                    "
+                                >
+                                    <i class="fa fa-pencil-square-o fa-lg me-2 text-primary" aria-hidden="true"></i>
+                                    Edit
+                                </a>
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>

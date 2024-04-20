@@ -1,0 +1,15 @@
+<ng-template [ngIf]="template == 'Turnover less than 5 CR'">
+    <app-TOLT5CR [tableData]="tableData"></app-TOLT5CR>
+</ng-template>
+<ng-template [ngIf]="template == 'Turnover less than 5 CR with Dispatch'">
+    <app-TOLT5CRWithDispatch [tableData]="tableData"></app-TOLT5CRWithDispatch>
+</ng-template>
+<ng-template [ngIf]="template == 'E-Invoice' && tableData.customer.customerCategory.includes('Domestic')">
+    <app-E-Invoice [tableData]="tableData"></app-E-Invoice>
+</ng-template>
+<ng-template [ngIf]="template == 'AAS-AIDS Tax-Invoice'">
+    <app-aas-aids-tax-invoice [tableData]="tableData"></app-aas-aids-tax-invoice>
+</ng-template>
+<ng-template [ngIf]="template == 'E-Invoice' && tableData.customer.customerCategory.includes('Exports')">
+    <app-tax-invoice-exports [tableData]="tableData"></app-tax-invoice-exports>
+</ng-template>

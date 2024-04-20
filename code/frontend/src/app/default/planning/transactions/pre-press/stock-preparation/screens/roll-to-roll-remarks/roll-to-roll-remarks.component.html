@@ -1,0 +1,92 @@
+<div class="modelPage">
+    <div class="modal-header">
+        <div class="heading">Remarks</div>
+        <div>
+            <button type="button" class="btn btn-cross btn-sm" aria-label="Close" (click)="this.activeModal.close()">
+                <i class="fa fa-times-circle" aria-hidden="true"></i>
+            </button>
+        </div>
+    </div>
+    <div class="">
+        <form [formGroup]="form">
+            <ng-container formGroupName="productionRemarks">
+                <div class="mt-0 line-border-with-title">
+                    <span class="px-3"> Production Remarks </span>
+                </div>
+                <div class="row px-5">
+                    <div class="col-12">
+                        <label class="form-label mb-1"> Prod. Remarks <span class="text-danger"></span> </label>
+                        <div class="d-flex">
+                            <input class="form-control" type="text" formControlName="prodRemarks" />
+                        </div>
+                    </div>
+                </div>
+                <div class="row mt-4 px-5">
+                    <div class="col-4">
+                        <label class="form-label mb-1">Checked by <span class="text-danger"></span> </label>
+                        <div class="d-flex">
+                            <input class="form-control" type="text" formControlName="checkedBy" />
+                        </div>
+                    </div>
+
+                    <div class="col-4">
+                        <label class="form-label mb-1"> Approved by <span class="text-danger"></span> </label>
+                        <div class="d-flex">
+                            <input class="form-control" type="text" formControlName="approvedBy" />
+                        </div>
+                    </div>
+                    <div class="col-4">
+                        <label class="form-label mb-1"> Approved Date <span class="text-danger"></span> </label>
+                        <div class="d-flex">
+                            <input class="form-control" type="date" formControlName="approvedDate" />
+                        </div>
+                    </div>
+                </div>
+            </ng-container>
+
+            <ng-container formGroupName="QARemarks">
+                <div class="line-border-with-title">
+                    <span class="px-4"> &nbsp; QA/QC Remarks &nbsp; </span>
+                </div>
+                <div class="row px-5">
+                    <div class="col-12">
+                        <label class="form-label mb-1"> QA/QC Remarks <span class="text-danger"></span> </label>
+                        <div class="d-flex">
+                            <input class="form-control" type="text" formControlName="QARemark" />
+                        </div>
+                    </div>
+                </div>
+                <div class="row mt-4 px-5">
+                    <div class="col-4">
+                        <label class="form-label mb-1">Checked by <span class="text-danger"></span> </label>
+                        <div class="d-flex">
+                            <input class="form-control" type="text" formControlName="checkedBy" />
+                        </div>
+                    </div>
+
+                    <div class="col-4">
+                        <label class="form-label mb-1"> Approved by <span class="text-danger"></span> </label>
+                        <div class="d-flex">
+                            <input class="form-control" type="text" formControlName="approvedBy" />
+                        </div>
+                    </div>
+                    <div class="col-4">
+                        <label class="form-label mb-1"> Approved Date <span class="text-danger"></span> </label>
+                        <div class="d-flex">
+                            <input class="form-control" type="date" formControlName="approvedDate" />
+                        </div>
+                    </div>
+                </div>
+            </ng-container>
+            <hr class="line-border my-4" />
+        </form>
+
+        <div class="row px-5">
+            <div class="col-12 d-flex justify-content-center">
+                <div class="mb-4">
+                    <button type="button" class="btn bg-primary px-4" (click)="dismissModel()">Save & Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

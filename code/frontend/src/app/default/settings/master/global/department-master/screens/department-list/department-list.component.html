@@ -1,0 +1,80 @@
+<div class="listCard card">
+    <div class="table-header">
+        <label class="heading">Department Master Summary</label>
+    </div>
+    <div appAccessControl [accessType]="rolePermissionActions.createAction" class="text-center">
+        <button
+            class="btn btn-primary btn-add"
+            type="button"
+            (click)="navigateTo('default/settings/master/global/department_master/form', {}, 'create')"
+        >
+            <i class="fa fa-plus-square fa-lg me-2" aria-hidden="true"></i>
+            Department Master
+        </button>
+    </div>
+    <hr class="line-border" />
+    <div class="table-responsive">
+        <app-setting-header [data]="{page,pageSize,collection,search,type: 'list'}" (dataChange)="eventHeader($event)">
+        </app-setting-header>
+
+        <table class="table table-bordered">
+            <thead class="bg-secondary">
+                <tr class="text-white">
+                    <th sortable="category" (sort)="onSort($event)">Department Code</th>
+                    <th
+                        class="text-start"
+                        sortable="prefix
+            "
+                        (sort)="onSort($event)"
+                    >
+                        Department Name
+                    </th>
+                    <th sortable="digit" (sort)="onSort($event)">Department Head</th>
+                    <th sortable="nextAutoIncrement" (sort)="onSort($event)">Total Employees</th>
+                    <th sortable="nextAutoIncrement" (sort)="onSort($event)">Contact No.</th>
+                    <th sortable="nextAutoIncrement" (sort)="onSort($event)">Office Location</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let u of tableData; trackBy: trackByFn">
+                    <td>{{ u?.departmentCode }}</td>
+                    <td class="text-start">{{ u?.departmentName }}</td>
+                    <td>{{ u?.departmentHead }}</td>
+                    <td>{{ u?.totalEmployee }}</td>
+                    <td>{{ u?.contactNo }}</td>
+                    <td>{{ u?.officeLocation }}</td>
+                    <td>
+                        <div class="dropdown">
+                            <button class="dropbtn"></button>
+                            <div class="dropdown-content">
+                                <a
+                                    appAccessControl
+                                    [accessType]="rolePermissionActions.viewAction"
+                                    href="javascript:void(0)"
+                                    (click)="
+                                        navigateTo('default/settings/master/global/department_master/form', u, 'view')
+                                    "
+                                >
+                                    <i class="fa fa-eye fa-lg me-2 text-primary" aria-hidden="true"></i>
+                                    View
+                                </a>
+                                <a
+                                    appAccessControl
+                                    [accessType]="rolePermissionActions.editAction"
+                                    href="javascript:void(0)"
+                                    (click)="
+                                        navigateTo('default/settings/master/global/department_master/form', u, 'edit')
+                                    "
+                                >
+                                    <i class="fa fa-pencil-square-o fa-lg me-2 text-primary" aria-hidden="true"></i>
+                                    Edit
+                                </a>
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>

@@ -1,0 +1,102 @@
+<Form [formGroup]="form" class="formCard card">
+    <div class="container">
+        <div class="row form-header">
+            <div class="col heading">
+                <label>AUTO INCREMENT MODULE</label>
+            </div>
+        </div>
+        <div class="form-body">
+            <div class="row my-3 d-flex justify-content-center mt-3">
+                <div class="col-7 pe-0">
+                    <div class="row">
+                        <div class="col-4 pe-0">
+                            <label for="" class="form-label fs-5">Module Name </label><span class="text-danger"> *</span
+                            ><input type="text" class="form-control" formControlName="moduleName" />
+                        </div>
+                        <div class="col-4 pe-0">
+                            <label for="" class="form-label fs-5">Module </label><span class="text-danger"> *</span
+                            ><input type="text" class="form-control" formControlName="module" readonly />
+                        </div>
+                        <div class="col-4 pe-0">
+                            <label for="" class="form-label fs-5">Module Prefix</label
+                            ><span class="text-danger"> *</span
+                            ><input type="text" class="form-control" formControlName="modulePrefix" />
+                        </div>
+                    </div>
+                </div>
+                <div class="col-5 ps-5">
+                    <div class="row">
+                        <div class="col-6 ps-5 pe-0">
+                            <label for="" class="form-label fs-5">Auto Increment value </label
+                            ><span class="text-danger"> *</span>
+                            <input type="text" class="form-control" formControlName="autoIncrementValue" />
+                        </div>
+                        <div class="col-6">
+                            <label for="" class="form-label fs-5">Digit </label><span class="text-danger"> *</span>
+                            <input type="text" class="form-control" formControlName="digit" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="table-responsive mb-5" *ngIf="tableData.length > 0">
+                <table class="table table-bordered table-sticky text-center">
+                    <thead class="bg-primary">
+                        <tr class="text-white">
+                            <th>Sr No.</th>
+                            <th class="text-start">Module Name</th>
+                            <th>Module Prefix</th>
+                            <th>Auto Increment No.</th>
+                            <th>Digit</th>
+                        </tr>
+                    </thead>
+                    <tbody class="text-center">
+                        <tr *ngFor="let u of tableData; let i = index">
+                            <td>{{ i + 1 }}</td>
+                            <td class="text-start">{{ u?.location }}</td>
+                            <td class="">
+                                <div class="d-flex justify-content-center">
+                                    <input
+                                        class="form-control form-control-size-xl text-center w-25"
+                                        [(ngModel)]="u.modulePrefix"
+                                        [ngModelOptions]="{standalone: true}"
+                                        type="text"
+                                    />
+                                </div>
+                            </td>
+                            <td class="">
+                                <div class="d-flex justify-content-center">
+                                    <input
+                                        class="form-control form-control-size-lg text-center w-25"
+                                        [(ngModel)]="u.counter"
+                                        [ngModelOptions]="{standalone: true}"
+                                        type="number"
+                                    />
+                                </div>
+                            </td>
+                            <td>{{ u?.digit }}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <hr *ngIf="!['view'].includes(action)" class="row line-border mb-3 mt-4" />
+
+        <div class="row d-flex justify-content-center">
+            <div class="col-4 d-flex justify-content-center py-4">
+                <div class="d-grid gap-2 d-md-flex justify-content-md-center" [ngClass]="{'d-none': action == 'View'}">
+                    <button
+                        *ngIf="!['view', 'edit'].includes(action)"
+                        class="btn bg-primary px-5 mx-3"
+                        (click)="reset()"
+                    >
+                        Reset
+                    </button>
+                    <button *ngIf="['create', 'edit'].includes(action)" class="btn bg-primary px-5" (click)="submit()">
+                        Save
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</Form>

@@ -1,0 +1,139 @@
+<div class="modelPage">
+  <div class="modal-header">
+    <div class="heading">
+      Box No. Details <b>[ Total Dispatch Qty: {{ dispatchQty }} ]</b>
+    </div>
+    <div>
+      <button
+        type="button"
+        class="btn btn-cross btn-sm"
+        aria-label="Close"
+        (click)="activeModal.close(boxDetails)"
+      >
+        <i class="fa fa-times-circle" aria-hidden="true"></i>
+      </button>
+    </div>
+  </div>
+  <div class="container-fluid mt-4 px-0">
+    <form [formGroup]="form">
+      <div class="row mb-4 px-5">
+        <div class="col-md-4">
+          <label class="form-label mb-2">
+            Box No. <span class="text-danger">*</span>
+          </label>
+          <input class="form-control" type="number" formControlName="boxNo" />
+        </div>
+        <div class="col-md-4">
+          <label class="form-label mb-2">
+            Qty <span class="text-danger">*</span>
+          </label>
+          <input
+            class="form-control"
+            type="number"
+            formControlName="qty"
+            (input)="setQuantity($event)"
+          />
+        </div>
+        <div class="col-md-4">
+          <label class="form-label mb-2">
+            Weight <span class="text-danger">*</span>
+          </label>
+          <input class="form-control" type="number" formControlName="weight" />
+        </div>
+      </div>
+    </form>
+
+    <div class="col text-center my-4">
+      <button
+        class="btn bg-primary px-5"
+        type="button"
+        [disabled]="btnDisable || action == 'view'"
+        (click)="save()"
+      >
+        Add
+      </button>
+    </div>
+
+    <hr class="line-border mb-0" />
+    <div class="row px-5">
+      <div class="col-12">
+        <div class="ps-0 mt-0">
+          <app-setting-header
+            [data]="{page,pageSize,collection,search ,excelDisplay : 'none'}"
+            (dataChange)="eventHeader($event)"
+          >
+          </app-setting-header>
+        </div>
+
+        <div style="min-height: 23rem" class="table-responsive ps-0 pe-0">
+          <table class="table table-bordered table-sticky">
+            <thead class="bg-primary">
+              <tr class="text-white">
+                <th>Box No.</th>
+                <th>Qty</th>
+                <th>Weight</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr
+                *ngFor="
+                  let u of boxDetails
+                    | searchFi1ter : search
+                    | slice
+                      : (page - 1) * pageSize
+                      : (page - 1) * pageSize + pageSize;
+                  let i = index
+                "
+              >
+                <td>{{ u.boxNo }}</td>
+                <td>{{ u.qty }}</td>
+                <td>{{ u.weight }}</td>
+                <td>
+                  <div class="dropdown">
+                    <button class="dropbtn"></button>
+                    <div class="dropdown-content">
+                      <a
+                        [class.disable]="this.action == 'view'"
+                        href="javascript:void(0)"
+                        (click)="patchItem(u, i, 'view')"
+                      >
+                        <i
+                          class="fa fa-eye fa-lg me-2 text-primary"
+                          aria-hidden="true"
+                        ></i>
+                        View
+                      </a>
+                      <a
+                        [class.disable]="this.action == 'view'"
+                        href="javascript:void(0)"
+                        (click)="patchItem(u, i, 'edit')"
+                      >
+                        <i
+                          class="fa fa-pencil-square-o fa-lg me-2 text-primary"
+                          aria-hidden="true"
+                        ></i>
+                        Edit
+                      </a>
+                      <a
+                        [class.disable]="this.action == 'view'"
+                        href="javascript:void(0)"
+                        (click)="deleteItem(i)"
+                      >
+                        <i
+                          class="fa fa-trash me-2 text-primary"
+                          aria-hidden="true"
+                        ></i>
+                        Delete
+                      </a>
+                    </div>
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,30 @@
+[
+    {
+        "_id": "655c3c203613e949b4d61d9f",
+        "menuItemId": "64a6c1e33339d4dc9d8141ad",
+        "module": "Finance",
+        "type": "REPORT",
+        "order": 1,
+        "isDisplay": true,
+        "title": "FG Inventory Value",
+        "displayName": "FG Inventory Value",
+        "disabled": false,
+        "url": "/default/finance/reports/FG_inventory_value",
+        "items": [],
+        "roles": []
+    },
+    {
+        "_id": "6527c6c0d15520cff95ca524",
+        "menuItemId": "64a6c1e33339d4dc9d8141ad",
+        "module": "Finance",
+        "type": "REPORT",
+        "order": 2,
+        "isDisplay": true,
+        "title": "Cost Sheet",
+        "displayName": "Cost Sheet",
+        "disabled": false,
+        "url": "/default/finance/reports/cost_sheet",
+        "items": [],
+        "roles": []
+    }
+]

@@ -1,0 +1,258 @@
+<div class="formCard card">
+    <div class="container">
+        <div class="row form-header">
+            <div class="col heading ms-2">
+                <label class=""> Roll-to-Sheet </label>
+            </div>
+        </div>
+        <div class="form-body">
+            <div class="row mb-0">
+                <div class="col-12">
+                    <label class="form-label"> Selected Input </label>
+                </div>
+            </div>
+        </div>
+
+        <div class="row mb-0 d-flex justify-content-center">
+            <div class="col-12">
+                <div class="table-responsive">
+                    <table class="table table-bordered table-sticky">
+                        <thead class="bg-primary">
+                            <tr class="text-white">
+                                <th>MRN No.</th>
+                                <th>Item Code</th>
+                                <th class="text-start">Item Name</th>
+                                <th class="text-start">Item Description</th>
+                                <th>UoM</th>
+                                <th>PPIC Qty</th>
+                                <th>Width</th>
+                                <th>Length</th>
+                                <th>sqm/roll</th>
+                                <th>Roll/s #</th>
+                                <th>Aging</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let u of selectedMRNDetails; let i = index">
+                                <td>{{ u?.MRNNumber }}</td>
+                                <td>{{ u?.itemCode }}</td>
+                                <td class="text-start" [style.width]="itemName.clientWidth" #itemName>
+                                    <span class="pointer" [ngbTooltip]="u.itemName" [positionTarget]="itemName">
+                                        {{ u.itemName }}
+                                    </span>
+                                </td>
+                                <td class="text-start" [style.width]="itemDescription.clientWidth" #itemDescription>
+                                    <span
+                                        class="pointer"
+                                        [ngbTooltip]="u.itemDescription"
+                                        [positionTarget]="itemDescription"
+                                    >
+                                        {{ u.itemDescription }}
+                                    </span>
+                                </td>
+                                <td>{{ u?.UOM | UOMUnitsMaster }}</td>
+                                <td>
+                                    {{ u?.closedIRQty | number : "1.2-2" }}
+                                </td>
+                                <td>{{ u?.width }} | mm</td>
+                                <td>{{ u?.length }} | m</td>
+                                <td>
+                                    {{ u?.SQM }}
+                                </td>
+                                <td>
+                                    {{ u?.roll }}
+                                </td>
+                                <td>
+                                    <span class="d-flex justify-content-center">
+                                        <div *ngIf="u?.status == 'green'" class="flaggreen"></div>
+                                        <div *ngIf="u?.status == 'red'" class="flagred"></div>
+                                        <div *ngIf="u?.status == 'orange'" class="flagYellow"></div>
+                                    </span>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <div class="row mb-0">
+            <div class="mb-4 mt-3 line-border-with-title">
+                <span class="px-5"> Select Output </span>
+            </div>
+        </div>
+
+        <div class="row mb-0 d-flex justify-content-center">
+            <div class="col-12">
+                <div class="table-responsive">
+                    <table class="table table-bordered table-sticky">
+                        <thead class="bg-primary">
+                            <tr class="text-white">
+                                <th>MRN No.</th>
+                                <th>Item Code</th>
+                                <th class="text-start">Item Name</th>
+                                <th class="text-start">Item Description</th>
+                                <th>UoM</th>
+                                <th>O/P Qty</th>
+                                <th>Width</th>
+                                <th>Length</th>
+                                <th>sqm/sheet</th>
+                                <th>Sheets #</th>
+                                <th>Aging</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let u of outputDetails; let i = index">
+                                <td>{{ u?.MRNNumber }}</td>
+                                <td>
+                                    {{ u.itemCode ? u.itemCode : null }}
+                                    <a *ngIf="!u.itemCode" class="pointer" (click)="openChildItemModal()">
+                                        Click here</a
+                                    >
+                                </td>
+                                <td class="text-start" [style.width]="itemName.clientWidth" #itemName>
+                                    <span class="pointer" [ngbTooltip]="u.itemName" [positionTarget]="itemName">
+                                        {{ u.itemName }}
+                                    </span>
+                                </td>
+                                <td class="text-start" [style.width]="itemDescription.clientWidth" #itemDescription>
+                                    <span
+                                        class="pointer"
+                                        [ngbTooltip]="u.itemDescription"
+                                        [positionTarget]="itemDescription"
+                                    >
+                                        {{ u.itemDescription }}
+                                    </span>
+                                </td>
+                                <td>{{ u?.UOM }}</td>
+                                <td>
+                                    {{ u?.closedIRQty | number : "1.2-2" }}
+                                </td>
+                                <td>
+                                    {{ u?.width }}
+
+                                    <span class="mx-2"> | </span>
+                                    mm
+                                </td>
+                                <td>
+                                    {{ u?.length }}
+                                    <span class="mx-2"> | </span>
+                                    mm
+                                </td>
+                                <td>
+                                    {{ u?.SQM }}
+                                </td>
+                                <td>
+                                    <!-- {{ u?.roll }} -->
+                                    <div class="d-flex justify-content-center align-items-center">
+                                        <input
+                                            class="form-control form-control-sm"
+                                            type="number"
+                                            [(ngModel)]="u.roll"
+                                            (input)="setSheetDetails(u, i)"
+                                        />
+                                    </div>
+                                </td>
+                                <td>
+                                    <span class="d-flex justify-content-center">
+                                        <div *ngIf="u?.status == 'green'" class="flaggreen"></div>
+                                        <div *ngIf="u?.status == 'red'" class="flagred"></div>
+                                        <div *ngIf="u?.status == 'orange'" class="flagYellow"></div>
+                                    </span>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <ng-container *ngIf="showBalanceDetails">
+            <div class="row mb-0">
+                <div class="mb-4 mt-3 line-border-with-title">
+                    <span class="px-5">Balance Roll Qty </span>
+                </div>
+            </div>
+            <div class="row mb-0 d-flex justify-content-center">
+                <div class="col-12">
+                    <div class="table-responsive">
+                        <table class="table table-bordered table-sticky">
+                            <thead class="bg-primary">
+                                <tr class="text-white">
+                                    <th>MRN No.</th>
+                                    <th>Item Code</th>
+                                    <th class="text-start">Item Name</th>
+                                    <th class="text-start">Item Description</th>
+                                    <th>UoM</th>
+                                    <th>PPIC Qty</th>
+                                    <th>Width</th>
+                                    <th>Length</th>
+                                    <th>sqm/roll</th>
+                                    <th>Roll/s #</th>
+                                    <th>Aging</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr *ngFor="let u of balanceDetails; let i = index">
+                                    <td>{{ u?.MRNNumber }}</td>
+                                    <td>{{ u?.itemCode }}</td>
+                                    <td class="text-start" [style.width]="itemName.clientWidth" #itemName>
+                                        <span class="pointer" [ngbTooltip]="u.itemName" [positionTarget]="itemName">
+                                            {{ u?.itemName }}
+                                        </span>
+                                    </td>
+                                    <td class="text-start" [style.width]="itemDescription.clientWidth" #itemDescription>
+                                        <span
+                                            *ngIf="i == 0"
+                                            class="pointer ps-2"
+                                            [ngbTooltip]="u.itemDescription"
+                                            [positionTarget]="itemDescription"
+                                        >
+                                            {{ u?.itemDescription }}
+                                        </span>
+                                        <input
+                                            *ngIf="i == 1"
+                                            class="form-control form-control-xl"
+                                            type="text"
+                                            [(ngModel)]="u.itemDescription"
+                                        />
+                                    </td>
+                                    <td>{{ u?.UOM | UOMUnitsMaster }}</td>
+                                    <td>
+                                        {{ u?.closedIRQty | number : "1.2-2" }}
+                                    </td>
+                                    <td>{{ u?.width }} | mm</td>
+                                    <td>{{ u?.length }} | m</td>
+                                    <td>
+                                        {{ u?.SQM }}
+                                    </td>
+                                    <td>
+                                        {{ u?.roll }}
+                                    </td>
+                                    <td>
+                                        <span class="d-flex justify-content-center">
+                                            <div *ngIf="u?.status == 'green'" class="flaggreen"></div>
+                                            <div *ngIf="u?.status == 'red'" class="flagred"></div>
+                                            <div *ngIf="u?.status == 'orange'" class="flagYellow"></div>
+                                        </span>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </ng-container>
+
+        <hr class="row line-border" />
+
+        <div class="row mt-2 mb-3">
+            <div class="col-3 pe-0">
+                <button class="plusIconSvg btn btn-primary me-1"></button>
+                <button (click)="openRemarksDetailsModal()" class="btn btn-primary px-5" type="button">Remarks</button>
+            </div>
+            <div class="col-9 mb-0 d-flex align-self-end justify-content-end">
+                <button class="btn btn-primary px-5 me-5" type="button" (click)="reset()">Reset</button>
+                <button class="btn btn-primary px-5" type="button" (click)="submit()">Save</button>
+            </div>
+        </div>
+    </div>
+</div>

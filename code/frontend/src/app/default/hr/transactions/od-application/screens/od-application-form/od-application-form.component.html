@@ -1,0 +1,158 @@
+<div class="container">
+    <form [formGroup]="form">
+        <div class="row justify-content-center form-page">
+            <div class="col-md-11">
+                <div class="row justify-content-center">
+                    <div class="col-5">
+                        <div class="card border-0 card-form">
+                            <div class="py-2 bg-info text-white">
+                                <h4 class="text-center fw-light mb-0">Select Employee</h4>
+                            </div>
+                            <div class="my-4 mx-5 pb-3">
+                                <label class="form-label mt-4">
+                                    Employee Name <span class="text-danger">*</span>
+                                </label>
+                                <ng-select
+                                    [items]="masterData.employeesOptions"
+                                    bindLabel="label"
+                                    bindValue="value"
+                                    [multiple]="false"
+                                    [clearable]="false"
+                                    formControlName="employeeId"
+                                >
+                                </ng-select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-5">
+                        <div class="card card-form pb-0">
+                            <div class="py-2 bg-info text-white">
+                                <h4 class="text-center fw-light mb-0">Outdoor Duty Application</h4>
+                            </div>
+                            <div class="row mb-4 mt-5 justify-content-center">
+                                <div class="col-5">
+                                    <label class="form-label"> OD Type <span class="text-danger">*</span></label>
+                                    <select class="form-select" formControlName="ODType">
+                                        <option [value]="null" selected disabled>Select Type</option>
+                                        <option value="'Out of town'">Out of town</option>
+                                        <option value="'In town'">In town</option>
+                                    </select>
+                                </div>
+                                <div class="col-5">
+                                    <label class="form-label">
+                                        Application Date <span class="text-danger">*</span></label
+                                    >
+                                    <input
+                                        class="form-control"
+                                        type="date"
+                                        readonly
+                                        formControlName="applicationDate"
+                                    />
+                                </div>
+                            </div>
+
+                            <div class="row mb-4 justify-content-center">
+                                <div class="col-5">
+                                    <label class="form-label"> From Date <span class="text-danger">*</span></label>
+                                    <input
+                                        class="form-control"
+                                        id="applicationDate"
+                                        type="date"
+                                        formControlName="fromDate"
+                                    />
+                                </div>
+                                <div class="col-5">
+                                    <label class="form-label"> From Session <span class="text-danger">*</span></label>
+                                    <select
+                                        class="form-select"
+                                        formControlName="fromSession"
+                                        (change)="changeFromSession()"
+                                    >
+                                        <option [value]="null" disabled>Select Session</option>
+                                        <option [value]="'First'">First</option>
+                                        <option [value]="'Second'">Second</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="row mb-4 justify-content-center">
+                                <div class="col-5">
+                                    <label class="form-label"> To Date <span class="text-danger">*</span></label>
+                                    <input
+                                        class="form-control"
+                                        id="applicationDate"
+                                        type="date"
+                                        formControlName="toDate"
+                                        (change)="setDatesHandler()"
+                                    />
+                                </div>
+                                <div class="col-5">
+                                    <label class="form-label"> To Session <span class="text-danger">*</span></label>
+                                    <select
+                                        class="form-select"
+                                        formControlName="toSession"
+                                        (change)="setHalfDayHandler()"
+                                    >
+                                        <option [value]="null" disabled>Select Session</option>
+                                        <option [value]="'First'">First</option>
+                                        <option [value]="'Second'">Second</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="row mb-4 justify-content-center">
+                                <div class="col-5">
+                                    <label class="form-label"> OD Days <span class="text-danger">*</span></label>
+                                    <input
+                                        class="form-control"
+                                        id="ODDays"
+                                        type="number"
+                                        formControlName="ODDays"
+                                        readonly
+                                    />
+                                </div>
+                                <div class="col-5">
+                                    <label class="form-label">
+                                        Resumption Date <span class="text-danger">*</span></label
+                                    >
+                                    <input
+                                        class="form-control"
+                                        id="resumptionDate"
+                                        name="resumptionDate"
+                                        formControlName="resumptionDate"
+                                        type="date"
+                                        readonly
+                                    />
+                                </div>
+                            </div>
+
+                            <div class="row align-items-center mx-5 px-3 mb-5">
+                                <label class="form-label px-0"> Remarks <span class="text-danger">*</span></label>
+                                <input class="form-control" id="reason" type="text" formControlName="reason" />
+                            </div>
+
+                            <div class="row justify-content-center mb-4">
+                                <div class="col-auto mb-4">
+                                    <div
+                                        class="mt-1"
+                                        [ngClass]="
+                                            action == 'view'
+                                                ? 'd-none'
+                                                : 'd-grid gap-3 d-md-flex justify-content-md-center'
+                                        "
+                                    >
+                                        <button type="button" class="btn bg-primary px-4 fw-light" (click)="submit()">
+                                            {{ action == "edit" || action == "create" ? "Send For Approval" : null }}
+                                            {{ action == "approve" ? "Approve" : null }}
+                                            {{ action == "cancel" ? "Cancel" : null }}
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>

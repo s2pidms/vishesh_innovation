@@ -1,0 +1,204 @@
+<Form class="px-2" [formGroup]="form" class="formCard card">
+    <div class="container">
+        <div class="row form-header">
+            <div class="col heading">
+                <label class="">GT Request (Intra) {{ action | titlecase }}</label>
+            </div>
+        </div>
+        <div class="form-body">
+            <div class="row">
+                <div class="col-4">
+                    <div class="row">
+                        <div class="col-5 pe-4">
+                            <label class="form-label">GT Request No.</label>
+                            <input type="text" class="form-control" formControlName="GTRequestNo" readonly />
+                        </div>
+
+                        <div class="col-7 ps-4 pe-5">
+                            <label class="form-label">GT request Date</label>
+                            <input type="date" class="form-control" formControlName="GTRequestDate" />
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-2 ps-0">
+                    <label class="form-label"> Location <span class="text-danger">*</span> </label>
+                    <ng-select
+                        [items]="masterData.locationOptions"
+                        bindLabel="value"
+                        bindValue="label"
+                        [clearable]="false"
+                        formControlName="location"
+                    >
+                    </ng-select>
+                </div>
+                <div class="col-3">
+                    <label class="form-label"> From Department <span class="text-danger">*</span> </label>
+                    <ng-select
+                        [items]="masterData.departmentOptions"
+                        bindLabel="value"
+                        bindValue="label"
+                        [clearable]="false"
+                        formControlName="fromDepartment"
+                        (change)="setToDepartmentValid($event)"
+                    >
+                    </ng-select>
+                </div>
+                <div class="col-3">
+                    <label class="form-label"> To Department <span class="text-danger">*</span> </label>
+                    <ng-select
+                        [items]="masterData.departmentOptions"
+                        bindLabel="value"
+                        bindValue="label"
+                        [clearable]="false"
+                        formControlName="toDepartment"
+                        (change)="setToDepartmentValid($event)"
+                    >
+                    </ng-select>
+                </div>
+            </div>
+            <hr class="row line-border" />
+            <app-setting-header
+                [data]="{page,pageSize,collection,search,excelDisplay : 'none'}"
+                (dataChange)="eventHeader($event)"
+            >
+            </app-setting-header>
+            <div class="table-responsive" style="min-height: 23rem">
+                <table class="table table-bordered table-sticky mt-1">
+                    <thead class="bg-primary">
+                        <tr class="text-white">
+                            <th sortable="GTRequestLineNumber" (sort)="onSort($event)">#</th>
+                            <th sortable="itemCode" (sort)="onSort($event)">Item Code</th>
+                            <th class="text-start" sortable="itemName" (sort)="onSort($event)">Item Name</th>
+                            <th class="text-start" sortable="itemDescription" (sort)="onSort($event)">
+                                Item Description
+                            </th>
+                            <th sortable="primaryUnit" (sort)="onSort($event)">UoM</th>
+                            <th sortable="IRQty" (sort)="onSort($event)">IR Qty.</th>
+                            <th sortable="GTRequestQty" (sort)="onSort($event)">GTR Qty.</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr
+                            *ngFor="
+                                let g of GTRequestDetailsArray
+                                    | searchFi1ter : search
+                                    | slice : (page - 1) * pageSize : (page - 1) * pageSize + pageSize;
+                                trackBy: trackByFn
+                            "
+                        >
+                            <td>{{ g.GTRequestLineNumber }}</td>
+                            <td>{{ g.itemCode }}</td>
+                            <td class="text-start" [style.width]="itemName.clientWidth" #itemName>
+                                <span class="pointer" [positionTarget]="itemName" [ngbTooltip]="g.itemName">
+                                    {{ g?.itemName }}
+                                </span>
+                            </td>
+                            <td class="text-start" [style.width]="itemDescription.clientWidth" #itemDescription>
+                                <span
+                                    class="pointer"
+                                    [positionTarget]="itemDescription"
+                                    [ngbTooltip]="g.itemDescription"
+                                >
+                                    {{ g?.itemDescription }}
+                                </span>
+                            </td>
+                            <!-- <td>{{ g.primaryUnit }}</td> -->
+                            <td>
+                                <div class="d-flex justify-content-between px-2">
+                                    <span
+                                        [ngbTooltip]="g.conversionOfUnits"
+                                        placement="top"
+                                        [ngClass]="
+                                            g.UOM == g.secondaryUnit ? 'text-primary pointer' : 'text-secondary pointer'
+                                        "
+                                    >
+                                        {{ g?.UOM | UOMUnitsMaster }}
+                                    </span>
+                                    <span class="pointer d-flex align-items-center">
+                                        <div
+                                            *ngIf="g.secondaryUnit"
+                                            class="unit-switch-rev"
+                                            (click)="setConversionOfUnit(g)"
+                                        ></div>
+                                        <div *ngIf="!g.secondaryUnit" class="unit-switch-gray"></div>
+                                    </span>
+                                </div>
+                            </td>
+                            <td>{{ g.IRQty | number : "1.2-2" }}</td>
+                            <td>
+                                <div class="d-flex justify-content-center">
+                                    <span *ngIf="['view', 'approve', 'reject'].includes(action)">{{
+                                        g.GTRequestQty
+                                    }}</span>
+                                    <input
+                                        (input)="setGRQty(g)"
+                                        *ngIf="!['view', 'approve', 'reject'].includes(action)"
+                                        class="form-control form-control-sm w-25"
+                                        type="number"
+                                        [(ngModel)]="g.GTRequestQty"
+                                        [ngModelOptions]="{standalone: true}"
+                                    />
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <hr class="row line-border" />
+            <div class="row mb-0">
+                <div class="col">
+                    <div class="row">
+                        <div class="col-3 pe-0">
+                            <button class="plusIconSvg btn btn-primary me-1"></button>
+                            <button type="button" class="btn btn-primary px-4" (click)="openRemarksModal()">
+                                Remarks
+                            </button>
+                        </div>
+
+                        <div class="col-7 pe-5" *ngIf="action == 'reject'">
+                            <div class="d-flex align-items-center text-nowrap">
+                                <span class="set-flex-status px-4"> Rejection Remarks </span>
+                                <input class="form-control" type="text" formControlName="rejectRemarks" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-auto ms-auto">
+                    <div *ngIf="['create'].includes(action)" class="d-grid gap-2 d-md-block">
+                        <button type="button" class="btn btn-primary px-5 me-3" (click)="reset()">Reset</button>
+                        <button
+                            type="button"
+                            class="btn btn-primary px-4 me-1"
+                            [disabled]="!isESCPreview"
+                            (click)="ESCPreview()"
+                        >
+                            Esc
+                        </button>
+                        <button type="button" class="btn btn-primary px-4 me-3" (click)="preview()">Preview</button>
+                        <button class="btn btn-primary px-5" type="button" [disabled]="!isPreview" (click)="submit()">
+                            Save
+                        </button>
+                    </div>
+                    <div *ngIf="action == 'edit'" class="text-end">
+                        <button type="button" class="btn btn-primary px-5" (click)="submit()">Save</button>
+                    </div>
+
+                    <div *ngIf="action == 'reject'" class="text-end">
+                        <button type="button" class="btn btn-primary px-5" (click)="submit()">Reject</button>
+                    </div>
+
+                    <div *ngIf="action == 'approve'" class="col-5 text-end">
+                        <button type="button" class="btn btn-primary px-5" (click)="submit()">Approve</button>
+                    </div>
+                    <div *ngIf="['view'].includes(action)">
+                        <button class="btn btn-primary px-5" type="button" (click)="navigateTo('../list', {}, '')">
+                            Back
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</Form>

@@ -1,0 +1,177 @@
+<div class="modelPage">
+  <div class="modal-header">
+    <div class="heading">Inventory (Stock) Levels</div>
+    <div>
+      <button
+        type="button"
+        class="btn btn-cross btn-sm"
+        aria-label="Close"
+        (click)="this.activeModal.close(inventoryStockLevels)"
+      >
+        <i class="fa fa-times-circle" aria-hidden="true"></i>
+      </button>
+    </div>
+  </div>
+    <div class="">
+      <form [formGroup]="form">
+        <div class="row px-5 mt-4">
+          <div class="col-6">
+            <label class="form-label mb-1">
+              Maximum Consumption/Day <span class="text-danger">*</span>
+            </label>
+            <div class="d-flex">
+              <input
+                class="form-control input-margin"
+                type="number"
+                formControlName="maxConsumptionPerDay"
+                (input)="setAvgConsumptionPerDay()"
+              />
+              <span class="input-group-text set-uom px-4">
+                {{ unitOfMeasurement }}</span
+              >
+            </div>
+          </div>
+
+          <div class="col-6">
+            <label class="form-label mb-1">
+              Minimum Consumption/Day <span class="text-danger">*</span>
+            </label>
+            <div class="d-flex">
+              <input
+                class="form-control input-margin"
+                type="number"
+                formControlName="minConsumptionPerDay"
+                (input)="setAvgConsumptionPerDay()"
+              />
+
+              <span class="input-group-text set-uom px-4">
+                {{ unitOfMeasurement }}</span
+              >
+            </div>
+          </div>
+        </div>
+        <div class="row mt-4 px-5">
+          <div class="col-6">
+            <label class="form-label mb-1">
+              Average Consumption/Day <span class="text-danger">*</span>
+            </label>
+            <div class="d-flex">
+              <input
+                class="form-control input-margin"
+                type="number"
+                formControlName="avgConsumptionPerDay"
+                readonly
+              />
+
+              <span class="input-group-text set-uom px-4">
+                {{ unitOfMeasurement }}</span
+              >
+            </div>
+          </div>
+
+          <div class="col-6">
+            <label class="form-label mb-1">
+              Supply Lead Time <span class="text-danger">*</span>
+            </label>
+            <div class="d-flex">
+              <input
+                class="form-control input-margin"
+                type="number"
+                formControlName="supplyLeadTime"
+                (input)="setAvgConsumptionPerDay()"
+              />
+
+              <span class="input-group-text set-uom px-3"> Days</span>
+            </div>
+          </div>
+        </div>
+        <div class="row mt-4 px-5">
+          <div class="col-6">
+            <label class="form-label mb-1">
+              Inventory Turnover Cycle <span class="text-danger">*</span>
+            </label>
+            <div class="d-flex">
+              <input
+                class="form-control input-margin"
+                type="number"
+                formControlName="inventoryTurnoverCycle"
+                (input)="setReorderQty()"
+              />
+              <span class="input-group-text set-uom px-3"> Days</span>
+            </div>
+          </div>
+
+          <div class="col-6">
+            <label class="form-label mb-1">
+              No. of orders/cycle <span class="text-danger">*</span>
+            </label>
+            <div class="d-flex">
+              <input
+                class="form-control input-margin"
+                type="number"
+                formControlName="noOfOrdersPerCycle"
+                (input)="setReorderQty()"
+              />
+
+              <span class="input-group-text set-uom px-3"> Count</span>
+            </div>
+          </div>
+        </div>
+        <div class="row mt-4">
+          <div class="col">
+            <hr class="line-border" />
+          </div>
+        </div>
+
+        <div class="row mt-3 px-5">
+          <div class="col-6">
+            <label class="form-label mb-1">
+              Reorder Level <span class="text-danger">*</span>
+            </label>
+            <div class="d-flex">
+              <input
+                class="form-control input-margin"
+                type="number"
+                formControlName="reorderLevel"
+                readonly
+              />
+
+              <span class="input-group-text set-uom px-4">
+                {{ unitOfMeasurement }}</span
+              >
+            </div>
+          </div>
+
+          <div class="col-6">
+            <label class="form-label mb-1">
+              Reorder Quantity <span class="text-danger">*</span>
+            </label>
+            <div class="d-flex">
+              <input
+                class="form-control input-margin"
+                type="number"
+                formControlName="reorderQuantity"
+                readonly
+              />
+
+              <span class="input-group-text set-uom px-4">
+                {{ unitOfMeasurement }}</span
+              >
+            </div>
+          </div>
+        </div>
+        <hr class="line-border my-5" />
+      </form>
+
+      <div class="text-center mb-5">
+        <button
+          [disabled]="action == 'view'"
+          type="button"
+          class="btn bg-primary px-5"
+          (click)="dismissModel()"
+        >
+          Save & Close
+        </button>
+      </div>
+    </div>
+</div>

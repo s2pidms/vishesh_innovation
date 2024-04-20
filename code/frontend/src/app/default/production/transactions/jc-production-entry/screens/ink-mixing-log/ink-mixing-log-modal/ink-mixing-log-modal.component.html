@@ -1,0 +1,160 @@
+<div class="modelPage">
+    <div class="modal-header">
+        <div class="heading">Ink Mixing</div>
+        <div>
+            <button type="button" class="btn btn-cross btn-sm" aria-label="Close" (click)="this.activeModal.close()">
+                <i class="fa fa-times-circle" aria-hidden="true"></i>
+            </button>
+        </div>
+    </div>
+    <div class="container">
+        <div class="form-body my-4">
+            <div class="row">
+                <div class="col-4 pe-3">
+                    <div class="row">
+                        <div class="col-6">
+                            <label class="form-label">Job Card No. <span class="text-danger">*</span></label>
+                            <input type="text" class="form-control" [(ngModel)]="inkMixingLog.jobCardNo" readonly />
+                        </div>
+                        <div class="col-6 pe-5">
+                            <label class="form-label">SKU No. <span class="text-danger"> </span></label>
+                            <input
+                                type="text"
+                                class="form-control bg-white-smoke"
+                                [(ngModel)]="inkMixingLog.SKUNo"
+                                readonly
+                            />
+                        </div>
+                    </div>
+                </div>
+                <div class="col-3 ps-0 pe-5">
+                    <label class="form-label">SKU Name <span class="text-danger"> </span></label>
+                    <input
+                        type="text"
+                        class="form-control bg-white-smoke"
+                        [(ngModel)]="inkMixingLog.SKUName"
+                        readonly
+                    />
+                </div>
+                <div class="col-5 ps-3">
+                    <div class="row">
+                        <div class="col-6 ps-0 pe-3">
+                            <label class="form-label">SKU Description <span class="text-danger"> </span></label>
+                            <input
+                                type="text"
+                                class="form-control bg-white-smoke"
+                                [(ngModel)]="inkMixingLog.SKUDescription"
+                                readonly
+                            />
+                        </div>
+                        <div class="col-6">
+                            <div class="row">
+                                <div class="col-5 ps-3">
+                                    <label class="form-label">UoM <span class="text-danger"> </span></label>
+                                    <input
+                                        type="text"
+                                        class="form-control bg-white-smoke"
+                                        [(ngModel)]="inkMixingLog.UOM"
+                                        readonly
+                                    />
+                                </div>
+                                <div class="col-7 ps-0">
+                                    <label class="form-label">SKU Batch Qty <span class="text-danger"> </span></label>
+                                    <input
+                                        type="text"
+                                        class="form-control bg-white-smoke"
+                                        [(ngModel)]="inkMixingLog.SKUBatchQty"
+                                        readonly
+                                    />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <hr class="row line-border" />
+
+        <app-setting-header
+            [data]="{page,pageSize,collection,search, excelDisplay : 'none'}"
+            (dataChange)="eventHeader($event)"
+        >
+        </app-setting-header>
+        <div class="table-responsive" style="min-height: 20rem">
+            <table class="table table-bordered table-sticky">
+                <thead class="bg-primary">
+                    <tr class="text-white">
+                        <th>SN</th>
+                        <th>Item Code</th>
+                        <th class="text-start">Item Name</th>
+                        <th class="text-start">Item Description</th>
+                        <th>Mesh</th>
+                        <th>UoM</th>
+                        <th>BoM Qty</th>
+                        <th>Add New Batch</th>
+                        <th>Ink Batch Qty.</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr
+                        *ngFor="
+                            let g of inkMixingLog.inkMixingLogDetails
+                                | searchFi1ter : search
+                                | slice : (page - 1) * pageSize : (page - 1) * pageSize + pageSize;
+                            let i = index;
+                            trackBy: trackByFn
+                        "
+                    >
+                        <td>{{ g.SN }}</td>
+                        <td>{{ g.colourCode }}</td>
+                        <td class="text-start" [style.width]="colourName.clientWidth" #colourName>
+                            <span class="pointer" [ngbTooltip]="g.colourName" [positionTarget]="colourName">
+                                {{ g.colourName }}
+                            </span>
+                        </td>
+                        <td class="text-start" [style.width]="colourDescription.clientWidth" #colourDescription>
+                            <span
+                                class="pointer"
+                                [ngbTooltip]="g.colourDescription"
+                                [positionTarget]="colourDescription"
+                            >
+                                {{ g.colourDescription }}
+                            </span>
+                        </td>
+                        <td>{{ g.mesh }}</td>
+                        <td>{{ g.UOM }}</td>
+                        <td>{{ g.BOMQty }}</td>
+                        <td>
+                            <div class="d-flex justify-content-center align-items-center">
+                                <!-- <button class="plusIconSvg btn btn-primary   form-btn-sm py-0"></button> -->
+                                <button
+                                    type="button"
+                                    class="btn btn-primary form-btn-sm py-0"
+                                    (click)="openBatchModal(g)"
+                                >
+                                    New Batch
+                                </button>
+                            </div>
+                        </td>
+                        <td>{{ g.inkBatchQty }}</td>
+                        <td>
+                            <input
+                                class="form-check-input pointer"
+                                type="checkbox"
+                                [(ngModel)]="g.processStatus"
+                                [ngModelOptions]="{standalone: true}"
+                            />
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <hr class="row line-border mt-4" />
+        <div class="row">
+            <div class="col-12 d-flex justify-content-center">
+                <button type="button" class="btn bg-primary px-5 mb-3" (click)="submit()">Save</button>
+            </div>
+        </div>
+    </div>
+</div>

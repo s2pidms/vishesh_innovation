@@ -1,0 +1,174 @@
+<div class="modelPage">
+    <div class="modal-header">
+        <div class="heading">Production Info</div>
+        <div>
+            <button type="button" class="btn btn-cross btn-sm" aria-label="Close" (click)="this.activeModal.close()">
+                <i class="fa fa-times-circle" aria-hidden="true"></i>
+            </button>
+        </div>
+    </div>
+    <div class="container-fluid mt-4 px-0">
+        <div class="row mx-4 px-3">
+            <div class="col-6">
+                <div class="d-flex align-items-center">
+                    <div class="col-form-label text-nowrap col-4">
+                        Prod. Source <span class="ms-1 me-2">&#9654;</span>
+                    </div>
+                    <div class="col-7 ps-1">
+                        <ng-select
+                            [items]="sourceOfMfg"
+                            bindLabel="sourceOfMfg"
+                            bindValue="sourceOfMfg"
+                            [clearable]="false"
+                            [(ngModel)]="productionDetails.prodSource"
+                            [disabled]="['view', 'approve'].includes(action)"
+                        >
+                        </ng-select>
+                    </div>
+                </div>
+            </div>
+            <div class="col-6">
+                <div class="d-flex align-items-center">
+                    <div class="col-form-label text-nowrap">
+                        Cumulative Count <span class="ms-1 me-2">&#9654;</span>
+                    </div>
+                    <input
+                        [(ngModel)]="productionDetails.cumulativeCount"
+                        class="form-control"
+                        type="number"
+                        readonly
+                    />
+                </div>
+            </div>
+        </div>
+        <hr class="line-border" />
+        <div class="row mx-4 px-3">
+            <div class="col-6 pe-1">
+                <div class="row">
+                    <div class="col-7 pe-1"><label class="form-label">Prod. Date</label></div>
+                    <div class="col-5 ps-0"><label class="form-label">Prod. Shift</label></div>
+                </div>
+            </div>
+            <div class="col-6 ps-1">
+                <div class="row">
+                    <div class="col-7 pe-1"><label class="form-label">Operating Staff </label></div>
+                    <div class="col-5 ps-0"><label class="form-label">Prod. Qty</label></div>
+                </div>
+            </div>
+        </div>
+
+        <div *ngFor="let item of prodInfoList; let i = index" class="row mx-4 px-3 mb-2">
+            <div class="col-6 pe-1">
+                <div class="row">
+                    <div class="col-7 pe-1">
+                        <input [(ngModel)]="item.prodDate" class="form-control" type="date" />
+                    </div>
+                    <div class="col-5 ps-0">
+                        <ng-select
+                            [items]="shiftOptions"
+                            bindLabel="parameterName"
+                            bindValue="parameterLabel"
+                            [clearable]="false"
+                            [(ngModel)]="item.prodShift"
+                            [disabled]="['view', 'approve'].includes(action)"
+                        >
+                        </ng-select>
+                    </div>
+                </div>
+            </div>
+            <div class="col-6 ps-1">
+                <div class="row">
+                    <div class="col-7 pe-1">
+                        <input
+                            [(ngModel)]="item.operatingStaff"
+                            class="form-control"
+                            type="text"
+                            [disabled]="['view', 'approve'].includes(action)"
+                        />
+                    </div>
+                    <div class="col-5 ps-0">
+                        <input
+                            [(ngModel)]="item.prodQty"
+                            class="form-control"
+                            type="number"
+                            (input)="calCumulativeCount()"
+                            [disabled]="['view', 'approve'].includes(action)"
+                        />
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row mt-4 mb-2 px-5 mx-1">
+            <div class="col-12 set-image px-0 seperate-row">
+                <div class="add-icon">
+                    <img
+                        data-tip
+                        data-for="infoTip"
+                        (click)="addTableRow()"
+                        class="pointer"
+                        src="./assets/new_icons/add_row.svg"
+                        width="14"
+                        alt=""
+                    />
+                </div>
+                <hr class="line-border" />
+                <!-- <img class="" src="./assets/new_icons/separator_row.svg" alt="" /> -->
+                <div class="minus-icon">
+                    <img
+                        data-tip
+                        data-for="infoTip"
+                        (click)="deleteTableRow()"
+                        class="pointer"
+                        src="./assets/new_icons/delete_row.svg"
+                        width="14"
+                        alt=""
+                    />
+                </div>
+            </div>
+        </div>
+
+        <div class="row mx-4 px-3" style="min-height: 10rem">
+            <div class="col-12">
+                <div class="d-flex align-items-center">
+                    <div class="col-form-label text-nowrap">
+                        Remarks
+                        <span class="ms-1 me-2">&#9654;</span>
+                    </div>
+                    <input
+                        [(ngModel)]="productionDetails.remarks"
+                        class="form-control"
+                        type="text"
+                        [disabled]="['view', 'approve'].includes(action)"
+                    />
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col mt-1">
+                <hr class="line-border" />
+            </div>
+        </div>
+
+        <div class="row mb-4 mt-2 mx-4 px-3">
+            <div class="col-6 pe-0">
+                <div class="d-flex align-items-center">
+                    <div class="col-form-label text-nowrap">
+                        Prod. Authorised by
+                        <span class="ms-1 me-2">&#9654;</span>
+                    </div>
+                    <input
+                        [(ngModel)]="productionDetails.prodAuthorizedBy"
+                        class="form-control"
+                        type="text"
+                        [disabled]="['view', 'approve'].includes(action)"
+                    />
+                </div>
+            </div>
+            <div *ngIf="['create', 'edit'].includes(action)" class="col-6 d-flex justify-content-end">
+                <button type="button" class="btn btn-primary px-4" (click)="dismissModel()">Save & Close</button>
+            </div>
+        </div>
+    </div>
+</div>

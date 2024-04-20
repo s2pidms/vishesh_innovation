@@ -1,0 +1,58 @@
+<div class="modelPage">
+  <div class="modal-header bg-info text-white">
+    <h4 class="modal-title fw-bold">{{ data.title }}</h4>
+    <button
+      type="button"
+      class="btn btn-white"
+      aria-label="Close"
+      (click)="activeModal.dismiss('Cross click')"
+    >
+      <i class="fa fa-times-circle fa-lg text-info" aria-hidden="true"></i>
+    </button>
+  </div>
+
+  <div class="modal-body">
+    <div class="row">
+      <div class="col-md-6 mb-3">
+        <h2 class="text-start ms-5">
+          {{ shippingLabel }}
+        </h2>
+        <div>
+          <div class="text-primary text- ms-5">
+            <h5>
+              {{ shippingAddress }}
+            </h5>
+          </div>
+        </div>
+
+        <div class="text-start ms-5">
+          <button
+            class="btn btn-primary mt-4"
+            type="button"
+            (click)="copyToClipboard(shippingAddress)"
+          >
+            Copy {{ shippingLabel }}
+          </button>
+        </div>
+      </div>
+
+      <div class="col-md-6 mb-3">
+        <h2 class="text-start">{{ billingLabel }}</h2>
+        <div class="text-primary text-start">
+          <h5>
+            {{ billingAddress }}
+          </h5>
+        </div>
+        <div class="text-start">
+          <button
+            class="btn btn-primary mt-4"
+            type="button"
+            (click)="copyToClipboard(billingAddress)"
+          >
+            Copy {{ billingLabel }}
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

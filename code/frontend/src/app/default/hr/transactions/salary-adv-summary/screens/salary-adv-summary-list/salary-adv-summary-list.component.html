@@ -1,0 +1,108 @@
+<div class="listCard card">
+    <div class="table-header">
+        <label class="heading">Advance Salary Summary</label>
+    </div>
+
+    <div appAccessControl [accessType]="rolePermissionActions.createAction" class="text-center">
+        <button class="plusIconSvg btn btn-primary me-1"></button>
+        <button
+            class="btn btn-primary btn-add px-4"
+            type="button"
+            (click)="navigateTo('default/HR/transactions/salary_adv_summary/sas-form', {}, 'create')"
+        >
+            Request Advance Salary
+        </button>
+    </div>
+    <hr class="line-border" />
+    <div class="table-responsive">
+        <app-setting-header [data]="{page,pageSize,collection,search,type: 'list'}" (dataChange)="eventHeader($event)">
+        </app-setting-header>
+
+        <table class="table table-bordered">
+            <thead class="bg-primary">
+                <tr class="text-white">
+                    <th sortable="requestDate" (sort)="onSort($event)">Request Dt.</th>
+                    <th sortable="employeeCode" (sort)="onSort($event)">Employee Code</th>
+                    <th class="text-start" sortable="empFullName" (sort)="onSort($event)">Employee Name</th>
+                    <th sortable="amount" (sort)="onSort($event)">Adv. Amt. {{ "INR" | companyCurrency }}</th>
+                    <th sortable=" repayStartMonthYear" (sort)="onSort($event)">Repay Start</th>
+                    <th sortable="repayEndMonthYear" (sort)="onSort($event)">Repay End</th>
+                    <th sortable="tenureMonths" (sort)="onSort($event)">Tenure Months</th>
+                    <th sortable=" repayAmountPerMonth" (sort)="onSort($event)">
+                        Repay Amt. {{ "INR" | companyCurrency }}
+                    </th>
+                    <th sortable="status" (sort)="onSort($event)">Status</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                <tr *ngFor="let u of tableData; trackBy: trackByFn">
+                    <td>{{ u?.requestDateS }}</td>
+                    <td>{{ u?.employeeCode }}</td>
+                    <td class="text-start">{{ u?.empFullName }}</td>
+                    <td>{{ u?.amount }}</td>
+                    <td>{{ u?.repayStartMonthYear | date : "MMM YYYY" }}</td>
+                    <td>{{ u?.repayEndMonthYear | date : "MMM YYYY" }}</td>
+                    <td>{{ u?.tenureMonths }}</td>
+                    <td>{{ u?.repayAmountPerMonth }}</td>
+                    <td>{{ u?.status }}</td>
+                    <td>
+                        <div class="dropdown">
+                            <button class="dropbtn"></button>
+                            <div class="dropdown-content">
+                                <a
+                                    appAccessControl
+                                    [accessType]="rolePermissionActions.viewAction"
+                                    href="javascript:void(0)"
+                                    (click)="
+                                        navigateTo('/default/HR/transactions/salary_adv_summary/sas-form', u, 'view')
+                                    "
+                                >
+                                    <i class="fa fa-eye fa-lg me-2 text-primary" aria-hidden="true"></i>
+                                    View
+                                </a>
+                                <a
+                                    appAccessControl
+                                    [accessType]="rolePermissionActions.editAction"
+                                    href="javascript:void(0)"
+                                    [class.disable]="u.status == 'Approved' || u.status == 'Rejected'"
+                                    (click)="
+                                        navigateTo('/default/HR/transactions/salary_adv_summary/sas-form', u, 'edit')
+                                    "
+                                >
+                                    <i class="fa fa-pencil-square-o fa-lg me-2 text-primary" aria-hidden="true"></i>
+                                    Edit
+                                </a>
+                                <a
+                                    appAccessControl
+                                    [accessType]="rolePermissionActions.approveAction"
+                                    href="javascript:void(0)"
+                                    [class.disable]="u.status == 'Approved' || u.status == 'Rejected'"
+                                    (click)="
+                                        navigateTo('/default/HR/transactions/salary_adv_summary/sas-form', u, 'approve')
+                                    "
+                                >
+                                    <i class="fa fa-check fa-lg me-2 text-success" aria-hidden="true"></i>
+                                    Approve
+                                </a>
+                                <a
+                                    appAccessControl
+                                    [accessType]="rolePermissionActions.approveAction"
+                                    href="javascript:void(0)"
+                                    [class.disable]="u.status == 'Approved' || u.status == 'Rejected'"
+                                    (click)="
+                                        navigateTo('/default/HR/transactions/salary_adv_summary/sas-form', u, 'reject')
+                                    "
+                                >
+                                    <i class="fa fa-close fa-lg text-primary" aria-hidden="true"></i>
+                                    Reject
+                                </a>
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>

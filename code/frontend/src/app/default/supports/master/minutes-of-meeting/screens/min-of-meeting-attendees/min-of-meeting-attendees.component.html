@@ -1,0 +1,44 @@
+<div class="modelPage">
+  <div class="modal-header">
+    <div class="heading">Attended By</div>
+    <div>
+      <button
+        type="button"
+        class="btn btn-cross btn-sm"
+        aria-label="Close"
+        (click)="this.activeModal.close()"
+      >
+        <i class="fa fa-times-circle" aria-hidden="true"></i>
+      </button>
+    </div>
+  </div>
+  <div class="">
+    <div class="container-fluid">
+      <div class="row justify-content-center mt-4">
+        <div class="col-12">
+          <label class="form-label text-nowrap">Attended By</label>
+          <textarea
+            class="form-control form-text-area"
+            [(ngModel)]="attendedBy"
+            rows="5"
+          ></textarea>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col px-0">
+          <hr class="line-border mt-5 mb-4" />
+        </div>
+      </div>
+      <div class="text-center">
+        <button
+          [disabled]="action == 'view'"
+          class="btn bg-primary px-5 mb-4"
+          type="button"
+          (click)="dismissModel()"
+        >
+          Save & Close
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

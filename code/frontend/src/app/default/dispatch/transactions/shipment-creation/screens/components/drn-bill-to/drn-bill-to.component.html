@@ -1,0 +1,86 @@
+<div class="container-fluid px-0">
+    <form [formGroup]="form">
+        <div class="row my-4 px-5">
+            <div class="col-auto mt-1 pe-0">
+                <label class="form-label text-nowrap">Bill To </label>
+            </div>
+            <div class="col-auto mt-1 px-3">
+                <i class="fa fa-caret-right text-secondary fs-2"></i>
+            </div>
+            <div class="col-6 ps-0">
+                <ng-select
+                    [items]="selectedCustomerData"
+                    bindLabel="contactPersonName"
+                    bindValue="contactPersonName"
+                    [clearable]="false"
+                    formControlName="contactPersonName"
+                    placeholder="Select"
+                    (change)="patchAddress($event)"
+                >
+                </ng-select>
+            </div>
+        </div>
+        <hr class="line-border" />
+        <div class="row mb-4 px-5">
+            <div class="col-6">
+                <label class="form-label"> Address Line 1 <span class="text-danger"></span> </label>
+                <input class="form-control" type="text" formControlName="line1" readonly />
+            </div>
+            <div class="col-6">
+                <label class="form-label"> Address Line 2 <span class="text-danger"></span></label>
+                <input class="form-control" type="text" formControlName="line2" readonly />
+            </div>
+        </div>
+        <div class="row mb-4 px-5">
+            <div class="col-6">
+                <label class="form-label"> Address Line 3 <span class="text-danger"></span></label>
+                <input class="form-control" type="text" formControlName="line3" readonly />
+            </div>
+            <div class="col-6">
+                <label class="form-label"> Address Line 4 <span class="text-danger"></span></label>
+                <input class="form-control" type="text" formControlName="line4" readonly />
+            </div>
+        </div>
+        <div class="row mb-4 px-5">
+            <div class="col-6">
+                <label class="form-label"> City/District <span class="text-danger"></span> </label>
+                <input class="form-control" type="text" formControlName="city" readonly />
+            </div>
+            <div class="col-6">
+                <label class="form-label"> State/Province <span class="text-danger"></span> </label>
+                <input class="form-control" type="text" formControlName="state" readonly />
+            </div>
+        </div>
+        <div class="row my-4 px-5">
+            <div class="col-6">
+                <label class="form-label"> Pin Code <span class="text-danger"></span> </label>
+                <input
+                    class="form-control"
+                    oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
+                    type="number"
+                    maxlength="6"
+                    formControlName="pinCode"
+                    readonly
+                />
+            </div>
+            <div class="col-6">
+                <div class="row justify-content-between">
+                    <div class="col">
+                        <label class="form-label">Country <span class="text-danger"></span> </label>
+                        <input class="form-control" type="text" formControlName="country" readonly />
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-12">
+                <hr *ngIf="['create', 'edit'].includes(action)" class="line-border" />
+            </div>
+        </div>
+        <div class="row justify-content-center" *ngIf="['create', 'edit'].includes(action)">
+            <div class="col-12 d-flex justify-content-center my-2">
+                <button (click)="dismissModel()" type="button" class="btn btn-primary px-5">Save</button>
+            </div>
+        </div>
+    </form>
+</div>

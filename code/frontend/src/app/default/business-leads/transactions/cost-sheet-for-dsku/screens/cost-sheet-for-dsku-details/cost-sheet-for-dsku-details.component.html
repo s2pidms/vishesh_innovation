@@ -1,0 +1,115 @@
+<div class="modelPage">
+    <div class="modal-header">
+        <div class="heading">Cost Details</div>
+        <div>
+            <button type="button" class="btn btn-cross btn-sm" aria-label="Close" (click)="this.activeModal.close()">
+                <i class="fa fa-times-circle" aria-hidden="true"></i>
+            </button>
+        </div>
+    </div>
+    <div class="container-fluid mt-5 px-0">
+        <div class="row px-5 justify-content-center">
+            <div class="col-12 mb-2">
+                <div class="table-responsive mt-0 text-wrap">
+                    <table class="table table-bordered mt-0 table-sm">
+                        <thead class="bg-info">
+                            <tr class="text-white text-center">
+                                <th>SN</th>
+                                <th class="text-start">Particulars/Cost Head</th>
+                                <th style="width: 12rem">Cost/Unit</th>
+                                <th>%</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let d of costDetailsArr; let i = index">
+                                <td>
+                                    {{ d.srNo }}
+                                </td>
+                                <td class="text-start">
+                                    {{ d.costHead }}
+                                </td>
+                                <td
+                                    [ngClass]="{
+                                        'py-0': d.costHead,
+                                        'bg-yellow-color': d.costHead == SKUCostParticulars.operatingOpex,
+                                        'bg-magenta-color': d.costHead == SKUCostParticulars.profit,
+                                        'bg-pink-color': [
+                                            SKUCostParticulars.totalCostOfOperation,
+                                            SKUCostParticulars.sellingPrice
+                                        ].includes(d.costHead)
+                                    }"
+                                >
+                                    <div class="d-flex justify-content-start align-items-center">
+                                        <span
+                                            [ngClass]="{
+                                              'bg-yellow-color input-group-text text-secondary combine-INR border border-0 border-0':
+                                                  d.costHead == SKUCostParticulars.operatingOpex,
+                                              'bg-magenta-color input-group-text text-secondary combine-INR border border-0 border-0':
+                                                  d.costHead == SKUCostParticulars.profit,
+                                              'bg-pink-color input-group-text text-secondary combine-INR border border-0 border-0': [
+                                                  SKUCostParticulars.totalCostOfOperation,
+                                                  SKUCostParticulars.sellingPrice
+                                              ].includes(d.costHead),
+                                              'input-group-text text-secondary combine-INR border border-0 border-0': d.costHead,
+                                          }"
+                                        >
+                                            {{ "INR" | companyCurrency }}
+                                            <div class="vr ms-3"></div>
+                                        </span>
+
+                                        <span
+                                            *ngIf="
+                                                [SKUCostParticulars.operatingOpex, SKUCostParticulars.profit].includes(
+                                                    d.costHead
+                                                )
+                                            "
+                                        >
+                                            <input
+                                                [ngClass]="{
+                                              'bg-yellow-color form-control px-2 form-control-cd-sm':
+                                                  d.costHead == SKUCostParticulars.operatingOpex,
+                                              'bg-magenta-color form-control px-2 form-control-cd-sm':
+                                                  d.costHead == SKUCostParticulars.profit,
+                                              'form-control px-2 form-control-cd-sm': d.costHead,
+                                          }"
+                                                [(ngModel)]="d.costPerUnit"
+                                                type="number"
+                                                (input)="setCostSheetData(d.costHead)"
+                                            />
+                                        </span>
+
+                                        <span
+                                            class="ps-2"
+                                            *ngIf="
+                                                ![SKUCostParticulars.operatingOpex, SKUCostParticulars.profit].includes(
+                                                    d.costHead
+                                                )
+                                            "
+                                        >
+                                            {{ d.costPerUnit }}
+                                        </span>
+                                    </div>
+                                </td>
+                                <td>
+                                    {{ d.percentage }}
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <hr *ngIf="action !== 'view'" class="line-border px-0" />
+
+        <div class="row my-4 px-5">
+            <div class="col-12 d-flex justify-content-center">
+                <div *ngIf="action !== 'view'">
+                    <button type="button" class="btn btn-primary px-5 me-3" (click)="reset()">Reset</button>
+
+                    <button type="button" class="btn btn-primary px-3" (click)="dismissModel()">Save & Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

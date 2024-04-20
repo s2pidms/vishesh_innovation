@@ -1,0 +1,149 @@
+<div colspan="12" class="text-center mt-5">
+    <button class="btn btn-primary" type="button" (click)="windowPrint()" *ngIf="pdfAction != 'pdf'">
+        <img src="./assets/images/print.png" width="20px" height="14px" class="mb-2" />&nbsp;&nbsp; Print
+    </button>
+</div>
+<div class="row justify-content-center printScreen mb-5 m-0" *ngFor="let l of labels; let last = last">
+    <div class="col-10 mb-2">
+        <div class="card border border-dark rounded-5">
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-12 mt-4 my-4"><b class="fs-3">Ship To</b></div>
+                </div>
+                <div class="row">
+                    <div class="col-6">
+                        <b class="fs-3">{{ tableData?.salesInvoice?.customerShippingAddress?.contactPersonName }}</b>
+                        <br />
+                        <p class="my-2">{{ tableData?.salesInvoice?.customerShippingAddress?.line1 }},</p>
+                        <p>
+                            {{ tableData?.salesInvoice?.customerShippingAddress?.line2 }},
+                            {{ tableData?.salesInvoice?.customerShippingAddress?.line3 }}
+                        </p>
+                        <p class="my-2">
+                            {{ tableData?.salesInvoice?.customerShippingAddress?.city }} -
+                            {{
+                                tableData?.salesInvoice?.customerShippingAddress?.district ??
+                                    tableData?.salesInvoice?.customerShippingAddress?.city
+                            }}
+                        </p>
+                        <p>
+                            {{ tableData?.salesInvoice?.customerShippingAddress?.state }} -
+                            {{ tableData?.salesInvoice?.customerShippingAddress?.pinCode }}
+                        </p>
+                    </div>
+                    <div class="col-6">
+                        <b class="fs-3">Contact Details</b> <br />
+                        <p class="my-2">
+                            {{
+                                tableData?.customer?.customerContactInfo[0]?.contactPersonName
+                                    ? tableData?.customer?.customerContactInfo[0]?.contactPersonName
+                                    : "-"
+                            }}
+                        </p>
+                        <p>
+                            Mobile:
+                            {{
+                                tableData?.customer?.customerContactInfo[0]?.contactPersonNumber
+                                    ? tableData?.customer?.customerContactInfo[0]?.contactPersonNumber
+                                    : "-"
+                            }}
+                        </p>
+                    </div>
+                </div>
+                <div class="row my-4">
+                    <div class="col">
+                        <p>GSTIN: {{ tableData?.customer?.GSTIN }}</p>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-6">Invoice No.: {{ tableData?.salesInvoice?.salesInvoiceNumber }}</div>
+                    <div class="col-6">
+                        Invoice Date:
+                        {{ tableData?.salesInvoiceDate | date : "dd-MM-YYYY" }}
+                    </div>
+                </div>
+                <div class="table-responsive">
+                    <table class="table">
+                        <thead>
+                            <tr class="head-row">
+                                <th class="text-center" colspan="1">#</th>
+                                <th colspan="4">Part Name</th>
+                                <th class="text-center" colspan="2">Part No.</th>
+                                <th class="text-center" colspan="2">UOM</th>
+                                <th class="text-center" colspan="3">Quantity</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr class="text-wrap" *ngFor="let s of getSkuData(l); let i = index">
+                                <td class="text-center" colspan="1">{{ i + 1 }}</td>
+                                <td colspan="4">
+                                    <p>{{ "SKU Name" | labelTranslate }}: {{ s?.SKU?.SKUName }}</p>
+                                    <p>
+                                        {{ "SKU Description" | labelTranslate }}:
+                                        {{ s?.SKU?.SKUDescription }}
+                                    </p>
+                                </td>
+                                <td class="text-center" colspan="2">
+                                    {{
+                                        s?.SKU?.customerInfo?.customerPartNo
+                                            ? s?.SKU?.customerInfo?.customerPartNo
+                                            : "-"
+                                    }}
+                                </td>
+                                <td class="text-center" colspan="2">{{ s?.unit }}</td>
+                                <td class="text-center" colspan="3">{{ s?.SKUQty }}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="row">
+                    <div class="col-6 text-center">Box Number: {{ l }} of {{ tableData.totalNoOfBoxes }}</div>
+                    <div class="col-6 text-center">Gross Weight: {{ getSkuWeight(l) }} kgs</div>
+                </div>
+
+                <div class="row">
+                    <div class="col-8 ps-0">
+                        <div class="row">
+                            <div class="col-12 my-4 mt-4">
+                                <b class="fs-3">Ship From: {{ tableData?.company?.companyName }}</b>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div colspan="6">
+                                Return Address: <br />
+                                <p class="my-2">
+                                    {{ tableData?.company?.companyBillingAddress?.addressLine1 }},
+                                    {{ tableData?.company?.companyBillingAddress?.addressLine2 }},{{
+                                        tableData?.company?.companyBillingAddress?.addressLine3
+                                    }}
+                                </p>
+                                <p>
+                                    {{ tableData?.company?.companyBillingAddress?.city }}
+                                    {{ tableData?.company?.companyBillingAddress?.district }} -
+                                    {{ tableData?.company?.companyBillingAddress?.pinCode }}
+                                </p>
+                                <p class="my-2">
+                                    {{ tableData?.company?.companyBillingAddress?.state }}
+                                </p>
+                                <p>
+                                    Contact:
+                                    {{ tableData?.company?.contactInfo?.companyContactPersonNumber }}
+                                    {{ tableData?.company?.contactInfo?.companyContactPersonEmail }}
+                                    (Sales)
+                                </p>
+                            </div>
+                            <div colspan="6"></div>
+                        </div>
+                    </div>
+                    <div
+                        *ngIf="pdfAction == 'print' && QRCode != 'QRCode'"
+                        class="col-4 pe-0 d-flex justify-content-center align-items-center"
+                    >
+                        <qrcode [qrdata]="QRCodeData" [allowEmptyString]="true" [width]="130"></qrcode>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div *ngIf="!last" class="page-break"></div>
+</div>

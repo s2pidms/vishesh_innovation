@@ -1,0 +1,275 @@
+<div class="container-fluid printScreen">
+    <div class="row justify-content-center">
+        <div colspan="12" class="text-center col-12">
+            <button class="btn btn-primary" type="button" (click)="windowPrint()" *ngIf="pdfAction != 'pdf'">
+                <img src="./assets/images/print.png" width="20px" height="14px" class="mb-2" />&nbsp;&nbsp; Print
+            </button>
+            <div class="page py-3">
+                <div
+                    class="row justify-content-center printScreen mb-5 m-0"
+                    *ngFor="let p of tableData.preDispatchDetails; let idx = index; let last = last"
+                >
+                    <div class="table-responsive shadow">
+                        <table class="table">
+                            <tr>
+                                <td colspan="12">
+                                    <div class="text-start">
+                                        <img src="{{ tableData?.company?.logoUrl }}" width="200px" />
+                                    </div>
+                                </td>
+                            </tr>
+
+                            <tr>
+                                <th colspan="12" class="text-center">
+                                    <div class="fs-3">PRE-DISPATCH INSPECTION REPORT</div>
+                                </th>
+                            </tr>
+                            <tr class="border-btm">
+                                <td colspan="12">
+                                    <div class="row justify-content-between">
+                                        <div class="col-12 h-100 p-0 mt-4">
+                                            <table class="table">
+                                                <h3 class="pb-2">Job Details</h3>
+                                                <tr>
+                                                    <td>
+                                                        <div class="row">
+                                                            <div class="col-3 px-0">PDIR No.:</div>
+                                                            <div class="col-1 ps-0 d-flex align-items-center">
+                                                                <div class="vr"></div>
+                                                            </div>
+                                                            <div class="col-8 px-0">
+                                                                {{ tableData?.preDispatchCode }}/{{ idx + 1 }}
+                                                            </div>
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <div class="row">
+                                                            <div class="col-3 px-0">PDIR Date:</div>
+                                                            <div class="col-1 ps-0 d-flex align-items-center">
+                                                                <div class="vr"></div>
+                                                            </div>
+                                                            <div class="col-8 px-0">
+                                                                {{ tableData?.preDispatchDate | date : "dd-MM-yyyy" }}
+                                                            </div>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td>
+                                                        <div class="row">
+                                                            <div class="col-3 px-0">Supplier Name:</div>
+                                                            <div class="col-1 ps-0 d-flex align-items-center">
+                                                                <div class="vr"></div>
+                                                            </div>
+                                                            <div class="col-8 px-0">
+                                                                {{ tableData?.company?.companyName }}
+                                                            </div>
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <div class="row">
+                                                            <div class="col-3 px-0">Customer Name:</div>
+                                                            <div class="col-1 ps-0 d-flex align-items-center">
+                                                                <div class="vr"></div>
+                                                            </div>
+                                                            <div class="col-8 px-0">
+                                                                {{ tableData?.customerName }}
+                                                            </div>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td class="col-6">
+                                                        <div class="row">
+                                                            <div class="col-3 px-0">Part No.:</div>
+                                                            <div class="col-1 ps-0 d-flex align-items-center">
+                                                                <div class="vr"></div>
+                                                            </div>
+                                                            <div class="col-8 px-0">
+                                                                {{ p?.partNumber }}
+                                                            </div>
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <div class="row">
+                                                            <div class="col-3 px-0">Part Name:</div>
+                                                            <div class="col-1 ps-0 d-flex align-items-center">
+                                                                <div class="vr"></div>
+                                                            </div>
+                                                            <div class="col-8 px-0">
+                                                                {{ p?.SKUName }}
+                                                            </div>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td>
+                                                        <div class="row">
+                                                            <div class="col-3 px-0">Invoice No.:</div>
+                                                            <div class="col-1 ps-0 d-flex align-items-center">
+                                                                <div class="vr"></div>
+                                                            </div>
+                                                            <div class="col-8 px-0">
+                                                                {{ tableData?.salesInvoiceNumber }}
+                                                            </div>
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <div class="row">
+                                                            <div class="col-3 px-0">Invoice Date:</div>
+                                                            <div class="col-1 ps-0 d-flex align-items-center">
+                                                                <div class="vr"></div>
+                                                            </div>
+                                                            <div class="col-8 px-0">
+                                                                {{ tableData?.salesInvoiceDate | date : "dd-MM-yyyy" }}
+                                                            </div>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td>
+                                                        <div class="row">
+                                                            <div class="col-3 px-0">Batch Qty.:</div>
+                                                            <div class="col-1 ps-0 d-flex align-items-center">
+                                                                <div class="vr"></div>
+                                                            </div>
+                                                            <div class="col-8 px-0">
+                                                                {{ p?.dispatchQty }}
+                                                            </div>
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <div class="row">
+                                                            <div class="col-3 px-0">Batch Date:</div>
+                                                            <div class="col-1 ps-0 d-flex align-items-center">
+                                                                <div class="vr"></div>
+                                                            </div>
+                                                            <div class="col-8 px-0">
+                                                                {{ p?.batchDate }}
+                                                            </div>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                            </table>
+                                            <div class="py-4"></div>
+                                            <table class="table">
+                                                <h3 class="pb-2 text-nowrap">Inspection Report</h3>
+                                                <tr>
+                                                    <th colspan="1" class="text-center">SN</th>
+                                                    <th colspan="3">Inspection Parameter</th>
+                                                    <th colspan="1" class="text-center">UoM</th>
+                                                    <th colspan="1" class="text-center">Test Method</th>
+                                                    <th colspan="1" class="text-center">LTL</th>
+                                                    <th colspan="2" class="text-center">Specification</th>
+                                                    <th colspan="1" class="text-center">UTL</th>
+                                                    <th colspan="2" class="text-center">Observations</th>
+                                                </tr>
+                                                <tr
+                                                    class="text-wrap"
+                                                    *ngFor="let s of p?.PDIEntryDetails; let i = index"
+                                                >
+                                                    <td colspan="1" class="text-center">{{ i + 1 }}</td>
+                                                    <td colspan="3">
+                                                        {{ s?.characteristic }}
+                                                    </td>
+                                                    <td colspan="1" class="text-center">
+                                                        {{ s?.UOM }}
+                                                    </td>
+                                                    <td colspan="1" class="text-center">
+                                                        {{ s?.measuringInstrument }}
+                                                    </td>
+                                                    <td colspan="1" class="text-center">
+                                                        {{ s?.LTL }}
+                                                    </td>
+                                                    <td colspan="2" class="text-center">
+                                                        {{ s?.specValue }}
+                                                    </td>
+                                                    <td colspan="1" class="text-center">
+                                                        {{ s?.UTL }}
+                                                    </td>
+                                                    <td colspan="2" class="text-center">
+                                                        {{ s?.observation }}
+                                                    </td>
+                                                </tr>
+                                            </table>
+                                        </div>
+                                        <div class="py-4"></div>
+                                        <div class="row px-0">
+                                            <div class="col-5 px-0">
+                                                <div class="row">
+                                                    <div class="col-4 text-nowrap px-0 d-flex align-items-center">
+                                                        Remarks By Supplier:
+                                                    </div>
+                                                    <div class="col-4 px-0">
+                                                        <div class="row">
+                                                            <div class="col-9 d-flex align-items-center">Released:</div>
+                                                            <div class="col-3 ps-0">
+                                                                <span class="">
+                                                                    <input
+                                                                        *ngIf="
+                                                                            p.status == 'Approved' ? isChecked : null
+                                                                        "
+                                                                        [(ngModel)]="isChecked"
+                                                                        type="checkbox"
+                                                                        onclick="return false;"
+                                                                    />
+                                                                    <input
+                                                                        *ngIf="
+                                                                            isChecked == false || p.status != 'Approved'
+                                                                        "
+                                                                        type="checkbox"
+                                                                        onclick="return false;"
+                                                                    />
+                                                                </span>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-4 px-0">
+                                                        <div class="row">
+                                                            <div class="col-9 d-flex align-items-center">
+                                                                Deviation:
+                                                            </div>
+                                                            <div class="col-3 ps-0">
+                                                                <span class="">
+                                                                    <input
+                                                                        *ngIf="
+                                                                            p.status == 'Deviation'
+                                                                                ? isDeviationChecked
+                                                                                : null
+                                                                        "
+                                                                        [(ngModel)]="isDeviationChecked"
+                                                                        type="checkbox"
+                                                                        onclick="return false;"
+                                                                    />
+                                                                    <input
+                                                                        *ngIf="
+                                                                            isDeviationChecked == false ||
+                                                                            p.status != 'Deviation'
+                                                                        "
+                                                                        type="checkbox"
+                                                                        onclick="return false;"
+                                                                    />
+                                                                </span>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-1 d-flex align-items-center justify-content-end pe-0">
+                                                <div class="vr"></div>
+                                            </div>
+                                            <div class="col-6 pe-0 d-flex justify-content-end align-items-center py-0">
+                                                This is Computer Generated report, hence no signature required.
+                                            </div>
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                    <div *ngIf="!last" class="page-break"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

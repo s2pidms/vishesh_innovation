@@ -1,0 +1,328 @@
+<div class="reportTablePage">
+    <div class="table-body pb-0 shadow-none">
+        <div class="row table-header">
+            <div class="col">
+                <label class="heading">D-SKU Cost Sheet - Report</label>
+            </div>
+        </div>
+        <div class="row my-4">
+            <div class="col-3 ps-5 separate-row">
+                <label class="form-label">Report Name</label>
+                <select (change)="setReportName()" [(ngModel)]="reportName" class="form-select">
+                    <option [value]="item.value" *ngFor="let item of reportNameArr">
+                        {{ item.label }}
+                    </option>
+                </select>
+                <span class="set-position">
+                    <img src="./assets/new_icons/redstroke.svg" alt="" height="27" width="8" />
+                </span>
+            </div>
+            <div *ngIf="[reportNameObj.costSheetByProductCategory].includes(reportName)" class="col-3 separate-row">
+                <label class="form-label">Report Specific Search</label>
+                <ng-select
+                    [items]="categoryList"
+                    bindLabel="productCategory"
+                    bindValue="productCategory"
+                    [clearable]="false"
+                    [(ngModel)]="categoryName"
+                >
+                </ng-select>
+            </div>
+            <div *ngIf="[reportNameObj.costSheetByDSKU].includes(reportName)" class="col-3">
+                <label class="form-label">Report Specific Search</label>
+                <ng-select
+                    [items]="DSKUList"
+                    bindLabel="SKUName"
+                    bindValue="_id"
+                    [clearable]="false"
+                    [(ngModel)]="DSKUId"
+                >
+                </ng-select>
+            </div>
+            <div class="col-3 align-self-end separate-image">
+                <span class="image-position">
+                    <img src="./assets/new_icons/redstroke.svg" alt="" height="27" width="8" />
+                </span>
+                <button type="button" class="btn btn-primary px-4 me-3" (click)="getAll()">Apply Filter</button>
+
+                <button type="button" class="btn btn-primary px-4 ms-4" (click)="reset()">Reset Filter</button>
+            </div>
+        </div>
+        <hr class="row line-border" />
+        <div class="table-responsive mb-0">
+            <app-setting-header
+                [data]="{page,pageSize,collection,search,type: 'list',pdfDisplay : true}"
+                (dataChange)="eventHeader($event)"
+            >
+            </app-setting-header>
+            <table
+                *ngIf="[reportNameObj.costSheetByDSKU].includes(reportName)"
+                class="table table-bordered table-sticky"
+            >
+                <thead class="bg-primary">
+                    <tr class="text-white">
+                        <th sortable="DSKUNo" (sort)="onSort($event)">D-SKU No.</th>
+                        <th class="text-start" sortable="DSKUName" (sort)="onSort($event)">
+                            {{ "D-SKU Name" | labelTranslate }}
+                        </th>
+                        <th class="text-start" sortable="DSKUDescription" (sort)="onSort($event)">
+                            {{ "D-SKU Description" | labelTranslate }}
+                        </th>
+                        <th sortable="UOM" (sort)="onSort($event)">UoM</th>
+                        <th sortable="directMaterial" (sort)="onSort($event)">D/Mtrl</th>
+                        <th sortable="directLabour" (sort)="onSort($event)">D/Lbr</th>
+                        <th sortable="directExpenses" (sort)="onSort($event)">D/Exp</th>
+                        <th sortable="costOfGoodsSold" (sort)="onSort($event)">COGS</th>
+                        <th sortable="operatingExpenses" (sort)="onSort($event)">OPEX</th>
+                        <th sortable="totalCostOfOperation" (sort)="onSort($event)">Total COO</th>
+                        <th sortable="sellingPrice" (sort)="onSort($event)">Selling Price</th>
+                        <th sortable="profit" (sort)="onSort($event)">Profit</th>
+                        <th sortable="profit" (sort)="onSort($event)">Profit %</th>
+                        <th sortable="" (sort)="onSort($event)">View</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let u of tableData; trackBy: trackByFn">
+                        <td>{{ u?.DSKUNo }}</td>
+                        <td class="text-start" [style.width]="DSKUName.clientWidth" #DSKUName>
+                            <span class="pointer" [positionTarget]="DSKUName" [ngbTooltip]="u.DSKUName">
+                                {{ u?.DSKUName ? u?.DSKUName : null }}
+                            </span>
+                        </td>
+                        <td class="text-start" [style.width]="DSKUDescription.clientWidth" #DSKUDescription>
+                            <span class="pointer" [positionTarget]="DSKUDescription" [ngbTooltip]="u.DSKUDescription">
+                                {{ u?.DSKUDescription ? u?.DSKUDescription : null }}
+                            </span>
+                        </td>
+                        <td>{{ u?.UOM }}</td>
+                        <td class="py-0 text-center">
+                            <div class="d-flex justify-content-start align-items-center">
+                                <span class="input-group-text text-secondary combine-INR border border-0">
+                                    {{ "INR" | companyCurrency }}
+                                    <div class="vr ms-3"></div>
+                                </span>
+                                <span class="total-cost-color">
+                                    {{ u?.directMaterial | number : "1.2-2" }}
+                                </span>
+                            </div>
+                        </td>
+                        <td class="py-0 text-center">
+                            <div class="d-flex justify-content-start align-items-center">
+                                <span class="input-group-text text-secondary combine-INR border border-0">
+                                    {{ "INR" | companyCurrency }}
+                                    <div class="vr ms-3"></div>
+                                </span>
+                                <span class="total-cost-color">
+                                    {{ u?.directLabour | number : "1.2-2" }}
+                                </span>
+                            </div>
+                        </td>
+                        <td class="py-0 text-center">
+                            <div class="d-flex justify-content-start align-items-center">
+                                <span class="input-group-text text-secondary combine-INR border border-0">
+                                    {{ "INR" | companyCurrency }}
+                                    <div class="vr ms-3"></div>
+                                </span>
+                                <span class="total-cost-color">
+                                    {{ u?.directExpenses | number : "1.2-2" }}
+                                </span>
+                            </div>
+                        </td>
+                        <td class="py-0 text-center">
+                            <div class="d-flex justify-content-start align-items-center">
+                                <span class="input-group-text text-secondary combine-INR border border-0">
+                                    {{ "INR" | companyCurrency }}
+                                    <div class="vr ms-3"></div>
+                                </span>
+                                <span class="total-cost-color">
+                                    {{ u?.costOfGoodsSold | number : "1.2-2" }}
+                                </span>
+                            </div>
+                        </td>
+                        <td class="py-0 text-center">
+                            <div class="d-flex justify-content-start align-items-center">
+                                <span class="input-group-text text-secondary combine-INR border border-0">
+                                    {{ "INR" | companyCurrency }}
+                                    <div class="vr ms-3"></div>
+                                </span>
+                                <span class="total-cost-color">
+                                    {{ u?.operatingExpenses | number : "1.2-2" }}
+                                </span>
+                            </div>
+                        </td>
+                        <td class="py-0 text-center">
+                            <div class="d-flex justify-content-start align-items-center">
+                                <span class="input-group-text text-secondary combine-INR border border-0">
+                                    {{ "INR" | companyCurrency }}
+                                    <div class="vr ms-3"></div>
+                                </span>
+                                <span class="total-cost-color">
+                                    {{ u?.totalCostOfOperation | number : "1.2-2" }}
+                                </span>
+                            </div>
+                        </td>
+                        <td class="py-0 text-center">
+                            <div class="d-flex justify-content-start align-items-center">
+                                <span class="input-group-text text-secondary combine-INR border border-0">
+                                    {{ "INR" | companyCurrency }}
+                                    <div class="vr ms-3"></div>
+                                </span>
+                                <span class="total-cost-color">
+                                    {{ u?.sellingPrice | number : "1.2-2" }}
+                                </span>
+                            </div>
+                        </td>
+                        <td class="py-0 text-center">
+                            <div class="d-flex justify-content-start align-items-center">
+                                <span class="input-group-text text-secondary combine-INR border border-0">
+                                    {{ "INR" | companyCurrency }}
+                                    <div class="vr ms-3"></div>
+                                </span>
+                                <span class="total-cost-color">
+                                    {{ u?.profit | number : "1.2-2" }}
+                                </span>
+                            </div>
+                        </td>
+                        <td>{{ u.profitPercent }}</td>
+                        <td>
+                            <div appAccessControl [accessType]="rolePermissionActions.viewAction" class="">
+                                <img
+                                    class="pointer"
+                                    src="./assets/new_icons/pdf_icon.svg"
+                                    width="15rem"
+                                    alt=""
+                                    (click)="navigateTo(u?._id, 'print')"
+                                />
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+            <table
+                *ngIf="[reportNameObj.costSheetByProductCategory].includes(reportName)"
+                class="table table-bordered table-sticky"
+            >
+                <thead class="bg-primary">
+                    <tr class="text-white">
+                        <th
+                            class="text-start"
+                            [style.width]="SKUName.clientWidth"
+                            #SKUName
+                            sortable="productCategory"
+                            (sort)="onSort($event)"
+                        >
+                            Product Category
+                        </th>
+                        <th sortable="DSKUNo" (sort)="onSort($event)">D-SKU No.</th>
+                        <th class="text-start" sortable="DSKUName" (sort)="onSort($event)">
+                            {{ "D-SKU Name" | labelTranslate }}
+                        </th>
+                        <th class="text-start" sortable="DSKUDescription" (sort)="onSort($event)">
+                            {{ "D-SKU Description" | labelTranslate }}
+                        </th>
+                        <th sortable="UOM" (sort)="onSort($event)">UoM</th>
+                        <th sortable="costOfGoodsSold" (sort)="onSort($event)">COGS</th>
+                        <th sortable="operatingExpenses" (sort)="onSort($event)">OPEX</th>
+                        <th sortable="totalCostOfOperation" (sort)="onSort($event)">Total COO</th>
+                        <th sortable="sellingPrice" (sort)="onSort($event)">Selling Price</th>
+                        <th sortable="profit" (sort)="onSort($event)">Profit/Unit</th>
+                        <th sortable="profit" (sort)="onSort($event)">Profit %</th>
+                        <th sortable="" (sort)="onSort($event)">View</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let u of tableData; trackBy: trackByFn">
+                        <td class="text-start">{{ u.productCategory }}</td>
+                        <td>{{ u?.DSKUNo }}</td>
+                        <td class="text-start" [style.width]="DSKUName.clientWidth" #DSKUName>
+                            <span class="pointer" [positionTarget]="DSKUName" [ngbTooltip]="u.DSKUName">
+                                {{ u?.DSKUName ? u?.DSKUName : null }}
+                            </span>
+                        </td>
+                        <td class="text-start" [style.width]="DSKUDescription.clientWidth" #DSKUDescription>
+                            <span class="pointer" [positionTarget]="DSKUDescription" [ngbTooltip]="u.DSKUDescription">
+                                {{ u?.DSKUDescription ? u?.DSKUDescription : null }}
+                            </span>
+                        </td>
+                        <td>{{ u?.UOM }}</td>
+                        <td class="py-0 text-center">
+                            <div class="d-flex justify-content-start align-items-center">
+                                <span class="input-group-text text-secondary combine-INR border border-0">
+                                    {{ "INR" | companyCurrency }}
+                                    <div class="vr ms-3"></div>
+                                </span>
+                                <span class="total-cost-color">
+                                    {{ u?.costOfGoodsSold | number : "1.2-2" }}
+                                </span>
+                            </div>
+                        </td>
+                        <td class="py-0 text-center">
+                            <div class="d-flex justify-content-start align-items-center">
+                                <span class="input-group-text text-secondary combine-INR border border-0">
+                                    {{ "INR" | companyCurrency }}
+                                    <div class="vr ms-3"></div>
+                                </span>
+                                <span class="total-cost-color">
+                                    {{ u?.operatingExpenses | number : "1.2-2" }}
+                                </span>
+                            </div>
+                        </td>
+                        <td class="py-0 text-center">
+                            <div class="d-flex justify-content-start align-items-center">
+                                <span class="input-group-text text-secondary combine-INR border border-0">
+                                    {{ "INR" | companyCurrency }}
+                                    <div class="vr ms-3"></div>
+                                </span>
+                                <span class="total-cost-color">
+                                    {{ u?.totalCostOfOperation | number : "1.2-2" }}
+                                </span>
+                            </div>
+                        </td>
+                        <td class="py-0 text-center">
+                            <div class="d-flex justify-content-start align-items-center">
+                                <span class="input-group-text text-secondary combine-INR border border-0">
+                                    {{ "INR" | companyCurrency }}
+                                    <div class="vr ms-3"></div>
+                                </span>
+                                <span class="total-cost-color">
+                                    {{ u?.sellingPrice | number : "1.2-2" }}
+                                </span>
+                            </div>
+                        </td>
+                        <td class="py-0 text-center">
+                            <div class="d-flex justify-content-start align-items-center">
+                                <span class="input-group-text text-secondary combine-INR border border-0">
+                                    {{ "INR" | companyCurrency }}
+                                    <div class="vr ms-3"></div>
+                                </span>
+                                <span class="total-cost-color">
+                                    {{ u?.profit | number : "1.2-2" }}
+                                </span>
+                            </div>
+                        </td>
+                        <td>{{ u.profitPercent }}</td>
+                        <td>
+                            <div appAccessControl [accessType]="rolePermissionActions.viewAction" class="">
+                                <img
+                                    class="pointer"
+                                    src="./assets/new_icons/pdf_icon.svg"
+                                    width="15rem"
+                                    alt=""
+                                    (click)="navigateTo(u?._id, 'print')"
+                                />
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="table-footer">
+            <hr class="row line-border" />
+            <div class="row align-items-center mt-3">
+                <div class="col-12 text-end pe-5 text-black-50">
+                    {{ reportQMSName }}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

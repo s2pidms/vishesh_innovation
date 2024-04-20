@@ -1,0 +1,111 @@
+<div class="row justify-content-center">
+    <div class="col-md-11">
+        <div class="row pb-4 border-bottom">
+            <div class="col">
+                <label class="form-label"> Inventory Correction Dates<span class="text-danger">*</span> </label>
+
+                <input class="form-control" type="date" [(ngModel)]="fromDate" />
+            </div>
+            <div class="col">
+                <label class="form-label"> Item Category<span class="text-danger">*</span> </label>
+                <select class="form-select" (change)="getAllFilterData()" [(ngModel)]="category">
+                    <option selected disabled value="">Select Item Category</option>
+                    <option *ngFor="let i of masterData?.itemCategoriesOptions" [value]="i">{{ i }}</option>
+                </select>
+            </div>
+            <div class="col">
+                <label class="form-label">
+                    Item Group
+                    <span class="text-danger">*</span>
+                </label>
+                <select class="form-select" (change)="getAllFilterData()" [(ngModel)]="group">
+                    <option value="" selected disabled>Select Item Group</option>
+                    <option *ngFor="let i of masterData?.itemSubCategoriesOptions" [value]="i?.value">
+                        {{ i?.label }}
+                    </option>
+                </select>
+            </div>
+        </div>
+
+        <app-setting-header [data]="{page,pageSize,collection,search,type: 'list'}" (dataChange)="eventHeader($event)">
+        </app-setting-header>
+
+        <div class="table-responsive" style="min-height: 33rem">
+            <table class="table table-bordered table-sticky">
+                <thead class="bg-primary">
+                    <tr class="text-white">
+                        <th>GIN Date</th>
+                        <th>MRN No.</th>
+                        <th>Item Code</th>
+                        <th class="text-start">Item Name</th>
+                        <th class="text-start">Item Description</th>
+                        <th>UoM</th>
+                        <th>Open IR Qty</th>
+                        <th>+/- Qty</th>
+                        <th>Cls IR Qty</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr
+                        *ngFor="
+                            let u of filterData
+                                | searchFi1ter : search
+                                | slice : (page - 1) * pageSize : (page - 1) * pageSize + pageSize;
+                            let v = index;
+                            trackBy: trackByFn
+                        "
+                    >
+                        <td>{{ u?.GINDateS }}</td>
+                        <td>{{ u?.MRNNumber }}</td>
+                        <td>{{ u?.itemCode }}</td>
+                        <td class="text-start" [style.width]="itemName.clientWidth" #itemName>
+                            <span class="pointer" [positionTarget]="itemName" [ngbTooltip]="u.itemName">
+                                {{ u?.itemName }}
+                            </span>
+                        </td>
+                        <td class="text-start" [style.width]="itemDescription.clientWidth" #itemDescription>
+                            <span class="pointer" [positionTarget]="itemDescription" [ngbTooltip]="u.itemDescription">
+                                {{ u?.itemDescription }}
+                            </span>
+                        </td>
+                        <td>{{ u?.UOM | UOMUnitsMaster }}</td>
+                        <td>{{ u?.openIRQty | number : "1.2-2" }}</td>
+                        <td>
+                            <div class="d-flex justify-content-center">
+                                <input
+                                    class="form-control form-control-sm w-25"
+                                    (input)="setUpdatedQty(u._id, u)"
+                                    type="number"
+                                    [(ngModel)]="u.updatedQty"
+                                />
+                            </div>
+                        </td>
+                        <td>{{ u?.closedIRQty | number : "1.2-2" }}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div class="row d-flex justify-content-center my-2">
+        <div class="col-md-2 d-grid">
+            <button class="btn bg-primary" type="button" (click)="reset()">Reset</button>
+        </div>
+
+        <div class="col-md-2 d-grid mx-2">
+            <button class="btn bg-primary" type="button" (click)="Preview()">Preview</button>
+        </div>
+
+        <div class="col-md-2 d-grid">
+            <button
+                appAccessControl
+                [accessType]="rolePermissionActions.createAction"
+                class="btn bg-primary"
+                type="button"
+                [disabled]="!isPreview"
+                (click)="update()"
+            >
+                Save
+            </button>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,412 @@
+<Form [formGroup]="form" class="formCard card">
+    <div class="container">
+        <div class="row form-header">
+            <div class="col heading">
+                <label class="">Formulation Master ({{ action | titlecase }})</label>
+            </div>
+        </div>
+        <div class="form-body">
+            <div class="row">
+                <div class="col-5 pe-0">
+                    <div class="row">
+                        <div class="col-4">
+                            <label class="form-label">
+                                {{ "Item Code" | labelTranslate }} <span class="text-danger">*</span></label
+                            >
+                            <input type="text" class="form-control" formControlName="itemCode" readOnly />
+                        </div>
+                        <div class="col-8 ps-3">
+                            <label class="form-label">
+                                {{ "Item Name" | labelTranslate }} <span class="text-danger">*</span></label
+                            >
+                            <input type="text" class="form-control" formControlName="itemName" />
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-7 ps-5">
+                    <div class="row">
+                        <div class="col-6 pe-3">
+                            <label class="form-label">
+                                {{ "Item Description" | labelTranslate }} <span class="text-danger">*</span></label
+                            >
+                            <input type="text" class="form-control" formControlName="itemDescription" />
+                        </div>
+                        <div class="col-3 pe-5">
+                            <label class="form-label"> UoM <span class="text-danger">*</span></label>
+                            <input type="text" class="form-control" formControlName="UoM" readonly />
+                        </div>
+                        <div class="col-3 ps-0">
+                            <label class="form-label">
+                                {{ "Item Cost" | labelTranslate }}/gram <span class="text-danger"> </span
+                            ></label>
+                            <div class="d-flex align-items-center">
+                                <span class="input-group-text text-secondary combine-INR bg-mix-pink-color">
+                                    {{ "INR" | companyCurrency }}
+                                    <div class="vr ms-3"></div>
+                                </span>
+                                <input
+                                    class="form-control border-start-0 bg-mix-pink-color"
+                                    type="number"
+                                    formControlName="inkCostPerGm"
+                                    readonly
+                                />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- <div class="col-5">
+                    <div class="row">
+                        <div class="col-6">
+                            <label class="form-label d-flex justify-content-between">
+                                UoM
+                                <span class="text-danger">*</span>
+                                <span class="setStar"></span>
+                                <button
+                                    (click)="openUOMDetailsModal()"
+                                    type="button"
+                                    class="btn btn-primary form-btn-sm py-0"
+                                >
+                                    Dual Units
+                                </button>
+                            </label>
+                            <select (change)="setPrimaryUnit()" class="form-select" formControlName="UoM">
+                                <option [value]="null" selected disabled>Select Primary Unit</option>
+                                <option [value]="'Unit'">Unit</option>
+                                <option *ngFor="let u of masterData?.UOMOptions" [value]="u.value">
+                                    {{ u?.label }}
+                                </option>
+                            </select>
+                        </div>
+                        <div class="col-6 ps-0">
+                            <label class="form-label">HSN Code <span class="text-danger">*</span></label>
+                            <div class="d-flex align-items-center">
+                                <div class="flex-grow-1">
+                                    <ng-select
+                                        [items]="masterData.HSNCodesList"
+                                        bindLabel="value"
+                                        bindValue="_id"
+                                        [clearable]="false"
+                                        formControlName="HSN"
+                                        (change)="setHSNCode($event)"
+                                    >
+                                    </ng-select>
+                                </div>
+                                <div
+                                    style="height: 2.9rem"
+                                    class="input-group-text bg-primary pointer"
+                                    id="basic-addon1"
+                                    (click)="openFormulationHSNModal()"
+                                >
+                                    <i class="fa fa-search text-white" aria-hidden="true"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div> -->
+            </div>
+        </div>
+        <hr class="row line-border" />
+        <div class="row justify-content-between">
+            <div class="col-4">
+                <div class="d-flex">
+                    <div class="input-group-text bg-primary" id="basic-addon1">
+                        <i class="fa fa-search text-white" aria-hidden="true"></i>
+                    </div>
+                    <div>
+                        <input
+                            type="text"
+                            class="form-control"
+                            [(ngModel)]="search"
+                            [ngModelOptions]="{standalone: true}"
+                        />
+                    </div>
+                </div>
+            </div>
+            <div class="col-4 d-flex justify-content-center">
+                <ngb-pagination
+                    *ngIf="masterData.mergedItemInkList.length > 0"
+                    [collectionSize]="masterData.mergedItemInkList.length"
+                    [(page)]="page"
+                    [pageSize]="pageSize"
+                    [boundaryLinks]="false"
+                >
+                    <ng-template ngbPaginationPrevious>
+                        <img src="./assets/new_icons/pagination_prev.svg" width="20rem" />
+                    </ng-template>
+                    <ng-template ngbPaginationNext>
+                        <img src="./assets/new_icons/pagination_next.svg" width="20rem" />
+                    </ng-template>
+                    <ng-template ngbPaginationPages let-page let-pages="pages">
+                        <li class="ngb-custom-pages-item align-self-center" *ngIf="pages.length > 0">
+                            <span class="page-label me-2 ms-1"> Page {{ page }} of {{ pages[pages.length - 1] }} </span>
+                        </li>
+                    </ng-template>
+                </ngb-pagination>
+            </div>
+            <!-- <div class="col-4 text-end">
+                        <button
+                            (click)="openLabValuesModal()"
+                            class="btn btn-primary"
+                            *ngIf="masterData.addLabValues == 'yes' && masterData.companyType != 'Coating Industry'"
+                        >
+                            Add L a b Values
+                        </button>
+                    </div> -->
+            <div class="col-1"></div>
+            <div class="col-3">
+                <div class="row">
+                    <div class="col-12 d-flex justify-content-end">
+                        <button
+                            (click)="openLabValuesModal()"
+                            class="btn btn-primary"
+                            *ngIf="masterData.addLabValues == 'yes' && masterData.companyType != 'Coating Industry'"
+                        >
+                            Add L a b Values
+                        </button>
+                    </div>
+                    <!-- <div class="col-3 d-flex justify-content-end align-items-center">
+                        <div class="d-flex justify-content-end">
+                            <img
+                                src="./assets/images/excel.svg"
+                                height="28"
+                                [style.cursor]="'pointer'"
+                                (click)="commonChange()"
+                                class=""
+                            />
+                        </div>
+                    </div> -->
+                </div>
+            </div>
+        </div>
+        <div class="table-responsive" style="min-height: 22rem">
+            <table class="table table-bordered table-sticky mt-1">
+                <thead class="bg-primary">
+                    <tr class="text-white">
+                        <th sortable="seq" (sort)="onSort($event)">Seq.</th>
+                        <th sortable="itemCode" (sort)="onSort($event)">Item Code</th>
+                        <th class="text-start" sortable="itemName" (sort)="onSort($event)">Item Name</th>
+                        <th class="text-start" sortable="itemDescription" (sort)="onSort($event)">Item Description</th>
+                        <!-- <ng-container *ngIf="masterData.companyType != 'Coating Industry'">
+                            <th sortable="supplierCode" (sort)="onSort($event)">UoM</th>
+                            <th sortable="UOM" (sort)="onSort($event)">Quantity</th>
+                        </ng-container> -->
+
+                        <th sortable="itemCost" (sort)="onSort($event)">Quantity</th>
+                        <th sortable="unitCost" (sort)="onSort($event)">UoM</th>
+                        <th sortable="partCount" (sort)="onSort($event)">% Loading</th>
+                        <th sortable="BOM" (sort)="onSort($event)">Rate/Unit</th>
+                        <th sortable="BOM" (sort)="onSort($event)">Item Cost</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr
+                        *ngFor="
+                            let g of masterData.mergedItemInkList
+                                | searchFi1ter : search
+                                | slice : (page - 1) * pageSize : (page - 1) * pageSize + pageSize;
+                            trackBy: trackByFn;
+                            let i = index
+                        "
+                    >
+                        <td>
+                            <div class="d-flex justify-content-center">
+                                <span *ngIf="['view'].includes(action)">{{ g.seq }}</span>
+                                <input
+                                    *ngIf="!['view'].includes(action)"
+                                    class="form-control form-control-sq"
+                                    type="number"
+                                    [(ngModel)]="g.seq"
+                                    [ngModelOptions]="{standalone: true}"
+                                />
+                            </div>
+                        </td>
+                        <td>{{ g.itemCode }}</td>
+                        <td class="text-start" [style.width]="itemName.clientWidth" #itemName>
+                            <span class="pointer" [positionTarget]="itemName" [ngbTooltip]="g.itemName">
+                                {{ g?.itemName }}
+                            </span>
+                        </td>
+                        <td class="text-start" [style.width]="itemDescription.clientWidth" #itemDescription>
+                            <span class="pointer" [positionTarget]="itemDescription" [ngbTooltip]="g.itemDescription">
+                                {{ g?.itemDescription }}
+                            </span>
+                        </td>
+                        <!-- <ng-container *ngIf="masterData.companyType != 'Coating Industry'">
+                            <td>
+                                <span>{{
+                                    (g.UoM | titlecase) == "Kg" || (g.UoM | titlecase) == "Kgs"
+                                        ? "gm"
+                                        : null || (g.UoM | titlecase) == "Ltr"
+                                        ? "ml"
+                                        : null
+                                }}</span>
+                            </td>
+                            <td>
+                                <div class="d-flex justify-content-center">
+                                    <span *ngIf="['view'].includes(action)">{{ g.qtyPerKgInitial }}</span>
+                                    <input
+                                        (input)="setItemCostDetails(g)"
+                                        *ngIf="!['view'].includes(action)"
+                                        class="form-control form-control-sm"
+                                        type="number"
+                                        [(ngModel)]="g.qtyPerKgInitial"
+                                        [ngModelOptions]="{standalone: true}"
+                                    />
+                                </div>
+                            </td>
+                        </ng-container> -->
+                        <td>
+                            <!-- <ng-container *ngIf="masterData.companyType != 'Coating Industry'; else elseBlock">
+                                {{ g.qtyPerKgFinal }}
+                            </ng-container> -->
+                            <!-- <ng-template #elseBlock> -->
+                            <div class="d-flex justify-content-center">
+                                <span *ngIf="['view'].includes(action)">{{ g.qtyPerKgFinal }}</span>
+                                <input
+                                    (input)="setItemCostDetailsForCoating(g)"
+                                    *ngIf="!['view'].includes(action)"
+                                    class="form-control form-control-sm"
+                                    type="number"
+                                    [(ngModel)]="g.qtyPerKgFinal"
+                                    [ngModelOptions]="{standalone: true}"
+                                />
+                            </div>
+                            <!-- </ng-template> -->
+                        </td>
+                        <td>{{ g.UoM }}</td>
+
+                        <!-- <td>
+                            <ng-container *ngIf="masterData.companyType != 'Coating Industry'; else elseBlock">
+                                {{ g.qtyPerKgFinal }}
+                            </ng-container>
+                            <ng-template #elseBlock>
+                                <div class="d-flex justify-content-center">
+                                    <span *ngIf="['view'].includes(action)">{{ g.qtyPerKgFinal }}</span>
+                                    <input
+                                        (input)="setItemCostDetailsForCoating(g)"
+                                        *ngIf="!['view'].includes(action)"
+                                        class="form-control form-control-sm"
+                                        type="number"
+                                        [(ngModel)]="g.qtyPerKgFinal"
+                                        [ngModelOptions]="{standalone: true}"
+                                    />
+                                </div>
+                            </ng-template>
+                        </td> -->
+                        <td>{{ g.percentageLoading }}</td>
+                        <td>{{ g.ratePerUnit }}</td>
+                        <td>{{ g.itemCost | number : "1.2-2" }}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <hr class="row line-border" />
+        <div class="row">
+            <div class="col">
+                <div class="d-flex align-items-center">
+                    <div class="col-form-label text-nowrap">
+                        Total Qty
+                        <i class="fa fa-caret-right fa-5x mx-1"></i>
+                    </div>
+                    <div class="d-flex">
+                        <span class="input-group-text text-secondary combine-INR">
+                            <span class="h-100 d-flex align-items-end">g</span>
+                            <div class="vr ms-3 text-secondary"></div>
+                        </span>
+                        <input
+                            class="form-control border-start-0"
+                            type="number"
+                            formControlName="totalQtyPerGm"
+                            readonly
+                        />
+                    </div>
+                </div>
+            </div>
+            <div class="col">
+                <div class="d-flex align-items-center">
+                    <div class="col-form-label text-nowrap">
+                        Total Cost
+                        <i class="fa fa-caret-right fa-5x mx-1"></i>
+                    </div>
+                    <div class="d-flex">
+                        <span class="input-group-text text-secondary combine-INR">
+                            {{ "INR" | companyCurrency }}
+                            <div class="vr ms-3"></div>
+                        </span>
+                        <input
+                            class="form-control border-start-0"
+                            type="number"
+                            formControlName="totalCostPerGm"
+                            readonly
+                        />
+                    </div>
+                </div>
+            </div>
+            <div class="col-3 d-flex align-items-center">
+                <div class="d-flex align-items-center">
+                    <span class="set-flex-status px-4"> Status </span>
+                    <select class="form-select statusSelectBorder" formControlName="status">
+                        <option [value]="'null'" selected disabled>Select Status</option>
+                        <option [value]="'Active'">Active</option>
+                        <option [value]="'Inactive'">Inactive</option>
+                    </select>
+                    <span class="input-group-text statusSpanHeight">
+                        <div class="statusActive" *ngIf="form.value['status'] == 'Active'" class="statusActive"></div>
+                        <div class="statusInActive" *ngIf="form.value['status'] == 'Inactive'"></div>
+                    </span>
+                </div>
+            </div>
+            <!-- <div class="col">
+                <div class="d-flex align-items-center">
+                    <div class="col-form-label text-nowrap">
+                        Cost/Kg
+                        <i class="fa fa-caret-right fa-5x mx-1"></i>
+                    </div>
+                    <div class="d-flex">
+                        <span class="input-group-text text-secondary combine-INR">
+                            {{ "INR" | companyCurrency }}
+                            <div class="vr ms-3"></div>
+                        </span>
+                        <input class="form-control  " type="number" formControlName="inkCostPerKg" readonly />
+                    </div>
+                </div>
+            </div> -->
+
+            <div class="col-md-auto ms-auto">
+                <div *ngIf="['create', 'edit'].includes(action)" class="d-grid gap-2 d-md-block">
+                    <button type="button" class="btn btn-primary px-5 me-3" (click)="reset()">Reset</button>
+                    <button
+                        type="button"
+                        class="btn btn-primary px-3 me-1"
+                        [disabled]="!isESCPreview"
+                        (click)="ESCPreview()"
+                    >
+                        Esc
+                    </button>
+                    <button
+                        type="button"
+                        class="btn btn-primary px-4 me-3"
+                        [disabled]="isConditionPreview"
+                        (click)="preview()"
+                    >
+                        Preview
+                    </button>
+                    <button class="btn btn-primary px-5" type="button" [disabled]="!isPreview" (click)="submit()">
+                        Save
+                    </button>
+                </div>
+                <div *ngIf="['view'].includes(action)">
+                    <button
+                        class="btn btn-primary px-5"
+                        type="button"
+                        (click)="navigateTo('/default/production/master/ink_master/list', {}, '')"
+                    >
+                        Back
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</Form>

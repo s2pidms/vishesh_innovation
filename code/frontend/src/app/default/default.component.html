@@ -1,0 +1,16 @@
+<ng-container *ngIf="isReport; else elseBlock">
+  <router-outlet></router-outlet>
+</ng-container>
+<ng-template #elseBlock>
+  <div class="container-fuild">
+    <app-nav-header></app-nav-header>
+    <div class="d-flex main">
+      <div class="sideNav-content">
+        <app-sidebar> </app-sidebar>
+      </div>
+      <div class="main-content">
+        <router-outlet></router-outlet>
+      </div>
+    </div>
+  </div>
+</ng-template>

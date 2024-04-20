@@ -1,0 +1,259 @@
+<div class="row">
+    <div class="col-5 pe-0">
+        <form [formGroup]="form" class="formCard card mt-3">
+            <div class="container">
+                <div class="row form-header">
+                    <div class="col heading">
+                        <label class="">Job Card Details </label>
+                    </div>
+                </div>
+                <div class="form-body">
+                    <div class="row mt-3">
+                        <div class="col-4 pe-0 d-flex justify-content-between align-items-center">
+                            <label class="form-label"> Job Card No. <span class="text-danger"> * </span></label>
+                            <span class="text-secondary fs-5">&#9654;</span>
+                        </div>
+                        <div class="col-8 ps-3 pe-5">
+                            <div class="d-flex align-items-center">
+                                <div class="col-11">
+                                    <ng-select
+                                        [items]="masterData.JCOptions"
+                                        bindLabel="jobCardNo"
+                                        bindValue="jobCardNo"
+                                        [clearable]="false"
+                                        formControlName="jobCardNo"
+                                        (change)="setJobCardId($event)"
+                                    >
+                                    </ng-select>
+                                </div>
+                                <div
+                                    style="height: 2.9rem"
+                                    class="set-input-group-text input-group-text bg-primary pointer col-auto ms-1"
+                                    id="basic-addon1"
+                                    (click)="openJobCardDetailsModal()"
+                                >
+                                    <i class="fa fa-search text-white fs-4" aria-hidden="true"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row mt-4">
+                        <div class="col-4 pe-0 d-flex justify-content-between align-items-center">
+                            <label class="form-label"> SKU Stage <span class="text-danger"> </span></label>
+                            <span class="text-secondary fs-5">&#9654;</span>
+                        </div>
+                        <div class="col-8 ps-3">
+                            <input
+                                type="text"
+                                class="form-control bg-white-smoke"
+                                formControlName="SKUStage"
+                                readonly
+                            />
+                        </div>
+                    </div>
+                    <div class="row mt-4">
+                        <div class="col-4 pe-0 d-flex justify-content-between align-items-center">
+                            <label class="form-label"> SKU Number <span class="text-danger"> </span></label>
+                            <span class="text-secondary fs-5">&#9654;</span>
+                        </div>
+                        <div class="col-8 ps-3">
+                            <input type="text" class="form-control bg-white-smoke" formControlName="SKUNo" readonly />
+                        </div>
+                    </div>
+                    <div class="row mt-4">
+                        <div class="col-4 pe-0 d-flex justify-content-between align-items-center">
+                            <label class="form-label"> SKU Name <span class="text-danger"> </span></label>
+                            <span class="text-secondary fs-5">&#9654;</span>
+                        </div>
+                        <div class="col-8 ps-3">
+                            <input type="text" class="form-control bg-white-smoke" formControlName="SKUName" readonly />
+                        </div>
+                    </div>
+                    <div class="row mt-4">
+                        <div class="col-4 pe-0 d-flex justify-content-between align-items-center">
+                            <label class="form-label"> SKU Description <span class="text-danger"> </span></label>
+                            <span class="text-secondary fs-5">&#9654;</span>
+                        </div>
+                        <div class="col-8 ps-3">
+                            <input
+                                type="text"
+                                class="form-control bg-white-smoke"
+                                formControlName="SKUDescription"
+                                readonly
+                            />
+                        </div>
+                    </div>
+                    <div class="row mt-4">
+                        <div class="col-4 pe-0 d-flex justify-content-between align-items-center">
+                            <label class="form-label"> SKU UoM <span class="text-danger"> </span></label>
+                            <span class="text-secondary fs-5">&#9654;</span>
+                        </div>
+                        <div class="col-8 ps-3">
+                            <input type="text" class="form-control bg-white-smoke" formControlName="UOM" readonly />
+                        </div>
+                    </div>
+                    <div class="row mt-4">
+                        <div class="col-4 pe-0 d-flex justify-content-between align-items-center">
+                            <label class="form-label">Batch Quantity<span class="text-danger"> </span></label>
+                            <span class="text-secondary fs-5">&#9654;</span>
+                        </div>
+                        <div class="col-8 ps-3">
+                            <input
+                                type="text"
+                                class="form-control bg-white-smoke"
+                                formControlName="batchQty"
+                                readonly
+                            />
+                        </div>
+                    </div>
+                    <div class="row mt-4">
+                        <div class="col-4 pe-0 d-flex justify-content-between align-items-center">
+                            <label class="form-label"> Batch Date <span class="text-danger"> </span></label>
+                            <span class="text-secondary fs-5">&#9654;</span>
+                        </div>
+                        <div class="col-8 ps-3">
+                            <input
+                                type="date"
+                                class="form-control bg-white-smoke"
+                                formControlName="batchDate"
+                                readonly
+                            />
+                        </div>
+                    </div>
+                    <div class="row my-4">
+                        <div class="col-4 pe-0 d-flex justify-content-between align-items-center">
+                            <label class="form-label"> SKU Customer <span class="text-danger"> </span></label>
+                            <span class="text-secondary fs-5">&#9654;</span>
+                        </div>
+                        <div class="col-8 ps-3">
+                            <input
+                                type="text"
+                                class="form-control bg-white-smoke"
+                                formControlName="customerName"
+                                readonly
+                            />
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+
+    <div class="col-7 ps-0">
+        <form [formGroup]="form" class="formCard ms-0 card mt-3">
+            <div class="container">
+                <div class="row form-header mb-4">
+                    <div class="col heading">
+                        <label class=""> Production Entry </label>
+                    </div>
+                </div>
+                <!-- <app-setting-header
+                    [data]="{page,pageSize,collection,search, excelDisplay : 'none'}"
+                    (dataChange)="eventHeader($event)"
+                >
+                </app-setting-header> -->
+                <div class="table-responsive pt-2" style="min-height: 34.35rem">
+                    <table class="table table-bordered table-sticky">
+                        <thead class="bg-primary">
+                            <tr class="text-white">
+                                <th sortable="seq" (sort)="onSort($event)">PRC Seq.</th>
+                                <th sortable="processName" (sort)="onSort($event)" class="text-start">Process Name</th>
+                                <th>Production</th>
+                                <th>Quality</th>
+                                <th sortable="processStatus" (sort)="onSort($event)">Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr
+                                *ngFor="
+                                    let item of JCEntryDetailsList
+                                        | searchFi1ter : search
+                                        | slice : (page - 1) * pageSize : (page - 1) * pageSize + pageSize;
+                                    let i = index;
+                                    trackBy: trackByFn
+                                "
+                            >
+                                <td>
+                                    <div class="d-flex justify-content-center">
+                                        <span *ngIf="['view', 'Converted to SKU', 'approve'].includes(action)">
+                                            {{ item?.seq }}
+                                        </span>
+                                        <input
+                                            *ngIf="!['view', 'Converted to SKU', 'approve'].includes(action)"
+                                            class="form-control form-control-size-xs w-25"
+                                            type="number"
+                                            [(ngModel)]="item.seq"
+                                            [ngModelOptions]="{standalone: true}"
+                                        />
+                                    </div>
+                                </td>
+                                <td class="text-start" [style.width]="processName.clientWidth" #processName>
+                                    <span
+                                        class="pointer"
+                                        [ngbTooltip]="item.processName"
+                                        [positionTarget]="processName"
+                                    >
+                                        {{ item?.processName }}
+                                    </span>
+                                </td>
+                                <td>
+                                    <div class="d-flex justify-content-center align-items-center">
+                                        <button class="plusSmallIconSvg btn btn-primary py-0 me-1"></button>
+                                        <button
+                                            type="button"
+                                            class="btn btn-primary form-btn-sm py-0"
+                                            (click)="openProdInfoModal(item)"
+                                        >
+                                            Prod. Log
+                                        </button>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="d-flex justify-content-center align-items-center">
+                                        <button class="plusSmallIconSvg btn btn-primary py-0 me-1"></button>
+                                        <button
+                                            type="button"
+                                            class="btn btn-primary form-btn-sm py-0"
+                                            (click)="openIPQAModal(item)"
+                                        >
+                                            IPQA Log
+                                        </button>
+                                    </div>
+                                </td>
+                                <td>
+                                    <input
+                                        class="form-check-input pointer"
+                                        type="checkbox"
+                                        [(ngModel)]="item.processStatus"
+                                        [ngModelOptions]="{standalone: true}"
+                                        [disabled]="['view', 'approve'].includes(action)"
+                                    />
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <hr class="row line-border" />
+                <div class="row">
+                    <div class="col-6">
+                        <button class="plusIconSvg btn btn-primary me-1"></button>
+                        <button type="button" class="btn btn-primary px-4" (click)="openBatchInfoModal()">
+                            Generate Report
+                        </button>
+                    </div>
+                    <div class="col-md-auto ms-auto d-flex align-items-end">
+                        <button
+                            *ngIf="!['reject', 'approve', 'view'].includes(action)"
+                            type="button"
+                            class="btn btn-primary px-5"
+                            (click)="submit()"
+                        >
+                            Save
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>

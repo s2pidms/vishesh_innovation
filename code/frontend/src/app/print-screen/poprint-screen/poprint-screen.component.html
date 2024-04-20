@@ -1,0 +1,60 @@
+<div class="container-fluid printScreen">
+  <div class="row">
+    <div class="col-12 text-center px-0">
+      <div *ngIf="buttonCondition == 'true'">
+        <button
+          appAccessControl
+          [accessType]="rolePermissionActions.downloadAction"
+          class="btn btn-primary"
+          type="button"
+          (click)="windowPrint()"
+          *ngIf="pdfAction != 'pdf'"
+        >
+          <img
+            src="./assets/images/print.png"
+            width="20px"
+            height="14px"
+            class="mb-2"
+          />&nbsp;&nbsp; Print
+        </button>
+      </div>
+      <div
+        class="page py-3"
+        [ngStyle]="
+          status == 'Cancelled'
+            ? {
+                background: 'url(./assets/buttons/cancelled.svg)',
+                'background-size': '100% 100%',
+                'background-color': 'transparent'
+              }
+            : {} && previewPO == 'previewPO'
+            ? {
+                background: 'url(./assets/new_icons/draft-stamp.svg)',
+                'background-size': '100% 100%',
+                'background-color': 'transparent'
+              }
+            : {}
+        "
+      >
+        <ng-template [ngIf]="template == 'PO Domestic'">
+          <app-PODomestics
+            [termsAndConditions]="termsAndConditions"
+            [tableData]="tableData"
+          ></app-PODomestics>
+        </ng-template>
+        <ng-template [ngIf]="template == 'PO Imports'">
+          <app-POImports
+            [termsAndConditions]="termsAndConditions"
+            [tableData]="tableData"
+          ></app-POImports>
+        </ng-template>
+        <ng-template [ngIf]="['Regular POI', 'Regular POD'].includes(template)">
+          <app-PORegular
+            [termsAndConditions]="termsAndConditions"
+            [tableData]="tableData"
+          ></app-PORegular>
+        </ng-template>
+      </div>
+    </div>
+  </div>
+</div>

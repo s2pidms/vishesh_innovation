@@ -1,0 +1,177 @@
+<Form class="px-2" [formGroup]="form" class="formCard card">
+    <div class="container">
+        <div class="row form-header">
+            <div class="col heading">
+                <label class="">GIN ({{ action | titlecase }})</label>
+            </div>
+        </div>
+        <div class="form-body">
+            <div class="row">
+                <div class="col-md-4 pe-3">
+                    <div class="row">
+                        <div class="col-6 pe-4">
+                            <label class="form-label"> GIN Date<span class="text-danger"></span> </label>
+                            <input
+                                class="form-control"
+                                id="applicationDate"
+                                type="date"
+                                formControlName="GINDate"
+                                readonly
+                            />
+                        </div>
+                        <div class="col-6 ps-4">
+                            <label class="form-label"> Select MRN<span class="text-danger">*</span> </label>
+
+                            <select class="form-select" (change)="setMRN($event)" formControlName="MRNNumber" readonly>
+                                <option [value]="null" selected disabled>Select MRN No.</option>
+                                <option *ngFor="let g of MRNListArr" [value]="g._id">
+                                    {{ g.MRNNumber }}
+                                </option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-4">
+                    <div class="row">
+                        <div class="col-5 pe-4">
+                            <label class="form-label"> MRN Date<span class="text-danger"></span> </label>
+                            <input class="form-control" formControlName="MRNDate" type="date" readonly />
+                        </div>
+                        <div class="col-7 ps-4">
+                            <label class="form-label"> Supplier Name<span class="text-danger"></span></label>
+                            <ng-select
+                                [items]="supplierOptionArr"
+                                bindLabel="supplierName"
+                                bindValue="_id"
+                                formControlName="supplier"
+                                [clearable]="false"
+                            >
+                            </ng-select>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-4">
+                    <div class="row">
+                        <div class="col-6 pe-4">
+                            <label class="form-label"> Purchase Category<span class="text-danger"></span> </label>
+                            <input class="form-control" type="text" formControlName="purchaseCategory" readonly />
+                        </div>
+                        <div class="col-6 ps-4">
+                            <label class="form-label"> Currency<span class="text-danger"></span> </label>
+                            <input class="form-control" type="text" formControlName="currency" readonly />
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <hr class="row line-border" />
+
+        <app-setting-header
+            [data]="{page,pageSize,collection,search, excelDisplay : 'none'}"
+            (dataChange)="eventHeader($event)"
+        >
+        </app-setting-header>
+        <div class="table-responsive" style="min-height: 19.5rem">
+            <table class="table table-bordered table-sticky">
+                <thead class="bg-primary">
+                    <tr class="text-white">
+                        <th sortable="GINLineNumber" (sort)="onSort($event)">#</th>
+                        <th sortable="itemCode" (sort)="onSort($event)">Item Code</th>
+                        <th class="text-start" sortable="itemName" (sort)="onSort($event)">Item Name</th>
+                        <th sortable="batchDate" (sort)="onSort($event)">Batch Date</th>
+                        <th sortable="UOM" (sort)="onSort($event)">UoM</th>
+                        <th sortable="GINQty" (sort)="onSort($event)">GIN Qty</th>
+                        <th sortable="purchaseRatINR" (sort)="onSort($event)">
+                            Purchase Rate [{{ "INR" | companyCurrency }}]
+                        </th>
+                        <th sortable="lineValueINR" (sort)="onSort($event)">
+                            Line Value [{{ "INR" | companyCurrency }}]
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr
+                        *ngFor="
+                            let u of GINDetailsArr
+                                | searchFi1ter : search
+                                | slice : (page - 1) * pageSize : (page - 1) * pageSize + pageSize;
+                            trackBy: trackByFn
+                        "
+                    >
+                        <td>{{ u?.GINLineNumber }}</td>
+                        <td>{{ u?.itemCode }}</td>
+                        <td class="text-start" [style.width]="itemName.clientWidth" #itemName>
+                            <span class="pointer" [positionTarget]="itemName" [ngbTooltip]="u.itemName">
+                                {{ u?.itemName }}
+                            </span>
+                        </td>
+                        <td>{{ u?.batchDate | date : "dd-MM-YYYY" }}</td>
+                        <td>{{ u?.UOM | UOMUnitsMaster }}</td>
+                        <td>
+                            <div class="d-flex justify-content-center">
+                                <input
+                                    class="form-control form-control-sm w-25"
+                                    type="number"
+                                    [(ngModel)]="u.GINQty"
+                                    [ngModelOptions]="{standalone: true}"
+                                />
+                            </div>
+                        </td>
+                        <td>{{ u?.purchaseRatINR | number : "1.2-2" }}</td>
+                        <td>{{ u?.lineValueINR | number : "1.2-2" }}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="row">
+            <div class="col-4">
+                <div class="d-flex justify-content-end">
+                    <div class="col-form-label text-nowrap">
+                        <button type="button" class="btn btn-secondary gin-location-btn-sm py-0">
+                            {{ "Delivery Location" | labelTranslate }}
+                        </button>
+                    </div>
+                    <div class="d-flex">
+                        <input
+                            type="text"
+                            class="form-control border-end-0"
+                            formControlName="deliveryLocation"
+                            readonly
+                        />
+                        <span class="input-group-text statusSpanHeight">
+                            <div (click)="openStorageLocationMappingModal()" class="bomDocInfo pointer"></div>
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <hr class="row line-border" />
+
+        <div *ngIf="this.form.controls['purchaseCategory'].value == 'Imports'" class="row">
+            <div class="col-5 ms-0">
+                <div class="d-flex">
+                    <div class="col-md-auto text-nowrap">
+                        <button type="button" class="btn btn-primary px-3">Remarks</button>
+                    </div>
+
+                    <input class="form-control input-margin" formControlName="remarks" type="text" />
+                </div>
+            </div>
+
+            <div class="col-md-auto ms-auto">
+                <div appAccessControl [accessType]="rolePermissionActions.createAction">
+                    <button class="btn btn-primary px-5 me-0" type="button" (click)="submit()">Inward to Stores</button>
+                </div>
+            </div>
+        </div>
+        <div *ngIf="['Domestic', '', null].includes(this.form.controls['purchaseCategory'].value)" class="row">
+            <div appAccessControl [accessType]="rolePermissionActions.createAction" class="col-12 text-center">
+                <button class="btn btn-primary px-5 me-4" type="button" (click)="submit()">Inward to Stores</button>
+            </div>
+        </div>
+    </div>
+</Form>

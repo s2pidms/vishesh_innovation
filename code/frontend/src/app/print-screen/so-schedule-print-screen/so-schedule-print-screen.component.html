@@ -1,0 +1,81 @@
+<div class="table-responsive shadow px-0 my-5 page-break">
+    <table class="table">
+        <tr>
+            <td colspan="12">
+                <div class="text-center">
+                    <img src="{{ tableData?.company?.SOPdfHeaderUrl }}" class="img-pdfHeader" />
+                </div>
+            </td>
+        </tr>
+
+        <tr class="head-row">
+            <td colspan="12" class="text-center">
+                <h1 class="fs-2">SO Schedule: The material will be supplied according to the following schedule.</h1>
+            </td>
+        </tr>
+
+        <tr class="border-btm border-0">
+            <td colspan="12" class="py-4">
+                <div style="min-height: 120rem" class="row justify-content-center mt-5">
+                    <div class="col-10 h-100 p-0 pe-4">
+                        <table *ngFor="let p of tableData.SODetails; let i = index" class="table table-sm mb-5">
+                            <tr *ngIf="p.dispatchSchedule.length > 0" class="head-row text-center w-100 text-nowrap">
+                                <th colspan="1" class="text-center">#</th>
+                                <th colspan="3" class="text-start">Description</th>
+                                <th colspan="2" class="text-center">SCH #</th>
+                                <th colspan="2" class="text-center">Quantity</th>
+                                <th colspan="2" class="text-center">Expected Dispatch Date</th>
+                                <th colspan="2" class="text-center">PPIC Date</th>
+                            </tr>
+                            <tr *ngIf="p.dispatchSchedule.length > 0" class="text-wrap">
+                                <td colspan="1" class="text-center">
+                                    <p class="">{{ i + 1 }}</p>
+                                </td>
+                                <td colspan="3">
+                                    <p>
+                                        SKU Code:
+                                        {{ p?.SKU?.SKUNo }}
+                                    </p>
+                                    <p>{{ "SKU Name" | labelTranslate }}: {{ p?.SKU?.SKUName }}</p>
+                                    <p>
+                                        {{ "SKU Description" | labelTranslate }}:
+                                        {{ p?.SKU?.SKUDescription }}
+                                    </p>
+                                    <p>Total SO Quantity: {{ p?.orderedQty }}</p>
+                                    <p>Unit of Measurement [UoM]: {{ p?.UOM }}</p>
+                                </td>
+                                <td colspan="2" class="text-center">
+                                    <p *ngFor="let d of p.dispatchSchedule">
+                                        {{ d?.scheduleNo }}
+                                    </p>
+                                </td>
+                                <td colspan="2" class="text-center">
+                                    <p *ngFor="let d of p.dispatchSchedule">
+                                        {{ d?.quantity }}
+                                    </p>
+                                </td>
+                                <td colspan="2" class="text-center">
+                                    <p *ngFor="let d of p.dispatchSchedule">
+                                        {{ d?.dispatchDate ? (d?.dispatchDate | date : "dd-MM-YYYY") : null }}
+                                    </p>
+                                </td>
+                                <td colspan="2" class="text-center">
+                                    <p *ngFor="let d of p.dispatchSchedule">
+                                        {{ d?.PPICDate ? (d?.PPICDate | date : "dd-MM-YYYY") : null }}
+                                    </p>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+                <div class="row justify-content-center">
+                    <div class="col-10">
+                        <h6 class="fs-4 text-center">
+                            This is a system-generated document, and hence no signature required.
+                        </h6>
+                    </div>
+                </div>
+            </td>
+        </tr>
+    </table>
+</div>

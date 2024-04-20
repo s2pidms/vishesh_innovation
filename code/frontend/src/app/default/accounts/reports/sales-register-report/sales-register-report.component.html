@@ -1,0 +1,153 @@
+<div class="reportTablePage">
+    <div class="table-body pb-0 shadow-none">
+        <div class="row table-header">
+            <div class="col">
+                <label class="heading">Sales Register (Report) </label>
+            </div>
+        </div>
+        <div class="row my-4">
+            <div class="col-5 pe-0">
+                <div class="row">
+                    <div class="col-6 ps-3 separate-row">
+                        <label class="form-label">Report Name</label>
+                        <select (change)="setReportName()" [(ngModel)]="reportName" class="form-select">
+                            <option [value]="item.value" *ngFor="let item of reportNameArr">
+                                {{ item.label }}
+                            </option>
+                        </select>
+                        <span class="set-position">
+                            <img src="./assets/new_icons/redstroke.svg" alt="" height="27" width="8" />
+                        </span>
+                    </div>
+                    <div *ngIf="[reportNameObj.taxInvoiceByCustomer].includes(reportName)" class="col-6 separate-row">
+                        <label class="form-label">Report Specific Search</label>
+                        <ng-select
+                            [items]="customerOptions"
+                            bindLabel="customerName"
+                            bindValue="_id"
+                            [clearable]="false"
+                            [(ngModel)]="customerId"
+                        >
+                        </ng-select>
+                        <span class="set-position">
+                            <img src="./assets/new_icons/redstroke.svg" alt="" height="27" width="8" />
+                        </span>
+                    </div>
+                    <div *ngIf="![reportNameObj.taxInvoiceByCustomer].includes(reportName)" class="col-6 separate-row">
+                        <label class="form-label"> From Date <span class="text-danger">*</span> </label>
+                        <input class="form-control" type="date" [(ngModel)]="fromDate" />
+                        <span class="set-position">
+                            <img src="./assets/new_icons/redstroke.svg" alt="" height="27" width="8" />
+                        </span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- <div class="col-3">
+                <label class="form-label"> As on Date <span class="text-danger"></span> </label>
+                <input class="form-control" type="date" [(ngModel)]="toDate" />
+            </div> -->
+
+            <div *ngIf="[reportNameObj.taxInvoiceByCustomer].includes(reportName)" class="col-2 separate-row">
+                <label class="form-label"> From Date <span class="text-danger">*</span> </label>
+                <input class="form-control" type="date" [(ngModel)]="fromDate" />
+                <span class="set-position">
+                    <img src="./assets/new_icons/redstroke.svg" alt="" height="27" width="8" />
+                </span>
+            </div>
+
+            <div class="col-2">
+                <label class="form-label"> To Date <span class="text-danger">*</span> </label>
+                <input class="form-control" type="date" [(ngModel)]="toDate" />
+            </div>
+
+            <div class="col-3 align-self-end separate-image">
+                <span class="image-position">
+                    <img src="./assets/new_icons/redstroke.svg" alt="" height="27" width="8" />
+                </span>
+                <button type="button" class="btn btn-primary px-4 me-3" (click)="getAll()">Apply Filter</button>
+
+                <button type="button" class="btn btn-primary px-4 ms-4" (click)="reset()">Reset Filter</button>
+            </div>
+        </div>
+        <hr class="row line-border" />
+        <div class="table-responsive mb-0">
+            <app-setting-header
+                [data]="{page,pageSize,collection,search,type: 'list',pdfDisplay : true}"
+                (dataChange)="eventHeader($event)"
+            >
+            </app-setting-header>
+            <table class="table table-bordered table-sticky">
+                <thead class="bg-primary">
+                    <tr class="text-white">
+                        <th sortable="salesInvoiceNumber" (sort)="onSort($event)">Tax Invoice No.</th>
+                        <th sortable="salesInvoiceDate" (sort)="onSort($event)">Invoice Date</th>
+                        <th class="text-start" sortable="customerName" (sort)="onSort($event)">Customer Name</th>
+                        <th sortable="GSTIN" (sort)="onSort($event)">Customer GSTIN</th>
+                        <th sortable="RCM" (sort)="onSort($event)">RCM</th>
+                        <th sortable="totalTaxableAmt" (sort)="onSort($event)">Taxable Amt.</th>
+                        <th sortable="salesInvoiceTotalSGSTAmount" (sort)="onSort($event)">SGST Amt.</th>
+                        <th sortable="salesInvoiceTotalCGSTAmount" (sort)="onSort($event)">CGST Amt.</th>
+                        <th sortable="salesInvoiceTotalIGSTAmount" (sort)="onSort($event)">IGST Amt.</th>
+                        <th sortable="salesInvoiceTotalAmountWithTax" (sort)="onSort($event)">Total Amt.</th>
+                        <th sortable="roundedOff" (sort)="onSort($event)">Round off</th>
+                        <th sortable="netAmount" (sort)="onSort($event)">Net Amt.</th>
+                        <th>View</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let u of tableData; trackBy: trackByFn">
+                        <td>{{ u?.salesInvoiceNumber }}</td>
+                        <td>{{ u?.salesInvoiceDate }}</td>
+                        <td class="text-start" [style.width]="customerName.clientWidth" #customerName>
+                            <span class="pointer" [positionTarget]="customerName" [ngbTooltip]="u.customerName">
+                                {{ u.customerName }}
+                            </span>
+                        </td>
+                        <td>{{ u?.GSTIN }}</td>
+                        <td>{{ u?.RCM ?? "No" }}</td>
+                        <td>{{ u?.totalTaxableAmt }}</td>
+                        <td>{{ u?.salesInvoiceTotalSGSTAmount }}</td>
+                        <td>{{ u?.salesInvoiceTotalCGSTAmount }}</td>
+                        <td>{{ u?.salesInvoiceTotalIGSTAmount }}</td>
+                        <td>{{ u?.salesInvoiceTotalAmountWithTax }}</td>
+                        <td>{{ u?.roundedOff }}</td>
+                        <td>{{ u?.netAmount }}</td>
+                        <td>
+                            <div class="d-flex justify-content-center">
+                                <i
+                                    (click)="navigateTo(u?._id, 'print')"
+                                    class="fa fa-eye fa-lg ms-2 text-primary pointer"
+                                    aria-hidden="true"
+                                ></i>
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="table-footer">
+            <hr class="row line-border" />
+            <div class="row align-items-center mt-3">
+                <div class="col-3 pe-0">
+                    <div class="d-flex">
+                        <div class="col-form-label text-nowrap px-1 pt-1 ms-3">
+                            Total Taxable Amt. <span>&#9654;</span>
+                        </div>
+
+                        <span class="input-group-text text-secondary combine-INR">
+                            {{ "INR" | companyCurrency }}
+                            <div class="vr ms-3"></div>
+                        </span>
+                        <input
+                            [value]="totalInvoiceValue | number : '1.2-2'"
+                            class="form-control ps-0 border-start-0"
+                            type="text"
+                            readonly
+                        />
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

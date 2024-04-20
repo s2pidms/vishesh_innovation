@@ -1,0 +1,88 @@
+<div class="reportTablePage">
+    <div class="table-body pb-0 shadow-none">
+        <div class="row table-header">
+            <div class="col">
+                <label class="heading">Invoice Payment Report</label>
+            </div>
+        </div>
+        <div class="row my-4">
+            <div class="col-3 ps-5 separate-row">
+                <label class="form-label"> Select Customer</label>
+                <ng-select
+                    [items]="customerOptions"
+                    bindLabel="customerName"
+                    bindValue="_id"
+                    [clearable]="false"
+                    [(ngModel)]="customerId"
+                >
+                </ng-select>
+                <span class="set-position">
+                    <img src="./assets/new_icons/redstroke.svg" alt="" height="27" width="8" />
+                </span>
+            </div>
+
+            <div class="col-3">
+                <label class="form-label"> Start Date <span class="text-danger">*</span> </label>
+                <input class="form-control" type="date" [(ngModel)]="fromDate" />
+            </div>
+
+            <div class="col-3">
+                <label class="form-label"> End Date <span class="text-danger">*</span> </label>
+                <input class="form-control" type="date" [(ngModel)]="toDate" />
+            </div>
+
+            <div class="col-3 align-self-end separate-image">
+                <span class="image-position">
+                    <img src="./assets/new_icons/redstroke.svg" alt="" height="27" width="8" />
+                </span>
+                <button type="button" class="btn btn-primary px-4" (click)="getAll()">Apply Filter</button>
+
+                <button type="button" class="btn btn-primary px-4 ms-4" (click)="reset()">Reset Filter</button>
+            </div>
+        </div>
+        <hr class="row line-border" />
+        <div class="table-responsive mb-0">
+            <app-setting-header
+                [data]="{page,pageSize,collection,search,type: 'list',pdfDisplay : true}"
+                (dataChange)="eventHeader($event)"
+            >
+            </app-setting-header>
+            <table class="table table-bordered table-sticky">
+                <thead class="bg-primary">
+                    <tr class="text-white">
+                        <th sortable="serviceInvoiceNumber" (sort)="onSort($event)">Invoice #</th>
+                        <th sortable="serviceInvoiceDate" (sort)="onSort($event)">Invoice Date</th>
+                        <th class="text-start" sortable="customerName" (sort)="onSort($event)">Customer</th>
+                        <th sortable="totalAmountWithTax" (sort)="onSort($event)">Invoice Amount</th>
+                        <th sortable="receivedAmount" (sort)="onSort($event)">Received Amount</th>
+                        <th sortable="receivedDate" (sort)="onSort($event)">Received Date</th>
+                        <th sortable="invoiceAge" (sort)="onSort($event)">Invoice Age</th>
+                        <th sortable="invoiceFlag" (sort)="onSort($event)">Invoice Flag</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let u of tableData; trackBy: trackByFn">
+                        <td>{{ u.serviceInvoiceNumber }}</td>
+                        <td>{{ u.serviceInvoiceDate }}</td>
+                        <td class="text-start" [style.width]="customerName.clientWidth" #customerName>
+                            <span class="pointer" [positionTarget]="customerName" [ngbTooltip]="u.customerName">
+                                {{ u.customerName }}
+                            </span>
+                        </td>
+                        <td>{{ u.totalAmountWithTax | number : "1.2-2" }}</td>
+                        <td>{{ u.receivedAmount | number : "1.2-2" }}</td>
+                        <td>{{ u.receivedDate }}</td>
+                        <td>{{ u.invoiceAge }}</td>
+                        <td>
+                            <span class="d-flex justify-content-center">
+                                <div *ngIf="u?.invoiceFlag == 'green'" class="flaggreen"></div>
+                                <div *ngIf="u?.invoiceFlag == 'red'" class="flagred"></div>
+                                <div *ngIf="u?.invoiceFlag == 'yellow'" class="flagYellow"></div>
+                            </span>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

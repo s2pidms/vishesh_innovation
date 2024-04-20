@@ -1,0 +1,104 @@
+<div class="container-fluid text-center dashboard-page">
+    <div class="row mt-5 mx-1">
+        <div class="col">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Active Users</h5>
+                    <p class="card-text">
+                        {{ dashBoardData.activeUsers }}
+                    </p>
+                </div>
+            </div>
+        </div>
+        <div class="col">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Active Roles</h5>
+                    <p class="card-text">
+                        {{ dashBoardData.activeRoles }}
+                    </p>
+                </div>
+            </div>
+        </div>
+        <div class="col">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Total Admin Users</h5>
+                    <p class="card-text">
+                        {{ dashBoardData.totalAdminUsers }}
+                    </p>
+                </div>
+            </div>
+        </div>
+        <div class="col">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Logged In Users</h5>
+                    <p class="card-text">
+                        {{ dashBoardData.loggedInUsers }}
+                    </p>
+                </div>
+            </div>
+        </div>
+        <div class="col">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Total Company Locations</h5>
+                    <p class="card-text">
+                        {{ dashBoardData.totalCompanyLocations }}
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row mt-3 mx-1">
+        <div class="col">
+            <app-setting-header
+                [data]="{page,pageSize,collection,search,excelDisplay : 'none'}"
+                (dataChange)="eventHeader($event)"
+            ></app-setting-header>
+
+            <div class="table-responsive">
+                <table class="table table-bordered table-sticky">
+                    <thead class="bg-primary">
+                        <tr class="text-white">
+                            <th class="text-start" sortable="name" (sort)="onSort($event)">User Name</th>
+                            <th sortable="userType" (sort)="onSort($event)">User type</th>
+                            <th sortable="role" (sort)="onSort($event)">Role</th>
+                            <th sortable="userEmail" (sort)="onSort($event)">Email</th>
+                            <th sortable="status" (sort)="onSort($event)">Status</th>
+                            <th sortable="isLoggedIn" (sort)="onSort($event)">Logged In status</th>
+                            <th sortable="lastLoggedIn" (sort)="onSort($event)">Last Logged In</th>
+                            <th sortable="userIP" (sort)="onSort($event)">IP Address</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let u of tableData; trackBy: trackByFn">
+                            <td class="text-start">{{ u?.name }}</td>
+                            <td>{{ u?.userType }}</td>
+                            <td>{{ u?.role }}</td>
+                            <td>{{ u?.userEmail }}</td>
+                            <td>{{ u?.status }}</td>
+                            <td>
+                                <div class="">
+                                    <i
+                                        *ngIf="u.isLoggedIn == 'Yes'"
+                                        class="fa fa-circle text-success"
+                                        aria-hidden="true"
+                                    ></i>
+                                    <i
+                                        *ngIf="u.isLoggedIn == 'No'"
+                                        class="fa fa-circle text-danger"
+                                        aria-hidden="true"
+                                    ></i>
+                                </div>
+                            </td>
+                            <td>{{ u?.lastLoggedIn }}</td>
+                            <td>{{ u?.userIP }}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>

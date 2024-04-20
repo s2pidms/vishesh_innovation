@@ -1,0 +1,48 @@
+<form [formGroup]="form" class="formCard card">
+    <div class="container">
+        <div class="row form-header">
+            <div class="col heading">
+                <label>Process Name Master ({{ action | titlecase }})</label>
+            </div>
+        </div>
+        <div class="form-body">
+            <div class="row">
+                <div class="col-3">
+                    <label class="form-label mb-2">Process Code <span class="text-danger">*</span></label>
+                    <input class="form-control" type="text" formControlName="processCode" readonly />
+                </div>
+                <div class="col-3">
+                    <label class="form-label mb-2">Process Name <span class="text-danger">*</span></label>
+                    <input class="form-control" type="text" formControlName="processName" />
+                </div>
+                <div class="col-3">
+                    <label class="form-label mb-2">Order <span class="text-danger">*</span></label>
+                    <input class="form-control" type="number" formControlName="order" />
+                </div>
+
+                <div class="col-3">
+                    <label class="form-label mb-2">Status <span class="text-danger">*</span></label>
+                    <select class="form-select" formControlName="status">
+                        <option value="Active">Active</option>
+                        <option value="Inactive">Inactive</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        <hr class="row line-border" />
+        <div class="row align-items-center mt-3">
+            <div class="col-6">
+                <button type="button" class="btn btn-primary px-4" (click)="openSubProcessesModal()">
+                    Define Sub - Processes
+                </button>
+            </div>
+            <div class="col-6 text-end">
+                <div *ngIf="!['view'].includes(action)" class="d-grid gap-2 d-md-block">
+                    <button class="btn btn-primary px-5 me-4" type="button" (click)="reset()">Reset</button>
+                    <button type="button" class="btn btn-primary px-5" (click)="submit()">Save</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>

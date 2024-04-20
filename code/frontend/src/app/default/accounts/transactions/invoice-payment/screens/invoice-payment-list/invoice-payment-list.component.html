@@ -1,0 +1,91 @@
+<div class="listCard card">
+    <div class="table-header">
+        <label class="heading">Invoice Payment Summary</label>
+    </div>
+    <div appAccessControl [accessType]="rolePermissionActions.createAction" class="text-center">
+        <button
+            class="btn btn-primary btn-add"
+            type="button"
+            (click)="navigateTo('/default/accounts/transactions/invoice_payment/form', null, 'create')"
+        >
+            <i class="fa fa-plus-square fa-lg me-2" aria-hidden="true"></i>
+            Invoice Payment
+        </button>
+    </div>
+    <hr class="line-border" />
+    <div class="table-responsive">
+        <app-setting-header [data]="{page,pageSize,collection,search,type: 'list'}" (dataChange)="eventHeader($event)">
+        </app-setting-header>
+
+        <table class="table table-bordered">
+            <thead class="bg-primary">
+                <tr class="text-white">
+                    <th sortable="customerName" (sort)="onSort($event)" class="text-start">Customer</th>
+                    <th sortable="projectName" (sort)="onSort($event)" class="text-start">Project</th>
+                    <th sortable="serviceInvoiceNumber" (sort)="onSort($event)">Invoice #</th>
+                    <th sortable="serviceInvoiceDate" (sort)="onSort($event)">Invoice Date</th>
+                    <th sortable="totalAmountWithTax" (sort)="onSort($event)">Invoice Amount</th>
+                    <th sortable="receivedAmount" (sort)="onSort($event)">Received Amount</th>
+                    <th sortable="receivedDate" (sort)="onSort($event)">Received Date</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let u of tableData; trackBy: trackByFn">
+                    <td class="text-start">
+                        <span class="pointer" [ngbTooltip]="u.customerName" placement="right">
+                            {{ u.customerName ? (u.customerName | truncate : 25) : null }}
+                        </span>
+                    </td>
+                    <td class="text-start">
+                        <span class="pointer" [ngbTooltip]="u.projectName" placement="right">
+                            {{ u.projectName ? (u.projectName | truncate : 25) : null }}
+                        </span>
+                    </td>
+                    <td>{{ u.serviceInvoiceNumber }}</td>
+                    <td>{{ u.serviceInvoiceDate }}</td>
+                    <td>{{ u.totalAmountWithTax }}</td>
+                    <td>{{ u.receivedAmount }}</td>
+                    <td>{{ u.receivedDate }}</td>
+                    <td>
+                        <div class="dropdown">
+                            <button class="dropbtn"></button>
+                            <div class="dropdown-content">
+                                <a
+                                    appAccessControl
+                                    [accessType]="rolePermissionActions.viewAction"
+                                    href="javascript:void(0)"
+                                    (click)="
+                                        navigateTo(
+                                            '/default/accounts/transactions/invoice_payment/form',
+                                            u?._id,
+                                            'view'
+                                        )
+                                    "
+                                >
+                                    <i class="fa fa-eye fa-lg me-2 text-primary" aria-hidden="true"></i>
+                                    View
+                                </a>
+                                <a
+                                    appAccessControl
+                                    [accessType]="rolePermissionActions.editAction"
+                                    href="javascript:void(0)"
+                                    (click)="
+                                        navigateTo(
+                                            '/default/accounts/transactions/invoice_payment/form',
+                                            u?._id,
+                                            'edit'
+                                        )
+                                    "
+                                >
+                                    <i class="fa fa-pencil-square-o fa-lg me-2 text-primary" aria-hidden="true"></i>
+                                    Edit
+                                </a>
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>

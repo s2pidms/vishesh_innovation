@@ -1,0 +1,139 @@
+<div class="reportTablePage">
+    <div class="table-body pb-0 shadow-none">
+        <div class="row table-header">
+            <div class="col">
+                <label class="heading">Payroll Report</label>
+            </div>
+        </div>
+        <div class="row my-4">
+            <div class="col-9">
+                <div class="row">
+                    <div class="col-3 ps-3 pe-0">
+                        <label class="form-label"> Employee Name<span class="text-danger"></span> </label>
+
+                        <ng-select
+                            [items]="user"
+                            bindLabel="label"
+                            bindValue="value"
+                            [multiple]="false"
+                            [(ngModel)]="userId"
+                            [clearable]="false"
+                        >
+                        </ng-select>
+                    </div>
+                    <div class="col-3 ps-5 separate-row">
+                        <label class="form-label"> Payroll Month</label>
+                        <select [(ngModel)]="payrollForMonthYear" class="form-select">
+                            <option value="" disabled>Select Month</option>
+                            <option [value]="item.value" *ngFor="let item of monthOptions">
+                                {{ item.value | date : "MMMM YYYY" }}
+                            </option>
+                        </select>
+                        <span class="set-position">
+                            <img src="./assets/new_icons/redstroke.svg" alt="" height="27" width="8" />
+                        </span>
+                    </div>
+                    <div class="col-3">
+                        <label class="form-label"> Start Date(from)<span class="text-danger">*</span> </label>
+                        <input class="form-control" type="date" [(ngModel)]="fromDate" />
+                    </div>
+                    <div class="col-3">
+                        <label class="form-label">
+                            End Date(to)
+                            <span class="text-danger">*</span>
+                        </label>
+                        <input class="form-control" type="date" [(ngModel)]="toDate" />
+                    </div>
+                </div>
+            </div>
+            <div class="col-3 align-self-end separate-image">
+                <span class="image-position">
+                    <img src="./assets/new_icons/redstroke.svg" alt="" height="27" width="8" />
+                </span>
+                <button type="button" class="btn btn-primary px-4 me-3" (click)="getAll()">Apply Filter</button>
+                <button type="button" class="btn btn-primary px-4 ms-4" (click)="clearFilter()">Reset Filter</button>
+            </div>
+        </div>
+        <hr class="row line-border" />
+        <div class="table-responsive mb-0">
+            <app-setting-header
+                [data]="{page,pageSize,collection,search,type: 'list',pdfDisplay:true}"
+                (dataChange)="eventHeader($event)"
+            >
+            </app-setting-header>
+            <table class="table table-bordered table-sticky">
+                <thead class="bg-primary">
+                    <tr class="text-white">
+                        <th sortable="employeeCode" (sort)="onSort($event)">Employee Code</th>
+                        <th class="text-start" sortable="employeeName" (sort)="onSort($event)">Employee Name</th>
+                        <th sortable="department" (sort)="onSort($event)">Department</th>
+                        <th sortable="paidDays" (sort)="onSort($event)">Paid Days</th>
+                        <th sortable="gross" (sort)="onSort($event)">Gross</th>
+                        <th sortable="PF" (sort)="onSort($event)">PF</th>
+                        <th sortable="ESIC" (sort)="onSort($event)">ESIC</th>
+                        <th sortable="TDS" (sort)="onSort($event)">TDS</th>
+                        <th sortable="PT" (sort)="onSort($event)">PT</th>
+                        <th sortable="advSalary" (sort)="onSort($event)">Adv. Salary</th>
+                        <th sortable="netPayable" (sort)="onSort($event)">Net Payable</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let u of tableData; trackBy: trackByFn">
+                        <td>{{ u?.employeeCode }}</td>
+                        <td class="text-start">{{ u?.employeeName }}</td>
+                        <td>{{ u?.department }}</td>
+                        <td>{{ u?.paidDays }}</td>
+                        <td>{{ u?.gross | number : "2.2-2" }}</td>
+                        <td>{{ u?.PF | number : "2.2-2" }}</td>
+                        <td>{{ u?.ESIC | number : "2.2-2" }}</td>
+                        <td>{{ u?.TDS | number : "2.2-2" }}</td>
+                        <td>{{ u?.PT | number : "2.2-2" }}</td>
+                        <td>{{ u?.advSalary | number : "2.2-2" }}</td>
+                        <td>{{ u?.netPayable | number : "2.2-2" }}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="table-footer">
+            <hr class="row line-border" />
+            <div class="row align-items-center mt-3">
+                <div class="col-3 pe-0">
+                    <div class="d-flex justify-content-center">
+                        <div class="col-form-label text-nowrap pe-1 pt-0 ms-3">
+                            Total Gross <i class="fa fa-caret-right fs-4 mx-2"></i>
+                            <button type="button" class="btn btn-info py-1 ms-2">{{ "INR" | companyCurrency }}</button>
+                        </div>
+                        <input [value]="gross | number : '1.2-2'" class="form-control" type="text" readonly />
+                    </div>
+                </div>
+                <div class="col-3 px-5">
+                    <div class="d-flex justify-content-center">
+                        <div class="col-form-label text-nowrap pe-1 pt-0 ms-3">
+                            Total Net Payable <i class="fa fa-caret-right fs-4 mx-2"></i>
+                            <button type="button" class="btn btn-info py-1 ms-2">{{ "INR" | companyCurrency }}</button>
+                        </div>
+                        <input [value]="netPayable | number : '1.2-2'" class="form-control" type="text" readonly />
+                    </div>
+                </div>
+                <div class="col-3 pe-0">
+                    <div class="d-flex justify-content-center">
+                        <div class="col-form-label text-nowrap pe-1 pt-0 ms-3">
+                            Total PF<i class="fa fa-caret-right fs-4 mx-2"></i>
+                            <button type="button" class="btn btn-info py-1 ms-2">{{ "INR" | companyCurrency }}</button>
+                        </div>
+                        <input [value]="PF | number : '1.2-2'" class="form-control" type="text" readonly />
+                    </div>
+                </div>
+                <div class="col-3">
+                    <div class="d-flex justify-content-center">
+                        <div class="col-form-label text-nowrap pe-1 pt-0 ms-3">
+                            Total TDS <i class="fa fa-caret-right fs-4 mx-2"></i>
+                            <button type="button" class="btn btn-info py-1 ms-2">{{ "INR" | companyCurrency }}</button>
+                        </div>
+                        <input [value]="TDS | number : '1.2-2'" class="form-control" type="text" readonly />
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

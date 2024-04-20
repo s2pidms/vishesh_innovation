@@ -1,0 +1,227 @@
+<form [formGroup]="form" class="formCard card">
+    <div class="container">
+        <div class="row form-header">
+            <div class="col heading">
+                <label>Customer Address</label>
+            </div>
+        </div>
+        <div class="form-body">
+            <div class="row">
+                <div class="col-3">
+                    <label class="form-label mb-0"> Customer Code <span class="text-danger"></span> </label>
+                    <ng-select
+                        [items]="customerOptions"
+                        bindLabel="customerCode"
+                        bindValue="customerCode"
+                        [clearable]="false"
+                        formControlName="customerCode"
+                        (change)="setCustomersDetails($event)"
+                    >
+                    </ng-select>
+                </div>
+                <div class="col-3">
+                    <label class="form-label mb-0"> Customer Name <span class="text-danger"></span> </label>
+                    <ng-select
+                        [items]="customerOptions"
+                        bindLabel="customerName"
+                        bindValue="customerName"
+                        [clearable]="false"
+                        formControlName="customerName"
+                        (change)="setCustomersDetails($event)"
+                    >
+                    </ng-select>
+                </div>
+                <div class="col-3">
+                    <label class="form-label mb-0"> Region/Zone <span class="text-danger"></span> </label>
+                    <input type="text" class="form-control" formControlName="zone" readonly />
+                </div>
+                <div class="col-3">
+                    <label class="form-label mb-0"> GSTIN <span class="text-danger"></span> </label>
+                    <input type="text" class="form-control" formControlName="GSTIN" readonly />
+                </div>
+            </div>
+        </div>
+        <hr class="row line-border" />
+        <div class="row">
+            <div class="col-6">
+                <h4 class="form-label">Bill To Address</h4>
+            </div>
+            <div class="col-6 text-end">
+                <button class="btn btn-primary pt-0 px-3" (click)="BillAddressCopyToClipboard()">Copy</button>
+            </div>
+        </div>
+        <ng-container formGroupName="customerBillingAddress">
+            <div class="row mt-1">
+                <div class="col">
+                    <label class="form-label">Address Line 1 <span class="text-danger"></span> </label>
+                    <input type="text" class="form-control" formControlName="line1" readonly />
+                </div>
+                <div class="col">
+                    <label class="form-label">Address Line 2 <span class="text-danger"></span></label>
+                    <input type="text" class="form-control" formControlName="line2" readonly />
+                </div>
+                <div class="col">
+                    <label class="form-label">Address Line 3 <span class="text-danger"></span></label>
+                    <input type="text" class="form-control" formControlName="line3" readonly />
+                </div>
+                <div class="col">
+                    <label class="form-label">Address Line 4 <span class="text-danger"></span></label>
+                    <input type="text" class="form-control" formControlName="line4" readonly />
+                </div>
+            </div>
+            <div class="row mt-4">
+                <div class="col">
+                    <label class="form-label"> City/District <span class="text-danger"></span> </label>
+                    <input type="text" class="form-control" formControlName="city" readonly />
+                </div>
+                <div class="col">
+                    <label class="form-label"> Pin Code <span class="text-danger"></span> </label>
+                    <input
+                        oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
+                        type="number"
+                        maxlength="6"
+                        class="form-control"
+                        formControlName="pinCode"
+                        readonly
+                    />
+                </div>
+                <div class="col">
+                    <label class="form-label"> State/Province <span class="text-danger"></span> </label>
+                    <input type="text" class="form-control" formControlName="state" readonly />
+                </div>
+                <div class="col">
+                    <label class="form-label"> Country <span class="text-danger"></span> </label>
+                    <input type="text" class="form-control" formControlName="country" readonly />
+                </div>
+            </div>
+        </ng-container>
+        <hr class="row line-border" />
+        <div class="row justify-content-between">
+            <div class="col-4">
+                <h4 class="form-label">Ship To Address</h4>
+            </div>
+
+            <div class="col-4 d-flex justify-content-center">
+                <ngb-pagination
+                    *ngIf="customerShippingAddressArray.length > 0"
+                    [collectionSize]="customerShippingAddressArray.length"
+                    [(page)]="page"
+                    [pageSize]="pageSize"
+                    [boundaryLinks]="false"
+                >
+                    <ng-template ngbPaginationPrevious>
+                        <img src="./assets/new_icons/pagination_prev.svg" width="20rem" />
+                    </ng-template>
+                    <ng-template ngbPaginationNext>
+                        <img src="./assets/new_icons/pagination_next.svg" width="20rem" />
+                    </ng-template>
+                    <ng-template ngbPaginationPages let-page let-pages="pages">
+                        <li class="ngb-custom-pages-item align-self-center" *ngIf="pages.length > 0">
+                            <span class="page-label me-2 ms-1"> Page {{ page }} of {{ pages[pages.length - 1] }} </span>
+                        </li>
+                    </ng-template>
+                </ngb-pagination>
+            </div>
+            <div class="col-4 text-end">
+                <button
+                    class="btn btn-primary pt-0 px-3"
+                    (click)="ShipAddressCopyToClipboard(customerShippingAddressArray[page - 1])"
+                >
+                    Copy
+                </button>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-12">
+                <ng-container *ngIf="customerShippingAddressArray.length > 0">
+                    <div class="row mt-1">
+                        <div class="col">
+                            <label class="form-label">Address Line 1 <span class="text-danger"></span> </label>
+                            <input
+                                type="text"
+                                class="form-control"
+                                [(ngModel)]="customerShippingAddressArray[page - 1].line1"
+                                [ngModelOptions]="{standalone: true}"
+                                readonly
+                            />
+                        </div>
+                        <div class="col">
+                            <label class="form-label">Address Line 2 <span class="text-danger"></span></label>
+                            <input
+                                type="text"
+                                class="form-control"
+                                [(ngModel)]="customerShippingAddressArray[page - 1].line2"
+                                [ngModelOptions]="{standalone: true}"
+                                readonly
+                            />
+                        </div>
+                        <div class="col">
+                            <label class="form-label">Address Line 3 <span class="text-danger"></span></label>
+                            <input
+                                type="text"
+                                class="form-control"
+                                [(ngModel)]="customerShippingAddressArray[page - 1].line3"
+                                [ngModelOptions]="{standalone: true}"
+                                readonly
+                            />
+                        </div>
+                        <div class="col">
+                            <label class="form-label">Address Line 4 <span class="text-danger"></span></label>
+                            <input
+                                type="text"
+                                class="form-control"
+                                [(ngModel)]="customerShippingAddressArray[page - 1].line4"
+                                [ngModelOptions]="{standalone: true}"
+                                readonly
+                            />
+                        </div>
+                    </div>
+                    <div class="row mt-4">
+                        <div class="col">
+                            <label class="form-label"> City/District <span class="text-danger"></span> </label>
+                            <input
+                                type="text"
+                                class="form-control"
+                                [(ngModel)]="customerShippingAddressArray[page - 1].city"
+                                [ngModelOptions]="{standalone: true}"
+                                readonly
+                            />
+                        </div>
+                        <div class="col">
+                            <label class="form-label"> Pin Code <span class="text-danger"></span> </label>
+                            <input
+                                oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
+                                type="number"
+                                maxlength="6"
+                                class="form-control"
+                                [(ngModel)]="customerShippingAddressArray[page - 1].pinCode"
+                                [ngModelOptions]="{standalone: true}"
+                                readonly
+                            />
+                        </div>
+                        <div class="col">
+                            <label class="form-label"> State/Province <span class="text-danger"></span> </label>
+                            <input
+                                type="text"
+                                class="form-control"
+                                [(ngModel)]="customerShippingAddressArray[page - 1].state"
+                                [ngModelOptions]="{standalone: true}"
+                                readonly
+                            />
+                        </div>
+                        <div class="col">
+                            <label class="form-label"> Country <span class="text-danger"></span> </label>
+                            <input
+                                type="text"
+                                class="form-control"
+                                [(ngModel)]="customerShippingAddressArray[page - 1].country"
+                                [ngModelOptions]="{standalone: true}"
+                                readonly
+                            />
+                        </div>
+                    </div>
+                </ng-container>
+            </div>
+        </div>
+    </div>
+</form>

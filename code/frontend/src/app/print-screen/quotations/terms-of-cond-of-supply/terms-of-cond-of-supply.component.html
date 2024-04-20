@@ -1,0 +1,68 @@
+<div class="container-fluid printScreen px-0">
+    <div class="row">
+        <div class="col-12 text-center px-0">
+            <div class="page py-3">
+                <div class="container-fluid printScreen px-0">
+                    <div class="row">
+                        <div class="col-12 text-center px-0">
+                            <div class="table-responsive shadow printScreen h-100">
+                                <table class="table">
+                                    <tr>
+                                        <td colspan="12">
+                                            <div class="text-center">
+                                                <img src="{{ tableData?.SOPdfHeaderUrl }}" class="img-pdfHeader" />
+                                            </div>
+                                        </td>
+                                    </tr>
+
+                                    <tr class="head-row">
+                                        <td colspan="12" class="text-center">
+                                            <h1 class="fs-1">Terms & Conditions of Supply</h1>
+                                        </td>
+                                    </tr>
+
+                                    <tr>
+                                        <td colspan="12">
+                                            <div class="row">
+                                                <div class="col-12 px-0">
+                                                    <table class="table mt-5">
+                                                        <thead>
+                                                            <tr class="head-row text-center w-100 text-nowrap">
+                                                                <th colspan="1" class="text-center">SN</th>
+                                                                <th colspan="9" class="text-start">
+                                                                    Terms & Conditions
+                                                                </th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                            <tr
+                                                                class="text-wrap"
+                                                                *ngFor="let p of termsAndCondOfQuotation; let i = index"
+                                                            >
+                                                                <td colspan="1" class="text-center">
+                                                                    <label>{{ i + 1 }}</label>
+                                                                </td>
+
+                                                                <td colspan="4" class="text-start">
+                                                                    {{ p?.parameterLabel }}
+                                                                </td>
+                                                                <td colspan="8" class="text-start">
+                                                                    {{ p?.parameterName }}
+                                                                </td>
+                                                            </tr>
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                </table>
+                                <p class="text-end">{{ display?.displayText }}</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

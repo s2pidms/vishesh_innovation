@@ -1,0 +1,132 @@
+<div style="min-height: 46rem" class="modelPage">
+    <div class="modal-header">
+        <div class="heading">Add Dispatch Details</div>
+        <div>
+            <button type="button" class="btn btn-cross btn-sm" aria-label="Close" (click)="activeModal.dismiss()">
+                <i class="fa fa-times-circle" aria-hidden="true"></i>
+            </button>
+        </div>
+    </div>
+
+    <div class="">
+        <label class="form-header mt-4 ms-5">Ship To Details</label>
+        <hr class="line-border mt-0" />
+        <form [formGroup]="form">
+            <div formGroupName="customerShippingAddress">
+                <div class="row mb-4 px-5">
+                    <div class="col-3">
+                        <label class="form-label"> Party Name <span class="text-danger">*</span> </label>
+
+                        <ng-select
+                            [items]="data.addressArr"
+                            bindLabel="contactPersonName"
+                            bindValue="contactPersonName"
+                            [clearable]="false"
+                            formControlName="contactPersonName"
+                            placeholder="Select"
+                            (change)="patchAddress($event)"
+                        >
+                        </ng-select>
+                    </div>
+                    <div class="col-3">
+                        <label class="form-label"> Address Line 1 <span class="text-danger"></span> </label>
+                        <input class="form-control" type="text" formControlName="line1" readonly />
+                    </div>
+                    <div class="col-3">
+                        <label class="form-label"> Address Line 2 <span class="text-danger"></span></label>
+                        <input class="form-control" type="text" formControlName="line2" readonly />
+                    </div>
+                    <div class="col-3">
+                        <label class="form-label"> Address Line 3 <span class="text-danger"></span></label>
+                        <input class="form-control" type="text" formControlName="line3" readonly />
+                    </div>
+                </div>
+
+                <div class="row my-4 px-5">
+                    <div class="col-3">
+                        <label class="form-label"> City/District <span class="text-danger"></span> </label>
+                        <input class="form-control" type="text" formControlName="city" readonly />
+                    </div>
+                    <div class="col-3">
+                        <label class="form-label"> Pin Code <span class="text-danger"></span> </label>
+                        <input
+                            class="form-control"
+                            oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
+                            type="number"
+                            maxlength="6"
+                            formControlName="pinCode"
+                            readonly
+                        />
+                    </div>
+                    <div class="col-3">
+                        <label class="form-label"> State/Province <span class="text-danger"></span> </label>
+                        <input class="form-control" type="text" formControlName="state" readonly />
+                    </div>
+                    <div class="col-3">
+                        <div class="row justify-content-between">
+                            <div class="col">
+                                <label class="form-label">Country <span class="text-danger"></span> </label>
+                                <input class="form-control" type="text" formControlName="country" readonly />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <label class="form-header mt-4 ms-5">Freight Details</label>
+            <hr class="line-border mt-0" />
+            <div class="row my-4 px-5">
+                <div class="col-3">
+                    <label class="form-label"> Mode of Transport <span class="text-danger">*</span> </label>
+                    <select class="form-select" formControlName="modeOfTransport">
+                        <option [value]="null" selected disabled>Select</option>
+                        <option [value]="f.value" *ngFor="let f of data.modeOfTransport">
+                            {{ f.label }}
+                        </option>
+                    </select>
+                </div>
+                <div class="col-3">
+                    <div class="form-label">
+                        Freight Terms<span class="text-danger">* </span>
+                        <button
+                            type="button"
+                            *ngIf="form.value.frightTerms == 'To be added in Tax Invoice'"
+                            class="btn btn-primary form-btn-sm py-0 float-end"
+                            (click)="openOtherChargesModal()"
+                        >
+                            <span>Add Other Charges</span>
+                        </button>
+                    </div>
+                    <select class="form-select" formControlName="frightTerms">
+                        <option [value]="null" selected disabled>Select</option>
+                        <option [value]="f.parameterName" *ngFor="let f of data.freightTerms">
+                            {{ f.parameterLabel }}
+                        </option>
+                    </select>
+                </div>
+                <div class="col-3">
+                    <label class="form-label"> Transporter<span class="text-danger">*</span> </label>
+                    <select class="form-select" formControlName="transporter">
+                        <option [value]="null" selected disabled>Select Transporter</option>
+                        <option [value]="f.value" *ngFor="let f of data.transporterArr">
+                            {{ f.label }}
+                        </option>
+                    </select>
+                </div>
+                <div class="col-3">
+                    <label class="form-label"
+                        >Destination [Terminal or Port]
+                        <span class="text-danger">*</span>
+                    </label>
+                    <input class="form-control" type="text" formControlName="destination" />
+                </div>
+            </div>
+            <div class="row justify-content-center" *ngIf="['create', 'edit'].includes(action)">
+                <div class="col-2 d-flex justify-content-center my-5">
+                    <button (click)="saveDispatchDetails()" type="button" class="btn btn-primary px-4">
+                        Save & Close
+                    </button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>

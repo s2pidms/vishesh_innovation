@@ -1,0 +1,72 @@
+<div class="listCard card">
+    <div class="table-header">
+        <div class="col">
+            <label class="heading">Employee Master Summary</label>
+        </div>
+    </div>
+
+    <div appAccessControl [accessType]="rolePermissionActions.createAction" class="text-center">
+        <button class="plusIconSvg btn btn-primary me-1"></button>
+        <button
+            class="btn btn-primary btn-add px-4"
+            type="button"
+            (click)="navigateTo('/default/HR/master/employee/emp-form', null, 'create')"
+        >
+            Add Employee Details
+        </button>
+    </div>
+    <hr class="line-border" />
+    <div class="table-responsive">
+        <app-setting-header [data]="{page,pageSize,collection,search,type: 'list'}" (dataChange)="eventHeader($event)">
+        </app-setting-header>
+
+        <table class="table table-bordered">
+            <thead class="bg-primary">
+                <tr class="text-white">
+                    <th sortable="empCode" (sort)="onSort($event)">Employee Code</th>
+                    <th class="text-start" sortable="empFullName" (sort)="onSort($event)">Employee Name</th>
+                    <th sortable="empDOB" (sort)="onSort($event)">Date of Birth</th>
+                    <th sortable="empAadharNo" (sort)="onSort($event)">Aadhar Card No.</th>
+                    <th sortable="empPANNo" (sort)="onSort($event)">PAN Card No.</th>
+                    <th sortable="empContactNo" (sort)="onSort($event)">Contact No.</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let u of tableData; trackBy: trackByFn">
+                    <td>{{ u?.empCode }}</td>
+                    <td class="text-start">{{ u?.empFullName }}</td>
+                    <td>{{ u?.empDOBS }}</td>
+                    <td>{{ u?.empAadharNo }}</td>
+                    <td>{{ u?.empPANNo }}</td>
+                    <td>{{ u?.empContactNo }}</td>
+                    <td>
+                        <div class="dropdown">
+                            <button class="dropbtn"></button>
+                            <div class="dropdown-content">
+                                <a
+                                    appAccessControl
+                                    [accessType]="rolePermissionActions.viewAction"
+                                    href="javascript:void(0)"
+                                    (click)="navigateTo('/default/HR/master/employee/emp-form', u?._id, 'view')"
+                                >
+                                    <i class="fa fa-eye fa-lg me-2 text-primary" aria-hidden="true"></i>
+                                    View
+                                </a>
+                                <a
+                                    appAccessControl
+                                    [accessType]="rolePermissionActions.editAction"
+                                    href="javascript:void(0)"
+                                    (click)="navigateTo('/default/HR/master/employee/emp-form', u?._id, 'edit')"
+                                >
+                                    <i class="fa fa-pencil-square-o fa-lg me-2 text-primary" aria-hidden="true"></i>
+                                    Edit
+                                </a>
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>

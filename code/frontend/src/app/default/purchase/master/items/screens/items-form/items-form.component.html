@@ -1,0 +1,185 @@
+<form [formGroup]="form" class="formCard card">
+    <div class="container">
+        <div class="row form-header">
+            <div class="col heading">
+                <label>Item Master ({{ this.action | titlecase }})</label>
+            </div>
+        </div>
+        <div class="form-body">
+            <div class="row mb-4">
+                <div class="col-3">
+                    <label class="form-label mb-1"> Item Category <span class="text-danger">*</span> </label>
+                    <select class="form-select" (change)="selectItemCategory($event)" formControlName="itemType">
+                        <option selected disabled value="">Select Item Category</option>
+                        <option *ngFor="let i of this.masterData?.itemCategories" [value]="i">
+                            {{ i }}
+                        </option>
+                    </select>
+                </div>
+                <div class="col-3">
+                    <label class="form-label mb-1"> Item Code No.<span class="text-danger">*</span> </label>
+                    <input class="form-control" type="text" formControlName="itemCode" readonly />
+                </div>
+                <div class="col-3">
+                    <label class="form-label mb-1"> Item Name <span class="text-danger">*</span> </label>
+                    <input type="text" class="form-control" formControlName="itemName" />
+                </div>
+                <div class="col-3">
+                    <label class="form-label mb-1"> Item Description <span class="text-danger">*</span> </label>
+                    <input type="text" class="form-control" formControlName="itemDescription" />
+                </div>
+            </div>
+            <div class="row mb-4">
+                <div class="col-3">
+                    <label class="form-label mb-1 d-flex justify-content-between">
+                        Unit of Measurement
+                        <span class="text-danger">*</span>
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                        <button
+                            (click)="openUOMDetailsModal()"
+                            type="button"
+                            class="btn btn-primary form-btn-sm py-0"
+                            [disabled]="!form.controls['orderInfoUOM'].value"
+                        >
+                            Dual Units
+                        </button>
+                    </label>
+                    <select (change)="setPrimaryUnit($event)" class="form-select" formControlName="orderInfoUOM">
+                        <option [value]="null" selected disabled>Select Primary Unit</option>
+                        <option [value]="'Unit'">Unit</option>
+                        <option *ngFor="let u of UOMUintMasterOptions" [value]="u.value">
+                            {{ u?.label }}
+                        </option>
+                    </select>
+                </div>
+                <div class="col-3">
+                    <label class="form-label mb-1"> HSN Code <span class="text-danger">*</span> </label>
+                    <div class="d-flex align-items-center">
+                        <div class="flex-grow-1">
+                            <select class="form-select" formControlName="hsn" (change)="setGST()">
+                                <option [value]="null" disabled selected>Select HSN Code</option>
+                                <option *ngFor="let h of masterData?.HSNCodesList" [value]="h.value">
+                                    {{ h?.value }}
+                                </option>
+                            </select>
+                        </div>
+                        <div
+                            style="height: 2.9rem"
+                            class="input-group-text bg-primary pointer"
+                            id="basic-addon1"
+                            (click)="openFormulationHSNModal()"
+                        >
+                            <i class="fa fa-search text-white" aria-hidden="true"></i>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-3">
+                    <label class="form-label mb-1">Shelf Life (Months) <span class="text-danger">*</span> </label>
+                    <!-- onkeypress="return event.charCode >= 48 && event.charCode <= 57" -->
+                    <input type="number" class="form-control" formControlName="shelfLife" />
+                </div>
+                <div class="col-3">
+                    <label class="form-label mb-1">Quality Control Level <span class="text-danger">*</span> </label>
+                    <ng-select
+                        [items]="masterData.QCLevelsOptions"
+                        bindLabel="label"
+                        bindValue="value"
+                        [clearable]="false"
+                        formControlName="QCLevels"
+                    >
+                    </ng-select>
+                </div>
+                <!-- <div class="col-3">
+                    <label class="form-label mb-1 d-flex justify-content-between">
+                        Reorder Level (ROL)
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                        <button
+                            [disabled]="!this.f['orderInfoUOM'].value"
+                            type="button"
+                            class="btn btn-primary form-btn-sm py-0"
+                            (click)="openStockLevelDetailsModal()"
+                        >
+                            Stock Levels
+                        </button>
+                    </label>
+                    <input class="form-control" type="number" formControlName="itemROL" readonly />
+                </div>
+                <div class="col-3">
+                    <label class="form-label mb-1"> Reorder Quantity </label>
+                    <input class="form-control" type="number" formControlName="itemAMU" readonly />
+                </div> -->
+            </div>
+        </div>
+        <hr class="row line-border mb-4" />
+        <div class="row mb-4">
+            <div class="col-6 pe-0">
+                <button [disabled]="!this.f['orderInfoUOM'].value" class="plusIconSvg btn btn-primary me-1"></button>
+                <!-- <button (click)="openItemAttributesModal()" class="btn btn-primary me-5 px-4" type="button">
+                    &nbsp;&nbsp; Attributes &nbsp;&nbsp;
+                </button> -->
+                <button
+                    [disabled]="!this.f['orderInfoUOM'].value"
+                    type="button"
+                    class="btn btn-primary px-4 me-3"
+                    (click)="openStockLevelDetailsModal()"
+                >
+                    Stock Levels
+                </button>
+                <button
+                    class="plusIconSvg btn btn-primary me-1"
+                    [disabled]="!form.controls['orderInfoUOM'].value"
+                ></button>
+                <button
+                    (click)="openSuppliersDetailsModal()"
+                    class="btn btn-primary me-4 px-5"
+                    type="button"
+                    [disabled]="!form.controls['orderInfoUOM'].value"
+                >
+                    Supplier
+                </button>
+                <button
+                    *ngIf="masterData?.channelPartnerOptions?.length > 0"
+                    class="plusIconSvg btn btn-primary me-1"
+                    [disabled]="!form.controls['orderInfoUOM'].value"
+                ></button>
+                <button
+                    *ngIf="masterData?.channelPartnerOptions?.length > 0"
+                    (click)="openChannelPartnerDetailsModal()"
+                    class="btn btn-primary me-4 px-4"
+                    type="button"
+                    [disabled]="!form.controls['orderInfoUOM'].value"
+                >
+                    Channel Partner
+                </button>
+            </div>
+            <div class="col-3 ps-0">
+                <div class="d-flex align-items-center">
+                    <div class="col-md-auto text-nowrap">
+                        <button type="button" class="btn btn-primary px-3">Status</button>
+                    </div>
+                    <select class="form-select statusSelectBorder" formControlName="isActive">
+                        <option [value]="'null'" selected disabled>Select Status</option>
+                        <option value="A">Active</option>
+                        <option value="I">Inactive</option>
+                    </select>
+                    <span class="input-group-text statusSpanHeight">
+                        <div class="statusActive" *ngIf="form.value['isActive'] == 'A'" class="statusActive"></div>
+                        <div class="statusInActive" *ngIf="form.value['isActive'] == 'I'"></div>
+                    </span>
+                </div>
+            </div>
+            <div *ngIf="action != 'view'" class="col-3 text-end">
+                <button class="btn btn-primary px-5 me-5" type="button" (click)="reset()">Reset</button>
+                <button class="btn btn-primary px-5" type="button" (click)="submit()">Save</button>
+            </div>
+        </div>
+    </div>
+</form>

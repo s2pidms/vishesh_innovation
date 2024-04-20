@@ -1,0 +1,110 @@
+<div class="modelPage">
+    <div class="modal-header">
+        <div class="heading">Generate Report</div>
+        <div>
+            <button type="button" class="btn btn-cross btn-sm" aria-label="Close" (click)="this.activeModal.close()">
+                <i class="fa fa-times-circle" aria-hidden="true"></i>
+            </button>
+        </div>
+    </div>
+    <div class="container-fluid px-0 mt-4">
+        <div class="row justify-content-center px-5 mt-4">
+            <div class="col-12">
+                <div class="row mt-4">
+                    <div class="col-4 pe-0">
+                        <label class="form-label">Batch Input Quantity<span class="text-danger"> * </span></label>
+                    </div>
+                    <div class="col-2 px-2 d-flex align-items-center justify-content-center">
+                        <span class="ms-1 me-2 text-secondary">&#9654;</span>
+                    </div>
+                    <div class="col-6 ps-0 setInputMargin">
+                        <input type="number" class="form-control" [(ngModel)]="generateReport.batchInputQty" />
+                    </div>
+                </div>
+                <div class="row mt-4">
+                    <div class="col-4 pe-0">
+                        <label class="form-label">Batch Output Quantity<span class="text-danger"> * </span></label>
+                    </div>
+                    <div class="col-2 px-2 d-flex align-items-center justify-content-center">
+                        <span class="ms-1 me-2 text-secondary">&#9654;</span>
+                    </div>
+                    <div class="col-6 ps-0 setInputMargin">
+                        <input type="number" class="form-control" [(ngModel)]="generateReport.batchOutputQty" />
+                    </div>
+                </div>
+                <div class="row mt-4">
+                    <div class="col-4 pe-0">
+                        <label class="form-label">Batch Rejection Quantity<span class="text-danger"> * </span> </label>
+                    </div>
+                    <div class="col-2 px-2 d-flex align-items-center justify-content-center">
+                        <span class="ms-1 me-2 text-secondary">&#9654;</span>
+                    </div>
+                    <div class="col-6 ps-0 setInputMargin">
+                        <input type="number" class="form-control" [(ngModel)]="generateReport.batchRejQty" />
+                    </div>
+                </div>
+                <div class="row mt-4">
+                    <div class="col-4 pe-0">
+                        <label class="form-label">Job Card Closure Date<span class="text-danger"> * </span> </label>
+                    </div>
+                    <div class="col-2 px-2 d-flex align-items-center justify-content-center">
+                        <span class="ms-1 me-2 text-secondary">&#9654;</span>
+                    </div>
+                    <div class="col-6 ps-0 setInputMargin">
+                        <input type="date" class="form-control" [(ngModel)]="generateReport.jobCardClosureDate" />
+                    </div>
+                </div>
+                <div class="row mt-4">
+                    <div class="col-4 pe-0">
+                        <label class="form-label"> Location </label>
+                    </div>
+                    <div class="col-2 px-2 d-flex align-items-center justify-content-center">
+                        <span class="ms-1 me-2 text-secondary">&#9654;</span>
+                    </div>
+                    <div class="col-6 ps-0 setInputMargin">
+                        <select class="form-select" [(ngModel)]="generateReport.location">
+                            <option [value]="null" selected disabled>Select Location</option>
+                            <option [value]="item.value" *ngFor="let item of billFromLocationOptions">
+                                {{ item.label }}
+                            </option>
+                        </select>
+                    </div>
+                </div>
+                <div class="row mt-4">
+                    <div class="col-4 pe-0">
+                        <label class="form-label"> Job Card Status <span class="text-danger"> * </span> </label>
+                    </div>
+                    <div class="col-2 px-2 d-flex align-items-center justify-content-center">
+                        <span class="ms-1 me-2 text-secondary">&#9654;</span>
+                    </div>
+                    <div class="col-6 ps-0 setInputMargin d-flex">
+                        <select class="form-select" [(ngModel)]="generateReport.checkoutStatus">
+                            <option [value]="null" selected disabled>Select Status</option>
+                            <option value="Skip Integration">Skip Integration</option>
+                            <option value="In-Process">In-Process</option>
+                            <option value="Mark As Completed">Mark As Completed</option>
+                        </select>
+                        <span class="input-group-text statusSpanHeight">
+                            <div
+                                class="statusInActive"
+                                *ngIf="generateReport.checkoutStatus == 'Skip Integration'"
+                            ></div>
+                            <div class="statusYellow" *ngIf="generateReport.checkoutStatus == 'In-Process'"></div>
+                            <div
+                                class="statusActive"
+                                *ngIf="generateReport.checkoutStatus == 'Mark As Completed'"
+                            ></div>
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <hr class="line-border my-4" />
+        <div class="row">
+            <div class="col text-center mb-4">
+                <button class="btn bg-primary px-5" type="button" (click)="dismissModel()">Save & Close</button>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,159 @@
+<div class="reportTablePage">
+    <div class="table-body pb-0 shadow-none">
+        <div class="row table-header">
+            <div class="col">
+                <label class="heading">Sales Register Report</label>
+            </div>
+        </div>
+        <div class="row my-4">
+            <div class="col-3 ps-5 separate-row">
+                <label class="form-label"> Select Customer</label>
+                <ng-select
+                    [items]="customerOptions"
+                    bindLabel="customerName"
+                    bindValue="_id"
+                    [clearable]="false"
+                    [(ngModel)]="customerId"
+                >
+                </ng-select>
+                <span class="set-position">
+                    <img src="./assets/new_icons/redstroke.svg" alt="" height="27" width="8" />
+                </span>
+            </div>
+
+            <div class="col-3">
+                <label class="form-label"> From Date <span class="text-danger">*</span> </label>
+                <input class="form-control" type="date" [(ngModel)]="fromDate" />
+            </div>
+
+            <div class="col-3">
+                <label class="form-label"> To Date <span class="text-danger">*</span> </label>
+                <input class="form-control" type="date" [(ngModel)]="toDate" />
+            </div>
+
+            <div class="col-3 align-self-end separate-image">
+                <span class="image-position">
+                    <img src="./assets/new_icons/redstroke.svg" alt="" height="27" width="8" />
+                </span>
+                <button type="button" class="btn btn-primary px-4" (click)="getAll()">Apply Filter</button>
+
+                <button type="button" class="btn btn-primary px-4 ms-4" (click)="reset()">Reset Filter</button>
+            </div>
+        </div>
+        <hr class="row line-border" />
+        <div class="table-responsive mb-0">
+            <app-setting-header
+                [data]="{page,pageSize,collection,search,type: 'list',pdfDisplay : true}"
+                (dataChange)="eventHeader($event)"
+            >
+            </app-setting-header>
+            <table class="table table-bordered table-sticky">
+                <thead class="bg-primary">
+                    <tr class="text-white">
+                        <th sortable="salesInvoiceNumber" (sort)="onSort($event)">Invoice #</th>
+                        <th sortable="salesInvoiceDateS" (sort)="onSort($event)">Invoice Date</th>
+                        <th sortable="salesInvoiceTotalAmount" (sort)="onSort($event)">Taxable Amt.</th>
+                        <th sortable="salesInvoiceTotalTaxAmount" (sort)="onSort($event)">Total Tax</th>
+                        <th sortable="salesInvoiceTotalAmountWithTax" (sort)="onSort($event)">Invoice Value</th>
+                        <th class="text-start" sortable="customerName" (sort)="onSort($event)">Customer Name</th>
+                        <th sortable="ewayBillNo" (sort)="onSort($event)">E-way Bill</th>
+                        <th sortable="salesInvoiceDateS" (sort)="onSort($event)">E-Invoicing</th>
+                        <th>View/Print</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let u of tableData; trackBy: trackByFn">
+                        <td>{{ u?.salesInvoiceNumber }}</td>
+                        <td>{{ u?.salesInvoiceDateS }}</td>
+                        <td>{{ u?.salesInvoiceTotalAmount | number : ".2-2" }}</td>
+                        <td>{{ u?.salesInvoiceTotalTaxAmount | number : ".2-2" }}</td>
+                        <td>{{ u?.salesInvoiceTotalAmountWithTax | number : ".2-2" }}</td>
+                        <td class="text-start" [style.width]="customerName.clientWidth" #customerName>
+                            <span class="pointer" [positionTarget]="customerName" [ngbTooltip]="u.customerName">
+                                {{ u.customerName }}
+                            </span>
+                        </td>
+                        <td>
+                            <a
+                                style="text-decoration: none"
+                                [href]="'https://my.gstzen.in' + u?.EWayBillPdfUrl"
+                                target="_blank"
+                                [download]="u?.EWayBillPdfUrl"
+                            >
+                                {{ u?.ewayBillNo }}
+                            </a>
+                        </td>
+
+                        <td>
+                            <a
+                                style="text-decoration: none"
+                                [href]="'https://my.gstzen.in' + u?.InvoicePdfUrl"
+                                target="_blank"
+                                [download]="u?.InvoicePdfUrl"
+                            >
+                                {{ u?.AckNo }}
+                            </a>
+                        </td>
+                        <td>
+                            <div appAccessControl [accessType]="rolePermissionActions.viewAction">
+                                <img
+                                    class="pointer"
+                                    src="./assets/images/file_pdf.png"
+                                    width="20rem"
+                                    (click)="navigateTo(u?._id, 'print')"
+                                />
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="table-footer">
+            <hr class="row line-border" />
+            <div class="row align-items-center mt-3">
+                <div class="col-3 pe-0">
+                    <div class="d-flex justify-content-center">
+                        <div class="col-form-label text-nowrap pe-1 pt-0 ms-3">
+                            Total Taxable Amount<i class="fa fa-caret-right fs-4 mx-2"></i>
+                            <button type="button" class="btn btn-info py-1 ms-2">{{ "INR" | companyCurrency }}</button>
+                        </div>
+                        <input
+                            [value]="totalSalesInvoiceAmount | number : '1.2-2'"
+                            class="form-control"
+                            type="text"
+                            readonly
+                        />
+                    </div>
+                </div>
+                <div class="col-3 px-5">
+                    <div class="d-flex justify-content-center">
+                        <div class="col-form-label text-nowrap pe-1 pt-0 ms-3">
+                            Total Tax <i class="fa fa-caret-right fs-4 mx-2"></i>
+                            <button type="button" class="btn btn-info py-1 ms-2">{{ "INR" | companyCurrency }}</button>
+                        </div>
+                        <input
+                            [value]="totalSalesInvoiceTaxAmount | number : '1.2-2'"
+                            class="form-control"
+                            type="text"
+                            readonly
+                        />
+                    </div>
+                </div>
+                <div class="col-3 pe-0">
+                    <div class="d-flex justify-content-center">
+                        <div class="col-form-label text-nowrap pe-1 pt-0 ms-3">
+                            Total Invoice Value <i class="fa fa-caret-right fs-4 mx-2"></i>
+                            <button type="button" class="btn btn-info py-1 ms-2">{{ "INR" | companyCurrency }}</button>
+                        </div>
+                        <input
+                            [value]="totalInvoiceValue | number : '1.2-2'"
+                            class="form-control"
+                            type="text"
+                            readonly
+                        />
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

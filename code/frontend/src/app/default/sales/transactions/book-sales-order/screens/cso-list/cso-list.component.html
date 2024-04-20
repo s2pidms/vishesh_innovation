@@ -1,0 +1,60 @@
+<div class="listCard card">
+    <div class="table-header">
+        <label class="heading">Cancellation[SO] Summary</label>
+    </div>
+    <hr class="line-border" />
+    <div class="table-responsive">
+        <app-setting-header [data]="{page,pageSize,collection,search,type: 'list'}" (dataChange)="eventHeader($event)">
+        </app-setting-header>
+        <table class="table table-bordered table-sticky">
+            <thead class="bg-primary">
+                <tr class="text-white">
+                    <th sortable="SONumber" (sort)="onSort($event)">SO No.</th>
+                    <th sortable="SODateS" (sort)="onSort($event)">SO Date</th>
+                    <th sortable="PONumber" (sort)="onSort($event)">PO No.</th>
+                    <th sortable="salesCategory" (sort)="onSort($event)">Sales Category</th>
+                    <th class="text-start" sortable="customerName" (sort)="onSort($event)">Customer Name</th>
+                    <th sortable="currency" (sort)="onSort($event)">Currency</th>
+                    <th sortable="SOTotalAmount" (sort)="onSort($event)">SO Value</th>
+                    <th sortable="SOTotalAmount" (sort)="onSort($event)">Status</th>
+                    <th sortable="status" (sort)="onSort($event)">Action</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                <tr *ngFor="let u of tableData; trackBy: trackByFn">
+                    <td>{{ u?.SONumber }}</td>
+                    <td>{{ u?.SODateS }}</td>
+                    <td>{{ u?.PONumber }}</td>
+                    <td>{{ u?.salesCategory }}</td>
+                    <td class="text-start" [style.width]="customerName.clientWidth" #customerName>
+                        <span class="pointer" [positionTarget]="customerName" [ngbTooltip]="u.customerName">
+                            {{ u?.customerName }}
+                        </span>
+                    </td>
+                    <td>{{ u?.currency }}</td>
+                    <td>{{ u?.SOTotalAmount }}</td>
+                    <td>{{ u?.SOStatus }}</td>
+                    <td>
+                        <div class="dropdown">
+                            <button class="dropbtn"></button>
+                            <div class="dropdown-content">
+                                <a
+                                    appAccessControl
+                                    [accessType]="rolePermissionActions.approveAction"
+                                    href="javascript:void(0)"
+                                    (click)="
+                                        navigateTo('/default/sales/transactions/book_sales_order/form', u, 'cancel')
+                                    "
+                                >
+                                    <i class="fa fa fa-times fa-lg me-2 text-primary" aria-hidden="true"></i>
+                                    Cancel
+                                </a>
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>

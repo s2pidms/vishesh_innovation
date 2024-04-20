@@ -1,0 +1,59 @@
+<div class="listCard card">
+    <div class="table-header">
+        <label class="heading">Cancellation [GRN] Summary</label>
+    </div>
+    <div class="table-responsive">
+        <app-setting-header [data]="{page,pageSize,collection,search,type: 'list'}" (dataChange)="eventHeader($event)">
+        </app-setting-header>
+        <table class="table table-bordered">
+            <thead class="bg-primary">
+                <tr class="text-white">
+                    <th sortable="GRNNumber" (sort)="onSort($event)">GRN No.</th>
+                    <th sortable="GRNDateS" (sort)="onSort($event)">GRN Dt.</th>
+                    <th sortable="PONumber" (sort)="onSort($event)">PO No.</th>
+                    <th sortable="PODate" (sort)="onSort($event)">PO Date</th>
+                    <th class="text-start" sortable="supplier" (sort)="onSort($event)">Supplier Name</th>
+                    <th sortable="supplierInvoiceRef" (sort)="onSort($event)">Supplier Inv. #</th>
+                    <th sortable="supplierInvoiceRefDate" (sort)="onSort($event)">Invoice Dt.</th>
+                    <th sortable="deliveryLocation" (sort)="onSort($event)">Location</th>
+                    <th sortable="GRNStatus" (sort)="onSort($event)">GRN Status</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let u of tableData; trackBy: trackByFn">
+                    <td>{{ u?.GRNNumber }}</td>
+                    <td>{{ u?.GRNDateS }}</td>
+                    <td>{{ u?.PONumber }}</td>
+                    <td>{{ u?.PODate }}</td>
+                    <td class="text-start" [style.width]="supplier.clientWidth" #supplier>
+                        <span class="pointer" [ngbTooltip]="u.supplier" [positionTarget]="supplier">
+                            {{ u.supplier }}
+                        </span>
+                    </td>
+                    <td>{{ u?.supplierInvoiceRef }}</td>
+                    <td>{{ u?.supplierInvoiceRefDate }}</td>
+                    <td>{{ u?.deliveryLocation }}</td>
+                    <td>{{ u?.GRNStatus }}</td>
+                    <td>
+                        <div class="dropdown">
+                            <button class="dropbtn"></button>
+                            <div class="dropdown-content">
+                                <a
+                                    appAccessControl
+                                    [accessType]="rolePermissionActions.approveAction"
+                                    href="javascript:void(0)"
+                                    [class.disable]="u?.GRNStatus === 'Cancelled'"
+                                    (click)="navigateTo('../form', u, 'cancel')"
+                                >
+                                    <i class="fa fa-close fa-lg text-primary" aria-hidden="true"></i>
+                                    Cancel
+                                </a>
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>

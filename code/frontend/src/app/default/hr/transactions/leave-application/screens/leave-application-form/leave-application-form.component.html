@@ -1,0 +1,233 @@
+<div class="container-fluid">
+    <div class="row justify-content-center form-page">
+        <div class="col-10 leave-app_container">
+            <form [formGroup]="form">
+                <div class="row">
+                    <div class="col-6">
+                        <div class="card-form mb-5">
+                            <div class="row bg-info text-white text-center mb-2 mx-0 px-4">
+                                <div class="col fs-4 my-1">Employee Leave Summary</div>
+                            </div>
+
+                            <div class="row justify-content-center mb-4 px-4 mx-2">
+                                <label class="form-label mt-3">
+                                    Employee Name
+                                    <span class="text-danger">*</span>
+                                </label>
+                                <div>
+                                    <ng-select
+                                        [items]="masterData.employeesOptions"
+                                        bindLabel="label"
+                                        bindValue="value"
+                                        [multiple]="false"
+                                        [clearable]="false"
+                                        formControlName="employeeId"
+                                        (change)="getPaidLeavesById()"
+                                    >
+                                    </ng-select>
+                                </div>
+                            </div>
+
+                            <div class="row pb-4 px-5 mx-2">
+                                <table class="table">
+                                    <thead class="bg-secondary section">
+                                        <tr>
+                                            <td class="section">Leave Type</td>
+                                            <td class="section px-5">Balance</td>
+                                            <td class="section px-5">Action</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody class="section">
+                                        <tr class="section">
+                                            <td class="section">Paid Leave [PL]</td>
+                                            <td class="section">{{ casualLeave }}</td>
+                                            <td class="section p-0">
+                                                <div class="d-grid">
+                                                    <button
+                                                        class="btn bg-primary px-4"
+                                                        type="button"
+                                                        (click)="setLeaveType(casualLeave, 'Paid Leaves')"
+                                                        [disabled]="action == 'approve'"
+                                                    >
+                                                        Apply
+                                                    </button>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        <tr class="section">
+                                            <td class="section">Comp. Off [C/Off]</td>
+                                            <td class="section">{{ privilageLeave }}</td>
+                                            <td class="section p-0">
+                                                <div class="d-grid">
+                                                    <button
+                                                        class="btn bg-primary px-4"
+                                                        type="button"
+                                                        (click)="setLeaveType(privilageLeave, 'Compensatory Off')"
+                                                        [disabled]="action == 'approve'"
+                                                    >
+                                                        Apply
+                                                    </button>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        <tr class="section">
+                                            <td class="section">Advance Leaves [AL]</td>
+                                            <td class="section">{{ sickLeaveSL }}</td>
+                                            <td class="section p-0">
+                                                <div class="d-grid">
+                                                    <button
+                                                        class="btn d-grid bg-primary px-4"
+                                                        type="button"
+                                                        (click)="setLeaveType(sickLeaveSL, 'Advance Leaves')"
+                                                        [disabled]="action == 'approve'"
+                                                    >
+                                                        Apply
+                                                    </button>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        <div class="row justify-content-center mb-4 mx-1">
+                            <div class="col bg-light leave-app_empty-box"></div>
+                        </div>
+                    </div>
+
+                    <div class="col-6">
+                        <div class="card-form">
+                            <div class="row bg-info text-white text-center mb-4 mx-0">
+                                <div class="col fs-4 my-1">Leave Application</div>
+                            </div>
+                            <div class="row justify-content-center pb-3 px-4 mb-2">
+                                <div class="col ms-4 me-1 mb-3">
+                                    <label class="form-label">
+                                        Leave Type
+                                        <span class="text-danger">*</span>
+                                    </label>
+                                    <input type="text" class="form-control" formControlName="leaveType" readonly />
+                                </div>
+                                <div class="col ms-1 me-4 mb-3">
+                                    <label class="form-label">
+                                        Application Date
+                                        <span class="text-danger">*</span>
+                                    </label>
+                                    <input
+                                        type="text"
+                                        class="form-control"
+                                        formControlName="applicationDate"
+                                        readonly
+                                    />
+                                </div>
+                                <div class="w-100 mb-2"></div>
+                                <div class="col ms-4 me-1 mb-3">
+                                    <label class="form-label">
+                                        From Date
+                                        <span class="text-danger">*</span>
+                                    </label>
+                                    <input
+                                        type="date"
+                                        class="form-control"
+                                        formControlName="fromDate"
+                                        (change)="setFromSession()"
+                                    />
+                                </div>
+                                <div class="col ms-1 me-4 mb-3">
+                                    <label class="form-label"> From Session </label>
+
+                                    <select
+                                        class="form-select"
+                                        formControlName="fromSession"
+                                        (change)="changeFromSession()"
+                                    >
+                                        <option [value]="null" disabled>Select Session</option>
+                                        <option [value]="'First'">First</option>
+                                        <option [value]="'Second'">Second</option>
+                                    </select>
+                                </div>
+                                <div class="w-100 mb-2"></div>
+                                <div class="col ms-4 me-1 mb-3">
+                                    <label class="form-label">
+                                        To Date
+                                        <span class="text-danger">*</span>
+                                    </label>
+                                    <input
+                                        type="date"
+                                        class="form-control"
+                                        formControlName="toDate"
+                                        (change)="setDatesHandler()"
+                                    />
+                                </div>
+                                <div class="col ms-1 me-4 mb-3">
+                                    <label class="form-label"> To Session </label>
+
+                                    <select
+                                        class="form-select"
+                                        formControlName="toSession"
+                                        (change)="setHalfDayHandler()"
+                                    >
+                                        <option [value]="null" disabled>Select Session</option>
+                                        <option [value]="'First'">First</option>
+                                        <option [value]="'Second'">Second</option>
+                                    </select>
+                                </div>
+                                <div class="w-100 mb-2"></div>
+                                <div class="col ms-4 me-1 mb-3">
+                                    <label class="form-label">
+                                        Leave Days
+                                        <span class="text-danger">*</span>
+                                    </label>
+                                    <input type="text" class="form-control" formControlName="leaveDays" readonly />
+                                </div>
+                                <div class="col ms-1 me-4 mb-3">
+                                    <label class="form-label">
+                                        Resumption Date
+                                        <span class="text-danger">*</span>
+                                    </label>
+                                    <input type="date" class="form-control" formControlName="resumptionDate" readonly />
+                                </div>
+                                <div class="w-100 mb-2"></div>
+                                <div class="col mx-4">
+                                    <label class="form-label">
+                                        Reason For Leave
+                                        <span class="text-danger">*</span>
+                                    </label>
+                                    <input type="text" class="form-control" formControlName="reasonForLeave" />
+                                </div>
+                            </div>
+                            <div class="row" *ngIf="action == 'cancelLeave'">
+                                <div class="col mx-5">
+                                    <label class="form-label">
+                                        Remarks for Cancellation
+                                        <span class="text-danger">*</span>
+                                    </label>
+                                    <input type="text" class="form-control" formControlName="cancelReason" />
+                                </div>
+                            </div>
+
+                            <div *ngIf="!['view'].includes(action)" class="row justify-content-center">
+                                <div *ngIf="action != 'cancelLeave'" class="d-grid col-md-5 mb-3">
+                                    <button class="btn bg-primary" type="button" (click)="submit()">
+                                        {{
+                                            action == "edit" || action == "create" || action == "view"
+                                                ? "Send For Approval"
+                                                : null
+                                        }}
+                                        {{ action == "approve" ? "Approve" : null }}
+                                        {{ action == "cancel" ? "Cancel" : null }}
+                                    </button>
+                                </div>
+                                <div *ngIf="action == 'cancelLeave'" class="d-grid col-md-5 mb-2 mt-4">
+                                    <button class="btn bg-primary" type="button" (click)="openCancelModal()">
+                                        Cancel
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

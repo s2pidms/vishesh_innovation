@@ -1,0 +1,131 @@
+<div class="listCard card">
+    <div class="table-header">
+        <label class="heading">D-SKU Cost Sheet Summary </label>
+    </div>
+
+    <div appAccessControl [accessType]="rolePermissionActions.createAction" class="text-center">
+        <button class="plusIconSvg btn btn-primary me-1"></button>
+        <button class="btn btn-primary btn-add px-3" type="button" (click)="navigateTo('../form', {}, 'create')">
+            D-SKU Cost Sheet
+        </button>
+    </div>
+    <hr class="line-border" />
+    <div class="table-responsive">
+        <app-setting-header [data]="{page,pageSize,collection,search,type: 'list'}" (dataChange)="eventHeader($event)">
+        </app-setting-header>
+
+        <table class="table table-bordered">
+            <thead class="bg-secondary">
+                <tr class="text-white">
+                    <th sortable="DSKUNo" (sort)="onSort($event)">D-SKU No.</th>
+                    <th class="text-start" sortable="DSKUName" (sort)="onSort($event)">D-SKU Name</th>
+                    <th class="text-start" sortable="DSKUDescription" (sort)="onSort($event)">D-SKU Description</th>
+                    <th sortable="UOM" (sort)="onSort($event)">UoM</th>
+                    <th sortable="costOfGoodsSold" (sort)="onSort($event)">COGS</th>
+                    <th sortable="operatingExpenses" (sort)="onSort($event)">Opex</th>
+                    <th sortable="totalCostOfOperation" (sort)="onSort($event)">Total COO</th>
+                    <th sortable="profit" (sort)="onSort($event)">Profit</th>
+                    <th sortable="sellingPrice" (sort)="onSort($event)">Selling Price</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let u of tableData; trackBy: trackByFn">
+                    <td>{{ u.DSKUNo }}</td>
+                    <td class="text-start" [style.width]="DSKUName.clientWidth" #DSKUName>
+                        <span class="pointer" [ngbTooltip]="u.DSKUName" [positionTarget]="DSKUName">
+                            {{ u.DSKUName ? (u.DSKUName | truncate : 30) : null }}
+                        </span>
+                    </td>
+                    <td class="text-start" [style.width]="DSKUDescription.clientWidth" #DSKUDescription>
+                        <span class="pointer" [ngbTooltip]="u.DSKUDescription" [positionTarget]="DSKUDescription">
+                            {{ u.DSKUDescription ? (u.DSKUDescription | truncate : 30) : null }}
+                        </span>
+                    </td>
+                    <td>{{ u.UOM }}</td>
+
+                    <td class="py-0 text-center">
+                        <div class="d-flex justify-content-start align-items-center">
+                            <span class="input-group-text text-secondary combine-INR border border-0">
+                                {{ "INR" | companyCurrency }}
+                                <div class="vr ms-3"></div>
+                            </span>
+                            <span class="total-cost-color">
+                                {{ u?.costOfGoodsSold | number : "1.2-2" }}
+                            </span>
+                        </div>
+                    </td>
+                    <td class="py-0 text-center">
+                        <div class="d-flex justify-content-start align-items-center">
+                            <span class="input-group-text text-secondary combine-INR border border-0">
+                                {{ "INR" | companyCurrency }}
+                                <div class="vr ms-3"></div>
+                            </span>
+                            <span class="total-cost-color">
+                                {{ u?.operatingExpenses | number : "1.2-2" }}
+                            </span>
+                        </div>
+                    </td>
+                    <td class="py-0 text-center">
+                        <div class="d-flex justify-content-start align-items-center">
+                            <span class="input-group-text text-secondary combine-INR border border-0">
+                                {{ "INR" | companyCurrency }}
+                                <div class="vr ms-3"></div>
+                            </span>
+                            <span class="total-cost-color">
+                                {{ u?.totalCostOfOperation | number : "1.2-2" }}
+                            </span>
+                        </div>
+                    </td>
+                    <td class="py-0 text-center">
+                        <div class="d-flex justify-content-start align-items-center">
+                            <span class="input-group-text text-secondary combine-INR border border-0">
+                                {{ "INR" | companyCurrency }}
+                                <div class="vr ms-3"></div>
+                            </span>
+                            <span class="total-cost-color">
+                                {{ u?.profit | number : "1.2-2" }}
+                            </span>
+                        </div>
+                    </td>
+                    <td class="py-0 text-center">
+                        <div class="d-flex justify-content-start align-items-center">
+                            <span class="input-group-text text-secondary combine-INR border border-0">
+                                {{ "INR" | companyCurrency }}
+                                <div class="vr ms-3"></div>
+                            </span>
+                            <span class="total-cost-color">
+                                {{ u?.sellingPrice | number : "1.2-2" }}
+                            </span>
+                        </div>
+                    </td>
+                    <td>
+                        <div class="dropdown">
+                            <button class="dropbtn"></button>
+                            <div class="dropdown-content">
+                                <a
+                                    appAccessControl
+                                    [accessType]="rolePermissionActions.viewAction"
+                                    href="javascript:void(0)"
+                                    (click)="navigateTo('../form', u, 'view')"
+                                >
+                                    <i class="fa fa-eye fa-lg me-2 text-primary" aria-hidden="true"></i>
+                                    View
+                                </a>
+                                <a
+                                    appAccessControl
+                                    [accessType]="rolePermissionActions.editAction"
+                                    href="javascript:void(0)"
+                                    (click)="navigateTo('../form', u, 'edit')"
+                                >
+                                    <i class="fa fa-pencil-square-o fa-lg me-2 text-primary" aria-hidden="true"></i>
+                                    Edit
+                                </a>
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>

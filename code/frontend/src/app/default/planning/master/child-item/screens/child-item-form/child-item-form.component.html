@@ -1,0 +1,237 @@
+<form [formGroup]="form" class="formCard card">
+    <div class="container">
+        <div class="row form-header">
+            <div class="col heading">Child Item Master ({{ action | titlecase }})</div>
+        </div>
+
+        <div class="form-body">
+            <div class="row">
+                <div class="col-3">
+                    <label class="form-label mb-1"> Child Item Category <span class="text-danger">*</span> </label>
+                    <input class="form-control" type="text" formControlName="childItemCategory" readonly />
+                </div>
+
+                <div class="col-3">
+                    <label class="form-label mb-1"> Item Code <span class="text-danger">*</span> </label>
+                    <input class="form-control" type="text" formControlName="itemCode" readonly />
+                </div>
+
+                <div class="col-3">
+                    <label class="form-label mb-1"> Item Name <span class="text-danger">*</span> </label>
+                    <input type="text" class="form-control" formControlName="itemName" />
+                </div>
+                <div class="col-3">
+                    <label class="form-label mb-1"> Item Description <span class="text-danger">*</span> </label>
+                    <input type="text" class="form-control" formControlName="itemDescription" />
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-3">
+                    <label class="form-label mb-1 d-flex justify-content-between">
+                        Unit of Measurement
+                        <span class="text-danger">*</span>
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                        <button
+                            (click)="openUOMDetailsModal()"
+                            type="button"
+                            class="btn btn-primary form-btn-sm py-0"
+                            [disabled]="!form.controls['unitOfMeasurement'].value"
+                        >
+                            Dual Units
+                        </button>
+                    </label>
+                    <select (change)="setPrimaryUnit()" class="form-select" formControlName="unitOfMeasurement">
+                        <option [value]="null" selected disabled>Select Primary Unit</option>
+                        <option [value]="'Unit'">Unit</option>
+                        <option *ngFor="let u of UOMUintMasterOptions" [value]="u.value">
+                            {{ u?.label }}
+                        </option>
+                    </select>
+                </div>
+
+                <div class="col-3">
+                    <label class="form-label mb-1"> HSN Code <span class="text-danger">*</span> </label>
+
+                    <div class="d-flex align-items-center">
+                        <div class="flex-grow-1">
+                            <ng-select
+                                [items]="masterData.HSNCodesList"
+                                (change)="setHSNId($event)"
+                                bindLabel="hsnCode"
+                                bindValue="_id"
+                                formControlName="HSN"
+                                [clearable]="false"
+                            >
+                            </ng-select>
+                        </div>
+                        <div
+                            style="height: 2.9rem"
+                            class="input-group-text bg-primary pointer"
+                            id="basic-addon1"
+                            (click)="openFormulationHSNModal()"
+                        >
+                            <i class="fa fa-search fs-4 text-white" aria-hidden="true"></i>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- <div class="col-3">
+                        <label class="form-label mb-1 d-flex justify-content-between">
+                            Avg. Consumption/Day
+                            <span class="text-danger pe-1"></span>
+                            <button
+                                [disabled]="!this.f['unitOfMeasurement'].value"
+                                type="button"
+                                class="btn btn-primary form-btn-sm py-0 px-1"
+                                (click)="openStockLevelDetailsModal()"
+                            >
+                                Stock Levels
+                            </button>
+                        </label>
+                        <input class="form-control" type="number" formControlName="avgConsumptionPerMonth" />
+                    </div> -->
+
+                <div class="col-3">
+                    <label class="form-label mb-1"> Shelf Life (Months) <span class="text-danger"></span></label>
+                    <input
+                        onkeypress="return event.charCode >= 48 && event.charCode <= 57"
+                        class="form-control"
+                        type="number"
+                        formControlName="shelfLife"
+                    />
+                </div>
+                <div class="col-3">
+                    <label class="form-label mb-1">
+                        Item Cost (Exclusive of GST) <span class="text-danger">*</span>
+                    </label>
+                    <div class="d-flex">
+                        <span class="input-group-text text-secondary combine-INR">
+                            {{ "INR" | companyCurrency }}
+                            <div class="vr ms-3"></div>
+                        </span>
+                        <input class="form-control border-start-0" type="number" formControlName="itemCost" />
+                    </div>
+                </div>
+            </div>
+
+            <!-- <div class="row mt-2">
+                    <div class="col-3">
+                        <label class="form-label mb-1 d-flex justify-content-between">
+                            Source of Manufacturing <span class="text-danger">*</span>
+                            <span></span>
+                            <span></span>
+                            <span></span>
+                            <span></span>
+                            <span></span>
+                            <button type="button" class="btn btn-primary form-btn-sm py-0">Process</button>
+                        </label>
+                        <select
+                            (change)="setSourceOfManufacturing($event)"
+                            formControlName="sourceOfManufacturing"
+                            class="form-select"
+                        >
+                            <option value="null" selected disabled>Select Source of Manufacturing</option>
+                            <option *ngFor="let item of sourceOfMfg" [value]="item">
+                                {{ item }}
+                            </option>
+                        </select>
+                    </div>
+                    <div formGroupName="serviceProviderDetailsForm" class="col-3">
+                        <label class="form-label mb-1">
+                            Ext. Service Provider Name <span class="text-danger pe-4">*</span>
+                        </label>
+                        <ng-select
+                            (change)="setServiceProviderName($event)"
+                            [items]="ExtServiceProviderName"
+                            bindLabel="ESPName"
+                            bindValue="_id"
+                            formControlName="extServiceProvider"
+                            [clearable]="false"
+                        >
+                        </ng-select>
+                    </div>
+                    <div formGroupName="serviceProviderDetailsForm" class="col-3">
+                        <label class="form-label mb-1">
+                            Mfg. Cost (Exclusive of GST)
+                            <span class="text-danger pe-4">*</span>
+                        </label>
+                        <div class="d-flex">
+                            <span class="input-group-text combine-INR">
+                                {{ "INR" | companyCurrency }}
+                                <div class="vr ms-3"></div>
+                            </span>
+                            <input
+                                class="form-control border-start-0"
+                                type="number"
+                                formControlName="manufacturingCost"
+                            />
+                        </div>
+                    </div>
+                    <div formGroupName="serviceProviderDetailsForm" class="col-3">
+                        <label class="form-label mb-1">
+                            Payment Terms
+                            <span class="text-danger">*</span>
+                        </label>
+                        <select formControlName="paymentTerms" class="form-select">
+                            <option value="null" selected disabled>Select Payment Terms</option>
+                            <option *ngFor="let item of paymentTerms" [value]="item.value">
+                                {{ item.label }}
+                            </option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="row justify-content-center">
+                    <div
+                        [ngStyle]="{color: isDisabled ? '' : 'rgba(255, 0, 150, 0.25)'}"
+                        (click)="openServiceProviderDetailsModal()"
+                        class="col-8 mt-3 text-center pointer fs-3 openModelLink"
+                    >
+                        Add alternate external service provider/s for this child item (if applicable)
+                    </div>
+                </div> -->
+        </div>
+        <hr class="row line-border" />
+        <div class="row">
+            <div class="col-2 pe-0">
+                <button [disabled]="!f['unitOfMeasurement'].value" class="plusIconSvg btn btn-primary me-1"></button>
+                <button
+                    [disabled]="!f['unitOfMeasurement'].value"
+                    (click)="openSuppliersDetailsModal()"
+                    class="btn btn-primary px-5"
+                    type="button"
+                >
+                    Supplier
+                </button>
+            </div>
+            <div class="col-3">
+                <div class="d-flex align-items-center">
+                    <div class="col-md-auto text-nowrap">
+                        <button type="button" class="btn btn-primary px-3">Status</button>
+                    </div>
+
+                    <select class="form-select statusSelectBorder" formControlName="status">
+                        <option [value]="'null'" selected disabled>Select Status</option>
+                        <option [value]="'Active'">Active</option>
+                        <option [value]="'Inactive'">Inactive</option>
+                    </select>
+                    <span class="input-group-text statusSpanHeight">
+                        <div class="statusActive" *ngIf="form.value['status'] == 'Active'" class="statusActive"></div>
+                        <div class="statusInActive" *ngIf="form.value['status'] == 'Inactive'"></div>
+                    </span>
+                </div>
+            </div>
+            <div class="col-7 mb-0 d-flex align-self-end justify-content-end">
+                <!-- <button class="btn btn-primary px-5 me-5" type="button" (click)="reset()">Reset</button> -->
+                <button *ngIf="action != 'view'" class="btn btn-primary px-5" type="button" (click)="submit()">
+                    Save
+                </button>
+            </div>
+        </div>
+    </div>
+</form>

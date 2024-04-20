@@ -1,0 +1,86 @@
+<div class="reportTablePage">
+    <div class="col-md-12 pb-0 table-body shadow-none">
+        <div class="row table-header">
+            <div class="col">
+                <label class="heading">Stock Transfer Report</label>
+            </div>
+        </div>
+        <div class="row my-4">
+            <div class="col-3 ps-5 separate-row">
+                <label class="form-label">Item Name</label>
+                <ng-select
+                    [items]="itemsListArr"
+                    bindLabel="label"
+                    bindValue="value"
+                    [clearable]="false"
+                    [(ngModel)]="itemId"
+                >
+                </ng-select>
+                <span class="set-position">
+                    <img src="./assets/new_icons/redstroke.svg" alt="" height="27" width="8" />
+                </span>
+            </div>
+
+            <div class="col-3">
+                <label class="form-label"> From Date <span class="text-danger">*</span> </label>
+                <input class="form-control" type="date" [(ngModel)]="fromDate" />
+            </div>
+
+            <div class="col-3">
+                <label class="form-label"> To Date <span class="text-danger">*</span> </label>
+                <input class="form-control" type="date" [(ngModel)]="toDate" />
+            </div>
+            <div class="col-3 align-self-end separate-image">
+                <span class="image-position">
+                    <img src="./assets/new_icons/redstroke.svg" alt="" height="27" width="8" />
+                </span>
+                <button type="button" class="btn btn-primary px-4 me-3" (click)="getAll()">Apply Filter</button>
+
+                <button type="button" class="btn btn-primary px-4 ms-4" (click)="reset()">Reset Filter</button>
+            </div>
+        </div>
+
+        <hr class="row line-border" />
+        <div class="table-responsive mb-0">
+            <app-setting-header
+                [data]="{page,pageSize,collection,search,pdfDisplay:true,type:'list'}"
+                (dataChange)="eventHeader($event)"
+            >
+            </app-setting-header>
+            <table class="table table-bordered table-sticky">
+                <thead class="bg-primary">
+                    <tr class="text-white">
+                        <th sortable="stockTransferDate" (sort)="onSort($event)">Transfer Dt.</th>
+                        <th sortable="MRNNumber" (sort)="onSort($event)">MRN No.</th>
+                        <th sortable="itemCode" (sort)="onSort($event)">Item Code</th>
+                        <th class="text-start" sortable="itemName" (sort)="onSort($event)">Item Name</th>
+                        <th class="text-start" sortable="itemDescription" (sort)="onSort($event)">Item Description</th>
+                        <th sortable="unitConversion" (sort)="onSort($event)">Units Conversion</th>
+                        <th sortable="UOM" (sort)="onSort($event)">UoM</th>
+                        <th sortable="transferQty" (sort)="onSort($event)">Transfer Qty.</th>
+                        <th sortable="GRStatus" (sort)="onSort($event)">Aging</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let u of tableData; trackBy: trackByFn">
+                        <td>{{ u?.stockTransferDate }}</td>
+                        <td>{{ u?.MRNNumber }}</td>
+                        <td>{{ u?.itemCode }}</td>
+                        <td class="text-start">{{ u?.itemName }}</td>
+                        <td class="text-start">{{ u?.itemDescription }}</td>
+                        <td>{{ u?.unitConversion }}</td>
+                        <td>{{ u?.UOM | UOMUnitsMaster }}</td>
+                        <td>{{ u?.transferQty }}</td>
+                        <td>
+                            <span class="d-flex justify-content-center">
+                                <div *ngIf="u?.status == 'green'" class="flaggreen"></div>
+                                <div *ngIf="u?.status == 'red'" class="flagred"></div>
+                                <div *ngIf="u?.status == 'orange'" class="flagYellow"></div>
+                            </span>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,154 @@
+<Form [formGroup]="form" class="formCard card">
+    <div class="container">
+        <div class="row form-header">
+            <div class="col heading">
+                <label> Asset ({{ this.action | titlecase }})</label>
+            </div>
+        </div>
+        <div class="form-body">
+            <div class="row">
+                <div class="col-md-3">
+                    <label class="form-label"> Asset Class <span class="text-danger">*</span> </label>
+                    <ng-select
+                        [items]="masterData.assetClassOptions"
+                        bindLabel="assetClassName"
+                        bindValue="_id"
+                        [clearable]="false"
+                        formControlName="assetClassId"
+                        (change)="setAssetClassDetails($event)"
+                    >
+                    </ng-select>
+                </div>
+                <div class="col-md-3">
+                    <label class="form-label"> Asset No. <span class="text-danger">*</span> </label>
+                    <input class="form-control" type="text" formControlName="assetCode" readonly />
+                </div>
+                <div class="col-md-3">
+                    <label class="form-label"> Asset Name <span class="text-danger">*</span> </label>
+                    <input class="form-control" type="text" formControlName="assetName" />
+                </div>
+                <div class="col-md-3">
+                    <label class="form-label"> Asset Description <span class="text-danger">*</span> </label>
+                    <input class="form-control" type="text" formControlName="assetDescription" />
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-3">
+                    <label class="form-label">
+                        Purchase Cost
+                        <span class="text-danger">*</span>
+                    </label>
+                    <div class="d-flex">
+                        <span class="input-group-text text-secondary combine-INR">
+                            {{ "INR" | companyCurrency }}
+                            <div class="vr ms-3"></div>
+                        </span>
+                        <input class="form-control border-start-0" formControlName="assetPurchaseCost" type="number" />
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <label class="form-label"> Purchase Date <span class="text-danger">*</span> </label>
+                    <input
+                        class="form-control"
+                        type="date"
+                        formControlName="assetPurchaseDate"
+                        (change)="setDepreciationStartDate()"
+                    />
+                </div>
+                <div class="col-md-3">
+                    <label class="form-label"> Depreciation Start Date <span class="text-danger">*</span> </label>
+                    <input class="form-control" type="date" formControlName="depreciationStartDate" />
+                </div>
+                <div class="col-md-3">
+                    <label class="form-label"> Location<span class="text-danger">*</span> </label>
+                    <select class="form-select" formControlName="location">
+                        <option [value]="null" selected disabled>Select Location</option>
+                        <option *ngFor="let l of masterData.locationOptions" [value]="l.value">
+                            {{ l?.label }}
+                        </option>
+                    </select>
+                </div>
+                <!-- <div class="col-md-3">
+                        <label class="form-label">
+                            Asset Serial No.
+                            <span class="text-danger"></span>
+                        </label>
+                        <input class="form-control" type="text" formControlName="assetSerialNumber" />
+                    </div>
+                     <div class="col-md-3">
+                        <label class="form-label"> Country of Origin <span class="text-danger"></span> </label>
+                        <input class="form-control" type="text" formControlName="countryOfOrigin" />
+                    </div>
+
+                    <div class="col-md-3">
+                        <label class="form-label"> Manufacturer <span class="text-danger"></span> </label>
+                        <input class="form-control" type="text" formControlName="manufacturer" />
+                    </div>
+                    <div class="col-md-3">
+                        <label class="form-label"> Supplier <span class="text-danger"></span> </label>
+                        <ng-select
+                            [items]="masterData.suppliersOptions"
+                            bindLabel="supplierName"
+                            bindValue="_id"
+                            [clearable]="false"
+                            formControlName="supplier"
+                            placeholder="Select Supplier"
+                        >
+                        </ng-select>
+                    </div> -->
+            </div>
+            <!-- <div class="row  ">
+                    <div class="col-md-3">
+                        <label class="form-label"> Installation Date <span class="text-danger"></span> </label>
+                        <input class="form-control" type="date" formControlName="installationDate" />
+                    </div>
+                    <div class="col-md-3">
+                        <label class="form-label">
+                            Warranty Expiry Date
+                            <span class="text-danger"></span>
+                        </label>
+                        <input class="form-control" type="date" formControlName="warrantyExpiryDate" />
+                    </div>
+                </div> -->
+        </div>
+        <hr class="row line-border my-4" />
+
+        <div class="row my-4">
+            <div *ngIf="menuItemId == financeMenuItemId" class="col-2 pe-0">
+                <button [disabled]="!f['assetPurchaseCost'].value" class="plusIconSvg btn btn-primary me-1"></button>
+                <button
+                    [disabled]="!f['assetPurchaseCost'].value"
+                    (click)="openInfoModal()"
+                    class="btn btn-primary px-3"
+                    type="button"
+                >
+                    Costing Input
+                </button>
+            </div>
+            <div class="col-3 ps-3">
+                <div class="d-flex align-items-center">
+                    <div class="col-md-auto text-nowrap">
+                        <button type="button" class="btn btn-primary px-3">Status</button>
+                    </div>
+
+                    <select class="form-select statusSelectBorder" formControlName="status">
+                        <option [value]="'null'" selected disabled>Select Status</option>
+                        <option value="Active">Active</option>
+                        <option value="Inactive">Inactive</option>
+                    </select>
+                    <span class="input-group-text statusSpanHeight">
+                        <div class="statusActive" *ngIf="form.value['status'] == 'Active'" class="statusActive"></div>
+                        <div class="statusInActive" *ngIf="form.value['status'] == 'Inactive'"></div>
+                    </span>
+                </div>
+            </div>
+            <div
+                [ngClass]="menuItemId == financeMenuItemId ? 'col-7 text-end' : 'col-9 text-end'"
+                *ngIf="action !== 'view'"
+            >
+                <button class="btn btn-primary px-5 me-5" type="button" (click)="reset()">Reset</button>
+                <button class="btn btn-primary px-5" type="button" (click)="submit()">Save</button>
+            </div>
+        </div>
+    </div>
+</Form>

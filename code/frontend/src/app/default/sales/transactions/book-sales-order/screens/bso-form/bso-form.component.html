@@ -1,0 +1,252 @@
+<Form class="px-2" [formGroup]="form" class="formCard card">
+    <div class="container">
+        <div class="row form-header">
+            <div class="col heading">
+                <label class="">Sales Order ({{ action | titlecase }})</label>
+            </div>
+        </div>
+        <div class="form-body">
+            <div class="row mb-2">
+                <div class="col-md-5">
+                    <div class="row">
+                        <div class="col-5">
+                            <label class="form-label mb-0">
+                                Customer Category <span class="text-danger">*</span>
+                            </label>
+                            <select class="form-select" formControlName="salesCategory" (change)="getCustomers()">
+                                <option [value]="null" selected disabled>Select</option>
+                                <option [value]="ele.value" *ngFor="let ele of masterData?.salesCategoryOptions">
+                                    {{ ele.label }}
+                                </option>
+                            </select>
+                        </div>
+                        <div class="col-3 px-0">
+                            <label class="form-label mb-0"> SO No. <span class="text-danger"></span> </label>
+                            <input class="form-control" type="text" formControlName="SONumber" readonly />
+                        </div>
+                        <div class="col-4 pe-0">
+                            <label class="form-label mb-0"> SO Date <span class="text-danger"></span> </label>
+                            <input class="form-control" type="date" formControlName="SODate" readonly />
+                        </div>
+                    </div>
+                </div>
+                <div class="col-7">
+                    <div class="row">
+                        <div class="col-4 pe-4">
+                            <label class="form-label mb-0"> Customer Name <span class="text-danger">*</span> </label>
+
+                            <div class="d-flex align-items-center">
+                                <div class="col-11">
+                                    <ng-select
+                                        [items]="customerOptions"
+                                        bindLabel="customerName"
+                                        bindValue="_id"
+                                        [clearable]="false"
+                                        formControlName="customer"
+                                        (change)="customerValueChange($event)"
+                                    >
+                                    </ng-select>
+                                </div>
+                                <div
+                                    style="height: 2.9rem"
+                                    class="input-group-text bg-primary pointer col-auto fs-4"
+                                    id="basic-addon1"
+                                    (click)="openCustomersDetailsModal()"
+                                >
+                                    <i class="fa fa-search text-white" aria-hidden="true"></i>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-3 pe-0">
+                            <label class="form-label mb-0 d-flex justify-content-between">
+                                PO No.<span class="text-danger">*</span>
+                                <span></span>
+                                <span></span>
+                                <span></span>
+                                <span></span>
+                                <span></span>
+                                <span></span>
+                                <span></span>
+                                <button
+                                    (click)="openSOTypeModal()"
+                                    type="button"
+                                    class="btn btn-primary px-1 form-btn-sm py-0"
+                                >
+                                    PO Type
+                                </button>
+                            </label>
+                            <input type="text" class="form-control" formControlName="PONumber" />
+                        </div>
+
+                        <div class="col-3">
+                            <label class="form-label mb-0"> PO Date <span class="text-danger">*</span> </label>
+                            <input class="form-control" type="date" formControlName="PODate" />
+                        </div>
+                        <div class="col-2 ps-0">
+                            <label class="form-label mb-0"> Currency </label>
+                            <input
+                                type="text"
+                                class="form-control"
+                                formControlName="currency"
+                                (change)="setDelivery()"
+                                readonly
+                            />
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <hr class="row line-border" />
+        <div class="">
+            <app-setting-header
+                [data]="{page,pageSize,collection,search, excelDisplay : 'none'}"
+                (dataChange)="eventHeader($event)"
+            >
+            </app-setting-header>
+        </div>
+
+        <div class="table-responsive mt-0 text-wrap" style="min-height: 22rem">
+            <table class="table table-bordered mt-0 table-sm">
+                <thead class="bg-info">
+                    <tr class="text-white">
+                        <th sortable="SKUNo" (sort)="onSort($event)">SKU Code</th>
+                        <th class="text-start" sortable="SKUName" (sort)="onSort($event)">
+                            {{ "SKU Name" | labelTranslate }}
+                        </th>
+                        <th class="text-start" sortable="SKUDescription" (sort)="onSort($event)">
+                            {{ "SKU Description" | labelTranslate }}
+                        </th>
+                        <th sortable="customerPartNo" (sort)="onSort($event)">Part No.</th>
+                        <th sortable="UOM" (sort)="onSort($event)">UoM</th>
+                        <th sortable="orderedQty" (sort)="onSort($event)">SO Qty</th>
+                        <th sortable="standardRate" (sort)="onSort($event)">Rate/Unit</th>
+                        <th sortable="discount" (sort)="onSort($event)">Disc %</th>
+                        <th sortable="netRate" (sort)="onSort($event)">Net Rate</th>
+                        <th sortable="lineValue" (sort)="onSort($event)">Line Value</th>
+                        <th>Disp.</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    <tr
+                        *ngFor="
+                            let u of SODetailsArray
+                                | searchFi1ter : search
+                                | slice : (page - 1) * pageSize : (page - 1) * pageSize + pageSize;
+                            trackBy: trackByFn
+                        "
+                    >
+                        <td>{{ u?.SKUNo }}</td>
+                        <td class="text-start" [style.width]="SKUName.clientWidth" #SKUName>
+                            <span class="pointer" [positionTarget]="SKUName" [ngbTooltip]="u.SKUName">
+                                {{ u.SKUName }}
+                            </span>
+                        </td>
+                        <td class="text-start" [style.width]="SKUDescription.clientWidth" #SKUDescription>
+                            <span class="pointer" [positionTarget]="SKUDescription" [ngbTooltip]="u.SKUDescription">
+                                {{ u.SKUDescription }}
+                            </span>
+                        </td>
+                        <td>{{ u?.customerPartNo }}</td>
+
+                        <td>{{ u?.UOM | UOMUnitsMaster }}</td>
+                        <td>
+                            <div class="d-flex justify-content-center">
+                                <span *ngIf="['approve', 'reject', 'view', 'generate', 'cancel'].includes(action)">
+                                    {{ u?.orderedQty | number : "1.2-2" }}
+                                </span>
+                                <input
+                                    type="number"
+                                    class="form-control form-control-sm w-25"
+                                    *ngIf="!['approve', 'reject', 'view', 'generate', 'cancel'].includes(action)"
+                                    [(ngModel)]="u.orderedQty"
+                                    [ngModelOptions]="{standalone: true}"
+                                    (input)="setLineValue(u)"
+                                />
+                            </div>
+                        </td>
+
+                        <td>{{ u?.standardRate | number : "1.2-2" }}</td>
+                        <td>
+                            <div class="d-flex justify-content-center">
+                                <span *ngIf="['approve', 'reject', 'view', 'generate', 'cancel'].includes(action)">
+                                    {{ u?.discount | number : "1.2-2" }}
+                                </span>
+                                <input
+                                    type="number"
+                                    class="form-control form-control-xs w-25"
+                                    *ngIf="!['approve', 'reject', 'view', 'generate', 'cancel'].includes(action)"
+                                    [(ngModel)]="u.discount"
+                                    [ngModelOptions]="{standalone: true}"
+                                    (input)="setNetRate(u)"
+                                />
+                            </div>
+                        </td>
+                        <td>{{ u?.netRate | number : "1.2-2" }}</td>
+                        <td>{{ u?.lineValue | number : "1.2-2" }}</td>
+                        <td>
+                            <span class="d-flex justify-content-center pointer" (click)="openSOScheduleModal(u)">
+                                <div class="assetCalendarTD"></div>
+                            </span>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <hr class="row line-border" />
+        <div class="row mb-3 align-items-center mt-3">
+            <div class="col-md-auto">
+                <button class="plusIconSvg btn btn-primary me-1"></button>
+                <button (click)="openSOTermsDetailsModal()" class="btn btn-primary me-5 px-4" type="button">
+                    SO Terms/Details
+                </button>
+            </div>
+            <div class="col-4 mt-1">
+                <div class="d-flex justify-content-center">
+                    <div class="col-form-label text-nowrap pe-2 pt-0">
+                        Net SO Value:
+                        <button type="button" class="btn btn-info py-1 ms-2">
+                            {{ "INR" | companyCurrency }}
+                        </button>
+                    </div>
+                    <input class="form-control" type="number" formControlName="SOTotalAmount" readonly />
+                </div>
+            </div>
+            <div *ngIf="action == 'cancel'" class="col px-0">
+                <div class="d-flex justify-content-center align-items-center">
+                    <div class="col-form-label text-nowrap">
+                        Reason for Cancellation<span class="text-danger me-2">*</span>
+                        <span>&#9654;</span>
+                    </div>
+                    <input class="form-control mx-2" type="text" formControlName="SOCancellationReason" />
+                </div>
+            </div>
+            <div class="col-md-auto ms-auto">
+                <div *ngIf="['create'].includes(action)" class="d-grid gap-2 d-md-block">
+                    <button class="btn btn-primary px-5 me-4" type="button" (click)="reset()">Reset</button>
+                    <button
+                        type="button"
+                        class="btn btn-primary me-1"
+                        [disabled]="!isESCPreview"
+                        (click)="ESCPreview()"
+                    >
+                        Esc
+                    </button>
+                    <button class="btn btn-primary px-4 me-4" type="button" (click)="preview()">Preview</button>
+                    <button type="button" class="btn btn-primary px-5" [disabled]="!isPreview" (click)="submit()">
+                        Save
+                    </button>
+                </div>
+                <div *ngIf="['edit'].includes(action)" class="d-grid gap-2 d-md-block">
+                    <button type="button" class="btn btn-primary px-5" (click)="submit()">Save</button>
+                </div>
+                <div *ngIf="action == 'cancel'" class="content-end">
+                    <button class="btn btn-primary px-5" type="button" (click)="openCancelModal()">Cancel</button>
+                </div>
+                <div *ngIf="action == 'approve'" class="content-end">
+                    <button class="btn btn-primary px-5" type="button" (click)="submit()">Approve</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</Form>

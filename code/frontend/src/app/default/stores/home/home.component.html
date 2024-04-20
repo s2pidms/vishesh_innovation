@@ -1,0 +1,92 @@
+<div class="container-fluid text-center dashboard-page">
+    <div class="row mx-3">
+        <div class="col px-3">
+            <div class="card h-100">
+                <div class="card-body">
+                    <h5 class="card-title">Total Items in Stock</h5>
+                    <p class="card-text">{{ dashBoardData.GINItemCount }}</p>
+                </div>
+            </div>
+        </div>
+        <div class="col px-3">
+            <div class="card h-100">
+                <div class="card-body">
+                    <h5 class="card-title">Total Inventory Value</h5>
+                    <p class="card-text">
+                        {{ dashBoardData.totalInventoryValue | number : "1.2-2" }}
+                        {{ lakhInWord }}
+                    </p>
+                </div>
+            </div>
+        </div>
+        <div class="col px-3">
+            <div class="card h-100">
+                <div class="card-body">
+                    <h5 class="card-title">GRN Count</h5>
+                    <p class="card-text">
+                        {{ dashBoardData.GRNCounts }}
+                    </p>
+                </div>
+            </div>
+        </div>
+        <div class="col px-3">
+            <div class="card h-100">
+                <div class="card-body">
+                    <h5 class="card-title">GIN Count</h5>
+                    <p class="card-text">{{ dashBoardData.GINCounts }}</p>
+                </div>
+            </div>
+        </div>
+        <div class="col px-3">
+            <div class="card h-100">
+                <div class="card-body">
+                    <h5 class="card-title">Goods Requisition Count</h5>
+                    <p class="card-text">{{ dashBoardData.GRCounts }}</p>
+                </div>
+            </div>
+        </div>
+        <div class="col px-3">
+            <div class="card h-100">
+                <div class="card-body">
+                    <h5 class="card-title">Goods Issued Count</h5>
+                    <p class="card-text">{{ dashBoardData.GICounts }}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row mx-4 mt-5">
+        <div class="col-md-6 px-2">
+            <div class="card">
+                <div class="card-body py-5">
+                    <h5 class="card-title">Bar chart: GRN Volume by Time Period</h5>
+                    <canvas
+                        baseChart
+                        class="chart pointer"
+                        [data]="dashBoardData.barMonthlyGRNVolume"
+                        [options]="barChartOptions"
+                        [type]="barChartType"
+                        [plugins]="barChartPlugins"
+                    >
+                    </canvas>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6 px-2">
+            <div class="card">
+                <div class="card-body py-5">
+                    <h5 class="card-title">Goods Issued Against Requisition.</h5>
+                    <canvas
+                        baseChart
+                        class="chart pointer"
+                        [data]="dashBoardData.barMonthlyGIStatus"
+                        [options]="barChartOptionsStack"
+                        [type]="barChartType"
+                        [plugins]="barChartPlugins"
+                    >
+                    </canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

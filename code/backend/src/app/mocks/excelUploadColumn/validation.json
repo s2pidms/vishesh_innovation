@@ -1,0 +1,31 @@
+{
+    "supplierCode": "Supplier Code is required",
+    "supplierName": "Supplier Name is required",
+    "supplierPurchaseType": "Supplier Purchase Type is required",
+    "supplierGST": "GSTIN No. is required",
+    "supplierPAN": "PAN Card No. is Invalid",
+    
+    "itemType": "Item Type is required",
+    "itemCode": "Item Code is required",
+    "itemName": "Item Name is required",
+    "itemDescription": "Item Description is required",
+    "isActive": "IsActive is required",
+    "orderInfoUOM": "UOM is required",
+    "primaryUnit": "Primary Unit is required",
+    "hsn": "HSN is required",
+    "shelfLife": "Shelf Life is required",
+    "QCLevels": "QCLevels required",
+    "supplierId": "Supplier is required",
+
+    "customerCode": "Customer Code is required",
+    "customerName": "Customer Name is required",
+    "customerCategory": "Customer Category is required",
+    "customerPAN": "Customer PAN is required",
+    "GSTIN": "GSTIN is required",
+    "GSTClassification": "GSTClassification is required",
+    "customerType": "CustomerType is required",
+    "customerCurrency": "CustomerCurrency is required",
+    "customerPaymentTerms": "CustomerPaymentTerms is required",
+    "country": "Country is required",
+    "region": "Region is required"
+}

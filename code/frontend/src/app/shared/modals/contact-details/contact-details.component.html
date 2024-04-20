@@ -1,0 +1,128 @@
+<div style="min-height: 54rem" class="modelPage">
+    <div class="modal-header">
+        <div class="heading">Customer Contact Details</div>
+        <div>
+            <button
+                type="button"
+                class="btn btn-cross btn-sm"
+                aria-label="Close"
+                (click)="activeModal.close(customerContactInfoArray)"
+            >
+                <i class="fa fa-times-circle" aria-hidden="true"></i>
+            </button>
+        </div>
+    </div>
+    <div class="">
+        <div class="container-fluid">
+            <div class="row">
+                <form [formGroup]="form">
+                    <div class="row p-0 px-5 mt-4">
+                        <div class="col ps-0">
+                            <label class="form-label mb-2">
+                                Contact Person's Name<span class="text-danger">*</span>
+                            </label>
+                            <input class="form-control" type="text" formControlName="contactPersonName" />
+                        </div>
+                        <div class="col">
+                            <label class="form-label mb-2">
+                                Department
+                                <span class="text-danger">*</span>
+                            </label>
+                            <input class="form-control" type="text" formControlName="contactPersonDepartment" />
+                        </div>
+                        <div class="col">
+                            <label class="form-label mb-2">
+                                Designation
+                                <span class="text-danger">*</span>
+                            </label>
+                            <input class="form-control" type="text" formControlName="contactPersonDesignation" />
+                        </div>
+                        <div class="col">
+                            <label class="form-label mb-2"> Mobile No. <span class="text-danger">*</span> </label>
+                            <input class="form-control" type="text" formControlName="contactPersonNumber" />
+                        </div>
+                        <div class="col pe-0">
+                            <label class="form-label mb-2"> E-mail ID<span class="text-danger">*</span> </label>
+                            <input class="form-control" type="text" formControlName="contactPersonEmail" />
+                        </div>
+                    </div>
+                </form>
+                <div class="col text-center my-4">
+                    <button
+                        class="btn bg-primary px-5"
+                        type="button"
+                        [disabled]="btnDisable || action == 'view'"
+                        (click)="save()"
+                    >
+                        Add
+                    </button>
+                </div>
+                <hr class="line-border mb-0" />
+                <div class="px-5 mt-0">
+                    <app-setting-header
+                        [data]="{page,pageSize,collection,search ,excelDisplay : 'none'}"
+                        (dataChange)="eventHeader($event)"
+                    >
+                    </app-setting-header>
+                </div>
+                <div class="table-responsive px-5">
+                    <table class="table table-bordered table-sticky">
+                        <thead class="bg-primary">
+                            <tr class="text-white">
+                                <th class="text-start">Name of Contact Person</th>
+                                <th>Department</th>
+                                <th>Designation</th>
+                                <th>Mobile No.</th>
+                                <th>E-mail ID</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr
+                                *ngFor="
+                                    let u of customerContactInfoArray
+                                        | searchFi1ter : search
+                                        | slice : (page - 1) * pageSize : (page - 1) * pageSize + pageSize;
+                                    let i = index
+                                "
+                            >
+                                <td class="text-start">{{ u?.contactPersonName }}</td>
+                                <td>{{ u?.contactPersonDepartment }}</td>
+                                <td>{{ u?.contactPersonDesignation }}</td>
+                                <td>{{ u?.contactPersonNumber }}</td>
+                                <td>{{ u?.contactPersonEmail }}</td>
+
+                                <td>
+                                    <div class="dropdown">
+                                        <button class="dropbtn"></button>
+                                        <div class="dropdown-content">
+                                            <a href="javascript:void(0)" (click)="patchItem(u, i, 'view')">
+                                                <i class="fa fa-eye fa-lg me-2 text-primary" aria-hidden="true"></i>
+                                                View
+                                            </a>
+                                            <a href="javascript:void(0)" (click)="patchItem(u, i, 'edit')">
+                                                <i
+                                                    class="fa fa-pencil-square-o fa-lg me-2 text-primary"
+                                                    aria-hidden="true"
+                                                ></i>
+                                                Edit
+                                            </a>
+                                            <a
+                                                [class.disable]="this.action == 'view'"
+                                                href="javascript:void(0)"
+                                                (click)="deleteItem(i)"
+                                            >
+                                                <i class="fa fa-trash me-2 text-primary" aria-hidden="true"></i>
+                                                Delete
+                                            </a>
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

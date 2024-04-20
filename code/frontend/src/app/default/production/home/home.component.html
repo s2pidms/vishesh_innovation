@@ -1,0 +1,70 @@
+<div class="container-fluid text-center dashboard-page">
+    <div class="row mt-5 mx-1">
+      <div class="col">
+        <div class="card">
+          <div class="card-body">
+            <h5 class="card-title">Total Requisitions</h5>
+            <p class="card-text2">{{ dashBoardData.totalRequisitions }}</p>
+          </div>
+        </div>
+      </div>
+      <div class="col">
+        <div class="card">
+          <div class="card-body">
+            <h5 class="card-title">Approved Requisitions</h5>
+            <p class="card-text2">{{ dashBoardData.approvedRequisitions }}</p>
+          </div>
+        </div>
+      </div>
+      <div class="col">
+        <div class="card">
+          <div class="card-body">
+            <h5 class="card-title">Pending Requisitions</h5>
+            <p class="card-text2">{{ dashBoardData.pendingRequisitions }}</p>
+          </div>
+        </div>
+      </div>
+      <div class="col">
+        <div class="card">
+          <div class="card-body">
+            <h5 class="card-title">Total FG Inward Entries</h5>
+            <p class="card-text2">{{ dashBoardData.totalFGInwardEntries }}</p>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="row mx-4 mt-5">
+      <div class="col-md-6 px-2">
+        <div class="card">
+          <div class="card-body py-5">
+            <h5 class="card-title">Requisitions Trend</h5>
+            <canvas
+              baseChart
+              class="chart pointer"
+              [data]="dashBoardData.barChartDataEmpPaidSalary"
+              [options]="barChartOptions"
+              [type]="barChartType"
+              [plugins]="barChartPlugins"
+            >
+            </canvas>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-6 px-2">
+        <div class="card">
+          <div class="card-body py-5">
+            <h5 class="card-title">Finished Goods Inventory Entry trend</h5>
+            <canvas
+              baseChart
+              class="chart pointer"
+              [data]="dashBoardData.barChartDataFGIEntry"
+              [options]="barChartOptions"
+              [type]="barChartType"
+              [plugins]="barChartPlugins"
+            >
+            </canvas>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>

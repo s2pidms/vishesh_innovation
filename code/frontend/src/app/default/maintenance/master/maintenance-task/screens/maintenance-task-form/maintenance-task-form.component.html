@@ -1,0 +1,126 @@
+<Form [formGroup]="form" class="formCard card">
+    <div class="container">
+        <div class="row form-header">
+            <div class="col heading">
+                <label>{{ this.action | titlecase }} Task Master</label>
+            </div>
+        </div>
+        <div class="form-body">
+            <div class="row">
+                <div class="col-md-3">
+                    <label class="form-label">
+                        Task Code
+                        <span class="text-danger"></span>
+                    </label>
+                    <input class="form-control" type="text" formControlName="taskCode" readonly />
+                </div>
+                <div class="col-md-3">
+                    <label class="form-label"> Task Name<span class="text-danger"></span> </label>
+                    <input class="form-control" type="text" formControlName="taskName" />
+                </div>
+                <div class="col-md-3">
+                    <label class="form-label">
+                        Task Description
+                        <span class="text-danger"></span>
+                    </label>
+                    <input class="form-control" type="text" formControlName="taskDescription" />
+                </div>
+                <div class="col-md-3">
+                    <label class="form-label"> Equipment <span class="text-danger"></span> </label>
+                    <ng-select
+                        [items]="masterData.equipmentOptions"
+                        bindLabel="assetName"
+                        bindValue="_id"
+                        [clearable]="false"
+                        formControlName="equipment"
+                        placeholder="Select Equipment Name"
+                    >
+                    </ng-select>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-3">
+                    <label class="form-label"> Priority <span class="text-danger"></span> </label>
+
+                    <select class="form-select" formControlName="priority">
+                        <option [value]="null" selected disabled>Select Priority</option>
+                        <option [value]="item.value" *ngFor="let item of masterData?.priorityOptions">
+                            {{ item.label }}
+                        </option>
+                    </select>
+                </div>
+                <div class="col-md-3">
+                    <label class="form-label">
+                        Frequency
+                        <span class="text-danger"></span>
+                    </label>
+
+                    <select class="form-select" formControlName="frequency">
+                        <option [value]="null" selected disabled>Select Frequency</option>
+                        <option [value]="item.value" *ngFor="let item of masterData?.frequencyOptions">
+                            {{ item.label }}
+                        </option>
+                    </select>
+                </div>
+
+                <div class="col-md-3">
+                    <label class="form-label"> Estimated Time (Hr)<span class="text-danger"></span> </label>
+
+                    <input class="form-control" type="number" formControlName="estimatedTime" />
+                </div>
+                <div class="col-md-3">
+                    <label class="form-label">
+                        Task Category
+                        <span class="text-danger"></span>
+                    </label>
+
+                    <select class="form-select" formControlName="taskCategory">
+                        <option [value]="null" selected disabled>Select Task Category</option>
+                        <option [value]="item.value" *ngFor="let item of masterData?.taskCategoryOptions">
+                            {{ item.label }}
+                        </option>
+                    </select>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-6">
+                    <label class="form-label">
+                        Maintenance Checklist
+                        <span class="text-danger"></span>
+                    </label>
+                    <ng-select
+                        [items]="masterData.maintenanceChecklistOptions"
+                        bindLabel="checklistName"
+                        bindValue="_id"
+                        [clearable]="false"
+                        formControlName="maintenanceChecklist"
+                        placeholder="Select Maintenance Checklist"
+                    >
+                    </ng-select>
+                </div>
+
+                <div class="col-md-6">
+                    <label class="form-label">
+                        Status
+                        <span class="text-danger"></span>
+                    </label>
+                    <select class="form-select" formControlName="taskStatus">
+                        <option [value]="''" selected disabled>Select Status</option>
+                        <option [value]="item.value" *ngFor="let item of masterData?.taskStatusOptions">
+                            {{ item.label }}
+                        </option>
+                    </select>
+                </div>
+            </div>
+        </div>
+        <hr *ngIf="action !== 'view'" class="row line-border" />
+        <div *ngIf="action !== 'view'" class="d-flex justify-content-center mb-3">
+            <div class="d-grid col-md-1 me-5" [ngClass]="{'d-none': action == 'View'}">
+                <button class="btn btn-primary" type="button" (click)="reset()">Reset</button>
+            </div>
+            <div class="d-grid col-md-1" [ngClass]="{'d-none': action == 'View'}">
+                <button class="btn btn-primary" type="button" (click)="submit()">Save</button>
+            </div>
+        </div>
+    </div>
+</Form>

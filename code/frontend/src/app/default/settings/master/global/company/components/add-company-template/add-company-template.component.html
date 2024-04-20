@@ -1,0 +1,115 @@
+<div class="modelPage">
+  <div class="modal-header">
+    <div class="heading">Templates Details</div>
+    <div>
+      <button
+        type="button"
+        class="btn btn-cross btn-sm"
+        aria-label="Close"
+        (click)="dismissModel()"
+      >
+        <i class="fa fa-times-circle" aria-hidden="true"></i>
+      </button>
+    </div>
+  </div>
+  <form [formGroup]="form" class="p-0">
+    <div class="row my-4 px-5">
+      <div class="col-md-4">
+        <label class="form-label"
+          >Purchase Order Domestics <span class="text-danger">*</span>
+        </label>
+        <select class="form-select" formControlName="PODomesticTemplates">
+          <option [value]="null" selected disabled>
+            Select Purchase Order Domestics
+          </option>
+          <option *ngFor="let d of PODomesticOptions" [value]="d.value">
+            {{ d.label }}
+          </option>
+        </select>
+      </div>
+      <div class="col-md-4">
+        <label class="form-label"
+          >Purchase Order Imports <span class="text-danger">*</span>
+        </label>
+        <select class="form-select" formControlName="POImportsTemplates">
+          <option [value]="null" selected disabled>
+            Select Purchase Order Imports
+          </option>
+          <option *ngFor="let d of POImportOptions" [value]="d.value">
+            {{ d.label }}
+          </option>
+        </select>
+      </div>
+      <div class="col-md-4">
+        <label class="form-label"
+          >Proforma Invoice Domestic <span class="text-danger">*</span>
+        </label>
+        <select class="form-select" formControlName="PIDomesticTemplates">
+          <option [value]="null" selected disabled>
+            Select Proforma Invoice Domestics
+          </option>
+          <option *ngFor="let d of PIDomesticOptions" [value]="d.value">
+            {{ d.label }}
+          </option>
+        </select>
+      </div>
+    </div>
+
+    <div class="row mb-5 px-5">
+      <div class="col-md-4">
+        <label class="form-label"
+          >Proforma Invoice Exports <span class="text-danger">*</span>
+        </label>
+        <select class="form-select" formControlName="PIExportsTemplates">
+          <option [value]="null" selected disabled>
+            Select Proforma Invoice Exports
+          </option>
+          <option *ngFor="let d of PIExportsOptions" [value]="d.value">
+            {{ d.label }}
+          </option>
+        </select>
+      </div>
+      <div class="col-md-4">
+        <label class="form-label"
+          >Tax Invoice Domestics <span class="text-danger">*</span>
+        </label>
+        <select class="form-select" formControlName="TIDomesticTemplates">
+          <option [value]="null" selected disabled>
+            Select Tax Invoice Domestics
+          </option>
+          <option *ngFor="let d of TIDomesticOptions" [value]="d.value">
+            {{ d.label }}
+          </option>
+        </select>
+      </div>
+
+      <div class="col-md-4">
+        <label class="form-label"
+          >Tax Invoice Exports <span class="text-danger">*</span>
+        </label>
+        <select class="form-select" formControlName="TIExportsTemplates">
+          <option [value]="null" selected disabled>
+            Select Tax Invoice Exports
+          </option>
+          <option *ngFor="let d of TIExportsOptions" [value]="d.value">
+            {{ d.label }}
+          </option>
+        </select>
+      </div>
+    </div>
+  </form>
+
+  <hr class="line-border mb-5 px-05" />
+
+  <div class="row text-center mb-5">
+    <div class="col-12">
+      <button
+        type="button"
+        class="btn bg-primary px-5"
+        (click)="dismissModel()"
+      >
+        Save & Close
+      </button>
+    </div>
+  </div>
+</div>

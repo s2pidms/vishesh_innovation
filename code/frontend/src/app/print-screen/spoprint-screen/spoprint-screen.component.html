@@ -1,0 +1,221 @@
+<div class="container-fluid printScreen">
+    <div class="row">
+        <div class="col-12 text-center px-0">
+            <div *ngIf="buttonCondition == 'true'" class="">
+                <button
+                    appAccessControl
+                    [accessType]="rolePermissionActions.downloadAction"
+                    class="btn btn-primary mt-4"
+                    type="button"
+                    (click)="windowprint()"
+                    *ngIf="pdfAction != 'pdf'"
+                >
+                    <img src="/assets/images/print.png" width="20px" height="14px" class="mb-2" />&nbsp;&nbsp; Print
+                </button>
+            </div>
+
+            <div class="page py-3">
+                <div
+                    [ngStyle]="
+                        previewSPO == 'previewSPO'
+                            ? {
+                                  background: 'url(./assets/new_icons/draft-stamp.svg)',
+                                  'background-size': '100% 100%',
+                                  'background-color': 'transparent'
+                              }
+                            : {}
+                    "
+                    class="table-responsive shadow"
+                >
+                    <table class="table">
+                        <tr>
+                            <td colspan="12">
+                                <img src="{{ tableData?.company?.companyPdfHeaderUrl }}" class="img-pdfHeader" />
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan="12">
+                                <h2 class="page-title">Service Purchase Order</h2>
+                            </td>
+                        </tr>
+                        <tr class="head-row">
+                            <th colspan="6" class="bg-grey">
+                                <label class="heading">SPO Details</label>
+                            </th>
+                            <th colspan="6" class="bg-grey">
+                                <label class="heading">Supplier Details</label>
+                            </th>
+                        </tr>
+                        <tr>
+                            <td colspan="6">
+                                <div class="font_le">
+                                    <p>Service Purchase Order No.: {{ tableData.SPONumber }}</p>
+                                    <p>
+                                        Service Purchase Order Date:
+                                        {{ tableData?.SPODate | date : "dd-MM-YYYY" }}
+                                    </p>
+                                    <p>
+                                        Service Purchase Order Reference:
+                                        {{ tableData?.orderReference }}
+                                    </p>
+                                    <p>Service Purchase Category: {{ tableData?.purchaseCategory }}</p>
+                                </div>
+                            </td>
+                            <td colspan="6">
+                                <p>Supplier Code: {{ tableData?.supplier?.supplierCode }}</p>
+                                <p>Supplier Name: {{ tableData?.supplier?.supplierName }}</p>
+                                <p>Supplier’s GSTIN:{{ tableData?.supplier?.supplierGST }}</p>
+                                <p>GST Registration Type:Regular</p>
+                            </td>
+                        </tr>
+                        <tr class="head-row">
+                            <th colspan="6">
+                                <label>Ship From: [Supplier’s Address]</label>
+                            </th>
+                            <th colspan="6">
+                                <label>Ship To</label>
+                            </th>
+                        </tr>
+                        <tr>
+                            <td colspan="6">
+                                <p class="fw-bold">
+                                    {{ tableData?.supplier?.supplierName }}
+                                </p>
+                                <p *ngFor="let s of tableData?.supplier?.supplierBillingAddress">
+                                    {{ s?.line1 }}
+                                    {{ s?.line2 }}
+                                    {{ s?.line3 }}
+                                    {{ s?.state }} {{ s?.pinCode }}
+                                </p>
+                                <p>GSTIN: {{ tableData?.supplier?.supplierGST }}</p>
+                                <p *ngFor="let u of tableData?.supplier?.supplierContactMatrix">
+                                    Contact: {{ u?.supplierContactPersonEmail }}
+                                </p>
+                            </td>
+                            <td colspan="6">
+                                <p class="fw-bold">{{ tableData?.company?.companyName }}</p>
+                                <p>
+                                    {{ getAddress(tableData?.company?.companyAddress)?.addressLine1 }}
+                                    {{ getAddress(tableData?.company?.companyAddress)?.addressLine2 }}
+                                    {{ getAddress(tableData?.company?.companyAddress)?.addressLine3 }},
+                                    {{ getAddress(tableData?.company?.companyAddress)?.city }} -
+                                    {{ getAddress(tableData?.company?.companyAddress)?.pinCode }}
+
+                                    {{ getAddress(tableData?.company?.companyAddress)?.state }},
+                                    {{ getAddress(tableData?.company?.companyAddress)?.country }}
+                                </p>
+                                <p>GSTIN:{{ tableData?.company?.GSTIN }}</p>
+                                <p>
+                                    Contact:
+
+                                    <span *ngIf="tableData?.company?.companyContactPersonNumber">
+                                        {{ tableData?.company?.companyContactPersonNumber }}
+                                    </span>
+                                    <span *ngIf="tableData?.company?.companyContactPersonAltNum">
+                                        / {{ tableData?.company?.companyContactPersonAltNum }}
+                                    </span>
+                                    <span *ngIf="tableData?.company?.companyContactPersonEmail">
+                                        ( {{ tableData?.company?.companyContactPersonEmail }} )
+                                    </span>
+                                </p>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan="12">
+                                <p class="sub-text">Dear Sir/Madam,</p>
+                                <p class="sub-text">
+                                    Please supply following goods/material in accordance with agreed terms and
+                                    conditions or contract purchase agreement.
+                                </p>
+                                <p class="sub-text">
+                                    Please mention our Item code & Purchase Order number on your tax invoice without
+                                    which invoice will not be processed.
+                                </p>
+                            </td>
+                        </tr>
+                        <tr class="head-row text-center">
+                            <th colspan="1" class="text-center">#</th>
+                            <th colspan="3">Master Service Details</th>
+                            <th colspan="1" class="text-center">Quantity</th>
+                            <th colspan="1" class="text-center">
+                                Rate
+                                {{ this.tableData?.supplier?.supplierCurrency == "INR" ? "₹" : "$" }}
+                            </th>
+                            <th colspan="3">
+                                Line Value [{{ this.tableData?.supplier?.supplierCurrency == "INR" ? "INR" : "USD" }}]
+                            </th>
+                            <th colspan="2" class="text-center">Delivery Date</th>
+                        </tr>
+                        <tr *ngFor="let p of tableData.SPODetails; let i = index">
+                            <td colspan="1" class="text-center">
+                                {{ i + 1 }}
+                            </td>
+                            <td colspan="3">
+                                <p>Service Master Code: {{ p?.serviceCode }}</p>
+                                <p>Service Master Description: {{ p?.serviceDescription }}</p>
+                                <p>SAC Code:{{ p?.serviceMaster?.sacCode }}</p>
+                            </td>
+                            <td colspan="1" class="text-center">{{ p?.SPOQty }}</td>
+                            <td colspan="1" class="text-center">
+                                {{ p?.purchaseRate | number : ".2-2" }}
+                            </td>
+                            <td colspan="3">
+                                <p>
+                                    Taxable Value:
+                                    {{ p?.lineValue | number : ".2-2" }}
+                                </p>
+                                <p *ngIf="supplierGST != tableData?.company?.GSTIN.substring(0, 2)">
+                                    I-GST [{{ p?.igst }}%]:
+                                    {{ p?.IGSTAmount | number : ".2-2" }}
+                                </p>
+
+                                <p *ngIf="supplierGST == tableData?.company?.GSTIN.substring(0, 2)">
+                                    S-GST [{{ p?.sgst }}%]:
+                                    {{ p?.SGSTAmount | number : ".2-2" }}
+                                    <br />
+                                    C-GST [{{ p?.cgst }}%]:
+                                    {{ p?.CGSTAmount | number : ".2-2" }}
+                                </p>
+                                <p>Total Line Value:{{ p?.totalLineValue | number : ".2-2" }}</p>
+                            </td>
+                            <td colspan="2" class="text-center">
+                                {{ p?.deliveryDate | date : "dd-MM-YYYY" }}
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td colspan="12" style="height: 5rem"></td>
+                        </tr>
+                        <tr>
+                            <td colspan="4">
+                                <p>General Terms & Conditions:</p>
+                                <p>
+                                    ▪ Mode of Transport:
+                                    {{ tableData?.purchaseCategory == "Domestic" ? "By Road" : "By Sea" }}
+                                </p>
+                                <p>
+                                    ▪ Freight/Inco Term:
+                                    {{ tableData?.supplier?.supplierINCOTerms }}
+                                </p>
+                                <p>
+                                    ▪ Payment Terms:
+                                    {{ tableData?.supplier?.supplierPaymentTerms }}
+                                </p>
+                                <p>▪ Remarks: {{ tableData?.SPORemarks }}</p>
+                            </td>
+                            <td colspan="4" class="text-center">
+                                <span>Total Purchase Order Value</span><br />
+                                {{ totalAmount }}.00
+                            </td>
+                            <td colspan="4" class="text-center">
+                                <div>
+                                    <img src="{{ tableData?.company?.companySignatureUrl }}" class="img-sign" />
+                                </div>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

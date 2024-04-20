@@ -1,0 +1,472 @@
+<div class="container-fluid printScreen">
+    <div class="row justify-content-center">
+        <div colspan="12" class="text-center col-10">
+            <button class="btn btn-primary" type="button" (click)="windowPrint()" *ngIf="pdfAction != 'pdf'">
+                <img src="./assets/images/print.png" width="20px" height="14px" class="mb-2" />&nbsp;&nbsp; Print
+            </button>
+            <div class="page py-3">
+                <div class="row justify-content-center mb-5 m-0">
+                    <div class="table-responsive">
+                        <table class="table border-btm">
+                            <tr>
+                                <td colspan="12" class="border-bottom-0">
+                                    <div class="text-center set-job-card-size py-5">
+                                        <!-- <img src="./assets/images/job_card_header.png" class="set-image" /> -->
+                                        Job Card
+                                    </div>
+                                </td>
+                            </tr>
+                            <!-- <tr>
+                                <th colspan="12" class="text-center border-bottom-0 border-top-0">
+                                    <div class="fs-3">Cost Sheet</div>
+                                </th>
+                            </tr> -->
+                            <tr class="border-btm">
+                                <td colspan="12" class="px-3">
+                                    <div class="row mt-4 justify-content-between">
+                                        <div class="col-6 pe-3 h-100">
+                                            <table class="table">
+                                                <tr>
+                                                    <td class="border stroke">
+                                                        <div class="row">
+                                                            <div class="px-0 text-dark">
+                                                                Job Card No: {{ tableData?.jobCard?.jobCardNo }}
+                                                            </div>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                            </table>
+                                        </div>
+                                        <div class="col-6 ps-3 h-100">
+                                            <table class="table">
+                                                <tr>
+                                                    <td class="border stroke">
+                                                        <div class="row">
+                                                            <div class="px-0 text-dark">
+                                                                Job Card Date:
+                                                                {{ tableData?.jobCard?.jobCardDate }}
+                                                            </div>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                            </table>
+                                        </div>
+                                    </div>
+                                    <div class="row mt-2 justify-content-between">
+                                        <div class="col-6 pe-3 h-100">
+                                            <table class="table">
+                                                <tr>
+                                                    <td class="border stroke">
+                                                        <div class="row">
+                                                            <div class="px-0 text-dark">
+                                                                Product Code: {{ tableData?.jobCard?.productCategory }}
+                                                            </div>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                            </table>
+                                        </div>
+                                        <div class="col-6 ps-3 h-100">
+                                            <table class="table">
+                                                <tr>
+                                                    <td class="border stroke">
+                                                        <div class="row">
+                                                            <div class="px-0 text-dark">
+                                                                Customer Name: {{ tableData?.jobCard?.customerName }}
+                                                            </div>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                            </table>
+                                        </div>
+                                    </div>
+                                    <div class="row mt-2 justify-content-between">
+                                        <div class="col-6 pe-3">
+                                            <div class="row">
+                                                <div class="col-6 ps-0 pe-2 h-100">
+                                                    <table class="table">
+                                                        <tr>
+                                                            <td class="border stroke">
+                                                                <div class="row">
+                                                                    <div class="px-0 text-dark">
+                                                                        SKU No.: {{ tableData?.jobCard?.SKUNo }}
+                                                                    </div>
+                                                                </div>
+                                                            </td>
+                                                        </tr>
+                                                    </table>
+                                                </div>
+                                                <div class="col-6 pe-0 ps-2 h-100">
+                                                    <table class="table">
+                                                        <tr>
+                                                            <td class="border stroke">
+                                                                <div class="row">
+                                                                    <div class="px-0 text-dark">
+                                                                        Stage: {{ tableData?.jobCard?.stage }}
+                                                                    </div>
+                                                                </div>
+                                                            </td>
+                                                        </tr>
+                                                    </table>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-6 ps-3">
+                                            <div class="row">
+                                                <div class="col-6 ps-0 pe-2 h-100">
+                                                    <table class="table">
+                                                        <tr>
+                                                            <td class="border stroke">
+                                                                <div class="row">
+                                                                    <div class="px-0 text-dark">
+                                                                        Part #: {{ tableData?.jobCard?.customerPartNo }}
+                                                                    </div>
+                                                                </div>
+                                                            </td>
+                                                        </tr>
+                                                    </table>
+                                                </div>
+                                                <div class="col-6 pe-0 ps-2 h-100">
+                                                    <table class="table">
+                                                        <tr>
+                                                            <td class="border stroke">
+                                                                <div class="row">
+                                                                    <div class="px-0 text-dark">
+                                                                        DWG #: {{ tableData?.jobCard?.artWorkNo }}
+                                                                    </div>
+                                                                </div>
+                                                            </td>
+                                                        </tr>
+                                                    </table>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row mt-2 justify-content-between">
+                                        <div class="col-6 pe-3 h-100">
+                                            <table class="table">
+                                                <tr>
+                                                    <td class="border stroke">
+                                                        <div class="row">
+                                                            <div class="px-0 text-dark">
+                                                                SKU Name: {{ tableData?.jobCard?.SKUName }}
+                                                            </div>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                            </table>
+                                        </div>
+                                        <div class="col-6 ps-3 h-100">
+                                            <table class="table">
+                                                <tr>
+                                                    <td class="border stroke">
+                                                        <div class="row">
+                                                            <div class="px-0 text-dark">
+                                                                Actual Size:
+                                                                <span
+                                                                    *ngIf="
+                                                                        tableData?.jobCard?.actualDimensionsLength &&
+                                                                        tableData?.jobCard?.actualDimensionsWidth
+                                                                    "
+                                                                >
+                                                                    {{ tableData?.jobCard?.actualDimensionsWidth }}
+                                                                    {{ tableData?.jobCard?.actualDimensionsUnit }}
+                                                                    <span>X</span>
+                                                                    {{ tableData?.jobCard?.actualDimensionsLength }}
+                                                                    {{ tableData?.jobCard?.actualDimensionsUnit }} ({{
+                                                                        tableData?.jobCard?.actualDimensionsUps
+                                                                    }})
+                                                                </span>
+                                                            </div>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                            </table>
+                                        </div>
+                                    </div>
+                                    <div class="row mt-2 justify-content-between">
+                                        <div class="col-6 pe-3 h-100">
+                                            <table class="table">
+                                                <tr>
+                                                    <td class="border stroke">
+                                                        <div class="row">
+                                                            <div class="px-0 text-dark">
+                                                                Production Layout Size:
+                                                                <span
+                                                                    *ngIf="
+                                                                        tableData?.jobCard?.layoutDimensionsLength &&
+                                                                        tableData?.jobCard?.layoutDimensionsWidth
+                                                                    "
+                                                                >
+                                                                    {{ tableData?.jobCard?.layoutDimensionsWidth }}
+                                                                    {{ tableData?.jobCard?.layoutDimensionsUnit }}
+                                                                    <span>X</span>
+
+                                                                    {{ tableData?.jobCard?.layoutDimensionsLength }}
+                                                                    {{ tableData?.jobCard?.layoutDimensionsUnit }} ({{
+                                                                        tableData?.jobCard?.layoutDimensionsUps
+                                                                    }})
+                                                                </span>
+                                                            </div>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                            </table>
+                                        </div>
+
+                                        <div class="col-6 ps-3">
+                                            <div class="row">
+                                                <div class="col-6 ps-0 pe-2 h-100">
+                                                    <table class="table">
+                                                        <tr>
+                                                            <td class="border stroke">
+                                                                <div class="row">
+                                                                    <div class="px-0 text-dark">
+                                                                        No. of Colours:
+                                                                        {{ tableData?.jobCard?.totalNoOfColors }}
+                                                                    </div>
+                                                                </div>
+                                                            </td>
+                                                        </tr>
+                                                    </table>
+                                                </div>
+                                                <div class="col-6 pe-0 ps-2 h-100">
+                                                    <table class="table">
+                                                        <tr>
+                                                            <td class="border stroke">
+                                                                <div class="row">
+                                                                    <div class="px-0 text-dark">
+                                                                        UoM: {{ tableData?.jobCard?.UOM }}
+                                                                    </div>
+                                                                </div>
+                                                            </td>
+                                                        </tr>
+                                                    </table>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row mt-2 justify-content-between">
+                                        <div class="col-6 pe-3 h-100">
+                                            <table class="table">
+                                                <tr>
+                                                    <td class="border stroke">
+                                                        <div class="row">
+                                                            <div class="px-0 text-dark">
+                                                                Batch Input Quantity:
+                                                                {{ tableData?.jobCard?.totalBatchQuantity }}
+                                                            </div>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                            </table>
+                                        </div>
+                                        <div class="col-6 ps-3 h-100">
+                                            <table class="table">
+                                                <tr>
+                                                    <td class="border stroke">
+                                                        <div class="row">
+                                                            <div class="px-0 text-dark">
+                                                                Batch Date:
+                                                                {{
+                                                                    tableData?.jobCard?.batchDate | date : "dd-MM-YYYY"
+                                                                }}
+                                                            </div>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                            </table>
+                                        </div>
+                                    </div>
+                                    <div class="row mt-2 justify-content-between">
+                                        <div class="col-6 pe-3 h-100">
+                                            <table class="table">
+                                                <tr>
+                                                    <td class="border stroke">
+                                                        <div class="row">
+                                                            <div class="px-0 text-dark">
+                                                                Order Reference: {{ tableData?.jobCard?.SONo }}
+                                                            </div>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                            </table>
+                                        </div>
+                                        <div class="col-6 ps-3 h-100">
+                                            <table class="table">
+                                                <tr>
+                                                    <td class="border stroke">
+                                                        <div class="row">
+                                                            <div class="px-0 text-dark">
+                                                                Target Dispatch Date:
+                                                                {{
+                                                                    tableData?.jobCard?.dispatchSchedule?.dispatchDate
+                                                                        | date : "dd-MM-YYYY"
+                                                                }}
+                                                            </div>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                            </table>
+                                        </div>
+                                    </div>
+                                    <div class="row mt-2 justify-content-between">
+                                        <div class="col-6 pe-3 h-100">
+                                            <table class="table">
+                                                <tr>
+                                                    <td class="border stroke">
+                                                        <div class="row">
+                                                            <div class="px-0 text-dark">
+                                                                NPD Input: {{ tableData?.jobCard?.NPDInput }}
+                                                            </div>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                            </table>
+                                        </div>
+                                        <div class="col-6 ps-3 h-100">
+                                            <table class="table">
+                                                <tr>
+                                                    <td class="border stroke">
+                                                        <div class="row">
+                                                            <div class="px-0 text-dark">Production Authorised By:</div>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                            </table>
+                                        </div>
+                                    </div>
+                                    <div class="py-3"></div>
+                                </td>
+                            </tr>
+
+                            <tr class="border-btm">
+                                <td class="p-0" colspan="12">
+                                    <div class="d-flex justify-content-center pt-0">
+                                        <th class="border-0 rounded-bottom">Material Requirement as per BOM</th>
+                                    </div>
+                                    <div class="row d-flex align-items-center">
+                                        <div class="col-12">
+                                            <div class="table-responsive pb-5">
+                                                <table class="table table-bordered table-sticky">
+                                                    <thead>
+                                                        <tr>
+                                                            <th class="text-center border stroke">Item Code</th>
+                                                            <th class="text-startborder stroke">Item Name</th>
+                                                            <th class="text-start border stroke">Item Description</th>
+                                                            <th class="text-center border stroke">UoM</th>
+                                                            <th class="text-center border stroke">Quantity</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        <tr
+                                                            class="text-wrap"
+                                                            *ngFor="let s of tableData?.MRPData; let i = index"
+                                                        >
+                                                            <td class="text-center border stroke">
+                                                                {{ s?.itemCode }}
+                                                            </td>
+                                                            <td class="border stroke">
+                                                                {{ s?.itemName }}
+                                                            </td>
+                                                            <td class="border stroke">
+                                                                {{ s?.itemDescription }}
+                                                            </td>
+                                                            <td class="text-center border stroke">
+                                                                {{ s?.UOM }}
+                                                            </td>
+                                                            <td class="text-center border stroke">
+                                                                {{ s?.partCount }}
+                                                            </td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+
+                            <tr class="border-btm">
+                                <td class="p-0" colspan="12">
+                                    <div class="d-flex justify-content-center pt-0">
+                                        <th class="border-0 rounded-bottom">PPIC to Production Goods Transfer</th>
+                                    </div>
+                                    <div class="row d-flex align-items-center">
+                                        <div class="col-12">
+                                            <div class="table-responsive">
+                                                <table class="table table-bordered table-sticky">
+                                                    <thead>
+                                                        <tr>
+                                                            <th class="text-center border stroke">MRN No.</th>
+                                                            <th class="text-center border stroke">Item Code</th>
+                                                            <th class="text-start border stroke">Item Name</th>
+                                                            <th class="text-start border stroke">Item Description</th>
+                                                            <th class="text-center border stroke">UoM</th>
+                                                            <th class="text-center border stroke">Issue Qty</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        <tr
+                                                            class="text-wrap"
+                                                            *ngFor="
+                                                                let s of tableData?.PPICToProdGoodsList;
+                                                                let i = index
+                                                            "
+                                                        >
+                                                            <td class="text-center border stroke">
+                                                                {{ s?.MRNNumber }}
+                                                            </td>
+                                                            <td class="text-center border stroke">
+                                                                {{ s?.itemCode }}
+                                                            </td>
+                                                            <td class="border stroke">
+                                                                {{ s?.itemName }}
+                                                            </td>
+                                                            <td class="border stroke">
+                                                                {{ s?.itemDescription }}
+                                                            </td>
+                                                            <td class="text-center border stroke">
+                                                                {{ s?.UOM }}
+                                                            </td>
+                                                            <td class="text-center border stroke">
+                                                                {{ s?.issueQty }}
+                                                            </td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row justify-content-between">
+                                        <div class="col-12 px-5">
+                                            <table class="table">
+                                                <tr>
+                                                    <td class="border stroke">
+                                                        <div class="row">
+                                                            <div class="px-0 text-dark">Remarks:</div>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                            </table>
+                                        </div>
+                                    </div>
+                                    <div class="py-4"></div>
+                                </td>
+                            </tr>
+
+                            <tr class="border-btm">
+                                <td class="p-0" colspan="12">
+                                    <div class="row d-flex align-items-center paddingLR-sm">
+                                        <div class="py-5"></div>
+                                        <div class="py-5"></div>
+                                    </div>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

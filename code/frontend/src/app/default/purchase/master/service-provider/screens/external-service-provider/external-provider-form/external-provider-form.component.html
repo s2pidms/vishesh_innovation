@@ -1,0 +1,192 @@
+<form [formGroup]="form" class="formCard card">
+    <div class="container">
+        <div class="row form-header">
+            <div class="col heading">
+                <label>ESP Master ({{ action | titlecase }})</label>
+            </div>
+        </div>
+        <div class="form-body">
+            <div class="row">
+                <div class="col">
+                    <label class="form-label"> ESP Category<span class="text-danger">*</span> </label>
+                    <select
+                        class="form-select"
+                        formControlName="ESPCategory"
+                        (change)="supplierCategoryImports($event)"
+                    >
+                        <option [value]="null" selected disabled>Select Category</option>
+                        <option *ngFor="let item of masterData?.ESPCategoryOptions" [value]="item.category">
+                            {{ item.category }}
+                        </option>
+                    </select>
+                </div>
+                <div class="col">
+                    <label class="form-label"> ESP Code <span class="text-danger">*</span></label>
+                    <input class="form-control" type="text" formControlName="ESPCode" readonly />
+                </div>
+                <div class="col">
+                    <label class="form-label">
+                        ESP Name
+                        <span class="text-danger">*</span>
+                    </label>
+                    <input class="form-control" type="text" formControlName="ESPName" />
+                </div>
+                <div class="col">
+                    <label class="form-label"> ESP Nick Name </label>
+                    <input class="form-control" type="text" formControlName="ESPNickName" />
+                </div>
+            </div>
+            <div class="row">
+                <div class="col">
+                    <label class="form-label"> PAN Card No.<span class="text-danger">*</span> </label>
+                    <input class="form-control" type="text" formControlName="PANNo" />
+                </div>
+                <div class="col">
+                    <label class="form-label"> GST Classification <span class="text-danger">*</span></label>
+                    <select class="form-select" formControlName="GSTClassification">
+                        <option value="null" selected disabled>Select</option>
+                        <option *ngFor="let item of GSTClassification" [value]="item">
+                            {{ item }}
+                        </option>
+                    </select>
+                </div>
+                <div class="col">
+                    <label class="form-label"> GSTIN No.<span class="text-danger">*</span> </label>
+                    <input class="form-control" type="text" formControlName="GSTIN" />
+                </div>
+                <div class="col">
+                    <label class="form-label"> Udyam Aadhaar No.<span class="text-danger">*</span> </label>
+                    <input class="form-control" type="text" formControlName="udyamAadhaarNo" />
+                </div>
+            </div>
+            <div class="row">
+                <div class="col">
+                    <label class="form-label"> MSME Classification<span class="text-danger">*</span> </label>
+                    <select class="form-select" formControlName="MSMEClassification">
+                        <option [value]="null" selected disabled>Select</option>
+                        <option *ngFor="let item of MSMEClassification" [value]="item">
+                            {{ item }}
+                        </option>
+                    </select>
+                </div>
+                <div class="col">
+                    <label class="form-label"> Currency<span class="text-danger">*</span> </label>
+                    <select class="form-select" formControlName="currency">
+                        <option value="null" selected disabled>Select Currency</option>
+                        <option *ngFor="let c of masterData?.currenciesOptions" [value]="c?.value">
+                            {{ c?.label }}
+                        </option>
+                    </select>
+                </div>
+                <div class="col">
+                    <label class="form-label"> Payment Terms<span class="text-danger">*</span> </label>
+                    <select class="form-select" formControlName="paymentTerms">
+                        <option value="null" selected disabled>Select Payment Terms</option>
+                        <option *ngFor="let p of masterData?.paymentTermsOptions" [value]="p.value">
+                            {{ p?.label }}
+                        </option>
+                    </select>
+                </div>
+                <div class="col">
+                    <label class="form-label">
+                        Status
+                        <span class="text-danger">*</span>
+                    </label>
+                    <div class="d-flex">
+                        <select class="form-select statusSelectBorder" formControlName="isESPActive">
+                            <option [value]="null" selected disabled>Select Status</option>
+                            <option value="Active">Active</option>
+                            <option value="Inactive">Inactive</option>
+                        </select>
+                        <span class="input-group-text statusSpanHeight">
+                            <div *ngIf="form.value['isESPActive'] == 'Active'" class="statusActive"></div>
+                            <div *ngIf="form.value['isESPActive'] == 'Inactive'" class="statusInActive"></div>
+                        </span>
+                    </div>
+                </div>
+            </div>
+            <div class="mt-4 d-flex justify-content-start">
+                <h4 class="mb-1 me-3 form-label customerHeading">Bill From Address</h4>
+                <span>
+                    <img src="./assets/new_icons/redstroke.svg" alt="" height="18" width="8" />
+                </span>
+                <h4 (click)="addShippingAddressModel()" class="ms-3 openModelLink pointer text-primary">
+                    Click here to add Ship From Address(if other than Bill From address)
+                </h4>
+            </div>
+        </div>
+        <hr class="row line-border" />
+        <ng-container>
+            <div formGroupName="billingAddress" class="row">
+                <div class="col">
+                    <label class="form-label"> Country <span class="text-danger">*</span> </label>
+                    <input type="text" class="form-control" formControlName="country" />
+                </div>
+                <div class="col">
+                    <label class="form-label"> State/Province <span class="text-danger">*</span> </label>
+                    <select class="form-select" formControlName="state">
+                        <option value="" selected disabled>Select State</option>
+                        <option *ngFor="let s of statesOfIndia" [value]="s">
+                            {{ s }}
+                        </option>
+                    </select>
+                </div>
+                <div class="col">
+                    <label class="form-label"> City/District <span class="text-danger">*</span> </label>
+                    <input type="text" class="form-control" formControlName="city" />
+                </div>
+                <div class="col">
+                    <label class="form-label"> Pin Code <span class="text-danger">*</span> </label>
+                    <input
+                        oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
+                        type="number"
+                        maxlength="6"
+                        class="form-control"
+                        formControlName="pinCode"
+                    />
+                </div>
+            </div>
+            <div formGroupName="billingAddress" class="row">
+                <div class="col">
+                    <label class="form-label">Address Line 1 <span class="text-danger">*</span> </label>
+                    <input type="text" class="form-control" formControlName="line1" />
+                </div>
+                <div class="col">
+                    <label class="form-label">Address Line 2 <span class="text-danger">*</span></label>
+                    <input type="text" class="form-control" formControlName="line2" />
+                </div>
+                <div class="col">
+                    <label class="form-label">Address Line 3 <span class="text-danger">*</span></label>
+                    <input type="text" class="form-control" formControlName="line3" />
+                </div>
+                <div class="col">
+                    <label class="form-label">Address Line 4 <span class="text-danger"></span></label>
+                    <input type="text" class="form-control" formControlName="line4" readonly />
+                </div>
+            </div>
+            <hr class="row line-border" />
+            <div class="row">
+                <div class="col-2">
+                    <div class="d-grid col-auto">
+                        <button (click)="openContactDetailsModal()" class="btn bg-primary" type="button">
+                            Add Contact Details
+                        </button>
+                    </div>
+                </div>
+                <div class="col-2">
+                    <div class="d-grid col-auto">
+                        <button (click)="openBankDetailsModal()" class="btn bg-primary" type="button">
+                            Add Bank Details
+                        </button>
+                    </div>
+                </div>
+                <div *ngIf="action != 'view'" class="col text-end">
+                    <button class="btn btn-primary px-5" type="button" (click)="submit()">Save</button>
+                </div>
+                <div *ngIf="action == 'view'" class="col text-end">
+                    <button class="btn btn-primary px-5" type="button" (click)="navigateTo()">Back</button>
+                </div>
+            </div>
+        </ng-container>
+    </div>
+</form>

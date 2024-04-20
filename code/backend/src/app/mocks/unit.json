@@ -1,0 +1,110 @@
+[
+    {
+        "value": "BAG",
+        "label": "Bags"
+    },
+    {
+        "value": "BDL",
+        "label": "Bundles"
+    },
+    {
+        "value": "BOX",
+        "label": "Box"
+    },
+    {
+        "value": "BTL",
+        "label": "Bottles"
+    },
+    {
+        "value": "CAN",
+        "label": "Cans"
+    },
+    {
+        "value": "CBM",
+        "label": "Cubic Meters"
+    },
+    {
+        "value": "CMS",
+        "label": "Centi Meters"
+    },
+    {
+        "value": "CTN",
+        "label": "Cartons"
+    },
+    {
+        "value": "DOZ",
+        "label": "Dozens"
+    },
+    {
+        "value": "DRM",
+        "label": "Drums"
+    },
+    {
+        "value": "GRS",
+        "label": "Gross"
+    },
+    {
+        "value": "KGS",
+        "label": "Kilograms"
+    },
+    {
+        "value": "LTR",
+        "label": "Litres"
+    },
+    {
+        "value": "MTR",
+        "label": "Meters"
+    },
+    {
+        "value": "MTS",
+        "label": "Metric Ton"
+    },
+    {
+        "value": "NOS",
+        "label": "Numbers"
+    },
+    {
+        "value": "OTH",
+        "label": "Others"
+    },
+    {
+        "value": "PAC",
+        "label": "Packs"
+    },
+    {
+        "value": "PCS",
+        "label": "Pieces"
+    },
+    {
+        "value": "QTL",
+        "label": "Quintal"
+    },
+    {
+        "value": "ROL",
+        "label": "Rolls"
+    },
+    {
+        "value": "SET",
+        "label": "Sets"
+    },
+    {
+        "value": "SQM",
+        "label": "Square Meters"
+    },
+    {
+        "value": "TBS",
+        "label": "Tablets"
+    },
+    {
+        "value": "TON",
+        "label": "Tonnes"
+    },
+    {
+        "value": "TUB",
+        "label": "Tubes"
+    },
+    {
+        "value": "UNT",
+        "label": "Values"
+    }
+]

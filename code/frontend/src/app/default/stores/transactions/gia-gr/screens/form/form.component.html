@@ -1,0 +1,234 @@
+<Form class="px-2" [formGroup]="form" class="formCard card">
+    <div class="container">
+        <div class="row form-header">
+            <div class="col heading">
+                <label class="">Goods Issue Against GR ({{ action | titlecase }})</label>
+            </div>
+        </div>
+        <div class="form-body">
+            <div class="row">
+                <div class="col">
+                    <label for="" class="form-label">Goods Request No.<span class="text-danger">*</span></label>
+                    <ng-select
+                        [items]="masterData.approvedGR"
+                        bindLabel="GRNumber"
+                        bindValue="_id"
+                        formControlName="GRNumber"
+                        [clearable]="false"
+                        (change)="getGoodRequisitionById()"
+                        (change)="deptValue($event)"
+                    >
+                    </ng-select>
+                </div>
+
+                <div class="col">
+                    <label for="" class="form-label">Goods Request Date</label>
+                    <input type="date" class="form-control" formControlName="GRDate" readonly />
+                </div>
+                <div class="col">
+                    <label for="" class="form-label">Goods Issue Date</label>
+                    <input type="date" class="form-control" formControlName="GIDate" />
+                </div>
+                <div class="col">
+                    <label for="" class="form-label">Location (Store)</label>
+
+                    <input type="text" class="form-control" formControlName="deliveryLocation" readonly />
+                </div>
+                <div class="col">
+                    <label for="" class="form-label">Department (GR by)</label>
+
+                    <input type="text" class="form-control" formControlName="department" readonly />
+                </div>
+            </div>
+        </div>
+
+        <hr class="row line-border" />
+
+        <app-setting-header
+            [data]="{page,pageSize,collection,search, excelDisplay : 'none'}"
+            (dataChange)="eventHeader($event)"
+        >
+        </app-setting-header>
+        <div class="table-responsive" style="min-height: 22rem">
+            <table class="table table-bordered table-sticky">
+                <thead class="bg-primary">
+                    <tr class="text-white">
+                        <th>MRN No.</th>
+                        <th>MRN Date</th>
+                        <th>Item Code</th>
+                        <th class="text-start">Item Name</th>
+                        <th class="text-start">Item Description</th>
+                        <th>Unit Conversion</th>
+                        <th>UoM</th>
+                        <th>IR Qty</th>
+                        <th>GR Qty</th>
+                        <th>Issue Qty</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr
+                        *ngFor="
+                            let g of GIDetailsArray
+                                | searchFi1ter : search
+                                | slice : (page - 1) * pageSize : (page - 1) * pageSize + pageSize;
+                            let i = index;
+                            trackBy: trackByFn
+                        "
+                    >
+                        <td>{{ g.mrnNo }}</td>
+                        <td>{{ g.MRNDate | date : "dd-MM-YYYY" }}</td>
+                        <td>{{ g.itemCode }}</td>
+                        <td class="text-start" [style.width]="itemName.clientWidth" #itemName>
+                            <span class="pointer" [positionTarget]="itemName" [ngbTooltip]="g.itemName">
+                                {{ g?.itemName }}
+                            </span>
+                        </td>
+                        <td class="text-start" [style.width]="itemDescription.clientWidth" #itemDescription>
+                            <span class="pointer" [positionTarget]="itemDescription" [ngbTooltip]="g.itemDescription">
+                                {{ g?.itemDescription }}
+                            </span>
+                        </td>
+                        <td>{{ g.conversionOfUnits }}</td>
+                        <td>{{ g.UOM | UOMUnitsMaster }}</td>
+                        <td>
+                            <div class="d-flex justify-content-between">
+                                <div class="ms-3">{{ g.IRQty | number : "1.2-2" }}</div>
+                                <div class=""></div>
+                                <div *ngIf="g.expiryStatus == 'green'" class="flagGreen me-3"></div>
+                                <div *ngIf="g.expiryStatus == 'red'" class="flagRed me-3"></div>
+                                <div *ngIf="g.expiryStatus == 'orange'" class="flagOrange me-3"></div>
+                            </div>
+                        </td>
+                        <td>
+                            <span
+                                [ngStyle]="{
+                                    color: g.isFirst ? '' : 'rgba(255, 0, 150, 0.25)'
+                                }"
+                            >
+                                {{ g.GRQty | number : "1.2-2" }}
+                            </span>
+                        </td>
+                        <td>
+                            <div class="d-flex justify-content-center">
+                                <span *ngIf="['approve', 'reject', 'view', 'Acknowledged'].includes(action)">
+                                    {{ g.GIQty | number : "1.2-2" }}
+                                </span>
+                                <input
+                                    *ngIf="!['approve', 'reject', 'view', 'Acknowledged'].includes(action)"
+                                    class="form-control form-control-sm w-25"
+                                    type="number"
+                                    [(ngModel)]="g.GIQty"
+                                    [ngModelOptions]="{standalone: true}"
+                                    (input)="changeGIQty(g, i)"
+                                />
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <hr class="row line-border" />
+
+        <div class="row mb-0">
+            <div class="col">
+                <div class="row">
+                    <div
+                        *ngIf="action != 'edit'"
+                        [ngClass]="action === 'create' ? 'col-8' : 'col' || action === 'view' ? 'col-6' : 'col'"
+                    >
+                        <div class="d-flex align-items-center">
+                            <div class="col-md-auto text-nowrap">
+                                <button type="button" class="btn btn-primary px-3">Remarks</button>
+                            </div>
+
+                            <input class="form-control" type="text" formControlName="remarks" />
+                        </div>
+                    </div>
+                    <div *ngIf="action == 'edit'" [ngClass]="action === 'edit' ? 'col-8' : 'col'">
+                        <div class="d-flex align-items-center">
+                            <div class="col-md-auto text-nowrap">
+                                <button type="button" class="btn btn-primary px-3">Remarks</button>
+                            </div>
+
+                            <input class="form-control" type="text" formControlName="remarks" />
+                        </div>
+                    </div>
+                    <div class="col px-5" *ngIf="action == 'reject'">
+                        <div class="d-flex align-items-center text-nowrap">
+                            <button type="button" class="btn btn-primary px-3">Rejection Remarks</button>
+                            <input class="form-control" type="text" formControlName="rejectionRemarks" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-auto ms-auto">
+                <button
+                    *ngIf="!['edit', 'reject', 'Acknowledged', 'approve', 'view'].includes(action)"
+                    type="button"
+                    class="btn bg-primary px-5 me-3"
+                    (click)="reset()"
+                >
+                    Reset
+                </button>
+                <button
+                    *ngIf="!['reject', 'Acknowledged', 'approve', 'edit', 'view'].includes(action)"
+                    type="button"
+                    class="btn btn-primary px-4 me-1"
+                    [disabled]="!isESCPreview"
+                    (click)="ESCPreview()"
+                >
+                    Esc
+                </button>
+                <button
+                    *ngIf="!['reject', 'Acknowledged', 'approve', 'edit', 'view'].includes(action)"
+                    type="button"
+                    class="btn bg-primary px-5 me-3"
+                    (click)="preview()"
+                >
+                    Preview
+                </button>
+                <button
+                    *ngIf="!['reject', 'Acknowledged', 'approve', 'edit', 'view'].includes(action)"
+                    type="button"
+                    [disabled]="!isPreview"
+                    class="btn bg-primary px-5"
+                    (click)="submit()"
+                >
+                    Save
+                </button>
+                <button
+                    *ngIf="['view'].includes(action)"
+                    class="btn btn-primary px-5"
+                    type="button"
+                    (click)="navigateTo()"
+                >
+                    Back
+                </button>
+                <button *ngIf="['edit'].includes(action)" type="button" class="btn bg-primary px-5" (click)="submit()">
+                    Save
+                </button>
+                <button
+                    *ngIf="['approve'].includes(action)"
+                    type="button"
+                    class="btn bg-primary px-5"
+                    (click)="submit()"
+                >
+                    Approve
+                </button>
+                <button
+                    *ngIf="['reject'].includes(action)"
+                    type="button"
+                    class="btn bg-primary px-5"
+                    (click)="submit()"
+                >
+                    Reject
+                </button>
+                <button *ngIf="action == 'Acknowledged'" type="button" class="btn bg-primary px-5" (click)="submit()">
+                    Acknowledged
+                </button>
+            </div>
+        </div>
+    </div>
+</Form>

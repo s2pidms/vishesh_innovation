@@ -1,0 +1,97 @@
+<div class="reportTablePage">
+    <div class="table-body pb-0 shadow-none">
+        <div class="row table-header">
+            <div class="col">
+                <label class="heading">Goods Requisition Summary Report</label>
+            </div>
+        </div>
+        <div class="row my-4">
+            <div class="col-9 ps-5">
+                <div class="row">
+                    <div class="col-3">
+                        <label class="form-label">Department/Team</label>
+                        <ng-select
+                            [items]="departmentOptions"
+                            bindLabel="label"
+                            bindValue="value"
+                            [clearable]="false"
+                            [(ngModel)]="departmentId"
+                        >
+                        </ng-select>
+                    </div>
+                    <div class="col-3 separate-row">
+                        <label class="form-label">Status</label>
+                        <select [(ngModel)]="GRStatus" class="form-select">
+                            <option [value]="s" *ngFor="let s of statusOptions">
+                                {{ s }}
+                            </option>
+                        </select>
+                        <span class="set-position">
+                            <img src="./assets/new_icons/redstroke.svg" alt="" height="27" width="8" />
+                        </span>
+                    </div>
+                    <div class="col-3">
+                        <label class="form-label"> From Date <span class="text-danger">*</span> </label>
+                        <input class="form-control" type="date" [(ngModel)]="fromDate" />
+                    </div>
+                    <div class="col-3">
+                        <label class="form-label"> To Date <span class="text-danger">*</span> </label>
+                        <input class="form-control" type="date" [(ngModel)]="toDate" />
+                    </div>
+                </div>
+            </div>
+            <div class="col-3 align-self-end separate-image">
+                <span class="image-position">
+                    <img src="./assets/new_icons/redstroke.svg" alt="" height="27" width="8" />
+                </span>
+                <button type="button" class="btn btn-primary px-4 me-3" (click)="getAll()">Apply Filter</button>
+                <button type="button" class="btn btn-primary px-4 ms-4" (click)="reset()">Reset Filter</button>
+            </div>
+        </div>
+
+        <hr class="row line-border" />
+        <div class="table-responsive mb-0">
+            <app-setting-header
+                [data]="{page,pageSize,collection,search,type: 'list',pdfDisplay:true}"
+                (dataChange)="eventHeader($event)"
+            >
+            </app-setting-header>
+            <table class="table table-bordered table-sticky">
+                <thead class="bg-primary">
+                    <tr class="text-white">
+                        <th sortable="GRNumber" (sort)="onSort($event)">GR No.</th>
+                        <th sortable="GRDate" (sort)="onSort($event)">GR Date</th>
+                        <th sortable="department" (sort)="onSort($event)">Department/Team</th>
+                        <th sortable="itemCode" (sort)="onSort($event)">Item Code</th>
+                        <th class="text-start" sortable="itemName" (sort)="onSort($event)">Item Name</th>
+                        <th class="text-start" sortable="itemDescription" (sort)="onSort($event)">Item Description</th>
+                        <th sortable="UOM" (sort)="onSort($event)">UoM</th>
+                        <th sortable="GRQty" (sort)="onSort($event)">GR Qty.</th>
+                        <th sortable="GRStatus" (sort)="onSort($event)">Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let u of tableData; trackBy: trackByFn">
+                        <td>{{ u?.GRNumber }}</td>
+                        <td>{{ u?.GRDate }}</td>
+                        <td>{{ u?.department }}</td>
+                        <td>{{ u?.itemCode }}</td>
+                        <td class="text-start" [style.width]="itemName.clientWidth" #itemName>
+                            <span class="pointer" [positionTarget]="itemName" [ngbTooltip]="u.itemName">
+                                {{ u.itemName }}
+                            </span>
+                        </td>
+                        <td class="text-start" [style.width]="itemDescription.clientWidth" #itemDescription>
+                            <span class="pointer" [positionTarget]="itemDescription" [ngbTooltip]="u.itemDescription">
+                                {{ u.itemDescription }}
+                            </span>
+                        </td>
+                        <td>{{ u?.UOM | UOMUnitsMaster }}</td>
+                        <td>{{ u?.GRQty }}</td>
+                        <td>{{ u?.GRStatus }}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,160 @@
+<form [formGroup]="form" class="formCard card">
+    <div class="container">
+        <div class="row form-header">
+            <div class="col heading">
+                <label> Pre-Dispatch Inspection ({{ this.action | titlecase }})</label>
+            </div>
+        </div>
+        <div class="form-body">
+            <div class="row">
+                <div class="col-3 pe-5">
+                    <label class="form-label mb-0"> Select Customer<span class="text-danger">*</span> </label>
+
+                    <div class="d-flex align-items-center">
+                        <div class="col-11">
+                            <ng-select
+                                [items]="masterData.customersOptions"
+                                bindLabel="customerName"
+                                bindValue="_id"
+                                [clearable]="false"
+                                formControlName="customer"
+                                (change)="getSalesInvoice($event)"
+                            >
+                            </ng-select>
+                        </div>
+                        <div
+                            style="height: 2.9rem"
+                            class="input-group-text bg-primary pointer col-auto fs-4"
+                            id="basic-addon1"
+                            (click)="openCustomersDetailsModal()"
+                        >
+                            <i class="fa fa-search text-white" aria-hidden="true"></i>
+                        </div>
+                    </div>
+                </div>
+                <div class="col">
+                    <label class="form-label mb-0"> Tax Invoice No.<span class="text-danger">*</span> </label>
+                    <ng-select
+                        *ngIf="['create'].includes(action)"
+                        [items]="invoiceNumberOptions"
+                        bindLabel="salesInvoiceNumber"
+                        bindValue="_id"
+                        [clearable]="false"
+                        formControlName="salesInvoice"
+                        (change)="invoiceValueChange($event)"
+                    >
+                    </ng-select>
+                    <input
+                        *ngIf="!['create'].includes(action)"
+                        class="form-control"
+                        type="text"
+                        formControlName="salesInvoiceNumber"
+                        readonly
+                    />
+                </div>
+                <div class="col">
+                    <label class="form-label mb-0"> Tax Invoice Date </label>
+                    <input class="form-control" type="date" formControlName="salesInvoiceDate" readonly />
+                </div>
+                <div class="col">
+                    <label class="form-label mb-0"> PDI No. </label>
+                    <input class="form-control" type="text" formControlName="preDispatchCode" readonly />
+                </div>
+                <div class="col">
+                    <label class="form-label mb-0"> PDI Date </label>
+                    <input class="form-control" type="date" formControlName="preDispatchDate" readonly />
+                </div>
+            </div>
+        </div>
+        <hr class="row line-border" />
+        <app-setting-header
+            [data]="{page,pageSize,collection,search, excelDisplay : 'none'}"
+            (dataChange)="eventHeader($event)"
+        >
+        </app-setting-header>
+        <div class="table-responsive" style="min-height: 22rem">
+            <table class="table table-bordered table-sticky mt-1">
+                <thead class="bg-primary">
+                    <tr class="text-white">
+                        <th sortable="sn" (sort)="onSort($event)">SN.</th>
+                        <th sortable="SKUNo" (sort)="onSort($event)">SKU No.</th>
+                        <th class="text-start" sortable="SKUName" (sort)="onSort($event)">
+                            {{ "SKU Name" | labelTranslate }}
+                        </th>
+                        <th class="text-start" sortable="SKUDescription" (sort)="onSort($event)">
+                            {{ "SKU Description" | labelTranslate }}
+                        </th>
+                        <th sortable="partNumber" (sort)="onSort($event)">Part No.</th>
+                        <th sortable="UOM" (sort)="onSort($event)">UoM</th>
+                        <th sortable="batchDate" (sort)="onSort($event)">Batch No./Dt</th>
+                        <th sortable="dispatchQty" (sort)="onSort($event)">Dispatch Qty</th>
+                        <th sortable="GRQty" (sort)="onSort($event)">PDI Entry</th>
+                        <th sortable="status" (sort)="onSort($event)">Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr
+                        *ngFor="
+                            let g of PDIRDetailsArr
+                                | searchFi1ter : search
+                                | slice : (page - 1) * pageSize : (page - 1) * pageSize + pageSize;
+                            trackBy: trackByFn;
+                            let i = index
+                        "
+                    >
+                        <td>{{ i + 1 }}</td>
+                        <td>{{ g.SKUNo }}</td>
+                        <td class="text-start" [style.width]="SKUName.clientWidth" #SKUName>
+                            <span class="pointer" [ngbTooltip]="g.SKUName" [positionTarget]="SKUName">
+                                {{ g?.SKUName }}
+                            </span>
+                        </td>
+                        <td class="text-start" [style.width]="SKUDescription.clientWidth" #SKUDescription>
+                            <span class="pointer" [ngbTooltip]="g.SKUDescription" [positionTarget]="SKUDescription">
+                                {{ g?.SKUDescription }}
+                            </span>
+                        </td>
+                        <td>{{ g.partNumber }}</td>
+                        <td>{{ g.UOM | UOMUnitsMaster }}</td>
+                        <td>
+                            {{ g?.batchDate }}
+                        </td>
+                        <td>{{ g.dispatchQty }}</td>
+                        <td class="align-self-center">
+                            <Button
+                                class="btn btn-primary btn-sm"
+                                style="--bs-btn-padding-y: 0rem"
+                                (click)="openPDIEntryModal(g)"
+                            >
+                                PDI Entry
+                            </Button>
+                        </td>
+                        <td>
+                            <span class="d-flex justify-content-center">
+                                <div class="statusActive" *ngIf="g.status == 'Approved'" class="statusActive"></div>
+                                <div class="statusInActive" *ngIf="g.status == 'Rejected'"></div>
+                                <div
+                                    class="statusYellow"
+                                    *ngIf="['Deviation', 'Need Re-Validation'].includes(g.status)"
+                                ></div>
+                            </span>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <hr class="row line-border" />
+
+        <div class="row">
+            <div class="col d-flex justify-content-center">
+                <div *ngIf="['create', 'edit'].includes(action)" class="d-grid gap-2 d-md-block">
+                    <button type="button" class="btn btn-primary px-5 me-3" (click)="reset()">Reset</button>
+                    <button type="button" class="btn btn-primary px-5" (click)="submit()">Save</button>
+                </div>
+                <div *ngIf="['view'].includes(action)" class="d-grid gap-2 d-md-block">
+                    <button type="button" class="btn btn-primary px-5" (click)="backToList()">Back</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>

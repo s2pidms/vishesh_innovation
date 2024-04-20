@@ -1,0 +1,77 @@
+<div class="listCard card">
+    <div class="table-header">
+        <label class="heading">Prospect Summery</label>
+    </div>
+    <div appAccessControl [accessType]="rolePermissionActions.createAction" class="text-center">
+        <button class="btn btn-primary btn-add" type="button" (click)="navigateTo('../form', null, 'create')">
+            <i class="fa fa-plus-square fa-lg me-2" aria-hidden="true"></i>
+            New Prospect
+        </button>
+    </div>
+    <hr class="line-border" />
+    <div class="table-responsive">
+        <app-setting-header [data]="{page,pageSize,collection,search,type: 'list'}" (dataChange)="eventHeader($event)">
+        </app-setting-header>
+        <table class="table table-bordered">
+            <thead class="bg-primary">
+                <tr class="text-white">
+                    <th sortable="prospectRegistrationCode" (sort)="onSort($event)">Prospect No.</th>
+                    <th sortable="prospectRegistrationDateS" (sort)="onSort($event)">Reg. Date</th>
+                    <th class="text-start" sortable="prospectName" (sort)="onSort($event)">Prospect Name</th>
+                    <th sortable="customerCategory" (sort)="onSort($event)">Prospect Category</th>
+                    <th sortable="contactPersonName" (sort)="onSort($event)">Contact Person</th>
+                    <th sortable="contactPersonNumber" (sort)="onSort($event)">Contact No.</th>
+                    <th sortable="status" (sort)="onSort($event)">Status</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let u of tableData; trackBy: trackByFn">
+                    <td>{{ u?.prospectRegistrationCode }}</td>
+                    <td>{{ u?.prospectRegistrationDateS }}</td>
+                    <td class="text-start" [style.width]="prospectName.clientWidth" #prospectName>
+                        <span class="pointer" [positionTarget]="prospectName" [ngbTooltip]="u.prospectName">
+                            {{ u.prospectName }}
+                        </span>
+                    </td>
+                    <td>{{ u?.customerCategory }}</td>
+                    <td>{{ u?.contactPersonName }}</td>
+                    <td>{{ u?.contactPersonNumber }}</td>
+                    <td>{{ u?.status }}</td>
+                    <td>
+                        <div class="dropdown">
+                            <button class="dropbtn"></button>
+                            <div class="dropdown-content">
+                                <a
+                                    appAccessControl
+                                    [accessType]="rolePermissionActions.viewAction"
+                                    href="javascript:void(0)"
+                                    (click)="navigateTo('../form', u, action.view)"
+                                >
+                                    <i class="fa fa-eye fa-lg me-2 text-primary" aria-hidden="true"></i>
+                                    View
+                                </a>
+                                <a
+                                    appAccessControl
+                                    [accessType]="rolePermissionActions.editAction"
+                                    href="javascript:void(0)"
+                                    (click)="navigateTo('../form', u, action.edit)"
+                                >
+                                    <i class="fa fa-pencil-square-o fa-lg me-2 text-primary" aria-hidden="true"></i>
+                                    Edit
+                                </a>
+                                <a
+                                    href="javascript:void(0)"
+                                    (click)="navigateTo('../convert_to_customer', u, 'Converted to Customer')"
+                                >
+                                    <i class="fa fa-check fa-lg me-2 text-success" aria-hidden="true"></i>
+                                    Convert to Customer
+                                </a>
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>

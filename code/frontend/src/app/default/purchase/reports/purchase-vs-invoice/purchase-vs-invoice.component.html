@@ -1,0 +1,70 @@
+<div class="reportTablePage">
+    <div class="table-body pb-0 shadow-none">
+        <div class="row table-header">
+            <div class="col">
+                <label class="heading">Purchase Vs Invoice Report</label>
+            </div>
+        </div>
+        <div class="table-responsive mb-0" style="min-height: 51.6rem">
+            <app-setting-header
+                [data]="{page,pageSize,collection,search,type: 'list',pdfDisplay : true}"
+                (dataChange)="eventHeader($event)"
+            >
+            </app-setting-header>
+            <table class="table table-bordered table-sticky">
+                <thead class="bg-primary">
+                    <tr class="text-white">
+                        <th sortable="months" (sort)="onSort($event)">Month</th>
+                        <th sortable="purchase" (sort)="onSort($event)">Purchases</th>
+                        <th sortable="ordersBooked" (sort)="onSort($event)">Orders Booked</th>
+                        <th sortable="invoices" (sort)="onSort($event)">Invoices</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let u of tableData; trackBy: trackByFn">
+                        <td>{{ u?.months }}</td>
+                        <td>{{ u?.purchase | number : ".2-2" }}</td>
+                        <td>{{ u?.ordersBooked | number : ".2-2" }}</td>
+                        <td>{{ u?.invoices | number : ".2-2" }}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="table-footer">
+            <hr class="row line-border" />
+            <div class="row align-items-center mt-3">
+                <div class="col-3 pe-0">
+                    <div class="d-flex justify-content-center">
+                        <div class="form-label text-nowrap pe-1 pt-0 ms-3">
+                            Total Purchases<i class="fa fa-caret-right fs-4 mx-2"></i>
+                            <button type="button" class="btn btn-info py-1 ms-2">{{ "INR" | companyCurrency }}</button>
+                        </div>
+                        <input [value]="purchaseTotal | number : '1.2-2'" class="form-control" type="text" readonly />
+                    </div>
+                </div>
+                <div class="col-3 px-5">
+                    <div class="d-flex justify-content-center">
+                        <div class="form-label text-nowrap pe-1 pt-0 ms-3">
+                            Total Invoices <i class="fa fa-caret-right fs-4 mx-2"></i>
+                            <button type="button" class="btn btn-info py-1 ms-2">{{ "INR" | companyCurrency }}</button>
+                        </div>
+                        <input [value]="invoicesTotal | number : '1.2-2'" class="form-control" type="text" readonly />
+                    </div>
+                </div>
+                <div class="col-3 px-0">
+                    <div class="d-flex justify-content-center">
+                        <div class="form-label text-nowrap mt-1 pe-1 ms-3">
+                            Purchases to Invoice % <i class="fa fa-caret-right fs-4 mx-2"></i>
+                        </div>
+                        <input
+                            [value]="purchaseToInvoicePercentage | number : '1.2-2'"
+                            class="form-control"
+                            type="text"
+                            readonly
+                        />
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

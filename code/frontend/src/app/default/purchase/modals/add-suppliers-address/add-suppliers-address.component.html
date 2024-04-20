@@ -1,0 +1,153 @@
+<div style="min-height: 54rem" class="modelPage">
+    <div class="modal-header">
+        <div class="heading">Ship From Address</div>
+        <div>
+            <button
+                type="button"
+                class="btn btn-cross btn-sm"
+                aria-label="Close"
+                (click)="activeModal.close(addressArr)"
+            >
+                <i class="fa fa-times-circle" aria-hidden="true"></i>
+            </button>
+        </div>
+    </div>
+    <div class="">
+        <form [formGroup]="supplierShippingAddressForm">
+            <div class="row mb-4 px-5 mt-4">
+                <div class="col">
+                    <label class="form-label"> Address Line 1 <span class="text-danger">*</span> </label>
+                    <input class="form-control" type="text" formControlName="line1" />
+                </div>
+                <div class="col">
+                    <label class="form-label"> Address Line 2 <span class="text-danger">*</span></label>
+                    <input class="form-control" type="text" formControlName="line2" />
+                </div>
+                <div class="col">
+                    <label class="form-label"> Address Line 3 <span class="text-danger">*</span></label>
+                    <input class="form-control" type="text" formControlName="line3" />
+                </div>
+                <div class="col">
+                    <label class="form-label"> City/District <span class="text-danger">*</span> </label>
+                    <input class="form-control" type="text" formControlName="city" />
+                </div>
+            </div>
+            <div class="row my-4 px-5">
+                <div class="col">
+                    <label class="form-label"> Pin Code <span class="text-danger">*</span> </label>
+                    <input
+                        class="form-control"
+                        oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
+                        type="number"
+                        maxlength="6"
+                        formControlName="pinCode"
+                    />
+                </div>
+                <div class="col">
+                    <label class="form-label"> State/Province <span class="text-danger">*</span> </label>
+                    <select
+                        *ngIf="!purchaseType || purchaseType == 'Domestic'"
+                        class="form-select"
+                        formControlName="state"
+                    >
+                        <option [value]="null" selected disabled>Select State</option>
+                        <option *ngFor="let s of statesOfIndia" [value]="s">
+                            {{ s }}
+                        </option>
+                    </select>
+                    <input *ngIf="purchaseType == 'Imports'" type="text" class="form-control" formControlName="state" />
+                </div>
+                <div class="col">
+                    <div class="row justify-content-between">
+                        <div class="col-8">
+                            <label class="form-label">Country <span class="text-danger">*</span> </label>
+
+                            <select *ngIf="purchaseType == 'Imports'" class="form-select" formControlName="country">
+                                <option [value]="null" selected disabled>Select Country</option>
+                                <option *ngFor="let item of purchaseCountry" [value]="item.parameterName">
+                                    {{ item.parameterName }}
+                                </option>
+                            </select>
+                            <input
+                                *ngIf="!purchaseType || purchaseType == 'Domestic'"
+                                class="form-control"
+                                type="text"
+                                formControlName="country"
+                            />
+                        </div>
+                        <div
+                            *ngIf="action === 'edit' || action === 'create'"
+                            class="col-auto ps-0 align-self-end text-end"
+                        >
+                            <button
+                                (click)="saveAddress()"
+                                type="button"
+                                [disabled]="btnDisable"
+                                class="btn bg-primary"
+                            >
+                                Add to List
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+        <hr class="line-border mt-5" />
+        <div class="px-5">
+            <app-setting-header [data]="{page,pageSize,collection,search}" (dataChange)="eventHeader($event)">
+            </app-setting-header>
+        </div>
+        <div class="table-responsive px-5">
+            <table class="table table-bordered">
+                <thead class="bg-primary">
+                    <tr class="text-white">
+                        <th sortable="country" (sort)="onSort($event)">Country</th>
+                        <th sortable="state" (sort)="onSort($event)">State/Province</th>
+                        <th sortable="city" (sort)="onSort($event)">City/District</th>
+                        <th sortable="pinCode" (sort)="onSort($event)">Pin Code</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr
+                        *ngFor="
+                            let a of addressArr
+                                | searchFi1ter : search
+                                | slice : (page - 1) * pageSize : (page - 1) * pageSize + pageSize;
+                            let i = index
+                        "
+                    >
+                        <td>{{ a?.country }}</td>
+                        <td>{{ a?.state }}</td>
+                        <td>{{ a?.city }}</td>
+                        <td>{{ a?.pinCode }}</td>
+
+                        <td>
+                            <div class="dropdown">
+                                <button class="dropbtn"></button>
+                                <div class="dropdown-content">
+                                    <a href="javascript:void(0)" (click)="patchAddress(a, i, 'view')">
+                                        <i class="fa fa-eye fa-lg text-primary" aria-hidden="true"></i>
+                                        View
+                                    </a>
+                                    <a href="javascript:void(0)" (click)="patchAddress(a, i, 'edit')">
+                                        <i class="fa fa-pencil-square-o fa-lg me-2 text-primary" aria-hidden="true"></i>
+                                        Edit
+                                    </a>
+                                    <a
+                                        [class.disable]="this.action == 'view'"
+                                        href="javascript:void(0)"
+                                        (click)="deleteShippingAddress(i)"
+                                    >
+                                        <i class="fa fa-trash text-primary fa-lg me-3" aria-hidden="true"></i>
+                                        Delete
+                                    </a>
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

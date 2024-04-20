@@ -1,0 +1,17 @@
+.set-image {
+    width: 100%;
+    margin-top: -1rem !important;
+}
+.seperate-row {
+    position: relative;
+    .add-icon {
+        position: absolute;
+        left: -1rem;
+        top: 0.2rem;
+    }
+    .minus-icon {
+        position: absolute;
+        right: -1rem;
+        top: 0.2rem;
+    }
+}

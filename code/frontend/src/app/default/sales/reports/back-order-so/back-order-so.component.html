@@ -1,0 +1,132 @@
+<div class="reportTablePage">
+    <div class="table-body pb-0 shadow-none">
+        <div class="row table-header">
+            <div class="col">
+                <label class="heading">Back Order SO Report</label>
+            </div>
+        </div>
+        <div class="row my-4">
+            <div class="col-9">
+                <div class="row">
+                    <div class="col-3 ps-5 pe-0">
+                        <label class="form-label"> Select SKU</label>
+                        <ng-select
+                            [items]="sku"
+                            bindLabel="skuNum"
+                            bindValue="_id"
+                            [(ngModel)]="skuId"
+                            [clearable]="false"
+                        >
+                        </ng-select>
+                    </div>
+
+                    <div class="col-3 separate-row">
+                        <label class="form-label"> Select {{ "SKU Name" | labelTranslate }}</label>
+                        <ng-select
+                            [items]="sku"
+                            bindLabel="SKUName"
+                            bindValue="_id"
+                            [clearable]="false"
+                            [(ngModel)]="skuId"
+                        >
+                        </ng-select>
+                        <span class="set-position">
+                            <img src="./assets/new_icons/redstroke.svg" alt="" height="27" width="8" />
+                        </span>
+                    </div>
+
+                    <div class="col-3 pe-0">
+                        <label class="form-label"> From Date <span class="text-danger">*</span> </label>
+                        <input class="form-control" type="date" [(ngModel)]="fromDate" />
+                    </div>
+
+                    <div class="col-3">
+                        <label class="form-label"> To Date <span class="text-danger">*</span> </label>
+                        <input class="form-control" type="date" [(ngModel)]="toDate" />
+                    </div>
+                </div>
+            </div>
+            <div class="col-3 align-self-end separate-image">
+                <span class="image-position">
+                    <img src="./assets/new_icons/redstroke.svg" alt="" height="27" width="8" />
+                </span>
+                <button type="button" class="btn btn-primary px-4 me-3" (click)="getAll()">Apply Filter</button>
+                <button type="button" class="btn btn-primary px-4 ms-4" (click)="reset()">Reset Filter</button>
+            </div>
+        </div>
+        <hr class="row line-border" />
+        <div class="table-responsive mb-0">
+            <app-setting-header
+                [data]="{page,pageSize,collection,search,type: 'list', pdfDisplay : true}"
+                (dataChange)="eventHeader($event)"
+            >
+            </app-setting-header>
+            <table class="table table-bordered table-sticky">
+                <thead class="bg-primary">
+                    <tr class="text-white">
+                        <th sortable="SODateS" (sort)="onSort($event)">SO Date</th>
+                        <th sortable="SONumber" (sort)="onSort($event)">SO</th>
+                        <th sortable="SOLineNumber" (sort)="onSort($event)">Line</th>
+                        <th sortable="SKUNo" (sort)="onSort($event)">SKU</th>
+                        <th class="text-start" sortable="SKUNo" (sort)="onSort($event)">
+                            {{ "SKU Name" | labelTranslate }}
+                        </th>
+                        <th class="text-start" sortable="SKUDescription" (sort)="onSort($event)">
+                            {{ "SKU Description" | labelTranslate }}
+                        </th>
+                        <th sortable="balancedQty" (sort)="onSort($event)">Bal Qty</th>
+                        <th sortable="lineValue" (sort)="onSort($event)">Bal Value (₹)</th>
+                        <th class="text-start" sortable="customerName" (sort)="onSort($event)">Customer Name</th>
+                        <th sortable="SOLineTargetDateS" (sort)="onSort($event)">TD Date</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    <tr *ngFor="let u of tableData; trackBy: trackByFn">
+                        <td>{{ u?.SODateS }}</td>
+                        <td>{{ u?.SONumber }}</td>
+                        <td>{{ u?.line }}</td>
+                        <td>{{ u?.SKUNo }}</td>
+                        <td class="text-start" [style.width]="SKUName.clientWidth" #SKUName>
+                            <span class="pointer" [positionTarget]="SKUName" [ngbTooltip]="u.SKUName">
+                                {{ u.SKUName }}
+                            </span>
+                        </td>
+                        <td class="text-start" [style.width]="SKUDescription.clientWidth" #SKUDescription>
+                            <span class="pointer" [positionTarget]="SKUDescription" [ngbTooltip]="u.SKUDescription">
+                                {{ u.SKUDescription }}
+                            </span>
+                        </td>
+                        <td>{{ u?.balancedQty | number : "1.2-2" }}</td>
+                        <td>{{ u?.lineValue | number : "1.2-2" }}</td>
+                        <td class="text-start" [style.width]="customerName.clientWidth" #customerName>
+                            <span class="pointer" [positionTarget]="customerName" [ngbTooltip]="u.customerName">
+                                {{ u.customerName }}
+                            </span>
+                        </td>
+                        <td>{{ u?.SOLineTargetDateS }}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="table-footer">
+            <hr class="row line-border" />
+            <div class="row align-items-center mt-3">
+                <div class="col-3 pe-0">
+                    <div class="d-flex justify-content-center">
+                        <div class="col-form-label text-nowrap pe-1 pt-0 ms-3">
+                            SO Value <i class="fa fa-caret-right fs-4 mx-2"></i>
+                            <button type="button" class="btn btn-info py-1 ms-2">{{ "INR" | companyCurrency }}</button>
+                        </div>
+                        <input
+                            [value]="totalBackOrderValue | number : '1.2-2'"
+                            class="form-control"
+                            type="text"
+                            readonly
+                        />
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

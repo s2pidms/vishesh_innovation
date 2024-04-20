@@ -1,0 +1,61 @@
+<div class="reportTablePage">
+    <div class="table-body pb-0 shadow-none">
+        <div class="row table-header">
+            <div class="col">
+                <label class="heading">Supplier Evaluation Report</label>
+            </div>
+        </div>
+        <div class="table-responsive mb-0">
+            <app-setting-header
+                [data]="{page,pageSize,collection,search,type: 'list',pdfDisplay : true}"
+                (dataChange)="eventHeader($event)"
+            >
+            </app-setting-header>
+            <table class="table table-bordered table-sticky">
+                <thead class="bg-primary">
+                    <tr class="text-white">
+                        <th class="text-start" sortable="supplierName" (sort)="onSort($event)">Supplier Name</th>
+                        <th
+                            sortable="totalSupplies
+"
+                            (sort)="onSort($event)"
+                        >
+                            Total Supplies
+                        </th>
+                        <th sortable="qualitySupplies" (sort)="onSort($event)">Quality Supplies</th>
+                        <th sortable="onTimeSupplies" (sort)="onSort($event)">Ontime Supplies</th>
+                        <th sortable="qualitySuppliesRating" (sort)="onSort($event)">QS Rating %</th>
+
+                        <th sortable="onTimeSuppliesRating" (sort)="onSort($event)">OS Rating %</th>
+                        <th sortable="totalRating" (sort)="onSort($event)">Total Rating %</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let u of tableData; trackBy: trackByFn">
+                        <td class="text-start" [style.width]="supplierName.clientWidth" #supplierName>
+                            <a
+                                (click)="
+                                    navigateTo(
+                                        '/default/purchase/reports/supplier-evaluationR/supplier_evaluation_month',
+                                        u
+                                    )
+                                "
+                                class="pointer link-dark"
+                            >
+                                <span class="pointer" [ngbTooltip]="u.supplierName" [positionTarget]="supplierName">
+                                    {{ u?.supplierName }}
+                                </span></a
+                            >
+                        </td>
+                        <td>{{ u?.totalSupplies }}</td>
+                        <td>{{ u?.qualitySupplies }}</td>
+                        <td>{{ u?.onTimeSupplies }}</td>
+                        <td>{{ u?.qualitySuppliesRating | number : "1.2-2" }}</td>
+                        <td>{{ u?.onTimeSuppliesRating | number : "1.2-2" }}</td>
+                        <td>{{ u?.totalRating | number : "1.2-2" }}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

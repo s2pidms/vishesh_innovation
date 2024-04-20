@@ -1,0 +1,146 @@
+<div class="row justify-content-center form-page">
+    <div class="col-12 mt-1">
+        <div class="row">
+            <div class="col-3">
+                <div class="d-flex align-items-center">
+                    <div class="col-form-label text-nowrap">
+                        Review No.
+                        <span class="text-danger">*</span>
+                        <i class="fa fa-caret-right fa-1x mx-1"></i>
+                    </div>
+                    <div class="d-flex inputGroup">
+                        <input
+                            [disabled]="action == 'view'"
+                            type="text"
+                            class="form-control"
+                            [(ngModel)]="economicObj.reviewNo"
+                            readonly
+                        />
+                    </div>
+                </div>
+            </div>
+            <div class="col-auto ps-0">
+                <div class="d-flex align-items-center">
+                    <div class="col-form-label text-nowrap">
+                        Review Date
+                        <span class="text-danger">*</span>
+                        <i class="fa fa-caret-right fa-1x mx-1"></i>
+                    </div>
+                    <input
+                        [disabled]="action == 'view'"
+                        type="date"
+                        class="form-control"
+                        [(ngModel)]="economicObj.reviewDate"
+                        readonly
+                    />
+                </div>
+            </div>
+            <div class="col px-0">
+                <div class="d-flex align-items-center">
+                    <div class="col-form-label text-nowrap">
+                        Reviewed by <span class="text-danger">*</span>
+                        <i class="fa fa-caret-right fa-1x mx-1"></i>
+                    </div>
+                    <div class="">
+                        <input
+                            [disabled]="action == 'view'"
+                            type="text"
+                            class="form-control"
+                            [(ngModel)]="economicObj.reviewBy"
+                            readonly
+                        />
+                    </div>
+                </div>
+            </div>
+            <div class="col-auto d-flex justify-content-end">
+                <button (click)="openNPDReview()" type="button" class="btn btn-primary">Review History</button>
+            </div>
+        </div>
+
+        <div class="row mt-4">
+            <div class="table-responsive" style="min-height: 21.2rem">
+                <table class="table table-bordered table-sticky">
+                    <thead class="bg-primary">
+                        <tr class="text-white">
+                            <th>Sr. No.</th>
+                            <th class="text-start">Economic Review - Questionnaire</th>
+                            <th>Check if "Yes"</th>
+                            <th class="text-start">Remarks</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let t of economicObj.technicalReview">
+                            <td>{{ t.orderNo }}</td>
+                            <td class="text-start">{{ t.questionnaire }}</td>
+                            <td>
+                                <input
+                                    [disabled]="action == 'view'"
+                                    class="form-check-input"
+                                    type="checkbox"
+                                    [(ngModel)]="t.isChecked"
+                                />
+                            </td>
+                            <td class="text-start">
+                                <span *ngIf="action == 'view'">{{ t.remarks }}</span>
+                                <input
+                                    *ngIf="'edit create'.includes(action)"
+                                    type="text"
+                                    class="form-control"
+                                    [(ngModel)]="t.remarks"
+                                />
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div class="row my-4">
+            <div class="col-5 pe-0 d-flex align-items-end">
+                <div>
+                    <div class="d-flex">
+                        <div class="col-form-label text-nowrap pt-1">
+                            Review output <span class="text-danger pe-2">*</span>
+                            <span>&#9654;</span>
+                        </div>
+                        <select
+                            [disabled]="action == 'view'"
+                            class="form-select statusSelectBorder mx-2"
+                            [(ngModel)]="economicObj.status"
+                        >
+                            <option [value]="null" selected disabled>Select Review output</option>
+                            <option *ngFor="let u of statusArr" [value]="u">{{ u }}</option>
+                        </select>
+                        <span class="input-group-text statusSpanHeight">
+                            <div *ngIf="economicObj['status'] == 'Feasible'" class="statusActive"></div>
+                            <div *ngIf="economicObj['status'] == 'Not Feasible'" class="statusInActive"></div>
+                            <div
+                                *ngIf="economicObj['status'] == 'Additional Review Required'"
+                                class="statusYellow"
+                            ></div>
+                        </span>
+                    </div>
+                </div>
+            </div>
+            <div class="col-5 pe-0 d-flex align-items-end">
+                <div>
+                    <div class="d-flex">
+                        <div class="col-form-label text-nowrap pt-1">
+                            Feasibility Done By <span class="text-danger pe-1"></span>
+                            <span>&#9654;</span>
+                        </div>
+                        <input
+                            [disabled]="action == 'view'"
+                            type="text"
+                            class="form-control mx-2"
+                            [(ngModel)]="economicObj.feasibilityDoneBy"
+                        />
+                    </div>
+                </div>
+            </div>
+            <div *ngIf="action != 'view'" class="col-2 ps-0 text-end">
+                <button class="btn btn-primary" type="button" (click)="saveEconomic()">&nbsp; Save &nbsp;</button>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,188 @@
+<!-- <div class="row px-0 justify-content-center">
+  <div class="col-md-11"> -->
+<form [formGroup]="form" class="formCard card mb-4">
+    <div class="container">
+        <div class="row form-header">
+            <div class="col heading">
+                <label>Salary Master Management Staff [{{ this.action | titlecase }}]</label>
+            </div>
+        </div>
+
+        <div class="form-body">
+            <div class="row mb-4">
+                <div class="col-md-3">
+                    <label class="form-label">Employee Name</label>
+                    <ng-select
+                        [items]="masterData.employeesOptions"
+                        bindLabel="label"
+                        bindValue="value"
+                        [clearable]="false"
+                        formControlName="employeeId"
+                    >
+                    </ng-select>
+                </div>
+                <div class="col-md-3 px-3">
+                    <label class="form-label"> With effect From Date <span class="text-danger">*</span> </label>
+                    <input formControlName="effectFromDate" class="form-control" type="date" />
+                </div>
+                <div class="col-md-3 px-3">
+                    <label class="form-label"> PF Applicability <span class="text-danger">*</span> </label>
+                    <select
+                        class="form-select"
+                        formControlName="isEmployeeProvidentFund"
+                        (change)="PFWagesDisable($event)"
+                    >
+                        <option [value]="null" disabled>Select</option>
+                        <option [value]="true">Yes</option>
+                        <option [value]="false">No</option>
+                    </select>
+                </div>
+                <div class="col-md-3">
+                    <label class="form-label">
+                        PF Wages For Contribution
+                        <span class="text-danger">*</span>
+                    </label>
+                    <select class="form-select" formControlName="PFWagesForContribution">
+                        <option [value]="null" disabled selected>Select</option>
+                        <option [value]="'Actual Basic'">Actual Basic</option>
+                        <option [value]="'Actual Basic + HRA + CCA'">Actual Basic + HRA + CCA</option>
+                        <option [value]="'Actual Basic + HRA + CCA + PA'">Actual Basic + HRA + CCA + PA</option>
+                        <option [value]="'Restricted to 15,000/-'">Restricted to 15,000/-</option>
+                        <option [value]="'Restricted to 30,000/-'">Restricted to 30,000/-</option>
+                    </select>
+                </div>
+            </div>
+            <hr class="row line-border" />
+
+            <!-- <hr class="text-warning" /> -->
+            <div class="row mb-1 mt-2">
+                <div class="col-md-8 mx-auto">
+                    <div class="row mb-4">
+                        <div class="col-md-4 pe-0">
+                            <h3 class="text-primary">Salary-Earning</h3>
+                        </div>
+                        <div class="col-md-4 text-center">
+                            <label class="form-label">Monthly</label>
+                        </div>
+                        <div class="col-md-4 text-center">
+                            <label class="form-label">Annual</label>
+                        </div>
+                    </div>
+                    <div formArrayName="salaryComponentDetails">
+                        <div *ngFor="let n of salaryComponentDetails.controls; let i = index" [formGroupName]="i">
+                            <div class="row mb-4">
+                                <div class="col-md-4 pe-0">
+                                    <label class="form-label">
+                                        {{ fSC[i].controls.earningHead.value }}
+                                    </label>
+                                </div>
+                                <div class="col-md-4 d-flex inputGroup">
+                                    <div class="input-group-text">&#8377;</div>
+                                    <input
+                                        class="form-control"
+                                        formControlName="salaryComponentPerMonth"
+                                        type="number"
+                                        [readonly]="fSC[i].controls.factor.value != '-'"
+                                        (input)="handleBasicPay($event, i)"
+                                    />
+                                </div>
+                                <div class="col-md-4 d-flex inputGroup">
+                                    <div class="input-group-text">&#8377;</div>
+                                    <input
+                                        class="form-control"
+                                        formControlName="salaryComponentPerAnnum"
+                                        type="number"
+                                        readonly
+                                    />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row mb-4">
+                        <div class="col-md-4 pe-0">
+                            <label class="form-label">Gross Salary</label>
+                        </div>
+                        <div class="col-md-4 d-flex inputGroup">
+                            <div class="input-group-text">&#8377;</div>
+                            <input class="form-control" formControlName="grossSalaryPerMonth" type="number" readonly />
+                        </div>
+                        <div class="col-md-4 d-flex inputGroup">
+                            <div class="input-group-text">&#8377;</div>
+                            <input class="form-control" formControlName="grossSalaryPerAnnum" type="number" readonly />
+                        </div>
+                    </div>
+                    <div class="row mb-4">
+                        <div class="col-md-4 pe-0">
+                            <label class="form-label"> Employee's PF Contribution </label>
+                        </div>
+                        <div class="col-md-4 d-flex inputGroup">
+                            <div class="input-group-text">&#8377;</div>
+                            <input
+                                class="form-control"
+                                formControlName="employerPFContributionPerMonth"
+                                type="number"
+                                readonly
+                            />
+                        </div>
+                        <div class="col-md-4 d-flex inputGroup">
+                            <div class="input-group-text">&#8377;</div>
+                            <input
+                                class="form-control"
+                                formControlName="employerPFContributionPerAnnum"
+                                type="number"
+                                readonly
+                            />
+                        </div>
+                    </div>
+                    <div class="row mb-4">
+                        <div class="col-md-4 pe-0">
+                            <label class="form-label">Gratuity</label>
+                        </div>
+                        <div class="col-md-4 d-flex inputGroup">
+                            <div class="input-group-text">&#8377;</div>
+                            <input class="form-control" formControlName="gratuityPerMonth" type="number" readonly />
+                        </div>
+                        <div class="col-md-4 d-flex inputGroup">
+                            <div class="input-group-text">&#8377;</div>
+                            <input class="form-control" formControlName="gratuityPerAnnum" type="number" readonly />
+                        </div>
+                    </div>
+                    <div class="row mb-4">
+                        <div class="col-md-4 pe-0">
+                            <label class="form-label"> Cost To Company (CTC) </label>
+                        </div>
+                        <div class="col-md-4 d-flex inputGroup">
+                            <div class="input-group-text">&#8377;</div>
+                            <input
+                                class="form-control"
+                                formControlName="costTOCompanyCTCPerMonth"
+                                type="number"
+                                readonly
+                            />
+                        </div>
+                        <div class="col-md-4 d-flex inputGroup">
+                            <div class="input-group-text">&#8377;</div>
+                            <input
+                                class="form-control"
+                                formControlName="costTOCompanyCTCPerAnnum"
+                                type="number"
+                                readonly
+                            />
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <hr *ngIf="action !== 'view'" class="row line-border mb-4" />
+        <div
+            *ngIf="action !== 'view'"
+            class="d-grid gap-2 d-md-flex justify-content-md-center mb-4"
+            [ngClass]="{'d-none': action == 'View'}"
+        >
+            <button type="button" class="btn bg-primary px-5 me-5" (click)="reset()">Reset</button>
+            <button type="button" class="btn bg-primary px-5" (click)="submit()">Save</button>
+        </div>
+    </div>
+</form>
+<!-- </div>
+</div> -->

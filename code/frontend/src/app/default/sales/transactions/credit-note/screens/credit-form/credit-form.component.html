@@ -1,0 +1,330 @@
+<Form class="px-2" [formGroup]="form" class="formCard card">
+    <div class="container">
+        <div class="row form-header">
+            <div class="col heading">
+                <label> {{ this.action | titlecase }} {{ this.creditNoteName }} </label>
+            </div>
+        </div>
+        <div class="form-body">
+            <div class="row mb-2">
+                <div class="col-md-3 pe-0">
+                    <div class="row">
+                        <div class="col-6 pe-2">
+                            <label class="form-label mb-2"> Credit Note No.</label>
+                            <input readonly class="form-control" type="text" formControlName="CNNumber" />
+                        </div>
+                        <div class="col-6 ps-0">
+                            <label class="form-label mb-2">Credit Note Date</label>
+                            <input class="form-control" type="date" formControlName="CNDate" />
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-3 pe-0">
+                    <label class="form-label mb-2">
+                        Customer Category
+                        <span class="text-danger">*</span>
+                    </label>
+                    <select class="form-select fs-5" formControlName="salesCategory" (change)="getCustomers()">
+                        <option [value]="null" disabled>Select</option>
+                        <option [value]="ele.value" *ngFor="let ele of masterData?.salesCategoryOptions">
+                            {{ ele.label }}
+                        </option>
+                    </select>
+                </div>
+
+                <div class="col-md-3 pe-5">
+                    <label class="form-label mb-2"> Customer Name <span class="text-danger">*</span> </label>
+
+                    <div class="d-flex align-items-center">
+                        <div class="col-11">
+                            <ng-select
+                                [items]="customersFilterOptions"
+                                bindLabel="label"
+                                bindValue="value"
+                                [clearable]="false"
+                                formControlName="customer"
+                                placeholder="Select a customer"
+                                (change)="customerValueChange($event)"
+                            >
+                            </ng-select>
+                        </div>
+                        <div
+                            style="height: 2.9rem"
+                            class="input-group-text bg-primary pointer col-auto fs-4"
+                            id="basic-addon1"
+                            (click)="openCustomersDetailsModal()"
+                        >
+                            <i class="fa fa-search text-white" aria-hidden="true"></i>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-3 ps-0">
+                    <div class="row">
+                        <div class="col-6 pe-2">
+                            <label class="form-label mb-2">Debit Note No.</label>
+                            <input class="form-control" type="text" formControlName="invoiceNo" />
+                        </div>
+                        <div class="col-6 ps-0">
+                            <label class="form-label mb-2">Invoice Date</label>
+                            <input class="form-control" type="date" formControlName="invoiceDate" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <hr class="row line-border" />
+
+        <div class="row justify-content-between settingMargin">
+            <div class="col-4">
+                <div class="d-flex">
+                    <div class="input-group-text bg-primary" id="basic-addon1">
+                        <i class="fa fa-search text-white" aria-hidden="true"></i>
+                    </div>
+                    <div>
+                        <input
+                            type="text"
+                            class="form-control"
+                            [(ngModel)]="search"
+                            [ngModelOptions]="{standalone: true}"
+                        />
+                    </div>
+                </div>
+            </div>
+            <div class="col-4 d-flex justify-content-center">
+                <ngb-pagination
+                    *ngIf="filterItems.length > 0"
+                    [collectionSize]="filterItems.length"
+                    [(page)]="page"
+                    [pageSize]="pageSize"
+                    [boundaryLinks]="false"
+                >
+                    <ng-template ngbPaginationPrevious>
+                        <img src="./assets/new_icons/pagination_prev.svg" width="20rem" />
+                    </ng-template>
+                    <ng-template ngbPaginationNext>
+                        <img src="./assets/new_icons/pagination_next.svg" width="20rem" />
+                    </ng-template>
+                    <ng-template ngbPaginationPages let-page let-pages="pages">
+                        <li class="ngb-custom-pages-item align-self-center" *ngIf="pages.length > 0">
+                            <span class="page-label me-2 ms-1"> Page {{ page }} of {{ pages[pages.length - 1] }} </span>
+                        </li>
+                    </ng-template>
+                </ngb-pagination>
+            </div>
+            <div class="col-4">
+                <div class="d-flex justify-content-end">
+                    <div class="col-form-label text-nowrap">
+                        <button type="button" class="btn btn-secondary po-currency-btn-sm py-0">Currency</button>
+                    </div>
+                    <div class="currency">
+                        <label class="text-dark">{{ f["currency"].value }}</label>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="table-responsive" style="min-height: 18.6rem">
+            <table class="table table-bordered table-sticky text-center">
+                <thead class="bg-primary">
+                    <tr class="text-white">
+                        <th sortable="CNLineNumber" (sort)="onSort($event)">#</th>
+                        <th sortable="SKUCode" (sort)="onSort($event)">SKU Code</th>
+                        <th class="text-start" sortable="SKUName" (sort)="onSort($event)">
+                            {{ "SKU Name" | labelTranslate }}
+                        </th>
+                        <th class="text-start" sortable="SKUDescription" (sort)="onSort($event)">
+                            {{ "SKU Description" | labelTranslate }}
+                        </th>
+                        <th sortable="hsn" (sort)="onSort($event)">HSN Code</th>
+                        <th sortable="UOM" (sort)="onSort($event)">UoM</th>
+                        <th sortable="returnQty" (sort)="onSort($event)">Return Qty</th>
+                        <th sortable="standardRate" (sort)="onSort($event)">Rate/Unit</th>
+                        <th sortable="lineValue" (sort)="onSort($event)">Line Value</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr
+                        *ngFor="
+                            let u of filterItems
+                                | searchFi1ter : search
+                                | slice : (page - 1) * pageSize : (page - 1) * pageSize + pageSize;
+                            let i = index;
+                            trackBy: trackByFn
+                        "
+                    >
+                        <td>{{ i + 1 }}</td>
+                        <td>{{ u?.SKUCode }}</td>
+                        <td class="text-start" [style.width]="SKUName.clientWidth" #SKUName>
+                            <span class="pointer" [positionTarget]="SKUName" [ngbTooltip]="u.SKUName">
+                                {{ u?.SKUName }}
+                            </span>
+                        </td>
+                        <td class="text-start" [style.width]="SKUDescription.clientWidth" #SKUDescription>
+                            <span class="pointer" [positionTarget]="SKUDescription" [ngbTooltip]="u.SKUDescription">
+                                {{ u?.SKUDescription }}
+                            </span>
+                        </td>
+                        <td>{{ u?.hsn }}</td>
+                        <td>{{ u?.UOM | UOMUnitsMaster }}</td>
+                        <td>
+                            <div class="d-flex justify-content-center">
+                                <span *ngIf="['approve', 'reject', 'view', 'generate'].includes(action)">
+                                    {{ u.returnQty | number : "1.2-2" }}
+                                </span>
+                                <input
+                                    *ngIf="!['approve', 'reject', 'view', 'generate'].includes(action)"
+                                    class="form-control form-control-sm w-25"
+                                    type="number"
+                                    [(ngModel)]="u.returnQty"
+                                    [ngModelOptions]="{standalone: true}"
+                                    (input)="lineValueRate(u.CNLineNumber, u)"
+                                />
+                            </div>
+                        </td>
+                        <td>
+                            <div class="d-flex justify-content-center">
+                                <span *ngIf="['approve', 'reject', 'view', 'generate'].includes(action)">
+                                    {{ u.returnQty | number : "1.2-2" }}
+                                </span>
+                                <input
+                                    *ngIf="!['approve', 'reject', 'view', 'generate'].includes(action)"
+                                    class="form-control form-control-sm w-25"
+                                    type="number"
+                                    [(ngModel)]="u.standardRate"
+                                    [ngModelOptions]="{standalone: true}"
+                                    (input)="standardValueRate(u.CNLineNumber, u)"
+                                />
+                            </div>
+                        </td>
+
+                        <td>
+                            {{ u?.lineValue | number : "1.2-2" }}
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <ng-container>
+            <div class="row">
+                <div class="col-md-10 d-flex">
+                    <div class="d-flex justify-content-center">
+                        <div class="col-form-label text-nowrap pe-1 pt-0">
+                            Total SKU Value:
+                            <div class="btn btn-info py-1 ms-2">
+                                <label>{{ f["currency"].value }}</label>
+                            </div>
+                        </div>
+                        <input class="form-control" type="number" formControlName="totalLineValue" readonly />
+                    </div>
+                    <div class="d-flex justify-content-center">
+                        <div class="mx-2 align-self-center mb-2">
+                            <i class="fa fa-plus fa-lg text-info" aria-hidden="true"></i>
+                        </div>
+                        <div class="text-nowrap">
+                            <button
+                                type="button "
+                                class="btn btn-sm btn-primary me-2 d-flex align-items-center mb-2"
+                                (click)="openOtherChargesModal()"
+                            >
+                                <span>Add Other Charges</span>
+                            </button>
+                        </div>
+
+                        <div class="d-flex inputGroup">
+                            <div class="col-form-label text-nowrap pe-1 pt-0">
+                                <div class="btn btn-info py-1 ms-2">
+                                    <label>{{ f["currency"].value }}</label>
+                                </div>
+                            </div>
+
+                            <input
+                                type="text"
+                                class="form-control mt-0 w-25"
+                                readOnly
+                                [(ngModel)]="otherCharges.totalAmount"
+                                [ngModelOptions]="{standalone: true}"
+                            />
+                        </div>
+                    </div>
+                    <div class="d-flex inputGroup"></div>
+                    <div class="mx-2 align-text-top">
+                        <div class="fs-3 fw-bolder text-info me-0" aria-hidden="true">=</div>
+                    </div>
+                    <div class="d-flex justify-content-center">
+                        <div class="col-form-label text-nowrap pe-1 pt-0">
+                            Net Credit Note Value:
+                            <div class="btn btn-info py-1 ms-2">
+                                <label>{{ f["currency"].value }}</label>
+                            </div>
+                        </div>
+                        <input class="form-control" type="number" formControlName="netCNValue" readonly />
+                    </div>
+                </div>
+            </div>
+            <hr class="row line-border" />
+        </ng-container>
+        <div class="row mb-0">
+            <div [ngClass]="action === 'reject' ? 'col-md-10 pe-0' : 'col'" class="col-8">
+                <div class="row">
+                    <div [ngClass]="action !== 'reject' ? 'col-md-10 pe-5' : 'col-md-7'" class="col">
+                        <div class="d-flex align-items-center">
+                            <div class="col-form-label text-nowrap">
+                                Reason for Credit Note
+                                <i class="fa fa-caret-right fa-5x mx-1"></i>
+                            </div>
+                            <input class="form-control" type="text" formControlName="reasonForCN" />
+                        </div>
+                    </div>
+                    <div class="col pe-0" *ngIf="action == 'reject'">
+                        <div class="d-flex align-items-center">
+                            <div class="col-form-label text-nowrap">
+                                Remarks <i class="fa fa-caret-right fa-5x mx-1"></i>
+                            </div>
+                            <input class="form-control" type="text" formControlName="remarks" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div
+                [ngClass]="action === 'reject' ? 'col-md-2 justify-content-center' : 'col-4 d-flex justify-content-end'"
+                class="col-md-auto ms-auto d-flex justify-content-end mb-3"
+            >
+                <div *ngIf="['create'].includes(action)" class="d-grid gap-2 d-md-block">
+                    <button type="button" class="btn btn-primary px-5 me-3" (click)="reset()">Reset</button>
+                    <button
+                        type="button"
+                        class="btn btn-primary me-1"
+                        [disabled]="!isESCPreview"
+                        (click)="ESCPreview()"
+                    >
+                        Esc
+                    </button>
+                    <button type="button" class="btn btn-primary px-4 me-3" (click)="preview()">Preview</button>
+                    <button class="btn btn-primary px-5" type="button" [disabled]="!isPreview" (click)="submit()">
+                        Save
+                    </button>
+                </div>
+                <div *ngIf="['edit'].includes(action)">
+                    <button type="button" class="btn btn-primary px-5" (click)="submit()">Save</button>
+                </div>
+                <div *ngIf="['view'].includes(action)">
+                    <button class="btn btn-primary px-5" type="button" (click)="navigateTo()">
+                        Back To Action Center
+                    </button>
+                </div>
+
+                <div *ngIf="action == 'reject'" class="col-5 text-end">
+                    <button type="button" class="btn btn-primary px-5" (click)="submit()">Reject</button>
+                </div>
+
+                <div *ngIf="action == 'approve'" class="col-5 d-flex justify-content-end">
+                    <button type="button" class="btn btn-primary px-5" (click)="submit()">Approve</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</Form>

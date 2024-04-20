@@ -1,0 +1,92 @@
+<div class="reportTablePage">
+    <div class="table-body pb-0 shadow-none">
+        <div class="row table-header">
+            <div class="col">
+                <label class="heading">GRN Item wise Report</label>
+            </div>
+        </div>
+        <div class="row my-4">
+            <div class="col-3 ps-5 separate-row">
+                <label class="form-label">Item wise</label>
+                <ng-select
+                    [items]="itemList"
+                    bindLabel="itemName"
+                    bindValue="_id"
+                    [clearable]="false"
+                    [(ngModel)]="itemId"
+                >
+                </ng-select>
+                <span class="set-position">
+                    <img src="./assets/new_icons/redstroke.svg" alt="" height="27" width="8" />
+                </span>
+            </div>
+
+            <div class="col-3">
+                <label class="form-label"> From Date <span class="text-danger">*</span> </label>
+                <input class="form-control" type="date" [(ngModel)]="fromDate" />
+            </div>
+
+            <div class="col-3">
+                <label class="form-label"> To Date <span class="text-danger">*</span> </label>
+                <input class="form-control" type="date" [(ngModel)]="toDate" />
+            </div>
+            <div class="col-3 align-self-end separate-image">
+                <span class="image-position">
+                    <img src="./assets/new_icons/redstroke.svg" alt="" height="27" width="8" />
+                </span>
+                <button type="button" class="btn btn-primary px-4 me-3" (click)="getAll()">Apply Filter</button>
+
+                <button type="button" class="btn btn-primary px-4 ms-4" (click)="reset()">Reset Filter</button>
+            </div>
+        </div>
+
+        <hr class="row line-border" />
+        <div class="table-responsive mb-0">
+            <app-setting-header
+                [data]="{page,pageSize,collection,search,type: 'list',pdfDisplay:true}"
+                (dataChange)="eventHeader($event)"
+            >
+            </app-setting-header>
+            <table class="table table-bordered">
+                <thead class="bg-primary">
+                    <tr class="text-white">
+                        <th sortable="GRNNumber" (sort)="onSort($event)">GRN No.</th>
+                        <th sortable="GRNDate" (sort)="onSort($event)">GRN Dt.</th>
+                        <th sortable="itemCode" (sort)="onSort($event)">Item Code</th>
+                        <th class="text-start" sortable="itemName" (sort)="onSort($event)">Item Name</th>
+                        <th class="text-start" sortable="itemDescription" (sort)="onSort($event)">Item Description</th>
+                        <th sortable="deliveryLocation" (sort)="onSort($event)">Location</th>
+                        <th sortable="batchDate" (sort)="onSort($event)">Batch #/ Dt.</th>
+                        <th sortable="UOM" (sort)="onSort($event)">UoM</th>
+                        <th sortable="balancedQty" (sort)="onSort($event)">PO Qty</th>
+                        <th sortable="invoicedQty" (sort)="onSort($event)">Inv. Qty</th>
+                        <th sortable="GRNQty" (sort)="onSort($event)">GRN Qty</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let u of tableData; trackBy: trackByFn">
+                        <td>{{ u?.GRNNumber }}</td>
+                        <td>{{ u?.GRNDate }}</td>
+                        <td>{{ u?.itemCode }}</td>
+                        <td class="text-start" [style.width]="itemName.clientWidth" #itemName>
+                            <span class="pointer" [positionTarget]="itemName" [ngbTooltip]="u.itemName">
+                                {{ u?.itemName }}
+                            </span>
+                        </td>
+                        <td class="text-start" [style.width]="itemDescription.clientWidth" #itemDescription>
+                            <span class="pointer" [positionTarget]="itemDescription" [ngbTooltip]="u.itemDescription">
+                                {{ u?.itemDescription }}
+                            </span>
+                        </td>
+                        <td>{{ u?.deliveryLocation }}</td>
+                        <td>{{ u?.batchDate }}</td>
+                        <td>{{ u?.UOM | UOMUnitsMaster }}</td>
+                        <td>{{ u?.balancedQty }}</td>
+                        <td>{{ u?.invoicedQty }}</td>
+                        <td>{{ u?.GRNQty }}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

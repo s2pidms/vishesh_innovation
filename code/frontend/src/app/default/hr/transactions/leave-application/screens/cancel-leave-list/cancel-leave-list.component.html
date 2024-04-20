@@ -1,0 +1,56 @@
+<div class="listCard card">
+    <div class="table-header">
+        <label class="heading"> Cancel Leave Summary</label>
+    </div>
+    <div class="table-responsive">
+        <app-setting-header [data]="{page,pageSize,collection,search,type: 'list'}" (dataChange)="eventHeader($event)">
+        </app-setting-header>
+
+        <table class="table table-bordered">
+            <thead class="bg-primary">
+                <tr class="text-white">
+                    <th sortable="applicationDate" (sort)="onSort($event)">Application Dt.</th>
+                    <th sortable="empCode" (sort)="onSort($event)">Employee Code</th>
+                    <th class="text-start" sortable="empFullName" (sort)="onSort($event)">Employee Name</th>
+                    <th sortable="fromDate" (sort)="onSort($event)">From Date</th>
+                    <th sortable="toDate" (sort)="onSort($event)">To Date</th>
+                    <th sortable="leaveType" (sort)="onSort($event)">Leave Type</th>
+                    <th sortable="leaveDays" (sort)="onSort($event)">Leave Days</th>
+                    <th sortable="resumptionDate" (sort)="onSort($event)">Resumption Dt.</th>
+                    <th sortable="status" (sort)="onSort($event)">Status</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let u of tableData; trackBy: trackByFn">
+                    <td>{{ u?.applicationDateS }}</td>
+                    <td>{{ u?.empCode }}</td>
+                    <td class="text-start">{{ u?.empFullName }}</td>
+                    <td>{{ u?.fromDateS }}</td>
+                    <td>{{ u?.toDateS }}</td>
+                    <td>{{ u?.leaveType }}</td>
+                    <td>{{ u?.leaveDays }}</td>
+                    <td>{{ u?.resumptionDateS }}</td>
+                    <td>{{ u?.status }}</td>
+                    <td>
+                        <div class="dropdown">
+                            <button class="dropbtn"></button>
+                            <div class="dropdown-content">
+                                <a
+                                    appAccessControl
+                                    [accessType]="rolePermissionActions.viewAction"
+                                    [class.disable]="u.status === 'Cancelled'"
+                                    href="javascript:void(0)"
+                                    (click)="navigateTo('../la-form', u, 'cancelLeave')"
+                                >
+                                    <i class="fa fa fa-times fa-lg me-2 text-primary" aria-hidden="true"></i>
+                                    Cancel
+                                </a>
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>

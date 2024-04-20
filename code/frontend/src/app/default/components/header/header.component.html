@@ -1,0 +1,14 @@
+<nav class="navbar navbar-light bg-white shadow-sm">
+    <a class="logo">
+        <!-- <img src="./assets/companies/logo.svg" /> -->
+        <img [src]="landingPageHeaderUrl" />
+    </a>
+
+    <form class="d-flex align-items-center me-3">
+        <label class="wel-text text-info">Welcome - {{ user?.name }}</label>
+        <button type="button" class="btn btn-primary" (click)="updateUser(); navigateTo('/auth/login')">
+            Logout
+            <i class="fa fa-power-off fa-fw" aria-hidden="true"></i>
+        </button>
+    </form>
+</nav>

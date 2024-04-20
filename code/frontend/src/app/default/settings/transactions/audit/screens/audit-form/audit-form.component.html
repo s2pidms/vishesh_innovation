@@ -1,0 +1,78 @@
+<Form [formGroup]="form" class="formCard card">
+    <div class="container">
+        <div class="row form-header">
+            <div class="col heading">
+                <label>Audit</label>
+            </div>
+        </div>
+        <div class="form-body">
+            <div class="col">
+                <div class="row justify-content-center">
+                    <div class="col-md-6">
+                        <label class="form-label">
+                            User
+                            <span class="mandatory">*</span></label
+                        >
+                        <input class="form-control" type="text" formControlName="user" />
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label">Date<span class="mandatory">*</span></label>
+                        <input class="form-control" formControlName="date" type="date" />
+                        <p class="validation-error"></p>
+                    </div>
+                </div>
+                <div class="row justify-content-center">
+                    <div class="col-md-6">
+                        <label class="form-label">Action<span class="mandatory">*</span></label>
+                        <input class="form-control" type="text" name="action" formControlName="action" />
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label">Field Modified<span class="mandatory">*</span></label>
+                        <input
+                            class="form-control"
+                            type="text"
+                            name="fieldsModified"
+                            formControlName="fieldsModified"
+                        />
+                        <p class="validation-error"></p>
+                    </div>
+                </div>
+                <div class="row justify-content-center">
+                    <div class="col-md-6">
+                        <label class="form-label d-flex justify-content-between"
+                            >Data
+                            <button
+                                (click)="copyData(form.controls['data'].value)"
+                                type="button"
+                                class="btn btn-primary px-3 form-btn-sm py-0"
+                            >
+                                Copy
+                            </button></label
+                        >
+                        <textarea type="text" class="form-control form-text-area" rows="10" disabled>
+              {{ form.controls["data"].value | json }}
+              </textarea
+                        >
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label d-flex justify-content-between"
+                            >Old Data
+                            <button
+                                (click)="copyData(form.controls['oldData'].value)"
+                                type="button"
+                                class="btn btn-primary px-3 form-btn-sm py-0"
+                            >
+                                Copy
+                            </button></label
+                        >
+                        <textarea type="text" class="form-control form-text-area" rows="10" disabled>
+              {{ form.controls["oldData"].value | json }}
+              </textarea
+                        >
+                        <p class="validation-error"></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</Form>

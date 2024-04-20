@@ -1,0 +1,291 @@
+<div class="modelPage">
+    <div class="modal-header">
+        <div class="heading">Stock Cutting</div>
+        <div>
+            <button type="button" class="btn btn-cross btn-sm" aria-label="Close" (click)="this.activeModal.close()">
+                <i class="fa fa-times-circle" aria-hidden="true"></i>
+            </button>
+        </div>
+    </div>
+    <div class="container">
+        <div class="row mb-0">
+            <div class="mt-1 line-border-with-title">
+                <span class="px-4"> PPIC Opening Stock </span>
+            </div>
+        </div>
+        <div class="form-body pt-0">
+            <div class="row justify-content-between my-3 px-3">
+                <div class="col-4 d-flex align-items-center px-3">
+                    <div class="d-flex">
+                        <div class="input-group-text bg-primary" id="basic-addon1">
+                            <i class="fa fa-search text-white" aria-hidden="true"></i>
+                        </div>
+                        <div>
+                            <input
+                                type="text"
+                                class="form-control"
+                                [(ngModel)]="search"
+                                [ngModelOptions]="{standalone: true}"
+                                (input)="setPagination()"
+                            />
+                        </div>
+                    </div>
+                </div>
+                <div class="col-4 d-flex justify-content-center align-items-center">
+                    <ngb-pagination
+                        [collectionSize]="selectedStockCuttingData?.PPICOpeningStock.length"
+                        [(page)]="page"
+                        [pageSize]="pageSize"
+                        [boundaryLinks]="false"
+                    >
+                        <ng-template ngbPaginationPrevious>
+                            <img src="./assets/new_icons/pagination_prev.svg" width="20rem" />
+                        </ng-template>
+                        <ng-template ngbPaginationNext>
+                            <img src="./assets/new_icons/pagination_next.svg" width="20rem" />
+                        </ng-template>
+                        <ng-template ngbPaginationPages let-page let-pages="pages">
+                            <li class="ngb-custom-pages-item align-self-center" *ngIf="pages.length > 0">
+                                <span class="page-label me-2 ms-1">
+                                    Page {{ page }} of {{ pages[pages.length - 1] }}
+                                </span>
+                            </li>
+                        </ng-template>
+                    </ngb-pagination>
+                </div>
+                <div class="col-2"></div>
+                <div class="col-2 ps-0 pe-3">
+                    <div class="d-flex align-items-center">
+                        <div class="col-form-label text-nowrap">
+                            <div class="">
+                                U2 Total
+                                <span class="ms-1 me-2 col-form-label text-nowrap">&#9654;</span>
+                            </div>
+                        </div>
+                        <input
+                            class="form-control bg-magenta-black"
+                            type="text"
+                            [(ngModel)]="selectedStockCuttingData.U2TotalQty"
+                            readonly
+                        />
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="table-responsive text-wrap" style="min-height: 17rem">
+            <table class="table table-bordered mt-0 table-sm">
+                <thead class="bg-info">
+                    <tr class="text-white">
+                        <th sortable="MRNNumber" (sort)="onSort($event)">MRN No.</th>
+                        <th sortable="itemCode" (sort)="onSort($event)">Item Code</th>
+                        <th class="text-start" sortable="itemName" (sort)="onSort($event)">Item Name</th>
+                        <th class="text-start" sortable="itemDescription" (sort)="onSort($event)">Item Description</th>
+                        <th sortable="closedIRQty" (sort)="onSort($event)">U1</th>
+                        <th sortable="closedIRQty" (sort)="onSort($event)">U1 Qty</th>
+                        <th sortable="width" (sort)="onSort($event)">Width</th>
+                        <th sortable="width" (sort)="onSort($event)">Unit</th>
+                        <th sortable="length" (sort)="onSort($event)">Length</th>
+                        <th sortable="length" (sort)="onSort($event)">Unit</th>
+                        <th sortable="SQM" (sort)="onSort($event)">U2 qty/U1</th>
+                        <th sortable="roll" (sort)="onSort($event)">U2</th>
+                        <th sortable="status" (sort)="onSort($event)">U2 Qty</th>
+                        <th sortable="select" (sort)="onSort($event)">Select</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    <tr
+                        *ngFor="
+                            let u of selectedStockCuttingData.PPICOpeningStock
+                                | searchFi1ter : search
+                                | slice : (page - 1) * pageSize : (page - 1) * pageSize + pageSize;
+                            trackBy: trackByFn;
+                            let i = index
+                        "
+                    >
+                        <td>{{ u?.MRNNo }}</td>
+                        <td>{{ u?.itemCode }}</td>
+                        <td class="text-start" [style.width]="itemName.clientWidth" #itemName>
+                            <span class="pointer" [ngbTooltip]="u.itemName" [positionTarget]="itemName">
+                                {{ u?.itemName }}
+                            </span>
+                        </td>
+                        <td class="text-start" [style.width]="itemDescription.clientWidth" #itemDescription>
+                            <span class="pointer" [ngbTooltip]="u.itemDescription" [positionTarget]="itemDescription">
+                                {{ u?.itemDescription }}
+                            </span>
+                        </td>
+                        <td>{{ u?.U1 }}</td>
+                        <td>{{ u?.U1Qty | number : "1.2-2" }}</td>
+
+                        <td>
+                            {{ u?.width }}
+                        </td>
+                        <td>
+                            {{ u?.widthUnit }}
+                        </td>
+                        <td>
+                            {{ u?.length }}
+                        </td>
+                        <td>
+                            {{ u?.lengthUnit }}
+                        </td>
+                        <td>
+                            {{ u?.MF }}
+                        </td>
+                        <td>
+                            {{ u?.U2 }}
+                        </td>
+                        <td>
+                            {{ u?.U2Qty | number : "1.2-2" }}
+                        </td>
+                        <td>
+                            <input
+                                class="form-check-input pointer"
+                                type="checkbox"
+                                [(ngModel)]="u.select"
+                                [ngModelOptions]="{standalone: true}"
+                                (change)="setSelectData(u)"
+                            />
+                            <!-- <input
+                                class="form-check-input pointer"
+                                name="isSelect"
+                                type="radio"
+                                [checked]="u._id == selectedData._id"
+                                (change)="setSelectData(u)"
+                            /> -->
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="row mb-0">
+            <div class="mt-3 line-border-with-title">
+                <span class="px-4"> PPIC To Production GT </span>
+            </div>
+        </div>
+        <div class="table-responsive text-wrap mt-5" style="min-height: 6rem">
+            <table class="table table-bordered mt-0 table-sm">
+                <thead class="bg-info">
+                    <tr class="text-white">
+                        <th sortable="MRNNumber" (sort)="onSort($event)">MRN No.</th>
+                        <th sortable="itemCode" (sort)="onSort($event)">Item Code</th>
+                        <th class="text-start" sortable="itemName" (sort)="onSort($event)">Item Name</th>
+                        <th class="text-start" sortable="itemDescription" (sort)="onSort($event)">Item Description</th>
+                        <th sortable="closedIRQty" (sort)="onSort($event)">U1</th>
+                        <th sortable="closedIRQty" (sort)="onSort($event)">U1 Qty</th>
+                        <th sortable="width" (sort)="onSort($event)">Width</th>
+                        <th sortable="width" (sort)="onSort($event)">Unit</th>
+                        <th sortable="length" (sort)="onSort($event)">Length</th>
+                        <th sortable="length" (sort)="onSort($event)">Unit</th>
+                        <th sortable="SQM" (sort)="onSort($event)">U2 qty/U1</th>
+                        <th sortable="roll" (sort)="onSort($event)">U2</th>
+                        <th sortable="status" (sort)="onSort($event)">U2 Qty</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    <tr
+                        *ngFor="
+                            let u of selectedStockCuttingData.PPICToProductionGT
+                                | searchFi1ter : search
+                                | slice : (page - 1) * pageSize : (page - 1) * pageSize + pageSize;
+                            trackBy: trackByFn;
+                            let i = index
+                        "
+                    >
+                        <td>{{ u?.MRNNo }}</td>
+                        <td>{{ u?.itemCode }}</td>
+                        <td class="text-start" [style.width]="itemName.clientWidth" #itemName>
+                            <span class="pointer" [ngbTooltip]="u.itemName" [positionTarget]="itemName">
+                                {{ u?.itemName }}
+                            </span>
+                        </td>
+                        <td class="text-start" [style.width]="itemDescription.clientWidth" #itemDescription>
+                            <span class="pointer" [ngbTooltip]="u.itemDescription" [positionTarget]="itemDescription">
+                                {{ u?.itemDescription }}
+                            </span>
+                        </td>
+                        <td>
+                            {{ u?.U1 }}
+                        </td>
+
+                        <td>
+                            <span *ngIf="['RL'].includes(u?.U1)">
+                                {{ u?.U1Qty | number : "1.2-2" }}
+                            </span>
+                            <div *ngIf="['SHT'].includes(u?.U1)" class="d-flex justify-content-center">
+                                <input
+                                    class="form-control text-center form-control-size-sx"
+                                    type="number"
+                                    [(ngModel)]="u.U1Qty"
+                                    (ngModelChange)="changeU2Qty(u)"
+                                    [ngModelOptions]="{standalone: true}"
+                                />
+                            </div>
+                        </td>
+
+                        <td>
+                            {{ u?.width }}
+                        </td>
+                        <td>
+                            {{ u?.widthUnit }}
+                        </td>
+                        <td>
+                            <span *ngIf="['SHT'].includes(u?.U1)">
+                                {{ u?.length | number : "1.2-2" }}
+                            </span>
+                            <div *ngIf="['RL'].includes(u?.U1)" class="d-flex justify-content-center">
+                                <input
+                                    class="form-control text-center form-control-size-sx"
+                                    type="number"
+                                    [(ngModel)]="u.length"
+                                    (ngModelChange)="changeU2Qty(u)"
+                                    [ngModelOptions]="{standalone: true}"
+                                />
+                            </div>
+                        </td>
+                        <td>
+                            {{ u?.lengthUnit }}
+                        </td>
+                        <td>
+                            {{ u?.MF }}
+                        </td>
+                        <td>
+                            {{ u?.U2 }}
+                        </td>
+                        <td>
+                            {{ u?.U2Qty | number : "1.2-2" }}
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <hr class="row line-border" />
+        <div class="row mb-4">
+            <div appAccessControl [accessType]="rolePermissionActions.createAction" class="col text-center">
+                <div class="d-grid gap-2 d-md-block">
+                    <button type="button" class="btn btn-primary px-5 me-3" (click)="reset()">Reset</button>
+                    <button
+                        type="button"
+                        class="btn btn-primary px-3 me-1"
+                        [disabled]="!isESCPreview"
+                        (click)="ESCPreview()"
+                    >
+                        Esc
+                    </button>
+                    <button type="button" class="btn btn-primary px-3 me-3" (click)="preview()">Preview</button>
+                    <button
+                        class="btn btn-primary px-5"
+                        type="button"
+                        (click)="openStockCuttingPPICClosingDetailsModal()"
+                    >
+                        Process
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

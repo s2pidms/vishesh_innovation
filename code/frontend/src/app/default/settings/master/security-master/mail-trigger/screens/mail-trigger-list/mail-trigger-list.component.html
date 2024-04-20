@@ -1,0 +1,78 @@
+<div class="listCard card">
+    <div class="table-header">
+        <div class="col">
+            <label class="heading">Mail Send Summary</label>
+        </div>
+    </div>
+    <hr class="line-border" />
+    <div style="min-height: 41rem" class="table-responsive">
+        <app-setting-header
+            [data]="{page,pageSize,collection,search,excelDisplay : 'none'}"
+            (dataChange)="eventHeader($event)"
+        >
+        </app-setting-header>
+
+        <table class="table table-bordered">
+            <thead class="bg-primary">
+                <tr class="text-white">
+                    <th class="text-start" sortable="message" (sort)="onSort($event)">Message</th>
+
+                    <th class="text-start" sortable="module" (sort)="onSort($event)">Module Name</th>
+                    <th class="text-start" sortable="subModule" (sort)="onSort($event)">Sub Module Name</th>
+                    <th sortable="isSent" (sort)="onSort($event)">Mail Send</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let u of tableData; trackBy: trackByFn">
+                    <td class="text-start" [style.width]="message.clientWidth" #message>
+                        <span class="pointer" [positionTarget]="message" [ngbTooltip]="u.message">
+                            {{ u.message }}
+                        </span>
+                    </td>
+                    <td class="text-start">{{ u.module }}</td>
+                    <td class="text-start">{{ u.subModule }}</td>
+                    <td>{{ u.isSent ? "Yes" : "No" }}</td>
+                    <td>
+                        <div class="dropdown">
+                            <button class="dropbtn"></button>
+                            <div class="dropdown-content">
+                                <a href="javascript:void(0)" [class.disable]="!u?.isSent" (click)="update(u)">
+                                    <i class="fa fa-envelope fa-lg text-primary me-2" aria-hidden="true"></i>
+                                    Resend Mail
+                                </a>
+                                <!-- <a
+                                    href="javascript:void(0)"
+                                    (click)="
+                                        navigateTo(
+                                            '/default/settings/master/security_master/mail_trigger/form',
+                                            u,
+                                            'view'
+                                        )
+                                    "
+                                >
+                                    <i class="fa fa-eye fa-lg me-2 text-primary" aria-hidden="true"></i>
+                                    View
+                                </a>
+                                <a
+                                    [class.disable]="u?.issueStatus == 'Closed'"
+                                    href="javascript:void(0)"
+                                    (click)="
+                                        navigateTo(
+                                            '/default/settings/master/security_master/mail_trigger/form',
+                                            u,
+                                            'edit'
+                                        )
+                                    "
+                                >
+                                    <i class="fa fa-pencil-square-o fa-lg me-2 text-primary" aria-hidden="true"></i>
+                                    Edit
+                                </a> -->
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>

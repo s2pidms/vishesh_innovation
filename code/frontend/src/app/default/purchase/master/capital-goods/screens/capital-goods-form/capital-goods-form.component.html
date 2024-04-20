@@ -1,0 +1,118 @@
+<form [formGroup]="form" class="formCard card">
+    <div class="container">
+        <div class="row form-header">
+            <div class="col heading">
+                <label>Enter Capital Goods Details [{{ this.action | titlecase }}]</label>
+            </div>
+        </div>
+        <div class="form-body">
+            <div class="row">
+                <div class="col-3">
+                    <label class="form-label text-cyan mb-1">
+                        Capital Goods No. <span class="text-danger">*</span>
+                    </label>
+                    <input class="form-control" type="text" formControlName="capitalGoodsNo" readonly />
+                </div>
+                <div class="col-3">
+                    <label class="form-label text-cyan mb-1">
+                        Capital Goods Name <span class="text-danger">*</span>
+                    </label>
+                    <input class="form-control" type="text" formControlName="capitalGoodsName" />
+                </div>
+                <div class="col-3">
+                    <label class="form-label text-cyan mb-1">
+                        Capital Goods Description<span class="text-danger">*</span>
+                    </label>
+                    <input class="form-control" type="text" formControlName="capitalGoodsDescription" />
+                </div>
+                <div class="col-3">
+                    <label class="form-label text-cyan mb-1">
+                        Capital Goods Specifications <span class="text-danger"></span>
+                    </label>
+                    <input class="form-control" type="text" formControlName="capitalGoodsSpecification" />
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-3">
+                    <label class="form-label mb-1"> HSN Code <span class="text-danger">*</span> </label>
+                    <select class="form-select" formControlName="hsnCode">
+                        <option [value]="null" disabled>Select HSN Code</option>
+                        <option [value]="item._id" *ngFor="let item of masterData.hsnCodes">
+                            {{ item.hsnCode }}
+                        </option>
+                    </select>
+                </div>
+                <div class="col-3">
+                    <label class="form-label mb-1"> Unit of Measurement <span class="text-danger">*</span> </label>
+                    <select class="form-select" formControlName="UOM">
+                        <option [value]="null" selected disabled>Select UOM</option>
+                        <option *ngFor="let u of masterData.UOMOptions" [value]="u?.value">
+                            {{ u?.label }}
+                        </option>
+                    </select>
+                </div>
+                <div class="col-6">
+                    <app-file-upload
+                        [fileName]="form.controls['technicalSheetFile'].value"
+                        [url]="form.controls['technicalSheetFileUrl'].value"
+                        [label]="'Upload Technical Sheet'"
+                        [(file)]="technicalSheetFile"
+                    ></app-file-upload>
+                </div>
+            </div>
+        </div>
+        <hr class="row line-border" />
+        <div class="row" formGroupName="supplierInfo">
+            <div class="col-3 pe-5">
+                <label class="form-label mb-1">Supplier Name <span class="text-danger">*</span></label>
+                <div class="d-flex align-items-center">
+                    <div class="col-11">
+                        <ng-select
+                            [items]="masterData.suppliersOptions"
+                            bindLabel="label"
+                            bindValue="value"
+                            formControlName="supplier"
+                            [clearable]="false"
+                            (change)="setCurrency($event)"
+                        >
+                        </ng-select>
+                    </div>
+                    <div
+                        style="height: 2.9rem"
+                        class="input-group-text bg-primary pointer col-auto fs-4"
+                        id="basic-addon1"
+                        (click)="openSupplierDetailsModal()"
+                    >
+                        <i class="fa fa-search text-white" aria-hidden="true"></i>
+                    </div>
+                </div>
+            </div>
+            <div class="col-3">
+                <label class="form-label mb-1">Supplier Part No. <span class="text-danger"></span></label
+                ><input class="form-control" formControlName="supplierPartNo" type="text" value="" />
+            </div>
+            <div class="col-3">
+                <label class="form-label mb-1">Currency<span class="text-danger"></span></label>
+                <input type="text" class="form-control" formControlName="currency" readonly />
+            </div>
+            <div class="col-3">
+                <label class="form-label mb-1"
+                    >Purchase Cost [Exclusive of GST] <span class="text-danger">*</span></label
+                ><input class="form-control" formControlName="purchaseCost" type="text" />
+            </div>
+        </div>
+        <hr class="row line-border" />
+        <div *ngIf="action !== 'view'" class="row justify-content-center">
+            <div class="col-3">
+                <div class="row">
+                    <div class="d-grid col px-0">
+                        <button (click)="reset()" class="btn btn-primary mx-1 mt-2" type="button">Reset</button>
+                    </div>
+                    <div class="d-grid col">
+                        <button (click)="submit()" class="btn btn-primary mx-1 mt-2" type="button">Save</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>

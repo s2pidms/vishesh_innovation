@@ -1,0 +1,52 @@
+<form [formGroup]="form" class="formCard card">
+    <div class="container">
+        <div class="row form-header">
+            <div class="col heading">
+                <label>Enter Supplier Evaluation [{{ this.action | titlecase }}]</label>
+            </div>
+        </div>
+        <div class="form-body">
+            <div class="row">
+                <div class="col-md-4">
+                    <label class="form-label">Name <span class="text-danger">*</span></label>
+                    <input class="form-control" formControlName="name" />
+                </div>
+                <div class="col-md-4">
+                    <label class="form-label">Description<span class="text-danger">*</span></label>
+                    <input class="form-control" formControlName="description" />
+                </div>
+                <div class="col-md-4">
+                    <label class="form-label">Enabled<span class="text-danger">*</span></label>
+                    <select class="form-select statusSelectBorder" formControlName="enabled">
+                        <option [value]="null" selected disabled>Select Status</option>
+                        <option [value]="'Active'">Active</option>
+                        <option [value]="'Inactive'">Inactive</option>
+                    </select>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-4">
+                    <label class="form-label">Weight <span class="text-danger">*</span></label>
+                    <input class="form-control" type="number" formControlName="weight" />
+                </div>
+                <div class="col-md-4">
+                    <label class="form-label">Passing %<span class="text-danger">*</span></label>
+                    <input class="form-control" type="number" formControlName="passingPercentage" />
+                </div>
+                <div class="col-md-4">
+                    <label class="form-label">Failing % <span class="text-danger">*</span></label>
+                    <input class="form-control" type="number" formControlName="failingPercentage" />
+                </div>
+            </div>
+        </div>
+        <hr *ngIf="action !== 'view'" class="row line-border" />
+        <div *ngIf="action !== 'view'" class="d-flex justify-content-center my-4">
+            <div class="d-grid col-md-1 mx-5" [ngClass]="{'d-none': action == 'View'}">
+                <button type="button" class="btn btn-primary" (click)="reset()">Reset</button>
+            </div>
+            <div class="d-grid col-md-1" [ngClass]="{'d-none': action == 'View'}">
+                <button type="button" class="btn btn-primary" (click)="submit()">Save</button>
+            </div>
+        </div>
+    </div>
+</form>

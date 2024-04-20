@@ -1,0 +1,251 @@
+<div class="table-responsive shadow">
+    <table class="table">
+        <tr>
+            <td colspan="12">
+                <img src="{{ tableData?.company?.companyPdfHeaderUrl }}" class="img-pdfHeader" />
+            </td>
+        </tr>
+        <tr>
+            <td colspan="12">
+                <h2 class="page-title">Purchase Order</h2>
+            </td>
+        </tr>
+        <tr class="head-row">
+            <th colspan="6" class="bg-grey">
+                <label class="heading">PO Details</label>
+            </th>
+            <th colspan="6" class="bg-grey">
+                <label class="heading">Supplier Details</label>
+            </th>
+        </tr>
+        <tr>
+            <td colspan="6">
+                <p>Purchase Order No.: {{ tableData?.PONumber }}</p>
+                <p>
+                    Purchase Order Date:
+                    {{ tableData?.PODate | date : "dd-MM-YYYY" }}
+                </p>
+                <p>PurchaseOrder Reference: {{ tableData?.orderReference }}</p>
+                <p>PO Type: {{ tableData?.POType }}</p>
+                <p>Purchase Category: {{ tableData?.purchaseCategory }}</p>
+            </td>
+            <td colspan="6">
+                <p>Supplier Code: {{ tableData?.supplier?.supplierCode }}</p>
+                <p>Supplier Name: {{ tableData?.supplier?.supplierName }}</p>
+                <p>Supplier’s GSTIN: {{ tableData?.supplier?.supplierGST }}</p>
+                <p>GST Registration Type: Regular</p>
+            </td>
+        </tr>
+        <tr class="head-row">
+            <th colspan="6">
+                <label>Ship From: [Supplier’s Address]</label>
+            </th>
+            <th colspan="6">
+                <label>Ship To</label>
+            </th>
+        </tr>
+        <tr>
+            <td colspan="6">
+                <p class="fw-bold">
+                    {{ tableData?.supplier?.supplierName }}
+                </p>
+                <p>
+                    {{ tableData?.supplier?.supplierBillingAddress?.line1 }}
+                    {{ tableData?.supplier?.supplierBillingAddress?.line2 }}
+                    {{ tableData?.supplier?.supplierBillingAddress?.line3 }}
+                    {{ tableData?.supplier?.supplierBillingAddress?.state }}
+                    {{ tableData?.supplier?.supplierBillingAddress?.pinCode }}
+                </p>
+                <p>GSTIN: {{ tableData?.supplier?.supplierGST }}</p>
+
+                <p>
+                    Contact:
+                    {{ tableData?.supplier?.supplierContactMatrix?.supplierContactPersonEmail }}
+                </p>
+            </td>
+            <td colspan="6">
+                <p class="fw-bold">{{ tableData?.company?.companyName }}</p>
+                <p>
+                    {{ tableData?.company?.companyAddress?.addressLine1 }}
+                    {{ tableData?.company?.companyAddress?.addressLine2 }}
+                    {{ tableData?.company?.companyAddress?.addressLine3 }},
+                    {{ tableData?.company?.companyAddress?.city }}
+                    -
+                    {{ tableData?.company?.companyAddress?.pinCode }}
+                </p>
+                <p>
+                    {{ tableData?.company?.companyAddress?.state }},
+                    {{ tableData?.company?.companyAddress?.country }}
+                </p>
+                <p>GSTIN: {{ tableData?.company?.GSTIN }}</p>
+                <p>
+                    Contact:
+
+                    <span *ngIf="tableData?.company?.companyContactPersonNumber">
+                        {{ tableData?.company?.companyContactPersonNumber }}
+                    </span>
+                    <span *ngIf="tableData?.company?.companyContactPersonAltNum">
+                        /
+                        {{ tableData?.company?.companyContactPersonAltNum }}
+                    </span>
+                    <span *ngIf="tableData?.company?.companyContactPersonEmail">
+                        (
+                        {{ tableData?.company?.companyContactPersonEmail }}
+                        )
+                    </span>
+                </p>
+            </td>
+        </tr>
+        <tr>
+            <td colspan="12">
+                <p class="sub-text">Dear Sir/Madam,</p>
+                <p class="sub-text">
+                    Please supply following goods/material in accordance with agreed terms and conditions or contract
+                    purchase agreement.
+                </p>
+
+                <p class="sub-text">
+                    Please mention our Item code &amp; Purchase Order number on your tax invoice without which invoice
+                    will not be processed.
+                </p>
+                <p>Please send the material along with a valid Test Report.</p>
+            </td>
+        </tr>
+        <tr class="head-row text-center">
+            <th colspan="1" class="text-center">#</th>
+            <th colspan="3">Item Details</th>
+            <th colspan="1" class="text-center">UoM</th>
+            <th colspan="1" class="text-center">Quantity</th>
+            <th colspan="1" class="text-center">
+                Rate
+                {{ this.tableData?.supplier?.supplierCurrency == "INR" ? "₹" : "$" }}
+            </th>
+            <th colspan="3">
+                Pricing Structure [{{ this.tableData?.supplier?.supplierCurrency == "INR" ? "INR" : "USD" }}]
+            </th>
+            <th colspan="2" class="text-center">Delivery Date</th>
+        </tr>
+        <tr *ngFor="let p of tableData.PODetails; let i = index">
+            <td colspan="1" class="text-center">
+                <label>{{ i + 1 }}</label>
+            </td>
+            <td colspan="3">
+                <p>Item Code: {{ p?.item?.itemCode }}</p>
+                <p>{{ p?.item?.itemName }}</p>
+                <p>Item Description: {{ p?.item?.itemDescription }}</p>
+                <p>HSN Code: {{ p?.item?.hsn }}</p>
+            </td>
+            <td colspan="1" class="text-center">
+                {{ (p?.UOM ? p?.UOM : p.primaryUnit) | UOMUnitsMaster }}
+            </td>
+            <td colspan="1" class="text-center">
+                {{ p?.POQty | number : ".2-2" }}
+            </td>
+            <td colspan="1" class="text-center">
+                {{ p?.purchaseRate | number : ".2-2" }}
+            </td>
+            <td colspan="3">
+                <p>Taxable Value: {{ p?.lineValue | number : ".2-2" }}</p>
+
+                <p *ngIf="tableData?.supplierGST != tableData?.company?.GSTIN.substring(0, 2)">
+                    I-GST [{{ p?.igst }}%]:
+                    {{ p?.IGSTAmount | number : ".2-2" }}
+                </p>
+                <p *ngIf="tableData?.supplierGST == tableData?.company?.GSTIN.substring(0, 2)">
+                    S-GST [{{ p?.sgst }}%]:
+                    {{ p?.SGSTAmount | number : ".2-2" }}
+                    <br />
+                    C-GST [{{ p?.cgst }}%]:
+                    {{ p?.CGSTAmount | number : ".2-2" }}
+                </p>
+                <p>Total Line Value:{{ p?.totalLineValue | number : ".2-2" }}</p>
+            </td>
+            <td
+                *ngIf="!tableData?.POType || tableData?.POType == POTypeObj.STANDARD_PO"
+                colspan="2"
+                class="text-center"
+            >
+                {{ p?.deliveryDate | date : "dd-MM-YYYY" }}
+            </td>
+            <td *ngIf="tableData?.POType == POTypeObj.PLANNED_PO" colspan="2" class="text-center">Refer Schedule</td>
+            <td *ngIf="tableData?.POType == POTypeObj.BLANKET_PO" colspan="2" class="text-center">As per Schedule</td>
+        </tr>
+        <tr *ngIf="tableData?.otherCharges?.totalAmount > 0">
+            <td colspan="1" class="text-center">
+                <span>{{ tableData.PODetails.length + 1 }}</span>
+            </td>
+            <td colspan="3">
+                <p>
+                    Packaging And Forwarding:
+                    {{ tableData?.otherCharges?.packagingAndForwarding }}
+                </p>
+                <p>Loading And Unloading:{{ tableData?.otherCharges?.loadingAndUnloading }}</p>
+                <p>Freight: {{ tableData?.otherCharges?.freight }}</p>
+                <p>Insurance: {{ tableData?.otherCharges?.insurance }}</p>
+                <p>Miscellaneous: {{ tableData?.otherCharges?.miscellaneous }}</p>
+            </td>
+            <td colspan="1" class="text-center">-</td>
+            <td colspan="1" class="text-center">1</td>
+            <td colspan="1" class="text-center">
+                {{ tableData?.otherCharges?.totalAmount | number : ".2-2" }}
+            </td>
+            <td colspan="3">
+                <p>Taxable Value:{{ tableData?.otherCharges?.totalAmount | number : ".2-2" }}</p>
+                <p *ngIf="tableData?.supplierGST != tableData?.company?.GSTIN.substring(0, 2)">
+                    I-GST [{{ 18 }}%]:
+                    {{ tableData?.igst1 | number : ".2-2" }}
+                </p>
+                <p *ngIf="tableData?.supplierGST == tableData?.company?.GSTIN.substring(0, 2)">
+                    S-GST [{{ 9 }}%]:
+                    {{ tableData?.sgst1 | number : ".2-2" }}
+                </p>
+                <p *ngIf="tableData?.supplierGST == tableData?.company?.GSTIN.substring(0, 2)">
+                    C-GST [{{ 9 }}%]:
+                    {{ tableData?.cgst1 | number : ".2-2" }}
+                </p>
+                <p>Total Line Value:{{ tableData?.TLVForOther | number : ".2-2" }}</p>
+            </td>
+            <td colspan="2" class="text-center">-</td>
+        </tr>
+
+        <tr>
+            <td colspan="12" style="height: 5rem"></td>
+        </tr>
+        <tr>
+            <td colspan="4">
+                <p>General terms & Conditions:</p>
+                <p>▪ Mode of Transport:{{ tableData?.purchaseCategory == "Domestic" ? "By Road" : "By Sea" }}</p>
+                <p>
+                    ▪ Freight/Inco Term:
+                    {{ tableData?.supplier?.supplierINCOTerms }}
+                </p>
+                <p>
+                    ▪ Payment Terms:
+                    {{ tableData?.supplier?.supplierPaymentTerms }}
+                </p>
+            </td>
+            <td colspan="4" class="text-center">
+                <span>Total Purchase Order Value</span><br />
+                {{ tableData?.totalAmount }}.00
+            </td>
+            <td *ngIf="tableData?.company?.companySignatureUrl" colspan="4" class="text-center">
+                <img src="{{ tableData?.company?.companySignatureUrl }}" class="img-sign" />
+            </td>
+            <td *ngIf="!tableData?.company?.companySignatureUrl" colspan="4" class="text-center no-signature-set">
+                This is a computer generated document. <br />No signature is required.
+            </td>
+        </tr>
+    </table>
+
+    <app-po-schedule-print-screen
+        *ngIf="tableData.POType == POTypeObj.PLANNED_PO"
+        [tableData]="tableData"
+    ></app-po-schedule-print-screen>
+</div>
+
+<br />
+<br />
+<app-terms-conditions
+    class="page-break"
+    *ngIf="termsAndConditions == tableData?.company?.companyName"
+></app-terms-conditions>

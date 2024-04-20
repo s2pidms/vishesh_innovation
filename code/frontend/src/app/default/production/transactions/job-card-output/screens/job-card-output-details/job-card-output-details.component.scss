@@ -1,0 +1,13 @@
+.seperator-row {
+    position: relative;
+    .add-icon {
+        position: absolute;
+        left: -1.2rem;
+        top: -0.9rem;
+    }
+    .minus-icon {
+        position: absolute;
+        right: 0.1rem;
+        top: -0.9rem;
+    }
+}

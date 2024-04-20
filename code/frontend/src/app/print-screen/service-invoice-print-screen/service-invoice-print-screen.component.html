@@ -1,0 +1,504 @@
+<div class="container-fluid printScreen">
+    <div class="row">
+        <div class="col-12 text-center px-0">
+            <div *ngIf="buttonCondition == 'true'">
+                <button class="btn btn-primary mt-4" type="button" (click)="windowPrint()" *ngIf="pdfAction != 'pdf'">
+                    <img src="./assets/images/print.png" width="20px" height="14px" class="mb-2" />&nbsp;&nbsp; Print
+                </button>
+            </div>
+            <div class="container-fluid printScreen">
+                <div class="row">
+                    <div class="col-12 text-center px-0">
+                        <div class="page py-3">
+                            <div class="table-responsive shadow">
+                                <table class="table">
+                                    <tr>
+                                        <td colspan="12">
+                                            <div class="text-center">
+                                                <img
+                                                    src="{{ tableData?.company?.SOPdfHeaderUrl }}"
+                                                    class="img-pdfHeader"
+                                                />
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr class="head-row">
+                                        <td colspan="12" class="text-center">
+                                            <label class="page-title">Service Invoice</label>
+                                        </td>
+                                    </tr>
+                                    <tr class="head-row">
+                                        <th colspan="4" class="bg-grey">
+                                            <label class="heading">Buyer's Details [Bill To]</label>
+                                        </th>
+                                        <th colspan="4" class="bg-grey">
+                                            <label class="heading">Consignee Details [Ship To]</label>
+                                        </th>
+                                        <th colspan="4" class="bg-grey">
+                                            <label class="heading">Document Details</label>
+                                        </th>
+                                    </tr>
+                                    <tr>
+                                        <td colspan="4">
+                                            <p class="fw-bold">
+                                                {{ tableData?.customerName }}
+                                            </p>
+                                            <p>
+                                                {{ tableData?.customer?.customerBillingAddress[0]?.line1 }}
+                                            </p>
+                                            <p>
+                                                {{ tableData?.customer?.customerBillingAddress[0]?.line2 }}
+                                            </p>
+                                            <p>
+                                                {{ tableData?.customer?.customerBillingAddress[0]?.line3 }}
+                                            </p>
+                                            <p>
+                                                {{
+                                                    tableData?.customer?.customerBillingAddress[0]?.city
+                                                        ? tableData?.customer?.customerBillingAddress[0]?.city
+                                                        : tableData?.customer?.customerBillingAddress[0]?.district
+                                                }}, {{ tableData?.customer?.customerBillingAddress[0]?.state }},
+                                                {{ tableData?.customer?.customerBillingAddress[0]?.pinCode }},
+                                                {{ tableData?.customer?.customerBillingAddress[0]?.country }}
+                                            </p>
+
+                                            <p>GSTIN: {{ tableData?.customer?.GSTIN }}</p>
+                                        </td>
+                                        <td colspan="4">
+                                            <p class="fw-bold">
+                                                {{ tableData?.customerName }}
+                                            </p>
+                                            <p>
+                                                {{ tableData?.customer?.customerBillingAddress[0]?.line1 }}
+                                            </p>
+                                            <p>
+                                                {{ tableData?.customer?.customerBillingAddress[0]?.line2 }}
+                                            </p>
+                                            <p>
+                                                {{ tableData?.customer?.customerBillingAddress[0]?.line3 }}
+                                            </p>
+                                            <p>
+                                                {{
+                                                    tableData?.customer?.customerBillingAddress[0]?.city
+                                                        ? tableData?.customer?.customerBillingAddress[0]?.city
+                                                        : tableData?.customer?.customerBillingAddress[0]?.district
+                                                }}, {{ tableData?.customer?.customerBillingAddress[0]?.state }},
+                                                {{ tableData?.customer?.customerBillingAddress[0]?.pinCode }},
+                                                {{ tableData?.customer?.customerBillingAddress[0]?.country }}
+                                            </p>
+
+                                            <p>GSTIN: {{ tableData?.customer?.GSTIN }}</p>
+                                        </td>
+                                        <td colspan="4">
+                                            <p>
+                                                Service Invoice No.:
+                                                {{ tableData?.serviceInvoiceNumber }}
+                                            </p>
+                                            <p>
+                                                Service Invoice Date:
+                                                {{ tableData?.serviceInvoiceDate | date : "dd-MMM-yy" }}
+                                            </p>
+                                            <p>Supply Type Code: B2B</p>
+                                            <p>
+                                                Place of Supply :
+                                                {{ tableData?.customer?.customerBillingAddress[0]?.state }}
+                                                [{{ tableData?.customer?.GSTIN.slice(0, 2) }}]
+                                            </p>
+
+                                            <p>RCM Applicable: No</p>
+                                            <p>
+                                                Currency:
+                                                {{ tableData?.currency }}
+                                            </p>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td colspan="4">
+                                            <p class="sub-text">
+                                                Mobile No.:
+                                                {{ tableData?.customer?.customerContactInfo[0]?.contactPersonNumber }}
+                                            </p>
+                                            <p class="sub-text">
+                                                E-mail:
+                                                {{ tableData?.customer?.customerContactInfo[0]?.contactPersonEmail }}
+                                            </p>
+                                        </td>
+                                        <td colspan="4">
+                                            <p class="sub-text">
+                                                Mobile No.:
+                                                {{ tableData?.customer?.customerContactInfo[0]?.contactPersonNumber }}
+                                            </p>
+                                            <p class="sub-text">
+                                                E-mail:
+                                                {{ tableData?.customer?.customerContactInfo[0]?.contactPersonEmail }}
+                                            </p>
+                                        </td>
+                                        <td colspan="4">
+                                            <p class="sub-text">
+                                                <i class="fa fa-square-o fs-3 me-2 align-middle" aria-hidden="true"></i>
+                                                Original for Buyer
+                                            </p>
+                                            <p class="sub-text">
+                                                <i class="fa fa-square-o fs-3 me-2 align-middle" aria-hidden="true"></i>
+                                                Duplicate for Transporter
+                                            </p>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td colspan="12">
+                                            <div class="py-4"></div>
+                                        </td>
+                                    </tr>
+                                    <tr class="head-row text-center w-100 text-nowrap">
+                                        <th colspan="1" class="text-center">#</th>
+                                        <th colspan="3" class="text-start">Service Description</th>
+                                        <th colspan="1" class="text-center">Order Ref.</th>
+                                        <th colspan="2" class="text-center">SAC Code</th>
+                                        <th colspan="1" class="text-center">Quantity</th>
+                                        <th colspan="1" class="text-center">Rate/Unit</th>
+                                        <th colspan="1" class="text-center">Disc %</th>
+                                        <th colspan="1" class="text-center">Net Rate</th>
+                                        <th colspan="1" class="text-center">Taxable Amount</th>
+                                    </tr>
+                                    <tr class="text-wrap" *ngFor="let s of tableData?.serviceDetails; let i = index">
+                                        <td colspan="1" class="text-center">
+                                            {{ i + 1 }}
+                                        </td>
+                                        <td colspan="3" class="text-start">
+                                            {{ s?.serviceDescription }} <br />
+                                            {{ s?.additionalInfo }}
+                                        </td>
+                                        <td colspan="1" class="text-center">
+                                            {{ tableData?.PONo }}
+                                        </td>
+                                        <td colspan="2" class="text-center">
+                                            {{ s?.SACCode }}
+                                        </td>
+                                        <td colspan="1" class="text-center">
+                                            {{ s?.qty }}
+                                        </td>
+                                        <td colspan="1" class="text-center">
+                                            {{ s?.unitRate | number : ".2-2" }}
+                                        </td>
+                                        <td colspan="1" class="text-center">0</td>
+                                        <td colspan="1" class="text-center">
+                                            {{ s?.unitRate | number : ".2-2" }}
+                                        </td>
+                                        <td colspan="1" class="text-center">
+                                            {{ s?.lineValue | number : ".2-2" }}
+                                        </td>
+                                    </tr>
+                                    <tr *ngFor="let d of tableData.rowRepeat; let j = index">
+                                        <td colspan="1" class="text-center">
+                                            <p class="py-3">
+                                                {{ tableData.serviceDetails.length + j + 1 }}
+                                            </p>
+                                        </td>
+                                        <td colspan="3" class="text-center"></td>
+                                        <td colspan="1" class="text-center"></td>
+                                        <td colspan="2" class="text-center"></td>
+                                        <td colspan="1" class="text-center"></td>
+                                        <td colspan="1" class="text-center"></td>
+                                        <td colspan="1" class="text-center"></td>
+                                        <td colspan="1" class="text-center"></td>
+                                        <td colspan="1" class="text-center"></td>
+                                    </tr>
+                                    <tr>
+                                        <td colspan="12" class="py-4"></td>
+                                    </tr>
+                                    <tr class="border-btm">
+                                        <th colspan="11" class="text-end">
+                                            <p>Total Taxable Amount</p>
+                                        </th>
+                                        <th colspan="1" class="text-center">
+                                            {{ tableData?.totalValue | number : ".2-2" }}
+                                        </th>
+                                    </tr>
+
+                                    <tr>
+                                        <td colspan="12">
+                                            <div class="row justify-content-between">
+                                                <div class="col-9 h-100 p-0 pe-4">
+                                                    <h4 class="my-2">
+                                                        GST Summary | Currency {{ tableData?.currency }}
+                                                    </h4>
+                                                    <table class="table table-sm">
+                                                        <tr>
+                                                            <th class="text-center">HSN/SAC</th>
+                                                            <th class="text-center">Taxable Amt.</th>
+                                                            <th class="text-center">CGST %</th>
+                                                            <th class="text-center">CGST Amt.</th>
+                                                            <th class="text-center">SGST %</th>
+                                                            <th class="text-center">SGST Amt.</th>
+                                                            <th class="text-center">IGST %</th>
+                                                            <th class="text-center">IGST Amt.</th>
+                                                            <th class="text-center">Total Tax</th>
+                                                        </tr>
+                                                        <tr *ngFor="let s of tableData.GSTDetails">
+                                                            <td class="text-center sub-text">
+                                                                {{ s?.SACCode }}
+                                                            </td>
+                                                            <td class="text-center sub-text">
+                                                                {{
+                                                                    s?.taxableValue
+                                                                        ? (s?.taxableValue | number : ".2-2")
+                                                                        : "-"
+                                                                }}
+                                                            </td>
+
+                                                            <td class="text-center sub-text sub-text">
+                                                                {{ s?.cgstRate ? s?.cgstRate : "-" }}
+                                                            </td>
+                                                            <td class="text-center sub-text">
+                                                                {{
+                                                                    s?.cgstAmount
+                                                                        ? (s?.cgstAmount | number : ".2-2")
+                                                                        : "-"
+                                                                }}
+                                                            </td>
+
+                                                            <td class="text-center sub-text">
+                                                                {{ s?.sgstRate ? s?.sgstRate : "-" }}
+                                                            </td>
+                                                            <td class="text-center sub-text">
+                                                                {{
+                                                                    s?.sgstAmount
+                                                                        ? (s?.sgstAmount | number : ".2-2")
+                                                                        : "-"
+                                                                }}
+                                                            </td>
+
+                                                            <td class="text-center sub-text">
+                                                                {{ s?.igstRate ? s?.igstRate : "-" }}
+                                                            </td>
+                                                            <td class="text-center sub-text">
+                                                                {{
+                                                                    s?.igstAmount
+                                                                        ? (s?.igstAmount | number : ".2-2")
+                                                                        : "-"
+                                                                }}
+                                                            </td>
+
+                                                            <td class="text-center sub-text">
+                                                                {{
+                                                                    +s?.cgstAmount + +s?.sgstAmount + +s?.igstAmount
+                                                                        | number : ".2-2"
+                                                                }}
+                                                            </td>
+                                                        </tr>
+                                                        <tr *ngFor="let d of tableData.summaryRowRepeat">
+                                                            <td class="text-center">-</td>
+                                                            <td class="text-center">-</td>
+                                                            <td class="text-center">-</td>
+                                                            <td class="text-center">-</td>
+                                                            <td class="text-center">-</td>
+                                                            <td class="text-center">-</td>
+                                                            <td class="text-center">-</td>
+                                                            <td class="text-center">-</td>
+                                                            <td class="text-center">-</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td class="text-center sub-text">Total >></td>
+                                                            <td class="text-center sub-text">
+                                                                {{
+                                                                    tableData?.totalValue
+                                                                        ? (tableData?.totalValue | number : ".2-2")
+                                                                        : "-"
+                                                                }}
+                                                            </td>
+
+                                                            <td class="text-center sub-text">-</td>
+                                                            <td class="text-center sub-text">
+                                                                {{
+                                                                    tableData?.totalCGSTAmount
+                                                                        ? (tableData?.totalCGSTAmount | number : ".2-2")
+                                                                        : "-"
+                                                                }}
+                                                            </td>
+                                                            <td class="text-center sub-text">-</td>
+                                                            <td class="text-center sub-text">
+                                                                {{
+                                                                    tableData?.totalSGSTAmount
+                                                                        ? (tableData?.totalSGSTAmount | number : ".2-2")
+                                                                        : "-"
+                                                                }}
+                                                            </td>
+                                                            <td class="text-center sub-text">-</td>
+                                                            <td class="text-center sub-text">
+                                                                {{
+                                                                    tableData?.totalIGSTAmount
+                                                                        ? (tableData?.totalIGSTAmount | number : ".2-2")
+                                                                        : "-"
+                                                                }}
+                                                            </td>
+                                                            <td class="text-center sub-text">
+                                                                {{
+                                                                    +tableData?.totalCGSTAmount +
+                                                                        +tableData?.totalSGSTAmount +
+                                                                        +tableData?.totalIGSTAmount | number : ".2-2"
+                                                                }}
+                                                            </td>
+                                                        </tr>
+                                                        <tr>
+                                                            <th colspan="9" class="text-start">
+                                                                Total Tax Amount (In words):
+                                                                {{ tableData?.currency }}
+                                                                {{ tableData?.totalTaxAmount ?? 0 | toWords }}
+                                                            </th>
+                                                        </tr>
+                                                    </table>
+                                                    <div class="py-3"></div>
+                                                    <table class="table">
+                                                        <tr>
+                                                            <th>
+                                                                <b
+                                                                    >Total Invoice Amount (In words):
+                                                                    {{ tableData?.currency }}</b
+                                                                >
+                                                                {{ tableData.totalAmountWithTax ?? 0 | toWords }}
+                                                            </th>
+                                                        </tr>
+                                                    </table>
+                                                    <div class="py-2"></div>
+                                                </div>
+                                                <div class="col-3 h-100 p-0">
+                                                    <h4 class="my-2">
+                                                        Tax Invoice Summary | Currency
+                                                        {{ tableData?.currency }}
+                                                    </h4>
+                                                    <table class="table">
+                                                        <tr>
+                                                            <th>Total Taxable Amount</th>
+                                                            <th class="text-center">
+                                                                {{
+                                                                    tableData?.totalValue
+                                                                        ? (tableData?.totalValue | number : ".2-2")
+                                                                        : "-"
+                                                                }}
+                                                            </th>
+                                                        </tr>
+                                                        <tr>
+                                                            <td class="sub-text">Output S-GST</td>
+                                                            <td colspan="2" class="text-center sub-text">
+                                                                {{
+                                                                    tableData?.totalSGSTAmount
+                                                                        ? (tableData?.totalSGSTAmount | number : ".2-2")
+                                                                        : "-"
+                                                                }}
+                                                            </td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td class="sub-text">Output C-GST</td>
+                                                            <td class="text-center sub-text">
+                                                                {{
+                                                                    tableData?.totalCGSTAmount
+                                                                        ? (tableData?.totalCGSTAmount | number : ".2-2")
+                                                                        : "-"
+                                                                }}
+                                                            </td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td class="sub-text">Output I-GST</td>
+                                                            <td class="text-center sub-text">
+                                                                {{
+                                                                    tableData?.totalIGSTAmount
+                                                                        ? (tableData?.totalIGSTAmount | number : ".2-2")
+                                                                        : "-"
+                                                                }}
+                                                            </td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td class="sub-text">Rounded off [+/-]</td>
+                                                            <td class="text-center sub-text">
+                                                                {{
+                                                                    tableData?.roundedOff
+                                                                        ? (tableData?.roundedOff | number : ".2-2")
+                                                                        : "-"
+                                                                }}
+                                                            </td>
+                                                        </tr>
+                                                        <tr>
+                                                            <th>
+                                                                <b>Total Invoice Amount</b>
+                                                            </th>
+                                                            <th class="text-center">
+                                                                <b>
+                                                                    {{
+                                                                        tableData?.totalAmountWithTax | number : ".2-2"
+                                                                    }}
+                                                                </b>
+                                                            </th>
+                                                        </tr>
+                                                    </table>
+                                                    <div class="py-3"></div>
+                                                    <table class="table">
+                                                        <tr>
+                                                            <th>
+                                                                <b> Payment Terms</b>
+                                                            </th>
+                                                            <th class="text-center">
+                                                                {{ tableData?.paymentTerms }}
+                                                            </th>
+                                                        </tr>
+                                                    </table>
+                                                    <div class="py-2"></div>
+                                                </div>
+                                            </div>
+                                        </td>
+                                    </tr>
+
+                                    <tr>
+                                        <td colspan="12">
+                                            <p class="sub-text">
+                                                Declaration: We certify that the particulars given above are true and
+                                                correct and the amount indicated represents the price actually charged
+                                                and that there is no flow or additional consideration directly or
+                                                indirectly from the buyer.
+                                            </p>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td colspan="10" class="p-0">
+                                            <table class="table table-sm">
+                                                <tr>
+                                                    <td
+                                                        class="border-top-0 border-bottom-0 border-start-0 border-end-0"
+                                                    >
+                                                        <p>Bank Details:</p>
+                                                        <p>
+                                                            Beneficiary:
+                                                            {{ tableData?.company?.companyBefName }}
+                                                        </p>
+                                                        <p>
+                                                            Bank Name:
+                                                            {{ tableData?.company?.companyBankName }}
+                                                        </p>
+                                                        <p>
+                                                            Branch:
+                                                            {{ tableData?.company?.companyBankBranch }}
+                                                        </p>
+                                                        <p>
+                                                            Account No.:
+                                                            {{ tableData?.company?.companyAccountNumber }}
+                                                        </p>
+                                                        <p>
+                                                            IFS Code:
+                                                            {{ tableData?.company?.companyBankIFSCCode }}
+                                                        </p>
+                                                    </td>
+                                                </tr>
+                                            </table>
+                                        </td>
+                                        <td colspan="2" class="text-center">
+                                            <img src="{{ tableData?.company?.SOSignatureUrl }}" class="img-sign" />
+                                        </td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

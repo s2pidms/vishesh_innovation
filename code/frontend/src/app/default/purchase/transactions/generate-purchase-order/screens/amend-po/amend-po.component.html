@@ -1,0 +1,62 @@
+<div class="listCard card">
+    <div class="table-header">
+        <label class="heading">Amend PO Summary</label>
+    </div>
+    <hr class="line-border" />
+    <div class="table-responsive">
+        <app-setting-header [data]="{page,pageSize,collection,search,type: 'list'}" (dataChange)="eventHeader($event)">
+        </app-setting-header>
+        <table class="table table-bordered">
+            <thead class="bg-primary">
+                <tr class="text-white">
+                    <th sortable="PONumber" (sort)="onSort($event)">PO #</th>
+                    <th sortable="PODateS" (sort)="onSort($event)">PO Date</th>
+                    <th sortable="purchaseCategory" (sort)="onSort($event)">Purchase Category</th>
+                    <th class="text-start" sortable="supplierName" (sort)="onSort($event)">Supplier Name</th>
+                    <th sortable="currency" (sort)="onSort($event)">Currency</th>
+                    <th sortable="netPOValue" (sort)="onSort($event)">PO Value</th>
+                    <th sortable="POStatus" (sort)="onSort($event)">Status</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let u of tableData; trackBy: trackByFn; let i = index">
+                    <td>{{ u?.PONumber }}</td>
+                    <td>{{ u?.PODateS }}</td>
+                    <td>{{ u?.purchaseCategory }}</td>
+                    <td class="text-start" [style.width]="supplierName.clientWidth" #supplierName>
+                        <span class="pointer" [positionTarget]="supplierName" [ngbTooltip]="u.supplierName">
+                            {{ u.supplierName }}
+                        </span>
+                    </td>
+                    <td>{{ u?.currency }}</td>
+                    <td>{{ u?.netPOValue }}</td>
+                    <td>{{ u?.POStatus }}</td>
+                    <td>
+                        <div class="dropdown">
+                            <button class="dropbtn"></button>
+                            <div class="dropdown-content">
+                                <a
+                                    appAccessControl
+                                    [accessType]="rolePermissionActions.editAction"
+                                    href="javascript:void(0)"
+                                    [class.disable]="u?.POStatus === 'Cancelled'"
+                                    (click)="
+                                        navigateTo(
+                                            '/default/purchase/transactions/generate_purchase_order/form',
+                                            u,
+                                            'amend'
+                                        )
+                                    "
+                                >
+                                    <i class="fa fa-close fa-lg text-primary" aria-hidden="true"></i>
+                                    Edit
+                                </a>
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>

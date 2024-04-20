@@ -1,0 +1,101 @@
+<div class="row justify-content-center biometricAttendancePage">
+    <div class="col-md-8 mt-3">
+        <div [ngClass]="fileSuccessUpload ? 'card activeCard mb-4' : 'card mb-4'">
+            <div class="biometricContainer">
+                <div class="row my-2 justify-content-center">
+                    <div class="col-md-10 px-5">
+                        <div class="d-flex justify-content-between">
+                            <div class="d-flex align-items-center">
+                                Download {{ type == "InventoryCorrection" ? "Validate Inventory" : type }}.csv File
+                                Sample Template
+                            </div>
+                            <div
+                                appAccessControl
+                                [accessType]="rolePermissionActions.createAction"
+                                class="align-self-end"
+                            >
+                                <button
+                                    class="btn btn-primary px-4 btn-width"
+                                    type="button"
+                                    (click)="downloadCSVFormat()"
+                                >
+                                    Download
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div [ngClass]="fileSuccessUpload ? 'card activeCard' : 'card'">
+            <div class="biometricContainer">
+                <div class="row row-box mb-5">
+                    <div class="col-12 data-box text-center blue-text">
+                        Upload {{ type == "InventoryCorrection" ? "Validate Inventory" : type }}
+                    </div>
+                </div>
+
+                <div class="row mb-5">
+                    <div class="col-md-12">
+                        <div class="d-flex justify-content-center">
+                            <div class="me-3 align-self-end align-items-baseline">
+                                <button type="button" class="btn btn-primary px-4" (click)="fileInput.click()">
+                                    Select File
+                                </button>
+                                <input #fileInput type="file" hidden accept=".csv" (change)="fileChosen($event)" />
+                            </div>
+
+                            <div class="me-3 w-50">
+                                <div class="text-center">
+                                    <label class="text-primary mb-2">
+                                        Upload {{ type == "InventoryCorrection" ? "Validate Inventory" : type }} in
+                                        Excel format [.csv]
+                                    </label>
+                                </div>
+                                <div class="d-flex inputGroup">
+                                    <input
+                                        class="form-control iBASInput-field"
+                                        type="text"
+                                        [value]="fileName"
+                                        readonly
+                                    />
+                                    <span class="input-group-text pe-4" (click)="removeFile()">
+                                        <img
+                                            *ngIf="fileName"
+                                            class="closeIcon"
+                                            src="../../../../../assets/new_icons/remove_attachment.svg"
+                                            alt=""
+                                        />
+                                    </span>
+                                </div>
+                            </div>
+
+                            <div
+                                appAccessControl
+                                [accessType]="rolePermissionActions.createAction"
+                                class="align-self-end"
+                            >
+                                <button class="btn btn-primary px-4 btn-width" type="button" (click)="submit()">
+                                    Upload
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row mb-4 row-3" *ngIf="fileSuccessUpload">
+                    <div class="col-auto">
+                        <img
+                            class="successImg"
+                            src="../../../../../assets/new_icons/successful_icon.svg"
+                            alt="successImg"
+                        />
+                    </div>
+                    <div class="col-auto align-self-center">
+                        <span>Upload Successful</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

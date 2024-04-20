@@ -1,0 +1,72 @@
+<div class="reportTablePage">
+    <div class="table-body pb-0 shadow-none">
+        <div class="row table-header">
+            <div class="col">
+                <label class="heading">Calibration and Verification Reports</label>
+            </div>
+        </div>
+        <div class="row my-4">
+            <div class="col-3 ps-5 separate-row">
+                <label class="form-label">Equipment Category</label>
+                <ng-select
+                    [items]="equipmentType"
+                    bindLabel="parameterLabel"
+                    bindValue="parameterName"
+                    [clearable]="false"
+                    [(ngModel)]="equipmentCategory"
+                >
+                </ng-select>
+                <span class="set-position">
+                    <img src="./assets/new_icons/redstroke.svg" alt="" height="27" width="8" />
+                </span>
+            </div>
+            <div class="col-3">
+                <label class="form-label"> From Date <span class="text-danger">*</span> </label>
+                <input class="form-control" type="date" [(ngModel)]="fromDate" />
+            </div>
+
+            <div class="col-3">
+                <label class="form-label"> To Date <span class="text-danger">*</span> </label>
+                <input class="form-control" type="date" [(ngModel)]="toDate" />
+            </div>
+            <div class="col-3 align-self-end separate-image pe-4">
+                <span class="image-position">
+                    <img src="./assets/new_icons/redstroke.svg" alt="" height="27" width="8" />
+                </span>
+                <button type="button" class="btn btn-primary px-4 me-3" (click)="getAll()">Apply Filter</button>
+                <button type="button" class="btn btn-primary px-4 ms-4" (click)="reset()">Reset Filter</button>
+            </div>
+        </div>
+
+        <hr class="row line-border" />
+
+        <div class="table-responsive mb-0">
+            <app-setting-header
+                [data]="{page,pageSize,collection,search,type: 'list',pdfDisplay:true}"
+                (dataChange)="eventHeader($event)"
+            >
+            </app-setting-header>
+            <table class="table table-bordered table-sticky">
+                <thead class="bg-primary">
+                    <tr class="text-white">
+                        <th sortable="equipmentCode" (sort)="onSort($event)">Equipment Code</th>
+                        <th class="text-start" sortable="equipmentName" (sort)="onSort($event)">Equipment Name</th>
+                        <th sortable="equipmentType" (sort)="onSort($event)">Equipment Category</th>
+                        <th sortable="calibrationDate" (sort)="onSort($event)">Calibration Date</th>
+                        <th sortable="calibrationAgency" (sort)="onSort($event)">Calibration Agency</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    <tr *ngFor="let u of tableData">
+                        <td>{{ u?.equipmentCode }}</td>
+                        <td class="text-start">{{ u?.equipmentName }}</td>
+                        <td>{{ u?.equipmentType }}</td>
+                        <td>{{ u?.calibrationDate }}</td>
+                        <td>{{ u?.calibrationAgency }}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

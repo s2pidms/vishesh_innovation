@@ -1,0 +1,117 @@
+<div class="reportTablePage">
+    <div class="table-body pb-0 shadow-none">
+        <div class="row table-header">
+            <div class="col">
+                <label class="heading">Sample Request - Report</label>
+            </div>
+        </div>
+        <div class="row my-4">
+            <!-- <div class="col-3">
+                <label class="form-label"> As on Date <span class="text-danger"></span> </label>
+                <input class="form-control" type="date" [(ngModel)]="toDate" />
+            </div> -->
+            <div class="col-3">
+                <label class="form-label"> From Date <span class="text-danger">*</span> </label>
+                <input class="form-control" type="date" [(ngModel)]="fromDate" />
+            </div>
+            <div class="col-3">
+                <label class="form-label"> To Date <span class="text-danger">*</span> </label>
+                <input class="form-control" type="date" [(ngModel)]="toDate" />
+            </div>
+
+            <div class="col-3 align-self-end separate-image">
+                <span class="image-position">
+                    <img src="./assets/new_icons/redstroke.svg" alt="" height="27" width="8" />
+                </span>
+                <button type="button" class="btn btn-primary px-4 me-3" (click)="getAll()">Apply Filter</button>
+
+                <button type="button" class="btn btn-primary px-4 ms-4" (click)="reset()">Reset Filter</button>
+            </div>
+        </div>
+        <hr class="row line-border" />
+        <div class="table-responsive mb-0">
+            <app-setting-header
+                [data]="{page,pageSize,collection,search,type: 'list',pdfDisplay : true}"
+                (dataChange)="eventHeader($event)"
+            >
+            </app-setting-header>
+            <table class="table table-bordered table-sticky">
+                <thead class="bg-primary">
+                    <tr class="text-white">
+                        <th sortable="SONumber" (sort)="onSort($event)">SR No.</th>
+                        <th sortable="SODate" (sort)="onSort($event)">SR Date</th>
+                        <th sortable="SKUNo" (sort)="onSort($event)">SKU Code</th>
+                        <th class="text-start" sortable="SKUName" (sort)="onSort($event)">
+                            {{ "SKU Name" | labelTranslate }}
+                        </th>
+                        <th class="text-start" sortable="SKUDescription" (sort)="onSort($event)">
+                            {{ "SKU Description" | labelTranslate }}
+                        </th>
+                        <th sortable="customerPartNo" (sort)="onSort($event)">Part No.</th>
+                        <th sortable="UOM" (sort)="onSort($event)">UoM</th>
+                        <th sortable="quantity" (sort)="onSort($event)">SR Qty</th>
+                        <th sortable="currency" (sort)="onSort($event)">Ccy</th>
+                        <th sortable="netRate" (sort)="onSort($event)">Net Rate</th>
+                        <th sortable="lineValue" (sort)="onSort($event)">Line Value</th>
+                        <th class="text-start" sortable="customerName" (sort)="onSort($event)">Cust. Nick Name</th>
+                        <th sortable="scheduleNo" (sort)="onSort($event)">D/S</th>
+                        <th sortable="dispatchDate" (sort)="onSort($event)">Disp. Date</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let u of tableData; trackBy: trackByFn">
+                        <td>{{ u?.SONumber }}</td>
+                        <td>{{ u?.SODate }}</td>
+                        <td>{{ u?.SKUNo }}</td>
+                        <td class="text-start" [style.width]="SKUName.clientWidth" #SKUName>
+                            <span class="pointer" [positionTarget]="SKUName" [ngbTooltip]="u.SKUName">
+                                {{ u.SKUName }}
+                            </span>
+                        </td>
+                        <td class="text-start" [style.width]="SKUDescription.clientWidth" #SKUDescription>
+                            <span class="pointer" [positionTarget]="SKUDescription" [ngbTooltip]="u.SKUDescription">
+                                {{ u.SKUDescription }}
+                            </span>
+                        </td>
+                        <td>{{ u?.customerPartNo }}</td>
+                        <td>{{ u?.UOM }}</td>
+                        <td>{{ u?.quantity }}</td>
+                        <td>{{ u?.currency }}</td>
+                        <td>{{ u?.netRate | number : "1.2-2" }}</td>
+                        <td>{{ u?.lineValue | number : "1.2-2" }}</td>
+                        <td class="text-start" [style.width]="customerName.clientWidth" #customerName>
+                            <span class="pointer" [positionTarget]="customerName" [ngbTooltip]="u.customerName">
+                                {{ u.customerName }}
+                            </span>
+                        </td>
+                        <td>{{ u?.scheduleNo }}</td>
+                        <td>{{ u?.dispatchDate }}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="table-footer">
+            <hr class="row line-border" />
+            <div class="row align-items-center mt-3">
+                <div class="col-3 pe-0">
+                    <div class="d-flex justify-content-center">
+                        <div class="col-form-label text-nowrap pe-1 pt-0 ms-3">
+                            SR Value <i class="fa fa-caret-right fs-4 mx-2"></i>
+                            <button type="button" class="btn btn-info py-1 ms-2">{{ "INR" | companyCurrency }}</button>
+                        </div>
+                        <input [value]="SOValue | number : '1.2-2'" class="form-control" type="text" readonly />
+                    </div>
+                </div>
+                <div
+                    [ngClass]="
+                        [reportNameObj.aodForecastBySKUName].includes(reportName)
+                            ? 'col-6 text-end pe-5 text-black-50'
+                            : 'col-9 text-end pe-5 text-black-50'
+                    "
+                >
+                    {{ reportQMSName }}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

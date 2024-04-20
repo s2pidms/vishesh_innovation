@@ -1,0 +1,171 @@
+<div class="listCard card">
+    <div class="table-header">
+        <label class="heading">NPD Summary</label>
+    </div>
+
+    <div appAccessControl [accessType]="rolePermissionActions.createAction" class="text-center">
+        <button class="btn btn-primary btn-add" type="button" (click)="navigateTo('../form', null, 'create')">
+            <i class="fa fa-plus-square fa-lg me-2" aria-hidden="true"></i>
+            Start NPD Review
+        </button>
+    </div>
+    <hr class="line-border" />
+    <div class="table-responsive">
+        <app-setting-header [data]="{page,pageSize,collection,search,type: 'list'}" (dataChange)="eventHeader($event)">
+        </app-setting-header>
+        <table class="table table-bordered">
+            <thead class="bg-primary">
+                <tr class="text-white">
+                    <th sortable="NPDNo" (sort)="onSort($event)">NPD No.</th>
+                    <th sortable="NPDDate" (sort)="onSort($event)">NPD Date</th>
+                    <th class="text-start" sortable="projectName" (sort)="onSort($event)">Project Name</th>
+                    <th class="text-start" sortable="name" (sort)="onSort($event)">Customer/Prospect Name</th>
+                    <th sortable="productCategory" (sort)="onSort($event)">Product Code</th>
+
+                    <th sortable="expectedDeliveryDate" (sort)="onSort($event)">EDD</th>
+                    <th class="text-center" sortable="customerInputs" (sort)="onSort($event)">Inputs</th>
+                    <th class="text-center" sortable="technicalReview" (sort)="onSort($event)">T</th>
+                    <th class="text-center" sortable="economicReview" (sort)="onSort($event)">E</th>
+                    <th class="text-center" sortable="operationalReview" (sort)="onSort($event)">L</th>
+                    <th class="text-center" sortable="schedulingReview" (sort)="onSort($event)">O</th>
+                    <th class="text-center" sortable="status" (sort)="onSort($event)">S</th>
+                    <th class="text-center" sortable="status" (sort)="onSort($event)">Status</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let u of tableData; trackBy: trackByFn">
+                    <td>{{ u?.NPDNo }}</td>
+                    <td>{{ u?.NPDDate }}</td>
+                    <td class="text-start" [style.width]="projectName.clientWidth" #projectName>
+                        <span class="pointer" [ngbTooltip]="u.projectName" [positionTarget]="projectName">
+                            {{ u.projectName }}
+                        </span>
+                    </td>
+                    <td class="text-start" [style.width]="name.clientWidth" #name>
+                        <span class="pointer" [ngbTooltip]="u.name" [positionTarget]="name">
+                            {{ u.name }}
+                        </span>
+                    </td>
+                    <td [style.width]="productCategory.clientWidth" #productCategory>
+                        <span class="pointer" [ngbTooltip]="u.productCategory" [positionTarget]="productCategory">
+                            {{ u.productCategory }}
+                        </span>
+                    </td>
+                    <td>{{ u?.expectedDeliveryDate }}</td>
+                    <td>
+                        <span class="d-flex justify-content-center">
+                            <div *ngIf="u.customerInputs?.status == 'Feasible'" class="statusActive"></div>
+                            <div *ngIf="u?.customerInputs?.status == 'Not Feasible'" class="statusInActive"></div>
+                            <div
+                                *ngIf="u?.customerInputs?.status == 'Additional Review Required'"
+                                class="statusYellow"
+                            ></div>
+                        </span>
+                    </td>
+                    <td>
+                        <span class="d-flex justify-content-center">
+                            <div *ngIf="u?.technicalReview?.status == 'Feasible'" class="statusActive"></div>
+                            <div *ngIf="u?.technicalReview?.status == 'Not Feasible'" class="statusInActive"></div>
+                            <div
+                                *ngIf="u.technicalReview?.status == 'Additional Review Required'"
+                                class="statusYellow"
+                            ></div>
+                        </span>
+                    </td>
+                    <td>
+                        <span class="d-flex justify-content-center">
+                            <div *ngIf="u.economicReview?.status == 'Feasible'" class="statusActive"></div>
+                            <div *ngIf="u.economicReview?.status == 'Not Feasible'" class="statusInActive"></div>
+                            <div
+                                *ngIf="u.economicReview?.status == 'Additional Review Required'"
+                                class="statusYellow"
+                            ></div>
+                        </span>
+                    </td>
+                    <td>
+                        <span class="d-flex justify-content-center">
+                            <div *ngIf="u.legalReview?.status == 'Feasible'" class="statusActive"></div>
+                            <div *ngIf="u.legalReview?.status == 'Not Feasible'" class="statusInActive"></div>
+                            <div
+                                *ngIf="u.legalReview?.status == 'Additional Review Required'"
+                                class="statusYellow"
+                            ></div>
+                        </span>
+                    </td>
+                    <td>
+                        <span class="d-flex justify-content-center">
+                            <div *ngIf="u.operationalReview?.status == 'Feasible'" class="statusActive"></div>
+                            <div *ngIf="u?.operationalReview?.status == 'Not Feasible'" class="statusInActive"></div>
+                            <div
+                                *ngIf="u?.operationalReview?.status == 'Additional Review Required'"
+                                class="statusYellow"
+                            ></div>
+                        </span>
+                    </td>
+                    <td>
+                        <span class="d-flex justify-content-center">
+                            <div *ngIf="u.schedulingReview?.status == 'Feasible'" class="statusActive"></div>
+                            <div *ngIf="u.schedulingReview?.status == 'Not Feasible'" class="statusInActive"></div>
+                            <div
+                                *ngIf="u.schedulingReview?.status == 'Additional Review Required'"
+                                class="statusYellow"
+                            ></div>
+                        </span>
+                    </td>
+                    <td>
+                        <span class="d-flex justify-content-center">
+                            <div *ngIf="u?.status == 'Feasible'" class="statusActive"></div>
+                            <div *ngIf="u?.status == 'Not Feasible'" class="statusInActive"></div>
+                            <div *ngIf="u?.status == 'Need Addl. Review'" class="statusYellow"></div>
+                        </span>
+                    </td>
+                    <td>
+                        <div class="dropdown">
+                            <button class="dropbtn"></button>
+                            <div class="dropdown-content">
+                                <a
+                                    appAccessControl
+                                    [accessType]="rolePermissionActions.viewAction"
+                                    href="javascript:void(0)"
+                                    (click)="navigateTo('../form', u, 'view')"
+                                >
+                                    <i class="fa fa-eye fa-lg me-2 text-primary" aria-hidden="true"></i>
+                                    View
+                                </a>
+                                <a
+                                    appAccessControl
+                                    [accessType]="rolePermissionActions.editAction"
+                                    href="javascript:void(0)"
+                                    (click)="navigateTo('../form', u, 'edit')"
+                                >
+                                    <i class="fa fa-pencil-square-o fa-lg me-2 text-primary" aria-hidden="true"></i>
+                                    Edit
+                                </a>
+                                <a
+                                    appAccessControl
+                                    [accessType]="rolePermissionActions.generateReportAction"
+                                    href="javascript:void(0)"
+                                    [class.disable]="
+                                        !u.customerInputs?.status ||
+                                        !u.technicalReview?.status ||
+                                        !u.economicReview?.status ||
+                                        !u.legalReview?.status ||
+                                        !u.operationalReview?.status ||
+                                        !u.schedulingReview?.status ||
+                                        !['Not Feasible', 'Feasible'].includes(u.status)
+                                    "
+                                    (click)="update(u, true)"
+                                >
+                                    <img src="./assets/images/new.svg" width="14" class="me-3" />
+
+                                    Generate Report
+                                </a>
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>

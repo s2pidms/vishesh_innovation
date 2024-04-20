@@ -1,0 +1,85 @@
+<div style="min-height: 32rem" class="modelPage">
+    <div class="modal-header">
+        <div class="heading">Dispatch Details</div>
+        <div>
+            <button type="button" class="btn btn-cross btn-sm" aria-label="Close" (click)="activeModal.dismiss()">
+                <i class="fa fa-times-circle" aria-hidden="true"></i>
+            </button>
+        </div>
+    </div>
+
+    <div class="modal-body">
+        <form [formGroup]="form">
+            <div class="row my-4">
+                <div class="col">
+                    <label class="form-label"> Transporter<span class="text-danger">*</span> </label>
+                    <select class="form-select" formControlName="transporter">
+                        <option [value]="null" selected disabled>Select Transporter</option>
+                        <option [value]="f.value" *ngFor="let f of data.transporterArr">
+                            {{ f.label }}
+                        </option>
+                    </select>
+                </div>
+                <div class="col">
+                    <label class="form-label"> Mode of Transport <span class="text-danger">*</span> </label>
+                    <select class="form-select" formControlName="modeOfTransport">
+                        <option [value]="null" selected disabled>Select</option>
+                        <option [value]="f.value" *ngFor="let f of data.modeOfTransport">
+                            {{ f.label }}
+                        </option>
+                    </select>
+                </div>
+
+                <div class="col">
+                    <label class="form-label"> Freight Charges<span class="text-danger">*</span> </label>
+                    <input type="text" class="form-control" formControlName="frightCharge" (input)="setPercentage()" />
+                </div>
+
+                <div class="col">
+                    <div class="form-label">Freight Terms<span class="text-danger">* </span></div>
+                    <select class="form-select" formControlName="frightTerms">
+                        <option [value]="null" selected disabled>Select</option>
+                        <option [value]="f.parameterName" *ngFor="let f of data.freightTerms">
+                            {{ f.parameterLabel }}
+                        </option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="row my-4">
+                <div class="col">
+                    <label class="form-label"> Delivery Type<span class="text-danger">*</span> </label>
+                    <select class="form-select" formControlName="deliveryType">
+                        <option [value]="null" selected disabled>Select Delivery Type</option>
+                        <option [value]="f.value" *ngFor="let f of data.deliveryTypeArr">
+                            {{ f.label }}
+                        </option>
+                    </select>
+                </div>
+                <div class="col">
+                    <label class="form-label"> Docket/LR # <span class="text-danger"></span> </label>
+                    <input type="text" class="form-control" formControlName="docketLR" />
+                </div>
+
+                <div class="col">
+                    <label class="form-label"> Docket/LR Date<span class="text-danger"></span> </label>
+                    <input type="date" class="form-control" formControlName="docketLRDate" />
+                </div>
+
+                <div class="col">
+                    <div class="form-label">Freight %<span class="text-danger"></span></div>
+                    <input type="text" class="form-control" formControlName="freight" readonly />
+                </div>
+            </div>
+
+            <div class="row justify-content-center" *ngIf="['create', 'edit'].includes(action)">
+                <div class="col-1 d-flex justify-content-center my-5">
+                    <button (click)="reset()" type="button" class="btn btn-primary px-4">Reset</button>
+                </div>
+                <div class="col-1 d-flex justify-content-center my-5">
+                    <button (click)="saveDispatchDetails()" type="button" class="btn btn-primary px-4">Save</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>

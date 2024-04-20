@@ -1,0 +1,93 @@
+<div class="table-responsive">
+    <app-setting-header
+        [data]="{page,pageSize,collection,search, excelDisplay : 'none'}"
+        (dataChange)="eventHeader($event)"
+    >
+    </app-setting-header>
+
+    <table class="table table-bordered mt-0 table-sm">
+        <thead class="bg-info">
+            <tr class="text-white">
+                <th *ngFor="let item of tableHead" [class]="item.class" [sortable]="item.value" (sort)="onSort($event)">
+                    {{ item.label }}
+                </th>
+            </tr>
+        </thead>
+
+        <tbody>
+            <tr
+                *ngFor="
+                    let u of DSKUDetailsOfJC
+                        | searchFi1ter : search
+                        | slice : (page - 1) * pageSize : (page - 1) * pageSize + pageSize;
+                    trackBy: trackByFn
+                "
+            >
+                <td>{{ u?.NPDNo }}</td>
+                <td>
+                    {{ u?.NPDDate ? (u?.NPDDate | date : "dd-MM-YYYY") : null }}
+                </td>
+                <td>
+                    <div class="box">
+                        <div [style.background-color]="u?.code"></div>
+                    </div>
+                    <!-- {{ u?.code }} -->
+                </td>
+                <td>
+                    <span class="pointer" [ngbTooltip]="u.DSKUNo">
+                        {{ u?.DSKUNo }}
+                    </span>
+                </td>
+                <td class="text-start" [style.width]="DSKUName.clientWidth" #DSKUName>
+                    <span class="pointer" [ngbTooltip]="u.DSKUName" [positionTarget]="DSKUName">
+                        {{ u?.DSKUName }}
+                    </span>
+                </td>
+                <td class="text-start" [style.width]="DSKUDescription.clientWidth" #DSKUDescription>
+                    <span class="pointer" [ngbTooltip]="u.DSKUDescription" [positionTarget]="DSKUDescription">
+                        {{ u?.DSKUDescription }}
+                    </span>
+                </td>
+                <td #internalPartNo>
+                    <span
+                        class="d-flex justify-content-center pointer"
+                        [ngbTooltip]="u.internalPartNo"
+                        [positionTarget]="internalPartNo"
+                    >
+                        <div (click)="openDrawing(u.drawing)" class="drawingIcon"></div>
+                    </span>
+                </td>
+                <td>
+                    {{ u?.UOM }}
+                </td>
+                <td>{{ u?.balQty | number : "1.2-2" }}</td>
+                <td>
+                    <span class="d-flex justify-content-center pointer">
+                        <div class="FGMip opacity-50"></div>
+                    </span>
+                </td>
+                <td>
+                    <div class="d-flex justify-content-center">
+                        <span *ngIf="['approve', 'reject', 'view', 'generate', 'cancel'].includes(action)">
+                            {{ u?.batchQty | number : "1.2-2" }}
+                        </span>
+                        <input
+                            type="number"
+                            class="form-control form-control-xs w-25"
+                            *ngIf="!['approve', 'reject', 'view', 'generate', 'cancel'].includes(action)"
+                            [(ngModel)]="u.batchQty"
+                            [ngModelOptions]="{standalone: true}"
+                            (input)="setBatchQty(u)"
+                            [disabled]="selectDSKU && selectDSKU != u.DSKUNo"
+                        />
+                    </div>
+                </td>
+                <td>
+                    <span class="d-flex justify-content-center pointer">
+                        <div class="assetCalendarTD opacity-50"></div>
+                    </span>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>

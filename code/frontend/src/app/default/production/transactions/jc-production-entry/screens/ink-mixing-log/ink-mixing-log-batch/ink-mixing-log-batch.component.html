@@ -1,0 +1,167 @@
+<div class="modelPage">
+    <div class="modal-header">
+        <div class="heading">Ink Mixing Log (Entry)</div>
+        <div>
+            <button type="button" class="btn btn-cross btn-sm" aria-label="Close" (click)="this.activeModal.close()">
+                <i class="fa fa-times-circle" aria-hidden="true"></i>
+            </button>
+        </div>
+    </div>
+
+    <div class="container-fluid mt-4">
+        <div class="row mb-2 px-4">
+            <div class="col-7">
+                <div class="row">
+                    <div class="col-3">
+                        <label class="form-label mb-0"> F20 Ink Code </label>
+                        <input class="form-control" type="text" readonly [(ngModel)]="inkLogNewBatch.colourCode" />
+                    </div>
+                    <div class="col-5 ps-2">
+                        <label class="form-label mb-0"> F20 Ink Name</label>
+                        <input class="form-control" type="text" readonly [(ngModel)]="inkLogNewBatch.colourName" />
+                    </div>
+                    <div class="col-4 px-2">
+                        <label class="form-label mb-0"> F20 Ink Description </label>
+                        <input
+                            class="form-control"
+                            type="text"
+                            readonly
+                            [(ngModel)]="inkLogNewBatch.colourDescription"
+                        />
+                    </div>
+                </div>
+            </div>
+            <div class="col-5">
+                <div class="row">
+                    <div class="col-6">
+                        <div class="row">
+                            <div class="col-5">
+                                <label class="form-label mb-0"> UoM </label>
+                                <input class="form-control" type="text" readonly [(ngModel)]="inkLogNewBatch.UOM" />
+                            </div>
+                            <div class="col-7 ps-2">
+                                <label class="form-label mb-0"> M/Batch Total </label>
+                                <input
+                                    class="form-control bg-magenta-black"
+                                    type="number"
+                                    readonly
+                                    [(ngModel)]="inkLogNewBatch.BOMQty"
+                                />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-6">
+                        <div class="row">
+                            <div class="col-5 ps-2">
+                                <label class="form-label mb-0"> *MF </label>
+                                <!-- <input
+                                    class="form-control"
+                                    type="number"
+                                    (ngModelChange)="changeTotalBatchQty()"
+                                    [(ngModel)]="inkLogNewBatch.MF"
+                                /> -->
+                                <input
+                                    class="form-control form-control-sm"
+                                    type="number"
+                                    [(ngModel)]="inkLogNewBatch.MF"
+                                    (ngModelChange)="changeTotalBatchQty()"
+                                    [ngModelOptions]="{standalone: true}"
+                                />
+                            </div>
+                            <div class="col-7 ps-2">
+                                <label class="form-label mb-0"> Batch Qty </label>
+                                <input
+                                    class="form-control bg-pink-color"
+                                    type="number"
+                                    readonly
+                                    [(ngModel)]="inkLogNewBatch.inkBatchQty"
+                                />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row mt-4">
+            <div class="col px-0">
+                <hr class="line-border mb-0" />
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-12 px-5">
+                <app-setting-header
+                    [data]="{page,pageSize,collection,search, excelDisplay : 'none'}"
+                    (dataChange)="eventHeader($event)"
+                >
+                </app-setting-header>
+                <div class="table-responsive" style="min-height: 19.2rem">
+                    <table class="table table-bordered table-sticky mt-1">
+                        <thead class="bg-primary">
+                            <tr class="text-white">
+                                <th sortable="seq" (sort)="onSort($event)">SN</th>
+                                <th sortable="specificationCode" (sort)="onSort($event)">Item Code</th>
+                                <th class="text-start" sortable="characteristic" (sort)="onSort($event)">Item Name</th>
+                                <th class="text-start" sortable="characteristic" (sort)="onSort($event)">
+                                    Item Description
+                                </th>
+                                <th sortable="testStandard" (sort)="onSort($event)">Quantity</th>
+                                <th sortable="UOM" (sort)="onSort($event)">UoM</th>
+                                <th sortable="measuringInstrument" (sort)="onSort($event)">*MF</th>
+                                <th sortable="LTL" (sort)="onSort($event)">Quantity</th>
+                                <th sortable="specValue" (sort)="onSort($event)">UoM</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr
+                                *ngFor="
+                                    let g of inkLogNewBatch.newBatch
+                                        | searchFi1ter : search
+                                        | slice : (page - 1) * pageSize : (page - 1) * pageSize + pageSize;
+                                    trackBy: trackByFn
+                                "
+                            >
+                                <td>{{ g?.SN }}</td>
+                                <td>
+                                    {{ g?.itemCode }}
+                                </td>
+                                <td>{{ g?.itemName }}</td>
+                                <td>{{ g?.itemDescription }}</td>
+                                <td class="bg-magenta-black">{{ g?.quantity1 }}</td>
+                                <td>{{ g?.UOM1 }}</td>
+                                <td>
+                                    <div class="d-flex justify-content-center">
+                                        <input
+                                            class="form-control form-control-sm"
+                                            type="number"
+                                            [(ngModel)]="g.MF"
+                                            (ngModelChange)="changeBatchQty(g)"
+                                            [ngModelOptions]="{standalone: true}"
+                                        />
+                                    </div>
+                                </td>
+
+                                <td class="bg-pink-color">{{ g?.quantity2 }}</td>
+                                <td>{{ g?.UOM2 }}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <div class="row mt-4">
+            <div class="col px-0">
+                <hr class="line-border mt-0" />
+            </div>
+        </div>
+        <div class="row px-4 mb-3">
+            <div class="col-4">
+                <button class="plusIconSvg btn btn-primary me-1"></button>
+                <button class="btn btn-primary px-3 me-4" type="button" (click)="openLogEntryModal()">Log Entry</button>
+            </div>
+            <div class="col-8 d-flex justify-content-end">
+                <button type="button" class="btn btn-primary px-5 me-4" (click)="reset()">Reset</button>
+                <button type="button" class="btn btn-primary px-4" (click)="dismissModel()">Save & close</button>
+            </div>
+        </div>
+    </div>
+</div>

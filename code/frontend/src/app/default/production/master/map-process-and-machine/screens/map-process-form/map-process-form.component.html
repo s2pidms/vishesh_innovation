@@ -1,0 +1,182 @@
+<form [formGroup]="form" class="formCard card">
+    <div class="container">
+        <div class="row form-header">
+            <div class="col heading">
+                <label class="">Map Process and Machine ({{ action | titlecase }})</label>
+            </div>
+        </div>
+        <div class="form-body">
+            <div class="row">
+                <div class="col-3">
+                    <label class="form-label mb-0"> Map Code <span class="text-danger">*</span> </label>
+                    <input class="form-control" type="text" formControlName="mapCode" readonly />
+                </div>
+                <div class="col-3">
+                    <label class="form-label"> Process Code <span class="text-danger">*</span> </label>
+                    <ng-select
+                        [items]="masterData.processOptions"
+                        bindLabel="processCode"
+                        bindValue="processCode"
+                        [clearable]="false"
+                        formControlName="processCode"
+                        (change)="setProcessId($event)"
+                    >
+                    </ng-select>
+                </div>
+                <div class="col-3">
+                    <label class="form-label"> Process Name <span class="text-danger">*</span> </label>
+                    <ng-select
+                        [items]="masterData.processOptions"
+                        bindLabel="processName"
+                        bindValue="processName"
+                        [clearable]="false"
+                        formControlName="processName"
+                        (change)="setProcessId($event)"
+                    >
+                    </ng-select>
+                </div>
+                <div class="col-3">
+                    <label class="form-label">Status<span class="text-danger"> *</span></label>
+                    <select class="form-select" formControlName="status">
+                        <option [value]="null" selected disabled>Select Status</option>
+                        <option value="Active">Active</option>
+                        <option value="Inactive">Inactive</option>
+                    </select>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-3" formGroupName="machineDetails">
+                    <label class="form-label">
+                        Machine Code
+                        <span class="text-danger">*</span>
+                    </label>
+                    <ng-select
+                        [items]="masterData.machineOptions"
+                        bindLabel="assetCode"
+                        bindValue="assetCode"
+                        [clearable]="false"
+                        formControlName="machineCode"
+                        (change)="setMachineId($event)"
+                    >
+                    </ng-select>
+                </div>
+                <div class="col-3" formGroupName="machineDetails">
+                    <label class="form-label">
+                        Machine Name
+                        <span class="text-danger">*</span>
+                    </label>
+                    <ng-select
+                        [items]="masterData.machineOptions"
+                        bindLabel="assetName"
+                        bindValue="assetName"
+                        [clearable]="false"
+                        formControlName="machineName"
+                        (change)="setMachineId($event)"
+                    >
+                    </ng-select>
+                </div>
+                <div class="col-3" formGroupName="machineDetails">
+                    <label class="form-label mb-0"> Machine Description <span class="text-danger">*</span> </label>
+                    <input class="form-control" type="text" formControlName="machineDescription" readonly />
+                </div>
+                <div class="col-2" formGroupName="machineDetails">
+                    <label class="form-label mb-0"> Machine Type <span class="text-danger">*</span> </label>
+                    <input class="form-control" type="text" formControlName="machineType" readonly />
+                </div>
+                <div class="col-1 d-flex align-items-end justify-content-end ps-0">
+                    <button [disabled]="action == 'view'" class="btn btn-primary" (click)="addMachineDetails()">
+                        (+) Add
+                    </button>
+                </div>
+            </div>
+        </div>
+        <hr class="row line-border" />
+        <div class="">
+            <app-setting-header
+                [data]="{page,pageSize,collection,search, excelDisplay : 'none'}"
+                (dataChange)="eventHeader($event)"
+            >
+            </app-setting-header>
+        </div>
+
+        <div class="table-responsive mt-0 text-wrap" style="min-height: 18rem">
+            <table class="table table-bordered mt-0 table-sm">
+                <thead class="bg-info">
+                    <tr class="text-white">
+                        <th>#</th>
+
+                        <th sortable="machineCode" (sort)="onSort($event)">Machine Code</th>
+                        <th class="text-start" sortable="machineName" (sort)="onSort($event)">Machine Name</th>
+                        <th class="text-start" sortable="machineDescription" (sort)="onSort($event)">
+                            Machine Description
+                        </th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    <tr
+                        *ngFor="
+                            let u of machineDetailsArr
+                                | searchFi1ter : search
+                                | slice : (page - 1) * pageSize : (page - 1) * pageSize + pageSize;
+                            trackBy: trackByFn;
+                            let i = index
+                        "
+                    >
+                        <td>{{ 1 + i + (page - 1) * pageSize }}</td>
+                        <td>
+                            {{ u?.machineCode }}
+                        </td>
+                        <td class="text-start" [style.width]="machineName.clientWidth" #machineName>
+                            <span class="pointer" [positionTarget]="machineName" [ngbTooltip]="u.machineName">
+                                {{ u?.machineName }}
+                            </span>
+                        </td>
+                        <td class="text-start" [style.width]="machineDescription.clientWidth" #machineDescription>
+                            <span
+                                class="pointer"
+                                [positionTarget]="machineDescription"
+                                [ngbTooltip]="u.machineDescription"
+                            >
+                                {{ u?.machineDescription }}
+                            </span>
+                        </td>
+                        <td>
+                            <div class="dropdown">
+                                <button class="dropbtn"></button>
+                                <div class="dropdown-content">
+                                    <a
+                                        [class.disable]="this.action == 'view'"
+                                        href="javascript:void(0)"
+                                        (click)="patchItem(u, i, 'edit')"
+                                    >
+                                        <i class="fa fa-pencil-square-o fa-lg me-2 text-primary" aria-hidden="true"></i>
+                                        Edit
+                                    </a>
+                                    <a
+                                        [class.disable]="this.action == 'view'"
+                                        href="javascript:void(0)"
+                                        (click)="deleteItem(i)"
+                                    >
+                                        <i class="fa fa-trash fa-lg me-2 text-primary" aria-hidden="true"></i>
+                                        Delete
+                                    </a>
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <hr *ngIf="!['view'].includes(action)" class="row line-border" />
+        <div class="row align-items-center mt-3">
+            <div class="col-12 text-center">
+                <div *ngIf="!['view'].includes(action)" class="d-grid gap-2 d-md-block">
+                    <button class="btn btn-primary px-5 me-4" type="button" (click)="reset()">Reset</button>
+                    <button type="button" class="btn btn-primary px-5" (click)="submit()">Save</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>

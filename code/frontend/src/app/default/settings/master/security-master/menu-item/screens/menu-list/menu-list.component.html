@@ -1,0 +1,75 @@
+<div class="listCard card">
+    <div class="table-header">
+        <label class="heading">Menu Item Summary</label>
+    </div>
+    <div style="min-height: 40.5rem" class="table-responsive">
+        <app-setting-header
+            [data]="{page,pageSize,collection,search,type: 'list', excelDisplay : 'none'}"
+            (dataChange)="eventHeader($event)"
+        >
+        </app-setting-header>
+
+        <table class="table table-bordered">
+            <thead class="bg-primary">
+                <tr class="text-white">
+                    <th sortable="menuOrder" (sort)="onSort($event)">Menu Order</th>
+                    <th sortable="title" (sort)="onSort($event)">Title</th>
+                    <th sortable="isMenuActive" (sort)="onSort($event)">Status</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr
+                    *ngFor="
+                        let u of tableData
+                            | searchFi1ter : search
+                            | slice : (page - 1) * pageSize : (page - 1) * pageSize + pageSize;
+                        let i = index;
+                        trackBy: trackByFn
+                    "
+                >
+                    <td>{{ u?.menuOrder }}</td>
+                    <td>{{ u?.title }}</td>
+                    <td>{{ u?.isMenuActive ? "Enable" : "Disable" }}</td>
+                    <td>
+                        <div class="dropdown">
+                            <button class="dropbtn"></button>
+                            <div class="dropdown-content">
+                                <a
+                                    appAccessControl
+                                    [accessType]="rolePermissionActions.viewAction"
+                                    href="javascript:void(0)"
+                                    (click)="
+                                        navigateTo(
+                                            '/default/settings/master/security_master/menu-item/menu-form',
+                                            u?._id,
+                                            'view'
+                                        )
+                                    "
+                                >
+                                    <i class="fa fa-eye fa-lg me-2 text-primary" aria-hidden="true"></i>
+                                    View
+                                </a>
+                                <a
+                                    appAccessControl
+                                    [accessType]="rolePermissionActions.editAction"
+                                    href="javascript:void(0)"
+                                    (click)="
+                                        navigateTo(
+                                            '/default/settings/master/security_master/menu-item/menu-form',
+                                            u?._id,
+                                            'edit'
+                                        )
+                                    "
+                                >
+                                    <i class="fa fa-pencil-square-o fa-lg me-2 text-primary" aria-hidden="true"></i>
+                                    Edit
+                                </a>
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>

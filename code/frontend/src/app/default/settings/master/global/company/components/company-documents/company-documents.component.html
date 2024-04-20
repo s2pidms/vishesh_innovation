@@ -1,0 +1,96 @@
+<div class="modelPage">
+    <div class="modal-header">
+        <div class="heading">Documents Details</div>
+        <div>
+            <button type="button" class="btn btn-cross btn-sm" aria-label="Close" (click)="dismissModel()">
+                <i class="fa fa-times-circle" aria-hidden="true"></i>
+            </button>
+        </div>
+    </div>
+    <div class="">
+        <div class="container-fluid px-0">
+            <form [formGroup]="form" class="p-0">
+                <div class="row px-4 mt-4">
+                    <div class="col-md-6">
+                        <app-file-upload
+                            [fileName]="form.controls['logo'].value"
+                            [url]="form.controls['logoUrl'].value"
+                            [label]="'Company Logo'"
+                            [(file)]="logoFile"
+                        ></app-file-upload>
+                    </div>
+                    <div class="col-md-6">
+                        <app-file-upload
+                            [fileName]="form.controls['welcomeInfo'].value"
+                            [url]="form.controls['welcomeInfoUrl'].value"
+                            [label]="'Company Welcome Info'"
+                            [(file)]="welcomeInfoFile"
+                        ></app-file-upload>
+                    </div>
+                </div>
+
+                <hr class="line-border my-4 px-05" />
+
+                <div class="row px-4">
+                    <div class="col-md-6">
+                        <app-file-upload
+                            [fileName]="form.controls['SOSignature'].value"
+                            [url]="form.controls['SOSignatureUrl'].value"
+                            [label]="'Company SO Signature'"
+                            [(file)]="SOSignatureFile"
+                        ></app-file-upload>
+                    </div>
+                    <div class="col-md-6">
+                        <app-file-upload
+                            [fileName]="form.controls['companySignature'].value"
+                            [url]="form.controls['companySignatureUrl'].value"
+                            [label]="'Company PO Signature '"
+                            [(file)]="companySignatureFile"
+                        ></app-file-upload>
+                    </div>
+                </div>
+
+                <div class="row justify-content-center px-4"></div>
+                <hr class="line-border my-4 px-05" />
+
+                <div class="row justify-content-center px-4">
+                    <div class="col-md-6">
+                        <app-file-upload
+                            [fileName]="form.controls['SOPdfHeader'].value"
+                            [url]="form.controls['SOPdfHeaderUrl'].value"
+                            [label]="'Company SO PDF Header'"
+                            [(file)]="SOPdfHeaderFile"
+                        ></app-file-upload>
+                    </div>
+                    <div class="col-md-6">
+                        <app-file-upload
+                            [fileName]="form.controls['companyPdfHeader'].value"
+                            [url]="form.controls['companyPdfHeaderUrl'].value"
+                            [label]="'Company PO PDF Header'"
+                            [(file)]="companyPdfHeaderFile"
+                        ></app-file-upload>
+                    </div>
+                </div>
+                <hr class="line-border mt-4 px-05" />
+                <div class="row px-4 mt-4">
+                    <div class="col-12">
+                        <app-file-upload
+                            [fileName]="form.controls['landingPageHeader'].value"
+                            [url]="form.controls['landingPageHeaderUrl'].value"
+                            [label]="'Landing Page Header'"
+                            [(file)]="landingPageHeaderFile"
+                        ></app-file-upload>
+                    </div>
+                </div>
+            </form>
+
+            <hr class="line-border my-4 px-05" />
+
+            <div class="row justify-content-center mb-4">
+                <div class="col-12 text-center">
+                    <button type="button" class="btn bg-primary px-5" (click)="dismissModel()">Save & Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

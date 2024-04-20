@@ -1,0 +1,234 @@
+<Form class="px-2" [formGroup]="form" class="formCard card">
+    <div class="container">
+        <div class="row form-header">
+            <div class="col heading">Generate SPO [{{ this.action | titlecase }}]</div>
+        </div>
+        <div class="form-body">
+            <div class="row">
+                <div class="col-md-3">
+                    <label class="form-label">Purchase Category<span class="text-danger">*</span> </label>
+                    <select class="form-select" formControlName="purchaseCategory" (change)="getSuppliers()">
+                        <option [value]="null" disabled>Select</option>
+                        <option [value]="ele.value" *ngFor="let ele of masterData?.purchaseCategories">
+                            {{ ele.label }}
+                        </option>
+                    </select>
+                </div>
+                <div class="col-md-3 pe-5">
+                    <label class="form-label">Supplier Name<span class="text-danger">*</span> </label>
+
+                    <div class="d-flex align-items-center">
+                        <div class="col-11">
+                            <ng-select
+                                [items]="supplierOptions"
+                                bindLabel="label"
+                                bindValue="value"
+                                [clearable]="false"
+                                formControlName="supplier"
+                                (change)="supplierValueChange($event)"
+                                placeholder="Select a Supplier"
+                            >
+                            </ng-select>
+                        </div>
+                        <div
+                            style="height: 2.9rem"
+                            class="input-group-text bg-primary pointer col-auto fs-4"
+                            id="basic-addon1"
+                            (click)="openSupplierDetailsModal()"
+                        >
+                            <i class="fa fa-search text-white" aria-hidden="true"></i>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <label class="form-label">Service Purchase Order #<span class="text-danger">*</span> </label>
+                    <input readonly class="form-control" type="text" formControlName="SPONumber" />
+                </div>
+                <div class="col-md-3">
+                    <label class="form-label">Service Purchase Order Date<span class="text-danger">*</span> </label>
+                    <input class="form-control" type="date" formControlName="SPODate" />
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-3">
+                    <label class="form-label">Order Reference <span class="text-danger">*</span> </label>
+                    <input class="form-control" type="text" formControlName="orderReference" />
+                </div>
+                <div class="col-md-3">
+                    <label class="form-label">Currency<span class="text-primary">*</span> </label>
+                    <input class="form-control" type="text" readonly formControlName="currency" />
+                </div>
+                <div class="col-md-3">
+                    <label class="form-label"
+                        >{{ "Delivery Location" | labelTranslate }}<span class="text-danger">*</span>
+                    </label>
+                    <select class="form-select" formControlName="deliveryLocation">
+                        <option [value]="null" disabled>Select Location</option>
+                        <option [value]="ele.value" *ngFor="let ele of masterData?.locationOptions">
+                            {{ ele.label }}
+                        </option>
+                    </select>
+                </div>
+                <div class="col-md-3">
+                    <label class="form-label">Delivery Date<span class="text-danger">*</span> </label>
+                    <input
+                        class="form-control"
+                        type="date"
+                        (change)="setDeliveryDate()"
+                        formControlName="deliveryDate"
+                    />
+                </div>
+            </div>
+        </div>
+        <hr class="row line-border" />
+        <app-setting-header
+            [data]="{page,pageSize,collection,search, excelDisplay : 'none'}"
+            (dataChange)="eventHeader($event)"
+        >
+        </app-setting-header>
+        <div class="table-responsive" style="min-height: 18.6rem">
+            <table class="table table-bordered table-sticky">
+                <thead class="bg-primary">
+                    <tr class="text-white">
+                        <th sortable="SPOLineNumber" (sort)="onSort($event)">#</th>
+                        <th sortable="serviceCode" (sort)="onSort($event)">Service Code</th>
+                        <th sortable="serviceDescription" (sort)="onSort($event)" class="text-start">
+                            Service Description
+                        </th>
+                        <th sortable="SPOQty" (sort)="onSort($event)">SPO Qty</th>
+                        <th sortable="purchaseRate" (sort)="onSort($event)">Purchase Rate</th>
+                        <th sortable="lineValue" (sort)="onSort($event)">Line Value</th>
+                        <th sortable="deliveryDate" (sort)="onSort($event)">Delivery Date</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr
+                        *ngFor="
+                            let u of filterItems
+                                | searchFi1ter : search
+                                | slice : (page - 1) * pageSize : (page - 1) * pageSize + pageSize;
+                            let i = index;
+                            trackBy: trackByFn
+                        "
+                    >
+                        <td>{{ i + 1 + (page - 1) * pageSize }}</td>
+                        <td>{{ u?.serviceCode }}</td>
+                        <td class="text-start" [style.width]="serviceDescription.clientWidth" #serviceDescription>
+                            <span
+                                class="pointer"
+                                [positionTarget]="serviceDescription"
+                                [ngbTooltip]="u.serviceDescription"
+                            >
+                                {{ u.serviceDescription }}
+                            </span>
+                        </td>
+                        <td>
+                            <div class="d-flex justify-content-center">
+                                <span *ngIf="['approve', 'reject', 'view', 'generate'].includes(action)">
+                                    {{ u.SPOQty | number : "1.2-2" }}
+                                </span>
+                                <input
+                                    *ngIf="!['approve', 'reject', 'view', 'generate'].includes(action)"
+                                    class="form-control form-control-sm w-25"
+                                    type="number"
+                                    [(ngModel)]="u.SPOQty"
+                                    [ngModelOptions]="{standalone: true}"
+                                    (ngModelChange)="spoQtyChange($event, i)"
+                                    (input)="lineValueRate(u.SPOLineNumber, u)"
+                                />
+                            </div>
+                        </td>
+
+                        <td>
+                            <div class="d-flex justify-content-center">
+                                <span *ngIf="['approve', 'reject', 'view', 'generate'].includes(action)">
+                                    {{ u.purchaseRate | number : "1.2-2" }}
+                                </span>
+                                <input
+                                    *ngIf="!['approve', 'reject', 'view', 'generate'].includes(action)"
+                                    class="form-control form-control-sm w-25"
+                                    type="number"
+                                    [(ngModel)]="u.purchaseRate"
+                                    [ngModelOptions]="{standalone: true}"
+                                    (ngModelChange)="purchaseRateQtyChange($event, i)"
+                                    (input)="lineValueRate(u.SPOLineNumber, u)"
+                                />
+                            </div>
+                        </td>
+
+                        <td>{{ u?.lineValue | number : "1.2-2" }}</td>
+
+                        <td>
+                            <div class="d-flex justify-content-center">
+                                <span *ngIf="['approve', 'reject', 'view', 'generate'].includes(action)">
+                                    {{ u.deliveryDate }}
+                                </span>
+                                <input
+                                    *ngIf="!['approve', 'reject', 'view', 'generate'].includes(action)"
+                                    class="form-control form-control-sm w-25"
+                                    type="date"
+                                    [(ngModel)]="u.deliveryDate"
+                                    [ngModelOptions]="{standalone: true}"
+                                />
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <hr class="row line-border mt-3" />
+
+        <div class="row footer-div">
+            <div class="col-md-3">
+                <div class="d-flex inputGroup">
+                    <span class="input-group-text" id="Remarks_Field-2">Net SPO Value</span>
+                    <input type="text" class="form-control" readOnly formControlName="netSPOValue" />
+                </div>
+            </div>
+            <div *ngIf="action != 'approve'" class="col-md-4">
+                <div class="d-flex inputGroup">
+                    <span class="input-group-text" id="Remarks_Field-2"> SPO Remarks</span>
+                    <input
+                        class="form-control"
+                        id="SPORemarks"
+                        type="text"
+                        name="SPORemarks"
+                        formControlName="SPORemarks"
+                    />
+                </div>
+            </div>
+            <div *ngIf="action == 'approve'" class="col-md-4">
+                <div class="d-flex inputGroup">
+                    <span class="input-group-text" id="Remarks_Field-2">Remarks</span>
+                    <input type="text" class="form-control" formControlName="remarks" />
+                </div>
+            </div>
+            <div class="col-5 d-flex justify-content-end">
+                <div *ngIf="['create', 'edit'].includes(action)" class="d-grid gap-2 d-md-block">
+                    <button type="button" class="btn btn-primary px-5 me-3" (click)="reset()">Reset</button>
+                    <button
+                        type="button"
+                        class="btn btn-primary me-1"
+                        [disabled]="!isESCPreview"
+                        (click)="ESCPreview()"
+                    >
+                        Esc
+                    </button>
+                    <button type="button" class="btn btn-primary me-3" (click)="preview()">Preview</button>
+                    <button class="btn btn-primary px-5" type="button" [disabled]="!isPreview" (click)="submit()">
+                        Save
+                    </button>
+                </div>
+
+                <div *ngIf="action == 'reject'" class="col-5 text-end">
+                    <button type="button" class="btn btn-primary px-5" (click)="submit()">Reject</button>
+                </div>
+
+                <div *ngIf="action == 'approve'" class="col-5 d-flex justify-content-end">
+                    <button type="button" class="btn btn-primary px-5" (click)="submit()">Approve</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</Form>

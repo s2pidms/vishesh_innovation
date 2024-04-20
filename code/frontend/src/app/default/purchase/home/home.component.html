@@ -1,0 +1,498 @@
+<div class="container-fluid text-center dashboard-page">
+    <div class="row justify-content-center mt-5">
+        <div class="col-md-12">
+            <ul ngbNav #nav1="ngbNav" [(activeId)]="activeCards" class="nav-pills tabs-card row">
+                <li [ngbNavItem]="1" class="col d-grid pe-2">
+                    <ng-template ngbNavContent>
+                        <div class="row mx-1">
+                            <div class="col-md-12">
+                                <div class="d-flex align-items-center">
+                                    <div class="col pt-3 text-start">
+                                        <i
+                                            (click)="nav1.select(activeCards + 1)"
+                                            class="fa fa-chevron-left fs-2 pointer"
+                                            aria-hidden="true"
+                                        ></i>
+                                    </div>
+                                    <div class="col-11">
+                                        <div class="row px-2 mb-4">
+                                            <div class="col px-3">
+                                                <div class="card flip-box-inner">
+                                                    <div class="card-body flip-box-front">
+                                                        <h5 class="card-title">MTD Purchase [D]*</h5>
+                                                        <p class="card-text">
+                                                            {{ dashBoardData.purchaseMTDDomestics | number : "1.2-2" }}
+                                                            {{ lakhInWord }}
+                                                        </p>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col px-3">
+                                                <div class="card">
+                                                    <div class="card-body flip-box-front">
+                                                        <h5 class="card-title">YTD Purchase [D]*</h5>
+                                                        <p class="card-text card-text1">
+                                                            {{ dashBoardData.purchaseYTDDomestics | number : "1.2-2" }}
+                                                            {{ lakhInWord }}
+                                                        </p>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col px-3">
+                                                <div class="card">
+                                                    <div class="card-body flip-box-front">
+                                                        <h5 class="card-title">MTD Purchase [I]*</h5>
+                                                        <p class="card-text card-text1">
+                                                            {{ dashBoardData.purchaseMTDImports | number : "1.2-2" }}
+                                                            {{ lakhInWord }}
+                                                        </p>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col px-3">
+                                                <div class="card h-100">
+                                                    <div class="card-body">
+                                                        <h5 class="card-title">YTD Purchase [I]*</h5>
+                                                        <p class="card-text">
+                                                            {{ dashBoardData.purchaseYTDImports | number : "1.2-2" }}
+                                                            {{ lakhInWord }}
+                                                        </p>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col px-3">
+                                                <div class="card h-100">
+                                                    <div class="card-body">
+                                                        <h5 class="card-title">PPV Value</h5>
+                                                        <p class="card-text">
+                                                            {{ dashBoardData.ppvTotalValue | number : "1.2-2" }}
+                                                            {{ lakhInWord }}
+                                                        </p>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col px-3">
+                                                <div class="card h-100">
+                                                    <div class="card-body">
+                                                        <h5 class="card-title w-100">
+                                                            <div class="d-flex justify-content-between text-center">
+                                                                <div></div>
+                                                                <div>PPV Ratio</div>
+                                                                <div class="me-2">
+                                                                    <span class="pointer" data-tip data-for="infoTip">
+                                                                        <svg
+                                                                            tooltipClass="my-tooltip-class custom-tooltip-class "
+                                                                            [ngbTooltip]="list"
+                                                                            xmlns="http://www.w3.org/2000/svg"
+                                                                            width="14"
+                                                                            height="14"
+                                                                            fill="red"
+                                                                            class="bi bi-info-circle"
+                                                                            viewBox="0 0 16 16"
+                                                                        >
+                                                                            <path
+                                                                                d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"
+                                                                            />
+                                                                            <path
+                                                                                d="m8.93 6.588-2.29.287-.082.38.45.083c.294.07.352.176.288.469l-.738 3.468c-.194.897.105 1.319.808 1.319.545 0 1.178-.252 1.465-.598l.088-.416c-.2.176-.492.246-.686.246-.275 0-.375-.193-.304-.533L8.93 6.588zM9 4.5a1 1 0 1 1-2 0 1 1 0 0 1 2 0z"
+                                                                            />
+                                                                        </svg>
+                                                                    </span>
+                                                                </div>
+                                                            </div>
+                                                        </h5>
+
+                                                        <p class="card-text">
+                                                            {{ dashBoardData.ppvRatio | number : "1.2-2" }}
+                                                            %
+                                                        </p>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="col pt-2 text-end">
+                                        <i
+                                            (click)="nav1.select(activeCards + 1)"
+                                            class="fa fa-chevron-right fs-2 pointer"
+                                            aria-hidden="true"
+                                        ></i>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </ng-template>
+                </li>
+                <li [ngbNavItem]="2" class="col d-grid pe-2">
+                    <ng-template ngbNavContent>
+                        <div class="row mx-1">
+                            <div class="col-md-12">
+                                <div class="d-flex align-items-center">
+                                    <div class="col pt-3 text-start">
+                                        <i
+                                            (click)="nav1.select(activeCards - 1)"
+                                            class="fa fa-chevron-left fs-2 pointer"
+                                            aria-hidden="true"
+                                        ></i>
+                                    </div>
+                                    <div class="col-11 text-start">
+                                        <div class="row px-2 mb-4">
+                                            <div class="col px-3">
+                                                <div class="card h-100">
+                                                    <div class="card-body">
+                                                        <h5 class="card-title">Debit Note MTD [D]*</h5>
+                                                        <p class="card-text">
+                                                            {{ dashBoardData.debitNoteMTD | number : "1.2-2" }}
+                                                            {{ lakhInWord }}
+                                                        </p>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col px-3">
+                                                <div class="card h-100">
+                                                    <div class="card-body">
+                                                        <h5 class="card-title">Debit Note YTD [D]*</h5>
+                                                        <p class="card-text">
+                                                            {{ dashBoardData.debitNoteYTD | number : "1.2-2" }}
+                                                            {{ lakhInWord }}
+                                                        </p>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col px-3">
+                                                <div class="card">
+                                                    <div class="card-body">
+                                                        <h5 class="card-title">Suppliers</h5>
+                                                        <p class="card-text">
+                                                            {{ dashBoardData.totalSupplier }}
+                                                        </p>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col px-3">
+                                                <div class="card">
+                                                    <div class="card-body">
+                                                        <h5 class="card-title">Suppliers [D]*</h5>
+                                                        <p class="card-text">
+                                                            {{ dashBoardData.supplierDomestics }}
+                                                        </p>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col px-3">
+                                                <div class="card">
+                                                    <div class="card-body">
+                                                        <h5 class="card-title">Suppliers [I]*</h5>
+                                                        <p class="card-text">
+                                                            {{ dashBoardData.supplierImports }}
+                                                        </p>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col px-3">
+                                                <div class="card h-100">
+                                                    <div class="card-body">
+                                                        <h5 class="card-title">Items</h5>
+                                                        <p class="card-text">
+                                                            {{ dashBoardData.itemsCount }}
+                                                        </p>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="col pt-2 text-end">
+                                        <i
+                                            (click)="nav1.select(activeCards - 1)"
+                                            class="fa fa-chevron-right fs-2 pointer"
+                                            aria-hidden="true"
+                                        ></i>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </ng-template>
+                </li>
+            </ul>
+
+            <div [ngbNavOutlet]="nav1" class="mt-2"></div>
+        </div>
+    </div>
+
+    <div class="row mb-4 justify-content-center">
+        <div class="col-11 px-2">
+            <div class="card mx-5 h-100">
+                <div class="card-body ms-3 align-items-start">
+                    <h5>Note: D – Domestic, I – Imports</h5>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row justify-content-center mt-4">
+        <div class="col-md-12">
+            <ul ngbNav #nav="ngbNav" [(activeId)]="active" class="nav-pills tabs-card row">
+                <li [ngbNavItem]="1" class="col d-grid px-2">
+                    <ng-template ngbNavContent>
+                        <div class="row mx-1">
+                            <div class="col-md-6">
+                                <div class="d-flex align-items-center">
+                                    <div class="col-1 text-start">
+                                        <i
+                                            (click)="nav.select(active + 3)"
+                                            class="fa fa-chevron-left fs-2 pointer"
+                                            aria-hidden="true"
+                                        ></i>
+                                    </div>
+
+                                    <div class="card col-11">
+                                        <div class="card-body gh p-4">
+                                            <h5 class="card-title">
+                                                Monthly Domestic Purchase Value [Amt In
+                                                {{ lakhInWord }}]
+                                            </h5>
+                                            <canvas
+                                                *ngIf="dashBoardData.barMonthlyDomesticPurchaseOrderData.labels"
+                                                baseChart
+                                                class="chart pointer"
+                                                [data]="dashBoardData.barMonthlyDomesticPurchaseOrderData"
+                                                [options]="barChartOptions"
+                                                [type]="barChartType"
+                                            >
+                                            </canvas>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="d-flex align-items-center">
+                                    <div class="card col-11">
+                                        <div class="card-body gh p-4">
+                                            <h5 class="card-title">Monthly Domestic PO Count [ Count in Nos.]</h5>
+                                            <canvas
+                                                baseChart
+                                                class="chart pointer"
+                                                [data]="dashBoardData.barMonthlyDomesticPurchaseCount"
+                                                [options]="barChartOptions"
+                                                [type]="barChartType"
+                                                [plugins]="barChartPlugins"
+                                            >
+                                            </canvas>
+                                        </div>
+                                    </div>
+                                    <div class="col-1 text-end">
+                                        <i
+                                            (click)="nav.select(active + 1)"
+                                            class="fa fa-chevron-right fs-2 pointer"
+                                            aria-hidden="true"
+                                        ></i>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </ng-template>
+                </li>
+                <li [ngbNavItem]="2" class="col d-grid pe-2">
+                    <ng-template ngbNavContent>
+                        <div class="row mx-1">
+                            <div class="col-md-6">
+                                <div class="d-flex align-items-center">
+                                    <div class="col-1 text-start">
+                                        <i
+                                            (click)="nav.select(active - 1)"
+                                            class="fa fa-chevron-left fs-2 pointer"
+                                            aria-hidden="true"
+                                        ></i>
+                                    </div>
+                                    <div class="card col-11">
+                                        <div class="card-body gh p-4">
+                                            <h5 class="card-title">
+                                                Top 5 Domestic Suppliers Spend [In
+                                                {{ lakhInWord }}]
+                                            </h5>
+                                            <canvas
+                                                baseChart
+                                                class="chart pointer"
+                                                [data]="dashBoardData.barChartDataSupplierDomestic"
+                                                [options]="barChartOptions"
+                                                [type]="barChartType"
+                                            >
+                                            </canvas>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="d-flex align-items-center">
+                                    <div class="card col-11">
+                                        <div class="card-body gh p-4">
+                                            <h5 class="card-title">
+                                                Top 5 Domestic Items Spend [In
+                                                {{ lakhInWord }}]
+                                            </h5>
+                                            <canvas
+                                                baseChart
+                                                class="chart pointer"
+                                                [data]="dashBoardData.barChartDataItemsDomestic"
+                                                [options]="barChartOptions"
+                                                [type]="barChartType"
+                                            >
+                                            </canvas>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-1 text-end">
+                                        <i
+                                            (click)="nav.select(active + 1)"
+                                            class="fa fa-chevron-right fs-2 pointer"
+                                            aria-hidden="true"
+                                        ></i>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </ng-template>
+                </li>
+                <li [ngbNavItem]="3" class="col d-grid px-2">
+                    <ng-template ngbNavContent>
+                        <div class="row mx-1">
+                            <div class="col-md-6">
+                                <div class="d-flex align-items-center">
+                                    <div class="col-1 text-start">
+                                        <i
+                                            (click)="nav.select(active - 1)"
+                                            class="fa fa-chevron-left fs-2 pointer"
+                                            aria-hidden="true"
+                                        ></i>
+                                    </div>
+
+                                    <div class="card col-11">
+                                        <div class="card-body gh p-4">
+                                            <h5 class="card-title">
+                                                Monthly Imports Purchase Value [Amt In
+                                                {{ lakhInWord }}]
+                                            </h5>
+                                            <canvas
+                                                baseChart
+                                                class="chart pointer"
+                                                [data]="dashBoardData.barMonthlyImportsPurchaseOrderData"
+                                                [options]="barChartOptions"
+                                                [type]="barChartType"
+                                            >
+                                            </canvas>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="d-flex align-items-center">
+                                    <div class="card col-11">
+                                        <div class="card-body gh p-4">
+                                            <h5 class="card-title">Monthly Imports PO Count [ Count in Nos.]</h5>
+                                            <canvas
+                                                baseChart
+                                                class="chart pointer"
+                                                [data]="dashBoardData.barMonthlyImportsPurchaseOrderCount"
+                                                [options]="barChartOptions"
+                                                [type]="barChartType"
+                                            >
+                                            </canvas>
+                                        </div>
+                                    </div>
+                                    <div class="col-1 text-end">
+                                        <i
+                                            (click)="nav.select(active + 1)"
+                                            class="fa fa-chevron-right fs-2 pointer"
+                                            aria-hidden="true"
+                                        ></i>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </ng-template>
+                </li>
+                <li [ngbNavItem]="4" class="col d-grid px-2">
+                    <ng-template ngbNavContent>
+                        <div class="row mx-1">
+                            <div class="col-md-6">
+                                <div class="d-flex align-items-center">
+                                    <div class="col-1 text-start">
+                                        <i
+                                            (click)="nav.select(active - 1)"
+                                            class="fa fa-chevron-left fs-2 pointer"
+                                            aria-hidden="true"
+                                        ></i>
+                                    </div>
+                                    <div class="card col-11">
+                                        <div class="card-body gh p-4">
+                                            <h5 class="card-title">
+                                                Top 5 Imports Suppliers Spend [In
+                                                {{ lakhInWord }}]
+                                            </h5>
+                                            <canvas
+                                                baseChart
+                                                class="chart pointer"
+                                                [data]="dashBoardData.barChartDataSupplierImports"
+                                                [options]="barChartOptions"
+                                                [type]="barChartType"
+                                            >
+                                            </canvas>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="d-flex align-items-center">
+                                    <div class="card col-11">
+                                        <div class="card-body gh p-4">
+                                            <h5 class="card-title">
+                                                Top 5 Imports Items Spend [In
+                                                {{ lakhInWord }}]
+                                            </h5>
+                                            <canvas
+                                                baseChart
+                                                class="chart pointer"
+                                                [data]="dashBoardData.barChartDataItemsImports"
+                                                [options]="barChartOptions"
+                                                [type]="barChartType"
+                                            >
+                                            </canvas>
+                                        </div>
+                                    </div>
+                                    <div class="col-1 text-end">
+                                        <i
+                                            (click)="nav.select(active - 3)"
+                                            class="fa fa-chevron-right fs-2 pointer"
+                                            aria-hidden="true"
+                                        ></i>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </ng-template>
+                </li>
+            </ul>
+
+            <div [ngbNavOutlet]="nav" class="mt-2"></div>
+        </div>
+    </div>
+</div>
+<ng-template #list>
+    <div class="d-flex flex-column">
+        <span class="text-start">
+            PPV Ratio = ((Standard Purchase Price - Actual Purchase Price ) / Standard Purchase Price) * 100
+        </span>
+        <br />
+        <span class="text-start">
+            A positive PPV Ratio indicates that the actual purchase price is lower than the standard price, indicating
+            potential cost saving.
+        </span>
+        <br />
+        <span class="text-start">
+            Conversely, a negative PPV Ratio implies that the actual purchase price is higher than the standard price,
+            indicating a cost overrun.
+        </span>
+    </div>
+</ng-template>

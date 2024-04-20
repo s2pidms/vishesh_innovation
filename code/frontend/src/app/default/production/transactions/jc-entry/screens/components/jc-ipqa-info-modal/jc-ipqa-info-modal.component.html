@@ -1,0 +1,153 @@
+<div class="modelPage">
+    <div class="modal-header">
+        <div class="heading">{{ IPQADetails?.processName }} Sub-Processes</div>
+
+        <div>
+            <button type="button" class="btn btn-cross btn-sm" aria-label="Close" (click)="this.activeModal.close()">
+                <i class="fa fa-times-circle" aria-hidden="true"></i>
+            </button>
+        </div>
+    </div>
+    <div class="container-fluid px-0">
+        <div class="mt-1 line-border-with-title mb-4">
+            <span class="px-5"> IPQA Details </span>
+        </div>
+        <div class="row mx-4 px-3">
+            <div class="col-7">
+                <div class="row">
+                    <div class="col-2 pe-1 text-center"><label class="form-label">Seq.</label></div>
+                    <div class="col-6 ps-0 pe-1"><label class="form-label">Sub-Process Name</label></div>
+                    <div class="col-4 ps-0"><label class="form-label">Inspected By </label></div>
+                </div>
+            </div>
+            <div class="col-5 ps-2">
+                <div class="row">
+                    <div class="col-5 ps-0 pe-1"><label class="form-label">Release Date </label></div>
+                    <div class="col-5 ps-0"><label class="form-label">Release Status</label></div>
+                    <div class="col-2 ps-0 pe-1"><label class="form-label"> Status </label></div>
+                </div>
+            </div>
+        </div>
+
+        <div *ngFor="let item of prodInfoList; let i = index" class="row mx-4 px-3 mb-2">
+            <div class="col-7">
+                <div class="row">
+                    <div class="col-2 pe-1">
+                        <input
+                            [(ngModel)]="item.seq"
+                            class="form-control text-center"
+                            type="number"
+                            [disabled]="['view', 'approve'].includes(action)"
+                        />
+                    </div>
+                    <div class="col-6 ps-0 pe-1">
+                        <input
+                            [(ngModel)]="item.subProcessName"
+                            class="form-control"
+                            type="text"
+                            [disabled]="['view', 'approve'].includes(action)"
+                        />
+                    </div>
+                    <div class="col-4 ps-0">
+                        <input
+                            [(ngModel)]="item.inspectedBy"
+                            class="form-control"
+                            type="text"
+                            [disabled]="['view', 'approve'].includes(action)"
+                        />
+                    </div>
+                </div>
+            </div>
+            <div class="col-5 ps-2">
+                <div class="row">
+                    <div class="col-5 ps-0 pe-1">
+                        <input
+                            [(ngModel)]="item.releasedDate"
+                            class="form-control"
+                            type="date"
+                            [disabled]="['view', 'approve'].includes(action)"
+                        />
+                    </div>
+                    <div class="col-5 ps-0 pe-1">
+                        <ng-select
+                            [items]="releaseStatusOptions"
+                            bindLabel="releaseStatusOptions"
+                            bindValue="releaseStatusOptions"
+                            [clearable]="false"
+                            [(ngModel)]="item.releaseStatus"
+                            [disabled]="['view', 'approve'].includes(action)"
+                        >
+                        </ng-select>
+                    </div>
+                    <div class="col-2 ps-0">
+                        <div class="h-100 d-flex justify-content-center align-items-center set-prod-status">
+                            <input
+                                class="form-check-input pointer mt-0"
+                                type="checkbox"
+                                [(ngModel)]="item.IPQAStatus"
+                                [ngModelOptions]="{standalone: true}"
+                                [disabled]="['view', 'approve'].includes(action)"
+                            />
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row mt-4 mb-2 px-5 mx-1" style="min-height: 13rem">
+            <div class="col-12 set-image px-0 seperate-row">
+                <div class="add-icon">
+                    <img
+                        data-tip
+                        data-for="infoTip"
+                        (click)="addTableRow()"
+                        class="pointer"
+                        src="./assets/new_icons/add_row.svg"
+                        width="14"
+                        alt=""
+                    />
+                </div>
+                <hr class="line-border" />
+                <!-- <img class="" src="./assets/new_icons/separator_row.svg" alt="" /> -->
+                <div class="minus-icon">
+                    <img
+                        data-tip
+                        data-for="infoTip"
+                        (click)="deleteTableRow()"
+                        class="pointer"
+                        src="./assets/new_icons/delete_row.svg"
+                        width="14"
+                        alt=""
+                    />
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col mt-1">
+                <hr class="line-border" />
+            </div>
+        </div>
+
+        <div class="row mb-4 mt-2 mx-4 px-3">
+            <div class="col-7 pe-0">
+                <div class="d-flex align-items-center">
+                    <div class="col-form-label text-nowrap">
+                        IPQA Remarks
+                        <span class="ms-1 me-2">&#9654;</span>
+                    </div>
+                    <input
+                        [(ngModel)]="IPQADetails.IPQARemarks"
+                        class="form-control"
+                        placeholder="Critical incident/Deviation/Concerns during Production"
+                        type="text"
+                        [disabled]="['view', 'approve'].includes(action)"
+                    />
+                </div>
+            </div>
+            <div *ngIf="['create', 'edit'].includes(action)" class="col-5 d-flex justify-content-end">
+                <button type="button" class="btn btn-primary px-4" (click)="dismissModel()">Save & Close</button>
+            </div>
+        </div>
+    </div>
+</div>

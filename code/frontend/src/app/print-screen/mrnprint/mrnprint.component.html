@@ -1,0 +1,133 @@
+<div class="grnPrint">
+    <div class="row m-0 justify-content-center">
+        <div class="col-11 text-end mt-2 px-0">
+            <div *ngIf="buttonCondition == 'true'" id="btnDisplay">
+                <button class="btn btn-primary" type="button" (click)="windowPrint()" *ngIf="pdfAction != 'pdf'">
+                    <img src="./assets/images/print.png" width="20px" height="14px" class="mb-2" />&nbsp;&nbsp; Print
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div class="row tablePage m-0">
+        <div class="col-md-11 table-body pb-0">
+            <div class="row table-header">
+                <div class="col d-flex justify-content-center">
+                    <label class="heading text-center">Material Release Note [MRN]</label>
+                </div>
+            </div>
+
+            <Form [formGroup]="form">
+                <div class="row px-4 mt-4">
+                    <div class="col-3">
+                        <div class="row">
+                            <div class="col-6 pe-2">
+                                <label class="form-label mb-2"> MRN # <span class="text-danger">*</span> </label>
+                                <input type="text" class="form-control" formControlName="MRNNumber" />
+                            </div>
+                            <div class="col-6 ps-2">
+                                <label class="form-label mb-2"> MRN Date <span class="text-danger">*</span> </label>
+                                <input type="text" class="form-control" formControlName="MRNDate" />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-2">
+                        <label class="form-label mb-2"> Goods Receipt Note # <span class="text-danger">*</span> </label>
+                        <input type="text" formControlName="GRNNumber" class="form-control" />
+                    </div>
+
+                    <div class="col-3">
+                        <label class="form-label mb-2"> Supplier Name </label>
+                        <input type="text" formControlName="supplier" class="form-control" />
+                    </div>
+
+                    <div class="col-2">
+                        <label class="form-label mb-2"> Supplier Invoice #<span class="text-danger">*</span> </label>
+                        <input type="text" class="form-control" formControlName="supplierInvoice" readonly />
+                    </div>
+
+                    <div class="col-2">
+                        <label class="form-label mb-2"> Supplier Date<span class="text-danger">*</span> </label>
+                        <input type="date" class="form-control" formControlName="supplierDate" readonly />
+                    </div>
+                </div>
+
+                <hr class="row line-border my-4" />
+
+                <div class="table-responsive px-1 my-4">
+                    <table class="table table-bordered table-sticky">
+                        <thead class="bg-primary">
+                            <tr class="text-white">
+                                <th>#</th>
+                                <th>Item code</th>
+                                <th>Item Name</th>
+                                <th>Item Description</th>
+                                <th>Batch No.</th>
+                                <th>Batch Dt.</th>
+                                <th>UoM</th>
+                                <th>GRN Qty</th>
+                                <th>Release Qty</th>
+                                <th>Reject Qty</th>
+                            </tr>
+                        </thead>
+
+                        <tbody>
+                            <tr *ngFor="let u of MRNDetailsArray; let i = index">
+                                <td>{{ u?.MRNLineNumber }}</td>
+                                <td>{{ u?.itemCode }}</td>
+                                <td>{{ u?.itemName }}</td>
+                                <td>{{ u?.itemDescription }}</td>
+                                <td>{{ u?.batchNo }}</td>
+                                <td>
+                                    {{ u?.batchDate }}
+                                </td>
+                                <td>{{ u?.UOM }}</td>
+                                <td>{{ u?.GRNQty }}</td>
+                                <td>
+                                    {{ u.releasedQty }}
+                                </td>
+                                <td>
+                                    {{ u.rejectedQty }}
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <hr class="row line-border" />
+                <div class="row px-4">
+                    <div class="col-4 mb-4">
+                        <div class="d-flex align-items-center">
+                            <div class="col-form-label text-nowrap">
+                                MRN Released By
+                                <i class="fa fa-caret-right fs-3 mx-2"></i>
+                            </div>
+                            <input
+                                [(ngModel)]="MRNReleasedBy"
+                                [ngModelOptions]="{standalone: true}"
+                                class="form-control"
+                                type="text"
+                                readonly
+                            />
+                        </div>
+                    </div>
+                    <div class="col-4 mb-4">
+                        <div class="d-flex align-items-center">
+                            <div class="col-form-label text-nowrap">
+                                MRN Remark
+                                <i class="fa fa-caret-right fs-3 mx-2"></i>
+                            </div>
+                            <input
+                                [(ngModel)]="MRNRemark"
+                                [ngModelOptions]="{standalone: true}"
+                                class="form-control"
+                                type="text"
+                                readonly
+                            />
+                        </div>
+                    </div>
+                </div>
+            </Form>
+        </div>
+    </div>
+</div>

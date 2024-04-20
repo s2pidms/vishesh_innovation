@@ -1,0 +1,211 @@
+<form [formGroup]="form" class="formCard card">
+    <div class="container">
+        <div class="row form-header">
+            <div class="col heading">
+                <label class="">RM Specification</label>
+            </div>
+        </div>
+        <div class="form-body">
+            <div class="row">
+                <div class="col-8">
+                    <div class="row">
+                        <div class="col-md-5 pe-0">
+                            <label class="form-label">Item Category <span class="text-danger">*</span> </label>
+                            <select class="form-select" formControlName="itemCategory" (change)="getItems($event)">
+                                <option selected disabled value="">Select Item Category</option>
+                                <option
+                                    *ngFor="let item of masterData?.itemCategoryListOptions"
+                                    [value]="item.category"
+                                >
+                                    {{ item.category }}
+                                </option>
+                            </select>
+                        </div>
+                        <div class="col-3">
+                            <label class="form-label">Item Code <span class="text-danger">*</span> </label>
+                            <ng-select
+                                [items]="filterItemList"
+                                bindLabel="itemCode"
+                                bindValue="itemCode"
+                                [clearable]="false"
+                                formControlName="itemCode"
+                                (change)="setItemDetails($event)"
+                            >
+                            </ng-select>
+                        </div>
+                        <div class="col-md-4 p-0">
+                            <label class="form-label">Item Name <span class="text-danger">*</span></label>
+                            <ng-select
+                                [items]="filterItemList"
+                                bindLabel="itemName"
+                                bindValue="itemName"
+                                [clearable]="false"
+                                formControlName="itemName"
+                                (change)="setItemDetails($event)"
+                            >
+                            </ng-select>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-4">
+                    <div class="row">
+                        <div class="col-md-8 pe-0">
+                            <label class="form-label">Item Description <span class="text-danger">*</span></label>
+                            <input formControlName="itemDescription" class="form-control" type="text" readonly />
+                        </div>
+                        <div class="col-4">
+                            <label class="form-label">UoM</label>
+                            <input
+                                value="{{ f['UOM'].value | UOMUnitsMaster }}"
+                                class="form-control"
+                                type="text"
+                                readonly
+                            />
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <hr class="row line-border" />
+
+        <app-setting-header
+            [data]="{page,pageSize,collection,search, excelDisplay : 'none'}"
+            (dataChange)="eventHeader($event)"
+        >
+        </app-setting-header>
+        <div class="table-responsive" style="min-height: 19.5rem">
+            <table class="table table-bordered table-sticky mt-1">
+                <thead class="bg-primary">
+                    <tr class="text-white">
+                        <th sortable="seq" (sort)="onSort($event)">Seq.</th>
+                        <th sortable="specificationCode" (sort)="onSort($event)">Specs Code</th>
+                        <th class="text-start" sortable="characteristic" (sort)="onSort($event)">
+                            Inspection Parameter
+                        </th>
+                        <th class="text-start" sortable="testStandard" (sort)="onSort($event)">Test Standard</th>
+                        <th class="text-start" sortable="measuringInstrument" (sort)="onSort($event)">Test Method</th>
+                        <th sortable="UOM" (sort)="onSort($event)">UoM</th>
+                        <th sortable="specValue" (sort)="onSort($event)">Spec Value</th>
+                        <th sortable="LTL" (sort)="onSort($event)">LTL</th>
+                        <th sortable="UTL" (sort)="onSort($event)">UTL</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr
+                        *ngFor="
+                            let item of masterData.specificationList
+                                | searchFi1ter : search
+                                | slice : (page - 1) * pageSize : (page - 1) * pageSize + pageSize;
+                            trackBy: trackByFn;
+                            let i = index
+                        "
+                    >
+                        <td>
+                            <div class="d-flex justify-content-center">
+                                <span *ngIf="['view', 'Converted to SKU'].includes(action)">
+                                    {{ item?.seq }}
+                                </span>
+                                <input
+                                    *ngIf="!['view', 'Converted to SKU'].includes(action)"
+                                    class="form-control form-control-sm"
+                                    type="number"
+                                    [(ngModel)]="item.seq"
+                                    [ngModelOptions]="{standalone: true}"
+                                />
+                            </div>
+                        </td>
+                        <td>
+                            {{ item.specificationCode }}
+                        </td>
+                        <td class="text-start" [style.width]="characteristic.clientWidth" #characteristic>
+                            <span class="pointer" [ngbTooltip]="item.characteristic" [positionTarget]="characteristic">
+                                {{ item.characteristic }}
+                            </span>
+                        </td>
+                        <td class="text-start">{{ item.testStandard }}</td>
+                        <td class="text-start">{{ item.measuringInstrument }}</td>
+                        <td>{{ item.UOM | UOMUnitsMaster }}</td>
+
+                        <td>
+                            <div class="d-flex justify-content-center">
+                                <span *ngIf="['view', 'Converted to SKU'].includes(action)">
+                                    {{ item?.specValue }}
+                                </span>
+                                <input
+                                    *ngIf="!['view', 'Converted to SKU'].includes(action)"
+                                    class="form-control form-control-sm"
+                                    type="text"
+                                    [(ngModel)]="item.specValue"
+                                    [ngModelOptions]="{standalone: true}"
+                                />
+                            </div>
+                        </td>
+                        <td>
+                            <div class="d-flex justify-content-center">
+                                <span *ngIf="['view', 'Converted to SKU'].includes(action)">
+                                    {{ item?.LTL }}
+                                </span>
+                                <input
+                                    *ngIf="!['view', 'Converted to SKU'].includes(action)"
+                                    class="form-control form-control-sm"
+                                    type="text"
+                                    [(ngModel)]="item.LTL"
+                                    [ngModelOptions]="{standalone: true}"
+                                />
+                            </div>
+                        </td>
+                        <td>
+                            <div class="d-flex justify-content-center">
+                                <span *ngIf="['view', 'Converted to SKU'].includes(action)">
+                                    {{ item?.UTL }}
+                                </span>
+                                <input
+                                    *ngIf="!['view', 'Converted to SKU'].includes(action)"
+                                    class="form-control form-control-sm"
+                                    type="text"
+                                    [(ngModel)]="item.UTL"
+                                    [ngModelOptions]="{standalone: true}"
+                                />
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <hr *ngIf="'view' != action" class="row line-border" />
+
+        <div
+            *ngIf="'view' != action"
+            class="row my-3"
+            appAccessControl
+            [accessType]="rolePermissionActions.createAction"
+        >
+            <div class="col text-center">
+                <div class="d-grid gap-2 d-md-block">
+                    <button type="button" class="btn btn-primary px-5 me-3" (click)="reset()">Reset</button>
+                    <button
+                        type="button"
+                        class="btn btn-primary px-3 me-1"
+                        [disabled]="!isESCPreview"
+                        (click)="ESCPreview()"
+                    >
+                        Esc
+                    </button>
+                    <button
+                        type="button"
+                        class="btn btn-primary px-4 me-3"
+                        [disabled]="isConditionPreview"
+                        (click)="preview()"
+                    >
+                        Preview
+                    </button>
+                    <button class="btn btn-primary px-5" type="button" [disabled]="!isPreview" (click)="submit()">
+                        Save
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>

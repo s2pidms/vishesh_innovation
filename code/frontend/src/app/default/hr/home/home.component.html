@@ -1,0 +1,86 @@
+<div class="container-fluid text-center dashboard-page">
+    <div class="row mt-5 mx-1">
+        <div class="col">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Active Employees</h5>
+                    <p class="card-text2">{{ dashBoardData.activeEmployees }}</p>
+                </div>
+            </div>
+        </div>
+        <div class="col">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Male Employees</h5>
+                    <p class="card-text2">{{ dashBoardData.maleEmployees }}</p>
+                </div>
+            </div>
+        </div>
+        <div class="col">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Female Employees</h5>
+                    <p class="card-text2">{{ dashBoardData.femaleEmployees }}</p>
+                </div>
+            </div>
+        </div>
+        <div class="col">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Availed Leaves</h5>
+                    <p class="card-text2">{{ dashBoardData.paidLeaveCount }}</p>
+                </div>
+            </div>
+        </div>
+        <div class="col">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Total Paid Holidays</h5>
+                    <p class="card-text2">{{ dashBoardData.paidHolidayCount }}</p>
+                </div>
+            </div>
+        </div>
+        <div class="col">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Total Paid Salary</h5>
+                    <p class="card-text2">{{ dashBoardData.monthPayrolls | number : "1.2-2" }}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row mx-4 mt-5">
+        <div class="col-md-6 px-2">
+            <div class="card">
+                <div class="card-body py-5">
+                    <h5 class="card-title">Monthly Employees Net Paid Salary</h5>
+                    <canvas
+                        baseChart
+                        class="chart pointer"
+                        [data]="dashBoardData.barChartDataPayroll"
+                        [options]="barChartOptions"
+                        [type]="barChartType"
+                        [plugins]="barChartPlugins"
+                    >
+                    </canvas>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6 px-2">
+            <div class="card">
+                <div class="card-body py-5">
+                    <h5 class="card-title">Monthly Employee Leaves</h5>
+                    <canvas
+                        baseChart
+                        class="chart pointer"
+                        [data]="dashBoardData.barChartDataLeaves"
+                        [options]="barChartOptions"
+                        [type]="barChartType"
+                        [plugins]="barChartPlugins"
+                    >
+                    </canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

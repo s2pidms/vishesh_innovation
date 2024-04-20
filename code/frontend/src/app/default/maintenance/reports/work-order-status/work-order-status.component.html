@@ -1,0 +1,90 @@
+<div class="reportTablePage">
+    <div class="table-body pb-0 shadow-none">
+        <div class="row table-header">
+            <div class="col">
+                <label class="heading">Work Order Status Report</label>
+            </div>
+        </div>
+        <div class="row my-4">
+            <div class="col-9">
+                <div class="row">
+                    <div class="col-3 ps-3">
+                        <label class="form-label">Priority</label>
+                        <ng-select
+                            [items]="priorityValues"
+                            bindLabel="label"
+                            bindValue="value"
+                            [clearable]="false"
+                            [(ngModel)]="priority"
+                        >
+                        </ng-select>
+                    </div>
+                    <div class="col-3 separate-row">
+                        <label class="form-label">Status</label>
+                        <ng-select
+                            [items]="taskStatus"
+                            bindLabel="label"
+                            bindValue="value"
+                            [clearable]="false"
+                            [(ngModel)]="status"
+                        >
+                        </ng-select>
+                        <span class="set-position">
+                            <img src="./assets/new_icons/redstroke.svg" alt="" height="27" width="8" />
+                        </span>
+                    </div>
+                    <div class="col-3">
+                        <label class="form-label"> From Date <span class="text-danger">*</span> </label>
+                        <input class="form-control" type="date" [(ngModel)]="fromDate" />
+                    </div>
+                    <div class="col-3">
+                        <label class="form-label"> To Date <span class="text-danger">*</span> </label>
+                        <input class="form-control" type="date" [(ngModel)]="toDate" />
+                    </div>
+                </div>
+            </div>
+            <div class="col-3 align-self-end separate-image">
+                <span class="image-position">
+                    <img src="./assets/new_icons/redstroke.svg" alt="" height="27" width="8" />
+                </span>
+                <button type="button" class="btn btn-primary px-4 me-3" (click)="getAll()">Apply Filter</button>
+                <button type="button" class="btn btn-primary px-4 ms-4" (click)="reset()">Reset Filter</button>
+            </div>
+        </div>
+
+        <hr class="row line-border" />
+        <div class="table-responsive mb-0">
+            <app-setting-header
+                [data]="{page,pageSize,collection,search,type: 'list',pdfDisplay:true}"
+                (dataChange)="eventHeader($event)"
+            >
+            </app-setting-header>
+            <table class="table table-bordered table-sticky">
+                <thead class="bg-primary">
+                    <tr class="text-white">
+                        <th sortable="workOrderCode" (sort)="onSort($event)">Work Order ID</th>
+                        <th sortable="equipmentCode" (sort)="onSort($event)">Equipment Code</th>
+                        <th class="text-start" sortable="equipmentName" (sort)="onSort($event)">Equipment Name</th>
+                        <th sortable="priority" (sort)="onSort($event)">Priority</th>
+                        <th sortable="status" (sort)="onSort($event)">Status</th>
+                        <th sortable="technicianName" (sort)="onSort($event)">Assigned Technician</th>
+                        <th sortable="scheduleDate" (sort)="onSort($event)">Scheduled Date</th>
+                        <th sortable="completionDate" (sort)="onSort($event)">Completion Date</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let u of tableData">
+                        <td>{{ u?.workOrderCode }}</td>
+                        <td>{{ u?.equipmentCode }}</td>
+                        <td class="text-start">{{ u?.equipmentName }}</td>
+                        <td>{{ u?.priority }}</td>
+                        <td>{{ u?.status }}</td>
+                        <td>{{ u?.technicianName }}</td>
+                        <td>{{ u?.scheduleDate }}</td>
+                        <td>{{ u?.completionDate }}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

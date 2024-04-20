@@ -1,0 +1,76 @@
+<div class="modelPage">
+    <div class="modal-header">
+        <div class="heading">Batch Info</div>
+        <div>
+            <button type="button" class="btn btn-cross btn-sm" aria-label="Close" (click)="this.activeModal.close()">
+                <i class="fa fa-times-circle" aria-hidden="true"></i>
+            </button>
+        </div>
+    </div>
+    <div class="container-fluid px-0 mt-5">
+        <div class="row justify-content-center">
+            <div class="col-5">
+                <div class="d-flex align-items-center">
+                    <div class="col-form-label text-nowrap">
+                        Total Batch Qty.
+                        <i class="fa fa-caret-right fs-3 mx-2"></i>
+                    </div>
+                    <input
+                        type="number"
+                        class="form-control"
+                        [(ngModel)]="totalBatchQuantity"
+                        [disabled]="!['create', 'edit'].includes(action)"
+                        readonly
+                    />
+                </div>
+            </div>
+        </div>
+        <div class="row justify-content-center mt-4">
+            <div class="col-5">
+                <div class="d-flex align-items-center">
+                    <div class="col-form-label text-nowrap">
+                        Batch/Mfg Date
+                        <i class="fa fa-caret-right fs-3 mx-2"></i>
+                    </div>
+                    <input
+                        type="date"
+                        class="form-control"
+                        [(ngModel)]="manufacturingDate"
+                        [disabled]="!['create', 'edit'].includes(action)"
+                    />
+                </div>
+            </div>
+        </div>
+        <div class="row justify-content-center mt-4">
+            <div class="col-5">
+                <div class="d-flex align-items-center">
+                    <div class="col-form-label text-nowrap">
+                        Batch Number #
+                        <i class="fa fa-caret-right fs-3 mx-2"></i>
+                    </div>
+                    <input
+                        type="text"
+                        class="form-control"
+                        [(ngModel)]="batchNumber"
+                        [disabled]="!['create', 'edit'].includes(action)"
+                    />
+                </div>
+            </div>
+        </div>
+
+        <hr *ngIf="['create', 'edit'].includes(action)" class="line-border my-4" />
+
+        <div class="row">
+            <div class="col text-center mb-4">
+                <button
+                    *ngIf="['create', 'edit'].includes(action)"
+                    class="btn bg-primary px-5"
+                    type="button"
+                    (click)="dismissModel()"
+                >
+                    Save & Close
+                </button>
+            </div>
+        </div>
+    </div>
+</div>

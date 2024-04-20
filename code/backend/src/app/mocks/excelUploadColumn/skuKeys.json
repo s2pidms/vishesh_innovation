@@ -1,0 +1,17 @@
+{
+    "SKU Stage": "SKUStage",
+    "Product Category": "productCategory",
+    "SKU Name": "SKUName",
+    "SKU Description": "SKUDescription",
+    "Hsn": "hsn",
+    "Shelf life": "shelfLife",
+    "Primary Unit": "primaryUnit",
+    "Secondary Unit": "secondaryUnit",
+    "Primary to Secondary Conversion": "primaryToSecondaryConversion",
+    "Secondary to Primary Conversion": "secondaryToPrimaryConversion",
+    "Customer Name": "customerName",
+    "Customer Part Description": "customerPartDescription",
+    "Part No": "customerPartNo",
+    "Customer Currency": "customerCurrency",
+    "Standard Selling Rate": "standardSellingRate"
+}

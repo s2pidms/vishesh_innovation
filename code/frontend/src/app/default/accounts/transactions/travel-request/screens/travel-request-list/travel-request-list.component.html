@@ -1,0 +1,114 @@
+<div class="listCard card">
+    <div class="table-header">
+        <label class="heading">Travel Request Summary</label>
+    </div>
+    <div appAccessControl [accessType]="rolePermissionActions.createAction" class="text-center">
+        <button
+            class="btn btn-primary btn-add"
+            type="button"
+            (click)="navigateTo('/default/accounts/transactions/travel_request/form', {}, 'create')"
+        >
+            <i class="fa fa-plus-square fa-lg me-2" aria-hidden="true"></i>
+            Travel Request
+        </button>
+    </div>
+    <hr class="line-border" />
+    <div class="table-responsive">
+        <app-setting-header [data]="{page,pageSize,collection,search,type: 'list'}" (dataChange)="eventHeader($event)">
+        </app-setting-header>
+
+        <table class="table table-bordered">
+            <thead class="bg-primary">
+                <tr class="text-white">
+                    <th sortable="travelCode" (sort)="onSort($event)">Travel Code</th>
+                    <th sortable="raisedBy" (sort)="onSort($event)">Raised By</th>
+                    <th sortable="travelStartDate" (sort)="onSort($event)">Travel Start Date</th>
+                    <th sortable="travelEndDate" (sort)="onSort($event)">Travel End Date</th>
+                    <th sortable="totalDays" (sort)="onSort($event)">Total # of Days</th>
+                    <th sortable="purposeOfTravel" (sort)="onSort($event)">Purpose of Travel</th>
+                    <th sortable="estimatedBudget" (sort)="onSort($event)">Estimated Budget</th>
+                    <th sortable="costAllocation" (sort)="onSort($event)">Cost Allocation</th>
+                    <th sortable="status" (sort)="onSort($event)">Status</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let u of tableData; trackBy: trackByFn">
+                    <td>{{ u?.travelCode }}</td>
+                    <td>{{ u?.raisedBy }}</td>
+                    <td>{{ u?.travelStartDate }}</td>
+                    <td>{{ u?.travelEndDate }}</td>
+                    <td>{{ u?.totalDays }}</td>
+                    <td>{{ u?.purposeOfTravel }}</td>
+                    <td>{{ u?.estimatedBudget }}</td>
+                    <td>{{ u?.costAllocation }}</td>
+                    <td>{{ u?.status }}</td>
+                    <td>
+                        <div class="dropdown">
+                            <button class="dropbtn"></button>
+                            <div class="dropdown-content">
+                                <a
+                                    appAccessControl
+                                    [accessType]="rolePermissionActions.viewAction"
+                                    href="javascript:void(0)"
+                                    (click)="
+                                        navigateTo('/default/accounts/transactions/travel_request/form', u, 'view')
+                                    "
+                                >
+                                    <i class="fa fa-eye fa-lg me-2 text-primary" aria-hidden="true"></i>
+                                    View
+                                </a>
+                                <a
+                                    appAccessControl
+                                    [accessType]="rolePermissionActions.editAction"
+                                    href="javascript:void(0)"
+                                    [class.disable]="u?.status === 'Approved' || u?.status === 'Rejected'"
+                                    (click)="
+                                        navigateTo('/default/accounts/transactions/travel_request/form', u, 'edit')
+                                    "
+                                >
+                                    <i class="fa fa-pencil-square-o fa-lg me-2 text-primary" aria-hidden="true"></i>
+                                    Edit
+                                </a>
+                                <a
+                                    href="javascript:void(0)"
+                                    [class.disable]="u?.status === 'Approved' || u?.status === 'Rejected'"
+                                    (click)="
+                                        navigateTo('/default/accounts/transactions/travel_request/form', u, 'reject')
+                                    "
+                                >
+                                    <i class="fa fa fa-times fa-lg me-2 text-primary" aria-hidden="true"></i>
+                                    Reject
+                                </a>
+                                <a
+                                    [class.disable]="u?.status === 'Approved' || u?.status === 'Rejected'"
+                                    href="javascript:void(0)"
+                                    (click)="
+                                        navigateTo('/default/accounts/transactions/travel_request/form', u, 'approve')
+                                    "
+                                >
+                                    <i class="fa fa-check fa-lg text-success" aria-hidden="true"></i>
+                                    Approve
+                                </a>
+                                <!-- <a
+                                        [class.disable]="u?.status === 'Approved' || u?.status === 'Rejected'"
+                                        href="javascript:void(0)"
+                                        (click)="
+                                            navigateTo(
+                                                '/default/accounts/transactions/travel_request/form',
+                                                u,
+                                                'approve'
+                                            )
+                                        "
+                                    >
+                                        <i class="fa fa-check fa-lg text-success" aria-hidden="true"></i>
+                                        Raise a Expense
+                                    </a> -->
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>

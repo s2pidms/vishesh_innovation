@@ -1,0 +1,260 @@
+<Form class="px-2" [formGroup]="form" class="formCard card">
+    <div class="container">
+        <div class="row form-header">
+            <div class="col heading">
+                <label> Generate Export E-Way Bill</label>
+            </div>
+        </div>
+        <div class="form-body">
+            <div class="row">
+                <div class="col-3">
+                    <label class="form-label mb-0"> Sales Invoice <span class="text-danger"></span> </label>
+                    <ng-select
+                        [(ngModel)]="salesInvoiceId"
+                        [ngModelOptions]="{standalone: true}"
+                        [items]="salesInvoiceArr"
+                        bindLabel="salesInvoiceNumber"
+                        bindValue="_id"
+                        [clearable]="false"
+                        (change)="setSalesInvoice($event)"
+                    >
+                    </ng-select>
+                </div>
+
+                <div class="col-3">
+                    <label class="form-label mb-0"> Customer Name <span class="text-danger"></span> </label>
+                    <input
+                        class="form-control"
+                        type="text"
+                        [ngClass]="{'is-invalid': f['toTrdName'].invalid && submitted}"
+                        formControlName="toTrdName"
+                    />
+                </div>
+                <div class="col-3">
+                    <label class="form-label mb-0"> Document No. <span class="text-danger"></span> </label>
+                    <input
+                        class="form-control"
+                        type="text"
+                        [ngClass]="{'is-invalid': f['docNo'].invalid && submitted}"
+                        formControlName="docNo"
+                    />
+                </div>
+
+                <div class="col-3">
+                    <label class="form-label mb-0"> Document Date<span class="text-danger"></span> </label>
+                    <input
+                        class="form-control"
+                        type="text"
+                        [ngClass]="{'is-invalid': f['docDate'].invalid && submitted}"
+                        formControlName="docDate"
+                    />
+                </div>
+            </div>
+        </div>
+
+        <label class="form-label">Bill From Details</label>
+        <hr class="row line-border" />
+
+        <div class="row">
+            <div class="col-3">
+                <label class="form-label mb-0"> From GSTIN <span class="text-danger"></span> </label>
+                <input
+                    class="form-control"
+                    type="text"
+                    [ngClass]="{'is-invalid': f['fromGstin'].invalid && submitted}"
+                    formControlName="fromGstin"
+                />
+            </div>
+
+            <div class="col-3">
+                <label class="form-label mb-0"> Name <span class="text-danger"></span> </label>
+                <input
+                    class="form-control"
+                    type="text"
+                    [ngClass]="{
+                        'is-invalid': f['fromTrdName'].invalid && submitted
+                    }"
+                    formControlName="fromTrdName"
+                />
+            </div>
+
+            <div class="col-3">
+                <label class="form-label mb-0"> Address Line 1<span class="text-danger"></span> </label>
+                <input
+                    class="form-control"
+                    type="text"
+                    [ngClass]="{'is-invalid': f['fromAddr1'].invalid && submitted}"
+                    formControlName="fromAddr1"
+                />
+            </div>
+
+            <div class="col-3">
+                <label class="form-label mb-0"> Address Line 2<span class="text-danger"></span> </label>
+                <input
+                    class="form-control"
+                    type="text"
+                    [ngClass]="{'is-invalid': f['fromAddr2'].invalid && submitted}"
+                    formControlName="fromAddr2"
+                />
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-3">
+                <label class="form-label mb-0"> Place <span class="text-danger"></span> </label>
+                <input
+                    class="form-control"
+                    type="text"
+                    [ngClass]="{'is-invalid': f['fromPlace'].invalid && submitted}"
+                    formControlName="fromPlace"
+                />
+            </div>
+
+            <div class="col-3">
+                <label class="form-label mb-0"> Pin Code <span class="text-danger"></span> </label>
+                <input
+                    class="form-control"
+                    type="number"
+                    [ngClass]="{
+                        'is-invalid': f['fromPincode'].invalid && submitted
+                    }"
+                    formControlName="fromPincode"
+                />
+            </div>
+
+            <div class="col-3">
+                <label class="form-label mb-0"> State Code<span class="text-danger"></span> </label>
+                <input
+                    class="form-control"
+                    type="number"
+                    [ngClass]="{
+                        'is-invalid': f['actFromStateCode'].invalid && submitted
+                    }"
+                    formControlName="actFromStateCode"
+                    name="actFromStateCode"
+                />
+            </div>
+        </div>
+
+        <label class="form-label">Bill To Details</label>
+        <hr class="row line-border mt-0" />
+
+        <div class="row">
+            <div class="col-3">
+                <label class="form-label mb-0"> To GSTIN <span class="text-danger"></span> </label>
+                <input
+                    class="form-control"
+                    type="text"
+                    [ngClass]="{'is-invalid': f['toGstin'].invalid && submitted}"
+                    formControlName="toGstin"
+                />
+            </div>
+
+            <div class="col-3">
+                <label class="form-label mb-0"> Name <span class="text-danger"></span> </label>
+                <input
+                    class="form-control"
+                    type="text"
+                    [ngClass]="{'is-invalid': f['toTrdName'].invalid && submitted}"
+                    formControlName="toTrdName"
+                />
+            </div>
+
+            <div class="col-3">
+                <label class="form-label mb-0"> Address Line 1<span class="text-danger"></span> </label>
+                <input
+                    class="form-control"
+                    type="text"
+                    [ngClass]="{'is-invalid': f['toAddr1'].invalid && submitted}"
+                    formControlName="toAddr1"
+                />
+            </div>
+
+            <div class="col-3">
+                <label class="form-label mb-0"> Address Line 2<span class="text-danger"></span> </label>
+                <input
+                    class="form-control"
+                    type="text"
+                    [ngClass]="{'is-invalid': f['toAddr2'].invalid && submitted}"
+                    formControlName="toAddr2"
+                />
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-3">
+                <label class="form-label mb-0"> Place <span class="text-danger"></span> </label>
+                <input
+                    class="form-control"
+                    type="text"
+                    [ngClass]="{'is-invalid': f['toPlace'].invalid && submitted}"
+                    formControlName="toPlace"
+                />
+            </div>
+
+            <div class="col-3">
+                <label class="form-label mb-0"> Pin Code <span class="text-danger"></span> </label>
+                <input
+                    class="form-control"
+                    type="number"
+                    [ngClass]="{'is-invalid': f['toPincode'].invalid && submitted}"
+                    formControlName="toPincode"
+                />
+            </div>
+
+            <div class="col-3">
+                <label class="form-label mb-0"> State Code<span class="text-danger"></span> </label>
+                <input
+                    class="form-control"
+                    type="number"
+                    [ngClass]="{
+                        'is-invalid': f['actToStateCode'].invalid && submitted
+                    }"
+                    formControlName="actToStateCode"
+                    (keyup)="setStateCode()"
+                />
+            </div>
+        </div>
+
+        <hr class="row line-border" />
+
+        <div class="row">
+            <div class="col-7">
+                <button class="btn bg-primary" type="button" (click)="openTransportationDetailsModal()">
+                    Add Transportation Details
+                </button>
+                <button class="btn bg-primary ms-4" type="button" (click)="openItemDetailsModal()">
+                    Add Item Details
+                </button>
+            </div>
+
+            <div class="col-5 mb-0 align-self-end">
+                <div class="row">
+                    <div *ngIf="action !== 'view'" class="d-grid col pe-0">
+                        <button
+                            class="btn btn-primary"
+                            type="button"
+                            (click)="reset()"
+                            [ngClass]="{'d-none': action == 'View'}"
+                        >
+                            Reset
+                        </button>
+                    </div>
+
+                    <div *ngIf="action !== 'view'" class="d-grid col">
+                        <button
+                            appAccessControl
+                            [accessType]="rolePermissionActions.createAction"
+                            class="btn btn-primary"
+                            type="button"
+                            (click)="submit()"
+                            [ngClass]="{'d-none': action == 'View'}"
+                        >
+                            Generate Export E-Way Bill
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</Form>

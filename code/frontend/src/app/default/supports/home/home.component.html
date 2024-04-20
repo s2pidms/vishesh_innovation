@@ -1,0 +1,86 @@
+<div class="container-fluid text-center dashboard-page">
+  <div class="row mt-5 mx-1">
+    <div class="col">
+      <div class="card">
+        <div class="card-body">
+          <h5 class="card-title">Total Tickets MTD</h5>
+          <p class="card-text">{{ dashBoardData.totalTicketsMTD }}</p>
+        </div>
+      </div>
+    </div>
+    <div class="col">
+      <div class="card">
+        <div class="card-body">
+          <h5 class="card-title">Total Tickets YTD</h5>
+          <p class="card-text">{{ dashBoardData.totalTicketsYTD }}</p>
+        </div>
+      </div>
+    </div>
+    <div class="col">
+      <div class="card">
+        <div class="card-body">
+          <h5 class="card-title">Open Tickets</h5>
+          <p class="card-text">{{ dashBoardData.openTickets }}</p>
+        </div>
+      </div>
+    </div>
+    <div class="col">
+      <div class="card">
+        <div class="card-body">
+          <h5 class="card-title">WIP Tickets</h5>
+          <p class="card-text">{{ dashBoardData.WIPTickets }}</p>
+        </div>
+      </div>
+    </div>
+    <div class="col">
+      <div class="card">
+        <div class="card-body">
+          <h5 class="card-title">Fixed Tickets</h5>
+          <p class="card-text">{{ dashBoardData.fixedTickets }}</p>
+        </div>
+      </div>
+    </div>
+    <div class="col">
+      <div class="card">
+        <div class="card-body">
+          <h5 class="card-title">Closed Tickets</h5>
+          <p class="card-text">{{ dashBoardData.closedTickets }}</p>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row mx-4 mt-5">
+    <div class="col-md-6 px-2">
+      <div class="card">
+        <div class="card-body py-5">
+          <h5 class="card-title">Ticket Count by Ticket Type</h5>
+          <canvas
+            baseChart
+            class="chart pointer"
+            [data]="dashBoardData.barChartDataTicketCountByTicketType"
+            [options]="barChartOptions"
+            [type]="barChartType"
+            [plugins]="barChartPlugins"
+          >
+          </canvas>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-6 px-2">
+      <div class="card">
+        <div class="card-body py-5">
+          <h5 class="card-title">Ticket Count by Ticket Severity</h5>
+          <canvas
+            baseChart
+            class="chart pointer"
+            [data]="dashBoardData.barChartDataTicketCountByTicketSeverity"
+            [options]="barChartOptions"
+            [type]="barChartType"
+            [plugins]="barChartPlugins"
+          >
+          </canvas>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

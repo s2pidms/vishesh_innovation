@@ -1,0 +1,60 @@
+<div class="listCard card">
+    <div class="table-header">
+        <label class="heading">Cost Head Summary</label>
+    </div>
+    <div class="table-responsive">
+        <app-setting-header [data]="{page,pageSize,collection,search,type: 'list'}" (dataChange)="eventHeader($event)">
+        </app-setting-header>
+
+        <table class="table table-bordered">
+            <thead class="bg-secondary">
+                <tr class="text-white">
+                    <th sortable="order" (sort)="onSort($event)">Sr.No</th>
+                    <th class="text-start" sortable="costHead" class="text-start" (sort)="onSort($event)">Cost Head</th>
+                    <th class="text-start" sortable="displayName" (sort)="onSort($event)">Display Name</th>
+                    <th class="text-start" sortable="category" (sort)="onSort($event)">Category</th>
+                    <th sortable="status" (sort)="onSort($event)">Status</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let u of tableData; trackBy: trackByFn">
+                    <td>{{ u?.order }}</td>
+                    <td class="text-start">{{ u?.costHead }}</td>
+                    <td class="text-start">{{ u?.displayName }}</td>
+                    <td class="text-start">{{ u?.category }}</td>
+                    <td>{{ u?.status }}</td>
+                    <td>
+                        <div class="dropdown">
+                            <button class="dropbtn"></button>
+                            <div class="dropdown-content">
+                                <a
+                                    appAccessControl
+                                    [accessType]="rolePermissionActions.viewAction"
+                                    href="javascript:void(0)"
+                                    (click)="
+                                        navigateTo('default/settings/master/finance_master/cost_head/form', u, 'view')
+                                    "
+                                >
+                                    <i class="fa fa-eye fa-lg me-2 text-primary" aria-hidden="true"></i>
+                                    View
+                                </a>
+                                <a
+                                    appAccessControl
+                                    [accessType]="rolePermissionActions.editAction"
+                                    href="javascript:void(0)"
+                                    (click)="
+                                        navigateTo('default/settings/master/finance_master/cost_head/form', u, 'edit')
+                                    "
+                                >
+                                    <i class="fa fa-pencil-square-o fa-lg me-2 text-primary" aria-hidden="true"></i>
+                                    Edit
+                                </a>
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>

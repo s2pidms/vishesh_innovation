@@ -1,0 +1,78 @@
+<div class="listCard card">
+    <div class="table-header">
+        <label class="heading">Paid Holidays Summary</label>
+    </div>
+
+    <div appAccessControl [accessType]="rolePermissionActions.createAction" class="text-center">
+        <button class="plusIconSvg btn btn-primary me-1"></button>
+        <button
+            class="btn btn-primary btn-add px-5"
+            type="button"
+            (click)="navigateTo('/default/HR/master/paid_holidays/ph-form', null, 'create')"
+        >
+            Holiday
+        </button>
+    </div>
+    <hr class="line-border" />
+    <div class="table-responsive">
+        <app-setting-header [data]="{page,pageSize,collection,search,type: 'list'}" (dataChange)="eventHeader($event)">
+        </app-setting-header>
+
+        <table class="table table-bordered table-sticky">
+            <thead class="bg-primary">
+                <tr class="text-white">
+                    <th sortable="serialNumber" (sort)="onSort($event)">SN</th>
+                    <th class="text-start" sortable="holidayName" (sort)="onSort($event)">Holiday Name</th>
+                    <th sortable="holidayDay" (sort)="onSort($event)">Day</th>
+                    <th sortable="holidayDate" (sort)="onSort($event)">Date</th>
+                    <th sortable="holidayLocation" (sort)="onSort($event)">Location</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let u of tableData; let i = index; trackBy: trackByFn">
+                    <td>{{ u?.serialNumber }}</td>
+                    <td class="text-start">{{ u?.holidayName }}</td>
+                    <td>{{ u?.holidayDay }}</td>
+                    <td>{{ u?.holidayDateS }}</td>
+                    <td>{{ u?.holidayLocation }}</td>
+
+                    <td>
+                        <div class="dropdown">
+                            <button class="dropbtn"></button>
+                            <div class="dropdown-content">
+                                <a
+                                    appAccessControl
+                                    [accessType]="rolePermissionActions.viewAction"
+                                    href="javascript:void(0)"
+                                    (click)="navigateTo('/default/HR/master/paid_holidays/ph-form', u?._id, 'view')"
+                                >
+                                    <i class="fa fa-eye fa-lg me-2 text-primary" aria-hidden="true"></i>
+                                    View
+                                </a>
+                                <a
+                                    appAccessControl
+                                    [accessType]="rolePermissionActions.editAction"
+                                    href="javascript:void(0)"
+                                    (click)="navigateTo('/default/HR/master/paid_holidays/ph-form', u?._id, 'edit')"
+                                >
+                                    <i class="fa fa-pencil-square-o fa-lg me-2 text-primary" aria-hidden="true"></i>
+                                    Edit
+                                </a>
+                                <a
+                                    appAccessControl
+                                    [accessType]="rolePermissionActions.editAction"
+                                    href="javascript:void(0)"
+                                    (click)="deletePaidHoliday(u)"
+                                >
+                                    <i class="fa fa-trash me-2 text-primary" aria-hidden="true"></i>
+                                    Delete
+                                </a>
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>

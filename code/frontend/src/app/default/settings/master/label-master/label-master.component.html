@@ -1,0 +1,15 @@
+<div style="width: 80rem" class="container-fluid tabs-card-page mt-5">
+    <div class="row row-cols-1 row-cols-md-4">
+        <div class="col d-flex justify-content-center" *ngFor="let t of cardsData">
+            <div
+                class="card masterCard"
+                [ngClass]="t.disabled ? 'disabled' : ''"
+                (click)="navigateTo('./default/settings/master/label_master/dynamic_label_card/form', t.id, t.title)"
+            >
+                <div class="card-body d-flex align-content-center">
+                    <h5 class="card-title align-self-center">{{ t.title }}</h5>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

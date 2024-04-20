@@ -1,0 +1,475 @@
+<div class="container-fluid printScreen">
+    <div class="row">
+        <div class="col-12 text-center px-0">
+            <div class="page py-3">
+                <div class="table-responsive shadow">
+                    <table class="table">
+                        <tr>
+                            <td colspan="11">
+                                <div class="text-start">
+                                    <img src="{{ tableData?.company?.SOPdfHeaderUrl }}" class="pdf-header" />
+                                </div>
+                            </td>
+                            <td colspan="1" rowspan="2">
+                                <div class="text-center">
+                                    <img
+                                        src="{{
+                                            tableData?.SignedQrCodeImgUrl
+                                                ? 'https://my.gstzen.in' + tableData?.SignedQrCodeImgUrl
+                                                : ''
+                                        }}"
+                                        class="QR-img"
+                                    />
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan="11">
+                                <div>
+                                    <p>
+                                        IRN :
+                                        {{ tableData?.Irn ? tableData?.Irn : "-" }}
+                                    </p>
+                                    <p>Ack No.: {{ tableData?.AckNo ? tableData?.AckNo : "-" }}</p>
+                                    <p>
+                                        Ack Date:
+                                        {{ tableData?.AckDt ? tableData?.AckDt.substring(10, -1) : "-" }}
+                                    </p>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr class="head-row">
+                            <td colspan="12" class="text-center">
+                                <label class="page-title">Tax Invoice </label>
+                                <p class="fs-4">
+                                    (Supply meant for export/supply to SEZ unit or SEZ developer for authorized
+                                    operations under LUT/Bond without payment of IGST.)
+                                </p>
+                            </td>
+                        </tr>
+                        <tr class="head-row">
+                            <th colspan="4" class="bg-grey">
+                                <label class="heading">Buyer's Details [Bill To]</label>
+                            </th>
+                            <th colspan="4" class="bg-grey">
+                                <label class="heading">Consignee Details [Ship To]</label>
+                            </th>
+                            <th colspan="4" class="bg-grey">
+                                <label class="heading">Document Details</label>
+                            </th>
+                        </tr>
+                        <tr>
+                            <td colspan="4">
+                                <p class="fw-bold">
+                                    {{ tableData?.customerBillingAddress?.contactPersonName }}
+                                </p>
+                                <p>
+                                    {{ tableData?.customerBillingAddress?.line1 }}
+                                </p>
+                                <p>
+                                    {{ tableData?.customerBillingAddress?.line2 }}
+                                </p>
+                                <p>
+                                    {{ tableData?.customerBillingAddress?.line3 }}
+                                </p>
+                                <p>
+                                    {{
+                                        tableData?.customerBillingAddress?.city
+                                            ? tableData?.customerBillingAddress?.city
+                                            : tableData?.customerBillingAddress?.district
+                                    }}, {{ tableData?.customerBillingAddress?.state }},
+                                    {{ tableData?.customerBillingAddress?.pinCode }}
+                                </p>
+                                <p>
+                                    {{ tableData?.customerBillingAddress?.country }}
+                                </p>
+                            </td>
+                            <td colspan="4">
+                                <p class="fw-bold">
+                                    {{ tableData?.customerShippingAddress?.contactPersonName }}
+                                </p>
+                                <p>
+                                    {{ tableData?.customerShippingAddress?.line1 }}
+                                </p>
+                                <p>
+                                    {{ tableData?.customerShippingAddress?.line2 }}
+                                </p>
+                                <p>
+                                    {{ tableData?.customerShippingAddress?.line3 }}
+                                </p>
+                                <p>
+                                    {{
+                                        tableData?.customerShippingAddress?.city
+                                            ? tableData?.customerShippingAddress?.city
+                                            : tableData?.customerShippingAddress?.district
+                                    }}, {{ tableData?.customerShippingAddress?.state }},
+                                    {{ tableData?.customerShippingAddress?.pinCode }},
+                                </p>
+                                <p>
+                                    {{ tableData?.customerShippingAddress?.country }}
+                                </p>
+                            </td>
+                            <td colspan="4">
+                                <p>Invoice No.: {{ tableData?.salesInvoiceNumber }}</p>
+                                <p>
+                                    Invoice Date:
+                                    {{ tableData?.salesInvoiceDate | date : "dd-MMM-yy" }}
+                                </p>
+                                <p>
+                                    Order Ref. :
+                                    {{ tableData?.PONumber }}
+                                </p>
+                                <p>
+                                    Order Ref. Date :
+                                    {{ tableData?.PODate ? (tableData?.PODate | date : "dd-MM-YYYY") : null }}
+                                </p>
+                                <p>
+                                    PI No. :
+                                    {{ tableData?.PINumber }}
+                                </p>
+                                <p>
+                                    PI Date :
+                                    {{ tableData?.PIDate ? (tableData?.PIDate | date : "dd-MM-YYYY") : null }}
+                                </p>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan="4">
+                                <p class="sub-text">
+                                    Mobile No.:
+                                    {{ tableData?.customer?.customerContactInfo?.contactPersonNumber }}
+                                </p>
+                                <p class="sub-text">
+                                    E-mail:
+                                    {{ tableData?.customer?.customerContactInfo?.contactPersonEmail }}
+                                </p>
+                            </td>
+                            <td colspan="4">
+                                <p class="sub-text">
+                                    Mobile No.:
+                                    {{ tableData?.customer?.customerContactInfo?.contactPersonNumber }}
+                                </p>
+                                <p class="sub-text">
+                                    E-mail:
+                                    {{ tableData?.customer?.customerContactInfo?.contactPersonEmail }}
+                                </p>
+                            </td>
+                            <td colspan="4">
+                                <p>Currency: INR</p>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan="12">
+                                <div class="py-4"></div>
+                            </td>
+                        </tr>
+                        <tr class="head-row text-center w-100 text-nowrap">
+                            <th colspan="1" class="text-center">#</th>
+                            <th colspan="3" class="text-start">Product Description</th>
+                            <th colspan="1" class="text-center">Order Ref.</th>
+                            <th colspan="1" class="text-center">HSN Code</th>
+                            <th colspan="1" class="text-center">UoM</th>
+                            <th colspan="1" class="text-center">Quantity</th>
+                            <th colspan="1" class="text-center">Rate/Unit</th>
+                            <th colspan="1" class="text-center">Disc %</th>
+                            <th colspan="1" class="text-center">Net Rate</th>
+                            <th colspan="1" class="text-center">Taxable Amount</th>
+                        </tr>
+                        <tr class="text-wrap" *ngFor="let s of tableData?.salesInvoiceDetails; let i = index">
+                            <td colspan="1" class="text-center">
+                                {{ s?.salesInvoiceLineNumber }}
+                            </td>
+                            <td colspan="3">
+                                <p>{{ s?.SKU?.SKUNo }}</p>
+                                <p>{{ s?.SKU?.SKUName }}</p>
+                                <p *ngIf="tableData?.customer?.showSKUDescription != 'No'">{{ s?.SKU?.SKUDescription }}</p>
+                                <!-- <p>
+                                    Part No.
+                                    {{
+                                        s?.SKU?.customerInfo[0]?.customerPartNo
+                                            ? s?.SKU?.customerInfo[0]?.customerPartNo
+                                            : s?.SKU?.SKUNo
+                                    }}
+                                    | Batch No./Date :
+                                    {{ s?.batchDate ? (s?.batchDate | date : "dd-MM-yy") : s?.tBatchNo }}
+                                </p> -->
+                            </td>
+
+                            <td colspan="1" class="text-center">
+                                {{ s?.SOId?.PONumber }}
+                            </td>
+                            <td colspan="1" class="text-center">
+                                {{ s?.SKU?.hsn }}
+                            </td>
+                            <td colspan="1" class="text-center">
+                                {{ s?.unit }}
+                            </td>
+                            <td colspan="1" class="text-center">
+                                {{ s?.dispatchQty | number : ".2-2" }}
+                            </td>
+                            <td colspan="1" class="text-center">
+                                {{ s?.purchaseRate | number : ".2-2" }}
+                            </td>
+                            <td colspan="1" class="text-center">
+                                {{ s?.discount | number : ".2-2" }}
+                            </td>
+                            <td colspan="1" class="text-center">
+                                {{ s?.salesInvoiceUnitRate | number : ".2-2" }}
+                            </td>
+                            <td colspan="2" class="text-center">
+                                {{ s?.salesInvoiceLineValue | number : ".2-2" }}
+                            </td>
+                        </tr>
+                        <tr *ngFor="let d of tableData.rowRepeat; let j = index">
+                            <td colspan="1" class="text-center">
+                                <p class="py-3">
+                                    {{ tableData.salesInvoiceDetails.length + j + 1 }}
+                                </p>
+                            </td>
+                            <td colspan="3" class="text-center"></td>
+                            <td colspan="1" class="text-center"></td>
+                            <td colspan="1" class="text-center"></td>
+                            <td colspan="1" class="text-center"></td>
+                            <td colspan="1" class="text-center"></td>
+                            <td colspan="1" class="text-center"></td>
+                            <td colspan="1" class="text-center"></td>
+                            <td colspan="1" class="text-center"></td>
+                            <td colspan="1" class="text-center"></td>
+                        </tr>
+                        <tr>
+                            <td colspan="11 " class="text-end">
+                                <p class="sub-text">SAC 996511 - Freight & Forwarding Charges</p>
+                            </td>
+                            <td colspan="1" class="text-center sub-text">
+                                {{ tableData?.otherCharges?.totalAmount | number : ".2-2" }}
+                            </td>
+                        </tr>
+                        <tr class="border-btm">
+                            <th colspan="11" class="text-end">
+                                <p>Total Taxable Amount</p>
+                            </th>
+                            <th colspan="1" class="text-center">
+                                {{ tableData?.salesInvoiceTotalAmount | number : ".2-2" }}
+                            </th>
+                        </tr>
+
+                        <tr class="border-btm">
+                            <td colspan="12">
+                                <div class="row justify-content-between px-5">
+                                    <div class="col-8 h-100 p-0 pe-4">
+                                        <h4 class="my-2">GST Summary | Currency INR</h4>
+                                        <table class="table table-sm">
+                                            <tr>
+                                                <th class="text-center">HSN/SAC</th>
+                                                <th class="text-center">Taxable Amt.</th>
+                                                <th class="text-center">IGST %</th>
+                                                <th class="text-center">IGST Amt.</th>
+                                                <th class="text-center">Tax Amount</th>
+                                            </tr>
+                                            <tr *ngFor="let s of tableData.GSTDetails">
+                                                <td class="text-center sub-text">{{ s?.HSNCode }}</td>
+                                                <td class="text-center sub-text">
+                                                    {{ s?.taxableValue ? (s?.taxableValue | number : ".2-2") : "-" }}
+                                                </td>
+
+                                                <td class="text-center sub-text">
+                                                    {{ s?.igstRate ? s?.igstRate : "-" }}
+                                                </td>
+                                                <td class="text-center sub-text">
+                                                    {{ s?.igstAmount ? (s?.igstAmount | number : ".2-2") : "NIL" }}
+                                                </td>
+
+                                                <td class="text-center sub-text">
+                                                    {{ +s?.igstAmount ? (+s?.igstAmount | number : ".2-2") : "NIL" }}
+                                                </td>
+                                            </tr>
+                                            <tr *ngFor="let d of tableData.summaryRowRepeatForExports">
+                                                <td class="text-center sub-text">-</td>
+                                                <td class="text-center sub-text">-</td>
+                                                <td class="text-center sub-text">-</td>
+                                                <td class="text-center sub-text">-</td>
+                                                <td class="text-center sub-text">-</td>
+                                            </tr>
+                                            <tr>
+                                                <td class="text-center sub-text">Total >></td>
+                                                <td class="text-center sub-text">
+                                                    <!-- {{
+                                                        tableData?.salesInvoiceTotalAmount
+                                                            ? (tableData?.salesInvoiceTotalAmount | number : ".2-2")
+                                                            : "-"
+                                                    }} -->
+                                                    -
+                                                </td>
+
+                                                <td class="text-center sub-text">-</td>
+                                                <td class="text-center sub-text">
+                                                    {{
+                                                        tableData?.salesInvoiceTotalIGSTAmount
+                                                            ? (tableData?.salesInvoiceTotalIGSTAmount | number : ".2-2")
+                                                            : "-"
+                                                    }}
+                                                </td>
+                                                <td class="text-center sub-text">
+                                                    {{
+                                                        +tableData?.salesInvoiceTotalIGSTAmount
+                                                            ? (+tableData?.salesInvoiceTotalIGSTAmount
+                                                              | number : ".2-2")
+                                                            : "NIL"
+                                                    }}
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <th colspan="9" class="text-start">
+                                                    Total Tax Amount (In words): NIL
+                                                    <!-- {{
+                                                        tableData.salesInvoiceTotalTaxAmount
+                                                            ? (tableData.salesInvoiceTotalTaxAmount ?? 0 | toWords)
+                                                            : "NIL"
+                                                    }} -->
+                                                </th>
+                                            </tr>
+                                        </table>
+                                        <div class="py-3"></div>
+                                    </div>
+                                    <div class="col-4 h-100 p-0">
+                                        <h4 class="my-2">Tax Invoice Summary | Currency INR</h4>
+                                        <table class="table">
+                                            <tr>
+                                                <th>Total Taxable Amount</th>
+                                                <th class="text-center">
+                                                    {{
+                                                        tableData?.salesInvoiceTotalAmount
+                                                            ? (tableData?.salesInvoiceTotalAmount | number : ".2-2")
+                                                            : "-"
+                                                    }}
+                                                </th>
+                                            </tr>
+
+                                            <tr>
+                                                <td class="sub-text">Output I-GST</td>
+                                                <td class="text-center sub-text">
+                                                    {{
+                                                        tableData?.salesInvoiceTotalIGSTAmount
+                                                            ? (tableData?.salesInvoiceTotalIGSTAmount | number : ".2-2")
+                                                            : "-"
+                                                    }}
+                                                </td>
+                                            </tr>
+
+                                            <tr>
+                                                <td class="sub-text">Rounded off [+/-]</td>
+                                                <td class="text-center sub-text">
+                                                    {{
+                                                        tableData?.roundedOff
+                                                            ? (tableData?.roundedOff | number : ".2-2")
+                                                            : "-"
+                                                    }}
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td class="sub-text">-</td>
+                                                <td class="text-center sub-text">-</td>
+                                            </tr>
+                                            <tr>
+                                                <th>
+                                                    <p>Total Invoice Amount</p>
+                                                </th>
+                                                <th class="text-center">
+                                                    {{ tableData?.salesInvoiceTotalAmountWithTax | number : ".2-2" }}
+                                                </th>
+                                            </tr>
+                                        </table>
+                                        <div class="py-3"></div>
+                                    </div>
+                                </div>
+                                <div class="row px-5">
+                                    <div class="col-12 px-0">
+                                        <table class="table">
+                                            <tr>
+                                                <th>
+                                                    <b>Total Invoice Amount (In words): INR</b>
+                                                    {{ tableData.salesInvoiceTotalAmountWithTax ?? 0 | toWords }}
+                                                </th>
+                                            </tr>
+                                        </table>
+                                        <div class="py-2"></div>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+
+                        <tr class="border-btm">
+                            <td colspan="12">
+                                <p class="fs-4">
+                                    Export under Letter of Undertaking without payment of integrated Tax vide
+                                    Application Reference No. (ARN): {{ tableData?.ARNNo }} Dated
+                                    {{ tableData?.ARNDate | date : "dd-MM-YYYY" }}
+                                </p>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan="10" class="p-0 border-0" style="padding: 0rem !important">
+                                <table class="table">
+                                    <tr>
+                                        <td colspan="6" class="border-top-0">
+                                            <p>Export Invoice No.: {{ tableData?.exportsInfo?.exportsInvoiceNo }}</p>
+                                        </td>
+                                        <td colspan="6" class="border-top-0">
+                                            <p>Mode of Transport: {{ tableData?.modeOfTransport }}</p>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td colspan="6">
+                                            <p>
+                                                Export Invoice Date:
+                                                {{ tableData?.exportsInfo?.exportsInvoiceDate | date : "dd-MM-YYYY" }}
+                                            </p>
+                                        </td>
+                                        <td colspan="6">
+                                            <p>Freight Terms: {{ tableData?.frightTerms }}</p>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td colspan="6">
+                                            <p>
+                                                Export Invoice Value:
+                                                {{ tableData?.customer?.customerCurrency }}
+                                                {{ tableData?.exportsInfo?.exportsInvoiceTotalValue }}
+                                            </p>
+                                        </td>
+                                        <td colspan="6">
+                                            <p>Port of Destination: {{ tableData?.destination }}</p>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td colspan="6">
+                                            <p>
+                                                Exchange Rate:
+                                                {{ tableData?.company?.accountsDetails?.reportingCurrency }}
+                                                {{ tableData?.exportsInfo?.exchangeRate }}
+                                            </p>
+                                        </td>
+                                        <td colspan="6">
+                                            <p>Final Destination: {{ tableData?.exportsInfo?.finalDestination }}</p>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td colspan="12">
+                                            We declare that this invoice shows the actual price of thr goods described
+                                            and that all particulars are true and correct
+                                        </td>
+                                    </tr>
+                                </table>
+                            </td>
+                            <td colspan="2" class="border-start-0">
+                                <div class="text-center">
+                                    <img src="{{ tableData?.company?.TISignatureUrl }}" class="img-sign" />
+                                </div>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

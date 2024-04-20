@@ -1,0 +1,62 @@
+<div class="modelPage">
+    <div class="modal-header">
+        <div class="heading">Upload Documents</div>
+        <div>
+            <button type="button" class="btn btn-cross btn-sm" aria-label="Close" (click)="activeModal.close()">
+                <i class="fa fa-times-circle" aria-hidden="true"></i>
+            </button>
+        </div>
+    </div>
+    <form [formGroup]="form">
+        <div class="row my-4">
+            <div class="col-md-6">
+                <app-file-upload
+                    [fileName]="form.controls['SOPdfHeader'].value"
+                    [url]="form.controls['SOPdfHeaderUrl'].value"
+                    [label]="'Company SO PDF Header'"
+                    [(file)]="newSOPdfHeaderFile"
+                ></app-file-upload>
+            </div>
+            <div class="col-md-6">
+                <app-file-upload
+                    [fileName]="form.controls['SOSignature'].value"
+                    [url]="form.controls['SOSignatureUrl'].value"
+                    [label]="'Company SO Signature'"
+                    [(file)]="newSOSignatureFile"
+                ></app-file-upload>
+            </div>
+        </div>
+
+        <hr class="line-border" />
+
+        <div class="row mb-4">
+            <div class="col-md-6">
+                <app-file-upload
+                    [fileName]="form.controls['PISignature'].value"
+                    [url]="form.controls['PISignatureUrl'].value"
+                    [label]="'Company PI Signature'"
+                    [(file)]="PISignatureFile"
+                ></app-file-upload>
+            </div>
+            <div class="col-md-6">
+                <app-file-upload
+                    [fileName]="form.controls['TISignature'].value"
+                    [url]="form.controls['TISignatureUrl'].value"
+                    [label]="'Company TI Signature'"
+                    [(file)]="TISignatureFile"
+                ></app-file-upload>
+            </div>
+        </div>
+        <hr class="line-border mt-5" />
+        <div class="text-center mt-4">
+            <button
+                class="btn bg-primary px-5 mb-4"
+                type="button"
+                [disabled]="btnDisable || action == 'view'"
+                (click)="uploadPDF()"
+            >
+                Upload & Close
+            </button>
+        </div>
+    </form>
+</div>

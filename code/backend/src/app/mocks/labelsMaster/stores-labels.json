@@ -1,0 +1,32 @@
+[
+    {
+        "menuItemId": "64a6c1e33339d4dc9d8141a6",
+        "labelName": "SKU Name",
+        "displayLabelName": "SKU Name"
+    },
+    {
+        "menuItemId": "64a6c1e33339d4dc9d8141a6",
+        "labelName": "SKU Description",
+        "displayLabelName": "SKU Description"
+    },
+    {
+        "menuItemId": "64a6c1e33339d4dc9d8141a6",
+        "labelName": "D-SKU Name",
+        "displayLabelName": "D-SKU Name"
+    },
+    {
+        "menuItemId": "64a6c1e33339d4dc9d8141a6",
+        "labelName": "D-SKU Description",
+        "displayLabelName": "D-SKU Description"
+    },
+    {
+        "menuItemId": "64a6c1e33339d4dc9d8141a6",
+        "labelName": "SKU Description is Required",
+        "displayLabelName": "SKU Description is Required"
+    },
+    {
+        "menuItemId": "64a6c1e33339d4dc9d8141a6",
+        "labelName": "Delivery Location",
+        "displayLabelName": "Delivery Location"
+    }
+]

@@ -1,0 +1,66 @@
+<form [formGroup]="form" class="formCard card">
+    <div class="container">
+        <div class="row form-header">
+            <div class="col heading">
+                <label>Service Master</label>
+            </div>
+        </div>
+        <div class="form-body">
+            <div class="row">
+                <div class="col-md-3">
+                    <label class="form-label"> Service Code <span class="text-danger">*</span> </label>
+                    <input class="form-control" type="text" formControlName="serviceCode" readonly />
+                </div>
+                <div class="col-md-3">
+                    <label class="form-label"> Service Description<span class="text-danger">*</span> </label>
+                    <input #date class="form-control" type="text" formControlName="serviceDescription" />
+                </div>
+                <div class="col-md-3">
+                    <label class="form-label"> Active <span class="text-danger">*</span> </label>
+
+                    <select class="form-select" formControlName="isActive">
+                        <option value="Y">Yes</option>
+                        <option value="N">No</option>
+                    </select>
+                </div>
+                <div class="col-md-3">
+                    <label class="form-label"> Select SAC <span class="text-danger">*</span> </label>
+
+                    <select class="form-select" (change)="setSAC()" formControlName="sacId">
+                        <option [value]="null" selected disabled>Select SAC No.</option>
+                        <option *ngFor="let g of masterData?.SACs" [value]="g._id">
+                            {{ g.sacCode }}
+                        </option>
+                    </select>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-3">
+                    <label class="form-label"> GST Rate <span class="text-danger">*</span> </label>
+                    <input class="form-control" type="any" formControlName="gst" readonly />
+                </div>
+                <div class="col-md-3">
+                    <label class="form-label"> IGST Rate <span class="text-danger">*</span> </label>
+                    <input class="form-control" type="any" formControlName="igst" readonly />
+                </div>
+                <div class="col-md-3">
+                    <label class="form-label"> CGST Rate <span class="text-danger">*</span> </label>
+                    <input class="form-control" type="any" formControlName="cgst" readonly />
+                </div>
+                <div class="col-md-3">
+                    <label class="form-label"> SGST Rate <span class="text-danger">*</span> </label>
+                    <input class="form-control" type="any" formControlName="sgst" readonly />
+                </div>
+            </div>
+        </div>
+        <hr *ngIf="action !== 'view'" class="row line-border" />
+        <div *ngIf="action !== 'view'" class="d-flex justify-content-center pb-4">
+            <div class="d-grid col-md-1 me-5" [ngClass]="{'d-none': action == 'View'}">
+                <button class="btn btn-primary" type="button" (click)="reset()">Reset</button>
+            </div>
+            <div class="d-grid col-md-1" [ngClass]="{'d-none': action == 'View'}">
+                <button class="btn btn-primary" type="button" (click)="submit()">Save</button>
+            </div>
+        </div>
+    </div>
+</form>

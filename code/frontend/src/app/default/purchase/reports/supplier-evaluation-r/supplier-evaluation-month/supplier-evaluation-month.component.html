@@ -1,0 +1,91 @@
+<div class="reportTablePage">
+    <div class="col-md-12 table-body pb-1">
+        <div class="row table-header">
+            <div class="col">
+                <label class="heading ms-0">Supplier Evaluation Detailed Report</label>
+            </div>
+        </div>
+
+        <div class="row mt-3 px-3">
+            <div class="col-6">
+                <h4 class="mb-4">Supplier: {{ supplierName }}</h4>
+            </div>
+            <div class="col-auto mt-2">
+                <h5>Evaluation Criteria:</h5>
+            </div>
+            <div class="col-auto pe-0" *ngFor="let h of data">
+                <div class="card">
+                    <div class="card-body pt-2 pb-0">
+                        <h5 class="card-title">
+                            {{ h?.name }} : <b> {{ h?.weight }}</b>
+                        </h5>
+                    </div>
+                </div>
+            </div>
+            <div class="col">
+                <div class="d-flex justify-content-end">
+                    <img
+                        src="./assets/images/excel.svg"
+                        height="24"
+                        [style.cursor]="'pointer'"
+                        (click)="excelDownload(tableData)"
+                    />
+                </div>
+            </div>
+        </div>
+        <div class="table-responsive mt-0">
+            <table class="table table-bordered">
+                <thead class="bg-secondary">
+                    <tr class="text-white">
+                        <th sortable="_id" (sort)="onSort($event)">Month</th>
+                        <th sortable="totalSupplies" (sort)="onSort($event)">Total Supplies</th>
+                        <th sortable="qualitySupplies" (sort)="onSort($event)">Quality Supplies</th>
+                        <th sortable="onTimeSupplies" (sort)="onSort($event)">Ontime Supplies</th>
+                        <th sortable="qualitySuppliesRating" (sort)="onSort($event)">QS Rating</th>
+                        <th
+                            sortable="qualitySuppliesActualRating
+                  "
+                            (sort)="onSort($event)"
+                        >
+                            Actual QS Rating
+                        </th>
+                        <th sortable="onTimeSuppliesRating" (sort)="onSort($event)">OS Rating</th>
+                        <th
+                            sortable="onTimeSuppliesActualRating
+                  "
+                            (sort)="onSort($event)"
+                        >
+                            Actual OS Rating
+                        </th>
+                        <th
+                            sortable="totalRating
+                  "
+                            (sort)="onSort($event)"
+                        >
+                            Total Rating
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let u of tableData; trackBy: trackByFn">
+                        <td>{{ u?._id | date : "MMM-yyyy" }}</td>
+                        <td>{{ u?.totalSupplies }}</td>
+                        <td>{{ u?.qualitySupplies }}</td>
+                        <td>{{ u?.onTimeSupplies }}</td>
+                        <td>{{ u?.qualitySuppliesRating | number : "1.2-2" }}</td>
+                        <td>
+                            {{ u?.qualitySuppliesActualRating | number : "1.2-2" }}
+                        </td>
+                        <td>{{ u?.onTimeSuppliesRating | number : "1.2-2" }}</td>
+                        <td>
+                            {{ u?.onTimeSuppliesActualRating | number : "1.2-2" }}
+                        </td>
+                        <td>
+                            {{ u?.totalRating | number : "1.2-2" }}
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

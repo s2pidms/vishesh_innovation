@@ -1,0 +1,96 @@
+<div class="modelPage">
+    <div class="modal-header">
+        <div class="heading">Material Requirement Planning (MRP)</div>
+        <div>
+            <button type="button" class="btn btn-cross btn-sm" aria-label="Close" (click)="this.activeModal.close()">
+                <i class="fa fa-times-circle" aria-hidden="true"></i>
+            </button>
+        </div>
+    </div>
+    <div class="container-fluid px-0 mt-5">
+        <div class="row justify-content-center px-5">
+            <div class="col-12 px-4">
+                <div class="row justify-content-between mb-3">
+                    <div class="col-4 d-flex align-items-center">
+                        <div class="d-flex align-items-center">
+                            <div class="col-form-label text-nowrap">
+                                Total Batch Quantity
+                                <span class="ms-1 me-2 col-form-label text-nowrap">&#9654;</span>
+                            </div>
+                            <input class="form-control" type="text" [(ngModel)]="totalBatchQuantity" readonly />
+                        </div>
+                    </div>
+                    <div class="col-4 d-flex justify-content-center align-items-center">
+                        <ngb-pagination
+                            *ngIf="tableData.length > 0"
+                            [collectionSize]="tableData.length"
+                            [(page)]="page"
+                            [pageSize]="pageSize"
+                            [boundaryLinks]="false"
+                        >
+                            <ng-template ngbPaginationPrevious>
+                                <img src="./assets/new_icons/pagination_prev.svg" width="20rem" />
+                            </ng-template>
+                            <ng-template ngbPaginationNext>
+                                <img src="./assets/new_icons/pagination_next.svg" width="20rem" />
+                            </ng-template>
+                            <ng-template ngbPaginationPages let-page let-pages="pages">
+                                <li class="ngb-custom-pages-item align-self-center" *ngIf="pages.length > 0">
+                                    <span class="page-label me-2 ms-1">
+                                        Page {{ page }} of {{ pages[pages.length - 1] }}
+                                    </span>
+                                </li>
+                            </ng-template>
+                        </ngb-pagination>
+                    </div>
+                    <div class="col-1"></div>
+                    <div class="col-3"></div>
+                </div>
+                <div style="min-height: 44rem" class="table-responsive">
+                    <table class="table table-bordered table-sticky">
+                        <thead class="bg-primary">
+                            <tr class="text-white">
+                                <th>Item Code</th>
+                                <th class="text-start">Item Name</th>
+                                <th class="text-start">Item Description</th>
+                                <th>UoM</th>
+                                <th>Qty/Part Count</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr
+                                *ngFor="
+                                    let item of tableData
+                                        | searchFi1ter : search
+                                        | slice : (page - 1) * pageSize : (page - 1) * pageSize + pageSize;
+                                    trackBy: trackByFn;
+                                    let i = index
+                                "
+                            >
+                                <td>{{ item?.itemCode }}</td>
+                                <td class="text-start" [style.width]="itemName.clientWidth" #itemName>
+                                    <span class="pointer" [positionTarget]="itemName" [ngbTooltip]="item.itemName">
+                                        {{ item.itemName }}
+                                    </span>
+                                </td>
+                                <td class="text-start" [style.width]="itemDescription.clientWidth" #itemDescription>
+                                    <span
+                                        class="pointer"
+                                        [positionTarget]="itemDescription"
+                                        [ngbTooltip]="item.itemDescription"
+                                    >
+                                        {{ item.itemDescription }}
+                                    </span>
+                                </td>
+                                <td>
+                                    {{ item?.UOM }}
+                                </td>
+                                <td>{{ item?.partCount ? (item?.partCount | number : "1.2-2") : null }}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

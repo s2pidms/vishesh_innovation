@@ -1,0 +1,105 @@
+<div class="listCard card">
+    <div class="table-header">
+        <label class="heading">BoM Summary of Gr. Child Items</label>
+    </div>
+
+    <div appAccessControl [accessType]="rolePermissionActions.createAction" class="text-center">
+        <button class="btn btn-primary btn-add" type="button" (click)="navigateTo('../form', null, 'create')">
+            <i class="fa fa-plus-square fa-lg me-2" aria-hidden="true"></i>
+            Create BoM
+        </button>
+    </div>
+    <hr class="line-border" />
+    <div class="table-responsive">
+        <app-setting-header [data]="{page,pageSize,collection,search,type: 'list'}" (dataChange)="eventHeader($event)">
+        </app-setting-header>
+        <table class="table table-bordered">
+            <thead class="bg-primary">
+                <tr class="text-white">
+                    <th sortable="BOMNo" (sort)="onSort($event)">BoM No.</th>
+                    <th sortable="grandChildItemCode" (sort)="onSort($event)">Item Code</th>
+                    <th class="text-start" sortable="grandChildItemName" (sort)="onSort($event)">Item Name</th>
+                    <th class="text-start" sortable="grandChildItemDescription" (sort)="onSort($event)">
+                        Item Description
+                    </th>
+                    <th sortable="UOM" (sort)="onSort($event)">UoM</th>
+                    <th sortable="partCount" (sort)="onSort($event)">Part Count</th>
+                    <th sortable="totalMaterialCost" (sort)="onSort($event)">Material Cost</th>
+                    <th sortable="status" (sort)="onSort($event)">Status</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let item of tableData; trackBy: trackByFn">
+                    <td>{{ item?.BOMNo }}</td>
+                    <td>{{ item?.grandChildItemCode }}</td>
+                    <td class="text-start" [style.width]="grandChildItemName.clientWidth" #grandChildItemName>
+                        <span
+                            class="pointer"
+                            [positionTarget]="grandChildItemName"
+                            [ngbTooltip]="item.grandChildItemName"
+                        >
+                            {{ item.grandChildItemName ? item.grandChildItemName : null }}
+                        </span>
+                    </td>
+                    <td
+                        class="text-start"
+                        [style.width]="grandChildItemDescription.clientWidth"
+                        #grandChildItemDescription
+                    >
+                        <span
+                            class="pointer"
+                            [positionTarget]="grandChildItemDescription"
+                            [ngbTooltip]="item.grandChildItemDescription"
+                        >
+                            {{ item.grandChildItemDescription ? item.grandChildItemDescription : null }}
+                        </span>
+                    </td>
+                    <td>{{ item?.UOM }}</td>
+                    <td>{{ item?.partCount }}</td>
+                    <td>{{ item?.totalMaterialCost }}</td>
+                    <td>
+                        <span class="d-flex justify-content-center">
+                            <div *ngIf="item.status == 'Active'" class="statusActive"></div>
+                            <div *ngIf="item.status == 'Inactive'" class="statusInActive"></div>
+                        </span>
+                    </td>
+                    <td>
+                        <div class="dropdown">
+                            <button class="dropbtn"></button>
+                            <div class="dropdown-content">
+                                <a
+                                    appAccessControl
+                                    [accessType]="rolePermissionActions.viewAction"
+                                    href="javascript:void(0)"
+                                    (click)="navigateTo('../form', item, 'view')"
+                                >
+                                    <i class="fa fa-eye fa-lg me-2 text-primary" aria-hidden="true"></i>
+                                    View
+                                </a>
+                                <a
+                                    appAccessControl
+                                    [accessType]="rolePermissionActions.editAction"
+                                    href="javascript:void(0)"
+                                    (click)="navigateTo('../form', item, 'edit')"
+                                >
+                                    <i class="fa fa-pencil-square-o fa-lg me-2 text-primary" aria-hidden="true"></i>
+                                    Edit
+                                </a>
+                                <a
+                                    appAccessControl
+                                    [accessType]="rolePermissionActions.editAction"
+                                    href="javascript:void(0)"
+                                    (click)="navigateTo('../form', item, 'copy')"
+                                >
+                                    <i class="fa fa-clone fa-lg me-2 text-primary" aria-hidden="true"></i>
+                                    Copy
+                                </a>
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>

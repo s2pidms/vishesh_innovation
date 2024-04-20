@@ -1,0 +1,88 @@
+<div class="modelPage">
+    <div class="modal-header">
+        <div class="heading">Bank Details</div>
+        <div>
+            <button type="button" class="btn btn-cross btn-sm" aria-label="Close" (click)="dismissModel()">
+                <i class="fa fa-times-circle" aria-hidden="true"></i>
+            </button>
+        </div>
+    </div>
+    <form [formGroup]="form" class="p-0">
+        <div class="row mt-5 px-5">
+            <div class="col-md-3">
+                <label class="form-label"> Beneficery name</label>
+                <input class="form-control" type="text" formControlName="companyBefName" />
+            </div>
+            <div class="col-md-3">
+                <label class="form-label"> Bank Name </label>
+                <input type="text" class="form-control" formControlName="companyBankName" />
+            </div>
+            <div class="col-md-3">
+                <label class="form-label">Bank Branch </label>
+                <input type="text" class="form-control" formControlName="companyBankBranch" />
+            </div>
+            <div class="col-md-3">
+                <label class="form-label">Bank Address </label>
+                <input type="text" class="form-control" formControlName="companyBankAddress" />
+            </div>
+        </div>
+
+        <div class="row my-4 px-5">
+            <div class="col-md-3">
+                <label class="form-label"> Account Type</label>
+
+                <select class="form-select" formControlName="companyAccType">
+                    <option [value]="null" selected disabled>Select</option>
+                    <option [value]="'Current'">Current</option>
+                    <option [value]="'Saving'">Saving</option>
+                </select>
+            </div>
+
+            <div class="col-md-3">
+                <label class="form-label"> Account No. </label>
+                <input type="number" class="form-control" formControlName="companyAccountNumber" />
+            </div>
+
+            <div class="col-md-3">
+                <label class="form-label"> IFSC Code </label>
+                <input type="text" class="form-control" formControlName="companyBankIFSCCode" />
+            </div>
+            <div class="col-md-3">
+                <label class="form-label"> MICR Code </label>
+                <input type="text" class="form-control" formControlName="companyBankMICRCode" />
+            </div>
+        </div>
+
+        <div class="row mb-4 px-5">
+            <div class="col-md-3">
+                <label class="form-label"> Exports </label>
+                <select (change)="setExports()" class="form-select" formControlName="exports">
+                    <option [value]="null">Select Exports</option>
+                    <option *ngFor="let e of exportsArr" [value]="e.value">
+                        {{ e.label }}
+                    </option>
+                </select>
+            </div>
+            <div class="col-md-3">
+                <label class="form-label"> Swift Code </label>
+                <input type="text" class="form-control" formControlName="swiftCode" />
+            </div>
+            <div class="col-md-3">
+                <label class="form-label"> Intermediary Bank </label>
+                <input type="text" class="form-control" formControlName="intermediaryBank" />
+            </div>
+            <div class="col-md-3">
+                <label class="form-label"> Intermediary Bank Swift Code </label>
+                <input type="text" class="form-control" formControlName="intermediaryBankSwiftCode" />
+            </div>
+        </div>
+    </form>
+
+    <hr class="line-border my-5" />
+
+    <div class="row justify-content-center mb-5">
+        <div class="col-12 text-center">
+            <button type="button" class="btn bg-primary px-5" (click)="dismissModel()">Save & Close</button>
+        </div>
+    </div>
+</div>

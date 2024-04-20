@@ -1,0 +1,111 @@
+<div class="formCard card">
+    <div class="container">
+        <div class="form-body">
+            <div class="row mt-3 justify-content-center">
+                <div class="col-12">
+                    <div class="table-responsive">
+                        <table class="table table-bordered table-sticky">
+                            <thead class="bg-primary">
+                                <tr class="text-white">
+                                    <th>SN</th>
+                                    <th class="text-start">Cost Head</th>
+                                    <th class="text-start">Category</th>
+                                    <th>Ccy</th>
+                                    <th *ngFor="let k of keys">
+                                        {{
+                                            "FY " +
+                                                (+k.replace("fy_", "") - 1) +
+                                                "-" +
+                                                (+k.replace("fy_", "") > +currentYear
+                                                    ? +(+k.replace("fy_", "")) + "*"
+                                                    : +k.replace("fy_", ""))
+                                        }}
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr *ngFor="let item of costHeadList; trackBy: trackByFn; let i = index">
+                                    <td [ngClass]="[10].includes(i) ? 'opex-color' : null">{{ item.sr }}</td>
+                                    <td [ngClass]="[10].includes(i) ? 'opex-color' : null" class="text-start">
+                                        <div class="d-flex justify-content-between">
+                                            <span>
+                                                {{ item.displayName }}
+                                            </span>
+                                            <span *ngIf="![10].includes(i)" class="pointer" data-tip data-for="infoTip">
+                                                <svg
+                                                    tooltipClass="my-tooltip-class custom-tooltip-class "
+                                                    [ngbTooltip]="list"
+                                                    xmlns="http://www.w3.org/2000/svg"
+                                                    width="14"
+                                                    height="14"
+                                                    fill="red"
+                                                    class="bi bi-info-circle"
+                                                    viewBox="0 0 16 16"
+                                                >
+                                                    <path
+                                                        d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"
+                                                    />
+                                                    <path
+                                                        d="m8.93 6.588-2.29.287-.082.38.45.083c.294.07.352.176.288.469l-.738 3.468c-.194.897.105 1.319.808 1.319.545 0 1.178-.252 1.465-.598l.088-.416c-.2.176-.492.246-.686.246-.275 0-.375-.193-.304-.533L8.93 6.588zM9 4.5a1 1 0 1 1-2 0 1 1 0 0 1 2 0z"
+                                                    />
+                                                </svg>
+                                                <ng-template #list>
+                                                    <div class="d-flex flex-column">
+                                                        <span
+                                                            *ngFor="let t of getTooltipOfCostHead(item.costHead)"
+                                                            class="text-start"
+                                                        >
+                                                            {{ t }}
+                                                        </span>
+                                                    </div>
+                                                </ng-template>
+                                            </span>
+                                        </div>
+                                    </td>
+                                    <td [ngClass]="[10].includes(i) ? 'opex-color' : null" class="text-start">
+                                        {{ item.category }}
+                                    </td>
+                                    <td [ngClass]="[10].includes(i) ? 'opex-color' : null">
+                                        {{ item.reportingCurrency | companyCurrency }}
+                                    </td>
+                                    <td [ngClass]="[10].includes(i) ? 'opex-color' : null" *ngFor="let k of keys">
+                                        <div *ngIf="item.costHead == 'TOTAL OPEX'">
+                                            {{ item[k] | number : "1.2-2" }}
+                                        </div>
+                                        <div
+                                            *ngIf="item.costHead != 'TOTAL OPEX'"
+                                            class="d-flex justify-content-center"
+                                        >
+                                            <input
+                                                class="form-control form-control-sm"
+                                                type="number"
+                                                [(ngModel)]="item[k]"
+                                                (input)="setOperatingExpenses()"
+                                            />
+                                        </div>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row mb-4">
+                <div class="col-6 d-flex">
+                    <button class="btn btn-primary me-5" type="button" (click)="openAllocationModal()">
+                        Set Allocation
+                    </button>
+                    <div class="d-flex align-items-center fs-4">Note : * - Budgeted OPEX</div>
+                </div>
+
+                <div appAccessControl [accessType]="rolePermissionActions.createAction" class="col-6 text-end">
+                    <div class="d-grid gap-2 d-md-block">
+                        <button type="button" class="btn btn-primary px-5 me-3" (click)="reset()">Reset</button>
+                        <button class="btn btn-primary px-5" type="button" (click)="update()">Save</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

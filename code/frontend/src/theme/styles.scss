@@ -1,0 +1,73 @@
+/* You can add global styles to this file, and also import other style files */
+// @import "default";
+@import "variables";
+
+/* Importing Bootstrap SCSS file. */
+@import "bootstrap/scss/bootstrap";
+@import "custom";
+@import "~@ng-select/ng-select/themes/default.theme.css";
+
+:root {
+    zoom: 100%;
+    // font-size: .732vw;
+    font-size: 0.732vw;
+
+    // 1rem = 10px = .732vw
+    // font-size:clamp(8px, 0.66vw, 0.66vw);
+    --vw-font-1: 0.0732vw;
+    --vw-font-10: 0.732vw;
+    --vw-font-12: 0.878vw;
+    --vw-font-14: 1.024vw;
+    // --vw-font-14: 1.024vw;
+    --vh-font-22: 1.61vw;
+
+    --vh-font-1: 0.153vh;
+    --vh-font-10: 1.538vh;
+    --vh-font-12: 1.46vh;
+
+    --bs-color-master: #009696;
+    --bs-color-transaction: #007daf;
+    --bs-color-report: #ff0064;
+    --bs-table-color: #7d7d7d;
+
+    --bs-addtable-color: #009696;
+    --bs-b2b-subheding: #ff0064;
+    --bs-b2b-heading: #007dfa;
+}
+
+* {
+    font-family: "Outfit", sans-serif;
+}
+
+input[type="number"] {
+    -moz-appearance: textfield;
+}
+
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+    display: none;
+}
+
+.statusSpanHeight {
+    background-color: white !important;
+    height: 2.8rem !important;
+    border-radius: 0rem !important;
+    border-left: none;
+}
+
+.statusSelectBorder {
+    border-right: none;
+}
+
+input[type="date"]::-webkit-calendar-picker-indicator {
+    /* Change the color of the calendar icon (for Chrome and Safari) */
+    // filter: invert(1); /* Invert the color of the icon */
+    background-color: transparent;
+    background-image: url("./../assets/new_icons/Asset_Date_selection.svg");
+    background-size: 100% 100%;
+    border: 0;
+    // padding: 1.7rem 1.9rem;
+    color: white;
+    height: 1.2rem;
+    width: 1.2rem;
+}

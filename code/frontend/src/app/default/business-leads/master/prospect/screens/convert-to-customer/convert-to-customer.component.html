@@ -1,0 +1,273 @@
+<div class="row justify-content-center px-5 form-page">
+  <div class="col-12 card-form">
+    <div class="row form-header">
+      <div class="col heading ms-2">
+        <label>Convert to Customer</label>
+      </div>
+    </div>
+    <div class="form-body px-4">
+      <form [formGroup]="form">
+        <div class="row mb-4">
+          <div class="col">
+            <label class="form-label">
+              Customer Code <span class="text-danger">*</span>
+            </label>
+            <input
+              type="text"
+              class="form-control"
+              formControlName="customerCode"
+              readonly
+            />
+          </div>
+          <div class="col">
+            <label class="form-label">
+              Customer Name
+              <span class="text-danger">*</span>
+            </label>
+            <input
+              type="text"
+              class="form-control"
+              formControlName="customerName"
+            />
+          </div>
+          <div class="col">
+            <label class="form-label">
+              Customer Nick Name
+              <span class="text-danger">*</span>
+            </label>
+            <input
+              type="text"
+              class="form-control"
+              formControlName="customerNickName"
+            />
+          </div>
+          <div class="col">
+            <label class="form-label">
+              Customer Category
+              <span class="text-danger">*</span>
+            </label>
+            <select formControlName="customerCategory" class="form-select">
+              <option [value]="null" selected disabled>Select Type</option>
+              <option *ngFor="let c of salesCategory" [value]="c.value">
+                {{ c.label }}
+              </option>
+            </select>
+          </div>
+        </div>
+        <div class="row mb-4">
+          <div class="col">
+            <label class="form-label">Region/Zone </label>
+            <select formControlName="region" class="form-select">
+              <option [value]="null" selected disabled>Select Region</option>
+              <option *ngFor="let c of region" [value]="c.value">
+                {{ c.label }}
+              </option>
+            </select>
+          </div>
+          <div class="col">
+            <label class="form-label">
+              PAN No. <span class="text-danger">*</span>
+            </label>
+            <input
+              type="text"
+              class="form-control"
+              formControlName="customerPAN"
+            />
+          </div>
+          <div class="col">
+            <label class="form-label">
+              GST Classification
+              <span class="text-danger">*</span>
+            </label>
+
+            <select class="form-select" formControlName="GSTClassification">
+              <option [value]="null" selected disabled>
+                GST Classification
+              </option>
+              <option
+                *ngFor="let g of gstClassificationsOptions"
+                [value]="g.value"
+              >
+                {{ g.label }}
+              </option>
+            </select>
+          </div>
+          <div class="col">
+            <label class="form-label">
+              GSTIN <span class="text-danger">*</span>
+            </label>
+            <input type="text" class="form-control" formControlName="GSTIN" />
+          </div>
+        </div>
+        <div class="row">
+          <div class="col">
+            <label class="form-label">
+              Currency <span class="text-danger">*</span>
+            </label>
+
+            <select class="form-select" formControlName="customerCurrency">
+              <option [value]="null" selected disabled>Select</option>
+              <option [value]="item.value" *ngFor="let item of currency">
+                {{ item.label }}
+              </option>
+            </select>
+          </div>
+          <div class="col">
+            <label class="form-label">Credit Limit </label>
+            <input
+              type="text"
+              class="form-control"
+              formControlName="creditLimit"
+            />
+          </div>
+          <div class="col">
+            <label class="form-label">
+              Payment Terms <span class="text-danger">*</span>
+            </label>
+
+            <select class="form-select" formControlName="customerPaymentTerms">
+              <option [value]="null" selected disabled>Select</option>
+              <option [value]="item.value" *ngFor="let item of paymentTerm">
+                {{ item.label }}
+              </option>
+            </select>
+          </div>
+          <div class="col">
+            <label class="form-label">
+              Status
+              <span class="text-danger">*</span>
+            </label>
+            <div class="d-flex">
+              <select
+                class="form-select statusSelectBorder"
+                formControlName="isCustomerActive"
+              >
+                <option [value]="null" selected disabled>Select Status</option>
+                <option [value]="'A'">Active</option>
+                <option [value]="'I'">Inactive</option>
+              </select>
+              <span class="input-group-text statusSpanHeight">
+                <div
+                  *ngIf="form.value['isCustomerActive'] == 'A'"
+                  class="statusActive"
+                ></div>
+                <div
+                  *ngIf="form.value['isCustomerActive'] == 'I'"
+                  class="statusInActive"
+                ></div>
+              </span>
+            </div>
+          </div>
+        </div>
+        <div class="mt-4 d-flex justify-content-start">
+          <h4 class="mb-1 me-3 form-label customerHeading">Bill To Address</h4>
+          <span>
+            <img
+              src="./assets/new_icons/redstroke.svg"
+              alt=""
+              height="18"
+              width="8"
+            />
+          </span>
+          <h4 class="ms-3 openModelLink pointer text-primary" (click)="open()">
+            Click here to add Ship to Address(if other than Bill to address)
+          </h4>
+        </div>
+        <hr class="line-border" />
+        <ng-container formGroupName="customerBillingAddress">
+          <div class="row mt-4">
+            <div class="col">
+              <label class="form-label">
+                Country <span class="text-danger">*</span>
+              </label>
+              <input
+                type="text"
+                class="form-control"
+                formControlName="country"
+              />
+            </div>
+            <div class="col">
+              <label class="form-label">
+                State/Province <span class="text-danger">*</span>
+              </label>
+              <select class="form-select" formControlName="state">
+                <option value="" selected disabled>Select State</option>
+                <option *ngFor="let s of statesOfIndia" [value]="s">
+                  {{ s }}
+                </option>
+              </select>
+            </div>
+            <div class="col">
+              <label class="form-label">
+                City/District <span class="text-danger">*</span>
+              </label>
+              <input type="text" class="form-control" formControlName="city" />
+            </div>
+            <div class="col">
+              <label class="form-label">
+                Pin Code <span class="text-danger">*</span>
+              </label>
+              <input
+                oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
+                type="number"
+                maxlength="6"
+                class="form-control"
+                formControlName="pinCode"
+              />
+            </div>
+          </div>
+          <div class="row mt-4">
+            <div class="col">
+              <label class="form-label"
+                >Address Line 1 <span class="text-danger">*</span>
+              </label>
+              <input type="text" class="form-control" formControlName="line1" />
+            </div>
+            <div class="col">
+              <label class="form-label"
+                >Address Line 2 <span class="text-danger">*</span></label
+              >
+              <input type="text" class="form-control" formControlName="line2" />
+            </div>
+            <div class="col">
+              <label class="form-label"
+                >Address Line 3 <span class="text-danger">*</span></label
+              >
+              <input type="text" class="form-control" formControlName="line3" />
+            </div>
+            <div class="col">
+              <label class="form-label"
+                >Address Line 4 <span class="text-danger">*</span></label
+              >
+              <input type="text" class="form-control" formControlName="line4" />
+            </div>
+          </div>
+          <hr class="line-border" />
+          <div class="row mb-2">
+            <div class="d-flex justify-content-between mt-2">
+              <div class="d-grid col-auto">
+                <button
+                  class="btn bg-primary"
+                  type="button"
+                  (click)="openContactDetailsModal()"
+                >
+                  Add Contact Details
+                </button>
+              </div>
+              <div class="d-grid col-auto">
+                <button
+                  *ngIf="action != 'view'"
+                  class="btn btn-primary px-4"
+                  type="button"
+                  (click)="submit()"
+                >
+                  Save
+                </button>
+              </div>
+            </div>
+          </div>
+        </ng-container>
+      </form>
+    </div>
+  </div>
+</div>

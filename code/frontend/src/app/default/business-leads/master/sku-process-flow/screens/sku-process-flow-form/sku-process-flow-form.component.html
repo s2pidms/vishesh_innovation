@@ -1,0 +1,140 @@
+<form [formGroup]="form" class="formCard card">
+    <div class="container">
+        <div class="row form-header">
+            <div class="col heading ms-2">
+                <label class="">{{ action | titlecase }} Process Flow</label>
+            </div>
+        </div>
+        <div class="form-body">
+            <div class="row">
+                <div class="col-5">
+                    <div class="row">
+                        <div class="col-4">
+                            <label class="form-label">SKU No. <span class="text-danger"></span> </label>
+                            <input formControlName="SKUNo" class="form-control" type="text" readonly />
+                        </div>
+                        <div class="col-8">
+                            <label class="form-label"
+                                >{{ "SKU Name" | labelTranslate }}
+                                <span class="text-danger"></span>
+                            </label>
+                            <input formControlName="SKUName" class="form-control" type="text" readonly />
+                        </div>
+                    </div>
+                </div>
+                <div class="col-7">
+                    <div class="row">
+                        <div class="col-5 pe-0">
+                            <label class="form-label"
+                                >{{ "SKU Description" | labelTranslate }}
+                                <span class="text-danger"></span>
+                            </label>
+                            <input formControlName="SKUDescription" class="form-control" type="text" readonly />
+                        </div>
+                        <div class="col-7">
+                            <label class="form-label">Product Category</label>
+                            <input formControlName="productCategory" class="form-control" type="text" readonly />
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <hr class="row line-border" />
+
+        <app-setting-header
+            [data]="{page,pageSize,collection,search, excelDisplay : 'none'}"
+            (dataChange)="eventHeader($event)"
+        >
+        </app-setting-header>
+        <div class="table-responsive" style="min-height: 22rem">
+            <table class="table table-bordered table-sticky mt-1">
+                <thead class="bg-primary">
+                    <tr class="text-white">
+                        <th sortable="seq" (sort)="onSort($event)">Sequence</th>
+                        <th sortable="processId" (sort)="onSort($event)">Process ID</th>
+                        <th class="text-start" sortable="processName" (sort)="onSort($event)">Process Name</th>
+                        <th sortable="sourceOfManufacturing" (sort)="onSort($event)">Source</th>
+                        <th class="text-start" sortable="primaryAssetAllocation" (sort)="onSort($event)">
+                            Primary Asset/s Allocation
+                        </th>
+                        <th class="text-start" sortable="unitProcessOutput" (sort)="onSort($event)">Std. Output/Hr</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr
+                        *ngFor="
+                            let item of masterData.processMasterList
+                                | searchFi1ter : search
+                                | slice : (page - 1) * pageSize : (page - 1) * pageSize + pageSize;
+                            trackBy: trackByFn;
+                            let i = index
+                        "
+                    >
+                        <td>
+                            <div class="d-flex justify-content-center">
+                                <span *ngIf="['view', 'Converted to SKU'].includes(action)">
+                                    {{ item?.seq }}
+                                </span>
+                                <input
+                                    *ngIf="!['view', 'Converted to SKU'].includes(action)"
+                                    class="form-control form-control-sm"
+                                    type="number"
+                                    [(ngModel)]="item.seq"
+                                    [ngModelOptions]="{standalone: true}"
+                                />
+                            </div>
+                        </td>
+                        <td>
+                            {{ item.processId }}
+                        </td>
+                        <td class="text-start" [style.width]="processName.clientWidth" #processName>
+                            <span class="pointer" [ngbTooltip]="item.processName" [positionTarget]="processName">
+                                {{ item.processName }}
+                            </span>
+                        </td>
+                        <td>{{ item.sourceOfManufacturing }}</td>
+                        <td
+                            class="text-start"
+                            [style.width]="primaryAssetAllocation.clientWidth"
+                            #primaryAssetAllocation
+                        >
+                            <span
+                                class="pointer"
+                                [ngbTooltip]="item.primaryAssetAllocation"
+                                [positionTarget]="primaryAssetAllocation"
+                            >
+                                {{ item.primaryAssetAllocation }}
+                            </span>
+                        </td>
+                        <td class="text-start" class="p-0 text-center">
+                            <div class="d-flex align-items-center">
+                                <span class="input-group-text border border-0 text-muted combine-INR">
+                                    AU
+                                    <div class="vr ms-3"></div>
+                                </span>
+                                <span class="">
+                                    {{ item.unitProcessOutput }}
+                                </span>
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <hr *ngIf="action != 'view'" class="row line-border" />
+
+        <div *ngIf="action != 'view'" class="row" appAccessControl [accessType]="rolePermissionActions.createAction">
+            <div class="col text-center">
+                <div class="d-grid gap-2 d-md-block">
+                    <button type="button" class="btn btn-primary px-5 me-3" (click)="reset()">Reset</button>
+                    <button type="button" class="btn btn-primary px-3 me-1" (click)="ESCPreview()">Esc</button>
+                    <button type="button" class="btn btn-primary px-4 me-3" (click)="preview()">Preview</button>
+                    <button class="btn btn-primary px-5" type="button" [disabled]="!isPreview" (click)="submit()">
+                        Save
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>

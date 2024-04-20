@@ -1,0 +1,109 @@
+.biometricAttendancePage {
+    .btn {
+        border: 1px solid #fff !important;
+        border-radius: 0 !important;
+    }
+
+    .card {
+        font-size: 1.2rem;
+        border-radius: 4px;
+        -moz-border-radius: 4px;
+        -webkit-border-radius: 4px;
+        box-shadow: 0px 0px 7px rgba(0, 0, 0, 0.4);
+
+        .biometricContainer {
+            --bs-gutter-x: 3.7rem;
+            --bs-gutter-y: 0;
+            width: 100%;
+            padding-right: calc(var(--bs-gutter-x) * 0.5);
+            padding-left: calc(var(--bs-gutter-x) * 0.5);
+            margin-right: auto;
+            margin-left: auto;
+        }
+
+        .row-box {
+            display: flex;
+            align-content: center;
+            align-items: center;
+        }
+
+        .data-box {
+            align-self: center;
+            vertical-align: middle !important;
+            padding: 0.2rem 0 0.2rem 0.9rem;
+            color: #5a5a5a;
+            background-color: #eaecf2;
+            border-radius: 2px;
+        }
+
+        .blue-text {
+            background-color: #007daf !important;
+            color: #ffffff;
+            font-size: 1.4rem;
+        }
+    }
+
+    .btn-width {
+        width: 7.5vw;
+    }
+
+    .arrowDownImg {
+        width: 4vh;
+        height: 4vh;
+    }
+
+    .row-3 {
+        .col-auto {
+            padding: 0.5rem;
+        }
+
+        display: flex;
+        justify-content: center;
+
+        .successImg {
+            width: 3rem;
+            height: 3rem;
+        }
+
+        span {
+            font-size: 1.4rem;
+        }
+    }
+
+    .inputGroup {
+        .form-control {
+            border-right: none;
+        }
+
+        .input-group-text {
+            cursor: pointer;
+            border-left: none;
+            background: transparent !important;
+        }
+    }
+
+    .closeIcon {
+        width: 2vh;
+    }
+
+    .iBASInput-field {
+        width: 100%;
+        padding: 10px;
+    }
+
+    .activeCard {
+        background-color: #f2f8fb;
+
+        .inputGroup {
+            .form-control {
+                background: transparent !important;
+            }
+
+            .input-group-text {
+                cursor: pointer;
+                border-left: none;
+                background: transparent !important;
+            }
+        }
+    }
+}

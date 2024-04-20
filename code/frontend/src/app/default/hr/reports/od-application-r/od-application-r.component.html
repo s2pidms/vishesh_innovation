@@ -1,0 +1,83 @@
+<div class="reportTablePage">
+    <div class="table-body pb-0 shadow-none">
+        <div class="row table-header">
+            <div class="col">
+                <label class="heading">OD Application Report</label>
+            </div>
+        </div>
+        <div class="row my-4">
+            <div class="col-3 ps-5 separate-row">
+                <label class="form-label">Employee Name</label>
+
+                <ng-select
+                    [items]="user"
+                    bindLabel="label"
+                    bindValue="value"
+                    [multiple]="false"
+                    [clearable]="false"
+                    [(ngModel)]="userId"
+                >
+                </ng-select>
+                <span class="set-position">
+                    <img src="./assets/new_icons/redstroke.svg" alt="" height="27" width="8" />
+                </span>
+            </div>
+            <div class="col-3">
+                <label class="form-label"> From Date<span class="text-danger">*</span> </label>
+                <input class="form-control" type="date" [(ngModel)]="fromDate" />
+            </div>
+            <div class="col-3">
+                <label class="form-label">
+                    To Date
+                    <span class="text-danger">*</span>
+                </label>
+                <input class="form-control" type="date" [(ngModel)]="toDate" />
+            </div>
+            <div class="col-3 align-self-end separate-image pe-4">
+                <span class="image-position">
+                    <img src="./assets/new_icons/redstroke.svg" alt="" height="27" width="8" />
+                </span>
+                <button type="button" class="btn btn-primary px-4 me-3" (click)="getAllData()">Apply Filter</button>
+                <button type="button" class="btn btn-primary px-4 ms-4" (click)="clearFilter()">Reset Filter</button>
+            </div>
+        </div>
+
+        <hr class="row line-border" />
+
+        <div class="table-responsive">
+            <app-setting-header
+                [data]="{page,pageSize,collection,search,type: 'list',pdfDisplay:true}"
+                (dataChange)="eventHeader($event)"
+            >
+            </app-setting-header>
+            <table class="table table-bordered table-sticky">
+                <thead class="bg-primary">
+                    <tr class="text-white">
+                        <th sortable="applicationDate" (sort)="onSort($event)">Application Dt.</th>
+                        <th sortable="empCode" (sort)="onSort($event)">Employee Code</th>
+                        <th class="text-start" sortable="empFullName" (sort)="onSort($event)">Employee Name</th>
+                        <th sortable="fromDate" (sort)="onSort($event)">From Date</th>
+                        <th sortable="toDate" (sort)="onSort($event)">To Date</th>
+                        <th sortable="halfDay" (sort)="onSort($event)">Half Day</th>
+                        <th sortable="ODDays" (sort)="onSort($event)">OD Days</th>
+                        <th sortable="resumptionDate" (sort)="onSort($event)">Resumption Dt.</th>
+                        <th sortable="status " (sort)="onSort($event)">Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let u of tableData; trackBy: trackByFn">
+                        <td>{{ u?.applicationDateS }}</td>
+                        <td>{{ u?.empCode }}</td>
+                        <td class="text-start">{{ u?.empFullName }}</td>
+                        <td>{{ u?.fromDateS }}</td>
+                        <td>{{ u?.toDateS }}</td>
+                        <td>{{ u?.halfDay ? u?.halfDay : "-" }}</td>
+                        <td>{{ u?.ODDays }}</td>
+                        <td>{{ u?.resumptionDateS }}</td>
+                        <td>{{ u?.status }}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

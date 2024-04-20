@@ -1,0 +1,76 @@
+<div class="container-fluid">
+  <div class="flashScreen">
+    <img
+      *ngIf="!isLoading"
+      src="./assets/companies/splash.svg"
+      alt=""
+      class="scale-up-center"
+    />
+  </div>
+  <div class="row loginFlash login-card" *ngIf="isLoading">
+    <div class="col part-1">
+      <div class="text-center">
+        <img [src]="logo" class="img-fluid" alt="" />
+      </div>
+    </div>
+    <div class="col part-2">
+      <div class="text-center">
+        <img [src]="welcomeInfo" class="img-welcome img-fluid" alt="" />
+
+        <form [formGroup]="loginForm" class="text-start" (submit)="login()">
+          <div class="">
+            <label class="form-label">
+              User ID
+              <span class="text-danger">*</span>
+            </label>
+            <input
+              type="text"
+              class="form-control"
+              placeholder="Enter User Name"
+              formControlName="email"
+              aria-label="Large"
+            />
+            <validation-messages
+              class="error-left"
+              [control]="loginForm.controls['email']"
+            >
+            </validation-messages>
+          </div>
+
+          <div class="">
+            <label class="form-label">
+              Password
+              <span class="text-danger">*</span>
+            </label>
+            <input
+              type="password"
+              class="form-control"
+              placeholder="Enter Password"
+              formControlName="password"
+            />
+            <validation-messages
+              class="error-left"
+              [control]="loginForm.controls['password']"
+            >
+            </validation-messages>
+          </div>
+          <div class="d-grid">
+            <button class="btn btn-primary login-btn" type="submit">
+              Login
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+    <div class="w-100"></div>
+    <div class="col text-center part-3">
+      <label class="text-label">All Rights Reserved 2022</label>
+    </div>
+    <div class="col text-center part-4">
+      <label class="text-label">
+        Forgot Password ?
+        <a routerLink="/auth1/forget"> Click Here</a>
+      </label>
+    </div>
+  </div>
+</div>

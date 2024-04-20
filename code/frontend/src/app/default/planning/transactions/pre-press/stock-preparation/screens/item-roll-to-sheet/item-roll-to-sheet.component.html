@@ -1,0 +1,91 @@
+<div class="modelPage">
+    <div class="modal-header">
+        <div class="heading">Select Child Item</div>
+        <div>
+            <button type="button" class="btn btn-cross btn-sm" aria-label="Close" (click)="this.activeModal.close()">
+                <i class="fa fa-times-circle" aria-hidden="true"></i>
+            </button>
+        </div>
+    </div>
+    <div class="">
+        <div class="container-fluid">
+            <div class="row justify-content-center">
+                <div class="col-12 px-0 mt-4">
+                    <div class="px-5 mt-0">
+                        <app-setting-header
+                            [data]="{page,pageSize,collection,search ,excelDisplay : 'none'}"
+                            (dataChange)="eventHeader($event)"
+                        >
+                        </app-setting-header>
+                    </div>
+                    <div style="min-height: 33rem" class="table-responsive px-5">
+                        <table class="table table-bordered table-sticky">
+                            <thead class="bg-primary">
+                                <tr class="text-white">
+                                    <th sortable="itemCode" (sort)="onSort($event)">Item Code</th>
+                                    <th sortable="itemName" (sort)="onSort($event)" class="text-start">Item Name</th>
+                                    <th sortable="itemDescription" (sort)="onSort($event)" class="text-start">
+                                        Item Description
+                                    </th>
+                                    <th sortable="UOM" (sort)="onSort($event)">UoM</th>
+                                    <th sortable="widthInMM" (sort)="onSort($event)">Width</th>
+                                    <th sortable="lengthInM" (sort)="onSort($event)">Length</th>
+                                    <th sortable="SQM" (sort)="onSort($event)">sqm/sheet</th>
+                                    <th>Select</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr
+                                    *ngFor="
+                                        let u of childItemList
+                                            | searchFi1ter : search
+                                            | slice : (page - 1) * pageSize : (page - 1) * pageSize + pageSize;
+                                        let i = index
+                                    "
+                                >
+                                    <td>{{ u?.itemCode }}</td>
+                                    <td class="text-start" [style.width]="itemName.clientWidth" #itemName>
+                                        <span class="pointer" [ngbTooltip]="u.itemName" [positionTarget]="itemName">
+                                            {{ u.itemName }}
+                                        </span>
+                                    </td>
+                                    <td class="text-start" [style.width]="itemDescription.clientWidth" #itemDescription>
+                                        <span
+                                            class="pointer"
+                                            [ngbTooltip]="u?.itemDescription"
+                                            [positionTarget]="itemDescription"
+                                        >
+                                            {{ u?.itemDescription }}
+                                        </span>
+                                    </td>
+                                    <td>{{ u?.UOM | UOMUnitsMaster }}</td>
+                                    <td>{{ u?.widthInMM }} <span *ngIf="u.widthInMM">| mm</span></td>
+                                    <td>{{ u?.lengthInM }} <span *ngIf="u.widthInMM">| mm</span></td>
+                                    <td>{{ u?.SQM }}</td>
+                                    <td>
+                                        <input
+                                            [disabled]="action == 'view'"
+                                            class="form-check-input pointer"
+                                            type="radio"
+                                            name="formValue{{ childItemList[i] }}"
+                                            [checked]="u.select"
+                                            (change)="setSelectData(u)"
+                                        />
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col px-0 mb-3">
+                    <hr class="line-border" />
+                </div>
+            </div>
+            <div class="text-center mb-2">
+                <button class="btn bg-primary px-5 mb-4" type="button" (click)="dismissModel()">Save & Close</button>
+            </div>
+        </div>
+    </div>
+</div>

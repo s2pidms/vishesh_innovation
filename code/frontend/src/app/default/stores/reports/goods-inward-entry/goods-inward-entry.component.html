@@ -1,0 +1,104 @@
+<div class="reportTablePage">
+    <div class="col-md-12 table-body shadow-none">
+        <div class="row table-header">
+            <div class="col">
+                <label class="heading">GIN Report</label>
+            </div>
+        </div>
+        <div class="row my-4">
+            <div class="col-3 ps-5 separate-row">
+                <label class="form-label">Location wise</label>
+                <ng-select
+                    [items]="locationOptions"
+                    bindLabel="label"
+                    bindValue="value"
+                    [clearable]="false"
+                    [(ngModel)]="deliveryLocation"
+                >
+                </ng-select>
+                <span class="set-position">
+                    <img src="./assets/new_icons/redstroke.svg" alt="" height="27" width="8" />
+                </span>
+            </div>
+
+            <div class="col-3">
+                <label class="form-label"> From Date <span class="text-danger">*</span> </label>
+                <input class="form-control" type="date" [(ngModel)]="fromDate" />
+            </div>
+
+            <div class="col-3">
+                <label class="form-label"> To Date <span class="text-danger">*</span> </label>
+                <input class="form-control" type="date" [(ngModel)]="toDate" />
+            </div>
+            <div class="col-3 align-self-end separate-image">
+                <span class="image-position">
+                    <img src="./assets/new_icons/redstroke.svg" alt="" height="27" width="8" />
+                </span>
+                <button type="button" class="btn btn-primary px-4" (click)="getAll()">Apply Filter</button>
+
+                <button type="button" class="btn btn-primary px-4 ms-4" (click)="reset()">Reset Filter</button>
+            </div>
+        </div>
+
+        <hr class="row line-border" />
+        <div class="table-responsive">
+            <app-setting-header
+                [data]="{page,pageSize,collection,search,type: 'list',pdfDisplay :true}"
+                (dataChange)="eventHeader($event)"
+            >
+            </app-setting-header>
+            <table class="table table-bordered table-sticky">
+                <thead class="bg-primary">
+                    <tr class="text-white">
+                        <th sortable="GINDate" (sort)="onSort($event)">GIN Dt.</th>
+                        <th sortable="MRNNumber" (sort)="onSort($event)">MRN No.</th>
+                        <th sortable="MRNDate" (sort)="onSort($event)">MRN Dt.</th>
+                        <th sortable="itemCode" (sort)="onSort($event)">Item Code</th>
+                        <th class="text-start" sortable="itemName" (sort)="onSort($event)">Item Name</th>
+                        <th class="text-start" sortable="itemDescription" (sort)="onSort($event)">Item Description</th>
+                        <th sortable="batchDate" (sort)="onSort($event)">Batch #/Dt.</th>
+                        <th sortable="supplierInvoiceDate" (sort)="onSort($event)">Invoice Dt.</th>
+                        <th sortable="UOM" (sort)="onSort($event)">UoM</th>
+                        <th sortable="GINQty" (sort)="onSort($event)">GIN Qty</th>
+                        <th sortable="deliveryLocation" (sort)="onSort($event)">Location</th>
+                        <th>Report</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let u of tableData; trackBy: trackByFn">
+                        <td>{{ u?.GINDate }}</td>
+                        <td>{{ u?.MRNNumber }}</td>
+                        <td>{{ u?.MRNDate }}</td>
+                        <td>{{ u?.itemCode }}</td>
+                        <td class="text-start" [style.width]="itemName.clientWidth" #itemName>
+                            <span class="pointer" [positionTarget]="itemName" [ngbTooltip]="u.itemName">
+                                {{ u?.itemName }}
+                            </span>
+                        </td>
+                        <td class="text-start" [style.width]="itemDescription.clientWidth" #itemDescription>
+                            <span class="pointer" [positionTarget]="itemDescription" [ngbTooltip]="u.itemDescription">
+                                {{ u?.itemDescription }}
+                            </span>
+                        </td>
+                        <td>{{ u?.batchDate }}</td>
+                        <td>{{ u?.supplierInvoiceDate }}</td>
+                        <td>{{ u?.UOM | UOMUnitsMaster }}</td>
+                        <td>{{ u?.GINQty }}</td>
+                        <td>{{ u?.deliveryLocation }}</td>
+                        <td>
+                            <div appAccessControl [accessType]="rolePermissionActions.viewAction">
+                                <img
+                                    class="pointer"
+                                    src="./assets/new_icons/pdf_icon.svg"
+                                    width="15rem"
+                                    alt=""
+                                    (click)="navigateTo(u?._id, 'print')"
+                                />
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,210 @@
+<div [ngClass]="user.roleName.includes('Owner') ? 'container-fluid mt-5 pt-3' : ''">
+    <form [formGroup]="form" class="formCard card">
+        <div class="container">
+            <div class="row form-header">
+                <div class="col heading">
+                    <label> Enter Company Details </label>
+                </div>
+            </div>
+
+            <div class="form-body">
+                <div class="row">
+                    <div class="col-3">
+                        <label class="form-label text-cyan mb-1">
+                            Company Name [Legal Entity] <span class="text-danger">*</span>
+                        </label>
+                        <input class="form-control" type="text" formControlName="companyName" />
+                    </div>
+                    <div class="col-3">
+                        <label class="form-label text-cyan mb-1">
+                            Constitution of Business <span class="text-danger">*</span>
+                        </label>
+                        <select class="form-select" formControlName="constitutionOfBusiness">
+                            <option [value]="null" selected disabled>Select Constitution of Business</option>
+                            <option *ngFor="let c of constitutionOfBusinessOptions" [value]="c.value">
+                                {{ c?.label }}
+                            </option>
+                        </select>
+                    </div>
+                    <div class="col-3">
+                        <label class="form-label text-cyan mb-1">
+                            Corporate Identity No. <span class="text-danger">*</span>
+                        </label>
+                        <input class="form-control" type="text" formControlName="companyCIN" />
+                    </div>
+                    <div class="col-3">
+                        <label class="form-label text-cyan mb-1">
+                            Date of Incorporation <span class="text-danger">*</span>
+                        </label>
+                        <input class="form-control" type="date" formControlName="dateOfIncorporation" />
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-3">
+                        <label class="form-label text-cyan mb-1"> Pan No. <span class="text-danger">*</span> </label>
+                        <input class="form-control" type="text" formControlName="companyPAN" />
+                    </div>
+                    <div class="col-3">
+                        <label class="form-label text-cyan mb-1">
+                            GST Classification <span class="text-danger">*</span>
+                        </label>
+                        <select class="form-select" formControlName="GSTClassification">
+                            <option [value]="null" selected disabled>GST Classification</option>
+                            <option *ngFor="let g of GSTClassificationsOptions" [value]="g.value">
+                                {{ g.label }}
+                            </option>
+                        </select>
+                    </div>
+                    <div class="col-3">
+                        <label class="form-label text-cyan mb-1"> GSTIN <span class="text-danger">*</span> </label>
+                        <input class="form-control" type="text" formControlName="GSTIN" />
+                    </div>
+                    <div class="col-3">
+                        <label class="form-label text-cyan mb-1">
+                            MSME Category <span class="text-danger">*</span>
+                        </label>
+                        <select class="form-select" formControlName="companyMSMENo">
+                            <option [value]="null" selected disabled>Select</option>
+                            <option value="Micro">Micro</option>
+                            <option value="Small">Small</option>
+                            <option value="Medium">Medium</option>
+                            <option value="Large">Large</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-3">
+                        <label class="form-label text-cyan mb-1">
+                            Udyam Registration No. <span class="text-danger">*</span>
+                        </label>
+                        <input class="form-control" type="text" formControlName="udyamRegistrationNo" />
+                    </div>
+                    <div class="col-3">
+                        <label class="form-label text-cyan mb-1">
+                            Import & export [IE] Code <span class="text-danger"></span>
+                        </label>
+                        <input class="form-control" type="text" formControlName="importExportIECode" />
+                    </div>
+                    <div class="col-3">
+                        <label class="form-label text-cyan mb-1">
+                            TAN[For TDS/TCS] <span class="text-danger">*</span>
+                        </label>
+                        <input class="form-control" type="text" formControlName="TANForTDSTCS" />
+                    </div>
+                    <div class="col-3">
+                        <label class="form-label text-cyan mb-1">
+                            Company Type <span class="text-danger">*</span>
+                        </label>
+                        <select class="form-select" formControlName="companyType">
+                            <option value="" selected disabled>Select Company Type</option>
+                            <option *ngFor="let item of companyTypeArr" [value]="item.parameterName">
+                                {{ item.parameterLabel }}
+                            </option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div class="d-flex justify-content-start">
+                <h4 class="me-3 form-label customerHeading">Registered Address</h4>
+                <span>
+                    <img src="./assets/new_icons/redstroke.svg" alt="" height="18" width="8" />
+                </span>
+                <h4 (click)="openAdditionalPlacesOfBusinessModal()" class="ms-3 openModelLink pointer text-primary">
+                    Click here to add multiple locations of business [Additional Places of business]
+                </h4>
+            </div>
+            <hr class="row line-border" />
+            <div formGroupName="companyBillingAddress">
+                <div class="row mb-4">
+                    <div class="col-3">
+                        <label class="form-label mb-1">Country <span class="text-danger">*</span></label>
+                        <input type="text" class="form-control" formControlName="country" />
+                    </div>
+                    <div class="col-3">
+                        <label class="form-label"> State/Province <span class="text-danger">*</span> </label>
+                        <select class="form-select" formControlName="state">
+                            <option value="" selected disabled>Select State</option>
+                            <option *ngFor="let s of statesOfIndia" [value]="s">
+                                {{ s }}
+                            </option>
+                        </select>
+                    </div>
+                    <div class="col-3">
+                        <label class="form-label mb-1">City-District <span class="text-danger">*</span></label>
+                        <input type="text" class="form-control" formControlName="city" />
+                    </div>
+                    <div class="col-3">
+                        <label class="form-label mb-1">Pin Code <span class="text-danger">*</span></label
+                        ><input class="form-control" formControlName="pinCode" type="number" value="" />
+                    </div>
+                </div>
+
+                <div class="row mb-4">
+                    <div class="col-3">
+                        <label class="form-label mb-1">Address Line 1<span class="text-danger">*</span></label>
+                        <input type="text" class="form-control" formControlName="addressLine1" />
+                    </div>
+                    <div class="col-3">
+                        <label class="form-label mb-1">Address Line 2 <span class="text-danger">*</span></label
+                        ><input class="form-control" formControlName="addressLine2" type="text" />
+                    </div>
+                    <div class="col-3">
+                        <label class="form-label mb-1">Address Line 3 <span class="text-danger">*</span></label>
+                        <input type="text" class="form-control" formControlName="addressLine3" />
+                    </div>
+                    <div class="col-3">
+                        <label class="form-label mb-1">Address Line 4 <span class="text-danger"></span></label>
+                        <input type="text" class="form-control" formControlName="addressLine4" />
+                    </div>
+                </div>
+            </div>
+            <hr class="row line-border" />
+
+            <div class="row">
+                <div class="col-10 pe-0 mt-2">
+                    <div class="row">
+                        <div class="col-auto">
+                            <button class="plusIconSvg btn btn-primary me-1"></button>
+                            <button (click)="openContactDetailsModal()" class="btn btn-primary px-2" type="button">
+                                Contact Details
+                            </button>
+                        </div>
+                        <div class="col-auto ps-0">
+                            <button class="plusIconSvg btn btn-primary me-1"></button>
+                            <button (click)="openBankDetailsModal()" class="btn btn-primary px-2" type="button">
+                                Bank Details
+                            </button>
+                        </div>
+                        <div class="col-auto ps-0" *ngIf="!user.roleName.includes('Owner')">
+                            <button class="plusIconSvg btn btn-primary me-1"></button>
+                            <button (click)="openPdfTemplatesModal()" class="btn btn-primary px-3" type="button">
+                                Template
+                            </button>
+                        </div>
+                        <div class="col-auto ps-0" *ngIf="!user.roleName.includes('Owner')">
+                            <button class="plusIconSvg btn btn-primary me-1"></button>
+                            <button (click)="openDocumentsModal()" class="btn btn-primary px-3" type="button">
+                                Documents
+                            </button>
+                        </div>
+                        <div class="col-auto ps-0">
+                            <button class="plusIconSvg btn btn-primary me-1"></button>
+                            <button (click)="openAccountsModal()" class="btn btn-primary px-3" type="button">
+                                Accounts
+                            </button>
+                        </div>
+                        <div class="col-auto ps-0">
+                            <button class="plusIconSvg btn btn-primary me-1"></button>
+                            <button (click)="openExportsModal()" class="btn btn-primary px-4" type="button">
+                                Export
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-2 text-end mt-2">
+                    <button class="btn btn-primary px-5" type="button" (click)="submit()">Save</button>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>

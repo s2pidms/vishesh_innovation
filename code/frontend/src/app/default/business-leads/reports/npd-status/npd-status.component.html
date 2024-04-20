@@ -1,0 +1,119 @@
+<div class="reportTablePage">
+    <div class="table-body pb-0 shadow-none">
+        <div class="row table-header">
+            <div class="col">
+                <label class="heading">NPD Status Report</label>
+            </div>
+        </div>
+        <div class="row my-4">
+            <div class="col-3 ps-5 separate-row">
+                <label class="form-label">Customer/Prospect Name</label>
+                <ng-select
+                    [items]="customerOptions"
+                    bindLabel="name"
+                    bindValue="name"
+                    [clearable]="false"
+                    [(ngModel)]="customerId"
+                >
+                </ng-select>
+                <span class="set-position">
+                    <img src="./assets/new_icons/redstroke.svg" alt="" height="27" width="8" />
+                </span>
+            </div>
+
+            <div class="col-3">
+                <label class="form-label"> From Date <span class="text-danger">*</span> </label>
+                <input class="form-control" type="date" [(ngModel)]="fromDate" />
+            </div>
+
+            <div class="col-3">
+                <label class="form-label"> To Date <span class="text-danger">*</span> </label>
+                <input class="form-control" type="date" [(ngModel)]="toDate" />
+            </div>
+            <div class="col-3 align-self-end separate-image">
+                <span class="image-position">
+                    <img src="./assets/new_icons/redstroke.svg" alt="" height="27" width="8" />
+                </span>
+                <button type="button" class="btn btn-primary px-4" (click)="getAll()">Apply Filter</button>
+
+                <button type="button" class="btn btn-primary px-4 ms-4" (click)="reset()">Reset Filter</button>
+            </div>
+        </div>
+
+        <hr class="row line-border" />
+        <div class="table-responsive mb-0">
+            <app-setting-header
+                [data]="{page,pageSize,collection,search,type: 'list',pdfDisplay:true}"
+                (dataChange)="eventHeader($event)"
+            >
+            </app-setting-header>
+            <table class="table table-bordered table-sticky">
+                <thead class="bg-primary">
+                    <tr class="text-white">
+                        <th sortable="NPDNo" (sort)="onSort($event)">NPD No.</th>
+                        <th sortable="NPDDate" (sort)="onSort($event)">NPD Date</th>
+                        <th class="text-start" sortable="projectName" (sort)="onSort($event)">Project Name</th>
+                        <th class="text-start" sortable="name" (sort)="onSort($event)">Customer/Prospect Name</th>
+                        <th sortable="productCategory" (sort)="onSort($event)">Product Category</th>
+                        <th sortable="status" (sort)="onSort($event)">Status</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let u of tableData; trackBy: trackByFn">
+                        <td>{{ u?.NPDNo }}</td>
+                        <td>{{ u?.NPDDate }}</td>
+                        <td class="text-start" [style.width]="projectName.clientWidth" #projectName>
+                            <span class="pointer" [positionTarget]="projectName" [ngbTooltip]="u.projectName">
+                                {{ u?.projectName }}
+                            </span>
+                        </td>
+                        <td class="text-start" [style.width]="name.clientWidth" #name>
+                            <span class="pointer" [positionTarget]="name" [ngbTooltip]="u.name">
+                                {{ u?.name }}
+                            </span>
+                        </td>
+                        <td>{{ u?.productCategory }}</td>
+                        <td>{{ u?.status }}</td> 
+                        <td>
+                            <div class="dropdown">
+                                <button class="dropbtn"></button>
+                                <div class="dropdown-content">
+                                    <a
+                                        appAccessControl
+                                        [accessType]="rolePermissionActions.viewAction"
+                                        href="javascript:void(0)"
+                                        (click)="navigateTo(u._id, 'view', 'pdf')"
+                                    >
+                                        <i class="fa fa-eye fa-lg me-2 text-primary" aria-hidden="true"></i>
+                                        View
+                                    </a>
+                                    <a
+                                        appAccessControl
+                                        [accessType]="rolePermissionActions.viewAction"
+                                        href="javascript:void(0)"
+                                        (click)="navigateToPrint(u._id, 'view', 'print')"
+                                    >
+                                        <i class="fa fa-print fa-lg me-3 text-primary" aria-hidden="true"></i>
+                                        Print
+                                    </a>
+                                    <a
+                                        appAccessControl
+                                        [accessType]="rolePermissionActions.viewAction"
+                                        href="javascript:void(0)"
+                                        (click)="openCancelModal(u._id)"
+                                    >
+                                        <img src="./assets/images/new.svg" width="16" class="me-2" />
+
+                                        Convert to <br />
+                                        <span class="ms-5">Lost Order</span>
+                                    </a>
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

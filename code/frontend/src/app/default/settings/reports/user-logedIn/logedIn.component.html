@@ -1,0 +1,37 @@
+<div class="row justify-content-center">
+    <div class="col-md-11">
+        <app-setting-header
+            [data]="{page,pageSize,collection,search}"
+            (dataChange)="eventHeader($event)"
+        ></app-setting-header>
+
+        <div class="table-responsive">
+            <table class="table table-bordered table-sticky">
+                <thead class="bg-primary">
+                    <tr class="text-white">
+                        <th sortable="name" (sort)="onSort($event)">User Name</th>
+                        <th sortable="userType" (sort)="onSort($event)">User type</th>
+                        <th sortable="role" (sort)="onSort($event)">Role</th>
+                        <th sortable="userEmail" (sort)="onSort($event)">Email</th>
+                        <th sortable="status" (sort)="onSort($event)">Status</th>
+                        <th sortable="isLoggedIn" (sort)="onSort($event)">Logged In status</th>
+                        <th sortable="lastLoggedIn" (sort)="onSort($event)">Last Logged In</th>
+                        <th sortable="userIP" (sort)="onSort($event)">IP Address</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let u of tableData; trackBy: trackByFn">
+                        <td>{{ u?.name }}</td>
+                        <td>{{ u?.userType }}</td>
+                        <td>{{ u?.role }}</td>
+                        <td>{{ u?.userEmail }}</td>
+                        <td>{{ u?.status }}</td>
+                        <td>{{ u?.isLoggedIn }}</td>
+                        <td>{{ u?.lastLoggedIn }}</td>
+                        <td>{{ u?.userIP }}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,92 @@
+<div class="listCard card">
+    <div class="table-header">
+        <label class="heading">BoM Summary of Product </label>
+    </div>
+    <div appAccessControl [accessType]="rolePermissionActions.createAction" class="text-center">
+        <button class="btn btn-primary btn-add" type="button" (click)="navigateTo('../form', null, 'create')">
+            <i class="fa fa-plus-square fa-lg me-2" aria-hidden="true"></i>
+            Create BoM
+        </button>
+    </div>
+    <hr class="line-border" />
+    <div class="table-responsive">
+        <app-setting-header [data]="{page,pageSize,collection,search,type: 'list'}" (dataChange)="eventHeader($event)">
+        </app-setting-header>
+        <table class="table table-bordered">
+            <thead class="bg-primary">
+                <tr class="text-white">
+                    <th sortable="BOMNo" (sort)="onSort($event)">BoM No.</th>
+                    <th sortable="productNo" (sort)="onSort($event)">Product Code</th>
+                    <th sortable="productName" class="text-start" (sort)="onSort($event)">Product Name</th>
+                    <th sortable="productDescription" class="text-start" (sort)="onSort($event)">
+                        Product Description
+                    </th>
+                    <th sortable="UOM" (sort)="onSort($event)">UoM</th>
+                    <th sortable="partCount" (sort)="onSort($event)">Part Count</th>
+                    <th sortable="totalMaterialCost" (sort)="onSort($event)">Material Cost</th>
+                    <th sortable="status" (sort)="onSort($event)">Status</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let u of tableData; trackBy: trackByFn">
+                    <td>{{ u?.BOMNo }}</td>
+                    <td>{{ u?.productNo }}</td>
+                    <td class="text-start" [style.width]="productName.clientWidth" #productName>
+                        <span class="pointer" [positionTarget]="productName" [ngbTooltip]="u.productName">
+                            {{ u.productName ? u.productName : null }}
+                        </span>
+                    </td>
+                    <td class="text-start" [style.width]="productDescription.clientWidth" #productDescription>
+                        <span class="pointer" [positionTarget]="productDescription" [ngbTooltip]="u.productDescription">
+                            {{ u.productDescription ? u.productDescription : null }}
+                        </span>
+                    </td>
+                    <td>{{ u?.UOM| UOMUnitsMaster  }}</td>
+                    <td>{{ u?.partCount }}</td>
+                    <td>{{ u?.totalMaterialCost }}</td>
+                    <td>
+                        <span class="d-flex justify-content-center">
+                            <div *ngIf="u.status == 'Active'" class="statusActive"></div>
+                            <div *ngIf="u.status == 'Inactive'" class="statusInActive"></div>
+                        </span>
+                    </td>
+                    <td>
+                        <div class="dropdown">
+                            <button class="dropbtn"></button>
+                            <div class="dropdown-content">
+                                <a
+                                    appAccessControl
+                                    [accessType]="rolePermissionActions.viewAction"
+                                    href="javascript:void(0)"
+                                    (click)="navigateTo('../form', u, 'view')"
+                                >
+                                    <i class="fa fa-eye fa-lg me-2 text-primary" aria-hidden="true"></i>
+                                    View
+                                </a>
+                                <a
+                                    appAccessControl
+                                    [accessType]="rolePermissionActions.editAction"
+                                    href="javascript:void(0)"
+                                    (click)="navigateTo('../form', u, 'edit')"
+                                >
+                                    <i class="fa fa-pencil-square-o fa-lg me-2 text-primary" aria-hidden="true"></i>
+                                    Edit
+                                </a>
+                                <a
+                                    appAccessControl
+                                    [accessType]="rolePermissionActions.editAction"
+                                    href="javascript:void(0)"
+                                    (click)="navigateTo('../form', u, 'copy')"
+                                >
+                                    <i class="fa fa-clone fa-lg me-2 text-primary" aria-hidden="true"></i>
+                                    Copy
+                                </a>
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>

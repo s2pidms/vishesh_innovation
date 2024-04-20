@@ -1,0 +1,86 @@
+.border-btm {
+  border-bottom: 0.25rem solid black;
+}
+
+.img-sign {
+  width: 31.5rem;
+  text-align: start;
+  height: 19rem;
+}
+
+.no-signature-set {
+  height: 20rem;
+}
+
+@page {
+  size: B5;
+  margin: 0;
+}
+.page-break {
+  page-break-before: always;
+}
+
+@media print {
+  button {
+      display: none !important;
+  }
+  .page-break {
+      page-break-before: always;
+  }
+  * {
+      font-size: 1.7rem !important;
+      font-weight: 600 !important;
+      margin: 0;
+      font-family: Arial, Helvetica, sans-serif !important;
+      line-height: 1.9rem;
+      color: #000000 !important;
+  }
+  .sub-text {
+      font-size: 1.5rem !important;
+      font-weight: 600 !important;
+      margin: 0;
+      font-family: Arial, Helvetica, sans-serif !important;
+  }
+  .table-responsive .table th {
+      background: #e6e6e6 !important;
+      font-size: 1.8rem !important;
+  }
+
+  .table > :not(caption) > * > * {
+      padding: 0 !important;
+  }
+
+  .page {
+      margin: 0;
+      border: initial;
+      border-radius: initial;
+      width: initial;
+      min-height: initial;
+      box-shadow: initial;
+      background: initial;
+      page-break-after: always;
+  }
+
+  .img-sign {
+      width: 31.7rem;
+      text-align: start;
+      height: 24rem;
+  }
+  @page {
+      size: Letter !important;
+      margin: 0;
+  }
+  .table-responsive {
+      th,
+      td {
+          padding: 0.6rem !important;
+          .page-title {
+              font-size: 2.2rem !important;
+              font-weight: bolder;
+          }
+      }
+  }
+  .no-signature-set {
+      height: 25rem;
+  }
+}

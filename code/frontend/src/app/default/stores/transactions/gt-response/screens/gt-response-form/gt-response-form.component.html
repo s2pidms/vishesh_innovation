@@ -1,0 +1,221 @@
+<Form class="px-2" [formGroup]="form" class="formCard card">
+    <div class="container">
+        <div class="row form-header">
+            <div class="col heading">
+                <label class="">Goods Transfer (Intra) {{ action | titlecase }}</label>
+            </div>
+        </div>
+        <div class="form-body">
+            <div class="row">
+                <div class="col-6 pe-0">
+                    <div class="row">
+                        <div class="col-4 pe-4">
+                            <label class="form-label">GT Date</label>
+                            <input type="date" class="form-control" formControlName="GTDate" />
+                        </div>
+                        <div class="col-4 pe-5">
+                            <label class="form-label">GT Request No. <span class="text-danger">*</span></label>
+
+                            <div class="d-flex align-items-center">
+                                <div class="col-11">
+                                    <ng-select
+                                        [items]="masterData.GTRequestOptions"
+                                        bindLabel="GTRequestNo"
+                                        bindValue="_id"
+                                        formControlName="GTRequest"
+                                        [clearable]="false"
+                                        (change)="getGTRequestDetails($event)"
+                                    >
+                                    </ng-select>
+                                </div>
+                                <div
+                                    style="height: 2.9rem"
+                                    class="set-input-group-text input-group-text bg-primary pointer col-auto fs-4"
+                                    id="basic-addon1"
+                                    (click)="openGTRequestDetailsModal()"
+                                >
+                                    <i class="fa fa-search text-white" aria-hidden="true"></i>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-4">
+                            <label class="form-label">GT Request Date</label>
+                            <input type="date" class="form-control" formControlName="GTRequestDate" readonly />
+                        </div>
+                    </div>
+                </div>
+                <div class="col-6 ps-5">
+                    <div class="row">
+                        <div class="col-5 pe-0">
+                            <label class="form-label">Location <span class="text-danger">*</span></label>
+                            <input type="text" class="form-control" formControlName="location" readonly />
+                        </div>
+                        <div class="col-7 ps-5">
+                            <label class="form-label"
+                                >Goods Transfer To Department <span class="text-danger">*</span></label
+                            >
+
+                            <input type="text" class="form-control" formControlName="toDepartment" readonly />
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <hr class="row line-border" />
+
+        <app-setting-header
+            [data]="{page,pageSize,collection,search, excelDisplay : 'none'}"
+            (dataChange)="eventHeader($event)"
+        >
+        </app-setting-header>
+        <div class="table-responsive" style="min-height: 22rem">
+            <table class="table table-bordered table-sticky">
+                <thead class="bg-primary">
+                    <tr class="text-white">
+                        <th sortable="itemCode" (sort)="onSort($event)">Item Code</th>
+                        <th sortable="itemName" (sort)="onSort($event)" class="text-start">Item Name</th>
+                        <th sortable="itemDescription" (sort)="onSort($event)" class="text-start">Item Description</th>
+                        <th sortable="UOM" (sort)="onSort($event)">UoM</th>
+                        <th sortable="IRQty" (sort)="onSort($event)">IR Qty.</th>
+                        <th sortable="GTRQty" (sort)="onSort($event)">GTR Qty.</th>
+                        <th sortable="GIQty" (sort)="onSort($event)">FIFO</th>
+                        <th sortable="GIQty" (sort)="onSort($event)">GT Qty.</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr
+                        *ngFor="
+                            let g of GTResponseDetailsArray
+                                | searchFi1ter : search
+                                | slice : (page - 1) * pageSize : (page - 1) * pageSize + pageSize;
+                            let i = index;
+                            trackBy: trackByFn
+                        "
+                    >
+                        <td>{{ g.itemCode }}</td>
+                        <td class="text-start" [style.width]="itemName.clientWidth" #itemName>
+                            <span class="pointer" [positionTarget]="itemName" [ngbTooltip]="g.itemName">
+                                {{ g?.itemName }}
+                            </span>
+                        </td>
+                        <td class="text-start" [style.width]="itemDescription.clientWidth" #itemDescription>
+                            <span class="pointer" [positionTarget]="itemDescription" [ngbTooltip]="g.itemDescription">
+                                {{ g?.itemDescription }}
+                            </span>
+                        </td>
+                        <td>
+                            <span
+                                [ngbTooltip]="g.conversionOfUnits"
+                                placement="top"
+                                [ngClass]="g.UOM == g.secondaryUnit ? 'text-primary pointer' : 'text-secondary pointer'"
+                            >
+                                {{ g?.UOM | UOMUnitsMaster }}
+                            </span>
+                        </td>
+                        <td>
+                            {{ g.IRQty | number : "1.2-2" }}
+                        </td>
+                        <td>
+                            <span>
+                                {{ g.GTRQty | number : "1.2-2" }}
+                            </span>
+                        </td>
+                        <td>
+                            <span class="d-flex justify-content-center pointer">
+                                <div (click)="openFIFODetailsModal(g)" class="FGMip"></div>
+                            </span>
+                        </td>
+                        <td>
+                            {{ g.GTQty | number : "1.2-2" }}
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <hr class="row line-border" />
+
+        <div class="row mb-0">
+            <div class="col">
+                <div class="row">
+                    <div class="col-3 pe-0">
+                        <button class="plusIconSvg btn btn-primary me-1"></button>
+                        <button type="button" class="btn btn-primary px-4" (click)="openRemarksModal()">Remarks</button>
+                    </div>
+
+                    <div class="col-7 pe-5" *ngIf="action == 'reject'">
+                        <div class="d-flex align-items-center text-nowrap">
+                            <span class="set-flex-status px-4"> Rejection Remarks </span>
+                            <input class="form-control" type="text" formControlName="rejectionRemarks" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-auto ms-auto">
+                <button
+                    *ngIf="!['edit', 'reject', 'Acknowledged', 'approve', 'view'].includes(action)"
+                    type="button"
+                    class="btn bg-primary px-5 me-3"
+                    (click)="reset()"
+                >
+                    Reset
+                </button>
+                <button
+                    *ngIf="!['reject', 'Acknowledged', 'approve', 'edit', 'view'].includes(action)"
+                    type="button"
+                    class="btn btn-primary px-4 me-1"
+                    [disabled]="!isESCPreview"
+                    (click)="ESCPreview()"
+                >
+                    Esc
+                </button>
+                <button
+                    *ngIf="!['reject', 'Acknowledged', 'approve', 'edit', 'view'].includes(action)"
+                    type="button"
+                    class="btn bg-primary px-5 me-3"
+                    (click)="preview()"
+                >
+                    Preview
+                </button>
+                <button
+                    *ngIf="!['reject', 'Acknowledged', 'approve', 'edit', 'view'].includes(action)"
+                    type="button"
+                    [disabled]="!isPreview"
+                    class="btn bg-primary px-5"
+                    (click)="submit()"
+                >
+                    Save
+                </button>
+                <button
+                    *ngIf="['view'].includes(action)"
+                    class="btn btn-primary px-5"
+                    type="button"
+                    (click)="navigateTo()"
+                >
+                    Back
+                </button>
+                <button *ngIf="['edit'].includes(action)" type="button" class="btn bg-primary px-5" (click)="submit()">
+                    Save
+                </button>
+                <button
+                    *ngIf="['approve'].includes(action)"
+                    type="button"
+                    class="btn bg-primary px-5"
+                    (click)="submit()"
+                >
+                    Approve
+                </button>
+                <button
+                    *ngIf="['reject'].includes(action)"
+                    type="button"
+                    class="btn bg-primary px-5"
+                    (click)="submit()"
+                >
+                    Reject
+                </button>
+            </div>
+        </div>
+    </div>
+</Form>

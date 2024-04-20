@@ -1,0 +1,208 @@
+<form [formGroup]="form" class="formCard card">
+    <div class="container">
+        <div class="row form-header">
+            <div class="col heading">
+                <label>{{ action | titlecase }} Prospect Info</label>
+            </div>
+        </div>
+        <div class="form-body">
+            <div class="row">
+                <div class="col-5">
+                    <div class="row">
+                        <div class="col-6 pe-3">
+                            <label class="form-label">
+                                Prospect Registration Code <span class="text-danger"></span>
+                            </label>
+                            <input
+                                type="text"
+                                class="form-control"
+                                formControlName="prospectRegistrationCode"
+                                readonly
+                            />
+                        </div>
+                        <div class="col-6 ps-3">
+                            <label class="form-label">
+                                Prospect Registration Date
+                                <span class="text-danger"></span>
+                            </label>
+                            <input type="date" class="form-control" formControlName="prospectRegistrationDate" />
+                        </div>
+                    </div>
+                </div>
+                <div class="col-7">
+                    <div class="row">
+                        <div class="col-5 ps-2">
+                            <label class="form-label">
+                                Prospect Category
+                                <span class="text-danger">*</span>
+                            </label>
+                            <select formControlName="customerCategory" class="form-select">
+                                <option [value]="null" selected disabled>Select Prospect Category</option>
+                                <option *ngFor="let c of masterData.salesCategoryOptions" [value]="c.value">
+                                    {{ c.label }}
+                                </option>
+                            </select>
+                        </div>
+                        <div class="col-5 ps-2">
+                            <label class="form-label">
+                                Prospect Name
+                                <span class="text-danger">*</span>
+                            </label>
+                            <input type="text" class="form-control" formControlName="prospectName" />
+                        </div>
+                        <div class="col-2 ps-0">
+                            <label class="form-label">
+                                Ccy
+                                <span class="text-danger">*</span>
+                            </label>
+                            <select formControlName="currency" class="form-select">
+                                <option [value]="null" selected disabled>Select Ccy</option>
+                                <option *ngFor="let c of masterData.currenciesOptions" [value]="c.value">
+                                    {{ c.label }}
+                                </option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <hr class="row line-border" />
+
+        <div class="mb-4 d-flex justify-content-start">
+            <h4 class="me-3 form-label customerHeading">Correspondence Address</h4>
+        </div>
+
+        <ng-container formGroupName="correspondenceAddress">
+            <div class="row">
+                <div class="col">
+                    <label class="form-label"> Country <span class="text-danger">*</span> </label>
+                    <input type="text" class="form-control" formControlName="country" />
+                </div>
+                <div class="col">
+                    <label class="form-label"> State/Province <span class="text-danger">*</span> </label>
+                    <select class="form-select" formControlName="state">
+                        <option [value]="null" selected disabled>Select State</option>
+                        <option *ngFor="let s of statesOfIndia" [value]="s">
+                            {{ s }}
+                        </option>
+                    </select>
+                </div>
+                <div class="col">
+                    <label class="form-label"> City/District <span class="text-danger">*</span> </label>
+                    <input type="text" class="form-control" formControlName="city" />
+                </div>
+                <div class="col">
+                    <label class="form-label"> Pin Code <span class="text-danger">*</span> </label>
+                    <input
+                        oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
+                        type="number"
+                        maxlength="6"
+                        class="form-control"
+                        formControlName="pinCode"
+                    />
+                </div>
+            </div>
+            <div class="row mt-4">
+                <div class="col">
+                    <label class="form-label">Address Line 1 <span class="text-danger">*</span> </label>
+                    <input type="text" class="form-control" formControlName="line1" />
+                </div>
+                <div class="col">
+                    <label class="form-label">Address Line 2 <span class="text-danger">*</span></label>
+                    <input type="text" class="form-control" formControlName="line2" />
+                </div>
+                <div class="col">
+                    <label class="form-label">Address Line 3 <span class="text-danger">*</span></label>
+                    <input type="text" class="form-control" formControlName="line3" />
+                </div>
+                <div class="col">
+                    <label class="form-label">Address Line 4 <span class="text-danger"></span></label>
+                    <input type="text" class="form-control" formControlName="line4" />
+                </div>
+            </div>
+        </ng-container>
+
+        <hr class="row line-border" />
+
+        <div class="mb-3 d-flex justify-content-start">
+            <h4 class="mb-1 me-3 form-label customerHeading">Contact Details</h4>
+            <span>
+                <img src="./assets/new_icons/redstroke.svg" alt="" height="18" width="8" />
+            </span>
+            <h4 class="ms-3 openModelLink pointer text-primary" (click)="openContactDetailsModal()">
+                Click here to add more contacts
+            </h4>
+        </div>
+
+        <ng-container formGroupName="contactDetailsForm">
+            <div class="row mb-4">
+                <div class="col">
+                    <label class="form-label"> Contact Person's Name <span class="text-danger">*</span> </label>
+                    <input type="text" class="form-control" formControlName="contactPersonName" />
+                </div>
+                <div class="col">
+                    <label class="form-label"> Department<span class="text-danger"></span> </label>
+                    <input type="text" class="form-control" formControlName="contactPersonDepartment" />
+                </div>
+                <div class="col">
+                    <label class="form-label"> Designation <span class="text-danger"></span> </label>
+                    <input type="text" class="form-control" formControlName="contactPersonDesignation" />
+                </div>
+                <div class="col">
+                    <label class="form-label">Contact No. <span class="text-danger">*</span> </label>
+                    <input type="number" class="form-control" formControlName="contactPersonNumber" />
+                </div>
+                <div class="col">
+                    <label class="form-label">E-mail ID <span class="text-danger">*</span> </label>
+                    <input type="text" class="form-control" formControlName="contactPersonEmail" />
+                </div>
+            </div>
+        </ng-container>
+
+        <hr class="row line-border" />
+        <div class="row mb-3">
+            <div class="d-flex justify-content-between">
+                <div class="d-grid">
+                    <div class="d-flex align-items-center">
+                        <div class="col-form-label text-nowrap">
+                            Status <span class="text-danger">*</span>
+                            <i class="fa fa-caret-right fa-1x mx-3"></i>
+                        </div>
+                        <div class="d-flex inputGroup skuForm">
+                            <select class="form-select statusSelectBorder col-6" formControlName="status">
+                                <option [value]="null" selected disabled>Select Status</option>
+                                <option [value]="'Active'">Active</option>
+                                <option [value]="'Inactive'">Inactive</option>
+                            </select>
+                            <div class="input-group-text bg-white">
+                                <div class="col-md-auto my-4 align-self-center">
+                                    <div *ngIf="form.value['status'] == 'Active'" class="statusActive"></div>
+                                    <div *ngIf="form.value['status'] == 'Inactive'" class="statusInActive"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-4 d-flex justify-content-end">
+                    <button
+                        *ngIf="action != actionsList.view"
+                        class="btn btn-primary px-5 me-4"
+                        type="button"
+                        (click)="reset()"
+                    >
+                        Reset
+                    </button>
+                    <button
+                        *ngIf="action != actionsList.view"
+                        class="btn btn-primary px-5"
+                        type="button"
+                        (click)="submit()"
+                    >
+                        Save
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>

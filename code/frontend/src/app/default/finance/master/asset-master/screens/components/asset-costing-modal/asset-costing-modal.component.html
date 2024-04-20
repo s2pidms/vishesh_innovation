@@ -1,0 +1,197 @@
+<form [formGroup]="form">
+    <div class="modelPage">
+        <div class="modal-header">
+            <div class="heading">Asset Cost</div>
+            <div>
+                <button
+                    type="button"
+                    class="btn btn-cross btn-sm"
+                    aria-label="Close"
+                    (click)="this.activeModal.close()"
+                >
+                    <i class="fa fa-times-circle" aria-hidden="true"></i>
+                </button>
+            </div>
+        </div>
+        <div class="container-fluid mt-4 mb-3">
+            <div class="row">
+                <div class="col-12 px-0">
+                    <div class="row px-5 mb-4">
+                        <div class="col-6">
+                            <label class="form-label"> Purchase Cost<span class="text-danger">*</span> </label>
+
+                            <div class="d-flex">
+                                <span class="input-group-text combine-INR text-secondary">
+                                    {{ "INR" | companyCurrency }}
+                                    <div class="vr ms-3"></div>
+                                </span>
+                                <input
+                                    class="form-control border-start-0"
+                                    type="number"
+                                    formControlName="assetPurchaseCost"
+                                    (input)="setTotalAsset()"
+                                    readonly
+                                />
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <label class="form-label"> Finance Cost<span class="text-danger">*</span> </label>
+
+                            <div class="d-flex">
+                                <span class="input-group-text combine-INR text-secondary">
+                                    {{ "INR" | companyCurrency }}
+                                    <div class="vr ms-3"></div>
+                                </span>
+                                <input
+                                    class="form-control border-start-0"
+                                    type="number"
+                                    formControlName="financeCost"
+                                    (input)="setTotalAsset()"
+                                />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row px-5 mb-4">
+                        <div class="col-6">
+                            <label class="form-label"> Total Asset Cost<span class="text-danger">*</span> </label>
+
+                            <div class="d-flex">
+                                <span class="input-group-text combine-INR text-secondary">
+                                    {{ "INR" | companyCurrency }}
+                                    <div class="vr ms-3"></div>
+                                </span>
+                                <input
+                                    class="form-control border-start-0"
+                                    type="number"
+                                    formControlName="totalAssetClass"
+                                    readonly
+                                />
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <label class="form-label">
+                                Estimated Useful Life (Years)
+                                <span class="text-danger">*</span>
+                            </label>
+                            <input
+                                class="form-control"
+                                type="number"
+                                formControlName="estimatedUsefulLifeInYear"
+                                (input)="setDepreciatedCostPerYear()"
+                            />
+                        </div>
+                    </div>
+
+                    <div class="row px-5 mb-4">
+                        <div class="col-6">
+                            <label class="form-label">
+                                Depreciated Asset Cost/Year
+                                <span class="text-danger">*</span>
+                            </label>
+
+                            <div class="d-flex">
+                                <span class="input-group-text combine-INR text-secondary">
+                                    {{ "INR" | companyCurrency }}
+                                    <div class="vr ms-3"></div>
+                                </span>
+                                <input
+                                    class="form-control border-start-0"
+                                    type="number"
+                                    formControlName="depreciatedAssetCostPerYear"
+                                    readonly
+                                />
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <label class="form-label">
+                                Machine Efficiency %
+                                <span class="text-danger">*</span>
+                            </label>
+                            <input
+                                class="form-control"
+                                type="number"
+                                formControlName="machineEfficiencyPercentage"
+                                (input)="setDepreciationCostPerHour()"
+                            />
+                        </div>
+                    </div>
+                    <div class="row px-5 mb-4">
+                        <div class="col-6">
+                            <label class="form-label">
+                                No. of Operational Days/Year
+                                <span class="text-danger">*</span>
+                            </label>
+                            <input
+                                class="form-control"
+                                type="number"
+                                formControlName="noOfOperationalDaysPerYear"
+                                (input)="setDepreciationCostPerHour()"
+                            />
+                        </div>
+                        <div class="col-6">
+                            <label class="form-label">
+                                No. of shifts/Day
+                                <span class="text-danger">*</span>
+                            </label>
+                            <input
+                                class="form-control"
+                                type="number"
+                                formControlName="noOfShiftsRunPerDays"
+                                (input)="setDepreciationCostPerHour()"
+                            />
+                        </div>
+                    </div>
+
+                    <hr class="line-border" />
+
+                    <div class="row px-5 mb-4">
+                        <div class="col-6">
+                            <label class="form-label"> Total Cost/Hr<span class="text-danger">*</span> </label>
+
+                            <div class="d-flex">
+                                <span class="input-group-text combine-INR text-secondary">
+                                    {{ "INR" | companyCurrency }}
+                                    <div class="vr ms-3"></div>
+                                </span>
+                                <input
+                                    class="form-control border-start-0"
+                                    type="number"
+                                    formControlName="totalAssetCostPerHr"
+                                    readonly
+                                />
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <label class="form-label"> Total Cost/Shift<span class="text-danger">*</span> </label>
+
+                            <div class="d-flex">
+                                <span class="input-group-text combine-INR text-secondary">
+                                    {{ "INR" | companyCurrency }}
+                                    <div class="vr ms-3"></div>
+                                </span>
+                                <input
+                                    class="form-control border-start-0"
+                                    type="number"
+                                    formControlName="totalAssetCostPerShift"
+                                    readonly
+                                />
+                            </div>
+                        </div>
+                    </div>
+                    <hr *ngIf="['create', 'edit'].includes(action)" class="line-border" />
+
+                    <div class="row px-5 d-flex justify-content-center mt-4 mb-3">
+                        <div class="col-md-auto">
+                            <div *ngIf="['create', 'edit'].includes(action)" class="d-grid gap-2 d-md-block">
+                                <!-- <button class="btn btn-primary px-5 me-4" type="button" (click)="reset()">Reset</button> -->
+                                <button type="button" class="btn btn-primary px-3" (click)="dismissModel()">
+                                    Save & Close
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>

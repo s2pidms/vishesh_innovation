@@ -1,0 +1,464 @@
+<div class="container-fluid printScreen">
+    <div class="row">
+        <div class="col-12 text-center px-0">
+            <div *ngIf="buttonCondition == 'true'">
+                <button
+                    appAccessControl
+                    [accessType]="rolePermissionActions.downloadAction"
+                    class="btn btn-primary"
+                    type="button"
+                    (click)="windowPrint()"
+                    *ngIf="pdfAction != 'pdf'"
+                >
+                    <img src="./assets/images/print.png" width="20px" height="14px" class="mb-2" />&nbsp;&nbsp; Print
+                </button>
+            </div>
+            <div class="page py-3">
+                <div class="table-responsive shadow">
+                    <table class="table">
+                        <tr>
+                            <td colspan="12">
+                                <div class="text-center">
+                                    <img src="{{ tableData?.company?.companyPdfHeaderUrl }}" class="img-pdfHeader" />
+                                </div>
+                            </td>
+                        </tr>
+
+                        <tr class="head-row">
+                            <td colspan="12" class="text-center">
+                                <h1 class="fs-1">Debit Note</h1>
+                            </td>
+                        </tr>
+                        <tr class="head-row">
+                            <th colspan="4" class="bg-grey">
+                                <label class="heading">Rate Difference To [Customer's Details]</label>
+                            </th>
+                            <th colspan="4" class="bg-grey">
+                                <label class="heading">Rate Difference By [Supplier's Details] </label>
+                            </th>
+                            <th colspan="4" class="bg-grey">
+                                <label class="heading">Debit Note Details</label>
+                            </th>
+                        </tr>
+                        <tr>
+                            <td colspan="4" rowspan="2">
+                                <p class="">
+                                    {{ tableData?.customer?.customerName }}
+                                </p>
+                                <p>
+                                    {{ tableData?.customer?.customerBillingAddress?.line1 }}
+                                </p>
+                                <p>{{ tableData?.customer?.customerBillingAddress?.line2 }}</p>
+                                <p>{{ tableData?.customer?.customerBillingAddress?.line3 }}</p>
+                                <p>
+                                    {{ tableData?.customer?.customerBillingAddress?.city }} ,
+                                    {{ tableData?.customer?.customerBillingAddress?.state }}
+                                    , {{ tableData?.customer?.customerBillingAddress?.pinCode }}
+                                    {{ tableData?.customer?.customerBillingAddress?.country }}
+                                </p>
+                                <p>GSTIN.: {{ tableData?.customer?.GSTIN }}</p>
+                            </td>
+                            <td colspan="4" rowspan="2">
+                                <p>{{ tableData?.company?.companyName }}</p>
+                                <p>
+                                    {{ tableData?.company?.companyBillingAddress?.addressLine1 }}
+                                </p>
+                                <p>
+                                    {{ tableData?.company?.companyBillingAddress?.addressLine2 }}
+                                </p>
+                                <p>
+                                    {{ tableData?.company?.companyBillingAddress?.addressLine3 }}
+                                </p>
+                                <p>
+                                    {{ tableData?.company?.companyBillingAddress?.city }},
+                                    {{ tableData?.company?.companyBillingAddress?.state }} ,
+                                    {{ tableData?.company?.companyBillingAddress?.pinCode }},
+                                    {{ tableData?.company?.companyBillingAddress?.country }}
+                                </p>
+                                <p>GSTIN: {{ tableData?.company?.GSTIN }}</p>
+                            </td>
+                            <td colspan="4">
+                                <p class="">Debit Note No.: {{ tableData?.DNNumber }}</p>
+                                <p class="">
+                                    Debit Note Date:
+                                    {{ tableData?.DNDate | date : "dd-MM-YYYY" }}
+                                </p>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan="4">
+                                <p class="">Your Tax Invoice No.: {{ tableData?.invoiceNo }}</p>
+                                <p class="">
+                                    Your Tax Invoice Date:
+                                    {{ tableData?.invoiceDate | date : "dd-MM-YYYY" }}
+                                </p>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan="4">
+                                <p class="sub-text">
+                                    Mobile No.:
+                                    {{ tableData?.customer?.customerContactInfo?.contactPersonNumber }}
+                                </p>
+                                <p class="sub-text">
+                                    E-mail:
+                                    {{ tableData?.customer?.customerContactInfo?.contactPersonEmail }}
+                                </p>
+                            </td>
+                            <td colspan="4">
+                                <p class="sub-text">
+                                    Mobile No.:
+                                    {{ tableData?.company?.companyContactPersonNumber }}
+                                </p>
+                                <p class="sub-text">
+                                    E-mail:
+                                    {{ tableData?.company?.companyContactPersonEmail }}
+                                </p>
+                            </td>
+                            <td colspan="4">
+                                <p class="sub-text">Currency: {{ tableData?.currency }}</p>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan="12">
+                                <p class="sub-text">Dear Sir/Madam,</p>
+                                <p class="sub-text">
+                                    This is to inform you that the debit is made to your account in our books of
+                                    accounts as per following details.
+                                </p>
+                                <p class="sub-text">
+                                    The debit is made since the supply of goods/services is not in accordance with our
+                                    agreed terms of business.
+                                </p>
+                                <p class="sub-text">
+                                    <b class="sub-text"> Reason for Debit Note: “{{ tableData?.reasonForDN }}” </b>
+                                </p>
+                            </td>
+                        </tr>
+                        <tr class="head-row text-center w-100 text-nowrap">
+                            <th colspan="1" class="text-center">#</th>
+                            <th colspan="3" class="text-start">SKU Description</th>
+                            <th colspan="2" class="text-center">HSN Code</th>
+                            <th colspan="1" class="text-center">UoM</th>
+                            <th colspan="1" class="text-center">Invoice Qty.</th>
+                            <th colspan="1" class="text-center">Rate Difference/Unit</th>
+                            <th colspan="3" class="text-center">Amount</th>
+                        </tr>
+                        <tr class="text-wrap" *ngFor="let p of tableData.DNDetails; let i = index">
+                            <td colspan="1" class="text-center">
+                                <label>{{ i + 1 }}</label>
+                            </td>
+                            <td colspan="3">
+                                <p>
+                                    SKU Code: {{ p?.SKU?.SKUNo }} | Customer's Code:
+                                    {{ tableData?.customer?.customerCode }}
+                                </p>
+                                <p>SKU Name : {{ p?.SKU?.SKUName }}</p>
+                                <p>SKU Description: {{ p?.SKU?.SKUDescription }}</p>
+                            </td>
+                            <td colspan="2" class="text-center">
+                                {{ p?.hsn }}
+                            </td>
+                            <td colspan="1" class="text-center">
+                                {{ p?.UOM ? p?.UOM : p.primaryUnit }}
+                            </td>
+                            <td colspan="1" class="text-center">
+                                {{ p?.returnQty | number : "1.2-2" }}
+                            </td>
+                            <td colspan="1" class="text-center">
+                                {{ p?.purchaseRate | number : "1.2-2" }}
+                            </td>
+                            <td colspan="3" class="text-center">
+                                {{ p?.lineValue | number : "1.2-2" }}
+                            </td>
+                        </tr>
+                        <tr *ngFor="let d of tableData.rowRepeat; let j = index">
+                            <td colspan="1" class="text-center">
+                                <p class="py-3">
+                                    {{ tableData.DNDetails.length + j + 1 }}
+                                </p>
+                            </td>
+                            <td colspan="3" class="text-center"><p></p></td>
+                            <td colspan="2" class="text-center"><p></p></td>
+                            <td colspan="1" class="text-center"><p></p></td>
+                            <td colspan="1" class="text-center"><p></p></td>
+                            <td colspan="1" class="text-center"><p></p></td>
+                            <td colspan="3" class="text-center"><p></p></td>
+                        </tr>
+                        <tr>
+                            <td colspan="11 " class="text-end">
+                                <p class="sub-text">SAC 996511 - Add Freight & Forwarding Charges</p>
+                            </td>
+                            <td colspan="1" class="text-center">
+                                <span class="sub-text">
+                                    {{
+                                        tableData?.otherCharges?.totalAmount
+                                            ? (tableData?.otherCharges?.totalAmount | number : "1.2-2")
+                                            : 0
+                                    }}
+                                </span>
+                            </td>
+                        </tr>
+                        <tr class="border-btm">
+                            <th colspan="11" class="text-end">
+                                <p>Total Taxable Amount</p>
+                            </th>
+                            <th *ngIf="isDomestic" colspan="1" class="text-center">
+                                {{ tableData?.totalAmount | number : "1.2-2" }}
+                            </th>
+                            <th *ngIf="!isDomestic" colspan="1" class="text-center">
+                                {{ tableData?.totalAmount | number : "1.2-2" }}
+                            </th>
+                        </tr>
+
+                        <tr class="border-btm">
+                            <td colspan="12 " class="py-4">
+                                <div class="row justify-content-between">
+                                    <div class="col-9 h-100 p-0 pe-4">
+                                        <h4 class="py-2">GST Summary | Currency {{ tableData?.currency }}</h4>
+                                        <table class="table table-sm">
+                                            <tr>
+                                                <th class="text-center">HSN/SAC</th>
+                                                <th class="text-center">Taxable Amt.</th>
+                                                <th class="text-center">SGST %</th>
+                                                <th class="text-center">SGST Amt.</th>
+                                                <th class="text-center">CGST %</th>
+                                                <th class="text-center">CGST Amt.</th>
+                                                <th class="text-center">IGST %</th>
+                                                <th class="text-center">IGST Amt.</th>
+                                                <th class="text-center">Total Tax</th>
+                                            </tr>
+                                            <tr *ngFor="let s of tableData?.GSTDetails">
+                                                <td class="text-center">
+                                                    <span class="sub-text" *ngIf="isDomestic; else hashBlock">
+                                                        {{ s?.hsn }}</span
+                                                    >
+                                                </td>
+                                                <td class="text-center">
+                                                    <span class="sub-text" *ngIf="isDomestic; else hashBlock"
+                                                        >{{ s?.taxableValue ? s?.taxableValue : "-" }}
+                                                    </span>
+                                                </td>
+
+                                                <td class="text-center sub-text">
+                                                    <span class="sub-text" *ngIf="isDomestic; else hashBlock">
+                                                        {{ s?.sgstRate ? s?.sgstRate : "-" }}
+                                                    </span>
+                                                </td>
+                                                <td class="text-center sub-text">
+                                                    <span class="sub-text" *ngIf="isDomestic; else hashBlock">
+                                                        {{ s?.sgstAmount ? (s?.sgstAmount | number : "1.2-2") : "-" }}
+                                                    </span>
+                                                </td>
+
+                                                <td class="text-center sub-text">
+                                                    <span class="sub-text" *ngIf="isDomestic; else hashBlock">
+                                                        {{ s?.cgstRate ? (s?.cgstRate | number : "1.2-2") : "-" }}
+                                                    </span>
+                                                </td>
+                                                <td class="text-center sub-text">
+                                                    <span class="sub-text" *ngIf="isDomestic; else hashBlock">
+                                                        {{ s?.cgstAmount ? s?.cgstAmount : "-" }}
+                                                    </span>
+                                                </td>
+
+                                                <td class="text-center">
+                                                    <span class="sub-text" *ngIf="isDomestic; else hashBlock">{{
+                                                        s?.igstRate ? (s?.igstRate | number : "1.2-2") : "-"
+                                                    }}</span>
+                                                </td>
+                                                <td class="text-center">
+                                                    <span class="sub-text" *ngIf="isDomestic; else hashBlock">{{
+                                                        s?.igstAmount ? (s?.igstAmount | number : "1.2-2") : "-"
+                                                    }}</span>
+                                                </td>
+
+                                                <td class="text-center">
+                                                    <span class="sub-text" *ngIf="isDomestic; else hashBlock">
+                                                        {{
+                                                            +s?.cgstAmount + +s?.sgstAmount + +s?.igstAmount
+                                                                | number : "1.2-2"
+                                                        }}
+                                                    </span>
+                                                </td>
+                                            </tr>
+                                            <tr *ngFor="let d of tableData.summaryRowRepeat">
+                                                <td class="text-center sub-text">-</td>
+                                                <td class="text-center sub-text">-</td>
+                                                <td class="text-center sub-text">-</td>
+                                                <td class="text-center sub-text">-</td>
+                                                <td class="text-center sub-text">-</td>
+                                                <td class="text-center sub-text">-</td>
+                                                <td class="text-center sub-text">-</td>
+                                                <td class="text-center sub-text">-</td>
+                                                <td class="text-center sub-text">-</td>
+                                            </tr>
+                                            <tr>
+                                                <th class="text-center">Total >></th>
+                                                <th class="text-center">
+                                                    <span *ngIf="isDomestic; else hashBlock">
+                                                        {{ tableData?.totalAmount | number : "1.2-2" }}
+                                                    </span>
+                                                </th>
+                                                <th class="text-center">-</th>
+                                                <th class="text-center">
+                                                    <span *ngIf="isDomestic; else hashBlock">
+                                                        {{ tableData?.totalSGSTAmount | number : "1.2-2" }}</span
+                                                    >
+                                                </th>
+
+                                                <th class="text-center">-</th>
+                                                <th class="text-center">
+                                                    <span *ngIf="isDomestic; else hashBlock">
+                                                        {{ tableData?.totalCGSTAmount | number : "1.2-2" }}</span
+                                                    >
+                                                </th>
+
+                                                <th class="text-center">-</th>
+                                                <th class="text-center">
+                                                    <span *ngIf="isDomestic; else hashBlock">
+                                                        {{ tableData?.totalIGSTAmount | number : "1.2-2" }}
+                                                    </span>
+                                                </th>
+                                                <th class="text-center">
+                                                    <span *ngIf="isDomestic; else hashBlock">
+                                                        {{ tableData?.totalTaxAmount | number : "1.2-2" }}
+                                                    </span>
+                                                </th>
+                                            </tr>
+                                        </table>
+                                    </div>
+                                    <div class="col-3 h-100 p-0">
+                                        <h4 class="py-2">
+                                            Debit Note Summary I Currency
+                                            {{ tableData?.currency }}
+                                        </h4>
+                                        <table class="table">
+                                            <tr>
+                                                <th>Total Taxable Amount</th>
+                                                <th *ngIf="isDomestic" class="text-center">
+                                                    {{ tableData?.totalAmount | number : "1.2-2" }}
+                                                </th>
+                                                <th *ngIf="!isDomestic" class="text-center">
+                                                    {{ tableData?.totalAmount | number : "1.2-2" }}
+                                                </th>
+                                            </tr>
+                                            <tr>
+                                                <td class="sub-text">S-GST</td>
+                                                <td colspan="2" class="text-center">
+                                                    <span class="sub-text" *ngIf="isDomestic; else hashBlock">
+                                                        {{ tableData?.totalSGSTAmount | number : ".2-2" }}
+                                                    </span>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td class="sub-text">C-GST</td>
+                                                <td class="text-center">
+                                                    <span class="sub-text" *ngIf="isDomestic; else hashBlock">
+                                                        {{ tableData?.totalCGSTAmount | number : ".2-2" }}
+                                                    </span>
+                                                </td>
+                                            </tr>
+
+                                            <tr>
+                                                <td class="sub-text">I-GST</td>
+                                                <td class="text-center">
+                                                    <span class="sub-text" *ngIf="isDomestic; else hashBlock">
+                                                        {{ tableData?.totalIGSTAmount | number : ".2-2" }}
+                                                    </span>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td class="sub-text">Rounded off [+/-]</td>
+                                                <td class="text-center">
+                                                    <span class="sub-text" *ngIf="isDomestic; else hashBlock">
+                                                        {{ tableData?.roundedOff | number : "1.2-2" }}
+                                                    </span>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <th>Total Debit Note Amount</th>
+                                                <th class="text-center">
+                                                    <span *ngIf="isDomestic">
+                                                        {{ tableData?.totalAmountWithTax | number : ".2-2" }}
+                                                    </span>
+
+                                                    <span *ngIf="!isDomestic">
+                                                        {{ tableData?.totalAmount | number : "1.2-2" }}
+                                                    </span>
+                                                </th>
+                                            </tr>
+                                        </table>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+
+                        <tr class="py-1">
+                            <td colspan="12">
+                                <div class="row justify-content-between my-3">
+                                    <div class="col-9 p-0 pe-4">
+                                        <table class="table">
+                                            <tr>
+                                                <th colspan="12">Bank Details</th>
+                                            </tr>
+                                            <tr>
+                                                <td colspan="6">Beneficiary Name</td>
+                                                <td colspan="6">
+                                                    {{ tableData?.company?.companyBefName }}
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td colspan="6">Bank Name</td>
+                                                <td colspan="6">
+                                                    {{ tableData?.company?.companyBankName }}
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td colspan="6">Account No.</td>
+                                                <td colspan="6">
+                                                    {{ tableData?.company?.companyAccountNumber }}
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td colspan="6">MICR Code</td>
+                                                <td colspan="6">
+                                                    {{ tableData?.company?.companyBankMICRCode }}
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td colspan="6">IFS Code (NEFT/RTGS)</td>
+                                                <td colspan="6">
+                                                    {{ tableData?.company?.companyBankIFSCCode }}
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td colspan="6">Bank/Branch Address</td>
+                                                <td colspan="6">
+                                                    {{ tableData?.company?.companyBankBranch }}
+                                                </td>
+                                            </tr>
+                                        </table>
+                                    </div>
+                                    <div class="col-3 text-center p-0">
+                                        <table class="table">
+                                            <tr>
+                                                <td colspan="12" class="text-center">
+                                                    <img
+                                                        src="{{ tableData?.company?.companySignatureUrl }}"
+                                                        class="img-sign"
+                                                    />
+                                                </td>
+                                            </tr>
+                                        </table>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<ng-template #hashBlock> <span>-</span> </ng-template>

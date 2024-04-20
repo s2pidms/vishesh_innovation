@@ -1,0 +1,62 @@
+<div class="listCard card">
+    <div class="row table-header">
+        <label class="heading">Short PO Closing</label>
+    </div>
+    <hr class="row line-border" />
+    <div class="table-responsive">
+        <app-setting-header [data]="{page,pageSize,collection,search,type: 'list'}" (dataChange)="eventHeader($event)">
+        </app-setting-header>
+        <table class="table table-bordered">
+            <thead class="bg-primary">
+                <tr class="text-white">
+                    <th sortable="PODateS" (sort)="onSort($event)">PO Date</th>
+                    <th sortable="PONumber" (sort)="onSort($event)">PO #</th>
+                    <th sortable="POLineNumber" (sort)="onSort($event)">Line #</th>
+                    <th sortable="itemCode" (sort)="onSort($event)">Item #</th>
+                    <th class="text-start" sortable="itemName" (sort)="onSort($event)">Item Name #</th>
+                    <th sortable="balancedQty" (sort)="onSort($event)">Bal Qty</th>
+                    <th sortable="lineValue" (sort)="onSort($event)">Bal Value (₹)</th>
+                    <th class="text-start" sortable="supplierName" (sort)="onSort($event)">Supplier Name</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let u of tableData; trackBy: trackByFn; let i = index">
+                    <td>{{ u?.PODate }}</td>
+                    <td>{{ u?.PONumber }}</td>
+                    <td>{{ u?.POLineNumber }}</td>
+                    <td>{{ u?.itemCode }}</td>
+                    <td class="text-start" [style.width]="itemName.clientWidth" #itemName>
+                        <span class="pointer" [positionTarget]="itemName" [ngbTooltip]="u.itemName">
+                            {{ u.itemName }}
+                        </span>
+                    </td>
+                    <td>{{ u?.balancedQty }}</td>
+                    <td>{{ u?.lineValue | number : "1.2-2" }}</td>
+                    <td class="text-start" [style.width]="supplierName.clientWidth" #supplierName>
+                        <span class="pointer" [positionTarget]="supplierName" [ngbTooltip]="u.supplierName">
+                            {{ u.supplierName }}
+                        </span>
+                    </td>
+                    <td>
+                        <div class="dropdown">
+                            <button class="dropbtn"></button>
+                            <div class="dropdown-content">
+                                <a
+                                    appAccessControl
+                                    [accessType]="rolePermissionActions.approveAction"
+                                    href="javascript:void(0)"
+                                    [class.disable]="u?.POStatus === 'Cancelled'"
+                                    (click)="openCancelPoModal(u)"
+                                >
+                                    <i class="fa fa-close fa-lg text-primary" aria-hidden="true"></i>
+                                    Cancel
+                                </a>
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>

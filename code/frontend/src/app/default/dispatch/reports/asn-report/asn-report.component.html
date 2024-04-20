@@ -1,0 +1,120 @@
+<div class="reportTablePage">
+    <div class="table-body pb-0 shadow-none">
+        <div class="row table-header">
+            <div class="col">
+                <label class="heading">Advance Shipment Notice Report</label>
+            </div>
+        </div>
+        <div class="row my-4">
+            <div class="col-9">
+                <div class="row">
+                    <div class="col-6 separate-row ps-3">
+                        <label class="form-label">From Date<span class="text-danger">*</span> </label>
+                        <input class="form-control" type="date" [(ngModel)]="fromDate" />
+                        <span class="set-position">
+                            <img src="./assets/new_icons/redstroke.svg" alt="" height="27" width="8" />
+                        </span>
+                    </div>
+                    <div class="col-6">
+                        <label class="form-label">To Date<span class="text-danger">*</span> </label>
+                        <input class="form-control" type="date" [(ngModel)]="toDate" />
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-3 align-self-end separate-image">
+                <span class="image-position">
+                    <img src="./assets/new_icons/redstroke.svg" alt="" height="27" width="8" />
+                </span>
+                <button type="button" class="btn btn-primary px-4 me-3" (click)="getAll()">Apply Filter</button>
+
+                <button type="button" class="btn btn-primary px-4 ms-4" (click)="reset()">Reset Filter</button>
+            </div>
+        </div>
+        <hr class="row line-border" />
+
+        <div class="table-responsive mb-0">
+            <app-setting-header
+                [data]="{page,pageSize,collection,search,type: 'list',pdfDisplay : true}"
+                (dataChange)="eventHeader($event)"
+            >
+            </app-setting-header>
+            <table class="table table-bordered">
+                <thead class="bg-info">
+                    <tr class="text-white">
+                        <th sortable="ASNNumber" (sort)="onSort($event)">ASN #</th>
+                        <th sortable="salesInvoiceNumber" (sort)="onSort($event)">Invoice #</th>
+                        <th class="text-start" sortable="customerName" (sort)="onSort($event)">Customer Name</th>
+                        <th sortable="stateOfSupply" (sort)="onSort($event)">State of supply</th>
+                        <th sortable="totalNoOfBoxes" (sort)="onSort($event)">Total Boxes</th>
+                        <th sortable="totalGrossWeight" (sort)="onSort($event)">Total Weight(kgs)</th>
+                        <th sortable="transporter" (sort)="onSort($event)">Transporter</th>
+                        <th sortable="ASNStatus" (sort)="onSort($event)">Status</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let u of tableData; trackBy: trackByFn">
+                        <td>{{ u?.ASNNumber }}</td>
+                        <td>{{ u?.salesInvoiceNumber }}</td>
+                        <td class="text-start" [style.width]="customerName.clientWidth" #customerName>
+                            <span class="pointer" [positionTarget]="customerName" [ngbTooltip]="u.customerName">
+                                {{ u.customerName ? u.customerName : null }}
+                            </span>
+                        </td>
+                        <td>{{ u?.stateOfSupply }}</td>
+                        <td>{{ u?.totalNoOfBoxes }}</td>
+                        <td>{{ u?.totalGrossWeight }}</td>
+                        <td>{{ u?.transporter }}</td>
+                        <td>{{ u?.ASNStatus }}</td>
+                        <td>
+                            <div class="dropdown">
+                                <button class="dropbtn"></button>
+                                <div class="dropdown-content">
+                                    <a
+                                        appAccessControl
+                                        [accessType]="rolePermissionActions.viewAction"
+                                        href="javascript:void(0)"
+                                        (click)="navigateTo('/default/dispatch/transactions/asn/form', u, 'view')"
+                                    >
+                                        <i class="fa fa-eye fa-lg me-2 text-primary" aria-hidden="true"></i>
+                                        View
+                                    </a>
+                                    <a
+                                        appAccessControl
+                                        [accessType]="rolePermissionActions.viewAction"
+                                        [class.disable]="u?.ASNStatus === 'Approved' || u?.ASNStatus === 'Rejected'"
+                                        href="javascript:void(0)"
+                                        (click)="navigateToPrint('/#/print/asn', u, 'print')"
+                                    >
+                                        <i class="fa fa-print fa-lg me-3 text-primary" aria-hidden="true"></i>
+                                        Print
+                                    </a>
+                                    <a
+                                        appAccessControl
+                                        [accessType]="rolePermissionActions.viewAction"
+                                        [class.disable]="u?.ASNStatus === 'Approved' || u?.ASNStatus === 'Rejected'"
+                                        href="javascript:void(0)"
+                                        (click)="navigateToPrint('/#/print/asn_box_label', u, 'print')"
+                                    >
+                                        <i class="fa fa-tag fa-lg me-3 text-primary" aria-hidden="true"></i>
+                                        Box Label
+                                    </a>
+                                    <a
+                                        appAccessControl
+                                        [accessType]="rolePermissionActions.viewAction"
+                                        href="javascript:void(0)"
+                                        (click)="sendMail(u?._id)"
+                                    >
+                                        <i class="fa fa-bell-o fa-lg text-primary me-3" aria-hidden="true"></i>
+                                        Notify customer
+                                    </a>
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

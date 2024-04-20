@@ -1,0 +1,64 @@
+<form [formGroup]="form" class="formCard card">
+    <div class="container">
+        <div class="row form-header">
+            <div class="col heading">
+                <label>Mail Configuration ( {{ this.action | titlecase }} )</label>
+            </div>
+        </div>
+        <div class="form-body">
+            <div class="row">
+                <div class="col-md-12 px-5 pt-2">
+                    <div class="row mb-4">
+                        <div class="col-md-4">
+                            <label class="form-label">Module Name<span class="text-danger">*</span></label>
+                            <input type="text" class="form-control" formControlName="module" readonly />
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label"> Sub Module Name<span class="text-danger">*</span></label>
+                            <input type="text" class="form-control" formControlName="subModule" readonly />
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label"> Action<span class="text-danger"></span> </label>
+                            <input type="text" class="form-control" formControlName="action" readonly />
+                        </div>
+                    </div>
+                    <div class="row mb-4">
+                        <div class="col-md-12">
+                            <label class="form-label"> Email To<span class="text-danger"></span> </label>
+                            <textarea class="form-control form-text-area" formControlName="emailTo" rows="2"></textarea>
+                        </div>
+                    </div>
+                    <div class="row mb-4">
+                        <div class="col-md-12">
+                            <label class="form-label"> Email CC<span class="text-danger"></span> </label>
+                            <textarea class="form-control form-text-area" formControlName="emailCC" rows="2"></textarea>
+                        </div>
+                    </div>
+                    <div class="row mb-4">
+                        <div class="col-md-12">
+                            <label class="form-label"> Email BCC<span class="text-danger"></span> </label>
+                            <textarea
+                                class="form-control form-text-area"
+                                formControlName="emailBCC"
+                                rows="2"
+                            ></textarea>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <hr *ngIf="!['view'].includes(action)" class="row line-border" />
+            <div class="row">
+                <div class="col-12">
+                    <div *ngIf="!['view'].includes(action)" class="d-flex justify-content-center">
+                        <div class="d-grid col-md-1 me-5">
+                            <button class="btn btn-primary" type="button" (click)="reset()">Reset</button>
+                        </div>
+                        <div class="d-grid col-md-1">
+                            <button type="submit" class="btn btn-primary" (click)="submit()">Save</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>

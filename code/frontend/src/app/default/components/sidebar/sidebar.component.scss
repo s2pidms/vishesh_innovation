@@ -1,0 +1,129 @@
+.sidebar {
+  display: flex;
+  flex-direction: column;
+  grid-area: sidebar;
+  width: 100%;
+  gap: 1px;
+  font-size: 1.4rem;
+  height: 100%;
+
+  .linkContainer {
+    display: flex;
+    position: relative;
+    height: 100% !important;
+    width: 100% !important;
+    background: #FFFFFF;
+    box-shadow: 0.25px 0px 2px rgba(50, 75, 125, 0.5);
+
+    a {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      align-content: center;
+      text-decoration: none;
+      width: 100% !important;
+      padding-top: 0.3rem !important;
+      padding-bottom: 0.3rem !important;
+
+      .partA {
+        display: flex;
+        justify-content: center;
+        align-self: center;
+        align-items: center;
+        align-content: center;
+        width: 25.3% !important;
+        height: 100% !important;
+
+        img {
+          height: 2rem;
+          width: 2rem;
+        }
+      }
+
+      .partB {
+        display: flex;
+        align-self: center;
+        align-items: center;
+        width: 74.7% !important;
+        height: 98% !important;
+        padding-left: 1rem;
+        .linkTitle {
+          margin-bottom: 0;
+          font-size: 1.4rem;
+          font-weight: 400;
+        }
+      }
+    }
+  }
+  .separatorLine {
+    position: absolute;
+    width: 16.6rem  !important;
+  
+    top: 71.6%;
+    img{
+      width: 16.6rem  !important;
+    }
+  }
+  .poweredByTitle{
+    font-size: 1.3rem !important;
+  }
+
+  .businessLeadsA {
+    background-color: rgba(0, 125, 250, 0.05) !important;
+  }
+  
+  .salesA {
+    background-color: rgba(0, 125, 175, 0.05) !important;
+  }
+  
+  .planingA {
+    background-color: rgba(51, 72, 125, 0.05) !important;
+  }
+  .purchaseA {
+    background-color: rgba(250, 0, 150, 0.05) !important;
+  }
+  
+  .storesA {
+    background-color: rgba(0, 150, 150, 0.05) !important;
+  }
+  
+  .maintenanceA {
+    background-color: rgba(250, 50, 100, 0.05) !important;
+  }
+  
+  .productionA {
+    background-color: rgba(0, 125, 250, 0.05) !important;
+  }
+  
+  .qualityA {
+    background-color: rgba(0, 175, 75, 0.05) !important;
+  }
+  
+  .dispatchA {
+    background-color: rgba(250, 50, 100, 0.05) !important;
+  }
+  
+  .hrA {
+    background-color: rgba(0, 125, 175, 0.05) !important;
+  }
+  
+  .accountsA {
+    background-color: rgba(50, 70, 125, 0.05) !important;
+  }
+  
+  .financeA {
+    background-color: rgba(0, 125, 250, 0.05) !important;
+  }
+  
+  .settingsA {
+    background-color: rgba(250, 50, 100, 0.05) !important;
+  }
+  
+  .supportA {
+    background-color: rgba(0, 125, 175, 0.05) !important;
+  }
+  
+  .idmsLogoA {
+    background-color: rgba(250, 50, 100, 0.05) !important;
+  }
+}

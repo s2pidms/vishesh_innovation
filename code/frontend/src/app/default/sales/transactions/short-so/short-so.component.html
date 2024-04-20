@@ -1,0 +1,69 @@
+<div class="listCard card">
+    <div class="table-header">
+        <label class="heading">Short SO Closing</label>
+    </div>
+    <hr class="line-border" />
+    <div class="table-responsive">
+        <app-setting-header [data]="{page,pageSize,collection,search,type: 'list'}" (dataChange)="eventHeader($event)">
+        </app-setting-header>
+        <table class="table table-bordered table-sticky">
+            <thead class="bg-primary">
+                <tr class="text-white">
+                    <th sortable="SODate" (sort)="onSort($event)">SO Date</th>
+                    <th sortable="SONumber" (sort)="onSort($event)">SO #</th>
+                    <th sortable="SOLineNumber" (sort)="onSort($event)">Line #</th>
+                    <th sortable="SKUNo" (sort)="onSort($event)">SKU #</th>
+                    <th class="text-start" sortable="SKUName" (sort)="onSort($event)">
+                        {{ "SKU Name" | labelTranslate }}
+                    </th>
+                    <th class="text-start" sortable="SKUDescription" (sort)="onSort($event)">
+                        {{ "SKU Description" | labelTranslate }}
+                    </th>
+                    <th sortable="balancedQty" (sort)="onSort($event)">Bal Qty</th>
+                    <th class="text-start" sortable="customer" (sort)="onSort($event)">Customer Name</th>
+                    <th sortable="status" (sort)="onSort($event)">Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let u of tableData; trackBy: trackByFn">
+                    <td>{{ u?.SODate }}</td>
+                    <td>{{ u?.SONumber }}</td>
+                    <td>{{ u?.SOLineNumber }}</td>
+                    <td>{{ u?.SKUNo }}</td>
+                    <td class="text-start" [style.width]="SKUName.clientWidth" #SKUName>
+                        <span class="pointer" [positionTarget]="SKUName" [ngbTooltip]="u.SKUName">
+                            {{ u.SKUName }}
+                        </span>
+                    </td>
+                    <td class="text-start" [style.width]="SKUDescription.clientWidth" #SKUDescription>
+                        <span class="pointer" [positionTarget]="SKUDescription" [ngbTooltip]="u.SKUDescription">
+                            {{ u.SKUDescription }}
+                        </span>
+                    </td>
+                    <td>{{ u.balancedQty | number : "1.2-2" }}</td>
+                    <td class="text-start" [style.width]="customer.clientWidth" #customer>
+                        <span class="pointer" [positionTarget]="customer" [ngbTooltip]="u.customer">
+                            {{ u.customer }}
+                        </span>
+                    </td>
+                    <td>
+                        <div class="dropdown">
+                            <button class="dropbtn"></button>
+                            <div class="dropdown-content">
+                                <a
+                                    appAccessControl
+                                    [accessType]="rolePermissionActions.approveAction"
+                                    href="javascript:void(0)"
+                                    (click)="openSOLineModal(u)"
+                                >
+                                    <i class="fa fa fa-times fa-lg me-2 text-primary" aria-hidden="true"></i>
+                                    Cancel
+                                </a>
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>

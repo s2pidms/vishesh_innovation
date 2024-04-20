@@ -1,0 +1,174 @@
+[
+    {
+        "label": "micron",
+        "value": "μm"
+    },
+    {
+        "label": "mm",
+        "value": "mm"
+    },
+    {
+        "label": "cm",
+        "value": "cm"
+    },
+    {
+        "label": "inch",
+        "value": "in"
+    },
+    {
+        "label": "ft",
+        "value": "ft"
+    },
+    {
+        "label": "Mtr",
+        "value": "m"
+    },
+    {
+        "label": "mtr",
+        "value": "m"
+    },
+    {
+        "label": "Mtrs",
+        "value": "m"
+    },
+    {
+        "label": "SQ.FT",
+        "value": "sqf"
+    },
+    {
+        "label": "SQM",
+        "value": "sqm"
+    },
+    {
+        "label": "SQ.MTRS",
+        "value": "sqm"
+    },
+    {
+        "label": "ml",
+        "value": "ml"
+    },
+    {
+        "label": "LTR",
+        "value": "ℓ"
+    },
+    {
+        "label": "lit",
+        "value": "ℓ"
+    },
+    {
+        "label": "Ltr",
+        "value": "ℓ"
+    },
+    {
+        "label": "KLR",
+        "value": "kl"
+    },
+    {
+        "label": "gm",
+        "value": "g"
+    },
+    {
+        "label": "KG",
+        "value": "kg"
+    },
+    {
+        "label": "Kgs",
+        "value": "kg"
+    },
+    {
+        "label": "Kg",
+        "value": "kg"
+    },
+    {
+        "label": "NOS",
+        "value": "Nos"
+    },
+    {
+        "label": "nos",
+        "value": "Nos"
+    },
+    {
+        "label": "Nos.",
+        "value": "Nos"
+    },
+    {
+        "label": "pcs",
+        "value": "Pcs"
+    },
+    {
+        "label": "PCS",
+        "value": "Pcs"
+    },
+    {
+        "label": "Set",
+        "value": "Set"
+    },
+    {
+        "label": "Pack",
+        "value": "Pkg"
+    },
+    {
+        "label": "Can",
+        "value": "Can"
+    },
+    {
+        "label": "Sheet",
+        "value": "SHT"
+    },
+    {
+        "label": "Roll",
+        "value": "RL"
+    },
+    {
+        "label": "roll",
+        "value": "RL"
+    },
+    {
+        "label": "Rolls",
+        "value": "RL"
+    },
+    {
+        "label": "bag",
+        "value": "Bag"
+    },
+    {
+        "label": "Carton",
+        "value": "CTN"
+    },
+    {
+        "label": "carton",
+        "value": "CTN"
+    },
+    {
+        "label": "Bundle",
+        "value": "BD"
+    },
+    {
+        "label": "Drum",
+        "value": "DRM"
+    },
+    {
+        "label": "drum",
+        "value": "DRM"
+    },
+    {
+        "label": "Box",
+        "value": "Box"
+    },
+    {
+        "label": "Coil",
+        "value": "Coil"
+    },
+    {
+        "label": "Brass",
+        "value": "Brass"
+    },
+    {
+        "label": "Dozen",
+        "value": "doz"
+    },
+    {
+        "label": "Days",
+        "value": "Days"
+    }
+]

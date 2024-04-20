@@ -1,0 +1,78 @@
+<div class="modelPage">
+    <div class="modal-header">
+        <div class="heading">Log Entry</div>
+        <div>
+            <button type="button" class="btn btn-cross btn-sm" aria-label="Close" (click)="this.activeModal.close()">
+                <i class="fa fa-times-circle" aria-hidden="true"></i>
+            </button>
+        </div>
+    </div>
+    <div class="">
+        <form [formGroup]="form">
+            <ng-container>
+                <div class="row my-4 px-5">
+                    <div class="col-6">
+                        <label class="form-label mb-1"> Prod. Source <span class="text-danger"></span> </label>
+                        <input class="form-control bg-white-smoke" type="text" formControlName="prodSource" />
+                    </div>
+                    <div class="col-6">
+                        <label class="form-label mb-1"> Prod. Date <span class="text-danger"></span> </label>
+                        <input class="form-control" type="date" formControlName="prodDate" />
+                    </div>
+                </div>
+
+                <div class="row px-5 mb-4">
+                    <div class="col-6">
+                        <label class="form-label mb-1">Production Shift <span class="text-danger"></span> </label>
+                        <ng-select
+                            [items]="shiftOptions"
+                            bindValue="parameterName"
+                            bindLabel="parameterLabel"
+                            [clearable]="false"
+                            formControlName="prodShift"
+                        >
+                        </ng-select>
+                    </div>
+
+                    <div class="col-6">
+                        <label class="form-label mb-1"> Operating Staff<span class="text-danger"></span> </label>
+                        <input class="form-control" type="text" formControlName="operatingStaff" />
+                    </div>
+                </div>
+
+                <div class="row px-5">
+                    <div class="col-12">
+                        <label class="form-label mb-1">Remarks <span class="text-danger"></span> </label>
+                        <input class="form-control" type="text" formControlName="remarks" />
+                    </div>
+                </div>
+            </ng-container>
+            <hr class="line-border my-4" />
+            <div class="row px-5">
+                <div class="col-8">
+                    <div class="d-flex align-items-center">
+                        <div class="col-form-label text-nowrap">
+                            Authorized by
+                            <i class="fa fa-caret-right fs-3 mx-2"></i>
+                        </div>
+                        <div class=" ">
+                            <input class="form-control" type="text" formControlName="authorizedBy" />
+                        </div>
+                    </div>
+                </div>
+                <div class="col-4 ps-0 d-flex justify-content-end">
+                    <div class="mb-4">
+                        <button
+                            [disabled]="['view', 'approve', 'reject'].includes(action)"
+                            type="button"
+                            class="btn bg-primary px-2"
+                            (click)="dismissModel()"
+                        >
+                            Save & Close
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>

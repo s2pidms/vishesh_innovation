@@ -1,0 +1,106 @@
+<form [formGroup]="form">
+    <div class="container-fluid">
+        <div class="row justify-content-center">
+            <div class="col-10 px-5 mt-3 mb-4">
+                <div class="row">
+                    <div class="col-3 mt-1 pe-0">
+                        <label class="form-label">Payment Terms <span class="text-danger">*</span> </label>
+                    </div>
+                    <div class="col-auto mt-1 px-0">
+                        <i class="fa fa-caret-right text-secondary"></i>
+                    </div>
+                    <div class="col-7 ps-0">
+                        <select class="form-select fs-5" type="text" formControlName="paymentTerms">
+                            <option [value]="null" selected disabled>Select Payment Terms</option>
+                            <option [value]="item.value" *ngFor="let item of SOTermsArr.paymentTermsArr">
+                                {{ item.label }}
+                            </option>
+                        </select>
+                    </div>
+                </div>
+                <div class="row mt-5">
+                    <div class="col-3 mt-1 pe-0">
+                        <label class="form-label"> Freight Terms <span class="text-danger">*</span></label>
+                    </div>
+                    <div class="col-auto mt-1 px-0">
+                        <i class="fa fa-caret-right text-secondary"></i>
+                    </div>
+                    <div class="col-7 ps-0">
+                        <select class="form-select fs-5" type="text" formControlName="frightTerms">
+                            <option [value]="null" selected disabled>Select Freight Terms</option>
+                            <option [value]="ele.parameterName" *ngFor="let ele of SOTermsArr.freightTerms">
+                                {{ ele.parameterLabel }}
+                            </option>
+                        </select>
+                    </div>
+                </div>
+                <div class="row mt-5">
+                    <div class="col-3 mt-1 pe-0">
+                        <label class="form-label text-nowrap"
+                            >Mode of transport <span class="text-danger">*</span>
+                        </label>
+                    </div>
+                    <div class="col-auto mt-1 px-0">
+                        <i class="fa fa-caret-right mt-1 text-secondary"></i>
+                    </div>
+                    <div class="col-7 ps-0">
+                        <select class="form-select fs-5" type="text" formControlName="modeOfTransport">
+                            <option [value]="null" selected disabled>Select Mode of transport</option>
+                            <option [value]="item.value" *ngFor="let item of SOTermsArr.modeOfTransport">
+                                {{ item.label }}
+                            </option>
+                        </select>
+                    </div>
+                </div>
+                <div class="row mt-5">
+                    <div class="col-3 mt-1 pe-0">
+                        <label class="form-label text-nowrap"
+                            >Transporter Name <span class="text-danger">*</span></label
+                        >
+                    </div>
+                    <div class="col-auto mt-1 px-0">
+                        <i class="fa fa-caret-right text-secondary"></i>
+                    </div>
+                    <div class="col-7 ps-0">
+                        <select class="form-select fs-5" type="text" formControlName="transporter">
+                            <option [value]="null" selected disabled>Select Transporter Name</option>
+                            <option [value]="ele.value" *ngFor="let ele of SOTermsArr.transporterArr">
+                                {{ ele.label }}
+                            </option>
+                        </select>
+                    </div>
+                    <div (click)="enableTransporterName()" class="col-1 assetChange mt-1 pointer"></div>
+                </div>
+                <div class="row mt-5">
+                    <div class="col-3 mt-1 pe-0">
+                        <label class="form-label text-nowrap"
+                            >Destination/Port <span class="text-danger">*</span></label
+                        >
+                    </div>
+                    <div class="col-auto mt-1 px-0">
+                        <i class="fa fa-caret-right text-secondary"></i>
+                    </div>
+                    <div class="col-7 ps-0">
+                        <input type="text" class="form-control" formControlName="destination" />
+                    </div>
+                    <div (click)="enableDestination()" class="col-1 assetChange mt-1 pointer"></div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col px-0 mt-5">
+                <hr *ngIf="['create', 'edit'].includes(action)" class="line-border" />
+            </div>
+        </div>
+        <div class="text-center my-2">
+            <button
+                *ngIf="['create', 'edit'].includes(action)"
+                class="btn bg-primary px-5"
+                type="button"
+                (click)="dismissModel()"
+            >
+                Save
+            </button>
+        </div>
+    </div>
+</form>

@@ -1,0 +1,142 @@
+<Form [formGroup]="form" class="formCard card">
+    <div class="container">
+        <div class="row form-header">
+            <div class="col heading">
+                <label> {{ this.action | titlecase }} Generate Work Order</label>
+            </div>
+        </div>
+        <div class="form-body">
+            <div class="row">
+                <div class="col-md-3">
+                    <label class="form-label"> Work Order Code <span class="text-danger"></span> </label>
+                    <input class="form-control" type="text" formControlName="workOrderCode" readonly />
+                </div>
+                <div class="col-md-3">
+                    <label class="form-label"> Work Order Execution Date <span class="text-danger"></span> </label>
+
+                    <input class="form-control" type="date" formControlName="workOrderExecutionDate" />
+                </div>
+                <div class="col-md-3">
+                    <label class="form-label"> Description <span class="text-danger"></span> </label>
+
+                    <input class="form-control" type="text" formControlName="description" />
+                </div>
+                <div class="col-md-3">
+                    <label class="form-label"> Schedule Code<span class="text-danger"></span> </label>
+                    <ng-select
+                        (change)="setEquipmentName($event)"
+                        [items]="masterData.scheduleCodeOptions"
+                        bindLabel="label"
+                        bindValue="_id"
+                        [clearable]="false"
+                        formControlName="schedule"
+                        placeholder="Select Schedule Code"
+                    >
+                    </ng-select>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-3">
+                    <label class="form-label"> Equipment Name <span class="text-danger"></span> </label>
+
+                    <input class="form-control" type="text" formControlName="equipmentName" readonly />
+                </div>
+                <div class="col-md-3">
+                    <label class="form-label"> Technician Code <span class="text-danger"></span> </label>
+                    <ng-select
+                        [items]="masterData.technicianCodeOptions"
+                        bindLabel="label"
+                        bindValue="_id"
+                        [clearable]="false"
+                        formControlName="technician"
+                        placeholder="Select Technician Code"
+                    >
+                    </ng-select>
+                </div>
+                <div class="col-md-3">
+                    <label class="form-label"> Priority<span class="text-danger"></span> </label>
+                    <select class="form-select" formControlName="priority">
+                        <option [value]="''" selected disabled>Select Priority</option>
+                        <option *ngFor="let p of masterData?.priorityOptions" [value]="p.value">
+                            {{ p?.label }}
+                        </option>
+                    </select>
+                </div>
+                <div class="col-md-3">
+                    <label class="form-label"> Start Date <span class="text-danger"></span> </label>
+                    <input class="form-control" type="date" formControlName="startDate" />
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-3">
+                    <label class="form-label"> End Date <span class="text-danger"></span> </label>
+                    <input class="form-control" type="date" formControlName="endDate" />
+                </div>
+                <div class="col-md-3">
+                    <label class="form-label"> Materials <span class="text-danger"></span> </label>
+                    <input class="form-control" type="text" formControlName="materials" />
+                </div>
+                <div class="col-md-3">
+                    <label class="form-label"> Maintenance Cost <span class="text-danger"></span> </label>
+                    <input class="form-control" type="number" formControlName="maintenanceCost" />
+                </div>
+                <div class="col-md-3">
+                    <label class="form-label"> Status<span class="text-danger"></span> </label>
+                    <select class="form-select" formControlName="status">
+                        <option [value]="''">Select Status</option>
+                        <option *ngFor="let s of masterData?.workOrderGenerateStatusOptions" [value]="s.value">
+                            {{ s?.label }}
+                        </option>
+                    </select>
+                </div>
+            </div>
+        </div>
+        <hr class="row line-border" />
+        <div class="row mb-0">
+            <div class="col-9 mb-3">
+                <button class="btn btn-primary" type="button" (click)="openChecklistInstructionModal()">
+                    View Maintenance Checklist
+                </button>
+            </div>
+
+            <div *ngIf="!['view', 'edit'].includes(action)" class="col-3 align-self-end">
+                <div class="row">
+                    <div class="d-grid col pe-0">
+                        <button
+                            class="btn btn-primary"
+                            type="button"
+                            (click)="reset()"
+                            [ngClass]="{'d-none': action == 'View'}"
+                        >
+                            Reset
+                        </button>
+                    </div>
+
+                    <div class="d-grid col">
+                        <button
+                            class="btn btn-primary"
+                            type="button"
+                            (click)="submit()"
+                            [ngClass]="{'d-none': action == 'View'}"
+                        >
+                            Save
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <div class="col-3 text-end">
+                <div *ngIf="['edit'].includes(action)">
+                    <button
+                        class="btn btn-primary col-6"
+                        type="button"
+                        (click)="submit()"
+                        [ngClass]="{'d-none': action == 'View'}"
+                    >
+                        Save
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</Form>

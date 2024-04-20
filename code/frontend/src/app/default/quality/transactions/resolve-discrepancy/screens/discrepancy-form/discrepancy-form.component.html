@@ -1,0 +1,204 @@
+<form [formGroup]="form" class="formCard card">
+    <div class="container">
+        <div class="row form-header">
+            <div class="col heading">
+                <label class="">Resolve Discrepancy</label>
+            </div>
+        </div>
+        <div class="form-body">
+            <div class="row">
+                <div class="col">
+                    <label for="" class="form-label">Goods Request No.<span class="text-danger">*</span></label>
+                    <ng-select
+                        [items]="Goods"
+                        bindLabel="GRNumber"
+                        bindValue="_id"
+                        formControlName="GRNumber"
+                        [clearable]="false"
+                        (change)="getGoodRequisitionById()"
+                        (change)="deptValue($event)"
+                    >
+                    </ng-select>
+                </div>
+
+                <div class="col">
+                    <label for="" class="form-label">Goods Request Date</label>
+                    <input type="date" class="form-control" formControlName="GRDate" readonly />
+                </div>
+                <div class="col">
+                    <label for="" class="form-label">Goods Issue Date</label>
+                    <input type="date" class="form-control" formControlName="GIDate" />
+                </div>
+                <div class="col">
+                    <label for="" class="form-label">Location (Store)</label>
+                    <input type="text" class="form-control" formControlName="deliveryLocation" readonly />
+                </div>
+                <div class="col">
+                    <label for="" class="form-label">Department (GR by)</label>
+
+                    <input type="text" class="form-control" formControlName="department" readonly />
+                </div>
+            </div>
+        </div>
+        <hr class="row line-border" />
+        <div class="row justify-content-between settingMargin">
+            <div class="col-4">
+                <div class="d-flex align-items-center">
+                    <div class="col-form-label text-nowrap">
+                        Action By
+                        <i class="fa fa-caret-right fa-5x text-dark mx-2"></i>
+                    </div>
+                    <select (change)="setActionBy()" formControlName="actionBy" class="form-select">
+                        <option value="null" selected disabled>Select Action By</option>
+                        <option *ngFor="let item of actionByArr" [value]="item.label">{{ item.label }}</option>
+                    </select>
+                </div>
+            </div>
+            <div class="col-4 d-flex justify-content-center">
+                <ngb-pagination
+                    *ngIf="GIDetailsArray.length > 0"
+                    [collectionSize]="GIDetailsArray.length"
+                    [(page)]="page"
+                    [pageSize]="pageSize"
+                    [boundaryLinks]="false"
+                >
+                    <ng-template ngbPaginationPrevious>
+                        <img src="./assets/new_icons/pagination_prev.svg" width="20rem" />
+                    </ng-template>
+                    <ng-template ngbPaginationNext>
+                        <img src="./assets/new_icons/pagination_next.svg" width="20rem" />
+                    </ng-template>
+                    <ng-template ngbPaginationPages let-page let-pages="pages">
+                        <li class="ngb-custom-pages-item align-self-center" *ngIf="pages.length > 0">
+                            <span class="page-label me-2 ms-1"> Page {{ page }} of {{ pages[pages.length - 1] }} </span>
+                        </li>
+                    </ng-template>
+                </ngb-pagination>
+            </div>
+            <div class="col-4"></div>
+        </div>
+        <div class="table-responsive" style="min-height: 21.4rem">
+            <table class="table table-bordered table-sticky">
+                <thead class="bg-primary">
+                    <tr class="text-white">
+                        <th>MRN No.</th>
+                        <th>MRN Date</th>
+                        <th>Item Code</th>
+                        <th class="text-start">Item Name</th>
+                        <th class="text-start">Item Description</th>
+                        <th>UoM</th>
+                        <th>Issue Qty</th>
+                        <th>Receipt Qty</th>
+                        <th>Diff. Qty.</th>
+                        <th *ngIf="this.form.controls['actionBy'].value == 'Stores'">+/- Invnt.</th>
+                        <th *ngIf="this.form.controls['actionBy'].value != 'Stores'">+/- WIP</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr
+                        *ngFor="
+                            let g of GIDetailsArray
+                                | searchFi1ter : search
+                                | slice : (page - 1) * pageSize : (page - 1) * pageSize + pageSize;
+                            let i = index;
+                            trackBy: trackByFn
+                        "
+                    >
+                        <td>{{ g.mrnNo }}</td>
+                        <td>{{ g.MRNDate | date : "dd-MM-YYYY" }}</td>
+                        <td>{{ g.itemCode }}</td>
+                        <td class="text-start" [style.width]="itemName.clientWidth" #itemName>
+                            <span class="pointer" [ngbTooltip]="g.itemName" [positionTarget]="itemName">
+                                {{ g.itemName }}
+                            </span>
+                        </td>
+                        <td class="text-start" [style.width]="itemDescription.clientWidth" #itemDescription>
+                            <span class="pointer" [ngbTooltip]="g.itemDescription" [positionTarget]="itemDescription">
+                                {{ g.itemDescription }}
+                            </span>
+                        </td>
+                        <td>{{ g.UOM | UOMUnitsMaster  }}</td>
+                        <td>
+                            {{ g.GIQty | number : "1.2-2" }}
+                        </td>
+                        <td>{{ g.receiptQty | number : "1.2-2" }}</td>
+                        <td class="text-primary">{{ g.diffQty | number : "1.2-2" }}</td>
+                        <td *ngIf="this.form.controls['actionBy'].value == 'Stores'">
+                            <div class="d-flex justify-content-center">
+                                <span *ngIf="action == 'view'"> {{ g.inventoryQty | number : "1.2-2" }}</span>
+                                <input
+                                    *ngIf="action != 'view'"
+                                    class="form-control form-control-sm w-25"
+                                    type="number"
+                                    [(ngModel)]="g.inventoryQty"
+                                    [ngModelOptions]="{standalone: true}"
+                                    (input)="setInventory()"
+                                />
+                            </div>
+                        </td>
+                        <td *ngIf="this.form.controls['actionBy'].value != 'Stores'">
+                            <div class="d-flex justify-content-center">
+                                <input
+                                    class="form-control form-control-sm w-25"
+                                    type="number"
+                                    [(ngModel)]="g.WIPQty"
+                                    [ngModelOptions]="{standalone: true}"
+                                    (input)="setWIP()"
+                                />
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <hr class="row line-border" />
+
+        <div class="row">
+            <div class="col">
+                <div class="row">
+                    <div class="col-4">
+                        <div class="d-flex align-items-center">
+                            <div class="col-md-auto text-nowrap">
+                                <button type="button" class="btn btn-primary px-3">Remarks</button>
+                            </div>
+
+                            <input class="form-control" type="text" formControlName="remarks" readonly />
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div *ngIf="action != 'view'" class="col-md-auto ms-auto">
+                <button
+                    [disabled]="!updateInventory"
+                    *ngIf="this.form.controls['actionBy'].value == 'Stores'"
+                    type="button"
+                    class="btn bg-primary px-5"
+                    (click)="submit()"
+                >
+                    Update Inventory
+                </button>
+
+                <button
+                    [disabled]="!updateWIP"
+                    *ngIf="this.form.controls['actionBy'].value != 'Stores'"
+                    type="button"
+                    class="btn bg-primary px-5"
+                    (click)="submit()"
+                >
+                    Update WIP
+                </button>
+            </div>
+            <div *ngIf="action == 'view'" class="col-md-auto ms-auto">
+                <button
+                    class="btn btn-primary px-5"
+                    type="button"
+                    (click)="navigateTo('/default/quality/transactions/resolve_discrepancy/list', {}, '')"
+                >
+                    Back
+                </button>
+            </div>
+        </div>
+    </div>
+</form>

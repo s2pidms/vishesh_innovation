@@ -1,0 +1,281 @@
+<div class="grnPrint">
+    <div class="row m-0 justify-content-center">
+        <div class="col-11 text-end mt-2 px-0">
+            <div *ngIf="buttonCondition == 'true'" id="btnDisplay">
+                <button class="btn btn-primary" type="button" (click)="windowPrint()" *ngIf="pdfAction != 'pdf'">
+                    <img src="./assets/images/print.png" width="20px" height="14px" class="mb-2" />&nbsp;&nbsp; Print
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div class="row tablePage m-0">
+        <div class="col-md-11 table-body px-0 pb-0">
+            <div class="row table-header mx-0">
+                <div class="col d-flex justify-content-center">
+                    <label class="heading text-center"> Feasibility Commitment </label>
+                </div>
+            </div>
+
+            <Form [formGroup]="form">
+                <div class="row my-4 px-4">
+                    <div class="col-4">
+                        <div class="row">
+                            <div class="col-7 pe-5">
+                                <label class="form-label"> NPD No. <span class="text-danger">*</span> </label>
+                                <div class="d-flex align-items-center">
+                                    <div class="col-11">
+                                        <ng-select
+                                            [items]="masterData.NPDOptions"
+                                            bindLabel="NPDNo"
+                                            bindValue="_id"
+                                            [clearable]="false"
+                                            (change)="setReference($event)"
+                                            formControlName="NPD"
+                                        >
+                                        </ng-select>
+                                    </div>
+                                    <div
+                                        style="height: 2.9rem"
+                                        class="set-input-group-text input-group-text bg-primary pointer col-auto"
+                                        id="basic-addon1"
+                                        (click)="openNPDDetailsModal()"
+                                    >
+                                        <i class="fa fa-search text-white fs-4" aria-hidden="true"></i>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-5 ps-0">
+                                <label class="form-label"> NPD Date <span class="text-danger"></span> </label>
+                                <input type="date" class="form-control" formControlName="NPDDate" readonly />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-8">
+                        <div class="row">
+                            <div class="col-4">
+                                <label class="form-label mb-0 d-flex justify-content-between">
+                                    Project Name
+                                    <span class="text-danger"></span>
+                                    <button
+                                        type="button"
+                                        class="btn btn-primary form-btn-sm py-0"
+                                        href="javascript:void(0)"
+                                        (click)="navigateTo('print/npd_request_print')"
+                                    >
+                                        NPD Details
+                                    </button>
+                                </label>
+                                <input type="text" class="form-control" formControlName="projectName" readonly />
+                            </div>
+
+                            <div class="col-4">
+                                <label class="form-label">
+                                    Product Category
+                                    <span class="text-danger"></span>
+                                </label>
+                                <ng-select
+                                    [items]="masterData.NPDOptions"
+                                    bindLabel="productCategory"
+                                    bindValue="productCategory"
+                                    [clearable]="false"
+                                    formControlName="productCategory"
+                                    [readonly]="true"
+                                >
+                                </ng-select>
+                            </div>
+                            <div class="col-4">
+                                <label class="form-label">
+                                    Customer Name
+                                    <span class="text-danger"></span>
+                                </label>
+                                <ng-select
+                                    *ngIf="action == 'create'"
+                                    [items]="masterData.NPDOptions"
+                                    bindLabel="name"
+                                    bindValue="name"
+                                    [clearable]="false"
+                                    formControlName="name"
+                                    [readonly]="true"
+                                >
+                                </ng-select>
+                                <input
+                                    *ngIf="['view', 'edit', 'print'].includes(action)"
+                                    type="text"
+                                    class="form-control"
+                                    readonly
+                                    formControlName="name"
+                                />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <hr class="line-border" />
+
+                <div class="row mb-3 px-4">
+                    <div class="col-12 d-flex justify-content-center">
+                        <h2 class="text-secondary">{{ heading }}</h2>
+                    </div>
+                </div>
+
+                <div class="row mb-0 px-4">
+                    <div class="col-2">
+                        <ul ngbNav #nav="ngbNav" [(activeId)]="active" class="nav flex-column tabs-card row mb-0">
+                            <li [ngbNavItem]="1" class="nav-item mb-1">
+                                <a (click)="setHeading('Customer Inputs')" ngbNavLink>
+                                    <div class="row mb-0">
+                                        <div class="col-12 px-3">
+                                            <div class="d-grid">
+                                                <button class="btn btn-primary" type="button">Customer Inputs</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </a>
+                                <ng-template ngbNavContent class="px-5">
+                                    <app-customer-inputs
+                                        [action]="action"
+                                        [(customerInputs)]="customerInputs"
+                                        [(customerInputsObj)]="customerInputsObj"
+                                        (saveData)="saveData($event)"
+                                    ></app-customer-inputs>
+                                </ng-template>
+                            </li>
+                            <li [ngbNavItem]="2" class="nav-item mb-1">
+                                <a (click)="setHeading('Technical Review')" ngbNavLink [class.aDisable]="aDisabled">
+                                    <div class="row mb-0">
+                                        <div class="col-4 ps-3">
+                                            <button class="btn btn-primary px-4">T</button>
+                                        </div>
+                                        <div class="col-8 ps-2 pe-3">
+                                            <div class="d-grid">
+                                                <button class="btn btn-primary px-4">Technical</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </a>
+                                <ng-template ngbNavContent>
+                                    <app-technical
+                                        [action]="action"
+                                        [(technical)]="technical"
+                                        [(technicalObj)]="technicalObj"
+                                        (saveData)="saveData($event)"
+                                    ></app-technical>
+                                </ng-template>
+                            </li>
+                            <li [ngbNavItem]="3" class="nav-item mb-1">
+                                <a (click)="setHeading('Economic Review')" ngbNavLink [class.aDisable]="aDisabled">
+                                    <div class="row mb-0">
+                                        <div class="col-4 ps-3">
+                                            <button class="btn btn-primary px-4">E</button>
+                                        </div>
+                                        <div class="col-8 ps-2 pe-3">
+                                            <div class="d-grid">
+                                                <button class="btn btn-primary px-4">Economic</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </a>
+                                <ng-template ngbNavContent>
+                                    <app-economic
+                                        [action]="action"
+                                        [(economic)]="economic"
+                                        [(economicObj)]="economicObj"
+                                        (saveData)="saveData($event)"
+                                    ></app-economic>
+                                </ng-template>
+                            </li>
+                            <li [ngbNavItem]="4" class="nav-item mb-1">
+                                <a (click)="setHeading('Legal Review')" ngbNavLink [class.aDisable]="aDisabled">
+                                    <div class="row mb-0">
+                                        <div class="col-4 ps-3">
+                                            <button class="btn btn-primary px-4">L</button>
+                                        </div>
+                                        <div class="col-8 ps-2 pe-3">
+                                            <div class="d-grid">
+                                                <button class="btn btn-primary px-4">Legal</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </a>
+                                <ng-template ngbNavContent>
+                                    <app-legal
+                                        [action]="action"
+                                        [(legal)]="legal"
+                                        [(legalObj)]="legalObj"
+                                        (saveData)="saveData($event)"
+                                    ></app-legal>
+                                </ng-template>
+                            </li>
+                            <li [ngbNavItem]="5" class="nav-item mb-1">
+                                <a (click)="setHeading('Operational Review')" ngbNavLink [class.aDisable]="aDisabled">
+                                    <div class="row mb-0">
+                                        <div class="col-3 ps-3">
+                                            <div class="d-grid">
+                                                <button class="btn btn-primary ps-4 pe-3">O</button>
+                                            </div>
+                                        </div>
+                                        <div class="col-9">
+                                            <div class="d-grid">
+                                                <button class="btn btn-primary">Operational</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </a>
+                                <ng-template ngbNavContent>
+                                    <app-operational
+                                        [action]="action"
+                                        [(operational)]="operational"
+                                        [(operationalObj)]="operationalObj"
+                                        (saveData)="saveData($event)"
+                                    ></app-operational>
+                                </ng-template>
+                            </li>
+                            <li [ngbNavItem]="6" class="nav-item mb-1">
+                                <a (click)="setHeading('Scheduling Review')" ngbNavLink [class.aDisable]="aDisabled">
+                                    <div class="row mb-0">
+                                        <div class="col-4 ps-3">
+                                            <button class="btn btn-primary px-4">S</button>
+                                        </div>
+                                        <div class="col-8 ps-2 pe-3">
+                                            <div class="d-grid">
+                                                <button class="btn btn-primary">Scheduling</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </a>
+                                <ng-template ngbNavContent>
+                                    <app-scheduling
+                                        [action]="action"
+                                        [(scheduling)]="scheduling"
+                                        [(schedulingObj)]="schedulingObj"
+                                        (saveData)="saveData($event)"
+                                    >
+                                    </app-scheduling>
+                                </ng-template>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <div class="col-10 ps-3 pe-5">
+                        <div [ngbNavOutlet]="nav" class=""></div>
+                    </div>
+                </div>
+
+                <hr *ngIf="f['reasonToConvert'].value" class="line-border" />
+
+                <div *ngIf="f['reasonToConvert'].value" class="row mb-4 px-4">
+                    <div class="col-6">
+                        <div class="d-flex">
+                            <div class="col-form-label text-nowrap pt-1">
+                                Reason to Convert <span class="text-danger pe-2">*</span>
+                                <span>&#9654;</span>
+                            </div>
+                            <input type="text" class="form-control" formControlName="reasonToConvert" readonly />
+                        </div>
+                    </div>
+                </div>
+            </Form>
+        </div>
+    </div>
+</div>

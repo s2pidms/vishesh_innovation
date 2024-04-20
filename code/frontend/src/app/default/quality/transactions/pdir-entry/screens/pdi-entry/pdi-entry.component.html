@@ -1,0 +1,159 @@
+<div class="modelPage">
+    <div class="modal-header">
+        <div class="heading">Pre-Dispatch Inspection</div>
+        <div>
+            <button type="button" class="btn btn-cross btn-sm" aria-label="Close" (click)="this.activeModal.close()">
+                <i class="fa fa-times-circle" aria-hidden="true"></i>
+            </button>
+        </div>
+    </div>
+
+    <div class="container-fluid mt-4">
+        <div class="row mb-2 px-4">
+            <div class="col-2 pe-0">
+                <label class="form-label mb-0"> SKU No. </label>
+                <input class="form-control" type="text" readonly [(ngModel)]="data.SKUNo" />
+            </div>
+            <div class="col-3 pe-0">
+                <label class="form-label mb-0">
+                    {{ "SKU Name" | labelTranslate }}
+                </label>
+                <input class="form-control" type="text" readonly [(ngModel)]="data.SKUName" />
+            </div>
+            <div class="col-3 pe-0">
+                <label class="form-label mb-0">
+                    {{ "SKU Description" | labelTranslate }}
+                </label>
+                <input class="form-control" type="text" readonly [(ngModel)]="data.SKUDescription" />
+            </div>
+            <div class="col-2 pe-3">
+                <label class="form-label mb-0"> Part No. </label>
+                <input class="form-control" type="text" [(ngModel)]="data.partNumber" readonly />
+            </div>
+            <div class="col-2 ps-3">
+                <label class="form-label mb-0"> Batch No./Date </label>
+                <input class="form-control" type="text" [ngModel]="batchDateNo" readonly />
+            </div>
+        </div>
+        <div class="row mt-4">
+            <div class="col px-0">
+                <hr class="line-border mb-0" />
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-12 px-5">
+                <app-setting-header
+                    [data]="{page,pageSize,collection,search, excelDisplay : 'none'}"
+                    (dataChange)="eventHeader($event)"
+                >
+                </app-setting-header>
+                <div class="table-responsive" style="min-height: 19.2rem">
+                    <table class="table table-bordered table-sticky mt-1">
+                        <thead class="bg-primary">
+                            <tr class="text-white">
+                                <th sortable="seq" (sort)="onSort($event)">Seq.</th>
+                                <th sortable="specificationCode" (sort)="onSort($event)">Specs Code</th>
+                                <th class="text-start" sortable="characteristic" (sort)="onSort($event)">
+                                    Inspection Parameter
+                                </th>
+
+                                <th sortable="UOM" (sort)="onSort($event)">UoM</th>
+                                <th sortable="testStandard" (sort)="onSort($event)">Test Standard</th>
+                                <th sortable="measuringInstrument" (sort)="onSort($event)">Test Method</th>
+                                <th sortable="LTL" (sort)="onSort($event)">LTL</th>
+                                <th sortable="specValue" (sort)="onSort($event)">Specification</th>
+                                <th sortable="UTL" (sort)="onSort($event)">UTL</th>
+                                <th sortable="observation" (sort)="onSort($event)">Observations</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr
+                                *ngFor="
+                                    let g of GRDetailsArray
+                                        | searchFi1ter : search
+                                        | slice : (page - 1) * pageSize : (page - 1) * pageSize + pageSize;
+                                    trackBy: trackByFn
+                                "
+                            >
+                                <td>{{ g.seq }}</td>
+                                <td>{{ g.specificationCode }}</td>
+                                <td class="text-start" [style.width]="characteristic.clientWidth" #characteristic>
+                                    <span
+                                        class="pointer"
+                                        [ngbTooltip]="g.characteristic"
+                                        [positionTarget]="characteristic"
+                                    >
+                                        {{ g?.characteristic }}
+                                    </span>
+                                </td>
+                                <td>{{ g.UOM | UOMUnitsMaster }}</td>
+                                <td>{{ g.testStandard }}</td>
+                                <td>{{ g.measuringInstrument }}</td>
+                                <td>{{ g.LTL }}</td>
+                                <td>{{ g.specValue }}</td>
+                                <td>{{ g.UTL }}</td>
+                                <td>
+                                    <div class="d-flex justify-content-center">
+                                        <span *ngIf="['approve', 'view', 'generate'].includes(action)">
+                                            {{ g?.observation }}
+                                        </span>
+                                        <input
+                                            *ngIf="!['approve', 'view', 'generate'].includes(action)"
+                                            class="form-control form-control-sm w-25"
+                                            type="text"
+                                            [(ngModel)]="g.observation"
+                                            [ngModelOptions]="{standalone: true}"
+                                        />
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <div class="row mt-4">
+            <div class="col px-0">
+                <hr class="line-border mt-0" />
+            </div>
+        </div>
+        <div class="row px-4 mb-3">
+            <div class="col-4">
+                <div class="d-flex align-items-center">
+                    <div class="col-md-auto text-nowrap">
+                        <button type="button" class="btn btn-secondary px-3">Release Status</button>
+                    </div>
+
+                    <select
+                        [disabled]="['approval', 'rejection', 'view', 'generate', 'cancel'].includes(action)"
+                        class="form-select statusSelectBorder"
+                        [(ngModel)]="data.status"
+                    >
+                        <option [value]="'null'" selected disabled>Select Status</option>
+                        <option [value]="item.value" *ngFor="let item of releaseStatusArr">
+                            {{ item.label }}
+                        </option>
+                    </select>
+                    <span class="input-group-text statusSpanHeight">
+                        <div class="statusActive" *ngIf="data.status == 'Approved'" class="statusActive"></div>
+                        <div class="statusInActive" *ngIf="data.status == 'Rejected'"></div>
+                        <div
+                            class="statusYellow"
+                            *ngIf="['Deviation', 'Need Re-Validation'].includes(data.status)"
+                        ></div>
+                    </span>
+                </div>
+            </div>
+            <div class="col-8 d-flex justify-content-end">
+                <button
+                    type="button"
+                    class="btn btn-primary px-2"
+                    (click)="dismissModel()"
+                    [disabled]="['approval', 'rejection', 'view', 'generate', 'cancel'].includes(action)"
+                >
+                    Save & close
+                </button>
+            </div>
+        </div>
+    </div>
+</div>

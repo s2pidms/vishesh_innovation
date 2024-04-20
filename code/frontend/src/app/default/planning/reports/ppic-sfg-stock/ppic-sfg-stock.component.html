@@ -1,0 +1,74 @@
+<div class="reportTablePage">
+    <div class="col-md-12 table-body shadow-none">
+        <div class="row table-header">
+            <div class="col">
+                <label class="heading">PPIC Semi-Finished Stock (SFG Stock)</label>
+            </div>
+        </div>
+
+        <div class="table-responsive mt-5">
+            <app-setting-header
+                [data]="{page,pageSize,collection,search,pdfDisplay:true,type: 'list'}"
+                (dataChange)="eventHeader($event)"
+            >
+            </app-setting-header>
+            <table class="table table-bordered table-sticky">
+                <thead class="bg-primary">
+                    <tr class="text-white">
+                        <th
+                            sortable="GINDate
+"
+                            (sort)="onSort($event)"
+                        >
+                            Inward Date
+                        </th>
+                        <th sortable="MRNNumber" (sort)="onSort($event)">MRN No.</th>
+                        <th sortable="itemCode" (sort)="onSort($event)">Item Code</th>
+
+                        <th class="text-start" sortable="itemName" (sort)="onSort($event)">Item Name</th>
+                        <th sortable="stage" (sort)="onSort($event)">Stage</th>
+                        <th sortable="noOfSlits" (sort)="onSort($event)">Qty.</th>
+                        <th
+                            sortable="WXL
+            "
+                            (sort)="onSort($event)"
+                        >
+                            W X L
+                        </th>
+                        <th sortable="width" (sort)="onSort($event)">Width</th>
+                        <th sortable="length" (sort)="onSort($event)">Length</th>
+                        <th sortable="UOM" (sort)="onSort($event)">UoM</th>
+                        <th sortable="sqmTotal" (sort)="onSort($event)">Quantity</th>
+                        <th sortable="status" (sort)="onSort($event)">Aging</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let u of tableData">
+                        <td>{{ u?.GINDate }}</td>
+                        <td>{{ u?.MRNNumber }}</td>
+                        <td>{{ u?.itemCode }}</td>
+                        <td class="text-start" [style.width]="itemName.clientWidth" #itemName>
+                            <span class="pointer" [ngbTooltip]="u.itemName" [positionTarget]="itemName">
+                                {{ u?.itemName }}
+                            </span>
+                        </td>
+                        <td>{{ u?.stage }}</td>
+                        <td>{{ u?.noOfSlits }}</td>
+                        <td>{{ u?.WXL }}</td>
+                        <td>{{ u?.width }}</td>
+                        <td>{{ u?.length }}</td>
+                        <td>{{ u?.UOM | UOMUnitsMaster }}</td>
+                        <td>{{ u?.sqmTotal | number : ".2-2" }}</td>
+                        <td>
+                            <span class="d-flex justify-content-center">
+                                <div *ngIf="u?.status == 'green'" class="flaggreen"></div>
+                                <div *ngIf="u?.status == 'red'" class="flagred"></div>
+                                <div *ngIf="u?.status == 'orange'" class="flagYellow"></div>
+                            </span>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

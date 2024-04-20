@@ -1,0 +1,98 @@
+.table-responsive {
+    * {
+        font-size: 1.25rem;
+        font-weight: 600;
+        font-family: Arial, Helvetica, sans-serif !important;
+        color: #231f20 !important;
+    }
+    .set-job-card-size {
+        font-size: 2.4rem;
+    }
+    overflow-x: inherit;
+    font-size: 1.4rem;
+    .paddingLR-sm {
+        padding: 1rem 6rem;
+        // padding-right: 6rem;
+    }
+    .border-bottom {
+        border-bottom: 2px solid #007daf !important;
+    }
+
+    td {
+        color: #7d7d7d;
+        height: 1.75rem;
+    }
+    .set-image {
+        width: 90rem;
+    }
+}
+@media print {
+    button {
+        display: none !important;
+    }
+
+    .page {
+        margin: 0;
+        border: initial;
+        border-radius: initial;
+        width: initial;
+        min-height: initial;
+        box-shadow: initial;
+        background: initial;
+        page-break-after: always;
+    }
+
+    .table-responsive {
+        padding-top: 7rem !important;
+        * {
+            font-size: 1.5rem;
+            font-weight: 600;
+            font-family: Arial, Helvetica, sans-serif !important;
+            color: #231f20 !important;
+        }
+        overflow-x: inherit;
+        font-size: 1.5rem;
+        .paddingLR-sm {
+            padding: 1rem 6rem;
+            // padding-right: 6rem;
+        }
+        .border-bottom {
+            border-bottom: 2px solid #007daf !important;
+        }
+        .border-btm {
+            border: 0.25rem solid black;
+        }
+
+        .stroke {
+            border-color: #939598 !important;
+            border-width: 0.016rem !important;
+        }
+
+        .header-color {
+            background-color: #d1d3d4 !important;
+        }
+        td {
+            color: #7d7d7d;
+            height: 1.75rem;
+        }
+    }
+
+    @page {
+        size: Letter !important;
+        margin: 0;
+    }
+}
+
+.border-btm {
+    border: 0.25rem solid black;
+}
+
+.stroke {
+    border-color: #939598 !important;
+    border-width: 0.016rem !important;
+    // padding: 0.7rem 0.8rem 0.7rem 0.8rem !important;
+}
+
+.header-color {
+    background-color: #d1d3d4 !important;
+}

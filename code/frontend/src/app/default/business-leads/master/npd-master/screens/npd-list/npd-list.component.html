@@ -1,0 +1,94 @@
+<div class="listCard card">
+    <div class="table-header">
+        <label class="heading">NPD Summary</label>
+    </div>
+
+    <div appAccessControl [accessType]="rolePermissionActions.createAction" class="text-center">
+        <button class="plusIconSvg btn btn-primary me-1"></button>
+        <button
+            class="btn btn-primary btn-add px-4"
+            type="button"
+            (click)="navigateTo('/default/business-leads/master/npd/form', null, 'create')"
+        >
+            D-SKU
+        </button>
+    </div>
+    <hr class="line-border" />
+    <div class="table-responsive">
+        <app-setting-header [data]="{page,pageSize,collection,search,type: 'list'}" (dataChange)="eventHeader($event)">
+        </app-setting-header>
+        <table class="table table-bordered">
+            <thead class="bg-primary">
+                <tr class="text-white">
+                    <th sortable="SKUNo" (sort)="onSort($event)">D-SKU No.</th>
+                    <th class="text-start" sortable="SKUName" (sort)="onSort($event)">
+                        {{ "D-SKU Name" | labelTranslate }}
+                    </th>
+                    <th class="text-start" sortable="SKUDescription" (sort)="onSort($event)">
+                        {{ "D-SKU Description" | labelTranslate }}
+                    </th>
+                    <th class="text-start" sortable="customerName" (sort)="onSort($event)">Customer/Prospect Name</th>
+                    <th sortable="unitOfMeasurement" (sort)="onSort($event)">UoM</th>
+                    <th sortable="productCategory" (sort)="onSort($event)">Product</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let u of tableData; trackBy: trackByFn">
+                    <td>{{ u?.dSKUNo }}</td>
+                    <td class="text-start" [style.width]="SKUName.clientWidth" #SKUName>
+                        <span class="pointer" [ngbTooltip]="u.SKUName" [positionTarget]="SKUName">
+                            {{ u.SKUName }}
+                        </span>
+                    </td>
+                    <td class="text-start" [style.width]="SKUDescription.clientWidth" #SKUDescription>
+                        <span class="pointer" [ngbTooltip]="u.SKUDescription" [positionTarget]="SKUDescription">
+                            {{ u.SKUDescription }}
+                        </span>
+                    </td>
+                    <td class="text-start" [style.width]="customerName.clientWidth" #customerName>
+                        <span class="pointer" [ngbTooltip]="u.customerName" [positionTarget]="customerName">
+                            {{ u.customerName }}
+                        </span>
+                    </td>
+                    <td>{{ u?.primaryUnit | UOMUnitsMaster }}</td>
+                    <td>{{ u?.productCategory }}</td>
+                    <td>
+                        <div class="dropdown">
+                            <button class="dropbtn"></button>
+                            <div class="dropdown-content">
+                                <a
+                                    appAccessControl
+                                    [accessType]="rolePermissionActions.viewAction"
+                                    href="javascript:void(0)"
+                                    (click)="navigateTo('/default/business-leads/master/npd/form', u, action.view)"
+                                >
+                                    <i class="fa fa-eye fa-lg me-2 text-primary" aria-hidden="true"></i>
+                                    View
+                                </a>
+                                <a
+                                    appAccessControl
+                                    [accessType]="rolePermissionActions.editAction"
+                                    href="javascript:void(0)"
+                                    (click)="navigateTo('/default/business-leads/master/npd/form', u, action.edit)"
+                                >
+                                    <i class="fa fa-pencil-square-o fa-lg me-2 text-primary" aria-hidden="true"></i>
+                                    Edit
+                                </a>
+                                <a
+                                    href="javascript:void(0)"
+                                    (click)="
+                                        navigateTo('/default/business-leads/master/npd/form', u, 'Converted to SKU')
+                                    "
+                                >
+                                    <i class="fa fa-check fa-lg me-2 text-success" aria-hidden="true"></i>
+                                    Convert to SKU
+                                </a>
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>

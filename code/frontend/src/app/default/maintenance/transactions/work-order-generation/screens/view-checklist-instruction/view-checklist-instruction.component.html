@@ -1,0 +1,44 @@
+<div style="min-height: 54rem" class="modelPage">
+    <div class="modal-header">
+        <div class="heading">Add Checklist Instructions</div>
+        <div>
+            <button
+                type="button"
+                class="btn btn-cross btn-sm"
+                aria-label="Close"
+                (click)="activeModal.close(checklistInstruction)"
+            >
+                <i class="fa fa-times-circle" aria-hidden="true"></i>
+            </button>
+        </div>
+    </div>
+    <div class="modal-body">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="table-responsive ps-0 pe-0">
+                    <table class="table table-bordered table-sticky">
+                        <thead class="bg-primary">
+                            <tr class="text-white">
+                                <th>Sr No</th>
+                                <th class="text-start">Description</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr
+                                *ngFor="
+                                    let u of checklistInstruction
+                                        | searchFi1ter : search
+                                        | slice : (page - 1) * pageSize : (page - 1) * pageSize + pageSize;
+                                    let i = index
+                                "
+                            >
+                                <td>{{ u?.srNo }}</td>
+                                <td class="text-start">{{ u?.description }}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

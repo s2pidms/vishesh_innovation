@@ -1,0 +1,41 @@
+<div class="modelPage">
+    <div class="modal-header">
+        <div class="heading">Export Details</div>
+        <div>
+            <button type="button" class="btn btn-cross btn-sm" aria-label="Close" (click)="this.activeModal.close()">
+                <i class="fa fa-times-circle" aria-hidden="true"></i>
+            </button>
+        </div>
+    </div>
+    <form [formGroup]="form" class="p-0">
+        <div class="row mt-4 px-5">
+            <div class="col-6">
+                <label class="form-label"> LUT/ARN No. <span class="text-danger"></span> </label>
+                <input class="form-control" formControlName="LUTNo" type="text" />
+            </div>
+            <div class="col-6">
+                <label class="form-label"> LUT/ARN Date <span class="text-danger"></span> </label>
+                <input class="form-control" formControlName="LUTDate" type="date" />
+            </div>
+        </div>
+        <hr class="line-border my-4" />
+        <div class="row px-5">
+            <div class="col-12">
+                <app-file-upload
+                    [fileName]="form.controls['LUTDocument'].value"
+                    [url]="form.controls['LUTDocumentUrl'].value"
+                    [label]="'LUT/ARN Document'"
+                    [(file)]="LUTDocumentFile"
+                ></app-file-upload>
+            </div>
+        </div>
+    </form>
+
+    <hr class="line-border my-4" />
+
+    <div class="row justify-content-center mb-4">
+        <div class="col-12 text-center">
+            <button type="button" class="btn bg-primary px-5" (click)="dismissModel()">Save & Close</button>
+        </div>
+    </div>
+</div>

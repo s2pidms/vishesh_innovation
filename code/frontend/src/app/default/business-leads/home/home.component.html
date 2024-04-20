@@ -1,0 +1,132 @@
+<div class="container-fluid text-center dashboard-page">
+    <div class="row mt-5 mx-5">
+        <div class="col">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">MTD No. of Prospect</h5>
+                    <p class="card-text">{{ dashBoardData.mtdProspectCount }}</p>
+                </div>
+            </div>
+        </div>
+        <div class="col">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">YTD No. of Prospect</h5>
+                    <p class="card-text">{{ dashBoardData.ytdProspectCount }}</p>
+                </div>
+            </div>
+        </div>
+        <div class="col">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">MTD No. of NPD</h5>
+                    <p class="card-text">{{ dashBoardData.mtdNPDCount }}</p>
+                </div>
+            </div>
+        </div>
+        <div class="col">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">YTD No. of NPD</h5>
+                    <p class="card-text">{{ dashBoardData.ytdNPDCount }}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row justify-content-center mt-4">
+        <div class="col-md-12 px-0">
+            <ul ngbNav #nav="ngbNav" [(activeId)]="active" class="nav-pills tabs-card row">
+                <li [ngbNavItem]="1" class="col d-grid pe-2">
+                    <ng-template ngbNavContent>
+                        <div class="row mx-1">
+                            <div class="col-md-6">
+                                <div class="d-flex align-items-center">
+                                    <div class="col-1 text-start">
+                                        <i
+                                            (click)="nav.select(active + 1)"
+                                            class="fa fa-chevron-left sales-fa-chevron-color fs-2 pointer"
+                                            aria-hidden="true"
+                                        ></i>
+                                    </div>
+
+                                    <div class="card col-11">
+                                        <div class="card-body gh p-4">
+                                            <h5 class="card-title">Monthly Prospect Trend</h5>
+                                            <canvas
+                                                baseChart
+                                                class="chart pointer"
+                                                [data]="dashBoardData.barChartDataMonthlyProspectTrend"
+                                                [options]="barChartOptions"
+                                                [type]="barChartType"
+                                                [plugins]="barChartPlugins"
+                                            >
+                                            </canvas>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="d-flex align-items-center">
+                                    <div class="card col-11">
+                                        <div class="card-body gh p-4">
+                                            <h5 class="card-title">Monthly NPD Trend</h5>
+                                            <canvas
+                                                baseChart
+                                                class="chart pointer"
+                                                [data]="dashBoardData.barChartDataMonthlyNPDTrend"
+                                                [options]="barChartOptions"
+                                                [type]="barChartType"
+                                                [plugins]="barChartPlugins"
+                                            >
+                                            </canvas>
+                                        </div>
+                                    </div>
+                                    <div class="col-1 text-end">
+                                        <i
+                                            (click)="nav.select(active + 1)"
+                                            class="fa fa-chevron-right sales-fa-chevron-color fs-2 pointer"
+                                            aria-hidden="true"
+                                        ></i>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </ng-template>
+                </li>
+                <li [ngbNavItem]="2" class="col d-grid pe-2">
+                    <ng-template ngbNavContent>
+                        <div class="row mx-1">
+                            <div class="col-md-6">
+                                <div class="d-flex align-items-center">
+                                    <div class="col-1 text-start">
+                                        <i
+                                            (click)="nav.select(active - 1)"
+                                            class="fa fa-chevron-left sales-fa-chevron-color fs-2 pointer"
+                                            aria-hidden="true"
+                                        ></i>
+                                    </div>
+
+                                    <div class="card col-11">
+                                        <div class="card-body gh p-4">
+                                            <h5 class="card-title">Statuswise NPD Count</h5>
+                                            <canvas
+                                                baseChart
+                                                class="chart pointer"
+                                                [data]="dashBoardData.barChartDataStatusWiseNPDCount"
+                                                [options]="barChartOptions"
+                                                [type]="barChartType"
+                                                [plugins]="barChartPlugins"
+                                            >
+                                            </canvas>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </ng-template>
+                </li>
+            </ul>
+            <div [ngbNavOutlet]="nav" class="mt-2"></div>
+        </div>
+    </div>
+</div>

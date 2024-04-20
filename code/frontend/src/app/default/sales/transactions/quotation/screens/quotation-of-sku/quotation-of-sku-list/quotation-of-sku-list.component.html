@@ -1,0 +1,114 @@
+<div class="listCard card">
+    <div class="table-header">
+        <label class="heading">Quotation Of SKU Summary</label>
+    </div>
+
+    <div appAccessControl [accessType]="rolePermissionActions.createAction" class="text-center">
+        <button class="plusIconSvg btn btn-primary me-1"></button>
+        <button class="btn btn-primary btn-add px-3" type="button" (click)="navigateTo('../form', {}, 'create')">
+            Create Quotation Of SKU
+        </button>
+    </div>
+
+    <hr class="line-border" />
+    <div class="table-responsive">
+        <app-setting-header [data]="{page,pageSize,collection,search,type: 'list'}" (dataChange)="eventHeader($event)">
+        </app-setting-header>
+        <table class="table table-bordered">
+            <thead class="bg-primary">
+                <tr class="text-white">
+                    <th sortable="quotationNo" (sort)="onSort($event)">Qtn. No.</th>
+                    <th sortable="revNo" (sort)="onSort($event)">Rev No.</th>
+                    <th sortable="quotationDate" (sort)="onSort($event)">Qtn. Date</th>
+                    <th sortable="customerCategory" (sort)="onSort($event)">Customer Category</th>
+                    <th class="text-start" sortable="customerName" (sort)="onSort($event)">Customer Name</th>
+                    <th sortable="currency" (sort)="onSort($event)">Ccy</th>
+                    <th sortable="status" (sort)="onSort($event)">Status</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                <tr *ngFor="let u of tableData; trackBy: trackByFn">
+                    <td>{{ u?.quotationNo }}</td>
+                    <td>{{ u?.revNo }}</td>
+                    <td>{{ u?.quotationDate }}</td>
+                    <td>{{ u?.customerCategory }}</td>
+                    <td class="text-start" [style.width]="customerName.clientWidth" #customerName>
+                        <span class="pointer" [positionTarget]="customerName" [ngbTooltip]="u.customerName">
+                            {{ u.customerName }}
+                        </span>
+                    </td>
+                    <td>{{ u?.currency }}</td>
+                    <td>{{ u?.status }}</td>
+                    <td>
+                        <div class="dropdown">
+                            <button class="dropbtn"></button>
+                            <div class="dropdown-content">
+                                <a
+                                    appAccessControl
+                                    [accessType]="rolePermissionActions.viewAction"
+                                    href="javascript:void(0)"
+                                    (click)="navigateTo('../form', u, 'view')"
+                                >
+                                    <i class="fa fa-eye fa-lg me-2 text-primary" aria-hidden="true"></i>
+                                    View
+                                </a>
+                                <a
+                                    appAccessControl
+                                    [accessType]="rolePermissionActions.editAction"
+                                    [class.disable]="u?.status === 'Approved'"
+                                    href="javascript:void(0)"
+                                    (click)="navigateTo('../form', u, 'edit')"
+                                >
+                                    <i class="fa fa-pencil-square-o fa-lg me-2 text-primary" aria-hidden="true"></i>
+                                    Edit
+                                </a>
+
+                                <a
+                                    appAccessControl
+                                    [accessType]="rolePermissionActions.approveAction"
+                                    [class.disable]="u?.status === 'Approved'"
+                                    href="javascript:void(0)"
+                                    (click)="navigateTo('../form', u, 'approve')"
+                                >
+                                    <i class="fa fa-check fa-lg text-success" aria-hidden="true"></i>
+                                    Approve
+                                </a>
+                                <a
+                                    appAccessControl
+                                    [accessType]="rolePermissionActions.approveAction"
+                                    [class.disable]="u?.status == 'Awaiting Approval'"
+                                    href="javascript:void(0)"
+                                    (click)="navigateTo('../form', u, 'revision')"
+                                >
+                                    <i class="fa fa-registered fa-lg me-2 text-primary" aria-hidden="true"></i>
+                                    Revision/s
+                                </a>
+                                <a
+                                    appAccessControl
+                                    [accessType]="rolePermissionActions.generateReportAction"
+                                    [class.disable]="u?.status == 'Awaiting Approval'"
+                                    href="javascript:void(0)"
+                                    (click)="update(u, 'Report Generated')"
+                                >
+                                    <img src="./assets/images/new.svg" width="14" class="me-3" />
+                                    Generate Report
+                                </a>
+                                <a
+                                    appAccessControl
+                                    [accessType]="rolePermissionActions.approveAction"
+                                    href="javascript:void(0)"
+                                    (click)="navigateToPrint('/#/print/quotation_of_sku', u, 'print')"
+                                >
+                                    <i class="fa fa-print fa-lg me-3 text-primary" aria-hidden="true"></i>
+                                    Preview Quotation
+                                </a>
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>

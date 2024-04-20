@@ -1,0 +1,290 @@
+<div class="formCard card">
+    <div class="container">
+        <div class="row form-header">
+            <div class="col heading ms-2">
+                <label class=""> Roll-to-Roll </label>
+            </div>
+        </div>
+        <div class="form-body">
+            <div class="row mb-0">
+                <div class="col-12">
+                    <label class="form-label"> Selected Input </label>
+                </div>
+            </div>
+        </div>
+
+        <div class="row d-flex justify-content-center">
+            <div class="col-12">
+                <div class="table-responsive">
+                    <table class="table table-bordered table-sticky">
+                        <thead class="bg-primary">
+                            <tr class="text-white">
+                                <th>MRN No.</th>
+                                <th>Item Code</th>
+                                <th class="text-start">Item Name</th>
+                                <th class="text-start">Item Description</th>
+                                <th>UoM</th>
+                                <th>PPIC Qty</th>
+                                <th>Width</th>
+                                <th>Length</th>
+                                <th>sqm/roll</th>
+                                <th>Roll/s #</th>
+                                <th>Aging</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let u of selectedMRNDetails; let i = index">
+                                <td>{{ u?.MRNNumber }}</td>
+                                <td>{{ u?.itemCode }}</td>
+                                <td class="text-start" [style.width]="itemName.clientWidth" #itemName>
+                                    <span class="pointer" [ngbTooltip]="u.itemName" [positionTarget]="itemName">
+                                        {{ u.itemName }}
+                                    </span>
+                                </td>
+                                <td class="text-start" [style.width]="itemDescription.clientWidth" #itemDescription>
+                                    <span
+                                        class="pointer"
+                                        [ngbTooltip]="u.itemDescription"
+                                        [positionTarget]="itemDescription"
+                                    >
+                                        {{ u?.itemDescription }}
+                                    </span>
+                                </td>
+                                <td>{{ u?.UOM | UOMUnitsMaster }}</td>
+                                <td>
+                                    {{ u?.closedIRQty | number : "1.2-2" }}
+                                </td>
+                                <td>{{ u?.width }} | mm</td>
+                                <td>{{ u?.length }} | m</td>
+                                <td>
+                                    {{ u?.SQM }}
+                                </td>
+                                <td>
+                                    {{ u?.roll }}
+                                </td>
+                                <td>
+                                    <span class="d-flex justify-content-center">
+                                        <div *ngIf="u?.status == 'green'" class="flaggreen"></div>
+                                        <div *ngIf="u?.status == 'red'" class="flagred"></div>
+                                        <div *ngIf="u?.status == 'orange'" class="flagYellow"></div>
+                                    </span>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <hr class="row line-border" />
+
+        <div class="row mb-4 justify-content-start">
+            <div class="col-4 pe-3">
+                <div class="d-flex align-items-center">
+                    <label class="form-label text-nowrap">
+                        No. of Rolls to be Processed <span class="ms-1 me-2">&#9654;</span>
+                    </label>
+                    <input
+                        [(ngModel)]="noOfRollsToBeSlit"
+                        (input)="setRowSQMPerRoll()"
+                        class="form-control"
+                        type="number"
+                    />
+                    <span class="fs-3 ms-3"> = </span>
+                </div>
+            </div>
+            <div class="col-2 ps-0">
+                <div class="d-flex">
+                    <input class="form-control border-end-0" type="number" [(ngModel)]="sqmToBeProcessed" disabled />
+                    <span class="input-group-text border border-1 combine-INR border-start-0">
+                        <div class="vr me-3"></div>
+                        <!-- {{ "INR" | companyCurrency }} -->
+                        sqm
+                    </span>
+                </div>
+            </div>
+        </div>
+
+        <div class="row d-flex justify-content-center">
+            <div class="col-12">
+                <div style="min-height: 17rem" class="table-responsive">
+                    <table class="table table-bordered table-sticky">
+                        <thead class="bg-primary">
+                            <tr class="text-white">
+                                <th>MRN No.</th>
+                                <th>Item Code</th>
+                                <th class="text-start">Item Name</th>
+                                <th class="text-start">Item Description</th>
+                                <th>UoM</th>
+                                <th>PPIC Qty</th>
+                                <th>Width</th>
+                                <th>Length</th>
+                                <th>sqm/roll</th>
+                                <th>Roll/s #</th>
+                                <th>Aging</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let u of outputDetails; let i = index">
+                                <td>{{ u?.MRNNumber }}</td>
+                                <td>{{ u?.itemCode }}</td>
+
+                                <td class="text-start" [style.width]="itemName.clientWidth" #itemName>
+                                    <span class="pointer" [ngbTooltip]="u.itemName" [positionTarget]="itemName">
+                                        {{ u.itemName }}
+                                    </span>
+                                </td>
+                                <td class="text-start">
+                                    <!-- <span class="pointer" [ngbTooltip]="u.itemDescription" placement="right">
+                                            {{ u?.itemDescription | truncate : 20 }}
+                                        </span> -->
+                                    <input class="form-control" type="text" [(ngModel)]="u.itemDescription" />
+                                </td>
+                                <td>{{ u?.UOM | UOMUnitsMaster }}</td>
+                                <td>
+                                    {{ u?.closedIRQty | number : "1.2-2" }}
+                                </td>
+                                <td>
+                                    <!-- {{ u?.width }} -->
+                                    <div class="d-flex align-items-center">
+                                        <input
+                                            class="form-control form-control-sm"
+                                            type="number"
+                                            [(ngModel)]="u.width"
+                                            (input)="setRecoveryDetails(u, i)"
+                                        />
+                                        <span class="mx-2"> | </span>
+                                        mm
+                                    </div>
+                                </td>
+                                <td>
+                                    <!-- {{ u?.length }} -->
+                                    <div class="d-flex align-items-center">
+                                        <input
+                                            class="form-control form-control-sm"
+                                            type="number"
+                                            [(ngModel)]="u.length"
+                                            (input)="setRecoveryDetails(u, i)"
+                                        />
+                                        <span class="mx-2"> | </span>
+                                        m
+                                    </div>
+                                </td>
+                                <td>
+                                    {{ u?.SQM }}
+                                </td>
+                                <td>
+                                    <!-- {{ u?.roll }} -->
+                                    <div class="d-flex align-items-center">
+                                        <input
+                                            class="form-control form-control-sm"
+                                            type="number"
+                                            [(ngModel)]="u.roll"
+                                            (input)="setRecoveryDetails(u, i)"
+                                        />
+                                    </div>
+                                </td>
+                                <td>
+                                    <span class="d-flex justify-content-center">
+                                        <div *ngIf="u?.status == 'green'" class="flaggreen"></div>
+                                        <div *ngIf="u?.status == 'red'" class="flagred"></div>
+                                        <div *ngIf="u?.status == 'orange'" class="flagYellow"></div>
+                                    </span>
+                                </td>
+                            </tr>
+                            <tr class="border-0 seperator-row">
+                                <td class="border-0" colspan="6">
+                                    <div class="add-icon">
+                                        <img
+                                            (click)="addTableRow()"
+                                            class="pointer"
+                                            src="./assets/new_icons/add_row.svg"
+                                            width="14"
+                                            alt=""
+                                        />
+                                    </div>
+                                </td>
+                                <td class="border-0" colspan="6">
+                                    <div class="minus-icon">
+                                        <img
+                                            (click)="deleteTableRow()"
+                                            class="pointer"
+                                            src="./assets/new_icons/delete_row.svg"
+                                            width="14"
+                                            alt=""
+                                        />
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <hr class="row line-border" />
+
+        <div class="row mb-3">
+            <div class="col-3 pe-0">
+                <button class="plusIconSvg btn btn-primary me-1"></button>
+                <button (click)="openRemarksDetailsModal()" class="btn btn-primary px-5" type="button">Remarks</button>
+            </div>
+            <div class="col-3 ps-0 pe-3 d-flex align-items-center">
+                <label class="form-label text-nowrap"> Recovery <span class="ms-1 me-2">&#9654;</span> </label>
+                <div class="d-flex">
+                    <div class="col-7 d-flex">
+                        <input
+                            type="number"
+                            class="form-control ps-2 pe-0 border-end-0"
+                            [(ngModel)]="recovery"
+                            readonly
+                        />
+                        <span class="input-group-text combine-INR border-start-0">
+                            <div class="vr me-3"></div>
+                            <!-- {{ "INR" | companyCurrency }} -->
+                            sqm
+                        </span>
+                    </div>
+                    <div class="col-4">
+                        <input
+                            type="text"
+                            class="form-control ps-2 pe-0"
+                            [value]="recoveryPercentage + ' %'"
+                            readonly
+                        />
+                    </div>
+                    <div class="col-1 ms-4">
+                        <span class="">
+                            <img src="./assets/new_icons/redstroke.svg" alt="" height="27" width="8" />
+                        </span>
+                    </div>
+                </div>
+            </div>
+            <div class="col-3 ps-3 pe-0 d-flex align-items-center">
+                <label class="form-label text-nowrap"> Wastage <span class="ms-1 me-2">&#9654;</span> </label>
+                <div class="d-flex">
+                    <div class="col-7 d-flex">
+                        <input
+                            type="number"
+                            class="form-control ps-2 pe-0 border-end-0"
+                            [(ngModel)]="wastage"
+                            readonly
+                        />
+                        <span class="input-group-text combine-INR border-start-0">
+                            <div class="vr me-3"></div>
+                            <!-- {{ "INR" | companyCurrency }} -->
+                            sqm
+                        </span>
+                    </div>
+                    <div class="col-4">
+                        <input type="text" class="form-control ps-2" [value]="wastagePercentage + ' %'" readonly />
+                    </div>
+                </div>
+            </div>
+            <div class="col-3 mb-0 d-flex align-self-end justify-content-end">
+                <button class="btn btn-primary px-5 me-5" type="button" (click)="reset()">Reset</button>
+                <button class="btn btn-primary px-5" type="button" (click)="submit()">Save</button>
+            </div>
+        </div>
+    </div>
+</div>

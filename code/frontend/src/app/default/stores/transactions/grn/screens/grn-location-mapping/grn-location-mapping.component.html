@@ -1,0 +1,86 @@
+<form [formGroup]="form">
+  <div class="modelPage">
+    <div class="modal-header">
+      <div class="heading">Storage Location Mapping</div>
+      <div>
+        <button type="button" class="btn btn-cross btn-sm" aria-label="Close"
+          (click)="this.activeModal.close(storageLocationMapping)">
+          <i class="fa fa-times-circle" aria-hidden="true"></i>
+        </button>
+      </div>
+    </div>
+    <div class="">
+      <div class="container-fluid">
+        <div class="row  justify-content-center">
+          <div class="col-12 px-5 mt-4">
+            <div class="row">
+              <div class="col-4 mt-1 pe-0">
+                <label class="form-label text-nowrap">sub-Location</label>
+              </div>
+              <div class="col-1  px-0">
+                <i class="fa fa-caret-right mt-1 text-primary"></i>
+              </div>
+              <div class="col-7 ps-0">
+                <input type="text" class="form-control" formControlName="subLocation" />
+              </div>
+            </div>
+            <div class="row mt-4">
+              <div class="col-4 pe-0">
+                <label class="form-label">Row No.</label>
+              </div>
+              <div class="col-1  px-0">
+                <i class="fa fa-caret-right text-primary"></i>
+              </div>
+              <div class="col-7 ps-0">
+                <input type="text" class="form-control" formControlName="rowNo" />
+              </div>
+            </div>
+            <div class="row mt-4">
+              <div class="col-4 pe-0">
+                <label class="form-label">Rack No.</label>
+              </div>
+              <div class="col-1  px-0">
+                <i class="fa fa-caret-right text-primary"></i>
+              </div>
+              <div class="col-7 ps-0">
+                <input type="text" class="form-control" formControlName="rackNo" />
+              </div>
+            </div>
+            <div class="row mt-4">
+              <div class="col-4 pe-0">
+                <label class="form-label text-nowrap">Bin No.</label>
+              </div>
+              <div class="col-1  px-0">
+                <i class="fa fa-caret-right text-primary"></i>
+              </div>
+              <div class="col-7 ps-0">
+                <input type="text" class="form-control" formControlName="binNo" />
+              </div>
+            </div>
+            <div class="row mt-4">
+              <div class="col-4 pe-0">
+                <label class="form-label text-nowrap">Other ID</label>
+              </div>
+              <div class="col-1  px-0">
+                <i class="fa fa-caret-right text-primary"></i>
+              </div>
+              <div class="col-7 ps-0">
+                <input type="text" class="form-control" formControlName="otherId" />
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col px-0">
+            <hr class="line-border mt-5 mb-4" />
+          </div>
+        </div>
+        <div class="text-center">
+          <button class="btn bg-primary px-5 mb-4" type="button" (click)="dismissModel()">
+            Save & Close
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</form>

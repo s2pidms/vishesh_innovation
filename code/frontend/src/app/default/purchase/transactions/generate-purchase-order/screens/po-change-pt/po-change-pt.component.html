@@ -1,0 +1,121 @@
+<form [formGroup]="form">
+    <div class="modelPage">
+        <div class="modal-header">
+            <div class="heading">PO Terms</div>
+            <div>
+                <button
+                    type="button"
+                    class="btn btn-cross btn-sm"
+                    aria-label="Close"
+                    (click)="this.activeModal.close()"
+                >
+                    <i class="fa fa-times-circle" aria-hidden="true"></i>
+                </button>
+            </div>
+        </div>
+        <div class="container-fluid">
+            <div class="row justify-content-center">
+                <div class="col-12 px-5 mt-5">
+                    <div class="row">
+                        <div class="col-3 mt-1 pe-0">
+                            <label class="form-label text-nowrap">{{ "Delivery Location" | labelTranslate }}</label>
+                        </div>
+                        <div class="col-auto px-0">
+                            <i class="fa fa-caret-right mt-1 text-secondary"></i>
+                        </div>
+                        <div class="col-7 ps-0">
+                            <select class="form-select fs-5" type="text" formControlName="deliveryLocation">
+                                <option [value]="null" selected disabled>Select Location</option>
+                                <option [value]="item.value" *ngFor="let item of deliveryLocationArr">
+                                    {{ item.label }}
+                                </option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="row mt-4">
+                        <div class="col-3 pe-0">
+                            <label class="form-label">Payment Terms</label>
+                        </div>
+                        <div class="col-auto px-0">
+                            <i class="fa fa-caret-right text-secondary"></i>
+                        </div>
+                        <div *ngIf="!showSelect" class="col-7 ps-0">
+                            <select class="form-select fs-5" type="text" formControlName="changedPaymentTerms">
+                                <option [value]="null" selected disabled>Select Payment Terms</option>
+                                <option [value]="item.value" *ngFor="let item of paymentTermsArr">
+                                    {{ item.label }}
+                                </option>
+                            </select>
+                        </div>
+                        <div *ngIf="showSelect" class="col-7 ps-0">
+                            <input type="text" class="form-control" formControlName="changedPaymentTerms" />
+                        </div>
+                        <div (click)="enablePaymentTerms()" class="col-1 assetChange mt-1 pointer"></div>
+                    </div>
+                    <div class="row mt-4">
+                        <div class="col-3 pe-0">
+                            <label class="form-label"> Freight Terms</label>
+                        </div>
+                        <div class="col-auto px-0">
+                            <i class="fa fa-caret-right text-secondary"></i>
+                        </div>
+                        <div class="col-7 ps-0">
+                            <select class="form-select fs-5" type="text" formControlName="freightTerms">
+                                <option [value]="null" selected disabled>Select Freight Terms</option>
+                                <option [value]="ele.parameterName" *ngFor="let ele of freightTermsArr">
+                                    {{ ele.parameterLabel }}
+                                </option>
+                            </select>
+                        </div>
+                        <div (click)="enableFreightTerms()" class="col-1 assetChange mt-2 pointer"></div>
+                    </div>
+                    <div class="row mt-4">
+                        <div class="col-3 pe-0">
+                            <label class="form-label text-nowrap">Transporter</label>
+                        </div>
+                        <div class="col-auto px-0">
+                            <i class="fa fa-caret-right text-secondary"></i>
+                        </div>
+                        <div class="col-7 ps-0">
+                            <select class="form-select fs-5" type="text" formControlName="transporter">
+                                <option [value]="null" selected disabled>Select Transporter</option>
+                                <option [value]="ele.value" *ngFor="let ele of transporterArr">
+                                    {{ ele.label }}
+                                </option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="row mt-4">
+                        <div class="col-3 pe-0">
+                            <label class="form-label text-nowrap">PO Remarks</label>
+                        </div>
+                        <div class="col-auto px-0">
+                            <i class="fa fa-caret-right text-secondary"></i>
+                        </div>
+                        <div class="col-7 ps-0">
+                            <input type="text" class="form-control" formControlName="PORemarks" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col mt-4 px-0">
+                    <hr
+                        *ngIf="!['approve', 'reject', 'view', 'generate', 'cancel'].includes(action)"
+                        class="line-border mb-4"
+                    />
+                </div>
+            </div>
+            <div class="text-center">
+                <button
+                    *ngIf="!['approve', 'reject', 'view', 'generate', 'cancel'].includes(action)"
+                    class="btn bg-primary px-5 mb-4"
+                    type="button"
+                    (click)="dismissModel()"
+                >
+                    Save & Close
+                </button>
+            </div>
+        </div>
+    </div>
+</form>

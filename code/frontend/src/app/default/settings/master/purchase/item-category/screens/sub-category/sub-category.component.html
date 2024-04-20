@@ -1,0 +1,182 @@
+<div class="modelPage">
+  <div class="modal-header">
+    <div class="heading">Add Sub-category</div>
+    <div>
+      <button
+        type="button"
+        class="btn btn-cross btn-sm"
+        aria-label="Close"
+        (click)="activeModal.close(subCategory)"
+      >
+        <i class="fa fa-times-circle" aria-hidden="true"></i>
+      </button>
+    </div>
+  </div>
+  <div class="container-fluid">
+    <div class="row">
+      <ng-container>
+        <form [formGroup]="form">
+          <div class="row mt-4 px-4">
+            <div class="col-md-4">
+              <label class="form-label mb-1">
+                Sub-Category Name <span class="text-danger">*</span></label
+              >
+              <input class="form-control" type="text" formControlName="name" />
+            </div>
+            <div class="col-md-4">
+              <label class="form-label mb-1">
+                Sub-Category Prefix <span class="text-danger">*</span>
+              </label>
+              <input
+                class="form-control"
+                type="text"
+                formControlName="prefix"
+              />
+            </div>
+
+            <div class="col-md-4">
+              <label class="form-label">
+                Status
+                <span class="text-danger">*</span>
+              </label>
+              <select formControlName="subCategoryStatus" class="form-select">
+                <option [value]="null" selected disabled>Select Type</option>
+                <option value="Active">Active</option>
+                <option value="Inactive">Inactive</option>
+              </select>
+            </div>
+          </div>
+          <div class="row mt-4 px-4">
+            <div class="col">
+              <label class="form-label mb-1">
+                Auto Increment No.
+                <span class="text-danger">*</span>
+              </label>
+              <input
+                class="form-control"
+                type="number"
+                formControlName="subCategoryAutoIncrement"
+              />
+            </div>
+            <div class="col">
+              <label class="form-label">
+                Digit
+                <span class="text-danger"></span>
+              </label>
+              <input
+                class="form-control"
+                type="number"
+                formControlName="digit"
+              />
+            </div>
+          </div>
+        </form>
+        <div class="col text-center mt-4">
+          <button
+            class="btn bg-primary px-5"
+            type="button"
+            [disabled]="btnDisable || action == 'view'"
+            (click)="save()"
+          >
+            Add to List
+          </button>
+        </div>
+        <hr class="line-border mt-4 mb-0" />
+      </ng-container>
+
+      <div class="px-5">
+        <app-setting-header
+          [data]="{page,pageSize,collection,search ,excelDisplay : 'none'}"
+          (dataChange)="eventHeader($event)"
+        >
+        </app-setting-header>
+      </div>
+      <div style="min-height: 17rem" class="table-responsive px-5">
+        <table class="table table-bordered table-sticky">
+          <thead class="bg-primary">
+            <tr class="text-white">
+              <th>#</th>
+              <th class="text-start">Sub Category Name</th>
+              <th>Sub Category Prefix</th>
+              <th>Auto Increment No.</th>
+              <th>Digit</th>
+              <th>Status</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr
+              *ngFor="
+                let u of subCategory
+                  | searchFi1ter : search
+                  | slice
+                    : (page - 1) * pageSize
+                    : (page - 1) * pageSize + pageSize;
+                let i = index
+              "
+            >
+              <td>{{ i + 1 }}</td>
+              <td class="text-start">{{ u?.name }}</td>
+              <td>{{ u?.prefix }}</td>
+              <td>{{ u?.subCategoryAutoIncrement }}</td>
+              <td>{{ u?.digit }}</td>
+              <td>{{ u?.subCategoryStatus }}</td>
+
+              <td>
+                <div class="dropdown">
+                  <button class="dropbtn"></button>
+                  <div class="dropdown-content">
+                    <a
+                      href="javascript:void(0)"
+                      (click)="patchItem(u, i, 'view')"
+                    >
+                      <i
+                        class="fa fa-eye fa-lg me-2 text-primary"
+                        aria-hidden="true"
+                      ></i>
+                      View
+                    </a>
+                    <a
+                      href="javascript:void(0)"
+                      (click)="patchItem(u, i, 'edit')"
+                    >
+                      <i
+                        class="fa fa-pencil-square-o fa-lg me-2 text-primary"
+                        aria-hidden="true"
+                      ></i>
+                      Edit
+                    </a>
+                    <a
+                      [class.disable]="this.action == 'view'"
+                      href="javascript:void(0)"
+                      (click)="deleteItem(i)"
+                    >
+                      <i
+                        class="fa fa-trash fa-lg me-2 text-primary"
+                        aria-hidden="true"
+                      ></i>
+                      Delete
+                    </a>
+                  </div>
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <hr class="line-border my-3 px-5" />
+
+      <div class="text-center">
+        <button
+          class="btn bg-primary px-5 mb-3"
+          type="button"
+          [disabled]="btnDisable || action == 'view'"
+          (click)="activeModal.close(subCategory)"
+        >
+          Save
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

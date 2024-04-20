@@ -1,0 +1,80 @@
+<div class="modelPage">
+    <div class="modal-header">
+        <div class="heading">FG Inventory</div>
+        <div>
+            <button type="button" class="btn btn-cross btn-sm" aria-label="Close" (click)="this.activeModal.close()">
+                <i class="fa fa-times-circle" aria-hidden="true"></i>
+            </button>
+        </div>
+    </div>
+    <div class="container-fluid px-0 mt-5">
+        <div class="row justify-content-center px-5">
+            <div class="col-12 px-5">
+                <div style="min-height: 19rem" class="table-responsive">
+                    <table class="table table-bordered table-sticky">
+                        <thead class="bg-primary">
+                            <tr class="text-white">
+                                <th>Batch No.</th>
+                                <th>Batch Date</th>
+                                <th>UoM</th>
+                                <th>FG Qty</th>
+                                <th>Aging</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let c of FGInventoryInfo; trackBy: trackByFn; let i = index">
+                                <td>{{ c?.batchNo }}</td>
+                                <td>
+                                    {{ c?.batchDate ? (c?.batchDate | date : "dd-MM-YYYY") : null }}
+                                </td>
+                                <td>
+                                    {{ c?.UOM | UOMUnitsMaster }}
+                                </td>
+                                <td>
+                                    {{ c?.FGQty | number : "1.2-2" }}
+                                </td>
+                                <td>
+                                    <span class="d-flex justify-content-center">
+                                        <div *ngIf="c?.aging == 'green'" class="flaggreen"></div>
+                                        <div *ngIf="c?.aging == 'red'" class="flagred"></div>
+                                        <div *ngIf="c?.aging == 'yellow'" class="flagYellow"></div>
+                                    </span>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <hr class="line-border my-4" />
+
+        <div class="row px-5">
+            <div class="col-5 ps-5">
+                <div class="d-flex align-items-center">
+                    <div class="col-form-label text-nowrap">
+                        Total FG Qty.
+                        <i class="fa fa-caret-right fs-3 mx-2"></i>
+                    </div>
+                    <input
+                        type="number"
+                        class="form-control"
+                        [(ngModel)]="totalFGQty"
+                        [disabled]="action == 'view'"
+                        readonly
+                    />
+                </div>
+            </div>
+            <div class="col-7 text-end mb-4 pe-5">
+                <button
+                    class="btn bg-primary px-5"
+                    type="button"
+                    [disabled]="btnDisable || action == 'view'"
+                    (click)="dismissModel()"
+                >
+                    Save & Close
+                </button>
+            </div>
+        </div>
+    </div>
+</div>

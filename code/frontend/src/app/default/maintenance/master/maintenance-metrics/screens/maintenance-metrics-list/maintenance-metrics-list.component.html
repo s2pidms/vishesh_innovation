@@ -1,0 +1,72 @@
+<div class="listCard card">
+    <div class="table-header">
+        <label class="heading">Maintenance Metrics Summary</label>
+    </div>
+
+    <div appAccessControl [accessType]="rolePermissionActions.createAction" class="text-center">
+        <button class="btn btn-primary btn-add" type="button" (click)="navigateTo('../form', {}, 'create')">
+            <i class="fa fa-plus-square fa-lg me-2" aria-hidden="true"></i>
+            Maintenance Metrics
+        </button>
+    </div>
+    <hr class="line-border" />
+    <div class="table-responsive">
+        <app-setting-header [data]="{page,pageSize,collection,search,type: 'list'}" (dataChange)="eventHeader($event)">
+        </app-setting-header>
+
+        <table class="table table-bordered">
+            <thead class="bg-secondary">
+                <tr class="text-white">
+                    <th sortable="metricCode" (sort)="onSort($event)">Metric Code</th>
+                    <th class="text-start" sortable="metricName" (sort)="onSort($event)">Metric Name</th>
+                    <th class="text-start" sortable=" metricDescription" (sort)="onSort($event)">Description</th>
+                    <th sortable="unitOfMeasure" (sort)="onSort($event)">Unit</th>
+                    <th sortable="calculationMethod" (sort)="onSort($event)">Calculation Method</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let u of tableData; trackBy: trackByFn">
+                    <td>{{ u?.metricCode }}</td>
+                    <td class="text-start" [style.width]="metricName.clientWidth" #metricName>
+                        <span class="pointer" [ngbTooltip]="u.metricName" [positionTarget]="metricName">
+                            {{ u.metricName }}
+                        </span>
+                    </td>
+                    <td class="text-start" [style.width]="metricDescription.clientWidth" #metricDescription>
+                        <span class="pointer" [ngbTooltip]="u.metricDescription" [positionTarget]="metricDescription">
+                            {{ u.metricDescription }}
+                        </span>
+                    </td>
+                    <td>{{ u?.unitOfMeasure }}</td>
+                    <td>{{ u?.calculationMethod }}</td>
+                    <td>
+                        <div class="dropdown">
+                            <button class="dropbtn"></button>
+                            <div class="dropdown-content">
+                                <a
+                                    appAccessControl
+                                    [accessType]="rolePermissionActions.viewAction"
+                                    href="javascript:void(0)"
+                                    (click)="navigateTo('../form', u, 'view')"
+                                >
+                                    <i class="fa fa-eye fa-lg me-2 text-primary" aria-hidden="true"></i>
+                                    View
+                                </a>
+                                <a
+                                    appAccessControl
+                                    [accessType]="rolePermissionActions.editAction"
+                                    href="javascript:void(0)"
+                                    (click)="navigateTo('../form', u, 'edit')"
+                                >
+                                    <i class="fa fa-pencil-square-o fa-lg me-2 text-primary" aria-hidden="true"></i>
+                                    Edit
+                                </a>
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>

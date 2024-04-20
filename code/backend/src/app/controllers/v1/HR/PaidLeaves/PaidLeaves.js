@@ -1,0 +1,232 @@
+const asyncHandler = require("express-async-handler");
+const Model = require("../../../../models/HR/paidLeavesModel");
+const MESSAGES = require("../../../../helpers/messages.options");
+const {outputData, getAllAggregationFooter} = require("../../../../helpers/utility");
+const {generateCreateData, getMatchData, OPTIONS} = require("../../../../helpers/global.options");
+const {getAllPaidLeavesAttributes} = require("../../../../models/HR/helpers/paidLeavesHelper");
+const {default: mongoose} = require("mongoose");
+const {findAppParameterValue} = require("../../settings/appParameter/appParameter");
+const {getAndSetAutoIncrementNo} = require("../../settings/autoIncrement/autoIncrement");
+const {PAID_LEAVES} = require("../../../../mocks/schemasConstant/HRConstant");
+const {filteredEmployeeList} = require("../../../../models/HR/repository/employeeRepository");
+const {getAllPaidLeaveAggregate} = require("../../../../models/HR/repository/paidLeaveRepository");
+const ObjectId = mongoose.Types.ObjectId;
+
+exports.getAll = asyncHandler(async (req, res) => {
+    try {
+        let project = getAllPaidLeavesAttributes();
+        let pipeline = [
+            {$match: {company: ObjectId(req.user.company)}},
+            {
+                $addFields: {
+                    dateOfJoiningS: {$dateToString: {format: "%d-%m-%Y", date: "$dateOfJoining"}}
+                }
+            },
+            {
+                $lookup: {
+                    from: "Employee",
+                    localField: "employeeId",
+                    foreignField: "_id",
+                    pipeline: [{$project: {empCode: 1, empFullName: 1}}],
+                    as: "employeeId"
+                }
+            },
+            {$unwind: "$employeeId"}
+        ];
+        let rows = await getAllPaidLeaveAggregate({pipeline, project, queryParams: req.query});
+        return res.success(rows);
+    } catch (e) {
+        console.error("getAllPaidLeaves", e);
+        const errors = MESSAGES.apiErrorStrings.SERVER_ERROR;
+        return res.serverError(errors);
+    }
+});
+exports.create = asyncHandler(async (req, res) => {
+    try {
+        let existing = await Model.findOne(
+            {
+                employeeId: req.body.employeeId
+            },
+            {_id: 1}
+        );
+        if (existing) {
+            let errors = MESSAGES.apiErrorStrings.Data_EXISTS("Paid Leaves");
+            return res.preconditionFailed(errors);
+        }
+        let createdObj = {
+            company: req.user.company,
+            createdBy: req.user.sub,
+            updatedBy: req.user.sub,
+            ...req.body
+        };
+        const saveObj = new Model(createdObj);
+        const itemDetails = await saveObj.save();
+        if (itemDetails) {
+            return res.success({
+                message: MESSAGES.apiSuccessStrings.ADDED("Paid Leaves")
+            });
+        } else {
+            const errors = MESSAGES.apiErrorStrings.INVALID_REQUEST;
+            return res.serverError(errors);
+        }
+    } catch (e) {
+        console.error("create PaidLeaves", e);
+        const errors = MESSAGES.apiErrorStrings.SERVER_ERROR;
+        return res.serverError(errors);
+    }
+});
+
+exports.update = asyncHandler(async (req, res) => {
+    try {
+        let itemDetails = await Model.findById(req.params.id);
+        if (!itemDetails) {
+            const errors = MESSAGES.apiErrorStrings.INVALID_REQUEST;
+            return res.preconditionFailed(errors);
+        }
+        itemDetails = await generateCreateData(itemDetails, req.body);
+        itemDetails.updatedBy = req.user.sub;
+        itemDetails = await itemDetails.save();
+        return res.success({
+            message: MESSAGES.apiSuccessStrings.UPDATE("Paid Leaves has been")
+        });
+    } catch (e) {
+        console.error("update PaidLeaves", e);
+        const errors = MESSAGES.apiErrorStrings.SERVER_ERROR;
+        return res.serverError(errors);
+    }
+});
+
+exports.deleteById = asyncHandler(async (req, res) => {
+    try {
+        const deleteItem = await Model.findById(req.params.id);
+        if (deleteItem) {
+            await deleteItem.remove();
+            return res.success({
+                message: MESSAGES.apiSuccessStrings.DELETED("Paid Leaves")
+            });
+        } else {
+            let errors = MESSAGES.apiSuccessStrings.DATA_NOT_EXISTS("Paid Leaves");
+            return res.preconditionFailed(errors);
+        }
+    } catch (e) {
+        console.error("deleteById PaidLeaves", e);
+        const errors = MESSAGES.apiErrorStrings.SERVER_ERROR;
+        return res.serverError(errors);
+    }
+});
+
+exports.getById = asyncHandler(async (req, res) => {
+    try {
+        let existing = await Model.findById(req.params.id);
+        if (!existing) {
+            let errors = MESSAGES.apiSuccessStrings.DATA_NOT_EXISTS("Paid Leaves");
+            return res.unprocessableEntity(errors);
+        }
+        return res.success(existing);
+    } catch (e) {
+        console.error("getById PaidLeaves", e);
+        const errors = MESSAGES.apiErrorStrings.SERVER_ERROR;
+        return res.serverError(errors);
+    }
+});
+
+exports.getAllMasterData = asyncHandler(async (req, res) => {
+    try {
+        const autoIncrementNo = await getAndSetAutoIncrementNo(PAID_LEAVES.AUTO_INCREMENT_DATA(), req.user.company);
+        const maxPaidLeaves = await findAppParameterValue("MAX_PT_FOR_EMP", req.user.company);
+        const employeesOptions = await filteredEmployeeList([
+            {$match: {empStatus: "A", company: ObjectId(req.user.company)}},
+            {$sort: {createdAt: 1}},
+            {
+                $project: {
+                    _id: 0,
+                    label: {$concat: ["$empCode", "-", "$empFullName"]},
+                    value: "$_id",
+                    empJoiningDate: 1
+                }
+            }
+        ]);
+        return res.success({autoIncrementNo, employeesOptions, maxPaidLeaves: +maxPaidLeaves});
+    } catch (error) {
+        console.error("getAllMasterData PaidLeaves", error);
+        const errors = MESSAGES.apiErrorStrings.SERVER_ERROR;
+        return res.serverError(errors);
+    }
+});
+exports.updatePaidLeaveOnLeaveApplication = async ({
+    employeeId,
+    leaveType,
+    leaveDays,
+    status,
+    updatedBy,
+    previousLeaves = 0
+}) => {
+    try {
+        let itemDetails = await Model.findOne({employeeId: employeeId});
+        itemDetails.updatedBy = updatedBy;
+        if (leaveType == "Paid Leaves") {
+            if (status == OPTIONS.defaultStatus.SUBMITTED) {
+                itemDetails.casualLeaveCL = +itemDetails.casualLeaveCL + +previousLeaves - +leaveDays;
+            } else {
+                itemDetails.casualLeaveCL = +itemDetails.casualLeaveCL + +leaveDays;
+            }
+        }
+        if (leaveType == "Compensatory Off") {
+            if (status == OPTIONS.defaultStatus.SUBMITTED) {
+                itemDetails.privilegeLeavePL = +itemDetails.privilegeLeavePL + +previousLeaves - +leaveDays;
+            } else {
+                itemDetails.privilegeLeavePL = +itemDetails.privilegeLeavePL + +leaveDays;
+            }
+        }
+        if (leaveType == "Advance Leaves") {
+            if (status == OPTIONS.defaultStatus.SUBMITTED) {
+                itemDetails.sickLeaveSL = +itemDetails.sickLeaveSL + +previousLeaves - +leaveDays;
+            } else {
+                itemDetails.sickLeaveSL = +itemDetails.sickLeaveSL + +leaveDays;
+            }
+        }
+        itemDetails = await itemDetails.save();
+    } catch (error) {
+        console.error("updatePaidLeaveOnLeaveApplication", error);
+    }
+};
+exports.updatePaidLeaveOnEmpAttendance = asyncHandler(async ({employeeId, days, updatedBy}) => {
+    try {
+        let itemDetails = await Model.findOne({employeeId: employeeId});
+        itemDetails.updatedBy = updatedBy;
+        itemDetails.sickLeaveSL = +itemDetails.sickLeaveSL + +days;
+        itemDetails = await itemDetails.save();
+    } catch (error) {
+        console.error("updatePaidLeaveOnEmpAttendance", error);
+    }
+});
+exports.paidLeaveByEmpId = asyncHandler(async employeeId => {
+    try {
+        let existing = await Model.findOne({employeeId: employeeId});
+        return existing;
+    } catch (e) {
+        console.error("getById PaidLeaves", e);
+    }
+});
+exports.getLeaveByEmployeeId = async employeeId => {
+    try {
+        const employee = await Model.findOne({employeeId: employeeId});
+        return {
+            casualLeaveCL: +employee?.casualLeaveCL ?? 0,
+            sickLeaveSL: +employee?.sickLeaveSL ?? 0,
+            privilegeLeavePL: +employee?.privilegeLeavePL ?? 0
+        };
+    } catch (error) {
+        console.error(error);
+    }
+};
+exports.getBalanceLeaveByEmployeeId = async employeeId => {
+    try {
+        const employee = await Model.findOne({employeeId: employeeId});
+        return employee
+            ? +employee?.casualLeaveCL ?? 0 + +employee?.sickLeaveSL ?? 0 + +employee?.privilegeLeavePL ?? 0
+            : 0;
+    } catch (error) {
+        console.error(error);
+    }
+};

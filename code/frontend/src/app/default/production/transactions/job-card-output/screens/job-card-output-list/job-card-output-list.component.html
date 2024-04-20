@@ -1,0 +1,107 @@
+<div class="listCard card">
+    <div class="table-header">
+        <label class="heading">Job Card Output Summary</label>
+    </div>
+
+    <div appAccessControl [accessType]="rolePermissionActions.createAction" class="text-center">
+        <button class="plusIconSvg btn btn-primary me-1"></button>
+        <button class="btn btn-primary btn-add px-5" type="button" (click)="navigateTo('../form', {}, 'create')">
+            Job Card Output
+        </button>
+    </div>
+    <hr class="line-border" />
+    <div class="table-responsive">
+        <app-setting-header [data]="{page,pageSize,collection,search,type: 'list'}" (dataChange)="eventHeader($event)">
+        </app-setting-header>
+
+        <table class="table table-bordered">
+            <thead class="bg-secondary">
+                <tr class="text-white">
+                    <!-- <th class="text-start" sortable="assetType" (sort)="onSort($event)">Asset Class</th> -->
+                    <th sortable="jobCardNo" (sort)="onSort($event)">JC No.</th>
+                    <th sortable="SKUNo" (sort)="onSort($event)">SKU No.</th>
+                    <th class="text-start" sortable="SKUName" (sort)="onSort($event)">SKU Name</th>
+                    <th class="text-start" sortable="SKUDescription" (sort)="onSort($event)">SKU Description</th>
+                    <th sortable="batchDate" (sort)="onSort($event)">Batch Date</th>
+                    <th sortable="batchInputQty" (sort)="onSort($event)">Input Qty</th>
+                    <th sortable="batchOutputQty" (sort)="onSort($event)">Output Qty</th>
+                    <th sortable="status" (sort)="onSort($event)">Status</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let u of tableData; trackBy: trackByFn">
+                    <!-- <td class="text-start">{{ u?.assetType }}</td> -->
+                    <td>{{ u?.jobCardNo }}</td>
+                    <td>{{ u.SKUNo }}</td>
+                    <td class="text-start" [style.width]="SKUName.clientWidth" #SKUName>
+                        <span class="pointer" [positionTarget]="SKUName" [ngbTooltip]="u.SKUName">
+                            {{ u.SKUName }}
+                        </span>
+                    </td>
+                    <td class="text-start" [style.width]="SKUDescription.clientWidth" #SKUDescription>
+                        <span class="pointer" [positionTarget]="SKUDescription" [ngbTooltip]="u.SKUDescription">
+                            {{ u.SKUDescription }}
+                        </span>
+                    </td>
+                    <td>{{ u.batchDate }}</td>
+                    <td>{{ u.batchInputQty }}</td>
+                    <td>{{ u.batchOutputQty }}</td>
+                    <td>{{ u.status }}</td>
+                    <td>
+                        <div class="dropdown">
+                            <button class="dropbtn"></button>
+                            <div class="dropdown-content">
+                                <a
+                                    appAccessControl
+                                    [accessType]="rolePermissionActions.viewAction"
+                                    href="javascript:void(0)"
+                                    (click)="navigateTo('../form', u, 'view')"
+                                >
+                                    <i class="fa fa-eye fa-lg me-2 text-primary" aria-hidden="true"></i>
+                                    View
+                                </a>
+                                <a
+                                    appAccessControl
+                                    [accessType]="rolePermissionActions.editAction"
+                                    href="javascript:void(0)"
+                                    [class.disable]="
+                                        ['Approved', 'Mark As Completed'].includes(u.status) ||
+                                        productionItemId != menuItemId
+                                    "
+                                    (click)="navigateTo('../form', u, 'edit')"
+                                >
+                                    <i class="fa fa-pencil-square-o fa-lg me-2 text-primary" aria-hidden="true"></i>
+                                    Edit
+                                </a>
+                                <a
+                                    appAccessControl
+                                    [accessType]="rolePermissionActions.approveAction"
+                                    href="javascript:void(0)"
+                                    [class.disable]="u?.status == 'Approved' || productionItemId == menuItemId"
+                                    (click)="navigateTo('../form', u, 'approve')"
+                                >
+                                    <i class="fa fa-check fa-lg text-success" aria-hidden="true"></i>
+                                    Approve (QA)
+                                </a>
+                                <a
+                                    appAccessControl
+                                    [accessType]="rolePermissionActions.generateReportAction"
+                                    href="javascript:void(0)"
+                                    [class.disable]="
+                                        ['In-Process', 'Mark As Completed'].includes(u.status) ||
+                                        productionItemId != menuItemId
+                                    "
+                                    (click)="update(u, 'Report Generated', u._id)"
+                                >
+                                    <img src="./assets/images/new.svg" width="16" class="me-2" />
+                                    Generate Report
+                                </a>
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>

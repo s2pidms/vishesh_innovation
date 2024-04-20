@@ -1,0 +1,211 @@
+<div class="modelPage" style="max-width: 100%">
+  <div class="modal-header">
+    <div class="heading">View NPD Request Details</div>
+    <div>
+      <button
+        type="button"
+        class="btn btn-cross btn-sm"
+        aria-label="Close"
+        (click)="activeModal.close()"
+      >
+        <i class="fa fa-times-circle" aria-hidden="true"></i>
+      </button>
+    </div>
+  </div>
+  <div class="">
+    <div class="row justify-content-center">
+      <div class="col-12 card-form pb-1">
+        <form [formGroup]="form">
+          <div class="row mb-4 px-5 mt-4">
+            <div class="col">
+              <div class="row">
+                <div class="col-6 pe-3">
+                  <label class="form-label">
+                    NPD No. <span class="text-danger"></span>
+                  </label>
+                  <input
+                    type="text"
+                    class="form-control"
+                    formControlName="NPDNo"
+                    readonly
+                  />
+                </div>
+                <div class="col-6 ps-0">
+                  <label class="form-label">
+                    NPD Date <span class="text-danger"></span>
+                  </label>
+                  <input
+                    type="date"
+                    class="form-control"
+                    formControlName="NPDDate"
+                  />
+                </div>
+              </div>
+            </div>
+            <div class="col">
+              <label class="form-label">
+                Customer/Prospect Name
+                <span class="text-danger">*</span>
+              </label>
+              <ng-select
+                [items]="customers"
+                bindLabel="name"
+                bindValue="_id"
+                [clearable]="false"
+                formControlName="reference"
+              >
+              </ng-select>
+            </div>
+            <div class="col-3">
+              <label class="form-label">
+                Project Name
+                <span class="text-danger">*</span>
+              </label>
+              <input
+                type="text"
+                class="form-control"
+                formControlName="projectName"
+              />
+            </div>
+            <div class="col-3">
+              <label class="form-label">
+                Product Category
+                <span class="text-danger">*</span>
+              </label>
+              <select formControlName="productCategory" class="form-select">
+                <option [value]="null" selected disabled>Select Type</option>
+                <option *ngFor="let c of productCategory" [value]="c.value">
+                  {{ c.label }}
+                </option>
+              </select>
+            </div>
+          </div>
+
+          <hr class="line-border" />
+
+          <div class="row mb-4 px-5">
+            <div class="col form-group">
+              <label class="form-label">
+                Product Brief <span class="text-danger">*</span>
+                [General Product information/Functional & Performance
+                requirements/specification and application]
+              </label>
+              <textarea
+                class="form-control form-text-area content"
+                formControlName="productBrief"
+                rows="5"
+              ></textarea>
+            </div>
+          </div>
+
+          <div class="row mt-4 px-5">
+            <div class="col">
+              <label class="form-label">
+                Build Stage
+                <span class="text-danger">*</span>
+              </label>
+              <select formControlName="buildStage" class="form-select">
+                <option [value]="null" selected disabled>Select Type</option>
+                <option *ngFor="let c of buildStage" [value]="c.value">
+                  {{ c.label }}
+                </option>
+              </select>
+            </div>
+            <div class="col">
+              <label class="form-label">
+                Order Type
+                <span class="text-danger">*</span>
+              </label>
+              <select formControlName="orderType" class="form-select">
+                <option [value]="null" selected disabled>Select Type</option>
+                <option *ngFor="let c of orderType" [value]="c.value">
+                  {{ c.label }}
+                </option>
+              </select>
+            </div>
+            <div class="col">
+              <label class="form-label">
+                Monthly off-take Quantity <span class="text-danger">*</span>
+              </label>
+              <input
+                type="number"
+                class="form-control"
+                formControlName="monthlyOffTakeQty"
+              />
+            </div>
+            <div class="col">
+              <label class="form-label">
+                Development Charges
+                <span class="text-danger">*</span>
+              </label>
+              <select formControlName="developmentCharges" class="form-select">
+                <option [value]="null" selected disabled>Select Type</option>
+                <option *ngFor="let c of developmentCharges" [value]="c.value">
+                  {{ c.label }}
+                </option>
+              </select>
+            </div>
+          </div>
+          <div class="row mt-4 px-5">
+            <div class="col">
+              <label class="form-label"
+                >Quantity [Requested] <span class="text-danger">*</span>
+              </label>
+              <input
+                type="number"
+                class="form-control"
+                formControlName="requestedQty"
+              />
+            </div>
+            <div class="col">
+              <label class="form-label"
+                >Expected Delivery Date [EDD]
+                <span class="text-danger">*</span></label
+              >
+              <input
+                type="date"
+                class="form-control"
+                formControlName="expectedDeliveryDate"
+              />
+            </div>
+            <div class="col">
+              <label class="form-label">
+                Validation Required
+                <span class="text-danger">*</span>
+              </label>
+              <select formControlName="validationRequired" class="form-select">
+                <option [value]="null" selected disabled>Select Type</option>
+                <option value="Yes">Yes</option>
+                <option value="No">No</option>
+              </select>
+            </div>
+            <div class="col">
+              <label class="form-label"
+                >NPD Requested by/Coordinator
+                <span class="text-danger">*</span></label
+              >
+              <input
+                type="text"
+                class="form-control"
+                formControlName="NPDRequestedBy"
+                readonly
+              />
+            </div>
+          </div>
+          <hr class="line-border" />
+          <div class="row my-4 px-5">
+            <div class="col-12 text-end">
+              <button
+                class="btn btn-primary px-5"
+                type="button"
+                (click)="activeModal.close()"
+              >
+                Back
+              </button>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>

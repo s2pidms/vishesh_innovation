@@ -1,0 +1,214 @@
+<div class="container-fluid text-center dashboard-page">
+    <div class="row justify-content-center mt-5">
+        <div class="col-md-12 px-0">
+            <ul ngbNav #nav1="ngbNav" [(activeId)]="activeCards" class="nav-pills tabs-card row">
+                <li [ngbNavItem]="1" class="col d-grid pe-2">
+                    <ng-template ngbNavContent>
+                        <div class="row mx-1">
+                            <div class="col-md-12">
+                                <div class="d-flex align-items-center">
+                                    <div class="col pt-3 text-start">
+                                        <i
+                                            (click)="nav1.select(activeCards + 1)"
+                                            class="fa fa-chevron-left sales-fa-chevron-color fs-2 pointer"
+                                            aria-hidden="true"
+                                        ></i>
+                                    </div>
+                                    <div class="col-11">
+                                        <div class="row px-2 mb-4">
+                                            <div class="col px-3">
+                                                <div class="card flip-box-inner">
+                                                    <div class="card-body">
+                                                        <h5 class="card-title">Total Equipment</h5>
+                                                        <p class="card-title">
+                                                            {{ dashBoardData.equipmentsDataCount }}
+                                                        </p>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col px-3">
+                                                <div class="card flip-box-inner">
+                                                    <div class="card-body">
+                                                        <h5 class="card-title">Total Equipment Cost</h5>
+                                                        <p class="card-text">
+                                                            {{ dashBoardData.equipmentsData | number : "1.2-2" }}
+                                                            {{ lakhInWord }}
+                                                        </p>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col px-3">
+                                                <div class="card">
+                                                    <div class="card-body">
+                                                        <h5 class="card-title">Total Assets</h5>
+                                                        <p class="card-text card-text1">
+                                                            {{ dashBoardData.assetsDataCount }}
+                                                        </p>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col px-3">
+                                                <div class="card">
+                                                    <div class="card-body">
+                                                        <h5 class="card-title">Total Assets Cost</h5>
+                                                        <p class="card-text">
+                                                            {{ dashBoardData.assetsDataCost | number : "1.2-2" }}
+                                                            {{ lakhInWord }}
+                                                        </p>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col px-3">
+                                                <div class="card h-100">
+                                                    <div class="card-body">
+                                                        <h5 class="card-title">Total Quality Equipment</h5>
+                                                        <p class="card-text">
+                                                            {{ dashBoardData.qualityEquipmentCount }}
+                                                        </p>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="col pt-2 text-end">
+                                        <i
+                                            (click)="nav1.select(activeCards + 1)"
+                                            class="fa fa-chevron-right sales-fa-chevron-color fs-2 pointer"
+                                            aria-hidden="true"
+                                        ></i>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </ng-template>
+                </li>
+                <li [ngbNavItem]="2" class="col d-grid pe-2">
+                    <ng-template ngbNavContent>
+                        <div class="row mx-1">
+                            <div class="col-md-12">
+                                <div class="d-flex align-items-center">
+                                    <div class="col pt-3 text-start">
+                                        <i
+                                            (click)="nav1.select(activeCards - 1)"
+                                            class="fa fa-chevron-left sales-fa-chevron-color fs-2 pointer"
+                                            aria-hidden="true"
+                                        ></i>
+                                    </div>
+                                    <div class="col-11 text-start">
+                                        <div class="row px-2 mb-4">
+                                            <div class="col px-3">
+                                                <div class="card h-100">
+                                                    <div class="card-body">
+                                                        <h5 class="card-title">YTD Maintenance Cost</h5>
+                                                        <p class="card-text">
+                                                            {{ dashBoardData.ytdEquipmentCost | number : "1.2-2" }}
+                                                            {{ lakhInWord }}
+                                                        </p>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col px-3">
+                                                <div class="card h-100">
+                                                    <div class="card-body">
+                                                        <h5 class="card-title">Task Scheduling Compliance</h5>
+                                                        <p class="card-text">
+                                                            {{ dashBoardData.taskScheduleCompleted }}%
+                                                        </p>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col px-3">
+                                                <div class="card">
+                                                    <div class="card-body">
+                                                        <h5 class="card-title">Task Scheduling Efficiency</h5>
+                                                        <p class="card-text">
+                                                            {{ dashBoardData.taskScheduleEfficiency }}
+                                                        </p>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col px-3">
+                                                <div class="card">
+                                                    <div class="card-body">
+                                                        <h5 class="card-title">Work Order Completion Rate</h5>
+                                                        <p class="card-text">
+                                                            {{ dashBoardData.workOrderCompletedRate }} %
+                                                        </p>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col px-3">
+                                                <div class="card">
+                                                    <div class="card-body">
+                                                        <h5 class="card-title">Calibration Due</h5>
+                                                        <p class="card-text">
+                                                            {{ dashBoardData.calibrationDueCount }}
+                                                        </p>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="col pt-2 text-end">
+                                        <i
+                                            (click)="nav1.select(activeCards - 1)"
+                                            class="fa fa-chevron-right sales-fa-chevron-color fs-2 pointer"
+                                            aria-hidden="true"
+                                        ></i>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </ng-template>
+                </li>
+            </ul>
+
+            <div [ngbNavOutlet]="nav1" class="mt-2"></div>
+        </div>
+    </div>
+
+    <div class="row justify-content-center mt-4">
+        <div class="col-md-12 px-0">
+            <div class="row mx-1">
+                <div class="col-md-6">
+                    <div class="d-flex justify-content-end">
+                        <div class="card col-11">
+                            <div class="card-body gh p-4">
+                                <h5 class="card-title">Maintenance Cost Distribution</h5>
+                                <canvas
+                                    baseChart
+                                    class="chart pointer"
+                                    [data]="dashBoardData.barMonthlyMaintenanceCost"
+                                    [options]="barChartOptions"
+                                    [type]="barChartType"
+                                    [plugins]="barChartPlugins"
+                                >
+                                </canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="d-flex align-items-center">
+                        <div class="card col-11">
+                            <div class="card-body gh p-4">
+                                <h5 class="card-title">Work Order Status Distribution</h5>
+                                <canvas
+                                    baseChart
+                                    class="chart pointer"
+                                    [data]="dashBoardData.barMonthlyWOStatusCount"
+                                    [options]="barChartOptions"
+                                    [type]="barChartType"
+                                    [plugins]="barChartPlugins"
+                                >
+                                </canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

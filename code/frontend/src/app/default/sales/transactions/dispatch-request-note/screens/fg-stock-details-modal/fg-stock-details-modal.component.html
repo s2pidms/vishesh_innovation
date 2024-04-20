@@ -1,0 +1,140 @@
+<div class="modelPage">
+    <div class="modal-header">
+        <div class="heading">FG Stock Details</div>
+        <div>
+            <button type="button" class="btn btn-cross btn-sm" aria-label="Close" (click)="this.activeModal.close()">
+                <i class="fa fa-times-circle" aria-hidden="true"></i>
+            </button>
+        </div>
+    </div>
+    <div class="container-fluid">
+        <div class="row justify-content-center">
+            <div class="col-12 my-3">
+                <div class="table-responsive">
+                    <table class="table table-bordered">
+                        <thead class="bg-primary">
+                            <tr class="text-white">
+                                <th>SKU NO.</th>
+                                <th class="text-start">{{ "SKU Name" | labelTranslate }}</th>
+                                <th class="text-start">
+                                    {{ "SKU Description" | labelTranslate }}
+                                </th>
+                                <th>UoM</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>{{ data?.SKUNo }}</td>
+                                <td class="text-start">{{ data?.SKUName }}</td>
+                                <td class="text-start">{{ data?.SKUDescription }}</td>
+                                <td>{{ data?.UOM | UOMUnitsMaster }}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <hr class="line-border my-3" />
+        </div>
+        <div class="row justify-content-center">
+            <div class="col-12 my-3">
+                <div class="table-responsive">
+                    <table class="table table-bordered">
+                        <thead class="bg-primary">
+                            <tr class="text-white">
+                                <th>FG Batch No</th>
+                                <th>FG Batch Date</th>
+                                <th>FG B/B Date</th>
+                                <th>Aging</th>
+                                <th>FGI Qty.</th>
+                                <th>Disp. Qty.</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let fg of data.FGStockDetails; let i = index">
+                                <td>{{ fg?.FGBatchNo }}</td>
+                                <td>{{ fg?.FGBatchDate | date : "dd-MM-YYYY" }}</td>
+                                <td>
+                                    {{ fg.FGExpiryDate ? (fg?.FGExpiryDate | date : "dd-MM-YYYY") : "-" }}
+                                </td>
+                                <td>
+                                    <span class="d-flex justify-content-center">
+                                        <div *ngIf="fg?.aging == 'green'" class="flaggreen"></div>
+                                        <div *ngIf="fg?.aging == 'red'" class="flagred"></div>
+                                        <div *ngIf="fg?.aging == 'orange'" class="flagYellow"></div>
+                                    </span>
+                                </td>
+                                <td>{{ fg?.FGINQuantity }}</td>
+                                <td>
+                                    <div class="d-flex justify-content-center">
+                                        <span
+                                            *ngIf="
+                                                ['approval', 'rejection', 'view', 'generate', 'cancel'].includes(action)
+                                            "
+                                        >
+                                            {{ fg?.dispatchQty | number : ".2-2" }}
+                                        </span>
+                                        <input
+                                            type="number"
+                                            class="form-control form-control-sm w-25"
+                                            *ngIf="
+                                                !['approval', 'rejection', 'view', 'generate', 'cancel'].includes(
+                                                    action
+                                                )
+                                            "
+                                            [(ngModel)]="fg.dispatchQty"
+                                            (input)="checkDispatchQty(fg, i)"
+                                        />
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <hr class="line-border my-3" />
+        </div>
+        <div class="row mb-3 justify-content-center">
+            <div class="col-12">
+                <div class="row">
+                    <div class="col-5">
+                        <div class="d-flex align-items-center">
+                            <div class="col-form-label text-nowrap">
+                                Total Dispatch. Qty.
+                                <i class="fa fa-caret-right fs-4 mx-1"></i>
+                            </div>
+                            <input class="form-control" type="text" readonly [(ngModel)]="totalDispatchQty" />
+                        </div>
+                    </div>
+                    <div class="col-4">
+                        <div class="d-flex align-items-center">
+                            <div class="col-form-label text-nowrap">
+                                T/Batch No.
+                                <i class="fa fa-caret-right fs-4 mx-1"></i>
+                            </div>
+                            <input
+                                [disabled]="['approval', 'rejection', 'view', 'generate', 'cancel'].includes(action)"
+                                class="form-control"
+                                type="text"
+                                [(ngModel)]="tBatchNo"
+                            />
+                        </div>
+                    </div>
+                    <div class="col-3 d-flex justify-content-end">
+                        <button
+                            type="button"
+                            class="btn btn-primary px-2 me-0 py-0"
+                            (click)="dismissModel()"
+                            [disabled]="['approval', 'rejection', 'view', 'generate', 'cancel'].includes(action)"
+                        >
+                            Save & close
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

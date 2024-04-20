@@ -1,0 +1,141 @@
+<div class="modelPage">
+    <div class="modal-header">
+        <div class="heading">Process Master - Asset Allocation</div>
+        <div>
+            <button type="button" class="btn btn-cross btn-sm" aria-label="Close" (click)="this.activeModal.close()">
+                <i class="fa fa-times-circle" aria-hidden="true"></i>
+            </button>
+        </div>
+    </div>
+
+    <div class="container-fluid pb-3">
+        <div class="row">
+            <div class="col-12 mt-4 px-5">
+                <app-setting-header
+                    [data]="{page,pageSize,collection,search, excelDisplay : 'none'}"
+                    (dataChange)="eventHeader($event)"
+                >
+                </app-setting-header>
+                <div class="table-responsive" style="min-height: 23rem">
+                    <table class="table table-bordered table-sticky mt-1">
+                        <thead class="bg-primary">
+                            <tr class="text-white">
+                                <th sortable="assetCode" (sort)="onSort($event)">Asset No.</th>
+                                <th class="text-start" sortable="assetName" (sort)="onSort($event)">Asset Name</th>
+                                <th class="text-start" sortable="assetDescription" (sort)="onSort($event)">
+                                    Asset Description
+                                </th>
+
+                                <th sortable="location" (sort)="onSort($event)">Location</th>
+                                <th sortable="totalAssetCostPerHr" (sort)="onSort($event)">Asset Cost/Hr</th>
+                                <th sortable="isSelect" (sort)="onSort($event)">Select</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr
+                                *ngFor="
+                                    let g of assetAllocationList
+                                        | searchFi1ter : search
+                                        | slice : (page - 1) * pageSize : (page - 1) * pageSize + pageSize;
+                                    trackBy: trackByFn
+                                "
+                            >
+                                <td>{{ g.assetCode }}</td>
+                                <td class="text-start" [style.width]="assetName.clientWidth" #assetName>
+                                    <span class="pointer" [ngbTooltip]="g.assetName" [positionTarget]="assetName">
+                                        {{ g.assetName }}
+                                    </span>
+                                </td>
+                                <td class="text-start" [style.width]="assetDescription.clientWidth" #assetDescription>
+                                    <span
+                                        class="pointer"
+                                        [ngbTooltip]="g.assetDescription"
+                                        [positionTarget]="assetDescription"
+                                    >
+                                        {{ g.assetDescription }}
+                                    </span>
+                                </td>
+                                <td>{{ g.location }}</td>
+                                <td>{{ g.totalAssetCostPerHr }}</td>
+                                <td>
+                                    <div class="d-flex justify-content-center">
+                                        <input
+                                            class="form-check-input"
+                                            type="checkbox"
+                                            [(ngModel)]="g.isSelect"
+                                            (change)="setAssetData($event)"
+                                            [disabled]="['view'].includes(action)"
+                                        />
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <div class="row mt-4">
+            <div class="col px-0">
+                <hr class="line-border mt-0" />
+            </div>
+        </div>
+
+        <div class="row px-4 py-3">
+            <div class="col-9">
+                <div class="d-flex align-items-center">
+                    <div class="col-form-label text-nowrap">
+                        Display Asset/s as
+                        <i class="fa fa-caret-right fs-3 mx-2"></i>
+                    </div>
+                    <div class="d-flex col-5">
+                        <input [(ngModel)]="primaryAssetAllocation" class="form-control total-bg-color" type="text" />
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col px-0">
+                <hr class="line-border" />
+            </div>
+        </div>
+        <div class="row px-4 py-3">
+            <div class="col-4">
+                <div class="d-flex align-items-center">
+                    <div class="col-form-label text-nowrap">
+                        Allocated Assets Cost/Hr
+                        <i class="fa fa-caret-right fs-3 mx-2"></i>
+                    </div>
+                    <div class="d-flex">
+                        <span class="input-group-text text-secondary combine-INR">
+                            {{ "INR" | companyCurrency }}
+                            <div class="vr ms-3"></div>
+                        </span>
+                        <input
+                            [(ngModel)]="totalAllocatedAssetCostPerHr"
+                            class="form-control ps-1 border-start-0"
+                            type="number"
+                            readonly
+                        />
+                    </div>
+                </div>
+            </div>
+            <div *ngIf="action !== 'view'" class="col-8 d-flex justify-content-end">
+                <button type="button" class="btn btn-primary px-5 me-3" (click)="reset()">&nbsp; Reset &nbsp;</button>
+                <button
+                    type="button"
+                    class="btn btn-primary px-3 me-1"
+                    [disabled]="!isESCPreview"
+                    (click)="ESCPreview()"
+                >
+                    Esc
+                </button>
+                <!-- [disabled]="isConditionPreview" -->
+                <button type="button" class="btn btn-primary px-5 me-3" (click)="preview()">Preview</button>
+                <button type="button" class="btn btn-primary px-4" (click)="dismissModel()" [disabled]="!isPreview">
+                    Save & Close
+                </button>
+            </div>
+        </div>
+    </div>
+</div>

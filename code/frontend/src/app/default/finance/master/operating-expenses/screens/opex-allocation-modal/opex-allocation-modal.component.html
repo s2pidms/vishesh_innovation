@@ -1,0 +1,73 @@
+<div class="modelPage">
+    <div class="modal-header">
+        <div class="heading ps-3">Opex Allocation</div>
+        <div>
+            <button type="button" class="btn btn-cross btn-sm" aria-label="Close" (click)="this.activeModal.close()">
+                <i class="fa fa-times-circle" aria-hidden="true"></i>
+            </button>
+        </div>
+    </div>
+    <div class="container-fluid mt-5 px-0">
+        <div class="row d-flex justify-content-center">
+            <div class="col-11 px-3 mb-2">
+                <div class="table-responsive mt-0 text-wrap">
+                    <table class="table table-bordered mt-0 table-sm">
+                        <thead class="bg-info">
+                            <tr class="text-white text-center">
+                                <th class="text-start">Particulars</th>
+                                <th *ngFor="let k of keys">
+                                    {{
+                                        "FY " +
+                                            (+k.replace("fy_", "") - 1) +
+                                            "-" +
+                                            (+k.replace("fy_", "") > +currentYear
+                                                ? +(+k.replace("fy_", "")) + "*"
+                                                : +k.replace("fy_", ""))
+                                    }}
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let d of opexAllocation; let i = index">
+                                <td [ngClass]="[3].includes(i) ? 'opex-color' : null" class="text-start">
+                                    {{ d.particulars.replace("Ccy", companyCurrency) }}
+                                </td>
+                                <td [ngClass]="[3].includes(i) ? 'opex-color' : null" *ngFor="let k of keys">
+                                    <div *ngIf="['Total OPEX (Ccy)', 'Opex Cost (Ccy)/Unit'].includes(d.particulars)">
+                                        {{ d[k] | number : "1.2-2" }}
+                                    </div>
+                                    <div
+                                        *ngIf="!['Total OPEX (Ccy)', 'Opex Cost (Ccy)/Unit'].includes(d.particulars)"
+                                        class="d-flex justify-content-center"
+                                    >
+                                        <input
+                                            [(ngModel)]="d[k]"
+                                            class="form-control form-control-sm"
+                                            type="number"
+                                            (input)="calAllocationData()"
+                                        />
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <div class="row mb-5 px-0 mt-4 d-flex justify-content-center">
+            <div class="col-11 px-3">
+                <div class="row">
+                    <div class="col-6 fs-4">Note : * - Budgeted OPEX</div>
+                    <div class="col-6 text-end">
+                        <div *ngIf="action !== 'view'">
+                            <button type="button" class="btn btn-primary px-5 me-3" (click)="reset()">Reset</button>
+
+                            <button type="button" class="btn btn-primary px-5" (click)="dismissModel()">Save</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

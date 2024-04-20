@@ -1,0 +1,190 @@
+<form [formGroup]="form" class="formCard card">
+    <div class="container">
+        <div class="row form-header">
+            <div class="col heading">
+                <label class="">Stock Issue to Production ({{ action | titlecase }})</label>
+            </div>
+        </div>
+        <div class="form-body">
+            <div class="row">
+                <div class="col-md-3">
+                    <label class="form-label mb-0"> Issue Date<span class="text-danger">*</span> </label>
+                    <input type="date" class="form-control" formControlName="issueDate" readonly />
+                </div>
+                <div class="col-md-3">
+                    <label class="form-label mb-0"> Stage/Category <span class="text-danger">*</span> </label>
+                    <select (change)="setStage($event)" class="form-select" formControlName="stage">
+                        <option value="null" selected disabled>Select Category</option>
+                        <option *ngFor="let item of stages" [value]="item.value">
+                            {{ item?.label }}
+                        </option>
+                    </select>
+                </div>
+                <div class="col-md-3">
+                    <label class="form-label mb-0"> Department<span class="text-danger">*</span> </label>
+                    <input type="text" class="form-control" formControlName="department" readonly />
+                </div>
+                <div class="col-md-3">
+                    <label class="form-label mb-0"> Job Card No. (Optional)<span class="text-danger"></span> </label>
+                    <input type="text" class="form-control" formControlName="jobCardNo" />
+                </div>
+            </div>
+        </div>
+        <hr class="row line-border" />
+
+        <app-setting-header
+            [data]="{page,pageSize,collection,search,excelDisplay : 'none'}"
+            (dataChange)="eventHeader($event)"
+        >
+        </app-setting-header>
+
+        <div class="table-responsive mt-0 text-wrap" style="min-height: 21rem">
+            <table class="table table-bordered mt-0 table-sm">
+                <thead class="bg-info">
+                    <tr class="text-white">
+                        <th sortable="MRNNumber" (sort)="onSort($event)">MRN No.</th>
+                        <th sortable="itemCode" (sort)="onSort($event)">Item Code</th>
+                        <th class="text-start" sortable="itemName" (sort)="onSort($event)">Item Name</th>
+                        <th sortable="stage" (sort)="onSort($event)">Stage</th>
+                        <th sortable="unitConversion" (sort)="onSort($event)">W X L</th>
+                        <th sortable="width" (sort)="onSort($event)">Width</th>
+                        <th sortable="length" (sort)="onSort($event)">Length</th>
+                        <th sortable="stage" (sort)="onSort($event)">Qty (C)</th>
+                        <th sortable="UOM" (sort)="onSort($event)">UoM</th>
+                        <th sortable="PPICIRQty" (sort)="onSort($event)">PPIC-IR Qty.</th>
+                        <th sortable="issueQty" (sort)="onSort($event)">Issue Qty.</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    <tr
+                        *ngFor="
+                            let u of filterTableData
+                                | searchFi1ter : search
+                                | slice : (page - 1) * pageSize : (page - 1) * pageSize + pageSize;
+                            trackBy: trackByFn;
+                            let i = index
+                        "
+                    >
+                        <td>{{ u?.MRNNumber }}</td>
+                        <td>{{ u?.itemCode }}</td>
+                        <td class="text-start">
+                            <span class="pointer" [ngbTooltip]="u.itemName" placement="right">
+                                {{ u?.itemName | truncate : 40 }}
+                            </span>
+                        </td>
+                        <td>{{ u?.stage }}</td>
+                        <td>{{ u?.stage == "SFG-Roll" ? "mm x mtr" : "mm x mm" }}</td>
+                        <td>{{ u?.width }}</td>
+                        <td>{{ u?.length }}</td>
+                        <td>
+                            {{
+                                u?.stage == "SFG-Sheet" ? (u?.sheetQty | number : "1.2-2") : (u?.qty | number : "1.2-2")
+                            }}
+                        </td>
+                        <td>{{ u?.UOM | UOMUnitsMaster }}</td>
+                        <td>{{ u?.PPICIRQty | number : "0.2-2" }}</td>
+                        <td>
+                            <div class="d-flex justify-content-center">
+                                <span *ngIf="['view', 'approve', 'reject'].includes(action)">
+                                    {{ u?.issueQty | number : "1.2-2" }}
+                                </span>
+                                <input
+                                    *ngIf="!['view', 'approve', 'reject'].includes(action)"
+                                    (input)="setIssueQty(i)"
+                                    type="number"
+                                    class="form-control form-control-xs w-25"
+                                    [(ngModel)]="u.issueQty"
+                                    [ngModelOptions]="{standalone: true}"
+                                />
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <hr class="row line-border" />
+
+        <div class="row" *ngIf="!['reject'].includes(action)">
+            <div class="col text-center">
+                <div class="d-grid gap-2 d-md-block">
+                    <button
+                        *ngIf="!['edit', 'approve', 'view'].includes(action)"
+                        type="button"
+                        class="btn btn-primary px-5 me-3"
+                        (click)="reset()"
+                    >
+                        Reset
+                    </button>
+                    <button
+                        *ngIf="!['edit', 'approve', 'view'].includes(action)"
+                        [disabled]="!isESCPreview"
+                        (click)="ESCPreview()"
+                        type="button"
+                        class="btn btn-primary px-3 me-3"
+                    >
+                        Esc Preview
+                    </button>
+                    <button
+                        *ngIf="!['edit', 'approve', 'view'].includes(action)"
+                        (click)="preview()"
+                        type="button"
+                        class="btn btn-primary px-5 me-3"
+                    >
+                        Preview
+                    </button>
+                    <button
+                        *ngIf="!['edit', 'approve', 'view'].includes(action)"
+                        [disabled]="!isPreview"
+                        class="btn btn-primary px-5"
+                        type="button"
+                        (click)="submit()"
+                    >
+                        Save
+                    </button>
+                    <button
+                        *ngIf="['view'].includes(action)"
+                        class="btn btn-primary px-5"
+                        type="button"
+                        (click)="navigateTo()"
+                    >
+                        Back
+                    </button>
+                    <button
+                        *ngIf="['approve'].includes(action)"
+                        class="btn btn-primary px-5"
+                        type="button"
+                        (click)="submit()"
+                    >
+                        Approve
+                    </button>
+                    <button
+                        *ngIf="['edit'].includes(action)"
+                        class="btn btn-primary px-5"
+                        type="button"
+                        (click)="submit()"
+                    >
+                        Save
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div class="row" *ngIf="['reject'].includes(action)">
+            <div class="col-5 px-5">
+                <div class="d-flex justify-content-center">
+                    <div class="col-form-label text-nowrap pt-0">
+                        <div class="btn btn-primary py-1">
+                            <label>Remark</label>
+                        </div>
+                    </div>
+                    <input class="form-control" type="text" formControlName="remarks" />
+                </div>
+            </div>
+            <div class="col-2 text-center ms-0">
+                <button class="btn btn-primary px-5" type="button" (click)="submit()">Reject</button>
+            </div>
+        </div>
+    </div>
+</form>

@@ -1,0 +1,33 @@
+export interface Employee {
+    _id: string;
+    empCode?: string;
+    company?: string;
+    empFullName?: string;
+    empGender?: string;
+    empDOB?: string;
+    empAadharNo?: string;
+    empPANNo?: string;
+    empContactNo?: string;
+    empJoiningDate?: string;
+    empJoiningLocation?: string;
+    empGrade?: string;
+    empDesignation?: string;
+    empDepartment?: string;
+    empStatus?: string;
+    empCadre?: string;
+    empFatherFullName?: string;
+    empMotherFullName?: string;
+    empSpouseFullName?: string;
+    createdAt: string;
+    empDOBS?: string;
+    empJoiningDateS: any;
+    GRNumber?: string;
+    GIStatus?: string;
+    GRDate?: string;
+    itemCode?: string;
+    itemName?: string;
+    itemDescription?: string;
+    UOM?: string;
+    GRQty?: number;
+    GIQty?: number;
+}

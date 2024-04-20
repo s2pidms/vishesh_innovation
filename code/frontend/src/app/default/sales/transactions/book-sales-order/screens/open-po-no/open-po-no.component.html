@@ -1,0 +1,59 @@
+<div class="modelPage">
+    <div class="modal-header">
+        <div class="heading">PO Number Details</div>
+        <div>
+            <button type="button" class="btn btn-cross btn-sm" aria-label="Close" (click)="this.activeModal.close()">
+                <i class="fa fa-times-circle" aria-hidden="true"></i>
+            </button>
+        </div>
+    </div>
+    <div class="modal-body">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="table-responsive ps-0 pe-0">
+                    <table class="table table-bordered table-sticky">
+                        <thead class="bg-primary">
+                            <tr class="text-white">
+                                <th>PO No.</th>
+                                <th>PO Date</th>
+                                <th>PO Valid Date</th>
+                                <th>Select</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let c of openPONumberArr; trackBy: trackByFn; let i = index">
+                                <td>{{ c?.PONo }}</td>
+                                <td>
+                                    {{ c?.PODate | date : "dd-MM-YYYY" }}
+                                </td>
+                                <td>
+                                    {{ c?.POValidDate | date : "dd-MM-YYYY" }}
+                                </td>
+                                <td>
+                                    <input
+                                        class="form-check-input me-3"
+                                        type="radio"
+                                        name="formValue{{ openPONumberArr[i] }}"
+                                        (click)="setSelectData(c)"
+                                    />
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <hr class="line-border mb-0 mt-4" />
+
+                <div class="col text-center my-4">
+                    <button
+                        class="btn bg-primary px-5"
+                        type="button"
+                        [disabled]="btnDisable || action == 'view'"
+                        (click)="dismissModel()"
+                    >
+                        Save & Close
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

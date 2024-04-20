@@ -1,0 +1,289 @@
+<form [formGroup]="form" class="formCard card">
+    <div class="container">
+        <div class="row form-header">
+            <div class="col heading">
+                <label class="">Sample Job Card Entry ({{ action | titlecase }}) </label>
+            </div>
+        </div>
+        <div class="form-body">
+            <div class="row mb-0">
+                <div class="col-6 pe-2">
+                    <div class="row mb-1">
+                        <div class="col-7">
+                            <div class="row">
+                                <div class="col-6">
+                                    <label for="" class="form-label"
+                                        >Job Card No. <span class="text-danger">*</span></label
+                                    >
+                                    <div class="d-flex align-items-center">
+                                        <div class="col-11">
+                                            <ng-select
+                                                [items]="masterData.JCOptions"
+                                                bindLabel="jobCardNo"
+                                                bindValue="jobCardNo"
+                                                [clearable]="false"
+                                                formControlName="jobCardNo"
+                                                (change)="setJobCardId($event)"
+                                            >
+                                            </ng-select>
+                                        </div>
+                                        <div
+                                            style="height: 2.9rem"
+                                            class="set-input-group-text input-group-text bg-primary pointer col-auto"
+                                            id="basic-addon1"
+                                            (click)="openJobCardDetailsModal()"
+                                        >
+                                            <i class="fa fa-search text-white fs-4" aria-hidden="true"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-6">
+                                    <label for="" class="form-label">SKU No. <span class="text-danger"> </span></label>
+                                    <input type="text" class="form-control" formControlName="SKUNo" readonly />
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-5 px-0">
+                            <label for="" class="form-label">SKU Name <span class="text-danger"> </span></label>
+                            <input type="text" class="form-control" formControlName="SKUName" readonly />
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-3 px-5">
+                    <label for="" class="form-label">SKU Description <span class="text-danger"> </span></label>
+                    <input type="text" class="form-control" formControlName="SKUDescription" readonly />
+                </div>
+                <div class="col-3 ps-0">
+                    <div class="row">
+                        <div class="col-5 ps-2 pe-3">
+                            <label for="" class="form-label"> UoM <span class="text-danger"> </span></label>
+                            <input type="text" class="form-control" formControlName="UOM" readonly />
+                        </div>
+                        <div class="col-7 ps-2">
+                            <label for="" class="form-label"> Batch Qty. <span class="text-danger"> </span></label>
+                            <input type="text" class="form-control" formControlName="totalBatchQuantity" readonly />
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <hr class="row line-border" />
+
+        <app-setting-header
+            [data]="{page,pageSize,collection,search, excelDisplay : 'none'}"
+            (dataChange)="eventHeader($event)"
+        >
+        </app-setting-header>
+        <div class="table-responsive" style="min-height: 22.5rem">
+            <table class="table table-bordered table-sticky">
+                <thead class="bg-primary">
+                    <tr class="text-white">
+                        <th sortable="seq" (sort)="onSort($event)">Seq.</th>
+                        <th sortable="processName" (sort)="onSort($event)" class="text-start">Process Name</th>
+                        <th sortable="machineName" (sort)="onSort($event)" class="text-start">Machine/Device</th>
+                        <th sortable="UOM" (sort)="onSort($event)">UoM</th>
+                        <th>Production</th>
+                        <th sortable="prodQty" (sort)="onSort($event)">Prod. Qty</th>
+                        <th>IPQA</th>
+                        <th sortable="releaseQty" (sort)="onSort($event)">Release Qty</th>
+                        <th sortable="processStatus" (sort)="onSort($event)">Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr
+                        *ngFor="
+                            let item of JCEntryDetailsList
+                                | searchFi1ter : search
+                                | slice : (page - 1) * pageSize : (page - 1) * pageSize + pageSize;
+                            let i = index;
+                            trackBy: trackByFn
+                        "
+                    >
+                        <td>
+                            <div class="d-flex justify-content-center">
+                                <span *ngIf="['view', 'Converted to SKU', 'approve'].includes(action)">
+                                    {{ item?.seq }}
+                                </span>
+                                <input
+                                    *ngIf="!['view', 'Converted to SKU', 'approve'].includes(action)"
+                                    class="form-control form-control-size-xs w-25"
+                                    type="number"
+                                    [(ngModel)]="item.seq"
+                                    [ngModelOptions]="{standalone: true}"
+                                />
+                            </div>
+                        </td>
+                        <td class="text-start" [style.width]="processName.clientWidth" #processName>
+                            <span class="pointer" [ngbTooltip]="item.processName" [positionTarget]="processName">
+                                {{ item?.processName }}
+                            </span>
+                        </td>
+                        <td class="text-start set-overflow-unset">
+                            <div class="d-flex justify-content-between px-2">
+                                <span
+                                    *ngIf="
+                                        !item?.machineInfo ||
+                                        item?.machineInfo?.length == 0 ||
+                                        item?.machineInfo?.length == 1 ||
+                                        !item?.isMachineToggle
+                                    "
+                                >
+                                    {{ item?.machineName ? (item?.machineName | truncate : 25) : null }}
+                                </span>
+                                <div style="width: 17rem !important">
+                                    <ng-select
+                                        *ngIf="item.isMachineToggle"
+                                        [items]="item.machineInfo"
+                                        bindLabel="machineName"
+                                        bindValue="machineName"
+                                        [clearable]="false"
+                                        [(ngModel)]="item.machineName"
+                                        (change)="setMachineId(item, $event)"
+                                        [ngModelOptions]="{standalone: true}"
+                                    >
+                                    </ng-select>
+                                </div>
+                                <span class="pointer d-flex align-items-center">
+                                    <div
+                                        (click)="changeMachineDetails(item)"
+                                        *ngIf="item?.machineInfo?.length > 1"
+                                        class="unit-switch-rev ms-3"
+                                    ></div>
+                                    <div
+                                        *ngIf="
+                                            !item?.machineInfo ||
+                                            item?.machineInfo?.length == 0 ||
+                                            item?.machineInfo?.length == 1
+                                        "
+                                        class="unit-switch-gray"
+                                    ></div>
+                                </span>
+                            </div>
+                        </td>
+                        <td>{{ item?.UOM }}</td>
+                        <td>
+                            <div class="d-flex justify-content-center align-items-center">
+                                <button
+                                    type="button"
+                                    class="btn btn-primary form-btn-sm py-0"
+                                    (click)="openProdInfoModal(item)"
+                                >
+                                    Prod. Info
+                                </button>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="d-flex justify-content-center">
+                                <span *ngIf="['approve', 'reject', 'view'].includes(action)">
+                                    {{ item.prodQty | number : "1.2-2" }}
+                                </span>
+                                <input
+                                    *ngIf="!['approve', 'reject', 'view'].includes(action)"
+                                    class="form-control form-control-sm w-25"
+                                    type="number"
+                                    [(ngModel)]="item.prodQty"
+                                    [ngModelOptions]="{standalone: true}"
+                                />
+                            </div>
+                        </td>
+                        <td>
+                            <div class="d-flex justify-content-center align-items-center">
+                                <button
+                                    type="button"
+                                    class="btn btn-primary form-btn-sm py-0"
+                                    (click)="openIPQAModal(item)"
+                                >
+                                    Control Plan
+                                </button>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="d-flex justify-content-center">
+                                <span *ngIf="['approve', 'reject', 'view'].includes(action)">
+                                    {{ item.releaseQty | number : "1.2-2" }}
+                                </span>
+                                <input
+                                    *ngIf="!['approve', 'reject', 'view'].includes(action)"
+                                    class="form-control form-control-sm w-25"
+                                    type="number"
+                                    [(ngModel)]="item.releaseQty"
+                                    [ngModelOptions]="{standalone: true}"
+                                />
+                            </div>
+                        </td>
+                        <td>
+                            <input
+                                class="form-check-input pointer"
+                                type="checkbox"
+                                [(ngModel)]="item.processStatus"
+                                [ngModelOptions]="{standalone: true}"
+                                [disabled]="['view', 'approve'].includes(action)"
+                            />
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <hr class="row line-border" />
+        <div class="row">
+            <div class="col-3 pe-0 d-flex">
+                <div class="d-flex align-items-end">
+                    <span class="set-flex-status px-4"> Status </span>
+                    <select class="form-select statusSelectBorder" formControlName="status">
+                        <option [value]="null" selected disabled>Select Status</option>
+                        <option value="In-Process">In-Process</option>
+                        <option value="Mark As Completed">Mark As Completed</option>
+                    </select>
+                    <span class="input-group-text statusSpanHeight">
+                        <div class="statusYellow" *ngIf="form.value['status'] == 'In-Process'"></div>
+                        <div class="statusActive" *ngIf="form.value['status'] == 'Mark As Completed'"></div>
+                    </span>
+                </div>
+            </div>
+            <div class="col-3">
+                <button class="plusIconSvg btn btn-primary me-1"></button>
+                <button type="button" class="btn btn-primary px-4" (click)="openBatchInfoModal()">Batch Info</button>
+            </div>
+            <div class="col-md-auto ms-auto d-flex align-items-end">
+                <button
+                    *ngIf="!['reject', 'Acknowledged', 'approve', 'view'].includes(action)"
+                    type="button"
+                    class="btn btn-primary px-5 me-3"
+                    (click)="reset()"
+                >
+                    Reset
+                </button>
+                <button
+                    *ngIf="!['reject', 'Acknowledged', 'approve', 'view'].includes(action)"
+                    type="button"
+                    class="btn btn-primary px-4 me-1"
+                    [disabled]="!isESCPreview"
+                    (click)="ESCPreview()"
+                >
+                    Esc
+                </button>
+                <button
+                    *ngIf="!['reject', 'Acknowledged', 'approve', 'view'].includes(action)"
+                    type="button"
+                    class="btn btn-primary px-4 me-3"
+                    (click)="preview()"
+                >
+                    Preview
+                </button>
+                <button
+                    *ngIf="!['reject', 'approve', 'view'].includes(action)"
+                    type="button"
+                    class="btn btn-primary px-5"
+                    [disabled]="!isPreview"
+                    (click)="submit()"
+                >
+                    Save
+                </button>
+                <div *ngIf="action == 'approve'" class="content-end">
+                    <button class="btn btn-primary px-5" type="button" (click)="submit()">Approve QA</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>

@@ -1,0 +1,92 @@
+<div class="reportTablePage">
+    <div class="col-md-12 pb-0 table-body shadow-none">
+        <div class="row table-header">
+            <div class="col">
+                <label class="heading">FGIN Report</label>
+            </div>
+        </div>
+        <div class="row mt-4 mb-4">
+            <div class="col-3 ps-5 separate-row">
+                <label class="form-label"> {{ "SKU Name" | labelTranslate }} </label>
+                <ng-select
+                    [items]="user"
+                    bindLabel="label"
+                    bindValue="value"
+                    [multiple]="false"
+                    [(ngModel)]="userId"
+                    [clearable]="false"
+                >
+                    >
+                </ng-select>
+                <span class="set-position">
+                    <img src="./assets/new_icons/redstroke.svg" alt="" height="27" width="8" />
+                </span>
+            </div>
+            <div class="col-3">
+                <label class="form-label"> Manufacturing Date (from)<span class="text-danger">*</span> </label>
+                <input class="form-control" type="date" [(ngModel)]="fromDate" />
+            </div>
+            <div class="col-3">
+                <label class="form-label">
+                    Manufacturing Date (to)
+                    <span class="text-danger">*</span>
+                </label>
+                <input class="form-control" type="date" [(ngModel)]="toDate" />
+            </div>
+            <div class="col-3 align-self-end separate-image">
+                <span class="image-position">
+                    <img src="./assets/new_icons/redstroke.svg" alt="" height="27" width="8" />
+                </span>
+                <button type="button" class="btn btn-primary px-4 me-3" (click)="getInitialData()">Apply Filter</button>
+                <button type="button" class="btn btn-primary px-4 ms-4" (click)="clearFilter()">Reset Filter</button>
+            </div>
+        </div>
+
+        <hr class="row line-border" />
+        <div class="table-responsive mb-0">
+            <app-setting-header
+                [data]="{page,pageSize,collection,search,type: 'list',pdfDisplay:true}"
+                (dataChange)="eventHeader($event)"
+            >
+            </app-setting-header>
+            <table class="table table-bordered table-sticky">
+                <thead class="bg-primary">
+                    <tr class="text-white">
+                        <th sortable="SKUNo" (sort)="($event)">SKU No.</th>
+                        <th class="text-start" sortable="SKUName" (sort)="($event)">
+                            {{ "SKU Name" | labelTranslate }}
+                        </th>
+                        <th class="text-start" sortable="SKUDescription" (sort)="($event)">
+                            {{ "SKU Description" | labelTranslate }}
+                        </th>
+                        <th sortable="UOM" (sort)="($event)">UoM</th>
+                        <th sortable="FGINQuantity" (sort)="($event)">FGIN Qty</th>
+                        <th sortable="batchNo" (sort)="($event)">Batch No</th>
+                        <th sortable="manufacturingDateS" (sort)="($event)">Mfg Date</th>
+                        <th sortable="expiryDateS" (sort)="($event)">Exp Date</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let u of tableData; trackBy: trackByFn">
+                        <td>{{ u?.SKUNo }}</td>
+                        <td class="text-start" [style.width]="SKUName.clientWidth" #SKUName>
+                            <span class="pointer" [positionTarget]="SKUName" [ngbTooltip]="u.SKUName">
+                                {{ u?.SKUName }}
+                            </span>
+                        </td>
+                        <td class="text-start" [style.width]="SKUDescription.clientWidth" #SKUDescription>
+                            <span class="pointer" [positionTarget]="SKUDescription" [ngbTooltip]="u.SKUDescription">
+                                {{ u?.SKUDescription }}
+                            </span>
+                        </td>
+                        <td>{{ u?.UOM | UOMUnitsMaster }}</td>
+                        <td>{{ u?.FGINQuantity }}</td>
+                        <td>{{ u?.batchNo }}</td>
+                        <td>{{ u?.manufacturingDateS }}</td>
+                        <td>{{ u?.expiryDateS }}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

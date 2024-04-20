@@ -1,0 +1,148 @@
+<form [formGroup]="form" class="formCard card">
+    <div class="container">
+        <div class="row form-header">
+            <div class="col heading">
+                <label>Travel Request ({{ this.action | titlecase }}) </label>
+            </div>
+        </div>
+        <div class="form-body">
+            <div class="row">
+                <div class="col-3">
+                    <label class="form-label"> Travel Code <span class="text-danger">*</span> </label>
+                    <input class="form-control" type="text" formControlName="travelCode" readonly />
+                </div>
+                <div class="col-3">
+                    <label class="form-label"> Request Date<span class="text-danger"></span> </label>
+                    <input class="form-control" type="date" formControlName="requestDate" />
+                </div>
+                <div class="col-3">
+                    <label class="form-label">
+                        Travel From
+                        <span class="text-danger">*</span>
+                    </label>
+                    <input class="form-control" type="text" formControlName="travelForm" />
+                </div>
+                <div class="col-3">
+                    <label class="form-label">
+                        Travel Destination
+                        <span class="text-danger">*</span>
+                    </label>
+                    <input class="form-control" type="text" formControlName="travelDestination" />
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-3">
+                    <label class="form-label">
+                        Travel Start Date
+                        <span class="text-danger">*</span>
+                    </label>
+                    <input
+                        (change)="setDateValidation()"
+                        class="form-control"
+                        type="date"
+                        formControlName="travelStartDate"
+                    />
+                </div>
+                <div class="col-3">
+                    <label class="form-label">
+                        Travel End Date
+                        <span class="text-danger">*</span>
+                    </label>
+                    <input
+                        (change)="setDateValidation()"
+                        class="form-control"
+                        type="date"
+                        formControlName="travelEndDate"
+                    />
+                </div>
+                <div class="col-3">
+                    <label class="form-label">
+                        Purpose of Travel
+                        <span class="text-danger">*</span>
+                    </label>
+                    <input class="form-control" type="text" formControlName="purposeOfTravel" />
+                </div>
+                <div class="col-3">
+                    <label class="form-label"> Mode of Transportation<span class="text-danger"></span> </label>
+                    <ng-select
+                        [items]="modeOfTransport"
+                        bindLabel="label"
+                        bindValue="value"
+                        [clearable]="false"
+                        formControlName="modeOfTransportation"
+                    >
+                    </ng-select>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-3">
+                    <label class="form-label">
+                        Estimated Budget
+                        <span class="text-danger">*</span>
+                    </label>
+                    <input class="form-control" type="number" formControlName="estimatedBudget" />
+                </div>
+                <div class="col-3">
+                    <label class="form-label">Cost Allocation<span class="text-danger">*</span> </label>
+                    <ng-select
+                        [items]="customersList"
+                        bindLabel="customerName"
+                        bindValue="customerName"
+                        [clearable]="false"
+                        formControlName="costAllocation"
+                        (change)="setCustomerId($event)"
+                    >
+                    </ng-select>
+                </div>
+                <div class="col-3">
+                    <label class="form-label">
+                        Payment Method
+                        <span class="text-danger"></span>
+                    </label>
+                    <select class="form-select" formControlName="paymentMethod">
+                        <option [value]="null" selected disabled>Select Payment Method</option>
+                        <option [value]="item.parameterName" *ngFor="let item of paymentMethod">
+                            {{ item.parameterLabel }}
+                        </option>
+                    </select>
+                </div>
+                <div class="col-3">
+                    <label class="form-label"> Raised By <span class="text-danger"></span> </label>
+                    <input class="form-control" type="text" formControlName="raisedBy" readonly />
+                </div>
+            </div>
+        </div>
+        <hr class="row line-border" />
+        <div class="row">
+            <div class="col-12">
+                <app-file-upload
+                    [fileName]="form.controls['supportingDocumentsFile'].value"
+                    [url]="form.controls['supportingDocumentsFileUrl'].value"
+                    [label]="'Upload Supporting Documents'"
+                    [(file)]="supportingDocumentsFile"
+                ></app-file-upload>
+            </div>
+        </div>
+
+        <hr *ngIf="action != 'view'" class="row line-border" />
+
+        <div *ngIf="!['view', 'approve', 'reject'].includes(action)" class="d-flex justify-content-center mb-3">
+            <div class="d-grid col-md-1 me-5" [ngClass]="{'d-none': action == 'View'}">
+                <button class="btn btn-primary" type="button" (click)="reset()">Reset</button>
+            </div>
+            <div class="d-grid col-md-1" [ngClass]="{'d-none': action == 'View'}">
+                <button class="btn btn-primary" type="button" (click)="submit()">Save</button>
+            </div>
+        </div>
+        <div *ngIf="['approve'].includes(action)" class="d-flex justify-content-center ">
+            <div class="d-grid col-md-1" [ngClass]="{'d-none': action == 'View'}">
+                <button class="btn btn-primary" type="button" (click)="submit()">Approve</button>
+            </div>
+        </div>
+        <div *ngIf="['reject'].includes(action)" class="d-flex justify-content-center ">
+            <div class="d-grid col-md-1" [ngClass]="{'d-none': action == 'View'}">
+                <button class="btn btn-primary" type="button" (click)="submit()">Reject</button>
+            </div>
+        </div>
+    </div>
+</form>

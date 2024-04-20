@@ -1,0 +1,172 @@
+<div style="min-height: 50rem" class="modelPage">
+  <div class="modal-header">
+    <div class="heading">Dispatch & Ship Details</div>
+    <div>
+      <button type="button" class="btn btn-cross btn-sm" aria-label="Close" (click)="activeModal.dismiss()">
+        <i class="fa fa-times-circle" aria-hidden="true"></i>
+      </button>
+    </div>
+  </div>
+
+  <div [formGroup]="form" class="mt-4" >
+
+    <label class="form-label px-5"> Dispatch Details</label>
+    <hr class="line-border mt-0" />
+    <div class="" formGroupName="DispDtls">
+      <div class="row my-4 px-5">
+        <div class="col-4">
+          <label class="form-label">
+            Name<span class="text-danger">*</span>
+          </label>
+          <input type="text" class="form-control" formControlName="Nm" [ngClass]="{
+              'is-invalid':
+              dispDtlsForm['controls']['Nm'].invalid && submitted
+            }" />
+        </div>
+        <div class="col-4">
+          <label class="form-label">
+            Address Line1<span class="text-danger">*</span>
+          </label>
+          <input type="text" class="form-control" formControlName="Addr1" [ngClass]="{
+              'is-invalid':
+              dispDtlsForm['controls']['Addr1'].invalid && submitted
+            }" />
+        </div>
+        <div class="col-4">
+          <label class="form-label">
+            Address Line2<span class="text-danger">*</span>
+          </label>
+          <input type="text" class="form-control" formControlName="Addr2" [ngClass]="{
+              'is-invalid':
+              dispDtlsForm['controls']['Addr2'].invalid && submitted
+            }" />
+        </div>
+      </div>
+
+      <div class="row my-4 px-5">
+        <div class="col-4">
+          <label class="form-label">
+            Location<span class="text-danger">*</span>
+          </label>
+          <input type="text" class="form-control" formControlName="Loc" [ngClass]="{
+            'is-invalid':
+            dispDtlsForm['controls']['Loc'].invalid && submitted
+          }" />
+        </div>
+        <div class="col-4">
+          <label class="form-label">
+            Pin Code<span class="text-danger">*</span>
+          </label>
+          <input type="number" class="form-control" formControlName="Pin"   [ngClass]="{
+            'is-invalid':
+            dispDtlsForm['controls']['Pin'].invalid && submitted
+          }" />
+        </div>
+        <div class="col-4">
+          <label class="form-label">
+            State Code<span class="text-danger">*</span>
+          </label>
+          <input type="text" class="form-control" formControlName="Stcd"    [ngClass]="{
+            'is-invalid':
+            dispDtlsForm['controls']['Stcd'].invalid && submitted
+          }"/>
+        </div>
+      </div>
+    </div>
+
+    <label class="form-label px-5"> Ship Details</label>
+    <hr class="line-border mt-0" />
+
+    <div class="" formGroupName="ShipDtls">
+      <div class="row my-4 px-5">
+        <div class="col-3">
+          <label class="form-label">
+            GSTIN<span class="text-danger">*</span>
+          </label>
+          <input type="text" class="form-control" formControlName="Gstin"   [ngClass]="{
+            'is-invalid':
+            shipDtlsForm['controls']['Gstin'].invalid && submitted
+          }" />
+        </div>
+        <div class="col-3">
+          <label class="form-label">
+            Legal Name<span class="text-danger">*</span>
+          </label>
+          <input type="text" class="form-control" formControlName="LglNm"   [ngClass]="{
+            'is-invalid':
+            shipDtlsForm['controls']['LglNm'].invalid && submitted
+          }" />
+        </div>
+        <div class="col-3">
+          <label class="form-label">
+            Trade Name<span class="text-danger">*</span>
+          </label>
+          <input type="text" class="form-control" formControlName="TrdNm"   [ngClass]="{
+            'is-invalid':
+            shipDtlsForm['controls']['TrdNm'].invalid && submitted
+          }" />
+        </div>
+        <div class="col-3">
+          <label class="form-label">
+            Address Line1<span class="text-danger">*</span>
+          </label>
+          <input type="text" class="form-control" formControlName="Addr1"   [ngClass]="{
+            'is-invalid':
+            shipDtlsForm['controls']['Addr1'].invalid && submitted
+          }" />
+        </div>
+      </div>
+
+      <div class="row my-4 px-5">
+
+        <div class="col-3">
+          <label class="form-label">
+            Address Line2<span class="text-danger">*</span>
+          </label>
+          <input type="text" class="form-control" formControlName="Addr2"   [ngClass]="{
+            'is-invalid':
+            shipDtlsForm['controls']['Addr2'].invalid && submitted
+          }" />
+        </div>
+        <div class="col-3">
+          <label class="form-label">
+            Location<span class="text-danger">*</span>
+          </label>
+          <input type="text" class="form-control" formControlName="Loc"   [ngClass]="{
+            'is-invalid':
+            shipDtlsForm['controls']['Loc'].invalid && submitted
+          }" />
+        </div>
+        <div class="col-3">
+          <label class="form-label">
+            Pin Code<span class="text-danger">*</span>
+          </label>
+          <input type="number" class="form-control" formControlName="Pin"   [ngClass]="{
+            'is-invalid':
+            shipDtlsForm['controls']['Pin'].invalid && submitted
+          }" />
+        </div>
+        <div class="col-3">
+          <label class="form-label">
+            State Code<span class="text-danger">*</span>
+          </label>
+          <input type="text" class="form-control" formControlName="Stcd"   [ngClass]="{
+            'is-invalid':
+            shipDtlsForm['controls']['Stcd'].invalid && submitted
+          }" />
+        </div>
+      </div>
+
+    </div>
+
+    <hr class="line-border mt-5" />
+
+    <div class="row justify-content-center">
+      <div class="col-1 d-flex justify-content-center my-5">
+        <button (click)="saveDispatchDetails()" type="button" class="btn btn-primary px-4">
+          Save
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

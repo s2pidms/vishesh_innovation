@@ -1,0 +1,111 @@
+<div class="listCard card">
+    <div class="table-header">
+        <label class="heading">SKU Summary</label>
+    </div>
+
+    <div appAccessControl [accessType]="rolePermissionActions.createAction" class="text-center">
+        <button class="plusIconSvg btn btn-primary me-1"></button>
+        <button class="btn btn-primary btn-add px-5" type="button" (click)="navigateTo('../form', {}, 'create')">
+            SKU
+        </button>
+    </div>
+    <hr class="line-border" />
+    <div class="table-responsive">
+        <app-setting-header [data]="{page,pageSize,collection,search,type: 'list'}" (dataChange)="eventHeader($event)">
+        </app-setting-header>
+        <table class="table table-bordered">
+            <thead class="bg-primary">
+                <tr class="text-white">
+                    <th sortable="SKUNo" (sort)="onSort($event)">SKU No.</th>
+                    <th class="text-start" sortable="SKUName" (sort)="onSort($event)">
+                        {{ "SKU Name" | labelTranslate }}
+                    </th>
+                    <th
+                        class="text-start"
+                        sortable="SKUDescription"
+                        (sort)="onSort($event)"
+                        [style.width]="SKUDescription.clientWidth"
+                        #SKUDescription
+                    >
+                        {{ "SKU Description" | labelTranslate }}
+                    </th>
+                    <th class="text-start" sortable="productCategory" (sort)="onSort($event)">Product</th>
+                    <th sortable="hsn" (sort)="onSort($event)">HSN Code</th>
+                    <th sortable="primaryUnit" (sort)="onSort($event)">UoM</th>
+                    <!-- <th sortable="artWorkNo" (sort)="onSort($event)">
+                            {{ "Drawing/Artwork No." | labelTranslate }}
+                        </th> -->
+
+                    <th sortable="SKUStage" (sort)="onSort($event)">Stage</th>
+                    <th sortable="isActive" (sort)="onSort($event)">Status</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let u of tableData; let i = index; trackBy: trackByFn">
+                    <td>{{ u?.SKUNo }}</td>
+                    <td class="text-start" [style.width]="SKUName.clientWidth" #SKUName>
+                        <span class="pointer" [positionTarget]="SKUName" [ngbTooltip]="u.SKUName">
+                            {{ u.SKUName }}
+                        </span>
+                    </td>
+                    <td class="text-start" [style.width]="SKUDescription.clientWidth" #SKUDescription>
+                        <span class="pointer" [positionTarget]="SKUDescription" [ngbTooltip]="u.SKUDescription">
+                            {{ u.SKUDescription }}
+                        </span>
+                    </td>
+                    <td class="text-start" [style.width]="productCategory.clientWidth" #productCategory>
+                        <span class="pointer" [positionTarget]="productCategory" [ngbTooltip]="u.productCategory">
+                            {{ u.productCategory }}
+                        </span>
+                    </td>
+                    <td>{{ u?.hsn }}</td>
+                    <td>{{ u?.primaryUnit }}</td>
+                    <td>{{ u.SKUStage }}</td>
+                    <td>
+                        <span class="d-flex justify-content-center">
+                            <div *ngIf="u.isActive == 'A'" class="statusActive"></div>
+                            <div *ngIf="u.isActive == 'I'" class="statusInActive"></div>
+                        </span>
+                    </td>
+                    <!-- <td>{{ u?.artWorkNo }}</td> -->
+                    <td>
+                        <div class="dropdown">
+                            <button class="dropbtn"></button>
+                            <div class="dropdown-content">
+                                <a
+                                    appAccessControl
+                                    [accessType]="rolePermissionActions.viewAction"
+                                    href="javascript:void(0)"
+                                    (click)="navigateTo('../form', u, 'view')"
+                                >
+                                    <i class="fa fa-eye fa-lg me-2 text-primary" aria-hidden="true"></i>
+                                    View
+                                </a>
+                                <a
+                                    appAccessControl
+                                    [accessType]="rolePermissionActions.editAction"
+                                    href="javascript:void(0)"
+                                    (click)="navigateTo('../form', u, 'edit')"
+                                >
+                                    <i class="fa fa-pencil-square-o fa-lg me-2 text-primary" aria-hidden="true"></i>
+                                    Edit
+                                </a>
+                                <a
+                                    appAccessControl
+                                    [accessType]="rolePermissionActions.editAction"
+                                    [class.disable]="u.isActive == 'I'"
+                                    href="javascript:void(0)"
+                                    (click)="navigateTo('../form', u, 'copy')"
+                                >
+                                    <i class="fa fa-clone fa-lg me-2 text-primary" aria-hidden="true"></i>
+                                    Copy
+                                </a>
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>

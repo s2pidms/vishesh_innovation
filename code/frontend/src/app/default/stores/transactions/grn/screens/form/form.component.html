@@ -1,0 +1,573 @@
+<Form class="px-2" [formGroup]="form" class="formCard card">
+    <div class="container">
+        <div class="row form-header">
+            <div class="col heading">
+                <label class="">GRN ({{ action | titlecase }})</label>
+            </div>
+        </div>
+        <div class="form-body">
+            <div class="row">
+                <div class="col-6">
+                    <div class="row">
+                        <div class="col-3 pe-2">
+                            <label class="form-label">GRN No.</label>
+                            <input type="text" class="form-control" formControlName="GRNNumber" readonly />
+                        </div>
+                        <div class="col-3 pe-2">
+                            <label class="form-label">GRN Date</label>
+                            <input type="date" class="form-control" formControlName="GRNDate" />
+                        </div>
+                        <div class="col-6 pe-5">
+                            <label class="form-label"> Supplier Name<span class="text-danger">*</span></label>
+
+                            <div class="d-flex align-items-center">
+                                <div class="col-11">
+                                    <ng-select
+                                        [items]="masterData.suppliersOptions"
+                                        bindLabel="label"
+                                        bindValue="value"
+                                        formControlName="supplier"
+                                        placeholder="Select a Supplier"
+                                        [clearable]="false"
+                                        (change)="getPONum($event)"
+                                    >
+                                    </ng-select>
+                                </div>
+                                <div
+                                    style="height: 2.9rem"
+                                    class="input-group-text bg-primary pointer col-auto fs-4"
+                                    id="basic-addon1"
+                                    (click)="openSupplierDetailsModal()"
+                                >
+                                    <i class="fa fa-search text-white" aria-hidden="true"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-6">
+                    <div class="row">
+                        <div class="col-3 ps-2">
+                            <label class="form-label">PO No.</label>
+                            <ng-select
+                                [items]="POFilter"
+                                bindLabel="PONumber"
+                                bindValue="_id"
+                                formControlName="PONumber"
+                                placeholder="Select Purchase Order No."
+                                [clearable]="false"
+                                (change)="setTableDetails($event)"
+                            >
+                            </ng-select>
+                        </div>
+                        <div class="col-3 ps-2">
+                            <label class="form-label">PO Date</label>
+                            <input type="date" class="form-control pe-0" formControlName="PODate" readonly />
+                        </div>
+                        <div class="col-3 ps-2">
+                            <label class="form-label">Supplier Inv. No.</label>
+                            <input
+                                class="form-control"
+                                type="text"
+                                name="supplierInvoiceRef"
+                                formControlName="supplierInvoiceRef"
+                            />
+                        </div>
+                        <div class="col-3 ps-2">
+                            <label class="form-label">Supplier Inv. Dt.</label>
+                            <input class="form-control" type="date" formControlName="supplierInvoiceRefDate" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <hr class="row line-border" />
+
+            <app-setting-header
+                [data]="{page,pageSize,collection,search, excelDisplay : 'none'}"
+                (dataChange)="eventHeader($event)"
+            >
+            </app-setting-header>
+            <div class="table-responsive" style="min-height: 22rem">
+                <table class="table table-bordered table-sticky">
+                    <thead class="bg-primary">
+                        <tr class="text-white">
+                            <th sortable="GRNLineNumber" (sort)="onSort($event)">SN</th>
+                            <th sortable="itemCode" (sort)="onSort($event)">Item Code</th>
+                            <th class="text-start" sortable="itemName" (sort)="onSort($event)">Item Name</th>
+                            <th class="text-start" sortable="itemDescription" (sort)="onSort($event)">
+                                Item Description
+                            </th>
+                            <th sortable="UOM" (sort)="onSort($event)">UoM</th>
+                            <th sortable="balancedQty" (sort)="onSort($event)">PO Bal Qty</th>
+                            <th sortable="GRNQty" (sort)="onSort($event)">GRN Qty</th>
+                            <th sortable="batchDate" (sort)="onSort($event)">Batch Dt</th>
+                            <th sortable="invoicedQty" (sort)="onSort($event)">Inv Qty</th>
+                            <th sortable="purchaseRate" (sort)="onSort($event)">
+                                Rate | {{ "INR" | companyCurrency }}
+                            </th>
+                            <th sortable="balancedQty" (sort)="onSort($event)">
+                                Inv Amt | {{ "INR" | companyCurrency }}
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr
+                            *ngFor="
+                                let i of GRNDetailsArray
+                                    | searchFi1ter : search
+                                    | slice : (page - 1) * pageSize : (page - 1) * pageSize + pageSize;
+                                let v = index;
+                                trackBy: trackByFn
+                            "
+                        >
+                            <td>{{ i?.GRNLineNumber }}</td>
+                            <td>{{ i?.itemCode }}</td>
+                            <td class="text-start" [style.width]="itemName.clientWidth" #itemName>
+                                <span class="pointer" [positionTarget]="itemName" [ngbTooltip]="i.itemName">
+                                    {{ i?.itemName }}
+                                </span>
+                            </td>
+                            <td class="text-start" [style.width]="itemDescription.clientWidth" #itemDescription>
+                                <span
+                                    class="pointer"
+                                    [positionTarget]="itemDescription"
+                                    [ngbTooltip]="i.itemDescription"
+                                >
+                                    {{ i?.itemDescription }}
+                                </span>
+                            </td>
+                            <td>
+                                <div class="d-flex justify-content-between px-2">
+                                    <span
+                                        [ngbTooltip]="i.conversionOfUnits"
+                                        placement="top"
+                                        [ngClass]="
+                                            i.UOM == i.secondaryUnit ? 'text-primary pointer' : 'text-secondary pointer'
+                                        "
+                                    >
+                                        {{ i?.UOM | UOMUnitsMaster }}
+                                    </span>
+                                    <span class="pointer d-flex align-items-center">
+                                        <div *ngIf="i.secondaryUnit" class="unit-switch-gray"></div>
+                                        <div *ngIf="!i.secondaryUnit" class="unit-switch-gray"></div>
+                                    </span>
+                                </div>
+                            </td>
+                            <td>{{ i?.balancedQty | number : "1.2-2" }}</td>
+                            <td>
+                                <div class="d-flex justify-content-center">
+                                    <span *ngIf="['approve', 'view', 'generate', 'cancel'].includes(action)">
+                                        {{ i.GRNQty | number : "1.2-2" }}
+                                    </span>
+                                    <input
+                                        *ngIf="!['approve', 'view', 'generate', 'cancel'].includes(action)"
+                                        class="form-control form-control-sm w-75"
+                                        type="number"
+                                        (input)="changeGRNQty(i.GRNLineNumber, i)"
+                                        [(ngModel)]="i.GRNQty"
+                                        (ngModelChange)="grnQtyChange($event, i.GRNLineNumber)"
+                                        [ngModelOptions]="{standalone: true}"
+                                    />
+                                </div>
+                            </td>
+                            <td>
+                                <div class="d-flex justify-content-center">
+                                    <span *ngIf="['approve', 'view', 'generate', 'cancel'].includes(action)">
+                                        {{ i.batchDate }}
+                                    </span>
+                                    <input
+                                        *ngIf="!['approve', 'view', 'generate', 'cancel'].includes(action)"
+                                        class="form-control form-control-sm w-75"
+                                        type="date"
+                                        [(ngModel)]="i.batchDate"
+                                        [ngModelOptions]="{standalone: true}"
+                                    />
+                                </div>
+                            </td>
+                            <td>
+                                <div class="d-flex justify-content-center">
+                                    <span *ngIf="['view', 'generate', 'cancel'].includes(action)">
+                                        {{ i.invoicedQty | number : "1.2-2" }}
+                                    </span>
+                                    <input
+                                        (input)="setInvoiceQty(i.GRNLineNumber, i)"
+                                        *ngIf="!['view', 'generate', 'cancel'].includes(action)"
+                                        class="form-control form-control-sm w-25"
+                                        type="number"
+                                        [(ngModel)]="i.invoicedQty"
+                                        [ngModelOptions]="{standalone: true}"
+                                    />
+                                </div>
+                            </td>
+                            <td>{{ i?.purchaseRate }}</td>
+
+                            <td>
+                                {{ i?.purchaseRate * (i?.invoicedQty ? i?.invoicedQty : 0) | number : "1.2-2" }}
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="row">
+                <div class="col-4">
+                    <div class="d-flex justify-content-end">
+                        <div class="text-nowrap">
+                            <span class="text-nowrap bg-secondary text-white d-flex align-items-center px-3 fs-4 h-100">
+                                {{ "Delivery Location" | labelTranslate }}
+                            </span>
+                        </div>
+                        <div class="d-flex">
+                            <input
+                                type="text"
+                                class="form-control border-end-0"
+                                formControlName="deliveryLocation"
+                                readonly
+                            />
+                            <span class="input-group-text statusSpanHeight">
+                                <div (click)="openStorageLocationMappingModal()" class="bomDocInfo pointer"></div>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <hr class="row line-border" />
+
+            <div class="row">
+                <div class="col-3">
+                    <div>
+                        <button type="button" class="btn btn-primary px-5 me-3" (click)="openAditionalInfoModal()">
+                            <i class="fa fa-plus-square fa-lg me-2" aria-hidden="true"></i>
+
+                            Addional Info
+                        </button>
+                    </div>
+                </div>
+
+                <div *ngIf="action != 'cancel'" class="col-4 ps-0 ms-0">
+                    <div class="d-flex">
+                        <span class="text-nowrap bg-primary text-white d-flex align-items-center px-3 fs-4"
+                            >GRN Remark
+                        </span>
+
+                        <input class="form-control input-margin" type="text" formControlName="remarks" />
+                    </div>
+                </div>
+                <div *ngIf="action == 'cancel'" class="col-6">
+                    <div class="d-flex">
+                        <!-- <div class="col-md-auto text-nowrap">
+                                <button type="button" class="btn btn-primary px-3">Reason for Cancellation</button>
+                            </div> -->
+                        <span class="text-nowrap bg-primary text-white d-flex align-items-center px-3 fs-4"
+                            >Reason for Cancellation
+                        </span>
+
+                        <input class="form-control input-margin" type="text" formControlName="cancellationReason" />
+                    </div>
+                </div>
+                <div class="col-md-auto ms-auto" *ngIf="action != 'view'">
+                    <div>
+                        <button
+                            *ngIf="!['edit', 'generate', 'approve', 'cancel'].includes(action)"
+                            class="btn btn-primary px-5 me-4"
+                            type="button"
+                            (click)="reset()"
+                        >
+                            Reset
+                        </button>
+                        <button
+                            *ngIf="action != 'approve' && action != 'generate' && action != 'cancel'"
+                            (click)="submit()"
+                            type="button"
+                            class="btn btn-primary px-5"
+                        >
+                            Save
+                        </button>
+                    </div>
+                    <div *ngIf="action == 'approve'" class="content-end">
+                        <button class="btn btn-primary px-5" type="button" (click)="submit()">Approve</button>
+                    </div>
+                    <div *ngIf="action == 'cancel'" class="content-end">
+                        <button class="btn btn-primary px-5" type="button" (click)="openCancelModal()">Cancel</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</Form>
+
+<!-- <div class="form-container">
+    <div class="container">
+        <div class="row container-header">
+            <div class="col heading ms-2">
+                <label class="">GRN ({{ action | titlecase }})</label>
+            </div>
+        </div>
+        <form [formGroup]="form" class="container-body">
+            <div class="row">
+                <div class="col-6">
+                    <div class="row">
+                        <div class="col-3 pe-2">
+                            <label class="form-label">GRN No.</label>
+                            <input type="text" class="form-control" formControlName="GRNNumber" readonly />
+                        </div>
+                        <div class="col-3 pe-2">
+                            <label class="form-label">GRN Date</label>
+                            <input type="date" class="form-control" formControlName="GRNDate" readonly />
+                        </div>
+                        <div class="col-6 pe-5">
+                            <label class="form-label"> Supplier Name<span class="text-danger">*</span></label>
+
+                            <div class="d-flex align-items-center">
+                                <div class="col-11">
+                                    <ng-select
+                                        [items]="masterData.suppliersOptions"
+                                        bindLabel="label"
+                                        bindValue="value"
+                                        formControlName="supplier"
+                                        placeholder="Select a Supplier"
+                                        [clearable]="false"
+                                        (change)="getPONum($event)"
+                                    >
+                                    </ng-select>
+                                </div>
+                                <div
+                                    style="height: 2.9rem"
+                                    class="input-group-text bg-primary pointer col-auto fs-4"
+                                    id="basic-addon1"
+                                    (click)="openSupplierDetailsModal()"
+                                >
+                                    <i class="fa fa-search text-white" aria-hidden="true"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-6">
+                    <div class="row">
+                        <div class="col-3 ps-2">
+                            <label class="form-label">PO No.</label>
+                            <ng-select
+                                [items]="POFilter"
+                                bindLabel="PONumber"
+                                bindValue="_id"
+                                formControlName="PONumber"
+                                placeholder="Select Purchase Order No."
+                                [clearable]="false"
+                                (change)="setTableDetails($event)"
+                            >
+                            </ng-select>
+                        </div>
+                        <div class="col-3 ps-2">
+                            <label class="form-label">PO Date</label>
+                            <input type="date" class="form-control pe-0" formControlName="PODate" readonly />
+                        </div>
+                        <div class="col-3 ps-2">
+                            <label class="form-label">Supplier Inv. No.</label>
+                            <input
+                                class="form-control"
+                                type="text"
+                                name="supplierInvoiceRef"
+                                formControlName="supplierInvoiceRef"
+                            />
+                        </div>
+                        <div class="col-3 ps-2">
+                            <label class="form-label">Supplier Inv. Dt.</label>
+                            <input class="form-control" type="date" formControlName="supplierInvoiceRefDate" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <hr class="row line-border" />
+
+            <app-setting-header
+                [data]="{page,pageSize,collection,search, excelDisplay : 'none'}"
+                (dataChange)="eventHeader($event)"
+            >
+            </app-setting-header>
+            <div class="table-responsive" style="min-height: 22rem">
+                <table class="table table-bordered table-sticky"> 
+                    <thead class="bg-primary">
+                        <tr class="text-white">
+                            <th sortable="GRNLineNumber" (sort)="onSort($event)">SN</th>
+                            <th sortable="itemCode" (sort)="onSort($event)">Item Code</th>
+                            <th class="text-start" sortable="itemName" (sort)="onSort($event)">Item Name</th>
+                            <th class="text-start" sortable="itemDescription" (sort)="onSort($event)">
+                                Item Description
+                            </th>
+                            <th sortable="UOM" (sort)="onSort($event)">Unit Conversion</th>
+                            <th sortable="batchDate" (sort)="onSort($event)">Batch #/Dt.</th>
+                            <th sortable="UOM" (sort)="onSort($event)">UoM</th>
+                            <th sortable="purchaseRate" (sort)="onSort($event)">Rate</th>
+                            <th sortable="balancedQty" (sort)="onSort($event)">PO Bal Qty</th>
+                            <th sortable="invoicedQty" (sort)="onSort($event)">Invoice Qty</th>
+                            <th sortable="GRNQty" (sort)="onSort($event)">GRN Qty</th>
+                            <th sortable="balancedQty" (sort)="onSort($event)">Invoice Amt.</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr
+                            *ngFor="
+                                let i of GRNDetailsArray
+                                    | searchFi1ter : search
+                                    | slice : (page - 1) * pageSize : (page - 1) * pageSize + pageSize;
+                                let v = index;
+                                trackBy: trackByFn
+                            "
+                        >
+                            <td>{{ i?.GRNLineNumber }}</td>
+                            <td>{{ i?.itemCode }}</td>
+                            <td class="text-start">
+                                <span class="pointer" [ngbTooltip]="i.itemName" placement="right">
+                                    {{ i?.itemName | truncate : 20 }}
+                                </span>
+                            </td>
+                            <td class="text-start">
+                                <span class="pointer" [ngbTooltip]="i.itemDescription" placement="right">
+                                    {{ i?.itemDescription | truncate : 20 }}
+                                </span>
+                            </td>
+                            <td>{{ i?.conversionOfUnits }}</td>
+
+                            <td>
+                                <div class="d-flex justify-content-center">
+                                    <span *ngIf="['approve', 'view', 'generate', 'cancel'].includes(action)">
+                                        {{ i.batchDate }}
+                                    </span>
+                                    <input
+                                        *ngIf="!['approve', 'view', 'generate', 'cancel'].includes(action)"
+                                        class="form-control form-control-size-lg px-2"
+                                        type="date"
+                                        [(ngModel)]="i.batchDate"
+                                        [ngModelOptions]="{standalone: true}"
+                                    />
+                                </div>
+                            </td>
+                            <td>{{ i?.UOM }}</td>
+                            <td>{{ i?.purchaseRate }}</td>
+                            <td>{{ i?.balancedQty | number : "1.2-2" }}</td>
+
+                            <td>
+                                <div class="d-flex justify-content-center">
+                                    <span *ngIf="['view', 'generate', 'cancel'].includes(action)">
+                                        {{ i.invoicedQty | number : "1.2-2" }}
+                                    </span>
+                                    <input
+                                        (input)="setInvoiceQty(i.GRNLineNumber, i)"
+                                        *ngIf="!['view', 'generate', 'cancel'].includes(action)"
+                                        class="form-control form-control-size-sm"
+                                        type="number"
+                                        [(ngModel)]="i.invoicedQty"
+                                        [ngModelOptions]="{standalone: true}"
+                                    />
+                                </div>
+                            </td>
+                            <td>
+                                <div class="d-flex justify-content-center">
+                                    <span *ngIf="['approve', 'view', 'generate', 'cancel'].includes(action)">
+                                        {{ i.GRNQty | number : "1.2-2" }}
+                                    </span>
+                                    <input
+                                        *ngIf="!['approve', 'view', 'generate', 'cancel'].includes(action)"
+                                        class="form-control form-control-size-sm"
+                                        type="number"
+                                        (input)="changeGRNQty(i.GRNLineNumber, i)"
+                                        [(ngModel)]="i.GRNQty"
+                                        (ngModelChange)="grnQtyChange($event, i.GRNLineNumber)"
+                                        [ngModelOptions]="{standalone: true}"
+                                    />
+                                </div>
+                            </td>
+                            <td>
+                                {{ i?.purchaseRate * (i?.invoicedQty ? i?.invoicedQty : 0) | number : "1.2-2" }}
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="row mb-0">
+                <div class="col-4">
+                    <div class="d-flex justify-content-end">
+                        <div class="text-nowrap">
+                            <span class="text-nowrap bg-secondary text-white d-flex align-items-center px-3 fs-4 h-100">
+                                {{ "Delivery Location" | labelTranslate }}
+                            </span>
+                        </div>
+                        <div class="d-flex">
+                            <input
+                                type="text"
+                                class="form-control border-end-0"
+                                formControlName="deliveryLocation"
+                                readonly
+                            />
+                            <span class="input-group-text statusSpanHeight">
+                                <div (click)="openStorageLocationMappingModal()" class="bomDocInfo pointer"></div>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row mt-0">
+                <div class="col">
+                    <hr class="row line-border mb-3" />
+                </div>
+            </div>
+
+            <div class="row mb-2">
+                <div class="col-3">
+                    <div>
+                        <button type="button" class="btn btn-primary px-5 me-3" (click)="openAditionalInfoModal()">
+                            <i class="fa fa-plus-square fa-lg me-2" aria-hidden="true"></i>
+
+                            Addional Info
+                        </button>
+                    </div>
+                </div>
+
+                <div *ngIf="action != 'cancel'" class="col-4 ms-0">
+                    <div class="d-flex">
+                        <span class="text-nowrap bg-primary text-white d-flex align-items-center px-3 fs-4"
+                            >GRN Remark
+                        </span>
+                        <input class="form-control input-margin" type="text" formControlName="remarks" />
+                    </div>
+                </div>
+                <div *ngIf="action == 'cancel'" class="col-6">
+                    <div class="d-flex">
+                        <div class="col-md-auto text-nowrap">
+                            <button type="button" class="btn btn-primary px-3">Reason for Cancellation</button>
+                        </div>
+                        <input class="form-control input-margin" type="text" formControlName="cancellationReason" />
+                    </div>
+                </div>
+                <div class="col-md-auto ms-auto" *ngIf="action != 'view'">
+                    <div>
+                        <button
+                            *ngIf="!['edit', 'generate', 'approve', 'cancel'].includes(action)"
+                            class="btn btn-primary px-5 me-4"
+                            type="button"
+                            (click)="reset()"
+                        >
+                            Reset
+                        </button>
+                        <button
+                            *ngIf="action != 'approve' && action != 'generate' && action != 'cancel'"
+                            (click)="submit()"
+                            type="button"
+                            class="btn btn-primary px-5"
+                        >
+                            Save
+                        </button>
+                    </div>
+                    <div *ngIf="action == 'approve'" class="content-end">
+                        <button class="btn btn-primary px-5" type="button" (click)="submit()">Approve</button>
+                    </div>
+                    <div *ngIf="action == 'cancel'" class="content-end">
+                        <button class="btn btn-primary px-5" type="button" (click)="openCancelModal()">Cancel</button>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div> -->

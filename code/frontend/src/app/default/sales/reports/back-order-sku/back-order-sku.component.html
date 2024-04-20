@@ -1,0 +1,107 @@
+<div class="reportTablePage">
+    <div class="table-body pb-0 shadow-none">
+        <div class="row table-header">
+            <div class="col">
+                <label class="heading">Back Order SKU Report</label>
+            </div>
+        </div>
+        <div class="row my-4">
+            <div class="col-9 ps-5">
+                <div class="row">
+                    <div class="col-6 separate-row">
+                        <label class="form-label">Select SKU </label>
+                        <ng-select
+                            [items]="sku"
+                            bindLabel="SkuNo"
+                            bindValue="id"
+                            [(ngModel)]="skuId"
+                            [clearable]="false"
+                        >
+                        </ng-select>
+                        <span class="set-position">
+                            <img src="./assets/new_icons/redstroke.svg" alt="" height="27" width="8" />
+                        </span>
+                    </div>
+                    <div class="col-6">
+                        <label class="form-label"> Select {{ "SKU Description" | labelTranslate }} </label>
+                        <ng-select
+                            [items]="sku"
+                            bindLabel="SKUDescription"
+                            bindValue="id"
+                            [(ngModel)]="skuId"
+                            [clearable]="false"
+                        >
+                        </ng-select>
+                    </div>
+                </div>
+            </div>
+            <div class="col-3 align-self-end separate-image">
+                <span class="image-position">
+                    <img src="./assets/new_icons/redstroke.svg" alt="" height="27" width="8" />
+                </span>
+                <button type="button" class="btn btn-primary px-4 me-3" (click)="getAll()">Apply Filter</button>
+                <button class="btn bg-primary px-4 ms-4" type="button" (click)="reset()">Reset Filter</button>
+            </div>
+        </div>
+        <hr class="row line-border" />
+        <div class="table-responsive mb-0">
+            <app-setting-header
+                [data]="{page,pageSize,collection,search,type: 'list', pdfDisplay : true}"
+                (dataChange)="eventHeader($event)"
+            >
+            </app-setting-header>
+            <table class="table table-bordered table-sticky">
+                <thead class="bg-primary">
+                    <tr class="text-white">
+                        <th sortable="sku" (sort)="onSort($event)">SKU</th>
+                        <th class="text-start" sortable="sku" (sort)="onSort($event)">
+                            {{ "SKU Name" | labelTranslate }}
+                        </th>
+
+                        <th class="text-start" sortable="skuDescription" (sort)="onSort($event)">
+                            {{ "SKU Description" | labelTranslate }}
+                        </th>
+                        <th sortable="balanceQty" (sort)="onSort($event)">Balance Qty</th>
+                        <th sortable="balanceValue" (sort)="onSort($event)">Balance Value (₹)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let u of tableData; trackBy: trackByFn">
+                        <td>{{ u?.SKUNo }}</td>
+                        <td class="text-start" [style.width]="SKUName.clientWidth" #SKUName>
+                            <span class="pointer" [positionTarget]="SKUName" [ngbTooltip]="u.SKUName">
+                                {{ u.SKUName }}
+                            </span>
+                        </td>
+                        <td class="text-start" [style.width]="SKUDescription.clientWidth" #SKUDescription>
+                            <span class="pointer" [positionTarget]="SKUDescription" [ngbTooltip]="u.SKUDescription">
+                                {{ u.SKUDescription }}
+                            </span>
+                        </td>
+                        <td>{{ u?.balancedQty | number : "1.2-2" }}</td>
+                        <td>{{ u?.balanceValue | number : "1.2-2" }}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="table-footer">
+            <hr class="row line-border" />
+            <div class="row align-items-center mt-3">
+                <div class="col-3 pe-0">
+                    <div class="d-flex justify-content-center">
+                        <div class="col-form-label text-nowrap pe-1 pt-0 ms-3">
+                            SO Value <i class="fa fa-caret-right fs-4 mx-2"></i>
+                            <button type="button" class="btn btn-info py-1 ms-2">{{ "INR" | companyCurrency }}</button>
+                        </div>
+                        <input
+                            [value]="totalBackOrderValue | number : '1.2-2'"
+                            class="form-control"
+                            type="text"
+                            readonly
+                        />
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

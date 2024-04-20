@@ -1,0 +1,31 @@
+@media print {
+    button {
+        display: none !important;
+    }
+
+    .page-break {
+        page-break-before: always;
+    }
+
+    .page {
+        margin: 0;
+        border: initial;
+        border-radius: initial;
+        width: initial;
+        min-height: initial;
+        box-shadow: initial;
+        background: initial;
+        page-break-after: always;
+    }
+
+    .table-responsive .table th {
+        background: #e6e6e6 !important;
+    }
+    .img-sign {
+        width: auto;
+        height: 23.3rem;
+    }
+    * {
+        font-size: 12px !important;
+    }
+}

@@ -1,0 +1,91 @@
+<div class="reportTablePage">
+    <div class="col-md-12 pb-0 table-body shadow-none">
+        <div class="row table-header">
+            <div class="col">
+                <label class="heading">PPIC - Stock Issue Report</label>
+            </div>
+        </div>
+        <div class="row my-4">
+            <div class="col-3 ps-5 separate-row">
+                <label class="form-label">Department</label>
+                <ng-select
+                    [items]="department"
+                    bindLabel="label"
+                    bindValue="value"
+                    [clearable]="false"
+                    [(ngModel)]="departmentId"
+                >
+                </ng-select>
+                <span class="set-position">
+                    <img src="./assets/new_icons/redstroke.svg" alt="" height="27" width="8" />
+                </span>
+            </div>
+
+            <div class="col-3">
+                <label class="form-label"> From Date <span class="text-danger">*</span> </label>
+                <input class="form-control" type="date" [(ngModel)]="fromDate" />
+            </div>
+
+            <div class="col-3">
+                <label class="form-label"> To Date <span class="text-danger">*</span> </label>
+                <input class="form-control" type="date" [(ngModel)]="toDate" />
+            </div>
+            <div class="col-3 align-self-end separate-image">
+                <span class="image-position">
+                    <img src="./assets/new_icons/redstroke.svg" alt="" height="27" width="8" />
+                </span>
+                <button type="button" class="btn btn-primary px-4 me-3" (click)="getAll()">Apply Filter</button>
+
+                <button type="button" class="btn btn-primary px-4 ms-4" (click)="reset()">Reset Filter</button>
+            </div>
+        </div>
+
+        <hr class="row line-border" />
+        <div class="table-responsive mb-0">
+            <app-setting-header
+                [data]="{page,pageSize,collection,search,pdfDisplay:true,type: 'list'}"
+                (dataChange)="eventHeader($event)"
+            >
+            </app-setting-header>
+            <table class="table table-bordered table-sticky">
+                <thead class="bg-primary">
+                    <tr class="text-white">
+                        <th sortable="issueDate" (sort)="onSort($event)">Posting Dt.</th>
+                        <th sortable="MRNNumber" (sort)="onSort($event)">MRN No.</th>
+                        <th sortable="itemCode" (sort)="onSort($event)">Item Code</th>
+                        <th class="text-start" sortable="itemName" (sort)="onSort($event)">Item Name</th>
+
+                        <th sortable="stage" (sort)="onSort($event)">Stage</th>
+                        <th sortable="WXL" (sort)="onSort($event)">W X L</th>
+                        <th sortable="width" (sort)="onSort($event)">Width</th>
+                        <th sortable="length" (sort)="onSort($event)">Length</th>
+                        <th sortable="qty" (sort)="onSort($event)">Qty (C)</th>
+                        <th sortable="UOM" (sort)="onSort($event)">UoM</th>
+                        <th sortable="issueQty" (sort)="onSort($event)">Issue Qty.</th>
+                        <th sortable="status" (sort)="onSort($event)">Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let u of tableData; trackBy: trackByFn">
+                        <td>{{ u?.issueDate }}</td>
+                        <td>{{ u?.MRNNumber }}</td>
+                        <td>{{ u?.itemCode }}</td>
+                        <td class="text-start" [style.width]="itemName.clientWidth" #itemName>
+                            <span class="pointer" [ngbTooltip]="u.itemName" [positionTarget]="itemName">
+                                {{ u?.itemName }}
+                            </span>
+                        </td>
+                        <td>{{ u?.stage }}</td>
+                        <td>{{ u?.WXL }}</td>
+                        <td>{{ u?.width }}</td>
+                        <td>{{ u?.length }}</td>
+                        <td>{{ u?.qty }}</td>
+                        <td>{{ u?.UOM | UOMUnitsMaster }}</td>
+                        <td>{{ u?.issueQty }}</td>
+                        <td>{{ u?.status }}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

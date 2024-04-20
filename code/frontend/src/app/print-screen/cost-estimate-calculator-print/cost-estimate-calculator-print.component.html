@@ -1,0 +1,87 @@
+<div class="container-fluid printScreen">
+    <div class="row justify-content-center">
+        <div class="col-9 text-center px-0">
+            <div class="row">
+                <div class="col-12 text-center text-white">
+                    <button
+                        style="color: white !important"
+                        class="btn btn-primary"
+                        type="button"
+                        (click)="windowPrint()"
+                        *ngIf="pdfAction != 'pdf'"
+                    >
+                        <img src="./assets/images/print.png" width="20px" height="14px" class="mb-2" />&nbsp;&nbsp;
+                        Print
+                    </button>
+                </div>
+            </div>
+            <div class="page py-3">
+                <div class="container-fluid printScreen px-0 pt-0">
+                    <div class="table-responsive">
+                        <div class="mb-2">D-SKU Details</div>
+                        <table class="table">
+                            <tbody>
+                                <tr>
+                                    <th>D-SKU Code</th>
+                                    <td>{{ SKUNo }}</td>
+                                </tr>
+                                <tr>
+                                    <th>{{ "D-SKU Name" | labelTranslate }}</th>
+                                    <td>{{ SKUName }}</td>
+                                </tr>
+                                <tr>
+                                    <th>{{ "D-SKU Description" | labelTranslate }}</th>
+                                    <td>{{ SKUDescription }}</td>
+                                </tr>
+                                <tr>
+                                    <th>UoM</th>
+                                    <td>{{ primaryUnit }}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div class="row mt-3">
+                        <div class="col-12">
+                            <h2>Cost Estimate Details</h2>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-12 text-center px-0">
+                            <div class="table-responsive printScreen">
+                                <table class="table">
+                                    <tr class="head-row text-center w-100 text-nowrap">
+                                        <th class="text-start">SN</th>
+                                        <th class="text-start">Cost Type</th>
+                                        <th class="text-start">Cost Element/Particulars</th>
+                                        <th class="text-start">SKU Unit</th>
+                                        <th class="text-start">Cost INR/SKU Unit</th>
+                                        <th class="text-center">%</th>
+                                    </tr>
+                                    <tr *ngFor="let u of costSheetArr; let i = index">
+                                        <td>
+                                            {{ i + 1 }}
+                                        </td>
+                                        <td>{{ u?.componentType }}</td>
+                                        <td class="text-start">{{ u?.costElement }}</td>
+                                        <td>{{ u?.SKUUnit }}</td>
+                                        <td>
+                                            <div class="d-flex justify-content-start">
+                                                <span>
+                                                    {{ u?.costPerSKUUnit | number : "1.2-2" }}
+                                                </span>
+                                            </div>
+                                        </td>
+                                        <td class="text-center">{{ u?.percentage }}</td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<ng-template #hashBlock> <span>-</span> </ng-template>

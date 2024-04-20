@@ -1,0 +1,320 @@
+<form class="px-2" [formGroup]="form" class="formCard card">
+    <div class="container">
+        <div class="row form-header">
+            <div class="col heading">
+                <label>BoM of Product ({{ action | titlecase }})</label>
+            </div>
+        </div>
+        <div class="form-body">
+            <div class="row">
+                <div class="col-6">
+                    <div class="row">
+                        <div class="col-7">
+                            <div class="row">
+                                <div class="col-6 pe-0">
+                                    <label class="form-label mb-2"> BoM No. <span class="text-danger">*</span></label>
+                                    <div class="d-flex align-items-center">
+                                        <input
+                                            type="text"
+                                            class="form-control border-end-0"
+                                            formControlName="BOMNo"
+                                            readonly
+                                        />
+                                        <span class="input-group-text statusSpanHeight">
+                                            <div
+                                                class="bomDocInfo pointer"
+                                                (click)="openBOMDocumentDetailsModal()"
+                                            ></div>
+                                        </span>
+                                    </div>
+                                </div>
+                                <div class="col-6 pe-0">
+                                    <label class="form-label mb-2"
+                                        >Product No. <span class="text-danger">*</span></label
+                                    >
+                                    <ng-select
+                                        [items]="masterData.productMasterOptions"
+                                        bindLabel="productNo"
+                                        bindValue="productNo"
+                                        [clearable]="false"
+                                        formControlName="productNo"
+                                        (change)="setSKUDetails($event)"
+                                    >
+                                    </ng-select>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-5 pe-0">
+                            <label class="form-label mb-2"> Product Category/Code</label>
+
+                            <ng-select
+                                [items]="masterData.productMasterOptions"
+                                bindLabel="productCategory"
+                                bindValue="productCategory"
+                                [clearable]="false"
+                                formControlName="productCategory"
+                                (change)="setSKUDetails($event)"
+                            >
+                            </ng-select>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-6">
+                    <div class="row">
+                        <div class="col-5 pe-0">
+                            <label class="form-label mb-2"> Product Name <span class="text-danger">*</span></label>
+                            <ng-select
+                                [items]="masterData.productMasterOptions"
+                                bindLabel="productName"
+                                bindValue="productName"
+                                [clearable]="false"
+                                formControlName="productName"
+                                (change)="setSKUDetails($event)"
+                            >
+                            </ng-select>
+                        </div>
+                        <div class="col-7">
+                            <div class="row">
+                                <div class="col-8 pe-0">
+                                    <label class="form-label mb-2"> Product Description</label>
+                                    <input
+                                        type="text"
+                                        class="form-control"
+                                        formControlName="productDescription"
+                                        readonly
+                                    />
+                                </div>
+                                <div class="col-4">
+                                    <label class="form-label mb-2"> UoM</label>
+                                    <input type="text" class="form-control" formControlName="UOM" readonly />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <hr class="row line-border" />
+        <div class="row justify-content-between settingMargin">
+            <div class="col-4">
+                <div class="d-flex">
+                    <div class="input-group-text bg-primary" id="basic-addon1">
+                        <i class="fa fa-search text-white" aria-hidden="true"></i>
+                    </div>
+                    <div>
+                        <input
+                            type="text"
+                            class="form-control"
+                            [(ngModel)]="search"
+                            [ngModelOptions]="{standalone: true}"
+                        />
+                    </div>
+                </div>
+            </div>
+            <div class="col-4 d-flex justify-content-center">
+                <ngb-pagination
+                    *ngIf="BoMOfSKUDetailsArr.length > 0"
+                    [collectionSize]="BoMOfSKUDetailsArr.length"
+                    [(page)]="page"
+                    [pageSize]="pageSize"
+                    [boundaryLinks]="false"
+                >
+                    <ng-template ngbPaginationPrevious>
+                        <img src="./assets/new_icons/pagination_prev.svg" width="20rem" />
+                    </ng-template>
+                    <ng-template ngbPaginationNext>
+                        <img src="./assets/new_icons/pagination_next.svg" width="20rem" />
+                    </ng-template>
+                    <ng-template ngbPaginationPages let-page let-pages="pages">
+                        <li class="ngb-custom-pages-item align-self-center" *ngIf="pages.length > 0">
+                            <span class="page-label me-2 ms-1"> Page {{ page }} of {{ pages[pages.length - 1] }} </span>
+                        </li>
+                    </ng-template>
+                </ngb-pagination>
+            </div>
+            <div class="col-1"></div>
+            <div class="col-3">
+                <div class="row">
+                    <div class="col-9 pe-0">
+                        <div class="d-flex align-items-center">
+                            <div class="col-form-label text-nowrap">
+                                <span>Part Count</span> <span class="text-danger">*</span>
+                                <i class="fa fa-caret-right fa-5x mx-2"></i>
+                            </div>
+                            <input
+                                type="number"
+                                class="form-control"
+                                formControlName="partCount"
+                                (input)="setPartCount()"
+                                min="0"
+                                oninput="this.value = !!this.value && Math.abs(this.value) >= 0 ? Math.abs(this.value) : 1"
+                            />
+                        </div>
+                    </div>
+                    <div class="col-3 d-flex justify-content-end align-items-center">
+                        <div class="d-flex justify-content-end">
+                            <img
+                                src="./assets/images/excel.svg"
+                                height="28"
+                                [style.cursor]="'pointer'"
+                                (click)="commonChange()"
+                                class=""
+                            />
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="table-responsive" style="min-height: 20rem">
+            <table class="table table-bordered table-sticky mt-1">
+                <thead class="bg-primary">
+                    <tr class="text-white">
+                        <th sortable="itemCode" (sort)="onSort($event)">{{ "Item Code" | labelTranslate }}</th>
+                        <th class="text-start" sortable="itemName" (sort)="onSort($event)">
+                            {{ "Item Name" | labelTranslate }}
+                        </th>
+                        <th class="text-start" sortable="itemDescription" (sort)="onSort($event)">
+                            {{ "Item Description" | labelTranslate }}
+                        </th>
+                        <th sortable="UOM" (sort)="onSort($event)">UoM</th>
+                        <th sortable="qtyPerSKUUnit" (sort)="onSort($event)">Qty/SKU Unit</th>
+                        <th sortable="wastePercentage" (sort)="onSort($event)">Waste %</th>
+                        <th sortable="partCount" (sort)="onSort($event)">Qty/Part Count</th>
+                        <th sortable="unitCost" (sort)="onSort($event)">Unit Cost</th>
+                        <th sortable="itemCost" (sort)="onSort($event)">{{ "Item Cost" | labelTranslate }}</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr
+                        *ngFor="
+                            let g of BoMOfSKUDetailsArr
+                                | searchFi1ter : search
+                                | slice : (page - 1) * pageSize : (page - 1) * pageSize + pageSize;
+                            trackBy: trackByFn;
+                            let i = index
+                        "
+                    >
+                        <td
+                            [ngClass]="{
+                                'text-black': g.type == 'items',
+                                'text-primary': g.type == 'childItem',
+                                blueColor: ['SKU', 'ink'].includes(g.type)
+                            }"
+                        >
+                            {{ g.itemCode }}
+                        </td>
+                        <td class="text-start" [style.width]="itemName.clientWidth" #itemName>
+                            <span class="pointer" [ngbTooltip]="g.itemName" [positionTarget]="itemName">
+                                {{ g.itemName }}
+                            </span>
+                        </td>
+                        <td class="text-start" [style.width]="itemDescription.clientWidth" #itemDescription>
+                            <span class="pointer" [ngbTooltip]="g.itemDescription" [positionTarget]="itemDescription">
+                                {{ g.itemDescription }}
+                            </span>
+                        </td>
+                        <td>{{ g.UOM | UOMUnitsMaster }}</td>
+                        <td>
+                            <div class="d-flex justify-content-center">
+                                <span *ngIf="['view'].includes(action)">{{ g.qtyPerSKUUnit }}</span>
+                                <input
+                                    (input)="setItemCostDetails(g)"
+                                    *ngIf="!['view'].includes(action)"
+                                    class="form-control text-center form-control-size-lg"
+                                    type="number"
+                                    [(ngModel)]="g.qtyPerSKUUnit"
+                                    [ngModelOptions]="{standalone: true}"
+                                />
+                            </div>
+                        </td>
+                        <td>
+                            <div class="d-flex justify-content-center">
+                                <span *ngIf="['view'].includes(action)">{{ g.wastePercentage }}</span>
+                                <input
+                                    (input)="setItemCostDetails(g)"
+                                    *ngIf="!['view'].includes(action)"
+                                    class="form-control text-center form-control-size-lg"
+                                    type="number"
+                                    [(ngModel)]="g.wastePercentage"
+                                    [ngModelOptions]="{standalone: true}"
+                                />
+                            </div>
+                        </td>
+                        <td>{{ g.partCount | number : "1.5-5" }}</td>
+                        <td>{{ g.unitCost }}</td>
+                        <td>{{ g.itemCost | number : "1.2-2" }}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <hr class="row line-border" />
+        <div class="row">
+            <div class="col-4">
+                <div class="d-flex align-items-center">
+                    <div class="col-form-label text-nowrap">
+                        Total Material Cost
+                        <i class="fa fa-caret-right fa-5x mx-1"></i>
+                    </div>
+                    <div class="d-flex">
+                        <span class="input-group-text text-secondary combine-INR">
+                            {{ "INR" | companyCurrency }}
+                            <div class="vr ms-3"></div>
+                        </span>
+                        <input
+                            class="form-control border-start-0"
+                            type="number"
+                            formControlName="totalMaterialCost"
+                            readonly
+                        />
+                    </div>
+                </div>
+            </div>
+            <div class="col-3">
+                <div class="d-flex align-items-center">
+                    <div class="col-md-auto text-nowrap">
+                        <button type="button" class="btn btn-primary px-3">Status</button>
+                    </div>
+
+                    <select class="form-select statusSelectBorder" formControlName="status">
+                        <option [value]="'null'" selected disabled>Select Status</option>
+                        <option [value]="'Active'">Active</option>
+                        <option [value]="'Inactive'">Inactive</option>
+                    </select>
+                    <span class="input-group-text statusSpanHeight">
+                        <div class="statusActive" *ngIf="form.value['status'] == 'Active'" class="statusActive"></div>
+                        <div class="statusInActive" *ngIf="form.value['status'] == 'Inactive'"></div>
+                    </span>
+                </div>
+            </div>
+
+            <div class="col-md-auto ms-auto">
+                <div *ngIf="['create', 'edit', 'copy'].includes(action)" class="d-grid gap-2 d-md-block">
+                    <button type="button" class="btn btn-primary px-5 me-3" (click)="reset()">Reset</button>
+                    <button
+                        type="button"
+                        class="btn btn-primary px-4 me-1"
+                        [disabled]="!isESCPreview"
+                        (click)="ESCPreview()"
+                    >
+                        Esc
+                    </button>
+                    <button
+                        type="button"
+                        class="btn btn-primary px-4 me-3"
+                        [disabled]="isConditionPreview"
+                        (click)="preview()"
+                    >
+                        Preview
+                    </button>
+                    <button class="btn btn-primary px-5" type="button" [disabled]="!isPreview" (click)="submit()">
+                        Save
+                    </button>
+                </div>
+                <div *ngIf="['view'].includes(action)">
+                    <button class="btn btn-primary px-5" type="button" (click)="navigateTo()">Back</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>

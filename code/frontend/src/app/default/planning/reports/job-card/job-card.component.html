@@ -1,0 +1,114 @@
+<div class="reportTablePage">
+    <div class="table-body pb-0 shadow-none">
+        <div class="row table-header">
+            <div class="col">
+                <label class="heading">Job Card - Report</label>
+            </div>
+        </div>
+        <div class="row my-4">
+            <div class="col-3 ps-5 separate-row">
+                <label class="form-label">Report Name</label>
+                <select (change)="setReportName()" [(ngModel)]="reportName" class="form-select">
+                    <option [value]="item.value" *ngFor="let item of reportNameArr">
+                        {{ item.label }}
+                    </option>
+                </select>
+                <span class="set-position">
+                    <img src="./assets/new_icons/redstroke.svg" alt="" height="27" width="8" />
+                </span>
+            </div>
+            <div *ngIf="[reportNameObj.jobCardByCustomer].includes(reportName)" class="col-3 separate-row">
+                <label class="form-label">Report Specific Search</label>
+                <ng-select
+                    [items]="customerOptions"
+                    bindLabel="label"
+                    bindValue="_id"
+                    [clearable]="false"
+                    [(ngModel)]="customerId"
+                >
+                </ng-select>
+
+                <span class="set-position">
+                    <img src="./assets/new_icons/redstroke.svg" alt="" height="27" width="8" />
+                </span>
+            </div>
+            <div class="col-3">
+                <label class="form-label"> As on Date <span class="text-danger"></span> </label>
+                <input class="form-control" type="date" [(ngModel)]="toDate" />
+            </div>
+
+            <div class="col-3 align-self-end separate-image">
+                <span class="image-position">
+                    <img src="./assets/new_icons/redstroke.svg" alt="" height="27" width="8" />
+                </span>
+                <button type="button" class="btn btn-primary px-4 me-3" (click)="getAll()">Apply Filter</button>
+
+                <button type="button" class="btn btn-primary px-4 ms-4" (click)="reset()">Reset Filter</button>
+            </div>
+        </div>
+        <hr class="row line-border" />
+        <div class="table-responsive mb-0">
+            <app-setting-header
+                [data]="{page,pageSize,collection,search,type: 'list',pdfDisplay : true}"
+                (dataChange)="eventHeader($event)"
+            >
+            </app-setting-header>
+            <table class="table table-bordered table-sticky">
+                <thead class="bg-primary">
+                    <tr class="text-white">
+                        <th sortable="jobCardNo" (sort)="onSort($event)">JC No.</th>
+                        <th sortable="jobCardDate" (sort)="onSort($event)">JC Date</th>
+                        <th sortable="SKUNo" (sort)="onSort($event)">SKU No.</th>
+                        <th sortable="SKUName" (sort)="onSort($event)" class="text-start">
+                            {{ "SKU Name" | labelTranslate }}
+                        </th>
+                        <th sortable="SKUDescription" (sort)="onSort($event)" class="text-start">
+                            {{ "SKU Description" | labelTranslate }}
+                        </th>
+                        <th sortable="batchQty" (sort)="onSort($event)">Batch Qty.</th>
+                        <th sortable="customerNickName" (sort)="onSort($event)" class="text-start">
+                            Customer/Prospect Nick Name
+                        </th>
+                        <th sortable="status" (sort)="onSort($event)">Status</th>
+                        <th sortable="" (sort)="onSort($event)">View</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let u of tableData; trackBy: trackByFn">
+                        <td>{{ u?.jobCardNo }}</td>
+                        <td>{{ u?.jobCardDate }}</td>
+                        <td>{{ u?.SKUNo }}</td>
+                        <td class="text-start" [style.width]="SKUName.clientWidth" #SKUName>
+                            <span class="pointer" [positionTarget]="SKUName" [ngbTooltip]="u.SKUName">
+                                {{ u.SKUName ? u.SKUName : null }}
+                            </span>
+                        </td>
+                        <td class="text-start" [style.width]="SKUDescription.clientWidth" #SKUDescription>
+                            <span class="pointer" [positionTarget]="SKUDescription" [ngbTooltip]="u.SKUDescription">
+                                {{ u.SKUDescription ? u.SKUDescription : null }}
+                            </span>
+                        </td>
+                        <td>{{ u?.batchQty }}</td>
+                        <td class="text-start" [style.width]="customerNickName.clientWidth" #customerNickName>
+                            <span class="pointer" [positionTarget]="customerNickName" [ngbTooltip]="u.customerNickName">
+                                {{ u.customerNickName ? u.customerNickName : null }}
+                            </span>
+                        </td>
+                        <td>{{ u?.status }}</td>
+                        <td>
+                            <div appAccessControl [accessType]="rolePermissionActions.viewAction" class="">
+                                <img
+                                    class="pointer"
+                                    src="./assets/new_icons/pdf_icon.svg"
+                                    width="15rem"
+                                    alt=""
+                                    (click)="navigateTo(u, 'print')"
+                                />
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

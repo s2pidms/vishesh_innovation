@@ -1,0 +1,44 @@
+<form [formGroup]="form">
+  <div class="row justify-content-center form-page">
+    <div class="col-md-11 card-form pb-4">
+      <div class="row form-header">
+        <div class="col heading">
+          <label>{{action | titlecase}} Checklist Particulars</label>
+        </div>
+      </div>
+      <div class="form-body">
+
+        <div class="row mb-4">
+          <div class="col-4">
+            <label class="form-label mb-2">Order <span class="text-danger">*</span></label>
+            <input class="form-control" type="number" formControlName="order" />
+          </div>
+          <div class="col-4">
+            <label class="form-label mb-2">Name <span class="text-danger">*</span></label>
+            <input class="form-control" type="text" formControlName="name" />
+          </div>
+          <div class="col-4">
+            <label class="form-label mb-2">Status <span class="text-danger">*</span></label>
+            <select class="form-select" formControlName="status">
+              <option value="Active">Active</option>
+              <option value="Inactive">Inactive</option>
+            </select>
+          </div>
+        </div>
+
+        <div *ngIf="action !== 'view'" class="d-flex justify-content-center py-3">
+          <div class="d-grid col-md-1 mx-5" [ngClass]="{ 'd-none': action == 'View' }">
+            <button type="button" class="btn btn-primary" (click)="reset()">
+              Reset
+            </button>
+          </div>
+          <div class="d-grid col-md-1" [ngClass]="{ 'd-none': action == 'View' }">
+            <button type="button" class="btn btn-primary" (click)="submit()">
+              Save
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</form>

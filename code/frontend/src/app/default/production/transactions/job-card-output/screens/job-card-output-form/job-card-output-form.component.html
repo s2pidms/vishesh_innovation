@@ -1,0 +1,97 @@
+<Form [formGroup]="form" class="formCard card">
+    <div class="container">
+        <div class="row form-header">
+            <div class="col heading">
+                <label> Job Card Output ({{ this.action | titlecase }})</label>
+            </div>
+        </div>
+        <div class="form-body">
+            <div class="row mb-4">
+                <div class="col-md-3">
+                    <label class="form-label"> Job Card No. <span class="text-danger">*</span> </label>
+                    <ng-select
+                        [items]="masterData.jobCardDetails"
+                        bindLabel="jobCardNo"
+                        bindValue="_id"
+                        [clearable]="false"
+                        formControlName="jobCard"
+                        (change)="setJobCardDetails($event)"
+                    >
+                    </ng-select>
+                </div>
+                <div class="col-md-3">
+                    <label class="form-label"> SKU No. <span class="text-danger"></span> </label>
+                    <input class="form-control" type="text" formControlName="SKUNo" readonly />
+                </div>
+                <div class="col-md-3">
+                    <label class="form-label"> SKU Name <span class="text-danger"></span> </label>
+                    <input class="form-control" type="text" formControlName="SKUName" readonly />
+                </div>
+                <div class="col-md-3">
+                    <label class="form-label"> SKU Description <span class="text-danger"></span> </label>
+                    <input class="form-control" type="text" formControlName="SKUDescription" readonly />
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-3">
+                    <label class="form-label"> Batch Date <span class="text-danger"></span> </label>
+                    <input class="form-control" type="date" formControlName="batchDate" readonly />
+                </div>
+                <div class="col-md-3">
+                    <label class="form-label">
+                        UoM
+                        <span class="text-danger"></span>
+                    </label>
+                    <input class="form-control" formControlName="UOM" type="text" readonly />
+                </div>
+
+                <div class="col-md-3">
+                    <label class="form-label"> Batch Input Qty<span class="text-danger"></span> </label>
+                    <input class="form-control" type="text" formControlName="batchInputQty" readonly />
+                </div>
+                <div class="col-3">
+                    <label class="form-label d-flex justify-content-between">
+                        Batch Output Qty
+                        <button
+                            type="button"
+                            class="btn btn-primary form-btn-sm py-0"
+                            (click)="openOutputDetailsModal()"
+                            [disabled]="!f['jobCard'].value"
+                        >
+                            Output Details
+                        </button>
+                    </label>
+                    <input class="form-control" type="number" formControlName="batchOutputQty" readonly />
+                </div>
+            </div>
+        </div>
+        <hr class="row line-border my-4" />
+
+        <div class="row my-4">
+            <div class="col-3">
+                <div class="d-flex align-items-center">
+                    <div class="col-md-auto text-nowrap">
+                        <button type="button" class="btn btn-primary px-3">Status</button>
+                    </div>
+
+                    <select class="form-select statusSelectBorder" formControlName="status">
+                        <option [value]="null" selected disabled>Select Status</option>
+                        <option value="In-Process">In-Process</option>
+                        <option value="Mark As Completed">Mark As Completed</option>
+                    </select>
+                    <span class="input-group-text statusSpanHeight">
+                        <div class="statusYellow" *ngIf="form.value['status'] == 'In-Process'"></div>
+                        <div class="statusActive" *ngIf="form.value['status'] == 'Mark As Completed'"></div>
+                    </span>
+                </div>
+            </div>
+            <div class="col-9 text-end" *ngIf="['create', 'edit'].includes(action)">
+                <button class="btn btn-primary px-5 me-5" type="button" (click)="reset()">Reset</button>
+                <button class="btn btn-primary px-5" type="button" (click)="submit()">Save</button>
+            </div>
+            <div class="col-9 text-end" *ngIf="action == 'approve'">
+                <button type="button" class="btn btn-primary px-5" (click)="submit()">Approve</button>
+            </div>
+        </div>
+    </div>
+</Form>

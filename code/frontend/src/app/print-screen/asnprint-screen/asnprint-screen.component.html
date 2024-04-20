@@ -1,0 +1,172 @@
+<div class="container-fluid printScreen">
+  <div class="row">
+    <div colspan="12" class="text-center">
+      <button
+        class="btn btn-primary"
+        type="button"
+        (click)="windowPrint()"
+        *ngIf="pdfAction != 'pdf'"
+      >
+        <img
+          src="./assets/images/print.png"
+          width="20px"
+          height="14px"
+          class="mb-2"
+        />&nbsp;&nbsp; Print
+      </button>
+      <div class="page py-3">
+        <div class="table-responsive shadow">
+          <table class="table">
+            <tr>
+              <td colspan="12">
+                <div class="text-center">
+                  <img src="{{ tableData?.company?.logoUrl }}" width="200px" />
+                </div>
+              </td>
+            </tr>
+
+            <tr>
+              <th colspan="12" class="text-center">
+                <h1 class="fs-1">ADVANCED SHIPMENT NOTICE</h1>
+              </th>
+            </tr>
+            <tr class="head-row">
+              <td colspan="6" class="text-center">
+                Customer: {{ tableData?.customerName }}
+              </td>
+              <td colspan="6" class="text-center">
+                Transporter: {{ tableData?.transporter }}
+              </td>
+            </tr>
+            <tr class="head-row">
+              <th colspan="6" class="text-center">
+                ASN #: {{ tableData?.ASNNumber }}
+              </th>
+              <th colspan="6" class="text-center">
+                ASN Date:
+                {{ tableData?.salesInvoiceDate | date : "dd-MM-YYYY" }}
+              </th>
+            </tr>
+            <tr class="head-row">
+              <td colspan="6" class="text-center">
+                State of Supply: {{ tableData?.stateOfSupply }}
+              </td>
+              <td colspan="6" class="text-center">
+                Docket/LR No.: {{ tableData?.docketLR }}
+              </td>
+            </tr>
+            <tr class="head-row">
+              <th colspan="6" class="text-center">
+                Ref. Invoice No.:
+                {{ tableData?.salesInvoice?.salesInvoiceNumber }}
+              </th>
+              <th colspan="6" class="text-center">
+                Docket/LR Date:
+                {{ tableData?.docketLRDate | date : "dd-MM-YYYY" }}
+              </th>
+            </tr>
+            <tr class="head-row">
+              <td colspan="6" class="text-center">
+                Ref. Invoice Date:
+                {{ tableData?.salesInvoiceDate | date : "dd-MM-YYYY" }}
+              </td>
+              <td colspan="6" class="text-center">
+                Mode of Transport: {{ tableData?.modeOfTransport }}
+              </td>
+            </tr>
+            <tr>
+              <th colspan="12" class="py-3"></th>
+            </tr>
+            <tr>
+              <td colspan="12" class="py-3"></td>
+            </tr>
+            <tr class="head-row text-center w-100 text-nowrap">
+              <th colspan="1" class="text-center">SN</th>
+              <th colspan="5" class="text-start">Description of Goods</th>
+              <th colspan="1" class="text-center">Quantity</th>
+              <th colspan="2" class="text-center">Batch No</th>
+              <th colspan="2" class="text-center">PO Reference</th>
+              <th colspan="1" class="text-center">Box No</th>
+            </tr>
+            <tr
+              class="text-wrap"
+              *ngFor="let s of tableData?.salesInvoiceDetails; let i = index"
+            >
+              <td colspan="1" class="text-center">
+                {{ i + 1 }}
+              </td>
+              <td colspan="5" class="text-start">
+                <p>{{ "SKU Name" | labelTranslate }}: {{ s?.SKU?.SKUName }}</p>
+                <p>
+                  {{ "SKU Description" | labelTranslate }}:
+                  {{ s?.SKU?.SKUDescription }}
+                </p>
+              </td>
+
+              <td colspan="1" class="text-center">
+                {{ s?.dispatchQty }}
+              </td>
+              <td colspan="2" class="text-center">
+                {{ s?.batchDate ? (s?.batchDate | date : "dd-MM-YYYY") : "-" }}
+              </td>
+              <td colspan="2" class="text-center">
+                {{ s?.PONumber }}
+              </td>
+              <td colspan="1" class="text-center">
+                {{ s?.boxNos }}
+              </td>
+            </tr>
+            <tr *ngFor="let d of tableData.rowRepeat; let j = index">
+              <td colspan="1" class="text-center">
+                <p class="py-3">
+                  {{ tableData?.salesInvoiceDetails?.length + j + 1 }}
+                </p>
+              </td>
+              <td colspan="5" class="text-center"></td>
+              <td colspan="1" class="text-center"></td>
+              <td colspan="2" class="text-center"></td>
+              <td colspan="2" class="text-center"></td>
+              <td colspan="1" class="text-center"></td>
+            </tr>
+            <tr>
+              <td colspan="12 ">
+                <div class="py-2"></div>
+              </td>
+            </tr>
+            <tr>
+              <th colspan="12" class="py-3"></th>
+            </tr>
+
+            <tr>
+              <td colspan="6" class="text-center">
+                <p>
+                  Total No. of Boxes:
+                  {{ tableData?.totalNoOfBoxes }}
+                </p>
+              </td>
+              <td colspan="6" rowspan="2" class="text-center">
+                <p>
+                  Should you have any queries concerning the dispatches please
+                  <br />contact our Sales Representative.<br />
+                  E-mail:
+                  {{
+                    tableData?.company?.contactInfo[0]
+                      ?.companyContactPersonEmail
+                  }}
+                </p>
+              </td>
+            </tr>
+            <tr>
+              <th colspan="6" class="text-center">
+                <p>
+                  Total Gross weight of shipment:
+                  {{ tableData?.totalGrossWeight }} kgs
+                </p>
+              </th>
+            </tr>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

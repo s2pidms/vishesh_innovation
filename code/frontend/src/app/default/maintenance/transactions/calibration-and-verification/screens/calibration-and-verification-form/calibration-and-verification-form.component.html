@@ -1,0 +1,80 @@
+<Form [formGroup]="form" class="formCard card">
+    <div class="container">
+        <div class="row form-header">
+            <div class="col heading">
+                <label> {{ this.action | titlecase }} Calibration and Verification</label>
+            </div>
+        </div>
+        <div class="form-body">
+            <div class="row">
+                <div class="col-md-4">
+                    <label class="form-label"> Equipment Code <span class="text-danger"></span> </label>
+                    <ng-select
+                        [items]="masterData.equipmentListOptions"
+                        bindLabel="label"
+                        bindValue="_id"
+                        formControlName="equipment"
+                        [clearable]="false"
+                        placeholder="Select Calibration And Verification"
+                    >
+                    </ng-select>
+                </div>
+                <div class="col-md-4">
+                    <label class="form-label"> Calibration Date <span class="text-danger"></span> </label>
+
+                    <input class="form-control" type="date" formControlName="calibrationDate" />
+                </div>
+                <div class="col-md-4">
+                    <label class="form-label"> Calibration Due <span class="text-danger"></span> </label>
+
+                    <input class="form-control" type="date" formControlName="calibrationDue" />
+                </div>
+            </div>
+            <div class="row 5">
+                <div class="col-md-4">
+                    <label class="form-label"> Calibration Agency <span class="text-danger"></span> </label>
+                    <select class="form-select" formControlName="calibrationAgency">
+                        <option [value]="''" selected disabled>Select Calibration Agency</option>
+                        <option [value]="item.parameterName" *ngFor="let item of masterData?.calibrationAgencyOptions">
+                            {{ item.parameterLabel }}
+                        </option>
+                    </select>
+                </div>
+
+                <div class="col-md-4">
+                    <label class="form-label">
+                        Calibration Result
+                        <span class="text-danger">*</span>
+                    </label>
+                    <select class="form-select" formControlName="calibrationResult">
+                        <option [value]="''" selected disabled>Select Calibration Result</option>
+                        <option [value]="item.value" *ngFor="let item of masterData?.calibrationResultOptions">
+                            {{ item.label }}
+                        </option>
+                    </select>
+                </div>
+                <div class="col-md-4">
+                    <label class="form-label"> Remarks <span class="text-danger"></span> </label>
+                    <input class="form-control" type="text" formControlName="remarks" />
+                </div>
+            </div>
+        </div>
+        <hr *ngIf="!['view'].includes(action)" class="row line-border" />
+        <div class="d-flex justify-content-center mb-3">
+            <div
+                *ngIf="!['view', 'edit'].includes(action)"
+                class="d-grid col-md-1 me-5"
+                [ngClass]="{'d-none': action == 'View'}"
+            >
+                <button class="btn btn-primary" type="button" (click)="reset()">Reset</button>
+            </div>
+            <div
+                *ngIf="['create', 'edit'].includes(action)"
+                class="d-grid col-md-1"
+                [ngClass]="{'d-none': action == 'View'}"
+            >
+                <button class="btn btn-primary" type="button" (click)="submit()">Save</button>
+            </div>
+        </div>
+    </div>
+</Form>

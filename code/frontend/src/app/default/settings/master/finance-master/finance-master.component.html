@@ -1,0 +1,19 @@
+<div style="min-height: 47rem" class="row tablePage">
+    <div class="col-md-11 table-body shadow-none">
+        <div class="container-fluid tabs-card-page">
+            <div class="row row-cols-1 row-cols-md-3">
+                <div class="col d-flex justify-content-center" *ngFor="let t of cardsData">
+                    <div
+                        class="card masterCard"
+                        [ngClass]="t.disabled ? 'disabled' : ''"
+                        (click)="navigateTo(t.url, t.disabled, t.displayName)"
+                    >
+                        <div class="card-body d-flex align-content-center">
+                            <h5 class="card-title align-self-center">{{ t.displayName }}</h5>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,86 @@
+<div class="reportTablePage">
+    <div class="table-body pb-0 shadow-none">
+        <div class="row table-header">
+            <div class="col">
+                <label class="heading">FG Correction History Report</label>
+            </div>
+        </div>
+        <div class="row my-4">
+            <div class="col-3 ps-5 separate-row">
+                <label class="form-label">SKUName</label>
+                <ng-select [items]="SKUList" bindLabel="SKUName" bindValue="_id" [clearable]="false" [(ngModel)]="SKU">
+                </ng-select>
+                <span class="set-position">
+                    <img src="./assets/new_icons/redstroke.svg" alt="" height="27" width="8" />
+                </span>
+            </div>
+
+            <div class="col-3">
+                <label class="form-label"> From Date <span class="text-danger">*</span> </label>
+                <input class="form-control" type="date" [(ngModel)]="fromDate" />
+            </div>
+
+            <div class="col-3">
+                <label class="form-label"> To Date <span class="text-danger">*</span> </label>
+                <input class="form-control" type="date" [(ngModel)]="toDate" />
+            </div>
+            <div class="col-3 align-self-end separate-image">
+                <span class="image-position">
+                    <img src="./assets/new_icons/redstroke.svg" alt="" height="27" width="8" />
+                </span>
+                <button type="button" class="btn btn-primary px-4 me-3" (click)="getAll()">Apply Filter</button>
+
+                <button type="button" class="btn btn-primary px-4 ms-4" (click)="reset()">Reset Filter</button>
+            </div>
+        </div>
+
+        <hr class="row line-border" />
+        <div class="table-responsive mb-0">
+            <app-setting-header
+                [data]="{page,pageSize,collection,search,type: 'list',pdfDisplay:true}"
+                (dataChange)="eventHeader($event)"
+            >
+            </app-setting-header>
+            <table class="table table-bordered">
+                <thead class="bg-primary">
+                    <tr class="text-white">
+                        <th sortable="FGDate" (sort)="onSort($event)">FG Date</th>
+                        <th sortable="SKUNo" (sort)="onSort($event)">SKU No</th>
+                        <th class="text-start" sortable="SKUName" (sort)="onSort($event)">
+                            {{ "SKU Name" | labelTranslate }}
+                        </th>
+                        <th class="text-start" sortable="SKUDescription" (sort)="onSort($event)">
+                            {{ "SKU Description" | labelTranslate }}
+                        </th>
+                        <th sortable="correctionCategory" (sort)="onSort($event)">Correction Type</th>
+                        <th sortable="sourceBatch" (sort)="onSort($event)">Source Batch</th>
+                        <th sortable="destinationBatch" (sort)="onSort($event)">Destination Batch</th>
+                        <th sortable="transferQty" (sort)="onSort($event)">Transfer Qty</th>
+                        <th sortable="availableSourceQty" (sort)="onSort($event)">Available Source Qty</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let u of tableData; trackBy: trackByFn">
+                        <td>{{ u?.FGDate }}</td>
+                        <td>{{ u?.SKUNo }}</td>
+                        <td class="text-start" [style.width]="SKUName.clientWidth" #SKUName>
+                            <span class="pointer" [positionTarget]="SKUName" [ngbTooltip]="u.SKUName">
+                                {{ u.SKUName }}
+                            </span>
+                        </td>
+                        <td class="text-start" [style.width]="SKUDescription.clientWidth" #SKUDescription>
+                            <span class="pointer" [positionTarget]="SKUDescription" [ngbTooltip]="u.SKUDescription">
+                                {{ u.SKUDescription }}
+                            </span>
+                        </td>
+                        <td>{{ u?.correctionCategory }}</td>
+                        <td>{{ u?.sourceBatch }}</td>
+                        <td>{{ u?.destinationBatch }}</td>
+                        <td>{{ u.transferQty }}</td>
+                        <td>{{ u?.availableSourceQty }}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

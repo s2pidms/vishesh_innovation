@@ -1,0 +1,239 @@
+<Form class="px-2" [formGroup]="form" class="formCard card">
+    <div class="container">
+        <div class="row form-header">
+            <div class="col heading">
+                <label class="">{{ action | titlecase }} Service Invoice</label>
+            </div>
+        </div>
+        <div class="form-body">
+            <div class="row mb-2">
+                <div class="col-md-3">
+                    <label class="form-label mb-0"> Invoice # <span class="text-danger"></span> </label>
+                    <input class="form-control" type="text" formControlName="serviceInvoiceNumber" readonly />
+                </div>
+                <div class="col-md-3">
+                    <label class="form-label mb-0"> Invoice Date <span class="text-danger"></span> </label>
+                    <input class="form-control" type="date" formControlName="serviceInvoiceDate" readonly />
+                </div>
+
+                <div class="col-3">
+                    <label class="form-label mb-0"> Customer/Sales Category <span class="text-danger">*</span> </label>
+                    <select class="form-select" formControlName="customerCategory" (change)="getCustomers()">
+                        <option [value]="null" selected disabled>Select</option>
+                        <option [value]="ele.value" *ngFor="let ele of masterData.customerCategoryOptions">
+                            {{ ele.label }}
+                        </option>
+                    </select>
+                </div>
+
+                <div class="col-3 pe-5">
+                    <label class="form-label mb-0"> Customer Name <span class="text-danger">*</span> </label>
+
+                    <div class="d-flex align-items-center">
+                        <div class="col-11">
+                            <ng-select
+                                [items]="customerFilterOptions"
+                                bindLabel="customerName"
+                                bindValue="_id"
+                                [clearable]="false"
+                                formControlName="customer"
+                                (change)="customerValueChange($event)"
+                            >
+                            </ng-select>
+                        </div>
+                        <div
+                            style="height: 2.9rem"
+                            class="input-group-text bg-primary pointer col-auto fs-4"
+                            id="basic-addon1"
+                            (click)="openCustomersDetailsModal()"
+                        >
+                            <i class="fa fa-search text-white" aria-hidden="true"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col">
+                    <label class="form-label mb-0"> Purchase Order No. <span class="text-danger">*</span> </label>
+                    <input class="form-control" type="text" formControlName="PONo" />
+                </div>
+
+                <div class="col">
+                    <label class="form-label mb-0"> Purchase Order Date <span class="text-danger">*</span> </label>
+                    <input class="form-control" type="date" formControlName="PODate" />
+                </div>
+
+                <div class="col">
+                    <label class="form-label mb-0"> Currency <span class="text-danger">*</span> </label>
+                    <input
+                        type="text"
+                        class="form-control"
+                        formControlName="currency"
+                        (change)="setDelivery()"
+                        readonly
+                    />
+                </div>
+                <div class="col">
+                    <label class="form-label mb-0"> Bill From Location <span class="text-danger">*</span> </label>
+                    <select class="form-select" formControlName="billFromLocation">
+                        <option [value]="null" selected disabled>Select</option>
+                        <option [value]="ele.value" *ngFor="let ele of masterData?.billFromLocationOptions">
+                            {{ ele.label }}
+                        </option>
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        <div class="">
+            <app-setting-header
+                [data]="{page,pageSize,collection,search, excelDisplay : 'none'}"
+                (dataChange)="eventHeader($event)"
+            >
+            </app-setting-header>
+        </div>
+
+        <div class="table-responsive mt-0 text-wrap" style="min-height: 22rem">
+            <table class="table table-bordered mt-0 table-sm">
+                <thead class="bg-info">
+                    <tr class="text-white">
+                        <th sortable="SKUNo" (sort)="onSort($event)">#</th>
+                        <th sortable="SKUDescription" (sort)="onSort($event)">Service Code</th>
+                        <th class="text-start" sortable="SKUDescription" (sort)="onSort($event)">
+                            Service Description
+                        </th>
+                        <th sortable="customerPartNo" (sort)="onSort($event)">SAC Code</th>
+                        <th sortable="UOM" (sort)="onSort($event)">GST %</th>
+                        <th sortable="orderedQty" (sort)="onSort($event)">Additional Information</th>
+                        <th sortable="orderedQty" (sort)="onSort($event)">Qty</th>
+                        <th sortable="standardRate" (sort)="onSort($event)">Unit Rate</th>
+                        <th sortable="lineValue" (sort)="onSort($event)">Line Value</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    <tr
+                        *ngFor="
+                            let u of SIDetailsArray
+                                | searchFi1ter : search
+                                | slice : (page - 1) * pageSize : (page - 1) * pageSize + pageSize;
+                            trackBy: trackByFn;
+                            let i = index
+                        "
+                    >
+                        <td>{{ 1 + i + (page - 1) * pageSize }}</td>
+                        <td>{{ u?.serviceCode }}</td>
+                        <td class="text-start" [style.width]="serviceDescription.clientWidth" #serviceDescription>
+                            <span
+                                class="pointer"
+                                [positionTarget]="serviceDescription"
+                                [ngbTooltip]="u.serviceDescription"
+                            >
+                                {{ u?.serviceDescription }}
+                            </span>
+                        </td>
+                        <td>{{ u?.SACCode }}</td>
+                        <td>{{ u?.gstRate }}</td>
+                        <td>
+                            <div class="d-flex justify-content-center">
+                                <span *ngIf="['approve', 'reject', 'view', 'generate', 'cancel'].includes(action)">
+                                    {{ u?.additionalInfo }}
+                                </span>
+                                <input
+                                    type="text"
+                                    class="form-control form-control-sm w-25"
+                                    *ngIf="!['approve', 'reject', 'view', 'generate', 'cancel'].includes(action)"
+                                    [(ngModel)]="u.additionalInfo"
+                                    [ngModelOptions]="{standalone: true}"
+                                />
+                            </div>
+                        </td>
+                        <td>
+                            <div class="d-flex justify-content-center">
+                                <span *ngIf="['approve', 'reject', 'view', 'generate', 'cancel'].includes(action)">
+                                    {{ u?.qty | number : "1.2-2" }}
+                                </span>
+                                <input
+                                    type="number"
+                                    class="form-control form-control-sm w-25"
+                                    *ngIf="!['approve', 'reject', 'view', 'generate', 'cancel'].includes(action)"
+                                    [(ngModel)]="u.qty"
+                                    [ngModelOptions]="{standalone: true}"
+                                    (input)="setLineValue(u.service, u)"
+                                />
+                            </div>
+                        </td>
+                        <td>
+                            <div class="d-flex justify-content-center">
+                                <span *ngIf="['approve', 'reject', 'view', 'generate', 'cancel'].includes(action)">
+                                    {{ u?.unitRate | number : "1.2-2" }}
+                                </span>
+                                <input
+                                    type="number"
+                                    class="form-control form-control-sm w-25"
+                                    *ngIf="!['approve', 'reject', 'view', 'generate', 'cancel'].includes(action)"
+                                    [(ngModel)]="u.unitRate"
+                                    [ngModelOptions]="{standalone: true}"
+                                    (input)="setLineValue(u.service, u)"
+                                />
+                            </div>
+                        </td>
+
+                        <td>{{ u?.lineValue | number : "1.2-2" }}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="row mb-3 align-items-center mt-3">
+            <div class="col-md-auto">
+                <div class="d-flex">
+                    <div class="col-form-label text-nowrap me-2">
+                        <button class="btn btn-primary px-5" type="button" (click)="openGSTDetailsModal()">
+                            GST Details
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <div class="col-3 mt-1">
+                <div class="d-flex justify-content-center align-items-center">
+                    <div class="col-form-label text-nowrap pe-2">Total Value:</div>
+                    <input class="form-control" type="number" formControlName="totalValue" readonly />
+                </div>
+            </div>
+            <div class="col">
+                <div class="d-flex justify-content-center align-items-center">
+                    <div class="col-form-label text-nowrap">Remark:</div>
+                    <input class="form-control mx-2" type="text" formControlName="remarks" />
+                </div>
+            </div>
+            <div class="col-md-auto ms-auto">
+                <div *ngIf="['create'].includes(action)" class="d-grid gap-2 d-md-block">
+                    <button class="btn btn-primary px-5 me-4" type="button" (click)="reset()">Reset</button>
+                    <button
+                        type="button"
+                        class="btn btn-primary me-1"
+                        [disabled]="!isESCPreview"
+                        (click)="ESCPreview()"
+                    >
+                        Esc
+                    </button>
+                    <button class="btn btn-primary px-4 me-4" type="button" (click)="preview()">Preview</button>
+                    <button type="button" class="btn btn-primary px-5" [disabled]="!isPreview" (click)="submit()">
+                        Save
+                    </button>
+                </div>
+                <div *ngIf="['edit'].includes(action)" class="d-grid gap-2 d-md-block">
+                    <button type="button" class="btn btn-primary px-5" (click)="submit()">Save</button>
+                </div>
+                <div *ngIf="action == 'cancel'" class="content-end">
+                    <button class="btn btn-primary px-5" type="button" (click)="submit()">Cancel</button>
+                </div>
+                <div *ngIf="action == 'approve'" class="content-end">
+                    <button class="btn btn-primary px-5" type="button" (click)="submit()">Approve</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</Form>

@@ -1,0 +1,87 @@
+<div class="modelPage">
+    <div class="modal-header">
+        <div class="heading">Remarks</div>
+        <div>
+            <button type="button" class="btn btn-cross btn-sm" aria-label="Close" (click)="this.activeModal.close()">
+                <i class="fa fa-times-circle" aria-hidden="true"></i>
+            </button>
+        </div>
+    </div>
+    <div class="container-fluid px-0 mt-4">
+        <div class="row justify-content-center px-5 mt-4">
+            <div class="col-12">
+                <div class="row mt-4">
+                    <div class="col-4 pe-0">
+                        <label class="form-label"> Goods Issued By</label>
+                    </div>
+                    <div class="col-1 px-2 d-flex align-items-center justify-content-end">
+                        <span class="ms-1 me-2 text-secondary">&#9654;</span>
+                    </div>
+                    <div class="col-7 ps-0 setInputMargin">
+                        <input
+                            type="text"
+                            class="form-control"
+                            [(ngModel)]="remarksObj.goodsIssuedBy"
+                            [disabled]="['view', 'approve', 'reject'].includes(action)"
+                        />
+                    </div>
+                </div>
+                <div class="row mt-4">
+                    <div class="col-4 pe-0">
+                        <label class="form-label"> Goods Issued To </label>
+                    </div>
+                    <div class="col-1 px-2 d-flex align-items-center justify-content-end">
+                        <span class="ms-1 me-2 text-secondary">&#9654;</span>
+                    </div>
+                    <div class="col-7 ps-0 setInputMargin">
+                        <input
+                            type="text"
+                            class="form-control"
+                            [(ngModel)]="remarksObj.goodsIssuedTo"
+                            [disabled]="['view', 'approve', 'reject'].includes(action)"
+                        />
+                    </div>
+                </div>
+                <div class="row mt-4">
+                    <div class="col-4 pe-0">
+                        <label class="form-label"> GT Remarks </label>
+                    </div>
+                    <div class="col-1 px-2 d-flex align-items-center justify-content-end">
+                        <span class="ms-1 me-2 text-secondary">&#9654;</span>
+                    </div>
+                    <div class="col-7 ps-0 setInputMargin">
+                        <input
+                            type="text"
+                            class="form-control"
+                            [(ngModel)]="remarksObj.GTRemarks"
+                            [disabled]="['view', 'approve', 'reject'].includes(action)"
+                        />
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <hr *ngIf="['create', 'edit'].includes(action)" class="line-border my-4" />
+
+        <div class="row">
+            <div class="col text-center mb-4">
+                <button
+                    *ngIf="['create', 'edit'].includes(action)"
+                    class="btn bg-primary px-5 me-4"
+                    type="button"
+                    (click)="reset()"
+                >
+                    Reset
+                </button>
+                <button
+                    *ngIf="['create', 'edit'].includes(action)"
+                    class="btn bg-primary px-3"
+                    type="button"
+                    (click)="dismissModel()"
+                >
+                    Save & Close
+                </button>
+            </div>
+        </div>
+    </div>
+</div>

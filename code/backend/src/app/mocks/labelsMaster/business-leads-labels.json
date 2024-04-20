@@ -1,0 +1,52 @@
+[
+    {
+        "menuItemId": "64a6c1e33339d4dc9d8141a2",
+        "labelName": "SKU Name",
+        "displayLabelName": "SKU Name"
+    },
+    {
+        "menuItemId": "64a6c1e33339d4dc9d8141a2",
+        "labelName": "SKU Description",
+        "displayLabelName": "SKU Description"
+    },
+    {
+        "menuItemId": "64a6c1e33339d4dc9d8141a2",
+        "labelName": "D-SKU Name",
+        "displayLabelName": "D-SKU Name"
+    },
+    {
+        "menuItemId": "64a6c1e33339d4dc9d8141a2",
+        "labelName": "D-SKU Description",
+        "displayLabelName": "D-SKU Description"
+    },
+    {
+        "menuItemId": "64a6c1e33339d4dc9d8141a2",
+        "labelName": "D-SKU Name is Required",
+        "displayLabelName": "D-SKU Name is Required"
+    },
+    {
+        "menuItemId": "64a6c1e33339d4dc9d8141a2",
+        "labelName": "D-SKU Description is Required",
+        "displayLabelName": "D-SKU Description is Required"
+    },
+    {
+        "menuItemId": "64a6c1e33339d4dc9d8141a2",
+        "labelName": "Item Code",
+        "displayLabelName": "Item Code"
+    },
+    {
+        "menuItemId": "64a6c1e33339d4dc9d8141a2",
+        "labelName": "Item Name",
+        "displayLabelName": "Item Name"
+    },
+    {
+        "menuItemId": "64a6c1e33339d4dc9d8141a2",
+        "labelName": "Item Description",
+        "displayLabelName": "Item Description"
+    },
+    {
+        "menuItemId": "64a6c1e33339d4dc9d8141a2",
+        "labelName": "Item Cost",
+        "displayLabelName": "Item Cost"
+    }
+]

@@ -1,0 +1,92 @@
+<div class="listCard card">
+    <div class="table-header">
+        <label class="heading">API Stack Summary</label>
+    </div>
+
+    <div class="table-responsive">
+        <!-- <app-setting-header
+            [data]="{page,pageSize,collection,search, excelDisplay : 'none' ,pdfDisplay:'none'}"
+            (dataChange)="eventHeader($event)"
+        >
+        </app-setting-header> -->
+        <div class="row justify-content-between my-4">
+            <div class="col-4">
+                <div class="d-flex">
+                    <div class="set-input-group-text input-group-text bg-primary" id="basic-addon1">
+                        <i class="fa fa-search text-white" aria-hidden="true"></i>
+                    </div>
+                    <div>
+                        <input
+                            type="text"
+                            class="form-control"
+                            [(ngModel)]="search"
+                            [ngModelOptions]="{standalone: true}"
+                        />
+                    </div>
+                </div>
+            </div>
+            <div class="col-4 d-flex justify-content-center">
+                <ngb-pagination
+                    *ngIf="tableData.length > 0"
+                    [collectionSize]="tableData.length"
+                    [(page)]="page"
+                    [pageSize]="pageSize"
+                    [boundaryLinks]="false"
+                >
+                    <ng-template ngbPaginationPrevious>
+                        <img src="./assets/new_icons/pagination_prev.svg" width="20rem" />
+                    </ng-template>
+                    <ng-template ngbPaginationNext>
+                        <img src="./assets/new_icons/pagination_next.svg" width="20rem" />
+                    </ng-template>
+                    <ng-template ngbPaginationPages let-page let-pages="pages">
+                        <li class="ngb-custom-pages-item align-self-center" *ngIf="pages.length > 0">
+                            <span class="page-label me-2 ms-1"> Page {{ page }} of {{ pages[pages.length - 1] }} </span>
+                        </li>
+                    </ng-template>
+                </ngb-pagination>
+            </div>
+            <div class="col-1"></div>
+            <div class="col-3">
+                <div class="d-flex justify-content-center">
+                    <div class="col-form-label text-nowrap pe-1 ms-3">
+                        Total Count<i class="fa fa-caret-right fa-5x mx-2"></i>
+                    </div>
+                    <input [value]="totalSum" class="form-control" type="text" readonly />
+                </div>
+            </div>
+        </div>
+        <table class="table table-bordered">
+            <thead class="bg-primary">
+                <tr class="text-white">
+                    <th class="text-start">Path</th>
+                    <th>Count</th>
+                </tr>
+            </thead>
+            <tbody class="text-wrap">
+                <tr
+                    *ngFor="
+                        let u of tableData
+                            | searchFi1ter : search
+                            | slice : (page - 1) * pageSize : (page - 1) * pageSize + pageSize;
+                        trackBy: trackByFn
+                    "
+                >
+                    <td class="text-start">{{ u?.endpoint }}</td>
+                    <td>{{ u?.count }}</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <!-- <div class="table-footer">
+        <hr class="row line-border" />
+        <div class="row align-items-center mt-3">
+            <div class="col-3 pe-0">
+                <div class="d-flex justify-content-center">
+                    <div class="col-form-label text-nowrap pe-1 pt-0 ms-3">Total Count</div>
+                    <input [value]="totalSum | number : '1.2-2'" class="form-control" type="text" readonly />
+                </div>
+            </div>
+        </div>
+    </div> -->
+</div>

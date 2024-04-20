@@ -1,0 +1,60 @@
+<div style="min-height: 53.7rem" class="modelPage">
+  <div class="modal-header">
+    <div class="heading">Product Attributes</div>
+    <div>
+      <button
+        type="button"
+        class="btn btn-cross btn-sm"
+        aria-label="Close"
+        (click)="dismissModel()"
+      >
+        <i class="fa fa-times-circle" aria-hidden="true"></i>
+      </button>
+    </div>
+  </div>
+  <div class="container-fluid mt-5 mb-3">
+    <div class="row">
+      <div class="col-12 px-0">
+        <ul
+          ngbNav
+          #nav="ngbNav"
+          [(activeId)]="active"
+          class="nav-pills tabs-card row justify-content-start ms-5 align-items-end"
+        >
+          <li [ngbNavItem]="1" class="col-auto d-grid px-0 btn-border-radius">
+            <a class="mb-0 ps-4 pe-5 pt-1" ngbNavLink>BOM Dim </a>
+            <ng-template ngbNavContent>
+              <app-product-bom-dim-modal
+              [bomDimData]="bomDimData"
+              [action]="action"
+              (saveData)="saveData($event)"
+              ></app-product-bom-dim-modal
+            ></ng-template>
+          </li>
+          <li [ngbNavItem]="2" class="col-auto px-0 d-grid btn-border-radius">
+            <a class="mb-0 ps-4 pe-5 pt-1" ngbNavLink> Storage </a>
+            <ng-template ngbNavContent>
+              <app-product-storage-modal
+              [storage]="storage"
+              [action]="action"
+              (saveData)="saveData($event)"
+              ></app-product-storage-modal
+            ></ng-template>
+          </li>
+          <li [ngbNavItem]="3" class="col-auto px-0 d-grid btn-border-radius">
+            <a class="mb-0 ps-4 pe-5 pt-1" ngbNavLink> Remarks </a>
+            <ng-template ngbNavContent>
+              <app-product-remarks-modal
+              [remarks]="remarks"
+              [action]="action"
+              (saveData)="saveData($event)"
+              ></app-product-remarks-modal
+            ></ng-template>
+          </li>
+        </ul>
+        <hr class="line-border mt-0" />
+        <div [ngbNavOutlet]="nav" class="mt-2"></div>
+      </div>
+    </div>
+  </div>
+</div>

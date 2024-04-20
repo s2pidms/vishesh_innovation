@@ -1,0 +1,77 @@
+<div class="listCard card">
+    <div class="table-header">
+        <label class="heading">Process Name Master Summary</label>
+    </div>
+
+    <div appAccessControl [accessType]="rolePermissionActions.createAction" class="text-center">
+        <button
+            class="btn btn-primary btn-add"
+            type="button"
+            (click)="navigateTo('/default/settings/master/production/process_name_master/form', null, 'create')"
+        >
+            <i class="fa fa-plus-square fa-lg me-2" aria-hidden="true"></i>
+            Process Name Master
+        </button>
+    </div>
+    <hr class="line-border" />
+    <div class="table-responsive">
+        <app-setting-header [data]="{page,pageSize,collection,search,type: 'list'}" (dataChange)="eventHeader($event)">
+        </app-setting-header>
+        <table class="table table-bordered">
+            <thead class="bg-primary">
+                <tr class="text-white">
+                    <th sortable="processCode" (sort)="onSort($event)">Process Code</th>
+                    <th class="text-start" sortable="processName" (sort)="onSort($event)">Process Name</th>
+                    <th sortable="order" (sort)="onSort($event)">Order</th>
+                    <th sortable="status" (sort)="onSort($event)">Status</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let u of tableData; trackBy: trackByFn">
+                    <td>{{ u?.processCode }}</td>
+                    <td class="text-start">{{ u?.processName }}</td>
+                    <td>{{ u?.order }}</td>
+                    <td>{{ u?.status }}</td>
+                    <td>
+                        <div class="dropdown">
+                            <button class="dropbtn"></button>
+                            <div class="dropdown-content">
+                                <a
+                                    appAccessControl
+                                    [accessType]="rolePermissionActions.viewAction"
+                                    href="javascript:void(0)"
+                                    (click)="
+                                        navigateTo(
+                                            '/default/settings/master/production/process_name_master/form',
+                                            u?._id,
+                                            'view'
+                                        )
+                                    "
+                                >
+                                    <i class="fa fa-eye fa-lg me-2 text-primary" aria-hidden="true"></i>
+                                    View
+                                </a>
+                                <a
+                                    appAccessControl
+                                    [accessType]="rolePermissionActions.editAction"
+                                    href="javascript:void(0)"
+                                    (click)="
+                                        navigateTo(
+                                            '/default/settings/master/production/process_name_master/form',
+                                            u?._id,
+                                            'edit'
+                                        )
+                                    "
+                                >
+                                    <i class="fa fa-pencil-square-o fa-lg me-2 text-primary" aria-hidden="true"></i>
+                                    Edit
+                                </a>
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>

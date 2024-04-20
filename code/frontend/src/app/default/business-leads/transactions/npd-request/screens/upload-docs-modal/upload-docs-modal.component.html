@@ -1,0 +1,88 @@
+<div class="modelPage">
+  <div class="modal-header">
+    <div class="heading">Upload Document</div>
+    <div>
+      <button
+        type="button"
+        class="btn btn-cross btn-sm"
+        aria-label="Close"
+        (click)="closedModel()"
+      >
+        <i class="fa fa-times-circle" aria-hidden="true"></i>
+      </button>
+    </div>
+  </div>
+  <div class="">
+    <div class="container-fluid px-0">
+      <form [formGroup]="form" class="p-0">
+        <div style="min-height: 31.8rem" class="row mt-5">
+          <div class="col-12">
+            <div class="row mt-5">
+              <div class="col-3"></div>
+              <div class="col-6">
+                <app-file-upload
+                  [fileName]="form.controls['engineeringDrawing'].value"
+                  [url]="form.controls['engineeringDrawingUrl'].value"
+                  [label]="'Engineering Drawing'"
+                  [(file)]="engineeringDrawing"
+                ></app-file-upload>
+              </div>
+              <div class="col-3"></div>
+            </div>
+            <div class="row mt-5">
+              <div class="col-3"></div>
+              <div class="col-6">
+                <app-file-upload
+                  [fileName]="form.controls['productSpecification'].value"
+                  [url]="form.controls['productSpecificationUrl'].value"
+                  [label]="'Product Specification'"
+                  [(file)]="productSpecification"
+                ></app-file-upload>
+              </div>
+              <div class="col-3"></div>
+            </div>
+            <div class="row mt-5">
+              <div class="col-3"></div>
+              <div class="col-6">
+                <app-file-upload
+                  [fileName]="form.controls['designMockUpFile'].value"
+                  [url]="form.controls['designMockUpFileUrl'].value"
+                  [label]="'Design mock-up file'"
+                  [(file)]="designMockUpFile"
+                ></app-file-upload>
+              </div>
+              <div class="col-3"></div>
+            </div>
+            <div class="row mt-5">
+              <div class="col-3"></div>
+              <div class="col-6">
+                <app-file-upload
+                  [fileName]="form.controls['artworkForProcessingFile'].value"
+                  [url]="form.controls['artworkForProcessingFileUrl'].value"
+                  [label]="'Artwork for processing [Ai/CDR]'"
+                  [(file)]="artworkForProcessingFile"
+                ></app-file-upload>
+              </div>
+              <div class="col-3"></div>
+            </div>
+          </div>
+        </div>
+      </form>
+
+      <hr class="line-border mt-5 px-05" />
+
+      <div class="row justify-content-center">
+        <div class="col-12 mb-4 text-center">
+          <button
+            type="button"
+            class="btn bg-primary px-5"
+            [disabled]="btnDisable || action == 'view'"
+            (click)="dismissModel()"
+          >
+            Save
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

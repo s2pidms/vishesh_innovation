@@ -1,0 +1,76 @@
+<div class="listCard card">
+    <div class="table-header">
+        <div class="col">
+            <label class="heading">SAC Summary</label>
+        </div>
+    </div>
+
+    <div appAccessControl [accessType]="rolePermissionActions.createAction" class="text-center">
+        <button class="btn btn-primary btn-add" type="button" (click)="navigateTo('../form', null, 'create')">
+            <i class="fa fa-plus-square fa-lg me-2" aria-hidden="true"></i>
+            SAC Code
+        </button>
+    </div>
+    <hr class="line-border" />
+    <div class="table-responsive">
+        <app-setting-header [data]="{page,pageSize,collection,search,type: 'list'}" (dataChange)="eventHeader($event)">
+        </app-setting-header>
+
+        <table class="table table-bordered">
+            <thead class="bg-primary">
+                <tr class="text-white">
+                    <th sortable="sacCode" (sort)="onSort($event)">SAC Code</th>
+                    <th class="text-start" sortable="serviceDescription" (sort)="onSort($event)">
+                        Description Of Service
+                    </th>
+                    <th sortable="gstRate" (sort)="onSort($event)">GST Rate %</th>
+                    <th sortable="igstRate" (sort)="onSort($event)">IGST Rate %</th>
+                    <th sortable="sgstRate" (sort)="onSort($event)">SGST Rate %</th>
+                    <th sortable="cgstRate" (sort)="onSort($event)">CGST Rate %</th>
+                    <th sortable="ugstRate" (sort)="onSort($event)">UTGST Rate %</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let u of tableData; trackBy: trackByFn">
+                    <td>{{ u?.sacCode }}</td>
+                    <td class="text-start" [style.width]="serviceDescription.clientWidth" #serviceDescription>
+                        <span class="pointer" [positionTarget]="serviceDescription" [ngbTooltip]="u.serviceDescription">
+                            {{ u.serviceDescription }}
+                        </span>
+                    </td>
+                    <td>{{ u?.gstRate | number : "1.2-2" }}</td>
+                    <td>{{ u?.igstRate | number : "1.2-2" }}</td>
+                    <td>{{ u?.sgstRate | number : "1.2-2" }}</td>
+                    <td>{{ u?.cgstRate | number : "1.2-2" }}</td>
+                    <td>{{ u?.ugstRate | number : "1.2-2" }}</td>
+                    <td>
+                        <div class="dropdown">
+                            <button class="dropbtn"></button>
+                            <div class="dropdown-content">
+                                <a
+                                    appAccessControl
+                                    [accessType]="rolePermissionActions.viewAction"
+                                    href="javascript:void(0)"
+                                    (click)="navigateTo('../form', u?._id, 'view')"
+                                >
+                                    <i class="fa fa-eye fa-lg me-2 text-primary" aria-hidden="true"></i>
+                                    View
+                                </a>
+                                <a
+                                    appAccessControl
+                                    [accessType]="rolePermissionActions.editAction"
+                                    href="javascript:void(0)"
+                                    (click)="navigateTo('../form', u?._id, 'edit')"
+                                >
+                                    <i class="fa fa-pencil-square-o fa-lg me-2 text-primary" aria-hidden="true"></i>
+                                    Edit
+                                </a>
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>

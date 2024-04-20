@@ -1,0 +1,19 @@
+.pagination {
+    margin-bottom: 0 !important;
+}
+ngb-pagination ::ng-deep ul.pagination {
+    margin: 0 !important;
+}
+.page-label {
+    color: var(--bs-dark);
+    padding: 0 1rem;
+    font-size: 1.4rem;
+}
+
+ngb-pagination ::ng-deep ul > li:not(.active) > a {
+    border: none !important;
+    color: var(--bs-white) !important;
+    background-color: #ffffff !important;
+    box-shadow: none;
+}
+ 

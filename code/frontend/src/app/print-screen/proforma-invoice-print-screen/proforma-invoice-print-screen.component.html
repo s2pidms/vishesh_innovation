@@ -1,0 +1,29 @@
+<div class="container-fluid printScreen">
+  <div class="row">
+    <div class="col-12 text-center px-0">
+      <div *ngIf="buttonCondition == 'true'">
+        <button
+          class="btn btn-primary"
+          type="button"
+          (click)="windowPrint()"
+          *ngIf="pdfAction != 'pdf'"
+        >
+          <img
+            src="./assets/images/print.png"
+            width="20px"
+            height="14px"
+            class="mb-2"
+          />&nbsp;&nbsp; Print
+        </button>
+      </div>
+      <div class="page py-3">
+        <ng-template [ngIf]="template == 'PI Domestic'">
+          <app-PIDomestics [tableData]="tableData"></app-PIDomestics>
+        </ng-template>
+        <ng-template [ngIf]="template == 'PI Exports'">
+          <app-PIExports [tableData]="tableData"></app-PIExports>
+        </ng-template>
+      </div>
+    </div>
+  </div>
+</div>

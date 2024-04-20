@@ -1,0 +1,105 @@
+<div class="modelPage">
+    <div class="modal-header">
+        <div class="heading">HSN Master</div>
+        <div>
+            <button type="button" class="btn btn-cross btn-sm" aria-label="Close" (click)="this.activeModal.close()">
+                <i class="fa fa-times-circle" aria-hidden="true"></i>
+            </button>
+        </div>
+    </div>
+    <div class="">
+        <div class="container-fluid">
+            <div class="row justify-content-center">
+                <div class="col-12 px-0 mt-4">
+                    <div class="px-5 mt-0">
+                        <app-setting-header
+                            [data]="{page,pageSize,collection,search ,excelDisplay : 'none'}"
+                            (dataChange)="eventHeader($event)"
+                        >
+                        </app-setting-header>
+                    </div>
+                    <div style="min-height: 33rem" class="table-responsive px-5">
+                        <table class="table table-bordered table-sticky">
+                            <thead class="bg-primary">
+                                <tr class="text-white">
+                                    <th sortable="value" (sort)="onSort($event)">HSN Code</th>
+                                    <th sortable="goodsDescription" (sort)="onSort($event)" class="text-start">
+                                        Description of Goods
+                                    </th>
+                                    <th sortable="gstRate" (sort)="onSort($event)">GST Rate %</th>
+                                    <th sortable="igstRate" (sort)="onSort($event)">IGST Rate %</th>
+                                    <th sortable="cgstRate" (sort)="onSort($event)">CGST Rate %</th>
+                                    <th sortable="sgstRate" (sort)="onSort($event)">SGST Rate %</th>
+                                    <th sortable="UOM" (sort)="onSort($event)">Select</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr
+                                    *ngFor="
+                                        let u of HSNCodeArr
+                                            | searchFi1ter : search
+                                            | slice : (page - 1) * pageSize : (page - 1) * pageSize + pageSize;
+                                        let i = index
+                                    "
+                                >
+                                    <td>{{ u?.value }}</td>
+                                    <td
+                                        class="text-start"
+                                        [style.width]="goodsDescription.clientWidth"
+                                        #goodsDescription
+                                    >
+                                        <span
+                                            class="pointer"
+                                            [positionTarget]="goodsDescription"
+                                            [ngbTooltip]="u.goodsDescription"
+                                        >
+                                            {{ u?.goodsDescription }}
+                                        </span>
+                                    </td>
+                                    <td>{{ u?.gstRate }}</td>
+                                    <td>{{ u?.igstRate }}</td>
+                                    <td>{{ u?.cgstRate }}</td>
+                                    <td>{{ u?.sgstRate }}</td>
+                                    <td>
+                                        <input
+                                            [disabled]="action == 'view'"
+                                            class="form-check-input pointer"
+                                            type="radio"
+                                            name="formValue{{ HSNCodeArr[i] }}"
+                                            [checked]="u.select"
+                                            (change)="setSelectData(u)"
+                                        />
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <ng-container *ngIf="editScreen != 'Edit Screen'">
+                <div class="row">
+                    <div class="col px-0 mb-3">
+                        <hr *ngIf="['create'].includes(action)" class="line-border" />
+                    </div>
+                </div>
+                <div *ngIf="['create'].includes(action)" class="text-center mb-2">
+                    <button class="btn bg-primary px-5 mb-4" type="button" (click)="dismissModel()">
+                        Save & Close
+                    </button>
+                </div>
+            </ng-container>
+            <ng-container *ngIf="editScreen == 'Edit Screen'">
+                <div class="row">
+                    <div class="col px-0 mb-3">
+                        <hr *ngIf="!['view'].includes(action)" class="line-border" />
+                    </div>
+                </div>
+                <div *ngIf="!['view'].includes(action)" class="text-center mb-2">
+                    <button class="btn bg-primary px-5 mb-4" type="button" (click)="dismissModel()">
+                        Save & Close
+                    </button>
+                </div>
+            </ng-container>
+        </div>
+    </div>
+</div>

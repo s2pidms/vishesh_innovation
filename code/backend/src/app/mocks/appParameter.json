@@ -1,0 +1,467 @@
+[
+    {
+        "appParameterAppCode": "RM_UOM",
+        "appParameterName": "Raw Material UOM",
+        "appParameterValue": "Reel,SQM,KG,LTR,NOS,Can,Drum,Bag,Rolls,Bundle,Pack,Carton,PCS,Jumbo,SQ.FT,SQ.MTRS"
+    },
+    {
+        "appParameterAppCode": "PRODUCT_CATEGORY",
+        "appParameterName": "Product Category",
+        "appParameterValue": "Automotive Graphics, Industrial Graphics, Self Adhesive Labels, Water Transfer Decal"
+    },
+    {
+        "appParameterAppCode": "MISC_MATERIAL_PREFIX",
+        "appParameterName": "MISC_MATERIAL_PREFIX",
+        "appParameterValue": "MS"
+    },
+    {
+        "appParameterAppCode": "PACKAGING_MATERIAL_PREFIX",
+        "appParameterName": "PACKAGING_MATERIAL_PREFIX",
+        "appParameterValue": "PM"
+    },
+    {
+        "appParameterAppCode": "JOINING_LOCATION",
+        "appParameterName": "Joining Location",
+        "appParameterValue": "Factory,Office"
+    },
+    {
+        "appParameterAppCode": "ENGG_CONSUMABLE_PREFIX",
+        "appParameterName": "ENGG_CONSUMABLE_PREFIX",
+        "appParameterValue": "EC"
+    },
+    {
+        "appParameterAppCode": "PRODUCTION_CONSUMABLE_PREFIX",
+        "appParameterName": "Production Consumable Prefix - Item Master",
+        "appParameterValue": "PC"
+    },
+    {
+        "appParameterAppCode": "RAW_MATERIAL_PREFIX",
+        "appParameterName": "Raw Material Prefix - Item Master",
+        "appParameterValue": "RM"
+    },
+    {
+        "appParameterAppCode": "TRADING_PREFIX",
+        "appParameterName": "TRADING_PREFIX",
+        "appParameterValue": "TG"
+    },
+    {
+        "appParameterAppCode": "EMP_GRADE",
+        "appParameterName": "EMP_GRADE",
+        "appParameterValue": "6B - Entry Level,6A - Sr-Officer-Function,5B - Executive-Function,5A - Sr-executive,4C - Asst. Manager,4B-Manager,4A-Sr Manager,3C-Asst. General Manager,3B-Dy. General Manager,3A - General Manager,2C - Associate Vice President,2B - Vice President,2A - Executive Vice President,1 - CEO/ED/MD"
+    },
+    {
+        "appParameterAppCode": "PURCHASE_TYPE",
+        "appParameterName": "Purchase Type",
+        "appParameterValue": "Domestic,Imports"
+    },
+    {
+        "appParameterAppCode": "ITEM_SUB_CATEGORY",
+        "appParameterName": "Item Sub Categories",
+        "appParameterValue": "Paper,Adhesive,Glue,Fuel,Inks,General,Thickner,Starch,Cartons,Polybags,Paper Cores,Chemicals,Labels"
+    },
+    {
+        "appParameterAppCode": "TARGET_PPM_LEVEL",
+        "appParameterName": "PPM Level (Target)",
+        "appParameterValue": "1000"
+    },
+    {
+        "appParameterAppCode": "INCO_TERMS",
+        "appParameterName": "Inco Terms used in Supplier Master",
+        "appParameterValue": "To be paid by seller,To be paid by buyer,To be included in tax invoice"
+    },
+    {
+        "appParameterAppCode": "Currency",
+        "appParameterName": "Currency",
+        "appParameterValue": "INR, Euro, USD"
+    },
+    {
+        "appParameterAppCode": "PAYMENT_TERMS",
+        "appParameterName": "Payment_Terms",
+        "appParameterValue": "30 Days,45 Days,60 Days,90 Days, Payment in advance ,Cash before shipment, Cash with order, Stage payment, Advance or Letter of credit (LC),D/P at site"
+    },
+    {
+        "appParameterAppCode": "LOCATION",
+        "appParameterName": "LOCATION",
+        "appParameterValue": "Warehouse,Factory"
+    },
+    {
+        "appParameterAppCode": "SALES_CATEGORY",
+        "appParameterName": "Sales_Category",
+        "appParameterValue": "Domestic – OEM,Domestic – Dealer,Exports – OEM,Exports – Dealer"
+    },
+    {
+        "appParameterAppCode": "STORAGE_LOCATION",
+        "appParameterName": "Storage Location",
+        "appParameterValue": "Factory, Warehouse"
+    },
+    {
+        "appParameterAppCode": "INSPECTION_METHOD_MODULE_PREFIX",
+        "appParameterName": "Inspection Method",
+        "appParameterValue": "IM/"
+    },
+    {
+        "appParameterAppCode": "INSPECTION_PARAMETER_MODULE_PREFIX",
+        "appParameterName": "Inspection Parameter",
+        "appParameterValue": "IP/"
+    },
+    {
+        "appParameterAppCode": "PDIR_TEMPLATE_MODULE_PREFIX",
+        "appParameterName": "PDIRT Template",
+        "appParameterValue": "PT/"
+    },
+    {
+        "appParameterAppCode": "REGION_ZONES",
+        "appParameterName": "zone",
+        "appParameterValue": "North,South,East,West,Center"
+    },
+    {
+        "appParameterAppCode": "GST_CLASSIFICATION",
+        "appParameterName": "GST Classification",
+        "appParameterValue": "B2B Regular,SEZ,Composite"
+    },
+    {
+        "appParameterAppCode": "CUSTOMER_TYPE",
+        "appParameterName": "customer Type",
+        "appParameterValue": "Domestic – OEM,Domestic – Dealer,Exports – OEM,Exports – Dealer"
+    },
+    {
+        "appParameterAppCode": "SALES_INVOICE_MODULE_PREFIX",
+        "appParameterName": "SALES_INVOICE_MODULE_PREFIX",
+        "appParameterValue": "AAS/2023-24/"
+    },
+    {
+        "appParameterAppCode": "CGM_UOM",
+        "appParameterName": "CGM_UOM",
+        "appParameterValue": "NOS,Set"
+    },
+    {
+        "appParameterAppCode": "OFFICE_STATIONERY_PREFIX",
+        "appParameterName": "OFFICE_STATIONERY_PREFIX",
+        "appParameterValue": "OS"
+    },
+    {
+        "appParameterAppCode": "CAPITAL_GOODS_PREFIX",
+        "appParameterName": "CAPITAL_GOODS_PREFIX",
+        "appParameterValue": "CG"
+    },
+    {
+        "appParameterAppCode": "MODE_OF_TRANSPORT",
+        "appParameterName": "Mode of Transport",
+        "appParameterValue": "Road,Air,Rail,Sea"
+    },
+    {
+        "appParameterAppCode": "PO_DOMESTIC_TEMPLATE",
+        "appParameterName": "PO_DOMESTIC_TEMPLATE",
+        "appParameterValue": "Regular POD,PO Domestic"
+    },
+    {
+        "appParameterAppCode": "PO_IMPORTS_TEMPLATE",
+        "appParameterName": "PO_IMPORTS_TEMPLATE",
+        "appParameterValue": "Regular POI,PO Imports"
+    },
+    {
+        "appParameterAppCode": "PI_DOMESTIC_TEMPLATE",
+        "appParameterName": "PI_DOMESTIC_TEMPLATE",
+        "appParameterValue": "PI Domestic"
+    },
+    {
+        "appParameterAppCode": "PI_EXPORTS_TEMPLATE",
+        "appParameterName": "PI_EXPORTS_TEMPLATE",
+        "appParameterValue": "PI Exports"
+    },
+    {
+        "appParameterAppCode": "TI_DOMESTIC_TEMPLATE",
+        "appParameterName": "TI_DOMESTIC_TEMPLATE",
+        "appParameterValue": "Turnover less than 5 CR,Turnover less than 5 CR with Dispatch,E-Invoice,AAS-AIDS Tax-Invoice"
+    },
+    {
+        "appParameterAppCode": "TI_EXPORTS_TEMPLATE",
+        "appParameterName": "TI_EXPORTS_TEMPLATE",
+        "appParameterValue": "Turnover less than 5 CR,Turnover less than 5 CR with Dispatch,E-Invoice,AAS-AIDS Tax-Invoice"
+    },
+    {
+        "appParameterAppCode": "CONSTITUTION_OF_BUSINESS",
+        "appParameterName": "Constitution of Business",
+        "appParameterValue": "Sole Proprietorship,Partnership,Limited Liability Partnership (LLP),Private Limited,Public Limited,One Person Company (OPC),Producer Company"
+    },
+    {
+        "appParameterAppCode": "TEMPLATE",
+        "appParameterName": "TEMPLATE",
+        "appParameterValue": "Turnover less than 5 CR,Turnover less than 5 CR with Dispatch,E-Invoice"
+    },
+    {
+        "appParameterAppCode": "ENABLE_DIRECT_TAX_INVOICE",
+        "appParameterName": "ENABLE_DIRECT_TAX_INVOICE",
+        "appParameterValue": "No"
+    },
+    {
+        "appParameterAppCode": "COMPANY_TERMS_&_CONDITION",
+        "appParameterName": "iLABELS",
+        "appParameterValue": "Integral Labels Pvt. Ltd."
+    },
+    {
+        "appParameterAppCode": "CLIENT_MAIL",
+        "appParameterName": "Client Mail",
+        "appParameterValue": "nikhil@idmsinfotech.com"
+    },
+    {
+        "appParameterAppCode": "CORRECTIVE_AND_PREVENTIVE_ACTION_PREFIX",
+        "appParameterName": "CAPA",
+        "appParameterValue": "CAPA"
+    },
+    {
+        "appParameterAppCode": "MAINTENANCE_NOTIFICATION_PREFIX",
+        "appParameterName": "Maintenance Notification",
+        "appParameterValue": "NT"
+    },
+    {
+        "appParameterAppCode": "SPARE_PARTS_PREFIX",
+        "appParameterName": "Spare Parts",
+        "appParameterValue": "SP"
+    },
+    {
+        "appParameterAppCode": "TASK_TYPE",
+        "appParameterName": "Task type",
+        "appParameterValue": "Preventive,Predictive"
+    },
+    {
+        "appParameterAppCode": "FREQUENCY",
+        "appParameterName": "Frequency",
+        "appParameterValue": "Daily,Weekly,Monthly,Yearly"
+    },
+    {
+        "appParameterAppCode": "EQUIPMENT_DISPOSAL_PREFIX",
+        "appParameterName": "Equipment Disposal",
+        "appParameterValue": "ED"
+    },
+    {
+        "appParameterAppCode": "DOCUMENT_TYPES",
+        "appParameterName": "Document Types",
+        "appParameterValue": "Procedure,Manual,Checklist,Report,Drawing,Other"
+    },
+    {
+        "appParameterAppCode": "AUDIT_OR_INSPECTION_TYPE",
+        "appParameterName": "Audit Or Inspection Type",
+        "appParameterValue": "Safety Audit,Compliance Inspection,Quality Inspection,Preventive Maintenance Audit,Other"
+    },
+    {
+        "appParameterAppCode": "AUDIT_OR_INSPECTION_RESULT",
+        "appParameterName": "Audit Or Inspection Result",
+        "appParameterValue": "Pass,Fail,Inconclusive,N/A"
+    },
+    {
+        "appParameterAppCode": "FOLLOW_UP_STATUS",
+        "appParameterName": "Follow Up Status",
+        "appParameterValue": "Open,In Progress,Closed"
+    },
+    {
+        "appParameterAppCode": "DISPOSAL_METHOD",
+        "appParameterName": "Disposal Method",
+        "appParameterValue": "Sale,Donation,Scrapping,Recycling,Other"
+    },
+    {
+        "appParameterAppCode": "CALIBRATION_STANDARD_TYPE",
+        "appParameterName": "Calibration Standard Type",
+        "appParameterValue": "Primary,Secondary,Reference,Working"
+    },
+    {
+        "appParameterAppCode": "TECHNICIAN_ASSIGNMENT_PREFIX",
+        "appParameterName": "Technician Assignment",
+        "appParameterValue": "AS"
+    },
+    {
+        "appParameterAppCode": "SPARE_PARTS_MANAGEMENT_PREFIX",
+        "appParameterName": "Spare Parts Management",
+        "appParameterValue": "SP"
+    },
+    {
+        "appParameterAppCode": "EQUIPMENT_TYPE",
+        "appParameterName": "Equipment Types",
+        "appParameterValue": "Machinery,Electrical,Tools,Vehicles,Instruments,Computers"
+    },
+    {
+        "appParameterAppCode": "WARRANTY_TYPES",
+        "appParameterName": "Warranty Type",
+        "appParameterValue": "Product Warranty,Service Warranty"
+    },
+    {
+        "appParameterAppCode": "ASSET_MODULE_PREFIX",
+        "appParameterName": "Asset Master",
+        "appParameterValue": "AST"
+    },
+    {
+        "appParameterAppCode": "CALCULATION_METHOD",
+        "appParameterName": "Calculation Method",
+        "appParameterValue": "Average,Sum,Count,Percentage"
+    },
+    {
+        "appParameterAppCode": "STANDARD_STATUS",
+        "appParameterName": "Standard Status",
+        "appParameterValue": "Active,Inactive,Under Repair"
+    },
+    {
+        "appParameterAppCode": "TASK_SCHEDULING_STATUS",
+        "appParameterName": "Task Scheduling Status",
+        "appParameterValue": "Scheduled,Completed,On Hold,Cancelled"
+    },
+    {
+        "appParameterAppCode": "CALIBRATION_RESULT",
+        "appParameterName": "Calibration Result",
+        "appParameterValue": "Passed,Failed"
+    },
+    {
+        "appParameterAppCode": "CALIBRATION_AND_VERIFICATION_PREFIX",
+        "appParameterName": "Calibration and Verification",
+        "appParameterValue": "CV"
+    },
+    {
+        "appParameterAppCode": "WORK_ORDER_GENERATE_STATUS",
+        "appParameterName": "Work Order Generate Status",
+        "appParameterValue": "Open,In Progress,Completed"
+    },
+    {
+        "appParameterAppCode": "TASK_STATUS",
+        "appParameterName": "Task Status",
+        "appParameterValue": "Open,In Progress,Completed,On Hold,Cancelled"
+    },
+    {
+        "appParameterAppCode": "DELIVERY_TYPE",
+        "appParameterName": "Delivery Type",
+        "appParameterValue": "Door Delivery,Godown"
+    },
+    {
+        "appParameterAppCode": "PDIR_ENTRY_MODULE_PREFIX",
+        "appParameterName": "PDIR Entry",
+        "appParameterValue": "PDIR"
+    },
+    {
+        "appParameterAppCode": "BILL_FROM_LOCATIONS",
+        "appParameterName": "Bill from locations",
+        "appParameterValue": "Register Office,Factory"
+    },
+    {
+        "appParameterAppCode": "PRODUCT_GROUP",
+        "appParameterName": "NPD Product group",
+        "appParameterValue": "WTD-C,WTD-S,SAL"
+    },
+    {
+        "appParameterAppCode": "ORDER_TYPE",
+        "appParameterName": "NPD Order type ",
+        "appParameterValue": "Repeat,One time project"
+    },
+    {
+        "appParameterAppCode": "BUILD_STAGE",
+        "appParameterName": "NPD Build Stage",
+        "appParameterValue": "Prototype,Pilot,Production"
+    },
+    {
+        "appParameterAppCode": "DEVELOPMENT_CHARGES",
+        "appParameterName": "NPD development charges",
+        "appParameterValue": "Customer,Prospect,DTPL"
+    },
+    {
+        "appParameterAppCode": "SO_CONFIRMATION_TERMS_&_CONDITION",
+        "appParameterName": "WACO",
+        "appParameterValue": "Waterproof Corporation Pvt. Ltd."
+    },
+    {
+        "appParameterAppCode": "ALLOWABLE_GRN_QUANTITY_PERCENTAGE",
+        "appParameterName": "GRN qty % allowed in GRN",
+        "appParameterValue": 0.05
+    },
+    {
+        "appParameterAppCode": "EXTERNAL_SERVICE_PROVIDER_MODULE_PREFIX",
+        "appParameterName": "External Service Provider",
+        "appParameterValue": "ESP"
+    },
+    {
+        "appParameterAppCode": "PART_PRODUCTION_PROCESS_NAMES",
+        "appParameterName": "Production Child Part Production Process Names",
+        "appParameterValue": "Moulding,Painting,Lacquering,Tailoring,Assembly"
+    },
+    {
+        "appParameterAppCode": "PART_PRODUCTION_MACHINE_NAMES",
+        "appParameterName": "Production Child Part Production Machine Names",
+        "appParameterValue": "Injection Moulding,Painting Booth,Spray Machine,Sewing Machine"
+    },
+    {
+        "appParameterAppCode": "PART_PRODUCTION_PRODUCTION_SHIFT",
+        "appParameterName": "Production Child Part Production Production Shift",
+        "appParameterValue": "I,General,II,III"
+    },
+    {
+        "appParameterAppCode": "SKU_PRODUCTION_MODULE_PREFIX",
+        "appParameterName": "SKU Part Production",
+        "appParameterValue": "SKUPP"
+    },
+    {
+        "appParameterAppCode": "GROUP_PRODUCTION_MODULE_PREFIX",
+        "appParameterName": "Group Part Production",
+        "appParameterValue": "GPP"
+    },
+    {
+        "appParameterAppCode": "COMPANY_TYPE",
+        "appParameterName": "Company Types",
+        "appParameterValue": "Printing Industry,Automobile Industry"
+    },
+    {
+        "appParameterAppCode": "INK_MASTER_UOM",
+        "appParameterName": "Ink master UOM List",
+        "appParameterValue": "KG,GM,LTR"
+    },
+    {
+        "appParameterAppCode": "MAP_CATEGORY_HSN_MODULE_PREFIX",
+        "appParameterName": "Map Category HSN",
+        "appParameterValue": "MAPHSN"
+    },
+    {
+        "appParameterAppCode": "PDIR_TEMPLATE",
+        "appParameterName": "Pdir Template",
+        "appParameterValue": "IDMS,TGY"
+    },
+    {
+        "appParameterAppCode": "ADD_LAB_VALUES",
+        "appParameterName": "Add Lab Values InkMaster",
+        "appParameterValue": "Yes"
+    },
+    {
+        "appParameterAppCode": "AUDIT_FLAG",
+        "appParameterName": "Audit Flag",
+        "appParameterValue": "yes"
+    },
+    {
+        "appParameterAppCode": "ASSET_MODULE_PREFIX",
+        "appParameterName": "Asset Class",
+        "appParameterValue": "DFA/"
+    },
+    {
+        "appParameterAppCode": "PAT_SKU_COST_SHEET",
+        "appParameterName": "Tax Value For Profit In SKU Cost Sheet",
+        "appParameterValue": "30"
+    },
+    {
+        "appParameterAppCode": "QUOTATION_DSKU_MODULE_PREFIX",
+        "appParameterName": "Quotation DSKU Module Prefix",
+        "appParameterValue": "Q-DSKU/"
+    },
+    {
+        "appParameterAppCode": "MAX_PT_FOR_EMP",
+        "appParameterName": "Max PT For Employee",
+        "appParameterValue": "80"
+    },
+    {
+        "appParameterAppCode": "SOSR_CONFIGURABLE_MONTH_VALUE",
+        "appParameterName": "SOSR Configurable Month Value",
+        "appParameterValue": "6"
+    },
+    {
+        "appParameterAppCode": "WXL_DIMENSIONS_UNIT",
+        "appParameterName": "W X L Dimensions Dual Unit",
+        "appParameterValue": "Roll,Sheet,SQM,sqm,SQ.FT"
+    },
+    {
+        "appParameterAppCode": "QUOTATION_OF_SKU_FILTER",
+        "appParameterName": "Filter For SKU By Order Type",
+        "appParameterValue": "All"
+    }
+]

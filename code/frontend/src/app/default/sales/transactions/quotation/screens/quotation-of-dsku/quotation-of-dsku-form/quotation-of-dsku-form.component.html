@@ -1,0 +1,240 @@
+<Form class="px-2" [formGroup]="form" class="formCard card">
+    <div class="container">
+        <div class="row form-header">
+            <div class="col heading">
+                <label class="">Quotation Of D-SKU ({{ action | titlecase }})</label>
+            </div>
+        </div>
+        <div class="form-body">
+            <div class="row mb-2">
+                <div class="col-4">
+                    <div class="row">
+                        <div class="col-7 pe-2">
+                            <label class="form-label mb-0"> Quotation No. <span class="text-danger">*</span> </label>
+
+                            <div class="d-flex">
+                                <input
+                                    class="form-control border-end-0 pe-0"
+                                    type="text"
+                                    formControlName="quotationNo"
+                                    readonly
+                                />
+                                <span class="input-group-text border-start-0 combine-INR border border-1">
+                                    <div class="vr me-3"></div>
+                                    Rev {{ form.value.revNo }}
+                                </span>
+                            </div>
+                        </div>
+                        <div class="col-5">
+                            <label class="form-label mb-0"> Quotation Date <span class="text-danger">*</span> </label>
+                            <input class="form-control" type="date" formControlName="quotationDate" />
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-8">
+                    <div class="row">
+                        <div class="col-4 px-2">
+                            <label class="form-label mb-0">
+                                Customer/Prospect Category <span class="text-danger">*</span>
+                            </label>
+                            <select
+                                class="form-select"
+                                formControlName="customerCategory"
+                                (change)="getCustomers($event)"
+                            >
+                                <option [value]="null" selected disabled>Select</option>
+                                <option [value]="ele.value" *ngFor="let ele of masterData?.salesCategoryOptions">
+                                    {{ ele.label }}
+                                </option>
+                            </select>
+                        </div>
+                        <div class="col-4 pe-3">
+                            <label class="form-label mb-0">
+                                Customer/Prospect Name <span class="text-danger">*</span>
+                            </label>
+
+                            <div class="d-flex align-items-center">
+                                <div class="col-11">
+                                    <ng-select
+                                        [items]="customerOptions"
+                                        bindLabel="customerName"
+                                        bindValue="reference"
+                                        [clearable]="false"
+                                        formControlName="reference"
+                                        (change)="customerValueChange($event)"
+                                    >
+                                    </ng-select>
+                                </div>
+                                <div
+                                    style="height: 2.9rem"
+                                    class="input-group-text bg-primary pointer col-auto fs-4"
+                                    id="basic-addon1"
+                                    (click)="openCustomersDetailsModal()"
+                                >
+                                    <i class="fa fa-search text-white" aria-hidden="true"></i>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-4 ps-5">
+                            <label class="form-label mb-0"> RFQ Reference <span class="text-danger">*</span> </label>
+                            <input class="form-control" type="text" formControlName="RFQReference" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <hr class="row line-border mt-4" />
+        <div class="">
+            <app-setting-header
+                [data]="{page,pageSize,collection,search, excelDisplay : 'none'}"
+                (dataChange)="eventHeader($event)"
+            >
+            </app-setting-header>
+        </div>
+        <div class="table-responsive mt-0 text-wrap" style="min-height: 22.5rem">
+            <table class="table table-bordered mt-0 table-sm">
+                <thead class="bg-info">
+                    <tr class="text-white">
+                        <th sortable="srNo" (sort)="onSort($event)">Sr.No.</th>
+                        <th sortable="SKUNo" (sort)="onSort($event)">D-SKU No.</th>
+                        <th class="text-start" sortable="SKUName" (sort)="onSort($event)">D-SKU Part Name</th>
+                        <th class="text-start" sortable="SKUDescription" (sort)="onSort($event)">D-SKU Description</th>
+                        <th sortable="partNo" (sort)="onSort($event)">Part No.(CPIN)</th>
+                        <th sortable="UOM" (sort)="onSort($event)">UoM</th>
+                        <th sortable="MOQ" (sort)="onSort($event)">MOQ</th>
+                        <th sortable="QPrice" (sort)="onSort($event)">Q-Price</th>
+                        <th sortable="developmentCost" (sort)="onSort($event)">Development Cost</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    <tr
+                        *ngFor="
+                            let u of quotationDetailsArray
+                                | searchFi1ter : search
+                                | slice : (page - 1) * pageSize : (page - 1) * pageSize + pageSize;
+                            trackBy: trackByFn;
+                            let i = index
+                        "
+                    >
+                        <td>
+                            <div class="d-flex justify-content-center">
+                                <span *ngIf="['approve', 'view', 'generate'].includes(action)">
+                                    {{ u?.srNo }}
+                                </span>
+                                <input
+                                    *ngIf="!['approve', 'view', 'generate'].includes(action)"
+                                    type="number"
+                                    class="form-control text-center form-control-sm"
+                                    [(ngModel)]="u.srNo"
+                                    [ngModelOptions]="{standalone: true}"
+                                />
+                            </div>
+                        </td>
+                        <td>{{ u?.DSKUNo }}</td>
+                        <td class="text-start" [style.width]="DSKUName.clientWidth" #DSKUName>
+                            <span class="pointer" [positionTarget]="DSKUName" [ngbTooltip]="u.DSKUName">
+                                {{ u?.DSKUName }}
+                            </span>
+                        </td>
+                        <td class="text-start" [style.width]="DSKUDescription.clientWidth" #DSKUDescription>
+                            <span class="pointer" [positionTarget]="DSKUDescription" [ngbTooltip]="u.DSKUDescription">
+                                {{ u?.DSKUDescription }}
+                            </span>
+                        </td>
+                        <td>{{ u?.partNo }}</td>
+                        <td>{{ u?.UOM | UOMUnitsMaster }}</td>
+                        <td>
+                            <div class="d-flex justify-content-center">
+                                <span *ngIf="['approve', 'view', 'generate'].includes(action)">
+                                    {{ u?.MOQ }}
+                                </span>
+                                <input
+                                    *ngIf="!['approve', 'view', 'generate'].includes(action)"
+                                    type="number"
+                                    class="form-control text-center form-control-size-lg"
+                                    [(ngModel)]="u.MOQ"
+                                    [ngModelOptions]="{standalone: true}"
+                                />
+                            </div>
+                        </td>
+                        <td class="">
+                            <div class="d-flex justify-content-start align-items-center">
+                                <span class="input-group-text text-secondary combine-INR border-0">
+                                    {{ "INR" | companyCurrency }}
+                                    <div class="vr ms-3"></div>
+                                </span>
+                                <span *ngIf="['approve', 'view', 'generate'].includes(action)">
+                                    {{ u?.QPrice }}
+                                </span>
+                                <input
+                                    *ngIf="!['approve', 'view', 'generate'].includes(action)"
+                                    class="form-control px-2 form-control-sm"
+                                    [(ngModel)]="u.QPrice"
+                                    [ngModelOptions]="{standalone: true}"
+                                    type="number"
+                                />
+                            </div>
+                        </td>
+                        <td class="">
+                            <div class="d-flex justify-content-start align-items-center">
+                                <span class="input-group-text text-secondary combine-INR border-0">
+                                    {{ "INR" | companyCurrency }}
+                                    <div class="vr ms-3"></div>
+                                </span>
+                                <span *ngIf="['approve', 'view', 'generate'].includes(action)">
+                                    {{ u?.developmentCost }}
+                                </span>
+                                <input
+                                    *ngIf="!['approve', 'view', 'generate'].includes(action)"
+                                    class="form-control px-2 form-control-size-lg"
+                                    [(ngModel)]="u.developmentCost"
+                                    [ngModelOptions]="{standalone: true}"
+                                    type="number"
+                                />
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <hr class="row line-border" *ngIf="!['view'].includes(action)" />
+        <div class="row mb-3 align-items-center mt-3">
+            <div class="col-4">
+                <div
+                    *ngIf="['Exports – OEM', 'Exports – Dealer'].includes(form.controls['customerCategory'].value)"
+                    class="d-flex justify-content-center"
+                >
+                    <div class="col-form-label text-nowrap pe-1 pt-0">
+                        Exchange Rate <i class="fa fa-caret-right fs-4 mx-2"></i>
+                        <button type="button" class="btn btn-info py-1 ms-2">
+                            {{ "INR" | companyCurrency }}
+                        </button>
+                    </div>
+                    <input class="form-control" type="number" formControlName="exchangeRate" />
+                </div>
+            </div>
+            <div class="col-md-auto ms-auto mb-1">
+                <div *ngIf="['create', 'edit', 'revision'].includes(action)" class="d-grid gap-2 d-md-block">
+                    <button class="btn btn-primary px-5 me-4" type="button" (click)="reset()">Reset</button>
+                    <button
+                        type="button"
+                        class="btn btn-primary me-1"
+                        [disabled]="!isESCPreview"
+                        (click)="ESCPreview()"
+                    >
+                        Esc
+                    </button>
+                    <button class="btn btn-primary px-4 me-4" type="button" (click)="preview()">Preview</button>
+                    <button type="button" class="btn btn-primary px-5" [disabled]="!isPreview" (click)="submit()">
+                        Save
+                    </button>
+                </div>
+                <div *ngIf="action == 'approve'" class="content-end">
+                    <button class="btn btn-primary px-5" type="button" (click)="submit()">Approve</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</Form>

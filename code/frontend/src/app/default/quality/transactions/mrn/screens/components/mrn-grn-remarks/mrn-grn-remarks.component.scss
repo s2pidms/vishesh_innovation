@@ -1,0 +1,33 @@
+.tabs-card {
+    box-shadow: none;
+    display: flex;
+    justify-content: center;
+    text-align: center;
+    background-color: transparent;
+
+    .nav-item {
+        display: grid !important;
+    }
+
+    a {
+        flex: 1 0;
+        font-weight: 500;
+        font-size: 1.4rem;
+        border-radius: 2px;
+        margin-bottom: 1rem;
+        color: var(--bs-white) !important;
+        background-color: #fd99d5 !important;
+        border: 1px solid var(--bs-white);
+    }
+
+    .active {
+        color: var(--bs-white) !important;
+        background-color: var(--bs-primary) !important;
+        border: 1px solid var(--bs-white);
+    }
+    .btn-border-radius {
+        clip-path: polygon(0 0, 85% 0, 100% 100%, 0% 100%) !important;
+        width: 14rem !important;
+        height: 2.6rem !important ;
+    }
+}

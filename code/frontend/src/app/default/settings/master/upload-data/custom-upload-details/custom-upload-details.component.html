@@ -1,0 +1,61 @@
+<div class="modelPage">
+    <div class="modal-header">
+        <div class="heading">{{ title }}</div>
+        <div>
+            <button type="button" class="btn btn-cross btn-sm" aria-label="Close" (click)="this.activeModal.close()">
+                <i class="fa fa-times-circle" aria-hidden="true"></i>
+            </button>
+        </div>
+    </div>
+    <div class="">
+        <div class="container-fluid">
+            <div class="row justify-content-center">
+                <div class="col-12 px-0 mt-4">
+                    <div class="px-5 mt-0">
+                        <app-setting-header
+                            [data]="{page,pageSize,collection,search  }"
+                            (dataChange)="eventHeader($event)"
+                        >
+                        </app-setting-header>
+                    </div>
+                    <div style="min-height: 33rem" class="table-responsive px-5">
+                        <table class="table table-bordered table-sticky">
+                            <thead class="bg-primary">
+                                <tr class="text-white">
+                                    <th
+                                        [class]="t.class"
+                                        *ngFor="let t of tableHead"
+                                        [sortable]="t.value"
+                                        (sort)="onSort($event)"
+                                    >
+                                        {{ t.label }}
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr
+                                    *ngFor="
+                                        let u of inValidRecords
+                                            | searchFi1ter : search
+                                            | slice : (page - 1) * pageSize : (page - 1) * pageSize + pageSize;
+                                        let i = index
+                                    "
+                                >
+                                    <td [class]="t.class" *ngFor="let t of tableHead">
+                                        {{ u[t.value] }}
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <!-- <div
+                *ngIf="!['view', 'edit', 'rejection', 'reject', 'approval', 'approve', 'cancel'].includes(action)"
+                class="text-center mb-2"
+            >
+                <button class="btn bg-primary px-5 mb-4" type="button" (click)="dismissModel()">Save & Close</button>
+            </div> -->
+        </div>
+    </div>
+</div>

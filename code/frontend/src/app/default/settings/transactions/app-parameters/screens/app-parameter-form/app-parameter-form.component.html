@@ -1,0 +1,80 @@
+<Form class="px-2" [formGroup]="form" class="formCard card">
+    <div class="container">
+        <div class="row form-header">
+            <div class="col heading">
+                <label>Application Parameter</label>
+            </div>
+        </div>
+        <div class="form-body">
+            <div class="col">
+                <div class="row justify-content-center">
+                    <div class="col-md-3">
+                        <label class="form-label">
+                            App Code
+                            <span class="mandatory">*</span></label
+                        >
+                        <input class="form-control" type="text" formControlName="appParameterCode" readonly />
+                    </div>
+                    <div class="col-9">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <label class="form-label">Parameter Code<span class="mandatory">*</span></label>
+                                <input class="form-control" formControlName="appParameterAppCode" type="text" />
+                                <p class="validation-error"></p>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">Parameter Name<span class="mandatory">*</span></label>
+                                <input
+                                    class="form-control"
+                                    type="text"
+                                    name="appParameterName"
+                                    formControlName="appParameterName"
+                                />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row justify-content-center">
+                    <div class="col-md-12">
+                        <label class="form-label">Parameter Value<span class="mandatory">*</span></label>
+                        <!-- <input
+                                class="form-control"
+                                type="text"
+                                name="appParameterValue"
+                                formControlName="appParameterValue"
+                            /> -->
+
+                        <textarea
+                            class="form-control form-text-area"
+                            type="text"
+                            rows="7"
+                            name="appParameterValue"
+                            formControlName="appParameterValue"
+                        >
+                        </textarea>
+                        <p class="validation-error"></p>
+                    </div>
+                </div>
+            </div>
+            <hr *ngIf="!['view'].includes(action)" class="row line-border" />
+            <div class="d-grid gap-2 d-md-flex justify-content-md-center mb-3">
+                <button
+                    *ngIf="!['view', 'edit'].includes(action)"
+                    class="btn bg-primary px-5 me-3"
+                    type="button"
+                    (click)="reset()"
+                >
+                    Reset
+                </button>
+                <button
+                    *ngIf="['create', 'edit'].includes(action)"
+                    class="btn bg-primary px-5"
+                    type="button"
+                    (click)="submit()"
+                >
+                    Save
+                </button>
+            </div>
+        </div>
+    </div>
+</Form>

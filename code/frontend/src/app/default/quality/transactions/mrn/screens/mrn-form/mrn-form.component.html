@@ -1,0 +1,301 @@
+<form [formGroup]="form" class="formCard card">
+    <div class="container">
+        <div class="row form-header">
+            <div class="col heading">
+                <label class="">MRN ({{ action | titlecase }})</label>
+            </div>
+        </div>
+        <div class="form-body">
+            <div class="row">
+                <div class="col-md-3">
+                    <div class="row">
+                        <div class="col-6 pe-3">
+                            <label class="form-label">MRN No.</label>
+                            <input type="text" class="form-control" formControlName="MRNNumber" readonly />
+                        </div>
+                        <div class="col-6 ps-2">
+                            <label class="form-label">MRN Date</label>
+                            <input type="date" class="form-control pe-0" formControlName="MRNDate" readonly />
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col">
+                    <label class="form-label"> GRN No.<span class="text-danger">*</span></label>
+                    <ng-select
+                        [items]="GRNListArr"
+                        bindLabel="GRNNumber"
+                        bindValue="_id"
+                        [clearable]="false"
+                        formControlName="GRNNumber"
+                        (change)="getGrn($event)"
+                    >
+                    </ng-select>
+                </div>
+
+                <div class="col-md-3">
+                    <label class="form-label">Supplier Name</label>
+                    <ng-select
+                        [items]="masterData.suppliersOptions"
+                        bindLabel="supplierName"
+                        bindValue="_id"
+                        [clearable]="false"
+                        formControlName="supplier"
+                    >
+                    </ng-select>
+                </div>
+
+                <div class="col-md-4">
+                    <div class="row">
+                        <div class="col-7 pe-5">
+                            <label class="form-label">Supplier Inv. No.</label>
+                            <input type="text" class="form-control" formControlName="supplierInvoice" readonly />
+                        </div>
+                        <div class="col-5 ps-0">
+                            <label class="form-label">Invoice Dt.</label>
+                            <input type="date" class="form-control" formControlName="supplierDate" readonly />
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <hr class="row line-border" />
+        <div class="row justify-content-between settingMargin">
+            <div class="col-4">
+                <div class="d-flex">
+                    <div class="input-group-text bg-primary" id="basic-addon1">
+                        <i class="fa fa-search text-white" aria-hidden="true"></i>
+                    </div>
+                    <div>
+                        <input
+                            type="text"
+                            class="form-control"
+                            [(ngModel)]="search"
+                            [ngModelOptions]="{standalone: true}"
+                        />
+                    </div>
+                </div>
+            </div>
+            <div class="col-4 d-flex justify-content-center">
+                <ngb-pagination
+                    *ngIf="MRNDetailsArray.length > 0"
+                    [collectionSize]="MRNDetailsArray.length"
+                    [(page)]="page"
+                    [pageSize]="pageSize"
+                    [boundaryLinks]="false"
+                >
+                    <ng-template ngbPaginationPrevious>
+                        <img src="./assets/new_icons/pagination_prev.svg" width="20rem" />
+                    </ng-template>
+                    <ng-template ngbPaginationNext>
+                        <img src="./assets/new_icons/pagination_next.svg" width="20rem" />
+                    </ng-template>
+                    <ng-template ngbPaginationPages let-page let-pages="pages">
+                        <li class="ngb-custom-pages-item align-self-center" *ngIf="pages.length > 0">
+                            <span class="page-label me-2 ms-1"> Page {{ page }} of {{ pages[pages.length - 1] }} </span>
+                        </li>
+                    </ng-template>
+                </ngb-pagination>
+            </div>
+            <div class="col-1"></div>
+            <div class="col-3 ps-0">
+                <div class="d-flex align-items-center">
+                    <div class="col-form-label text-nowrap">
+                        <span class="text-black">{{ "Delivery Location" | labelTranslate }}</span>
+                        <i class="fa fa-caret-right fa-5x mx-2"></i>
+                    </div>
+                    <input class="form-control" type="text" formControlName="deliveryLocation" readonly />
+                </div>
+            </div>
+        </div>
+        <div class="table-responsive" style="min-height: 22rem">
+            <table class="table table-bordered table-sticky">
+                <thead class="bg-primary">
+                    <tr class="text-white">
+                        <th>SN</th>
+                        <th>Item Code</th>
+                        <th class="text-start">Item Name</th>
+                        <th class="text-start">Item Description</th>
+                        <th>UoM</th>
+                        <th>Batch No.</th>
+                        <th>Batch Dt.</th>
+                        <!-- <th>UoM</th> -->
+                        <th>GRN Qty</th>
+                        <th>QCL</th>
+                        <th>Rel. Qty</th>
+                        <th>Rej. Qty</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    <tr
+                        *ngFor="
+                            let u of MRNDetailsArray
+                                | searchFi1ter : search
+                                | slice : (page - 1) * pageSize : (page - 1) * pageSize + pageSize;
+                            let i = index;
+                            trackBy: trackByFn
+                        "
+                    >
+                        <td>{{ u?.MRNLineNumber }}</td>
+                        <td>{{ u?.itemCode }}</td>
+                        <td class="text-start" [style.width]="itemName.clientWidth" #itemName>
+                            <span class="pointer" [ngbTooltip]="u.itemName" [positionTarget]="itemName">
+                                {{ u.itemName }}
+                            </span>
+                        </td>
+                        <td class="text-start" [style.width]="itemDescription.clientWidth" #itemDescription>
+                            <span class="pointer" [ngbTooltip]="u.itemDescription" [positionTarget]="itemDescription">
+                                {{ u?.itemDescription }}
+                            </span>
+                        </td>
+                        <!-- <td>{{ u?.conversionOfUnits }}</td> -->
+                        <td>
+                            <div class="d-flex justify-content-between px-2">
+                                <span
+                                    [ngbTooltip]="u?.conversionOfUnits"
+                                    placement="top"
+                                    [ngClass]="
+                                        u?.UOM == u?.secondaryUnit ? 'text-primary pointer' : 'text-secondary pointer'
+                                    "
+                                >
+                                    {{ u?.UOM | UOMUnitsMaster }}
+                                </span>
+                                <span class="pointer d-flex align-items-center">
+                                    <div *ngIf="u?.secondaryUnit" class="unit-switch-gray"></div>
+                                    <div *ngIf="!u?.secondaryUnit" class="unit-switch-gray"></div>
+                                </span>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="d-flex justify-content-center">
+                                <span *ngIf="['approve', 'view', 'generate'].includes(action)">
+                                    {{ u.batchNo }}
+                                </span>
+                                <input
+                                    *ngIf="!['approve', 'view', 'generate'].includes(action)"
+                                    class="form-control form-control-sm w-25"
+                                    type="text"
+                                    [(ngModel)]="u.batchNo"
+                                    [ngModelOptions]="{standalone: true}"
+                                />
+                            </div>
+                        </td>
+                        <td>
+                            <div class="d-flex justify-content-center">
+                                <span *ngIf="['approve', 'view', 'generate'].includes(action)">
+                                    {{ u?.batchDate }}
+                                </span>
+                                <input
+                                    *ngIf="!['approve', 'view', 'generate'].includes(action)"
+                                    class="form-control form-control-sm w-25"
+                                    type="date"
+                                    [(ngModel)]="u.batchDate"
+                                    [ngModelOptions]="{standalone: true}"
+                                />
+                            </div>
+                        </td>
+                        <!-- <td>{{ u?.UOM| UOMUnitsMaster  }}</td> -->
+                        <td>{{ u?.GRNQty | number : "1.2-2" }}</td>
+                        <td *ngIf="['L1', 'L2', 'L4'].includes(u.QCLevels)" class="align-self-center">
+                            <Button class="btn btn-secondary btn-sm py-0 px-4">
+                                <span class="pointer" [ngbTooltip]="list" placement="top">
+                                    {{ u?.QCLevels }}
+                                </span>
+                            </Button>
+                        </td>
+                        <td *ngIf="['L3'].includes(u.QCLevels)" class="align-self-center">
+                            <Button class="btn btn-primary btn-sm py-0 px-4" (click)="openQCLModal(u)">
+                                <span
+                                    *ngIf="['L3'].includes(u.QCLevels)"
+                                    class="pointer"
+                                    [ngbTooltip]="list"
+                                    placement="top"
+                                >
+                                    {{ u?.QCLevels }}
+                                </span>
+                            </Button>
+                        </td>
+                        <ng-template #list>
+                            <div class="d-flex flex-column">
+                                <span *ngFor="let t of getTooltipOfQCLevels(u.QCLevels)" class="text-start">
+                                    {{ t?.parameterLabel }}
+                                </span>
+                            </div>
+                        </ng-template>
+                        <td *ngIf="!u.QCLevels" class="align-self-center">
+                            {{ u?.QCLevels ? u?.QCLevels : "-" }}
+                        </td>
+                        <td>
+                            <div class="d-flex justify-content-center">
+                                <span *ngIf="['approve', 'view', 'generate'].includes(action)">
+                                    {{ u.releasedQty | number : "1.2-2" }}
+                                </span>
+                                <input
+                                    *ngIf="!['approve', 'view', 'generate'].includes(action)"
+                                    class="form-control form-control-sm w-25"
+                                    type="number"
+                                    (input)="changeRelQty(u.MRNLineNumber, u)"
+                                    [(ngModel)]="u.releasedQty"
+                                    (ngModelChange)="relQtyChange($event, u.MRNLineNumber)"
+                                    [ngModelOptions]="{standalone: true}"
+                                />
+                            </div>
+                        </td>
+                        <td>
+                            <div class="d-flex justify-content-center">
+                                <span *ngIf="['approve', 'view', 'generate'].includes(action)">
+                                    {{ u.rejectedQty | number : "1.2-2" }}
+                                </span>
+                                <input
+                                    *ngIf="!['approve', 'view', 'generate'].includes(action)"
+                                    class="form-control form-control-sm w-25"
+                                    type="number"
+                                    (input)="changeREJQty(u.MRNLineNumber, u)"
+                                    [(ngModel)]="u.rejectedQty"
+                                    (ngModelChange)="rejQtyChange($event, u.MRNLineNumber)"
+                                    [ngModelOptions]="{standalone: true}"
+                                />
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <hr class="row line-border" />
+        <div class="row">
+            <div class="col-5 ms-0">
+                <button (click)="openMRNAndGRMRemarksModal()" class="btn btn-primary">MRN/GRN Remarks</button>
+            </div>
+
+            <div *ngIf="action != 'view'" class="col-7 text-end">
+                <button
+                    class="btn btn-primary px-5 col-3"
+                    type="button"
+                    (click)="submit('Rejected')"
+                    [disabled]="rejectFlag"
+                >
+                    Reject
+                </button>
+
+                <button
+                    class="btn btn-warning ms-3 text-nowrap col-3"
+                    type="button"
+                    [disabled]="!partialRFlag"
+                    (click)="L3Condition('Partially Released')"
+                >
+                    Partially Released
+                </button>
+
+                <button
+                    class="btn btn-success px-5 ms-3 col-3"
+                    type="button"
+                    (click)="L3Condition('Released')"
+                    [disabled]="releasedFlag"
+                >
+                    Released
+                </button>
+            </div>
+        </div>
+    </div>
+</form>

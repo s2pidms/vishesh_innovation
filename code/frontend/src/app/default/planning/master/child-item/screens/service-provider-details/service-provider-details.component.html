@@ -1,0 +1,147 @@
+<div style="min-height: 54rem" class="modelPage">
+    <div class="modal-header">
+        <div class="heading">Add Alternate External Service Provider's for Child Item</div>
+        <div>
+            <button
+                type="button"
+                class="btn btn-cross btn-sm"
+                aria-label="Close"
+                (click)="activeModal.close(serviceProviderDetails)"
+            >
+                <i class="fa fa-times-circle" aria-hidden="true"></i>
+            </button>
+        </div>
+    </div>
+    <div class="">
+        <div class="container-fluid">
+            <div class="row">
+                <form [formGroup]="form">
+                    <div class="row px-4 mt-4">
+                        <div class="col-md-4">
+                            <label class="form-label mb-1">
+                                Ext. Service Provider Name <span class="text-danger">*</span>
+                            </label>
+                            <ng-select
+                                [items]="ExtServiceProviderName"
+                                bindLabel="ESPName"
+                                bindValue="_id"
+                                formControlName="extServiceProvider"
+                                [clearable]="false"
+                                (change)="setSupplierCurrency($event)"
+                            >
+                            </ng-select>
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label mb-1">
+                                Mfg. Cost (Exclusive of GST) <span class="text-danger">*</span>
+                            </label>
+                            <div class="d-flex">
+                                <span class="input-group-text combine-INR text-secondary">
+                                    {{ "INR" | companyCurrency }}
+                                    <div class="vr ms-3"></div>
+                                </span>
+                                <input
+                                    class="form-control border-start-0"
+                                    type="number"
+                                    formControlName="manufacturingCost"
+                                />
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label mb-1"> Payment Terms <span class="text-danger">*</span></label>
+                            <select class="form-select" formControlName="paymentTerms">
+                                <option value="null">Select Payment Terms</option>
+                                <option *ngFor="let item of paymentTerms" [value]="item.value">{{ item.label }}</option>
+                            </select>
+                        </div>
+                    </div>
+                </form>
+                <div class="col text-center mt-4">
+                    <button
+                        class="btn bg-primary px-5"
+                        type="button"
+                        [disabled]="btnDisable || action == 'view'"
+                        (click)="addSuppliers()"
+                    >
+                        Add to List
+                    </button>
+                </div>
+                <hr class="line-border mt-4 px-5" />
+
+                <div class="px-5">
+                    <app-setting-header
+                        [data]="{page,pageSize,collection,search ,excelDisplay : 'none'}"
+                        (dataChange)="eventHeader($event)"
+                    >
+                    </app-setting-header>
+                </div>
+                <div style="min-height: 17rem" class="table-responsive mt-1 px-5">
+                    <table class="table table-bordered table-sticky">
+                        <thead class="bg-primary">
+                            <tr class="text-white">
+                                <th class="text-start">Ext. Service Provider Name</th>
+                                <th>Mfg. Cost (Exclusive of GST)</th>
+                                <th>Payment Terms</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr
+                                *ngFor="
+                                    let u of serviceProviderDetails
+                                        | searchFi1ter : search
+                                        | slice : (page - 1) * pageSize : (page - 1) * pageSize + pageSize;
+                                    let i = index
+                                "
+                            >
+                                <td class="text-start">{{ u?.extServiceProviderName }}</td>
+                                <td>{{ u?.manufacturingCost }}</td>
+                                <td>{{ u?.paymentTerms }}</td>
+
+                                <td>
+                                    <div class="dropdown">
+                                        <button class="dropbtn"></button>
+                                        <div class="dropdown-content">
+                                            <a href="javascript:void(0)" (click)="patchItem(u, i, 'view')">
+                                                <i class="fa fa-eye fa-lg me-2 text-primary" aria-hidden="true"></i>
+                                                View
+                                            </a>
+                                            <a href="javascript:void(0)" (click)="patchItem(u, i, 'edit')">
+                                                <i
+                                                    class="fa fa-pencil-square-o fa-lg me-2 text-primary"
+                                                    aria-hidden="true"
+                                                ></i>
+                                                Edit
+                                            </a>
+                                            <a
+                                                [class.disable]="this.action == 'view'"
+                                                href="javascript:void(0)"
+                                                (click)="deleteItem(i)"
+                                            >
+                                                <i class="fa fa-trash me-2 text-primary" aria-hidden="true"></i>
+                                                Delete
+                                            </a>
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <hr class="line-border my-5 px-5" />
+
+                <div class="text-center mb-5">
+                    <button
+                        class="btn bg-primary px-5"
+                        type="button"
+                        [disabled]="btnDisable || action == 'view'"
+                        (click)="activeModal.close(serviceProviderDetails)"
+                    >
+                        Save & Close
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

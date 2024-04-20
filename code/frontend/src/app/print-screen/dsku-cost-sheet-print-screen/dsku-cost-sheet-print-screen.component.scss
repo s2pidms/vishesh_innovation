@@ -1,0 +1,157 @@
+.table-responsive {
+  * {
+      font-size: 1.25rem;
+      font-weight: 600;
+      font-family: Arial, Helvetica, sans-serif !important;
+      color: #000000 !important;
+  }
+  overflow-x: inherit;
+  font-size: 1.4rem;
+  .paddingLR-lg {
+      padding: 3rem 6rem;
+      // padding-right: 6rem;
+  }
+  .paddingLR-sm {
+      padding: 1rem 6rem;
+      // padding-right: 6rem;
+  }
+  .border-bottom {
+      border-bottom: 2px solid #007daf !important;
+  }
+  .srNo {
+      background-color: #007daf !important;
+      font-weight: 400 !important;
+      color: white !important;
+  }
+  .costHead {
+      background-color: #007daf !important;
+      font-weight: 400 !important;
+      color: white !important;
+  }
+  .costUnit {
+      background-color: #007daf !important;
+      font-weight: 400 !important;
+      color: white !important;
+      width: 14rem !important;
+  }
+  .percentage {
+      background-color: #007daf !important;
+      font-weight: 400 !important;
+      color: white !important;
+      width: 10rem !important;
+  }
+  // th,
+  // td {
+  //     text-align: center;
+  //     vertical-align: middle;
+  //     word-wrap: break-word !important;
+  //     align-self: center;
+  //     align-items: center;
+  //     justify-content: center;
+  //     padding: 0.5rem;
+  //     max-width: 28rem;
+  //     word-wrap: break-word;
+  //     border: 0.55px solid rgb(181, 180, 180);
+  //     border-collapse: collapse;
+  // }
+
+  td {
+      color: #7d7d7d;
+      height: 28px;
+  }
+}
+@media print {
+  button {
+      display: none !important;
+  }
+
+  .page {
+      margin: 0;
+      border: initial;
+      border-radius: initial;
+      width: initial;
+      min-height: initial;
+      box-shadow: initial;
+      background: initial;
+      page-break-after: always;
+  }
+
+  * {
+      font-size: 1.7rem !important;
+      font-weight: 600 !important;
+      margin: 0;
+      font-family: Arial, Helvetica, sans-serif !important;
+      line-height: 1.9rem;
+      color: #000000 !important;
+  }
+
+  .table-responsive {
+      * {
+          font-size: 1.25rem;
+          font-weight: 600;
+          font-family: Arial, Helvetica, sans-serif !important;
+          color: #000000 !important;
+      }
+      overflow-x: inherit;
+      font-size: 1.4rem;
+      .paddingLR-lg {
+          padding: 3rem 6rem;
+          // padding-right: 6rem;
+      }
+      .paddingLR-sm {
+          padding: 1rem 6rem;
+          // padding-right: 6rem;
+      }
+      .border-bottom {
+          border-bottom: 2px solid #007daf !important;
+      }
+      .srNo {
+          background-color: #007daf !important;
+          font-weight: 400 !important;
+          color: white !important;
+      }
+      .costHead {
+          background-color: #007daf !important;
+          font-weight: 400 !important;
+          color: white !important;
+      }
+      .costUnit {
+          background-color: #007daf !important;
+          font-weight: 400 !important;
+          color: white !important;
+          width: 14rem !important;
+      }
+      .percentage {
+          background-color: #007daf !important;
+          font-weight: 400 !important;
+          color: white !important;
+          width: 10rem !important;
+      }
+
+      td {
+          color: #7d7d7d;
+          height: 28px;
+      }
+  }
+
+  // .table-responsive .table th {
+  //     background: #e6e6e6 !important;
+  //     font-size: 1.8rem !important;
+  // }
+
+  @page {
+      size: Letter !important;
+      margin: 0;
+  }
+
+  // .table-responsive {
+  //     th,
+  //     td {
+  //         padding: 0.6rem ;
+  //         .page-title {
+  //             font-size: 2.2rem !important;
+  //             font-weight: bolder;
+  //         }
+  //     }
+  // }
+}

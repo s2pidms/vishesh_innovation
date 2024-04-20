@@ -1,0 +1,176 @@
+<Form class="px-2" class="formCard card">
+    <div class="container">
+        <div class="row form-header">
+            <div class="col heading">
+                <label class="">Finished Goods Inward (Entry)</label>
+            </div>
+        </div>
+        <div class="form-body">
+            <div class="row">
+                <div class="col-3">
+                    <label class="form-label mb-2">FG Inward Entry No.<span class="text-danger">*</span></label>
+                    <input class="form-control" type="text" [(ngModel)]="FGINNo" readonly />
+                </div>
+                <div class="col-3">
+                    <label class="form-label mb-2">FG Inward Entry Date<span class="text-danger">*</span> </label>
+                    <input type="date" class="form-control" [(ngModel)]="FGINDate" />
+                </div>
+                <div class="col-3">
+                    <label class="form-label mb-2">Location<span class="text-danger">*</span></label>
+                    <select class="form-select" [(ngModel)]="location">
+                        <option selected disabled value="">Select Location</option>
+                        <option *ngFor="let item of locationArr" [value]="item.value">
+                            {{ item.label }}
+                        </option>
+                    </select>
+                </div>
+                <div class="col-3 pe-5">
+                    <label class="form-label mb-2">Product Category<span class="text-danger">*</span></label>
+                    <!-- <ng-select
+                        [items]="productCategories"
+                        bindLabel="item"
+                        bindValue="item"
+                        (change)="setFilterData()"
+                        [(ngModel)]="productCategory"
+                        [clearable]="false"
+                    >
+                    </ng-select> -->
+                    <div class="d-flex align-items-center">
+                        <div class="col-11">
+                            <ng-select
+                                [items]="productCategories"
+                                bindLabel="label"
+                                bindValue="value"
+                                [(ngModel)]="productCategory"
+                                [clearable]="false"
+                                (change)="setFilterData($event)"
+                            >
+                            </ng-select>
+                        </div>
+                        <div
+                            style="height: 2.9rem"
+                            class="input-group-text bg-primary pointer fs-4 col-auto"
+                            id="basic-addon1"
+                            (click)="openProductCategoryModal()"
+                        >
+                            <i class="fa fa-search text-white" aria-hidden="true"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <hr class="row line-border" />
+        <app-setting-header
+            [data]="{page,pageSize,collection,search, excelDisplay : 'none'}"
+            (dataChange)="eventHeader($event)"
+        >
+        </app-setting-header>
+        <div class="table-responsive" style="min-height: 23rem">
+            <table class="table table-bordered table-sticky mt-1">
+                <thead class="bg-primary">
+                    <tr class="text-white">
+                        <th sortable="SKUNo" (sort)="onSort($event)">SKU No</th>
+                        <th class="text-start" sortable="SKUName" (sort)="onSort($event)">
+                            {{ "SKU Name" | labelTranslate }}
+                        </th>
+                        <th class="text-start" sortable="SKUDescription" (sort)="onSort($event)">
+                            {{ "SKU Description" | labelTranslate }}
+                        </th>
+                        <th sortable="partNo" (sort)="onSort($event)">Part No.</th>
+                        <th sortable="UOM" (sort)="onSort($event)">UoM</th>
+                        <th sortable="jobCardNo" (sort)="onSort($event)">Job Card No.</th>
+                        <th sortable="FGINQuantity" (sort)="onSort($event)">Inward Qty</th>
+                        <th sortable="batchNo" (sort)="onSort($event)">Batch No.</th>
+                        <th sortable="manufacturingDate" (sort)="onSort($event)">Batch Date</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr
+                        *ngFor="
+                            let item of filterTableData
+                                | searchFi1ter : search
+                                | slice : (page - 1) * pageSize : (page - 1) * pageSize + pageSize;
+                            trackBy: trackByFn;
+                            let i = index
+                        "
+                    >
+                        <td>{{ item.SKUNo }}</td>
+                        <td class="text-start" [style.width]="SKUName.clientWidth" #SKUName>
+                            <span class="pointer" [positionTarget]="SKUName" [ngbTooltip]="item.SKUName">
+                                {{ item?.SKUName }}
+                            </span>
+                        </td>
+                        <td class="text-start" [style.width]="SKUDescription.clientWidth" #SKUDescription>
+                            <span class="pointer" [positionTarget]="SKUDescription" [ngbTooltip]="item.SKUDescription">
+                                {{ item?.SKUDescription }}
+                            </span>
+                        </td>
+                        <td>{{ item.partNo }}</td>
+                        <td>{{ item.UOM }}</td>
+                        <td>
+                            <div class="d-flex justify-content-center">
+                                <input
+                                    class="form-control form-control-sm w-25"
+                                    type="text"
+                                    [(ngModel)]="item.jobCardNo"
+                                    [ngModelOptions]="{standalone: true}"
+                                />
+                            </div>
+                        </td>
+                        <td>
+                            <div class="d-flex justify-content-center">
+                                <input
+                                    class="form-control form-control-sm w-25"
+                                    type="number"
+                                    [(ngModel)]="item.FGINQuantity"
+                                    [ngModelOptions]="{standalone: true}"
+                                />
+                            </div>
+                        </td>
+                        <td>
+                            <div class="d-flex justify-content-center">
+                                <input
+                                    class="form-control form-control-sm w-25"
+                                    type="text"
+                                    [(ngModel)]="item.batchNo"
+                                    [ngModelOptions]="{standalone: true}"
+                                />
+                            </div>
+                        </td>
+                        <td>
+                            <div class="d-flex justify-content-center">
+                                <input
+                                    (change)="setExpiryDate(item, i)"
+                                    class="form-control form-control-sm w-25"
+                                    type="date"
+                                    [(ngModel)]="item.manufacturingDate"
+                                    [ngModelOptions]="{standalone: true}"
+                                />
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <hr class="row line-border" />
+        <div class="row">
+            <div appAccessControl [accessType]="rolePermissionActions.createAction" class="col text-center">
+                <div class="d-grid gap-2 d-md-block">
+                    <button type="button" class="btn btn-primary px-5 me-3" (click)="reset()">Reset</button>
+                    <button
+                        type="button"
+                        class="btn btn-primary px-4 me-1"
+                        [disabled]="!isESCPreview"
+                        (click)="ESCPreview()"
+                    >
+                        Esc
+                    </button>
+                    <button type="button" class="btn btn-primary px-4 me-3" (click)="preview()">Preview</button>
+                    <button class="btn btn-primary px-5" type="button" [disabled]="!isPreview" (click)="update()">
+                        Save
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</Form>

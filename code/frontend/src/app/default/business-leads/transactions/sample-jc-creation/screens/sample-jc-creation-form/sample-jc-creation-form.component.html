@@ -1,0 +1,257 @@
+<form [formGroup]="form" class="formCard card">
+    <div class="container">
+        <div class="row form-header">
+            <div class="col heading">
+                <label class="">Sample Job Card Creation ({{ action | titlecase }})</label>
+            </div>
+        </div>
+        <div class="form-body">
+            <div class="row">
+                <div class="col-5">
+                    <div class="row">
+                        <div class="col-5">
+                            <label class="form-label mb-0"> Stage<span class="text-danger">*</span> </label>
+                            <!-- <select class="form-select" formControlName="stage" (change)="setStageDetails()">
+                                <option [value]="null" selected disabled>Select</option>
+                                <ng-container *ngFor="let ele of masterData.stages; trackBy: trackByFn">
+                                    <option [value]="ele">
+                                        {{ ele }}
+                                    </option>
+                                </ng-container>
+                            </select> -->
+                            <input class="form-control" type="text" formControlName="stage" readonly />
+                        </div>
+                        <div class="col-7 px-0">
+                            <div class="row">
+                                <div class="col-6 pe-3">
+                                    <label class="form-label mb-0">
+                                        Job Card No. <span class="text-danger">*</span>
+                                    </label>
+                                    <input class="form-control" type="text" formControlName="jobCardNo" readonly />
+                                </div>
+                                <div class="col-6 ps-3">
+                                    <label class="form-label mb-0">
+                                        Job Card Date <span class="text-danger">*</span>
+                                    </label>
+                                    <input class="form-control" type="date" formControlName="jobCardDate" />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-7">
+                    <div class="row">
+                        <div class="col-4">
+                            <label class="form-label mb-0">
+                                Customer Category <span class="text-danger">*</span>
+                            </label>
+                            <select class="form-select" formControlName="customerCategory" (change)="getCustomers()">
+                                <option [value]="null" selected disabled>Select</option>
+                                <ng-container *ngFor="let ele of masterData.salesCategory; trackBy: trackByFn">
+                                    <option [value]="ele.value">
+                                        {{ ele.label }}
+                                    </option>
+                                </ng-container>
+                            </select>
+                        </div>
+                        <div class="col-5 ps-0">
+                            <label class="form-label mb-0"> Customer Name <span class="text-danger">*</span> </label>
+                            <ng-select
+                                [items]="customerOptions"
+                                bindLabel="customerName"
+                                bindValue="_id"
+                                [clearable]="false"
+                                formControlName="customer"
+                                (change)="customerValueChange($event)"
+                            >
+                            </ng-select>
+                        </div>
+                        <div class="col-3 ps-0">
+                            <label class="form-label"> Order Type <span class="text-danger">*</span> </label>
+                            <!-- <select class="form-select" formControlName="orderType" (change)="setTablesDetails()">
+                                <option [value]="null" selected disabled>Select Order Type</option>
+                                <ng-container *ngFor="let item of masterData.orderTypes; trackBy: trackByFn">
+                                    <option [value]="item">
+                                        {{ item }}
+                                    </option>
+                                </ng-container>
+                            </select> -->
+                            <input class="form-control" type="text" formControlName="orderType" readonly />
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <hr class="row line-border" />
+        <div class="table-responsive text-wrap" style="min-height: 22.5rem">
+            <div class="table-responsive">
+                <app-setting-header
+                    [data]="{page,pageSize,collection,search, excelDisplay : 'none'}"
+                    (dataChange)="eventHeader($event)"
+                >
+                </app-setting-header>
+
+                <table class="table table-bordered mt-0 table-sm">
+                    <thead class="bg-info">
+                        <tr class="text-white">
+                            <th sortable="SO_FCNumber" (sort)="onSort($event)">SR No.</th>
+                            <th sortable="SO_FCDate" (sort)="onSort($event)">SR Date</th>
+                            <th sortable="code" (sort)="onSort($event)">Code</th>
+                            <th sortable="SKUNo" (sort)="onSort($event)">SKU Code</th>
+                            <th class="text-start" sortable="SKUName" (sort)="onSort($event)">
+                                {{ "SKU Name" | labelTranslate }}
+                            </th>
+                            <th class="text-start" sortable="SKUDescription" (sort)="onSort($event)">
+                                {{ "SKU Description" | labelTranslate }}
+                            </th>
+                            <th>DWG</th>
+                            <th sortable="UOM" (sort)="onSort($event)">UoM</th>
+                            <th sortable="balQty" (sort)="onSort($event)">Bal SR Qty</th>
+                            <th>FG Inv</th>
+                            <th sortable="batchQty" (sort)="onSort($event)">Batch Qty</th>
+                            <th>Disp.</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        <tr
+                            *ngFor="
+                                let u of SKUDetailsOfJC
+                                    | searchFi1ter : search
+                                    | slice : (page - 1) * pageSize : (page - 1) * pageSize + pageSize;
+                                trackBy: trackByFn
+                            "
+                        >
+                            <td>{{ u?.SO_FCNumber }}</td>
+                            <td>
+                                {{ u?.SO_FCDate ? (u?.SO_FCDate | date : "dd-MM-YYYY") : null }}
+                            </td>
+                            <td class="text-start">
+                                <div class="box">
+                                    <div [style.background-color]="u?.code"></div>
+                                </div>
+                            </td>
+                            <td>
+                                {{ u?.SKUNo }}
+                            </td>
+                            <td class="text-start" [style.width]="SKUName.clientWidth" #SKUName>
+                                <span class="pointer" [ngbTooltip]="u.SKUName" [positionTarget]="SKUName">
+                                    {{ u?.SKUName }}
+                                </span>
+                            </td>
+                            <td class="text-start" [style.width]="SKUDescription.clientWidth" #SKUDescription>
+                                <span class="pointer" [ngbTooltip]="u.SKUDescription" [positionTarget]="SKUDescription">
+                                    {{ u?.SKUDescription }}
+                                </span>
+                            </td>
+                            <td #internalPartNo>
+                                <span
+                                    class="d-flex justify-content-center pointer"
+                                    [ngbTooltip]="u.internalPartNo"
+                                    [positionTarget]="internalPartNo"
+                                >
+                                    <div (click)="openDrawing(u.drawing)" class="drawingIcon"></div>
+                                </span>
+                            </td>
+                            <td>
+                                {{ u?.UOM }}
+                            </td>
+                            <td>{{ u?.balQty | number : "1.2-2" }}</td>
+                            <td>
+                                <span class="d-flex justify-content-center pointer">
+                                    <div (click)="openFGInventoryModal(u)" class="FGMip"></div>
+                                </span>
+                            </td>
+                            <td>
+                                <div class="d-flex justify-content-center">
+                                    <span *ngIf="['approve', 'reject', 'view', 'generate', 'cancel'].includes(action)">
+                                        {{ u?.batchQty | number : "1.2-2" }}
+                                    </span>
+                                    <input
+                                        type="number"
+                                        class="form-control form-control-xs w-25"
+                                        *ngIf="!['approve', 'reject', 'view', 'generate', 'cancel'].includes(action)"
+                                        [(ngModel)]="u.batchQty"
+                                        [ngModelOptions]="{standalone: true}"
+                                        (input)="setBatchQty(u)"
+                                        [disabled]="selectDSKU && selectDSKU != u.SKUNo"
+                                    />
+                                </div>
+                            </td>
+                            <td>
+                                <span class="d-flex justify-content-center pointer">
+                                    <div (click)="openSOScheduleModal(u)" class="assetCalendarTD"></div>
+                                </span>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <hr class="row line-border mt-3" />
+        <div class="row align-items-center">
+            <div class="col-3">
+                <button class="plusIconSvg btn btn-primary me-1"></button>
+                <button class="btn btn-primary px-3 me-4" type="button" (click)="openBatchInfoModal()">
+                    Batch Info
+                </button>
+                <button
+                    class="btn btn-primary px-4"
+                    type="button"
+                    (click)="openViewMRPModal()"
+                    [disabled]="itemDetailsList.length == 0"
+                >
+                    View MRP
+                </button>
+            </div>
+            <div *ngIf="masterData.companyType == 'Printing Industry'" class="col-3 px-0">
+                <div class="d-flex justify-content-center align-items-center">
+                    <div class="col-form-label text-nowrap">NPD Input <span>&#9654;</span></div>
+                    <select class="form-select mx-2" formControlName="NPDInput">
+                        <option [value]="null" selected disabled>Select</option>
+                        <ng-container *ngFor="let ele of masterData.NPDInputs; trackBy: trackByFn">
+                            <option [value]="ele.parameterName">
+                                {{ ele.parameterLabel }}
+                            </option>
+                        </ng-container>
+                    </select>
+                </div>
+            </div>
+            <div *ngIf="action == 'cancel'" class="col pe-0">
+                <div class="d-flex justify-content-center align-items-center">
+                    <div class="col-form-label text-nowrap">
+                        Reason for Cancellation<span class="text-danger me-2">*</span>
+                        <span>&#9654;</span>
+                    </div>
+                    <input class="form-control mx-2" type="text" formControlName="JCCancellationReason" />
+                </div>
+            </div>
+            <div class="col-md-auto ms-auto">
+                <div *ngIf="['create', 'edit'].includes(action)" class="d-grid gap-2 d-md-block">
+                    <button class="btn btn-primary px-5 me-4" type="button" (click)="reset()">Reset</button>
+                    <button
+                        type="button"
+                        class="btn btn-primary me-1"
+                        [disabled]="!isESCPreview"
+                        (click)="ESCPreview()"
+                    >
+                        Esc
+                    </button>
+                    <button class="btn btn-primary px-4 me-4" type="button" (click)="preview()">Preview</button>
+                    <button type="button" class="btn btn-primary px-5" [disabled]="!isPreview" (click)="submit()">
+                        Save
+                    </button>
+                </div>
+                <!-- <div *ngIf="['edit'].includes(action)" class="d-grid gap-2 d-md-block">
+                          <button type="button" class="btn btn-primary px-5" (click)="submit()">Save</button>
+                      </div> -->
+                <div *ngIf="action == 'cancel'" class="content-end">
+                    <button class="btn btn-primary px-5" type="button" (click)="openCancelModal()">Cancel</button>
+                </div>
+                <div *ngIf="action == 'approve'" class="content-end">
+                    <button class="btn btn-primary px-5" type="button" (click)="submit()">Approve</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>

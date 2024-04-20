@@ -1,0 +1,89 @@
+<div class="listCard card">
+    <div class="table-header">
+        <label class="heading">Goods Requisition Summary</label>
+    </div>
+    <div appAccessControl [accessType]="rolePermissionActions.createAction" class="text-center">
+        <button class="plusIconSvg btn btn-primary me-1"></button>
+        <button class="btn btn-primary btn-add px-4" type="button" (click)="navigateTo('../form', {}, 'create')">
+            Create Goods Requisition
+        </button>
+    </div>
+
+    <hr class="line-border" />
+    <div class="table-responsive">
+        <app-setting-header [data]="{page,pageSize,collection,search,type: 'list'}" (dataChange)="eventHeader($event)">
+        </app-setting-header>
+
+        <table class="table table-bordered">
+            <thead class="bg-primary">
+                <tr class="text-white">
+                    <th sortable="GRNumber" (sort)="onSort($event)">GR No.</th>
+                    <th sortable="GRDateS" (sort)="onSort($event)">GR Date</th>
+                    <th sortable="deliveryLocation" (sort)="onSort($event)">Location (Store)</th>
+                    <th class="text-start" sortable="department" (sort)="onSort($event)">Department</th>
+                    <th class="text-start" sortable="salesOrderSKUReference" (sort)="onSort($event)">
+                        Order Reference
+                    </th>
+                    <th sortable="GRStatus" (sort)="onSort($event)">Status</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let u of tableData; trackBy: trackByFn">
+                    <td>{{ u.GRNumber }}</td>
+                    <td>{{ u.GRDateS }}</td>
+                    <td>{{ u.deliveryLocation }}</td>
+                    <td class="text-start">{{ u.department }}</td>
+                    <td class="text-start">{{ u.salesOrderSKUReference }}</td>
+                    <td>{{ u.GRStatus }}</td>
+                    <td>
+                        <div class="dropdown">
+                            <button class="dropbtn"></button>
+                            <div class="dropdown-content">
+                                <a
+                                    appAccessControl
+                                    [accessType]="rolePermissionActions.viewAction"
+                                    href="javascript:void(0)"
+                                    (click)="navigateTo('../form', u, 'view')"
+                                >
+                                    <i class="fa fa-eye fa-lg me-2 text-primary" aria-hidden="true"></i>
+                                    View
+                                </a>
+                                <a
+                                    appAccessControl
+                                    [accessType]="rolePermissionActions.editAction"
+                                    href="javascript:void(0)"
+                                    [class.disable]="u?.GRStatus === 'Approved' || u?.GRStatus === 'Rejected'"
+                                    (click)="navigateTo('../form', u, 'edit')"
+                                >
+                                    <i class="fa fa-pencil-square-o fa-lg me-2 text-primary" aria-hidden="true"></i>
+                                    Edit
+                                </a>
+                                <a
+                                    appAccessControl
+                                    [accessType]="rolePermissionActions.approveAction"
+                                    href="javascript:void(0)"
+                                    [class.disable]="u?.GRStatus === 'Approved' || u?.GRStatus === 'Rejected'"
+                                    (click)="navigateTo('../form', u, 'approve')"
+                                >
+                                    <i class="fa fa-check fa-lg me-2 text-success" aria-hidden="true"></i>
+                                    Approve
+                                </a>
+                                <a
+                                    appAccessControl
+                                    [accessType]="rolePermissionActions.approveAction"
+                                    href="javascript:void(0)"
+                                    [class.disable]="u?.GRStatus === 'Approved' || u?.GRStatus === 'Rejected'"
+                                    (click)="navigateTo('../form', u, 'reject')"
+                                >
+                                    <i class="fa fa-close me-3 text-primary" aria-hidden="true"></i>
+                                    Reject
+                                </a>
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>

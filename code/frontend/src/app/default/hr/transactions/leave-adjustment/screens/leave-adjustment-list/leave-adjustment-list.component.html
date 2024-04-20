@@ -1,0 +1,93 @@
+<div class="listCard card">
+    <div class="table-header">
+        <label class="heading">Leave Adjustment Summary</label>
+    </div>
+    <div class="table-responsive">
+        <app-setting-header [data]="{page,pageSize,collection,search,type: 'list'}" (dataChange)="eventHeader($event)">
+        </app-setting-header>
+
+        <table class="table table-bordered">
+            <thead class="bg-primary">
+                <tr class="text-white">
+                    <th sortable="applicationDate" (sort)="onSort($event)">Application Dt.</th>
+                    <th sortable="empCode" (sort)="onSort($event)">Employee Code</th>
+                    <th class="text-start" sortable="empFullName" (sort)="onSort($event)">Employee Name</th>
+                    <th sortable="fromDate" (sort)="onSort($event)">From Date</th>
+                    <th sortable="toDate" (sort)="onSort($event)">To Date</th>
+                    <th sortable="leaveType" (sort)="onSort($event)">Leave Type</th>
+                    <th sortable="leaveDays" (sort)="onSort($event)">Leave Days</th>
+                    <th sortable="resumptionDate" (sort)="onSort($event)">Resumption Dt.</th>
+                    <th sortable="status" (sort)="onSort($event)">Status</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let u of tableData; trackBy: trackByFn">
+                    <td>{{ u?.applicationDateS }}</td>
+                    <td>{{ u?.empCode }}</td>
+                    <td class="text-start">{{ u?.empFullName }}</td>
+                    <td>{{ u?.fromDateS }}</td>
+                    <td>{{ u?.toDateS }}</td>
+                    <td>{{ u?.leaveType }}</td>
+                    <td>{{ u?.leaveDays }}</td>
+                    <td>{{ u?.resumptionDateS }}</td>
+                    <td>{{ u?.status }}</td>
+                    <td>
+                        <div class="dropdown">
+                            <button class="dropbtn"></button>
+                            <div class="dropdown-content">
+                                <a
+                                    appAccessControl
+                                    [accessType]="rolePermissionActions.viewAction"
+                                    href="javascript:void(0)"
+                                    (click)="
+                                        navigateTo(
+                                            '/default/HR/transactions/leave_adjustment/leave-adjustment-form',
+                                            u,
+                                            'view'
+                                        )
+                                    "
+                                >
+                                    <i class="fa fa-eye fa-lg me-2 text-primary" aria-hidden="true"></i>
+                                    View
+                                </a>
+                                <a
+                                    appAccessControl
+                                    [accessType]="rolePermissionActions.editAction"
+                                    href="javascript:void(0)"
+                                    [class.disable]="u.status != 'Approved'"
+                                    (click)="
+                                        navigateTo(
+                                            '/default/HR/transactions/leave_adjustment/leave-adjustment-form',
+                                            u,
+                                            'edit'
+                                        )
+                                    "
+                                >
+                                    <i class="fa fa-pencil-square-o fa-lg me-2 text-primary" aria-hidden="true"></i>
+                                    Edit
+                                </a>
+                                <a
+                                    appAccessControl
+                                    [accessType]="rolePermissionActions.approveAction"
+                                    href="javascript:void(0)"
+                                    [class.disable]="u.status !== 'Submitted'"
+                                    (click)="
+                                        navigateTo(
+                                            '/default/HR/transactions/leave_adjustment/leave-adjustment-form',
+                                            u,
+                                            'approve'
+                                        )
+                                    "
+                                >
+                                    <i class="fa fa-check fa-lg me-2 text-success" aria-hidden="true"></i>
+                                    Approve
+                                </a>
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>

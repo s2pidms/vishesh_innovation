@@ -1,0 +1,192 @@
+<div class="modelPage">
+    <div class="modal-header">
+        <div class="heading">Add Customers</div>
+        <div>
+            <button
+                type="button"
+                class="btn btn-cross btn-sm"
+                aria-label="Close"
+                (click)="activeModal.close(customerInfoArray)"
+            >
+                <i class="fa fa-times-circle" aria-hidden="true"></i>
+            </button>
+        </div>
+    </div>
+    <div class="">
+        <form [formGroup]="form">
+            <div class="row mb-4 px-5 mt-4">
+                <div class="col-3 pe-5">
+                    <label class="form-label mb-1">Customer/Prospect Name <span class="text-danger">*</span></label>
+
+                    <div class="d-flex align-items-center">
+                        <div class="col-11">
+                            <ng-select
+                                [items]="customerNPDArray"
+                                bindLabel="name"
+                                bindValue="_id"
+                                formControlName="reference"
+                                [clearable]="false"
+                                (change)="setCustomerDetails($event)"
+                            >
+                            </ng-select>
+                        </div>
+                        <div
+                            style="height: 2.9rem"
+                            class="input-group-text bg-primary pointer col-auto fs-4"
+                            id="basic-addon1"
+                            (click)="openCustomersDetailsModal()"
+                        >
+                            <i class="fa fa-search text-white" aria-hidden="true"></i>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <label class="form-label mb-1">
+                        Customer/Prospect Part No.
+                        <span class="text-danger"></span>
+                    </label>
+                    <input class="form-control" type="text" formControlName="customerPartNo" />
+                </div>
+                <div class="col-md-3">
+                    <label class="form-label mb-1"> Currency <span class="text-danger"></span> </label>
+                    <input class="form-control" type="text" formControlName="customerCurrency" readonly />
+                </div>
+                <div class="col-md-3">
+                    <label class="form-label mb-1">
+                        Selling Price [Excl. of GST]<span class="text-danger">*</span>
+                    </label>
+                    <input class="form-control" type="number" formControlName="standardSellingRate" />
+                </div>
+            </div>
+            <div class="row mb-4 px-5">
+                <div class="col-3">
+                    <label class="form-label mb-1">Avg. Monthly off-take <span class="text-danger"></span></label>
+                    <input class="form-control" formControlName="monthlyOffTake" type="number" />
+                </div>
+                <div class="col-3">
+                    <label class="form-label mb-1">PO No. (For open PO) <span class="text-danger"></span></label
+                    ><input class="form-control" formControlName="PONo" type="text" />
+                </div>
+                <div class="col-3">
+                    <label class="form-label mb-1">PO Date (For Open PO)<span class="text-danger"></span></label>
+                    <input type="date" class="form-control" formControlName="PODate" />
+                </div>
+                <div class="col-3">
+                    <div class="row">
+                        <div class="col-10">
+                            <label class="form-label mb-1"
+                                >PO Validity (For Open PO) <span class="text-danger"></span></label
+                            ><input class="form-control" formControlName="POValidDate" type="date" />
+                        </div>
+                        <div class="col-2 d-flex align-items-end ps-0">
+                            <button
+                                class="plusIconSvg btn btn-primary"
+                                type="button"
+                                [disabled]="btnDisable || action == 'view' || action == 'Converted to SKU'"
+                                (click)="addCustomer()"
+                            ></button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+        <hr class="line-border mt-4 px-0 mb-0" />
+
+        <div class="px-5">
+            <app-setting-header
+                [data]="{page,pageSize,collection,search ,excelDisplay : 'none'}"
+                (dataChange)="eventHeader($event)"
+            >
+            </app-setting-header>
+        </div>
+        <div style="min-height: 17rem" class="table-responsive mt-0 px-5">
+            <table class="table table-bordered table-sticky">
+                <thead class="bg-primary">
+                    <tr class="text-white">
+                        <th class="text-start">Customer/Prospect Name</th>
+                        <th>Customer Part No.</th>
+                        <th>Currency</th>
+                        <th>Selling Price</th>
+                        <th>AMO</th>
+                        <th>Open PO No.</th>
+                        <th>Open PO Date</th>
+                        <th>PO Validity Dt.</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr
+                        *ngFor="
+                            let u of customerInfoArray
+                                | searchFi1ter : search
+                                | slice : (page - 1) * pageSize : (page - 1) * pageSize + pageSize;
+                            let i = index
+                        "
+                    >
+                        <td class="text-start" [style.width]="customerName.clientWidth" #customerName>
+                            <span class="pointer" [ngbTooltip]="u.customerName" [positionTarget]="customerName">
+                                {{ u.customerName }}
+                            </span>
+                        </td>
+                        <td>{{ u?.customerPartNo }}</td>
+                        <td>{{ u?.customerCurrency }}</td>
+                        <td>{{ u?.standardSellingRate }}</td>
+                        <td>{{ u?.monthlyOffTake }}</td>
+                        <td>{{ u?.PONo }}</td>
+                        <td>{{ u?.PODate | date : "dd-MM-YYYY" }}</td>
+                        <td>{{ u?.POValidDate | date : "dd-MM-YYYY" }}</td>
+
+                        <td>
+                            <div class="dropdown">
+                                <button class="dropbtn"></button>
+                                <div class="dropdown-content">
+                                    <a
+                                        [class.disable]="action == 'Converted to SKU'"
+                                        href="javascript:void(0)"
+                                        (click)="patchItem(u, i, 'view')"
+                                    >
+                                        <i class="fa fa-eye fa-lg me-2 text-primary" aria-hidden="true"></i>
+                                        View
+                                    </a>
+                                    <a
+                                        [class.disable]="action == 'Converted to SKU'"
+                                        href="javascript:void(0)"
+                                        (click)="patchItem(u, i, 'edit')"
+                                    >
+                                        <i class="fa fa-pencil-square-o fa-lg me-2 text-primary" aria-hidden="true"></i>
+                                        Edit
+                                    </a>
+                                    <a
+                                        [class.disable]="this.action == 'view' || action == 'Converted to SKU'"
+                                        href="javascript:void(0)"
+                                        (click)="deleteItem(i)"
+                                    >
+                                        <i class="fa fa-trash me-2 text-primary" aria-hidden="true"></i>
+                                        Delete
+                                    </a>
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <hr class="line-border mt-3 px-5" />
+
+        <div class="row">
+            <div class="col">
+                <div class="text-center mt-3 mb-4">
+                    <button
+                        class="btn btn-primary px-5"
+                        type="button"
+                        [disabled]="btnDisable || action == 'view' || action == 'Converted to SKU'"
+                        (click)="activeModal.close(customerInfoArray)"
+                    >
+                        Save
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,112 @@
+<div class="listCard card">
+    <div class="table-header">
+        <label class="heading">Asset Summary</label>
+    </div>
+
+    <div appAccessControl [accessType]="rolePermissionActions.createAction" class="text-center">
+        <button class="plusIconSvg btn btn-primary me-1"></button>
+        <button class="btn btn-primary btn-add px-5" type="button" (click)="navigateTo('../form', {}, 'create')">
+            Asset
+        </button>
+    </div>
+    <hr class="line-border" />
+    <div class="table-responsive">
+        <app-setting-header [data]="{page,pageSize,collection,search,type: 'list'}" (dataChange)="eventHeader($event)">
+        </app-setting-header>
+
+        <table class="table table-bordered">
+            <thead class="bg-secondary">
+                <tr class="text-white">
+                    <!-- <th class="text-start" sortable="assetType" (sort)="onSort($event)">Asset Class</th> -->
+                    <th sortable="assetCode" (sort)="onSort($event)">Asset No.</th>
+                    <th class="text-start" sortable="assetName" (sort)="onSort($event)">Asset Name</th>
+                    <th class="text-start" sortable="assetDescription" (sort)="onSort($event)">Asset Description</th>
+                    <th sortable="assetPurchaseDate" (sort)="onSort($event)">Purchase Date</th>
+                    <th sortable="estimatedUsefulLifeInYear" (sort)="onSort($event)">Life (Yr)</th>
+                    <th sortable="location" (sort)="onSort($event)">Aging</th>
+                    <th
+                        *ngIf="menuItemId == financeMenuItemId"
+                        class="text-start"
+                        sortable="assetPurchaseDateS"
+                        (sort)="onSort($event)"
+                    >
+                        Asset Cost/Hr
+                    </th>
+                    <th>Status</th>
+
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let u of tableData; trackBy: trackByFn">
+                    <!-- <td class="text-start">{{ u?.assetType }}</td> -->
+                    <td>{{ u?.assetCode }}</td>
+                    <td class="text-start" [style.width]="assetName.clientWidth" #assetName>
+                        <span class="pointer" [positionTarget]="assetName" [ngbTooltip]="u.assetName">
+                            {{ u.assetName }}
+                        </span>
+                    </td>
+                    <td class="text-start" [style.width]="assetDescription.clientWidth" #assetDescription>
+                        <span class="pointer" [positionTarget]="assetDescription" [ngbTooltip]="u.assetDescription">
+                            {{ u.assetDescription }}
+                        </span>
+                    </td>
+                    <td>{{ u.assetPurchaseDateS }}</td>
+                    <td>{{ u.estimatedUsefulLifeInYear }}</td>
+                    <td>
+                        <span class="d-flex justify-content-center">
+                            <div *ngIf="u.expiryStatus == 'green'" class="flaggreen"></div>
+                            <div *ngIf="u.expiryStatus == 'red'" class="flagred"></div>
+                            <div *ngIf="u.expiryStatus == 'orange'" class="flagYellow"></div>
+                        </span>
+                    </td>
+                    <td *ngIf="menuItemId == financeMenuItemId" class="text-start" class="py-0 text-center">
+                        <div class="d-flex justify-content-start align-items-center">
+                            <span
+                                *ngIf="u?.totalAssetCostPerHr"
+                                class="input-group-text text-secondary combine-INR border border-0"
+                            >
+                                {{ "INR" | companyCurrency }}
+                                <div class="vr ms-3"></div>
+                            </span>
+                            <span class="total-cost-color">
+                                {{ u?.totalAssetCostPerHr | number : "1.2-2" }}
+                            </span>
+                        </div>
+                    </td>
+                    <td>
+                        <span class="d-flex justify-content-center">
+                            <div *ngIf="u.status == 'Active'" class="statusActive"></div>
+                            <div *ngIf="u.status == 'Inactive'" class="statusInActive"></div>
+                        </span>
+                    </td>
+                    <td>
+                        <div class="dropdown">
+                            <button class="dropbtn"></button>
+                            <div class="dropdown-content">
+                                <a
+                                    appAccessControl
+                                    [accessType]="rolePermissionActions.viewAction"
+                                    href="javascript:void(0)"
+                                    (click)="navigateTo('../form', u, 'view')"
+                                >
+                                    <i class="fa fa-eye fa-lg me-2 text-primary" aria-hidden="true"></i>
+                                    View
+                                </a>
+                                <a
+                                    appAccessControl
+                                    [accessType]="rolePermissionActions.editAction"
+                                    href="javascript:void(0)"
+                                    (click)="navigateTo('../form', u, 'edit')"
+                                >
+                                    <i class="fa fa-pencil-square-o fa-lg me-2 text-primary" aria-hidden="true"></i>
+                                    Edit
+                                </a>
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>

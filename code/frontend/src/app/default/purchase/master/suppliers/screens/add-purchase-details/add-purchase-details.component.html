@@ -1,0 +1,47 @@
+<div class="modelPage">
+    <div class="modal-header">
+        <div class="heading">Purchase Details</div>
+        <div>
+            <button type="button" class="btn btn-cross btn-sm" aria-label="Close" (click)="dismissModel()">
+                <i class="fa fa-times-circle" aria-hidden="true"></i>
+            </button>
+        </div>
+    </div>
+    <div class="">
+        <div class="container-fluid px-0">
+            <form [formGroup]="form" class="p-0">
+                <div class="row px-5 mt-4">
+                    <div class="col-md-4 pe-0">
+                        <label class="form-label">
+                            Lead Time for Supply (in Days)<span class="text-danger">*</span>
+                        </label>
+                        <input class="form-control" type="number" formControlName="supplierLeadTimeInDays" />
+                    </div>
+                    <div class="col-md-8 pe-0">
+                        <app-file-upload
+                            [fileName]="form.controls['cpaFile'].value"
+                            [url]="form.controls['cpaFileUrl'].value"
+                            [label]="'Contract Purchase Agreement'"
+                            [(file)]="cpaPurchaseAgreement"
+                        ></app-file-upload>
+                    </div>
+                </div>
+            </form>
+
+            <hr class="line-border my-5" />
+
+            <div class="row text-center mb-5 px-5">
+                <div class="col-12">
+                    <button
+                        type="button"
+                        class="btn bg-primary px-5"
+                        (click)="dismissModel()"
+                        [disabled]="action == 'view'"
+                    >
+                        Save & Close
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

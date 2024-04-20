@@ -1,0 +1,91 @@
+<div class="container-fluid text-center dashboard-page">
+    <div class="row mx-3">
+        <div class="col px-3">
+            <div class="card h-100">
+                <div class="card-body">
+                    <h5 class="card-title">Total MRN</h5>
+                    <p class="card-text">{{ dashBoardData.allMRNCount }}</p>
+                </div>
+            </div>
+        </div>
+        <div class="col px-3">
+            <div class="card h-100">
+                <div class="card-body">
+                    <h5 class="card-title">Rejected MRN</h5>
+                    <p class="card-text">
+                        {{ dashBoardData.MRNRejectedCount }}
+                    </p>
+                </div>
+            </div>
+        </div>
+        <div class="col px-3">
+            <div class="card h-100">
+                <div class="card-body">
+                    <h5 class="card-title">Partially Released MRN</h5>
+                    <p class="card-text">
+                        {{ dashBoardData.MRNPartiallyReleaseCount }}
+                    </p>
+                </div>
+            </div>
+        </div>
+        <div class="col px-3">
+            <div class="card h-100">
+                <div class="card-body">
+                    <h5 class="card-title">Released MRN</h5>
+                    <p class="card-text">{{ dashBoardData.MRNReleasedCount }}</p>
+                </div>
+            </div>
+        </div>
+        <div class="col px-3">
+            <div class="card h-100">
+                <div class="card-body">
+                    <h5 class="card-title">GRN Awaiting for MRN</h5>
+                    <p class="card-text">{{ dashBoardData.GRNAwaitingForMRNCounts }}</p>
+                </div>
+            </div>
+        </div>
+        <div class="col px-3">
+            <div class="card h-100">
+                <div class="card-body">
+                    <h5 class="card-title">MRN Pending for GIN</h5>
+                    <p class="card-text">{{ dashBoardData.MRNPendingForGINCount }}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row mx-4 mt-5">
+        <div class="col-md-6 px-2">
+            <div class="card">
+                <div class="card-body py-5">
+                    <h5 class="card-title">MRN Volume</h5>
+                    <canvas
+                        baseChart
+                        class="chart pointer"
+                        [data]="dashBoardData.barMonthlyMRNTrends"
+                        [options]="barChartOptions"
+                        [type]="barChartType"
+                        [plugins]="barChartPlugins"
+                    >
+                    </canvas>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6 px-2">
+            <div class="card">
+                <div class="card-body py-5">
+                    <h5 class="card-title">MRN Against GRN</h5>
+                    <canvas
+                        baseChart
+                        class="chart pointer"
+                        [data]="dashBoardData.barMonthlyMRNvsGRNTrends"
+                        [options]="barChartOptionsStack"
+                        [type]="barChartType"
+                        [plugins]="barChartPlugins"
+                    >
+                    </canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

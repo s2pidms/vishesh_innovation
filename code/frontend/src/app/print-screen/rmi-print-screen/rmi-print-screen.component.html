@@ -1,0 +1,370 @@
+<div class="container-fluid printScreen">
+    <div class="row justify-content-center">
+        <div colspan="12" class="text-center col-12">
+            <button class="btn btn-primary" type="button" (click)="windowPrint()" *ngIf="pdfAction != 'pdf'">
+                <img src="./assets/images/print.png" width="20px" height="14px" class="mb-2" />&nbsp;&nbsp; Print
+            </button>
+            <div class="page py-3">
+                <div
+                    class="row justify-content-center printScreen mb-5 m-0"
+                    *ngFor="let p of tableData; let last = last"
+                >
+                    <div class="table-responsive">
+                        <table class="table">
+                            <tr>
+                                <td colspan="12">
+                                    <div class="text-start">
+                                        <img src="{{ logoUrl }}" width="200px" />
+                                    </div>
+                                </td>
+                            </tr>
+
+                            <tr>
+                                <th colspan="12" class="text-center">
+                                    <div class="fs-3">INCOMING RAW MATERIAL INSPECTION REPORT</div>
+                                </th>
+                            </tr>
+                            <tr class="border-btm">
+                                <td colspan="12">
+                                    <div class="row justify-content-between">
+                                        <div class="col-12 h-100 p-0 mt-4">
+                                            <table class="table">
+                                                <tr>
+                                                    <td>
+                                                        <div class="row">
+                                                            <div class="col-3 px-0">Supplier Name:</div>
+                                                            <div class="col-1 ps-0 d-flex align-items-center">
+                                                                <div class="vr"></div>
+                                                            </div>
+                                                            <div class="col-8 px-0">
+                                                                {{ p?.supplierName }}
+                                                            </div>
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <div class="row">
+                                                            <div class="col-3 px-0">Item Code:</div>
+                                                            <div class="col-1 ps-0 d-flex align-items-center">
+                                                                <div class="vr"></div>
+                                                            </div>
+                                                            <div class="col-8 px-0">
+                                                                {{ p?.itemCode }}
+                                                            </div>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td class="col-6">
+                                                        <div class="row">
+                                                            <div class="col-3 px-0">Item Name:</div>
+                                                            <div class="col-1 ps-0 d-flex align-items-center">
+                                                                <div class="vr"></div>
+                                                            </div>
+                                                            <div class="col-8 px-0">
+                                                                {{ p?.itemName }}
+                                                            </div>
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <div class="row">
+                                                            <div class="col-3 px-0">Item Description:</div>
+                                                            <div class="col-1 ps-0 d-flex align-items-center">
+                                                                <div class="vr"></div>
+                                                            </div>
+                                                            <div class="col-8 px-0">
+                                                                {{ p?.itemDescription }}
+                                                            </div>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td>
+                                                        <div class="row">
+                                                            <div class="col-3 px-0">MRN No.:</div>
+                                                            <div class="col-1 ps-0 d-flex align-items-center">
+                                                                <div class="vr"></div>
+                                                            </div>
+                                                            <div class="col-8 px-0">
+                                                                {{ p?.MRNNumber }}
+                                                            </div>
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <div class="row">
+                                                            <div class="col-3 px-0">MRN Date:</div>
+                                                            <div class="col-1 ps-0 d-flex align-items-center">
+                                                                <div class="vr"></div>
+                                                            </div>
+                                                            <div class="col-8 px-0">
+                                                                {{ p?.MRNDate }}
+                                                            </div>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td>
+                                                        <div class="row">
+                                                            <div class="col-3 px-0">GRN No.:</div>
+                                                            <div class="col-1 ps-0 d-flex align-items-center">
+                                                                <div class="vr"></div>
+                                                            </div>
+                                                            <div class="col-8 px-0">
+                                                                {{ p?.GRNNumber }}
+                                                            </div>
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <div class="row">
+                                                            <div class="col-3 px-0">GRN Date:</div>
+                                                            <div class="col-1 ps-0 d-flex align-items-center">
+                                                                <div class="vr"></div>
+                                                            </div>
+                                                            <div class="col-8 px-0">
+                                                                {{ p?.GRNDate }}
+                                                            </div>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td>
+                                                        <div class="row">
+                                                            <div class="col-3 px-0">GRN Quantity:</div>
+                                                            <div class="col-1 ps-0 d-flex align-items-center">
+                                                                <div class="vr"></div>
+                                                            </div>
+                                                            <div class="col-8 px-0">
+                                                                {{ p?.GRNQty }}
+                                                            </div>
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <div class="row">
+                                                            <div class="col-3 px-0">Invoice No.:</div>
+                                                            <div class="col-1 ps-0 d-flex align-items-center">
+                                                                <div class="vr"></div>
+                                                            </div>
+                                                            <div class="col-8 px-0">
+                                                                {{ p?.supplierInvoice }}
+                                                            </div>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td>
+                                                        <div class="row">
+                                                            <div class="col-3 px-0">Batch No.:</div>
+                                                            <div class="col-1 ps-0 d-flex align-items-center">
+                                                                <div class="vr"></div>
+                                                            </div>
+                                                            <div class="col-8 px-0">
+                                                                {{ p?.batchNo }}
+                                                            </div>
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <div class="row">
+                                                            <div class="col-3 px-0">Batch Date:</div>
+                                                            <div class="col-1 ps-0 d-flex align-items-center">
+                                                                <div class="vr"></div>
+                                                            </div>
+                                                            <div class="col-8 px-0">
+                                                                {{ p?.batchDate }}
+                                                            </div>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td>
+                                                        <div class="row">
+                                                            <div class="col-3 px-0">MRN Release By:</div>
+                                                            <div class="col-1 ps-0 d-flex align-items-center">
+                                                                <div class="vr"></div>
+                                                            </div>
+                                                            <div class="col-8 px-0">
+                                                                {{ p?.MRNReleasedBy }}
+                                                            </div>
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <div class="row">
+                                                            <div class="col-3 px-0">MRN Remarks:</div>
+                                                            <div class="col-1 ps-0 d-flex align-items-center">
+                                                                <div class="vr"></div>
+                                                            </div>
+                                                            <div class="col-8 px-0">
+                                                                {{ p?.MRNRemarks }}
+                                                            </div>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                            </table>
+                                            <div class="py-4"></div>
+                                            <table class="table">
+                                                <h3 class="pb-2 text-nowrap">Inspection Report</h3>
+                                                <tr>
+                                                    <th colspan="1" class="text-center">SN</th>
+                                                    <th colspan="3">Inspection Parameter</th>
+                                                    <th colspan="1" class="text-center">UoM</th>
+                                                    <th colspan="1" class="text-center">Test Method</th>
+                                                    <th colspan="1" class="text-center">LTL</th>
+                                                    <th colspan="2" class="text-center">Specification</th>
+                                                    <th colspan="1" class="text-center">UTL</th>
+                                                    <th colspan="2" class="text-center">Observations</th>
+                                                </tr>
+                                                <tr
+                                                    class="text-wrap"
+                                                    *ngFor="let s of p?.QCLevelsDetails; let i = index"
+                                                >
+                                                    <td colspan="1" class="text-center">{{ i + 1 }}</td>
+                                                    <td colspan="3">
+                                                        {{ s?.characteristic }}
+                                                    </td>
+                                                    <td colspan="1" class="text-center">
+                                                        {{ s?.UOM }}
+                                                    </td>
+                                                    <td colspan="1" class="text-center">
+                                                        {{ s?.measuringInstrument }}
+                                                    </td>
+                                                    <td colspan="1" class="text-center">
+                                                        {{ s?.LTL }}
+                                                    </td>
+                                                    <td colspan="2" class="text-center">
+                                                        {{ s?.specValue }}
+                                                    </td>
+                                                    <td colspan="1" class="text-center">
+                                                        {{ s?.UTL }}
+                                                    </td>
+                                                    <td colspan="2" class="text-center">
+                                                        {{ s?.observation }}
+                                                    </td>
+                                                </tr>
+                                            </table>
+                                        </div>
+                                        <div class="py-4"></div>
+                                        <div class="row px-0">
+                                            <div class="col-6 px-0">
+                                                <div class="row">
+                                                    <div class="col-3 text-nowrap px-0 d-flex align-items-center">
+                                                        Release Status:
+                                                    </div>
+                                                    <div class="col-3 px-0">
+                                                        <div class="row">
+                                                            <div
+                                                                class="col-9 d-flex align-items-center justify-content-end"
+                                                            >
+                                                                Released:
+                                                            </div>
+                                                            <div class="col-3 ps-0">
+                                                                <span>
+                                                                    <input
+                                                                        class="col-3"
+                                                                        *ngIf="
+                                                                            p.status == 'Approved' ? isChecked : null
+                                                                        "
+                                                                        [(ngModel)]="isChecked"
+                                                                        type="checkbox"
+                                                                        onclick="return false;"
+                                                                    />
+                                                                    <input
+                                                                        class="col-3"
+                                                                        *ngIf="
+                                                                            isChecked == false || p.status != 'Approved'
+                                                                        "
+                                                                        type="checkbox"
+                                                                        onclick="return false;"
+                                                                    />
+                                                                </span>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-3 px-0">
+                                                        <div class="row">
+                                                            <div
+                                                                class="col-9 d-flex align-items-center justify-content-end"
+                                                            >
+                                                                Rejected:
+                                                            </div>
+                                                            <div class="col-3 ps-0">
+                                                                <span>
+                                                                    <input
+                                                                        class="col-3"
+                                                                        *ngIf="
+                                                                            p.status == 'Rejected' ? isChecked : null
+                                                                        "
+                                                                        [(ngModel)]="isChecked"
+                                                                        type="checkbox"
+                                                                        onclick="return false;" />
+                                                                    <input
+                                                                        class="col-3"
+                                                                        *ngIf="
+                                                                            isChecked == false || p.status != 'Rejected'
+                                                                        "
+                                                                        type="checkbox"
+                                                                        onclick="return false;"
+                                                                /></span>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-3 px-0">
+                                                        <div class="row">
+                                                            <div
+                                                                class="col-9 d-flex align-items-center justify-content-end"
+                                                            >
+                                                                Deviation:
+                                                            </div>
+                                                            <div class="col-3 ps-0">
+                                                                <span class="">
+                                                                    <input
+                                                                        *ngIf="
+                                                                            p.status == 'Deviation' ? isChecked : null
+                                                                        "
+                                                                        [(ngModel)]="isChecked"
+                                                                        type="checkbox"
+                                                                        onclick="return false;"
+                                                                    />
+                                                                    <input
+                                                                        *ngIf="
+                                                                            isChecked == false ||
+                                                                            p.status != 'Deviation'
+                                                                        "
+                                                                        type="checkbox"
+                                                                        onclick="return false;"
+                                                                    />
+                                                                </span>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-1 d-flex align-items-center justify-content-end pe-0">
+                                                <div *ngIf="p.status == 'Deviation'" class="vr"></div>
+                                            </div>
+                                            <div class="col-5 pe-0 d-flex justify-content-end align-items-center py-0">
+                                                <div class="row" *ngIf="p.status == 'Deviation'">
+                                                    <div class="col-6 px-0 d-flex align-items-center">
+                                                        Deviation Approved by:
+                                                    </div>
+                                                    <div class="col-6 px-0">
+                                                        <span class="">
+                                                            <input
+                                                                [(ngModel)]="p.deviationApprovedBy"
+                                                                class="form-control"
+                                                                type="text"
+                                                                readonly
+                                                            />
+                                                        </span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                    <div *ngIf="!last" class="page-break"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

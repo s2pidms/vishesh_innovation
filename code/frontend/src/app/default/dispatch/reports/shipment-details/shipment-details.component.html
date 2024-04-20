@@ -1,0 +1,65 @@
+<div class="reportTablePage">
+    <div class="table-body pb-0 shadow-none">
+        <div class="row table-header">
+            <div class="col">
+                <label class="heading">Shipment Details Report</label>
+            </div>
+        </div>
+        <div class="row my-4">
+            <div class="col-9">
+                <div class="row">
+                    <div class="col-6 separate-row ps-3">
+                        <label class="form-label">From Date<span class="text-danger">*</span> </label>
+                        <input class="form-control" type="date" [(ngModel)]="fromDate" />
+                        <span class="set-position">
+                            <img src="./assets/new_icons/redstroke.svg" alt="" height="27" width="8" />
+                        </span>
+                    </div>
+                    <div class="col-6">
+                        <label class="form-label">To Date<span class="text-danger">*</span> </label>
+                        <input class="form-control" type="date" [(ngModel)]="toDate" />
+                    </div>
+                </div>
+            </div>
+            <div class="col-3 align-self-end separate-image">
+                <span class="image-position">
+                    <img src="./assets/new_icons/redstroke.svg" alt="" height="27" width="8" />
+                </span>
+                <button type="button" class="btn btn-primary px-4 me-3" (click)="getAll()">Apply Filter</button>
+
+                <button type="button" class="btn btn-primary px-4 ms-4" (click)="reset()">Reset Filter</button>
+            </div>
+        </div>
+        <hr class="row line-border" />
+
+        <div class="table-responsive mb-0">
+            <app-setting-header
+                [data]="{page,pageSize,collection,search,type: 'list',pdfDisplay : true}"
+                (dataChange)="eventHeader($event)"
+            >
+            </app-setting-header>
+            <table class="table table-bordered table-sticky">
+                <thead class="bg-primary">
+                    <tr class="text-white">
+                        <th sortable="SPNumber" (sort)="onSort($event)">Shipment No.</th>
+                        <th sortable="createdAtS" (sort)="onSort($event)">Shipment Date</th>
+                        <th sortable="SKUNo" (sort)="onSort($event)">SKU Code</th>
+                        <th sortable="netRate" (sort)="onSort($event)">Unit Rate</th>
+                        <th sortable="dispatchQty" (sort)="onSort($event)">Total Quantity</th>
+                        <th sortable="shipmentValue" (sort)="onSort($event)">Shipment Value</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let u of tableData; trackBy: trackByFn">
+                        <td>{{ u?.SPNumber }}</td>
+                        <td>{{ u?.createdAtS }}</td>
+                        <td>{{ u?.SKUNo }}</td>
+                        <td>{{ u?.netRate }}</td>
+                        <td>{{ u?.dispatchQty }}</td>
+                        <td>{{ u?.shipmentValue | number : ".2-2" }}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

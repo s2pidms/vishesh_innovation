@@ -1,0 +1,85 @@
+<div class="modelPage">
+    <div class="modal-header">
+        <div class="heading">Document Details</div>
+        <div>
+            <button type="button" class="btn btn-cross btn-sm" aria-label="Close" (click)="this.activeModal.close()">
+                <i class="fa fa-times-circle" aria-hidden="true"></i>
+            </button>
+        </div>
+    </div>
+    <div class="">
+        <form [formGroup]="form">
+            <div class="row px-5 mt-4">
+                <div class="col-6">
+                    <label class="form-label mb-1"> Document No. <span class="text-danger">*</span> </label>
+                    <div class="d-flex">
+                        <input class="form-control input-margin" type="text" formControlName="documentNo" readonly />
+                    </div>
+                </div>
+
+                <div class="col-6">
+                    <label class="form-label mb-1"> Document Date <span class="text-danger">*</span> </label>
+                    <div class="d-flex">
+                        <input class="form-control input-margin" type="date" formControlName="documentDate" />
+                    </div>
+                </div>
+            </div>
+            <div class="row mt-4 px-5">
+                <div class="col-6">
+                    <label class="form-label mb-1"> Revision No. <span class="text-danger">*</span> </label>
+                    <div class="d-flex">
+                        <input class="form-control input-margin" type="text" formControlName="revisionNo" />
+                    </div>
+                </div>
+
+                <div class="col-6">
+                    <label class="form-label mb-1"> Revision Date <span class="text-danger">*</span> </label>
+                    <div class="d-flex">
+                        <input class="form-control input-margin" type="date" formControlName="revisionDate" />
+                    </div>
+                </div>
+            </div>
+            <div class="row mt-4 px-5">
+                <div class="col-6">
+                    <label class="form-label mb-1"> Doc Created by <span class="text-danger">*</span> </label>
+                    <div class="d-flex">
+                        <input class="form-control input-margin" type="text" formControlName="docCreatedBy" />
+                    </div>
+                </div>
+
+                <div class="col-6">
+                    <label class="form-label mb-1"> Doc Reviewed/Approved by <span class="text-danger">*</span> </label>
+                    <div class="d-flex">
+                        <input class="form-control input-margin" type="text" formControlName="docApprovedBy" />
+                    </div>
+                </div>
+            </div>
+
+            <div class="row mt-3 px-5">
+                <div class="col">
+                    <label class="form-label mb-1"> QMS Document No. <span class="text-danger">*</span> </label>
+                    <div class="d-flex">
+                        <input class="form-control input-margin" type="text" formControlName="QMSDocumentNo" />
+                    </div>
+                </div>
+            </div>
+
+            <hr class="line-border my-5" />
+        </form>
+
+        <div class="row px-5">
+            <div class="col-6">
+                <div class="text-start mb-5">
+                    <button (click)="openRevisionReview()" type="button" class="btn bg-primary px-5">
+                        Revision History
+                    </button>
+                </div>
+            </div>
+            <div class="col-6">
+                <div class="text-end mb-5">
+                    <button type="button" class="btn bg-primary px-5" (click)="dismissModel()">Save & Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

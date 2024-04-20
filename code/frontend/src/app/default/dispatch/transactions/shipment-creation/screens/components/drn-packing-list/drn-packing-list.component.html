@@ -1,0 +1,38 @@
+<div class="modelPage">
+    <div class="">
+        <div class="container-fluid">
+            <div style="min-height: 30rem" class="row">
+                <form [formGroup]="form">
+                    <div class="row px-5 mt-4 mb-5 form-page">
+                        <div class="col-2"></div>
+                        <div class="col-8 mb-3 card-form">
+                            <div class="row">
+                                <div class="col-12 px-0">
+                                    <div class="col pt-3 px-3">
+                                        <textarea
+                                            class="form-control form-text-area"
+                                            [(ngModel)]="packingList"
+                                            [ngModelOptions]="{standalone: true}"
+                                            rows="10"
+                                        ></textarea>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-2"></div>
+                    </div>
+                </form>
+
+                <hr *ngIf="['create', 'edit'].includes(action)" class="line-border mt-5 px-5" />
+
+                <div class="text-center">
+                    <div *ngIf="['create', 'edit'].includes(action)" class="text-center">
+                        <button class="btn bg-primary px-5 mb-2 mt-1" type="button" (click)="dismissModel()">
+                            Save
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

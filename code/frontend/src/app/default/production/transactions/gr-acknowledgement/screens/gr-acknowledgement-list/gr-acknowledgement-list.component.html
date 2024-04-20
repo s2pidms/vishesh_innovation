@@ -1,0 +1,64 @@
+<div class="listCard card">
+    <div class="table-header">
+        <label class="heading">Goods Receipt Acknowledgement</label>
+    </div>
+    <div class="table-responsive">
+        <app-setting-header
+            [data]="{page,pageSize,collection,search,type: 'list' , excelDisplay : 'none'}"
+            (dataChange)="eventHeader($event)"
+        >
+        </app-setting-header>
+
+        <table class="table table-bordered">
+            <thead class="bg-primary">
+                <tr class="text-white">
+                    <th sortable="GRNumber.GRNumber" (sort)="onSort($event)">GR No.</th>
+                    <th sortable="GRNumber.GRDate" (sort)="onSort($event)">GR Dt.</th>
+                    <th sortable="GIDateS" (sort)="onSort($event)">Goods Issue Dt.</th>
+                    <th sortable="deliveryLocation" (sort)="onSort($event)">Location (Store)</th>
+                    <th sortable="department" (sort)="onSort($event)">Department</th>
+                    <th sortable="GIStatus" (sort)="onSort($event)">Status</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let item of tableData; trackBy: trackByFn">
+                    <td>{{ item?.GRNumber }}</td>
+                    <td>{{ item?.GRDateS }}</td>
+                    <td>{{ item?.GIDateS }}</td>
+                    <td>{{ item?.deliveryLocation }}</td>
+                    <td>{{ item?.department }}</td>
+                    <td>{{ item?.GIStatus }}</td>
+                    <td>
+                        <div class="dropdown">
+                            <button class="dropbtn"></button>
+                            <div class="dropdown-content">
+                                <a
+                                    appAccessControl
+                                    [accessType]="rolePermissionActions.viewAction"
+                                    href="javascript:void(0)"
+                                    (click)="navigateTo('../form', item, 'view')"
+                                >
+                                    <i class="fa fa-eye fa-lg me-2 text-primary" aria-hidden="true"></i>
+                                    View
+                                </a>
+                                <a
+                                    appAccessControl
+                                    [accessType]="rolePermissionActions.createAction"
+                                    [class.disable]="
+                                        item?.GIStatus === 'Discrepancy Reported' || item?.GIStatus === 'Acknowledged'
+                                    "
+                                    href="javascript:void(0)"
+                                    (click)="navigateTo('../form', item, 'Acknowledged')"
+                                >
+                                    <i class="fa fa-pencil-square-o fa-lg me-2 text-primary" aria-hidden="true"></i>
+                                    Acknowledged
+                                </a>
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>

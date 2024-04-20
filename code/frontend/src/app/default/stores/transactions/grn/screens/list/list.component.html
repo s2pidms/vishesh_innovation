@@ -1,0 +1,99 @@
+<div class="listCard card">
+    <div class="table-header">
+        <label class="heading">Goods Receipt Note [GRN] Summary</label>
+    </div>
+
+    <div appAccessControl [accessType]="rolePermissionActions.createAction" class="text-center">
+        <button class="btn btn-primary btn-add" type="button" (click)="navigateTo('../form', {}, 'create')">
+            <i class="fa fa-plus-square fa-lg me-2" aria-hidden="true"></i>
+            Create Goods Receipt Note (GRN)
+        </button>
+    </div>
+    <hr class="line-border" />
+    <div class="table-responsive">
+        <app-setting-header [data]="{page,pageSize,collection,search,type: 'list'}" (dataChange)="eventHeader($event)">
+        </app-setting-header>
+        <table class="table table-bordered">
+            <thead class="bg-primary">
+                <tr class="text-white">
+                    <th sortable="GRNNumber" (sort)="onSort($event)">GRN No.</th>
+                    <th sortable="GRNDateS" (sort)="onSort($event)">GRN Dt.</th>
+                    <th sortable="PONumber" (sort)="onSort($event)">PO No.</th>
+                    <th sortable="PODate" (sort)="onSort($event)">PO Date</th>
+                    <th class="text-start" sortable="supplier" (sort)="onSort($event)">Supplier Name</th>
+                    <th sortable="supplierInvoiceRef" (sort)="onSort($event)">Supplier Inv. #</th>
+                    <th sortable="supplierInvoiceRefDate" (sort)="onSort($event)">Invoice Dt.</th>
+                    <th sortable="deliveryLocation" (sort)="onSort($event)">Location</th>
+                    <th sortable="GRNStatus" (sort)="onSort($event)">GRN Status</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let u of tableData; trackBy: trackByFn">
+                    <td>{{ u?.GRNNumber }}</td>
+                    <td>{{ u?.GRNDateS }}</td>
+                    <td>{{ u?.PONumber }}</td>
+                    <td>{{ u?.PODate }}</td>
+                    <td class="text-start" [style.width]="supplier.clientWidth" #supplier>
+                        <span class="pointer" [ngbTooltip]="u.supplier" [positionTarget]="supplier">
+                            {{ u.supplier }}
+                        </span>
+                    </td>
+                    <td>{{ u?.supplierInvoiceRef }}</td>
+                    <td>{{ u?.supplierInvoiceRefDate }}</td>
+                    <td>{{ u?.deliveryLocation }}</td>
+                    <td>{{ u?.GRNStatus }}</td>
+                    <td>
+                        <div class="dropdown">
+                            <button class="dropbtn"></button>
+                            <div class="dropdown-content">
+                                <a
+                                    appAccessControl
+                                    [accessType]="rolePermissionActions.viewAction"
+                                    href="javascript:void(0)"
+                                    (click)="navigateTo('../form', u, 'view')"
+                                >
+                                    <i class="fa fa-eye fa-lg me-2 text-primary" aria-hidden="true"></i>
+                                    View
+                                </a>
+                                <a
+                                    appAccessControl
+                                    [accessType]="rolePermissionActions.editAction"
+                                    href="javascript:void(0)"
+                                    [class.disable]="u?.GRNStatus === 'Approved' || u?.GRNStatus === 'Report Generated'"
+                                    (click)="navigateTo('../form', u, 'edit')"
+                                >
+                                    <i class="fa fa-pencil-square-o fa-lg me-2 text-primary" aria-hidden="true"></i>
+                                    Edit
+                                </a>
+                                <a
+                                    appAccessControl
+                                    [accessType]="rolePermissionActions.approveAction"
+                                    href="javascript:void(0)"
+                                    [class.disable]="u?.GRNStatus === 'Approved' || u?.GRNStatus === 'edit'"
+                                    (click)="navigateTo('../form', u, 'approve')"
+                                >
+                                    <i class="fa fa-check fa-lg me-2 text-success" aria-hidden="true"></i>
+                                    Approve
+                                </a>
+                                <a
+                                    appAccessControl
+                                    [accessType]="rolePermissionActions.generateReportAction"
+                                    href="javascript:void(0)"
+                                    [class.disable]="
+                                        u?.GRNStatus === 'Awaiting Approval' || u?.GRNStatus === 'Report Generated'
+                                    "
+                                    (click)="update(u, 'Report Generated')"
+                                >
+                                    <img src="./assets/images/new.svg" width="14" class="me-2" />
+
+                                    Generate Report
+                                </a>
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>

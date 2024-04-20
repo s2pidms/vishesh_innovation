@@ -1,0 +1,116 @@
+<Form class="px-2" [formGroup]="form" class="formCard card">
+    <div class="container">
+        <div class="row form-header">
+            <div class="col heading">
+                <label>FG Correction Entry</label>
+            </div>
+        </div>
+        <div class="form-body">
+            <div class="row">
+                <div class="col-3">
+                    <label class="form-label">FG Correction No. <span class="text-danger">*</span></label>
+                    <input class="form-control" type="text" formControlName="FGNo" readonly />
+                </div>
+                <div class="col-3">
+                    <label class="form-label">FG Correction Date <span class="text-danger">*</span></label>
+                    <input class="form-control" type="Date" formControlName="FGDate" />
+                </div>
+                <div class="col-3">
+                    <label class="form-label">SKU No <span class="text-danger">*</span> </label>
+                    <ng-select
+                        (change)="setBatchDate($event)"
+                        [items]="masterData.SKUOptions"
+                        [clearable]="false"
+                        bindLabel="SKUNo"
+                        bindValue="_id"
+                        formControlName="SKU"
+                    >
+                    </ng-select>
+                </div>
+                <div class="col-3">
+                    <label class="form-label"
+                        >{{ "SKU Description" | labelTranslate }}
+                        <span class="text-danger">*</span>
+                    </label>
+                    <ng-select
+                        (change)="setBatchDate($event)"
+                        [items]="masterData.SKUOptions"
+                        bindLabel="SKUDescription"
+                        bindValue="SKUDescription"
+                        [clearable]="false"
+                        formControlName="SKUDescription"
+                    >
+                    </ng-select>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-3">
+                    <label class="form-label"
+                        >Correction Category
+                        <span class="text-danger">*</span>
+                    </label>
+                    <select class="form-select" (change)="setCorrection($event)" formControlName="correctionCategory">
+                        <option [value]="null" selected disabled>Select Correction Category</option>
+                        <option *ngFor="let item of correctionCategory" [value]="item">
+                            {{ item }}
+                        </option>
+                    </select>
+                </div>
+                <div class="col-md-3">
+                    <label class="form-label">Source Batch (From) <span class="text-danger">*</span> </label>
+                    <select (change)="setAvailableSourceQty($event)" formControlName="sourceBatch" class="form-select">
+                        <option [value]="null" selected disabled>Select</option>
+                        <option [value]="s._id" *ngFor="let s of FGINOptions">
+                            {{ s.manufacturingDate | date : "dd-MM-yyyy" }}
+                        </option>
+                    </select>
+                </div>
+                <div class="col-md-3" *ngIf="conditions == 'Batch Transfer'">
+                    <label class="form-label">Rename/Transfer Qty. <span class="text-danger">*</span></label>
+                    <input (input)="setSourceQty()" class="form-control" type="number" formControlName="transferQty" />
+                </div>
+                <div class="col-md-3" *ngIf="conditions == 'Rename Batch'">
+                    <label class="form-label">New Batch<span class="text-danger">*</span></label>
+                    <input class="form-control" type="Date" formControlName="newBatch" />
+                </div>
+                <div class="col-md-3" *ngIf="conditions == 'Batch Transfer'">
+                    <label class="form-label">Destination Batch (To) <span class="text-danger">*</span> </label>
+                    <select formControlName="destinationBatch" class="form-select">
+                        <option [value]="null" selected disabled>Select</option>
+                        <option [value]="s._id" *ngFor="let s of FGINOptions">
+                            {{ s.manufacturingDate | date : "dd-MM-yyyy" }}
+                        </option>
+                    </select>
+                </div>
+                <div class="col-md-3" *ngIf="conditions == 'Rename Batch' || conditions == 'Quantity Correction'">
+                    <label class="form-label">Available Source Qty. <span class="text-danger">*</span> </label>
+                    <input class="form-control" type="number" formControlName="availableSourceQty" readonly />
+                </div>
+                <div class="col-md-3" *ngIf="conditions == 'Quantity Correction'">
+                    <label class="form-label">Corrected Qty. <span class="text-danger">*</span> </label>
+                    <input class="form-control" type="number" formControlName="correctedQty" />
+                </div>
+            </div>
+        </div>
+        <div class="row mb-0">
+            <div class="col-3">
+                <div *ngIf="conditions == 'Batch Transfer'">
+                    <label class="form-label">Available Source Qty. <span class="text-danger">*</span> </label>
+                    <input class="form-control" type="number" formControlName="availableSourceQty" readonly />
+                </div>
+            </div>
+            <div class="d-flex justify-content-end col-9 py-4">
+                <button class="btn btn-primary px-5 me-4" (click)="reset()" type="button">Reset</button>
+                <button
+                    appAccessControl
+                    [accessType]="rolePermissionActions.createAction"
+                    class="btn btn-primary px-5"
+                    (click)="submit()"
+                    type="button"
+                >
+                    Save
+                </button>
+            </div>
+        </div>
+    </div>
+</Form>

@@ -1,0 +1,67 @@
+<div class="modelPage">
+    <div class="modal-header">
+        <div class="heading">Review History</div>
+        <div>
+            <button type="button" class="btn btn-cross btn-sm" aria-label="Close" (click)="activeModal.close()">
+                <i class="fa fa-times-circle" aria-hidden="true"></i>
+            </button>
+        </div>
+    </div>
+</div>
+
+<div class="modelPage pb-4">
+    <div class="modal-body">
+        <div class="row mt-0">
+            <div class="col-12 d-flex justify-content-center">
+                <ngb-pagination
+                    *ngIf="oldDocumentDetails.length > 0"
+                    [collectionSize]="oldDocumentDetails.length"
+                    [(page)]="page"
+                    [pageSize]="pageSize"
+                    [boundaryLinks]="false"
+                >
+                    <ng-template ngbPaginationPrevious>
+                        <img src="./assets/new_icons/pagination_prev.svg" width="20rem" />
+                    </ng-template>
+                    <ng-template ngbPaginationNext>
+                        <img src="./assets/new_icons/pagination_next.svg" width="20rem" />
+                    </ng-template>
+                    <ng-template ngbPaginationPages let-page let-pages="pages">
+                        <li class="ngb-custom-pages-item align-self-center" *ngIf="pages.length > 0">
+                            <span class="page-label me-2 ms-1"> Page {{ page }} of {{ pages[pages.length - 1] }} </span>
+                        </li>
+                    </ng-template>
+                </ngb-pagination>
+            </div>
+        </div>
+
+        <div class="row mt-4">
+            <div class="table-responsive">
+                <table class="table table-bordered table-sticky">
+                    <thead class="bg-primary">
+                        <tr class="text-white">
+                            <th>Document No.</th>
+                            <th>Document Date</th>
+                            <th>Revision No.</th>
+                            <th>Revision Date</th>
+                            <th>Doc Created by</th>
+                            <th>Doc Reviewed/Approved by</th>
+                            <th>QMS Document No.</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let item of oldDocumentDetails">
+                            <td>{{ item.documentNo }}</td>
+                            <td>{{ item.documentDate | date : "dd-MM-YYYY" }}</td>
+                            <td>{{ item.revisionNo }}</td>
+                            <td>{{ item.revisionDate | date : "dd-MM-YYYY" }}</td>
+                            <td>{{ item.docCreatedBy }}</td>
+                            <td>{{ item.docApprovedBy }}</td>
+                            <td>{{ item.QMSDocumentNo }}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>

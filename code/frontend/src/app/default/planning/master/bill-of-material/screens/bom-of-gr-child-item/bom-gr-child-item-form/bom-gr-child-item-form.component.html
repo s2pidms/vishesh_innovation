@@ -1,0 +1,229 @@
+<Form class="px-2" [formGroup]="form" class="formCard card">
+    <div class="container">
+        <div class="row form-header">
+            <div class="col heading">
+                <label class="">BoM of Gr. Child Item ({{ action | titlecase }})</label>
+            </div>
+        </div>
+        <div class="form-body">
+            <div class="row">
+                <div class="col-2">
+                    <label class="form-label mb-2"> BoM No. <span class="text-danger">*</span></label>
+                    <div class="d-flex align-items-center">
+                        <input type="text" class="form-control border-end-0" formControlName="BOMNo" readonly />
+                        <span class="input-group-text statusSpanHeight">
+                            <div class="bomDocInfo pointer" (click)="openBOMDocumentDetailsModal()"></div>
+                        </span>
+                    </div>
+                </div>
+                <div class="col-2 px-0">
+                    <label class="form-label mb-2">Gr. Child Item Code <span class="text-danger">*</span></label>
+                    <ng-select
+                        [items]="masterData.childItemsOptions"
+                        bindLabel="itemCode"
+                        bindValue="itemCode"
+                        [clearable]="false"
+                        formControlName="grandChildItemCode"
+                        (change)="setItemDetails($event)"
+                    >
+                    </ng-select>
+                </div>
+                <div class="col-3">
+                    <label class="form-label mb-2">Gr. Child Item Name <span class="text-danger">*</span></label>
+                    <ng-select
+                        [items]="masterData.childItemsOptions"
+                        bindLabel="itemName"
+                        bindValue="itemName"
+                        [clearable]="false"
+                        formControlName="grandChildItemName"
+                        (change)="setItemDetails($event)"
+                    >
+                    </ng-select>
+                </div>
+                <div class="col-2 px-0">
+                    <label class="form-label mb-2"> Gr. Child Item Description</label>
+                    <input type="text" class="form-control" formControlName="grandChildItemDescription" readonly />
+                </div>
+                <div class="col-3 ps-4">
+                    <div class="row">
+                        <div class="col-5 pe-4">
+                            <label class="form-label mb-2"> UoM</label>
+                            <input
+                                type="text"
+                                class="form-control"
+                                value="{{ form.controls['UOM'].value | UOMUnitsMaster }}"
+                                readonly
+                            />
+                        </div>
+                        <div class="col-7 ps-4">
+                            <label class="form-label mb-2"> Part Count <span class="text-danger">*</span></label>
+                            <input
+                                type="text"
+                                class="form-control"
+                                formControlName="partCount"
+                                (input)="setPartCount()"
+                                min="0"
+                                oninput="this.value = !!this.value && Math.abs(this.value) >= 0 ? Math.abs(this.value) : 1"
+                            />
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <hr class="row line-border" />
+
+        <app-setting-header [data]="{page,pageSize,collection,search}" (dataChange)="eventHeader($event)">
+        </app-setting-header>
+        <div class="table-responsive" style="min-height: 22rem">
+            <table class="table table-bordered table-sticky mt-1">
+                <thead class="bg-primary">
+                    <tr class="text-white">
+                        <th sortable="itemCode" (sort)="onSort($event)">Item Code</th>
+                        <th class="text-start" sortable="itemName" (sort)="onSort($event)">Item Name</th>
+                        <th class="text-start" sortable="itemDescription" (sort)="onSort($event)">Item Description</th>
+                        <th sortable="UOM" (sort)="onSort($event)">UoM</th>
+                        <th sortable="qtyPerSKUUnit" (sort)="onSort($event)">Qty/SKU Unit</th>
+                        <th sortable="wastePercentage" (sort)="onSort($event)">Waste %</th>
+                        <th sortable="partCount" (sort)="onSort($event)">Qty/Part Count</th>
+                        <th sortable="unitCost" (sort)="onSort($event)">Unit Cost</th>
+                        <th sortable="itemCost" (sort)="onSort($event)">Item Cost</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr
+                        *ngFor="
+                            let g of masterData.itemsList
+                                | searchFi1ter : search
+                                | slice : (page - 1) * pageSize : (page - 1) * pageSize + pageSize;
+                            trackBy: trackByFn;
+                            let i = index
+                        "
+                    >
+                        <td
+                            [ngClass]="{
+                                'text-black': g.type == 'items',
+                                'text-primary': g.type == 'childItem',
+                                blueColor: ['SKU', 'ink'].includes(g.type)
+                            }"
+                        >
+                            {{ g.itemCode }}
+                        </td>
+                        <td class="text-start" [style.width]="itemName.clientWidth" #itemName>
+                            <span class="pointer" [ngbTooltip]="g.itemName" [positionTarget]="itemName">
+                                {{ g.itemName }}
+                            </span>
+                        </td>
+                        <td class="text-start" [style.width]="itemDescription.clientWidth" #itemDescription>
+                            <span class="pointer" [ngbTooltip]="g.itemDescription" [positionTarget]="itemDescription">
+                                {{ g.itemDescription }}
+                            </span>
+                        </td>
+                        <td>{{ g.UOM }}</td>
+                        <td>
+                            <div class="d-flex justify-content-center">
+                                <span *ngIf="['view'].includes(action)">{{ g.qtyPerSKUUnit }}</span>
+                                <input
+                                    (input)="setItemCostDetails(g)"
+                                    *ngIf="!['view'].includes(action)"
+                                    class="form-control text-center form-control-size-lg"
+                                    type="number"
+                                    [(ngModel)]="g.qtyPerSKUUnit"
+                                    [ngModelOptions]="{standalone: true}"
+                                />
+                            </div>
+                        </td>
+                        <td>
+                            <div class="d-flex justify-content-center">
+                                <span *ngIf="['view'].includes(action)">{{ g.wastePercentage }}</span>
+                                <input
+                                    (input)="setItemCostDetails(g)"
+                                    *ngIf="!['view'].includes(action)"
+                                    class="form-control text-center form-control-size-lg"
+                                    type="number"
+                                    [(ngModel)]="g.wastePercentage"
+                                    [ngModelOptions]="{standalone: true}"
+                                />
+                            </div>
+                        </td>
+                        <td>{{ g.partCount | number : "1.5-5" }}</td>
+                        <td>{{ g.unitCost }}</td>
+                        <td>{{ g.itemCost | number : "1.2-2" }}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <hr class="row line-border" />
+
+        <div class="row">
+            <div class="col-4">
+                <div class="d-flex align-items-center">
+                    <div class="col-form-label text-nowrap">
+                        Total Material Cost
+                        <i class="fa fa-caret-right fs-4 mx-1"></i>
+                    </div>
+                    <div class="d-flex">
+                        <span class="input-group-text text-secondary combine-INR">
+                            {{ "INR" | companyCurrency }}
+                            <div class="vr ms-3"></div>
+                        </span>
+                        <input
+                            class="form-control border-start-0"
+                            type="number"
+                            readonly
+                            formControlName="totalMaterialCost"
+                        />
+                    </div>
+                </div>
+            </div>
+            <div class="col-3">
+                <div class="d-flex align-items-center">
+                    <div class="col-md-auto text-nowrap">
+                        <button type="button" class="btn btn-primary px-3">Status</button>
+                    </div>
+
+                    <select class="form-select statusSelectBorder" formControlName="status">
+                        <option [value]="'null'" selected disabled>Select Status</option>
+                        <option [value]="'Active'">Active</option>
+                        <option [value]="'Inactive'">Inactive</option>
+                    </select>
+                    <span class="input-group-text statusSpanHeight">
+                        <div class="statusActive" *ngIf="form.value['status'] == 'Active'" class="statusActive"></div>
+                        <div class="statusInActive" *ngIf="form.value['status'] == 'Inactive'"></div>
+                    </span>
+                </div>
+            </div>
+
+            <div class="col-md-auto ms-auto">
+                <div *ngIf="['create', 'edit', 'copy'].includes(action)" class="d-grid gap-2 d-md-block">
+                    <button type="button" class="btn btn-primary px-5 me-3" (click)="reset()">Reset</button>
+                    <button
+                        type="button"
+                        class="btn btn-primary px-4 me-1"
+                        [disabled]="!isESCPreview"
+                        (click)="ESCPreview()"
+                    >
+                        Esc
+                    </button>
+                    <button
+                        type="button"
+                        class="btn btn-primary px-4 me-3"
+                        [disabled]="isConditionPreview"
+                        (click)="preview()"
+                    >
+                        Preview
+                    </button>
+                    <button class="btn btn-primary px-5" type="button" [disabled]="!isPreview" (click)="submit()">
+                        Save
+                    </button>
+                </div>
+                <div *ngIf="['view'].includes(action)">
+                    <button class="btn btn-primary px-5" type="button" (click)="navigateTo()">Back</button>
+                </div>
+                <div *ngIf="['viewBOM'].includes(action)">
+                    <button class="btn btn-primary px-5" type="button" (click)="backClicked()">Back</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</Form>

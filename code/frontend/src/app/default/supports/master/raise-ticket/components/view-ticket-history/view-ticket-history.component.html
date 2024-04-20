@@ -1,0 +1,74 @@
+<div class="modelPage">
+    <div class="modal-header">
+        <div class="heading">Review History</div>
+        <div>
+            <button type="button" class="btn btn-cross btn-sm" aria-label="Close" (click)="activeModal.close()">
+                <i class="fa fa-times-circle" aria-hidden="true"></i>
+            </button>
+        </div>
+    </div>
+</div>
+
+<div class="modelPage">
+    <div class="row px-5">
+        <div class="table-responsive" style="min-height: 38rem">
+            <app-setting-header
+                [data]="{page,pageSize,collection,search, excelDisplay : 'none'}"
+                (dataChange)="eventHeader($event)"
+            >
+            </app-setting-header>
+            <table class="table table-bordered">
+                <thead class="bg-primary">
+                    <tr class="text-white">
+                        <th sortable="issueDate" (sort)="onSort($event)">Date</th>
+                        <th sortable="action" (sort)="onSort($event)">Action</th>
+                        <th sortable="issueStatus" (sort)="onSort($event)">Status</th>
+                        <th class="text-start" sortable="issueDescription" (sort)="onSort($event)">
+                            Description/Resolution
+                        </th>
+                        <th sortable="url" (sort)="onSort($event)">Attachment</th>
+                        <th sortable="raisedBy" (sort)="onSort($event)">User</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr
+                        *ngFor="
+                            let u of historyData
+                                | searchFi1ter : search
+                                | slice : (page - 1) * pageSize : (page - 1) * pageSize + pageSize;
+                            trackBy: trackByFn
+                        "
+                    >
+                        <td>{{ u.issueDate | date : "dd-MM-YYYY" }}</td>
+                        <td>{{ u.action }}</td>
+                        <td>{{ u.issueStatus }}</td>
+                        <td class="text-start">
+                            <span
+                                *ngIf="['Open', 'Reopened'].includes(u.issueStatus)"
+                                class="pointer"
+                                [ngbTooltip]="u.issueDescription"
+                                placement="right"
+                            >
+                                {{ u.issueDescription ? (u.issueDescription | truncate : 40) : "-" }}
+                            </span>
+                            <span
+                                *ngIf="!['Open', 'Reopened'].includes(u.issueStatus)"
+                                class="pointer"
+                                [ngbTooltip]="u.issueResolution"
+                                placement="right"
+                            >
+                                {{ u.issueResolution ? (u.issueResolution | truncate : 40) : "-" }}
+                            </span>
+                        </td>
+                        <td>
+                            <a *ngIf="u.url" [href]="u.url" target="_blank">
+                                <i class="fa fa-eye fa-lg me-2 text-primary" aria-hidden="true"></i
+                            ></a>
+                        </td>
+                        <td>{{ u.raisedBy }}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

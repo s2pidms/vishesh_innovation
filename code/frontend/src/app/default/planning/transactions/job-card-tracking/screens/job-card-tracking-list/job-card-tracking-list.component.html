@@ -1,0 +1,281 @@
+<div class="formCard card">
+    <div class="container">
+        <div class="row form-header">
+            <div class="col heading">
+                <label class="heading ps-0">Job Card Tracking</label>
+            </div>
+        </div>
+        <div class="form-body pt-0">
+            <div class="row justify-content-between my-3 px-3">
+                <div class="col-4 d-flex align-items-center">
+                    <div class="d-flex">
+                        <div class="input-group-text bg-primary" id="basic-addon1">
+                            <i class="fa fa-search text-white" aria-hidden="true"></i>
+                        </div>
+                        <div>
+                            <input
+                                type="text"
+                                class="form-control"
+                                [(ngModel)]="search"
+                                [ngModelOptions]="{standalone: true}"
+                                (input)="setPagination()"
+                            />
+                        </div>
+                    </div>
+                </div>
+                <div class="col-4 d-flex justify-content-center align-items-center">
+                    <ngb-pagination
+                        *ngIf="jobTrackingData.length > 0"
+                        [collectionSize]="jobTrackingData.length"
+                        [(page)]="page"
+                        [pageSize]="pageSize"
+                        [boundaryLinks]="false"
+                    >
+                        <ng-template ngbPaginationPrevious>
+                            <img src="./assets/new_icons/pagination_prev.svg" width="20rem" />
+                        </ng-template>
+                        <ng-template ngbPaginationNext>
+                            <img src="./assets/new_icons/pagination_next.svg" width="20rem" />
+                        </ng-template>
+                        <ng-template ngbPaginationPages let-page let-pages="pages">
+                            <li class="ngb-custom-pages-item align-self-center" *ngIf="pages.length > 0">
+                                <span class="page-label me-2 ms-1">
+                                    Page {{ page }} of {{ pages[pages.length - 1] }}
+                                </span>
+                            </li>
+                        </ng-template>
+                    </ngb-pagination>
+                </div>
+                <div class="col-1"></div>
+                <div class="col-3">
+                    <div class="d-flex align-items-center">
+                        <div class="col-form-label text-nowrap">
+                            <div class="fs-5 text-black-50">
+                                Active Job Cards
+                                <span class="ms-1 me-2 col-form-label text-nowrap">&#9654;</span>
+                            </div>
+                        </div>
+                        <input
+                            class="form-control border border-primary"
+                            type="text"
+                            readonly
+                            [(ngModel)]="activeQualified"
+                        />
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div
+    *ngFor="
+        let item of jobTrackingData
+            | searchFi1ter : search
+            | slice : (page - 1) * pageSize : (page - 1) * pageSize + pageSize;
+        trackBy: trackByFn
+    "
+    class="row formCard card mt-2"
+>
+    <div class="container">
+        <div class="row justify-content-between px-3 mt-3 mb-0">
+            <div class="col-6">
+                <div class="row mb-0">
+                    <div class="col-4">
+                        <div class="row">
+                            <div class="col-10 pe-0">
+                                <div>
+                                    <span class="sub-text text-black-50">JC No.:</span>
+                                    <span class="text-primary fs-5"> {{ item?.jobCardNo }}</span>
+                                </div>
+                                <div class="sub-text text-black-50 mt-1">JC Dt.: {{ item?.jobCardDate }}</div>
+                            </div>
+                            <div class="col-2 mt-1 ps-2">
+                                <img src="./assets/new_icons/09-03_separator.svg" alt="" height="47" width="10" />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-8">
+                        <div class="row">
+                            <div class="col-11 px-0">
+                                <div class="text-secondary fs-5">
+                                    {{ item?.customerName }}
+                                </div>
+                                <div class="sub-text text-black-50 mt-1 fs-">
+                                    {{ item?.SKUNo }}
+                                    <span class="me-2 ms-1">
+                                        <img
+                                            src="./assets/new_icons/09-03_separator.svg"
+                                            alt=""
+                                            height="19"
+                                            width="8"
+                                        />
+                                    </span>
+                                    <span> Batch Dt.: {{ item?.batchDate }} </span>
+                                    <span class="me-2 ms-1">
+                                        <img
+                                            src="./assets/new_icons/09-03_separator.svg"
+                                            alt=""
+                                            height="19"
+                                            width="8"
+                                        />
+                                    </span>
+                                    <span> {{ item?.customerName }} </span>
+                                </div>
+                            </div>
+                            <div class="col-1 mt-1 ps-2">
+                                <img src="./assets/new_icons/09-03_separator.svg" alt="" height="47" width="10" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-6 px-0">
+                <div class="row mb-0">
+                    <div class="col-4 pe-0">
+                        <div class="row">
+                            <div class="col-11">
+                                <div class="fs-5 text-black-50">
+                                    PL Size:
+                                    <span *ngIf="item?.layoutDimensionsLength && item?.layoutDimensionsWidth">
+                                        {{ item?.layoutDimensionsWidth }}
+                                        {{ item?.layoutDimensionsUnit }}
+                                        <span>x</span>
+                                        {{ item?.layoutDimensionsLength }}
+                                        {{ item?.layoutDimensionsUnit }}
+                                    </span>
+                                </div>
+                                <div class="sub-text text-black-50 mt-1">
+                                    {{ item?.layoutDimensionsUps }} Ups
+                                    <span class="me-2 ms-1">
+                                        <img
+                                            src="./assets/new_icons/09-03_separator.svg"
+                                            alt=""
+                                            height="19"
+                                            width="8"
+                                        />
+                                    </span>
+                                    <span> Colours: {{ item?.totalNoOfColors }} </span>
+                                </div>
+                            </div>
+
+                            <div class="col-1 px-0">
+                                <img src="./assets/new_icons/09-03_separator.svg" alt="" height="47" width="10" />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-4 pe-0">
+                        <div class="row">
+                            <div class="col ms-3">
+                                <div class="fs-5 text-black-50">
+                                    Batch Input Qty:
+                                    <span class="text-secondary">
+                                        {{ item?.totalBatchQuantity }}
+                                        <span class="text-black-50"> {{ item?.UOM }} </span>
+                                    </span>
+                                </div>
+                                <div class="fs-5 text-black-50">
+                                    Batch Output Qty:
+                                    <span class="text-primary">
+                                        {{ item?.batchOutputQty }}
+                                        <span *ngIf="item.batchOutputQty" class="text-black-50">
+                                            {{ item?.UOM }}
+                                        </span></span
+                                    >
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="sub-text col-2 d-flex">
+                        <span class="greenStatus pt-3 pe-2"> Status </span>
+                        <span>
+                            <img
+                                src="./assets/new_icons/09-07_green_arrow.svg"
+                                alt=""
+                                height="35"
+                                width="15"
+                                class="pointer pt-3"
+                            />
+                        </span>
+                    </div>
+                    <div class="col-2 text-center d-flex mt-4">
+                        <div class="dropdown">
+                            <button class="dropbtn" style="width: 4rem"></button>
+                            <!-- <div class="dropdown-content">
+                                <a
+                                    appAccessControl
+                                    [accessType]="rolePermissionActions.editAction"
+                                    href="javascript:void(0)"
+                                    (click)="update(item, 'Lead Won')"
+                                >
+                                    <i
+                                        class="fa fa-trophy text-primary"
+                                        aria-hidden="true"
+                                        style="margin-right: 0.8rem !important"
+                                    ></i>
+                                    Lead Won
+                                </a>
+                                <a
+                                    appAccessControl
+                                    [accessType]="rolePermissionActions.editAction"
+                                    href="javascript:void(0)"
+                                    (click)="update(item, 'Lead Lost')"
+                                >
+                                    <i
+                                        class="fa fa-exclamation-triangle text-primary"
+                                        aria-hidden="true"
+                                        style="margin-right: 0.7rem !important"
+                                    ></i>
+                                    Lead Lost
+                                </a>
+                                <a
+                                    [class.disable]="item.demoSchedule.length == 0"
+                                    appAccessControl
+                                    [accessType]="rolePermissionActions.editAction"
+                                    href="javascript:void(0)"
+                                    (click)="
+                                        navigateTo(
+                                            'default/business-leads/transactions/demo_schedule/form',
+                                            'resetDemo',
+                                            'Demo Schedule',
+                                            item?.demoSchedule
+                                        )
+                                    "
+                                >
+                                    <i
+                                        class="fa fa-refresh text-primary"
+                                        aria-hidden="true"
+                                        style="margin-right: 0.9rem !important"
+                                    ></i>
+                                    Reset-a-demo
+                                </a>
+                                <a
+                                    [class.disable]="item.commercialProposal.length == 0"
+                                    appAccessControl
+                                    [accessType]="rolePermissionActions.editAction"
+                                    href="javascript:void(0)"
+                                    (click)="
+                                        navigateTo(
+                                            'default/business-leads/transactions/commercial_proposal/form',
+                                            'edit',
+                                            'Commercial Proposal',
+                                            item?.commercialProposal
+                                        )
+                                    "
+                                >
+                                    <i
+                                        class="fa fa-window-restore text-primary"
+                                        aria-hidden="true"
+                                        style="margin-right: 0.5rem !important"
+                                    ></i>
+                                    Revise Proposal
+                                </a>
+                            </div> -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <hr class="row line-border mb-0" />
+    </div>
+</div>

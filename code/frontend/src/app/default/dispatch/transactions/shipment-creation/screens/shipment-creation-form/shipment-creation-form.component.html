@@ -1,0 +1,242 @@
+<Form class="px-2" [formGroup]="form" class="formCard card">
+    <div class="container">
+        <div class="row form-header">
+            <div class="col heading ms-2">
+                <label> Shipment [{{ this.action | titlecase }}]</label>
+            </div>
+        </div>
+        <div class="form-body">
+            <div class="row">
+                <div class="col-4 pe-0">
+                    <div class="row">
+                        <div class="col-7 pe-2">
+                            <label class="form-label"> DRN No. <span class="text-danger">*</span> </label>
+                            <ng-select
+                                [items]="DRNOptions"
+                                bindLabel="DRNNumber"
+                                bindValue="_id"
+                                [clearable]="false"
+                                formControlName="DRNId"
+                                (change)="DRNNumberValueChange($event)"
+                            >
+                            </ng-select>
+                        </div>
+                        <div class="col-5 ps-4">
+                            <label class="form-label"> DRN Date <span class="text-danger"></span> </label>
+                            <input class="form-control" type="date" formControlName="DRNDate" readonly />
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-2 pe-0">
+                    <label class="form-label"> Customer Category<span class="text-danger">*</span> </label>
+                    <input class="form-control" type="text" readonly formControlName="customerCategory" />
+                </div>
+                <div class="col-3">
+                    <label class="form-label"> Customer Name <span class="text-danger">*</span> </label>
+                    <input
+                        class="form-control"
+                        type="text"
+                        readonly
+                        [(ngModel)]="customerName"
+                        [ngModelOptions]="{standalone: true}"
+                    />
+                </div>
+                <div class="col-3">
+                    <div class="row">
+                        <div class="col-5 ps-2 pe-0">
+                            <label class="form-label"> Currency<span class="text-danger"></span> </label>
+                            <input class="form-control" type="text" readonly formControlName="currency" />
+                        </div>
+                        <div class="col-7 ps-0 d-flex justify-content-end align-items-end">
+                            <button class="btn btn-primary" type="button" (click)="openViewDRNTermsModal()">
+                                Shipment Terms
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <hr class="row line-border" />
+
+        <div class="">
+            <app-setting-header
+                [data]="{page,pageSize,collection,search, excelDisplay : 'none'}"
+                (dataChange)="eventHeader($event)"
+            >
+            </app-setting-header>
+        </div>
+
+        <div class="table-responsive text-wrap" style="min-height: 22rem">
+            <table class="table table-bordered table-sticky">
+                <thead class="bg-info">
+                    <tr class="text-white">
+                        <th>#</th>
+                        <th sortable="SKUNo" (sort)="onSort($event)">SKU No.</th>
+                        <th class="text-start" sortable="SKUName" (sort)="onSort($event)">
+                            {{ "SKU Name" | labelTranslate }}
+                        </th>
+                        <th class="text-start" sortable="SKUDescription" (sort)="onSort($event)">
+                            {{ "SKU Description" | labelTranslate }}
+                        </th>
+                        <th sortable="UOM" (sort)="onSort($event)">UoM</th>
+                        <th sortable="SOBalancedQty" (sort)="onSort($event)">Disp. Qty</th>
+                        <th sortable="FGINMfgDate" (sort)="onSort($event)">Batch Date</th>
+                        <th sortable="FGINQty" (sort)="onSort($event)">Rate/Unit</th>
+                        <th sortable="dispatchQty" (sort)="onSort($event)">Disc %</th>
+                        <th sortable="dispatchQty" (sort)="onSort($event)">Net Rate</th>
+                        <th sortable="dispatchQty" (sort)="onSort($event)">Line Value</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    <tr
+                        *ngFor="
+                            let d of SPDetailsArray
+                                | searchFi1ter : search
+                                | slice : (page - 1) * pageSize : (page - 1) * pageSize + pageSize;
+                            trackBy: trackByFn;
+                            let i = index
+                        "
+                    >
+                        <td>{{ i + 1 }}</td>
+                        <td>{{ d?.SKUNo }}</td>
+                        <td class="text-start" [style.width]="SKUName.clientWidth" #SKUName>
+                            <span class="pointer" [ngbTooltip]="d.SKUName" [positionTarget]="SKUName">
+                                {{ d?.SKUName }}
+                            </span>
+                        </td>
+                        <td class="text-start" [style.width]="SKUDescription.clientWidth" #SKUDescription>
+                            <span class="pointer" [ngbTooltip]="d.SKUDescription" [positionTarget]="SKUDescription">
+                                {{ d?.SKUDescription }}
+                            </span>
+                        </td>
+                        <td>{{ d?.UOM }}</td>
+                        <td>{{ d?.dispatchQty | number : ".2-2" }}</td>
+                        <td>
+                            {{ d?.batchDate }}
+                        </td>
+                        <td>
+                            <div class="d-flex justify-content-center">
+                                <span *ngIf="['approval', 'rejection', 'view', 'generate', 'cancel'].includes(action)">
+                                    {{ d?.purchaseRate | number : ".2-2" }}
+                                </span>
+                                <input
+                                    type="number"
+                                    class="form-control form-control-xs w-25"
+                                    *ngIf="!['approval', 'rejection', 'view', 'generate', 'cancel'].includes(action)"
+                                    [(ngModel)]="d.purchaseRate"
+                                    [ngModelOptions]="{standalone: true}"
+                                    (input)="setLineValue(d)"
+                                />
+                            </div>
+                        </td>
+                        <td>
+                            <div class="d-flex justify-content-center">
+                                <span *ngIf="['approval', 'rejection', 'view', 'generate', 'cancel'].includes(action)">
+                                    {{ d?.discount | number : ".2-2" }}
+                                </span>
+                                <input
+                                    type="number"
+                                    class="form-control form-control-xs w-25"
+                                    *ngIf="!['approval', 'rejection', 'view', 'generate', 'cancel'].includes(action)"
+                                    [(ngModel)]="d.discount"
+                                    [ngModelOptions]="{standalone: true}"
+                                    (input)="setNetRate(d)"
+                                />
+                            </div>
+                        </td>
+                        <td>
+                            {{ d?.netRate | number : "1.2-2" }}
+                        </td>
+                        <td>
+                            {{ d?.lineValue | number : "1.2-2" }}
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <ng-container
+            *ngIf="
+                action == 'approval' ||
+                action == 'rejection' ||
+                action == 'generate' ||
+                action == 'create' ||
+                action == 'edit' ||
+                action == 'view'
+            "
+        >
+            <hr class="row line-border" />
+
+            <div class="row d-flex justify-content-between align-items-center mb-0">
+                <div class="col-md-auto" *ngIf="['create', 'edit', 'approval', 'view'].includes(action)">
+                    <div class="d-flex">
+                        <div class="col-form-label text-nowrap me-2">
+                            <button class="plusIconSvg btn btn-primary me-1"></button>
+                            <button class="btn btn-primary px-4" type="button" (click)="openShipmentDetailsModal()">
+                                Shipment Details
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <div *ngIf="['create', 'edit', 'approval'].includes(action)" class="col-md-auto">
+                    <div class="d-flex justify-content-center">
+                        <div class="col-form-label text-nowrap pe-1 pt-0">
+                            Total Shipment Value:
+                            <button type="button" class="btn btn-info py-1 ms-2">
+                                {{ "INR" | companyCurrency }}
+                            </button>
+                        </div>
+                        <input class="form-control" type="number" formControlName="shipmentValue" readonly />
+                    </div>
+                </div>
+                <div class="col-md-auto">
+                    <div class="d-grid gap-2 d-md-block">
+                        <button
+                            *ngIf="!['view', 'edit', 'rejection', 'approval'].includes(action)"
+                            class="btn btn-primary px-5 me-4"
+                            (click)="reset()"
+                        >
+                            Reset
+                        </button>
+                        <button
+                            *ngIf="['create', 'edit'].includes(action)"
+                            class="btn btn-primary px-5"
+                            type="button"
+                            (click)="submit()"
+                        >
+                            Save
+                        </button>
+                    </div>
+                </div>
+                <div *ngIf="action == 'approval'" class="col-md-auto">
+                    <button class="btn btn-primary px-5" type="button" (click)="submit()">Approve</button>
+                </div>
+            </div>
+            <div class="row d-flex">
+                <div *ngIf="action == 'rejection'" class="d-flex justify-content-start">
+                    <div class="d-flex inputGroup ms-0 col-4">
+                        <span class="input-group-text text-white bg-primary"> Remark</span>
+                        <input class="form-control" type="text" formControlName="remarks" />
+                    </div>
+
+                    <div class="col-5 ms-5">
+                        <div class="d-flex justify-content-center">
+                            <div class="col-form-label text-nowrap pe-1 pt-0">
+                                Total Shipment Value:
+                                <button type="button" class="btn btn-info py-1 ms-2">
+                                    {{ "INR" | companyCurrency }}
+                                </button>
+                            </div>
+                            <input class="form-control" type="number" formControlName="shipmentValue" readonly />
+                        </div>
+                    </div>
+
+                    <div class="col-3 text-end pe-5">
+                        <button class="btn btn-primary px-5" type="button" (click)="submit()">Reject</button>
+                    </div>
+                </div>
+            </div>
+        </ng-container>
+    </div>
+</Form>

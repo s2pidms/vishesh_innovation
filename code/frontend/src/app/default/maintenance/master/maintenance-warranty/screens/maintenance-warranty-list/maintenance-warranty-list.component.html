@@ -1,0 +1,82 @@
+<div class="listCard card">
+    <div class="table-header">
+        <label class="heading">Maintenance Warranty Summary</label>
+    </div>
+
+    <div appAccessControl [accessType]="rolePermissionActions.createAction" class="text-center">
+        <button class="btn btn-primary btn-add" type="button" (click)="navigateTo('../form', {}, 'create')">
+            <i class="fa fa-plus-square fa-lg me-2" aria-hidden="true"></i>
+            Maintenance Warranty
+        </button>
+    </div>
+    <hr class="line-border" />
+    <div class="table-responsive">
+        <app-setting-header [data]="{page,pageSize,collection,search,type: 'list'}" (dataChange)="eventHeader($event)">
+        </app-setting-header>
+
+        <table class="table table-bordered">
+            <thead class="bg-secondary">
+                <tr class="text-white">
+                    <th sortable="warrantyCode" (sort)="onSort($event)">Warranty Code</th>
+                    <th class="text-start" sortable="warrantyName" (sort)="onSort($event)">Warranty Name</th>
+                    <th sortable="equipmentName" (sort)="onSort($event)">Equipment</th>
+                    <th sortable="warrantyStartDate" (sort)="onSort($event)">Start Date</th>
+                    <th sortable="warrantyEndDate" (sort)="onSort($event)">End Date</th>
+                    <th sortable="warrantyType" (sort)="onSort($event)">Warranty Type</th>
+                    <th class="text-start" sortable="warrantyDescription" (sort)="onSort($event)">
+                        Warranty Description
+                    </th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let u of tableData; trackBy: trackByFn">
+                    <td>{{ u?.warrantyCode }}</td>
+                    <td class="text-start" [style.width]="warrantyName.clientWidth" #warrantyName>
+                        <span class="pointer" [ngbTooltip]="u.warrantyName" [positionTarget]="warrantyName">
+                            {{ u.warrantyName }}
+                        </span>
+                    </td>
+                    <td>{{ u?.equipmentName }}</td>
+                    <td>{{ u?.warrantyStartDate }}</td>
+                    <td>{{ u?.warrantyEndDate }}</td>
+                    <td>{{ u?.warrantyType }}</td>
+                    <td class="text-start" [style.width]="warrantyDescription.clientWidth" #warrantyDescription>
+                        <span
+                            class="pointer"
+                            [ngbTooltip]="u.warrantyDescription"
+                            [positionTarget]="warrantyDescription"
+                        >
+                            {{ u.warrantyDescription }}
+                        </span>
+                    </td>
+                    <td>
+                        <div class="dropdown">
+                            <button class="dropbtn"></button>
+                            <div class="dropdown-content">
+                                <a
+                                    appAccessControl
+                                    [accessType]="rolePermissionActions.viewAction"
+                                    href="javascript:void(0)"
+                                    (click)="navigateTo('../form', u, 'view')"
+                                >
+                                    <i class="fa fa-eye fa-lg me-2 text-primary" aria-hidden="true"></i>
+                                    View
+                                </a>
+                                <a
+                                    appAccessControl
+                                    [accessType]="rolePermissionActions.editAction"
+                                    href="javascript:void(0)"
+                                    (click)="navigateTo('../form', u, 'edit')"
+                                >
+                                    <i class="fa fa-pencil-square-o fa-lg me-2 text-primary" aria-hidden="true"></i>
+                                    Edit
+                                </a>
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>

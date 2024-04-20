@@ -1,0 +1,98 @@
+<div class="modelPage">
+    <div class="modal-header">
+        <div class="heading">Supplier Details</div>
+        <div>
+            <button type="button" class="btn btn-cross btn-sm" aria-label="Close" (click)="this.activeModal.close()">
+                <i class="fa fa-times-circle" aria-hidden="true"></i>
+            </button>
+        </div>
+    </div>
+    <div class="">
+        <div class="container-fluid">
+            <div class="row justify-content-center">
+                <div class="col-12 px-0 mt-4">
+                    <div class="px-5 mt-0">
+                        <app-setting-header
+                            [data]="{page,pageSize,collection,search ,excelDisplay : 'none'}"
+                            (dataChange)="eventHeader($event)"
+                        >
+                        </app-setting-header>
+                    </div>
+                    <div style="min-height: 33rem" class="table-responsive px-5">
+                        <table class="table table-bordered table-sticky">
+                            <thead class="bg-primary">
+                                <tr class="text-white">
+                                    <th sortable="supplierCode" (sort)="onSort($event)">Supplier Code</th>
+                                    <th sortable="supplierName" (sort)="onSort($event)" class="text-start">
+                                        Supplier Name
+                                    </th>
+                                    <th sortable="supplierBillingState" (sort)="onSort($event)">S. Billing State</th>
+                                    <th sortable="supplierBillingCity" (sort)="onSort($event)">S. Billing City</th>
+                                    <th sortable="supplierBillingPinCode" (sort)="onSort($event)">S. City Pin Code</th>
+                                    <th>Select</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr
+                                    *ngFor="
+                                        let u of supplierOptions
+                                            | searchFi1ter : search
+                                            | slice : (page - 1) * pageSize : (page - 1) * pageSize + pageSize;
+                                        let i = index
+                                    "
+                                >
+                                    <td>{{ u?.supplierCode }}</td>
+                                    <td class="text-start">{{ u?.supplierName ? u?.supplierName : u?.label }}</td>
+                                    <td>{{ u?.supplierBillingState }}</td>
+                                    <td>
+                                        {{ u?.supplierBillingCity }}
+                                        <!-- <span class="pointer" [ngbTooltip]="u?.label" placement="right">
+                                            {{ u?.label ? u?.label : null }}
+                                        </span> -->
+                                    </td>
+                                    <td>{{ u?.supplierBillingPinCode }}</td>
+                                    <td>
+                                        <input
+                                            [disabled]="
+                                                [
+                                                    'view',
+                                                    'edit',
+                                                    'rejection',
+                                                    'reject',
+                                                    'approval',
+                                                    'approve',
+                                                    'cancel'
+                                                ].includes(action)
+                                            "
+                                            class="form-check-input pointer"
+                                            type="radio"
+                                            name="formValue{{ supplierOptions[i] }}"
+                                            [checked]="u.select"
+                                            (change)="setSelectData(u)"
+                                        />
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col px-0 mb-3">
+                    <hr
+                        *ngIf="
+                            !['view', 'edit', 'rejection', 'reject', 'approval', 'approve', 'cancel'].includes(action)
+                        "
+                        class="line-border"
+                    />
+                </div>
+            </div>
+            <div
+                *ngIf="!['view', 'edit', 'rejection', 'reject', 'approval', 'approve', 'cancel'].includes(action)"
+                class="text-center mb-2"
+            >
+                <button class="btn bg-primary px-5 mb-4" type="button" (click)="dismissModel()">Save & Close</button>
+            </div>
+        </div>
+    </div>
+</div>

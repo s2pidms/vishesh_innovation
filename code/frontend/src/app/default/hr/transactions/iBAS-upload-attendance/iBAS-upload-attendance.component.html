@@ -1,0 +1,141 @@
+<div class="row justify-content-center biometricAttendancePage">
+  <div class="col-md-8 mt-3">
+    <div [ngClass]="fileSuccessUpload ? 'card activeCard' : 'card'">
+      <div class="biometricContainer">
+        <div class="row row-box mb-5">
+          <div class="col-12 data-box text-center blue-text">
+            Upload Biometric Attendance
+          </div>
+        </div>
+
+        <div class="row mb-5">
+          <div class="col-md-12">
+            <div class="d-flex justify-content-center">
+              <div class="me-3 align-self-end align-items-baseline">
+                <button
+                  type="button"
+                  class="btn btn-primary px-4"
+                  (click)="fileInput.click()"
+                >
+                  Select File
+                </button>
+                <input
+                  #fileInput
+                  type="file"
+                  hidden
+                  accept=".xlsx"
+                  (change)="fileChosen($event)"
+                />
+              </div>
+
+              <div class="me-3 w-50">
+                <div class="text-center">
+                  <label class="text-primary mb-2">
+                    Upload Biometric Attendance in Excel format [.xlsx]
+                  </label>
+                </div>
+                <div class="d-flex inputGroup">
+                  <input
+                    class="form-control iBASInput-field"
+                    type="text"
+                    [value]="fileName"
+                    readonly
+                  />
+                  <span class="input-group-text pe-4" (click)="removeFile()">
+                    <img
+                      *ngIf="fileName"
+                      class="closeIcon"
+                      src="../../../../../assets/new_icons/remove_attachment.svg"
+                      alt=""
+                    />
+                  </span>
+                </div>
+              </div>
+
+              <div
+                appAccessControl
+                [accessType]="rolePermissionActions.createAction"
+                class="align-self-end"
+              >
+                <button
+                  class="btn btn-primary px-4 btn-width"
+                  type="button"
+                  (click)="validateData()"
+                >
+                  Upload
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="row mb-4 row-3" *ngIf="fileSuccessUpload">
+          <div class="col-auto">
+            <img
+              class="successImg"
+              src="../../../../../assets/new_icons/successful_icon.svg"
+              alt="successImg"
+            />
+          </div>
+          <div class="col-auto align-self-center">
+            <span>Upload Successful</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="" *ngIf="fileSuccessUpload">
+      <div class="text-center my-5">
+        <img
+          class="arrowDownImg"
+          src="../../../../../assets/new_icons/upload_urrow_down.svg"
+          alt="arrowDownImg"
+        />
+      </div>
+      <div class="card">
+        <div class="biometricContainer">
+          <div class="row row-box">
+            <div class="col-12 data-box text-center blue-text">
+              Integrate Data
+            </div>
+          </div>
+        </div>
+        <div class="">
+          <div class="row mt-5 text-center">
+            <div class="col-12">
+              <h4 class="text-primary">
+                Click "Run Integration" to integrate Excel data with idms
+              </h4>
+            </div>
+          </div>
+
+          <div class="row justify-content-center my-4">
+            <div class="col-12 text-center">
+              <div class="align-self-end">
+                <button
+                  type="button"
+                  class="btn btn-primary px-4"
+                  (click)="submit(false)"
+                >
+                  Run Integration
+                </button>
+              </div>
+            </div>
+          </div>
+          <div class="row row-3 mb-4" *ngIf="dataSuccessUpload">
+            <div class="col-auto">
+              <img
+                class="successImg"
+                src="../../../../../assets/new_icons/successful_icon.svg"
+                alt="successImg"
+              />
+            </div>
+            <div class="col-auto align-self-center">
+              <span>Data Integration Successful</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,76 @@
+<div class="listCard card">
+    <div class="table-header">
+        <label class="heading">ESP Category Summary</label>
+    </div>
+
+    <div appAccessControl [accessType]="rolePermissionActions.createAction" class="text-center">
+        <button
+            class="btn btn-primary btn-add"
+            type="button"
+            (click)="navigateTo('default/settings/master/purchase/esp_category/form', {}, 'create')"
+        >
+            <i class="fa fa-plus-square fa-lg me-2" aria-hidden="true"></i>
+            ESP Category
+        </button>
+    </div>
+    <hr class="line-border" />
+    <div class="table-responsive">
+        <app-setting-header [data]="{page,pageSize,collection,search,type: 'list'}" (dataChange)="eventHeader($event)">
+        </app-setting-header>
+
+        <table class="table table-bordered">
+            <thead class="bg-secondary">
+                <tr class="text-white">
+                    <th sortable="category" (sort)="onSort($event)">Category</th>
+                    <th
+                        sortable="prefix
+            "
+                        (sort)="onSort($event)"
+                    >
+                        Category Prefix
+                    </th>
+                    <th sortable="digit" (sort)="onSort($event)">Digit</th>
+                    <th sortable="nextAutoIncrement" (sort)="onSort($event)">Auto Increment No.</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let u of tableData; trackBy: trackByFn">
+                    <td>{{ u?.category }}</td>
+                    <td>{{ u?.prefix }}</td>
+                    <td>{{ u?.digit }}</td>
+                    <td>{{ u?.nextAutoIncrement }}</td>
+                    <td>
+                        <div class="dropdown">
+                            <button class="dropbtn"></button>
+                            <div class="dropdown-content">
+                                <a
+                                    appAccessControl
+                                    [accessType]="rolePermissionActions.viewAction"
+                                    href="javascript:void(0)"
+                                    (click)="
+                                        navigateTo('default/settings/master/purchase/esp_category/form', u, 'view')
+                                    "
+                                >
+                                    <i class="fa fa-eye fa-lg me-2 text-primary" aria-hidden="true"></i>
+                                    View
+                                </a>
+                                <a
+                                    appAccessControl
+                                    [accessType]="rolePermissionActions.editAction"
+                                    href="javascript:void(0)"
+                                    (click)="
+                                        navigateTo('default/settings/master/purchase/esp_category/form', u, 'edit')
+                                    "
+                                >
+                                    <i class="fa fa-pencil-square-o fa-lg me-2 text-primary" aria-hidden="true"></i>
+                                    Edit
+                                </a>
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>

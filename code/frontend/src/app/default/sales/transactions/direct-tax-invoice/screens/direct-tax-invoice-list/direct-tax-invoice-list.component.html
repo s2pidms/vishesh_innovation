@@ -1,0 +1,85 @@
+<div class="listCard card">
+    <div class="table-header">
+        <label class="heading">Tax Invoice Summary</label>
+    </div>
+
+    <div class="text-center">
+        <button class="btn btn-primary btn-add" type="button" (click)="navigateTo('../form', {}, 'create')">
+            <i class="fa fa-plus-square fa-lg me-2" aria-hidden="true"></i>
+            Generate Tax Invoice
+        </button>
+    </div>
+
+    <hr class="line-border" />
+    <div class="table-responsive">
+        <app-setting-header [data]="{page,pageSize,collection,search,type: 'list'}" (dataChange)="eventHeader($event)">
+        </app-setting-header>
+        <table class="table table-bordered">
+            <thead class="bg-primary">
+                <tr class="text-white">
+                    <th sortable="DTINumber" (sort)="onSort($event)">Invoice #</th>
+                    <th sortable="salesInvoiceDateS" (sort)="onSort($event)">Invoice Date</th>
+                    <th sortable="DTIValue" (sort)="onSort($event)">Invoice Value</th>
+                    <th class="text-start" sortable="customerName" (sort)="onSort($event)">Customer Name</th>
+                    <th sortable="status" (sort)="onSort($event)">Action</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                <tr *ngFor="let u of tableData; trackBy: trackByFn">
+                    <td>{{ u?.DTINumber }}</td>
+                    <td>{{ u?.salesInvoiceDateS }}</td>
+                    <td>{{ u?.DTIValue }}</td>
+                    <td class="text-start" [style.width]="customerName.clientWidth" #customerName>
+                        <span class="pointer" [positionTarget]="customerName" [ngbTooltip]="u.customerName">
+                            {{ u.customerName }}
+                        </span>
+                    </td>
+                    <td>
+                        <div class="dropdown">
+                            <button class="dropbtn"></button>
+                            <div class="dropdown-content">
+                                <a href="javascript:void(0)" (click)="navigateTo('../form', u, 'view')">
+                                    <i class="fa fa-eye fa-lg me-2 text-primary" aria-hidden="true"></i>
+                                    View
+                                </a>
+                                <a
+                                    [class.disable]="u?.DTIStatus === 'Approved' || u?.DTIStatus === 'Rejected'"
+                                    href="javascript:void(0)"
+                                    (click)="navigateTo('../form', u, 'edit')"
+                                >
+                                    <i class="fa fa-pencil-square-o fa-lg me-2 text-primary" aria-hidden="true"></i>
+                                    Edit
+                                </a>
+                                <a
+                                    href="javascript:void(0)"
+                                    [class.disable]="u?.DTIStatus === 'Approved' || u?.DTIStatus === 'Rejected'"
+                                    (click)="navigateTo('../form', u, 'rejection')"
+                                >
+                                    <i class="fa fa fa-times fa-lg me-2 text-primary" aria-hidden="true"></i>
+                                    Reject
+                                </a>
+                                <a
+                                    [class.disable]="u?.DTIStatus === 'Approved' || u?.DTIStatus === 'Rejected'"
+                                    href="javascript:void(0)"
+                                    (click)="navigateTo('../form', u, 'approval')"
+                                >
+                                    <i class="fa fa-check fa-lg text-success" aria-hidden="true"></i>
+                                    Approve
+                                </a>
+                                <a
+                                    [class.disable]="u?.DTIStatus === 'Awaiting Approval'"
+                                    href="javascript:void(0)"
+                                    (click)="update(u, 'Report Generated')"
+                                >
+                                    <img src="./assets/images/new.svg" width="14" class="me-3" />
+                                    Generate Report
+                                </a>
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>

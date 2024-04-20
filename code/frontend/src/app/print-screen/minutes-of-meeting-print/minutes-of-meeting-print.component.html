@@ -1,0 +1,101 @@
+<div class="container-fluid printScreen">
+    <div class="row justify-content-center">
+        <div class="col-9 text-center px-0">
+            <div class="row">
+                <div class="col-12 text-center text-white">
+                    <button
+                        style="color: white !important"
+                        class="btn btn-primary"
+                        type="button"
+                        (click)="windowPrint()"
+                        *ngIf="pdfAction != 'pdf'"
+                    >
+                        <img src="./assets/images/print.png" width="20px" height="14px" class="mb-2" />&nbsp;&nbsp;
+                        Print
+                    </button>
+                </div>
+            </div>
+            <div class="page py-3">
+                <div class="container-fluid printScreen px-0 pt-0">
+                    <div class="table-responsive">
+                        <div class="mb-2">Meeting Details</div>
+                        <table class="table">
+                            <tbody>
+                                <tr>
+                                    <th>MoM Code</th>
+                                    <td>{{ MoMPrintDetailsArray.MOMCode }}</td>
+                                </tr>
+                                <tr>
+                                    <th>MoM Date</th>
+                                    <td>
+                                        {{ MoMPrintDetailsArray.MOMDate | date : "dd-MM-YYYY" }}
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th>Meeting Title</th>
+                                    <td>{{ MoMPrintDetailsArray.MOMTitle }}</td>
+                                </tr>
+                                <tr>
+                                    <th>Meeting Type</th>
+                                    <td>{{ MoMPrintDetailsArray.meetingType }}</td>
+                                </tr>
+                                <tr>
+                                    <th>Venue</th>
+                                    <td>{{ MoMPrintDetailsArray.venue }}</td>
+                                </tr>
+                                <tr>
+                                    <th>Organizer</th>
+                                    <td>{{ MoMPrintDetailsArray.organizer }}</td>
+                                </tr>
+                                <tr>
+                                    <th>Attended By</th>
+                                    <td>{{ MoMPrintDetailsArray.attendedBy }}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div class="row mt-3">
+                        <div class="col-12"></div>
+                    </div>
+                    <div class="row">
+                        <div class="col-12 text-center px-0">
+                            <div class="table-responsive printScreen">
+                                <table class="table">
+                                    <tr class="head-row text-center w-100 text-nowrap">
+                                        <th class="text-centre">SN</th>
+                                        <th>Action Point</th>
+                                        <th>Owner</th>
+                                        <th>Target Date</th>
+                                        <th>Review Date</th>
+                                        <th class="text-center">Status</th>
+                                        <th class="text-start">Remarks</th>
+                                    </tr>
+                                    <tr *ngFor="let u of MoMPrintDetailsArray.meetingInfo; let i = index">
+                                        <td class="text-centre">
+                                            {{ i + 1 }}
+                                        </td>
+                                        <td>{{ u?.actionPoint }}</td>
+                                        <td>{{ u?.owner }}</td>
+                                        <td>{{ u?.targetDate | date : "dd-MM-YYYY" }}</td>
+                                        <td>
+                                            <div class="d-flex justify-content-start">
+                                                <span>
+                                                    {{ u?.reviewDate | date : "dd-MM-YYYY" }}
+                                                </span>
+                                            </div>
+                                        </td>
+                                        <td class="text-center">{{ u?.status }}</td>
+                                        <td class="text-start">{{ u?.remarks }}</td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<ng-template #hashBlock> <span>-</span> </ng-template>

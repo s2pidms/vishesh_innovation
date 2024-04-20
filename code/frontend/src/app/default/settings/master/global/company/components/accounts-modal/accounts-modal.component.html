@@ -1,0 +1,102 @@
+<div class="modelPage">
+    <div class="modal-header">
+        <div class="heading">Accounts Details</div>
+        <div>
+            <button type="button" class="btn btn-cross btn-sm" aria-label="Close" (click)="this.activeModal.close()">
+                <i class="fa fa-times-circle" aria-hidden="true"></i>
+            </button>
+        </div>
+    </div>
+    <form [formGroup]="form" class="p-0">
+        <div class="row my-5 px-5">
+            <div class="col-4">
+                <label class="form-label"> Reporting Currency <span class="text-danger"></span> </label>
+
+                <select class="form-select" formControlName="reportingCurrency">
+                    <option [value]="null" selected disabled>Select</option>
+                    <option [value]="item.value" *ngFor="let item of currencies">
+                        {{ item.label }}
+                    </option>
+                </select>
+            </div>
+            <div class="col-4">
+                <label class="form-label"> Reporting Currency Symbol <span class="text-danger"></span> </label>
+                <input class="form-control" formControlName="currencySymbol" type="text" />
+            </div>
+            <div class="col-4">
+                <label class="form-label"> Total Weekly Working Days <span class="text-danger"></span> </label>
+
+                <select class="form-select" formControlName="totalWeeklyWorkingDays">
+                    <option [value]="null" selected disabled>Select</option>
+                    <option [value]="item.value" *ngFor="let item of totalWeeklyWorkingDays">
+                        {{ item.label }}
+                    </option>
+                </select>
+            </div>
+        </div>
+        <div class="row px-5">
+            <div class="col-6">
+                <label class="form-label">Fiscal Year Start Date </label>
+                <div class="row">
+                    <div class="col-6 pe-0">
+                        <ng-select
+                            [items]="months"
+                            bindLabel="months"
+                            bindValue="months"
+                            [(ngModel)]="fiscalYearStartMonth"
+                            [ngModelOptions]="{standalone: true}"
+                            [clearable]="false"
+                            (change)="setFiscalStartMonthsDays()"
+                        >
+                        </ng-select>
+                    </div>
+                    <div class="col-6 ps-0">
+                        <ng-select
+                            [items]="fiscalYearStartDays"
+                            bindLabel="fiscalYearStartDays"
+                            bindValue="fiscalYearStartDays"
+                            formControlName="fiscalYearStartDays"
+                            [clearable]="false"
+                        >
+                        </ng-select>
+                    </div>
+                </div>
+            </div>
+            <div class="col-6">
+                <label class="form-label">Fiscal Year End Date </label>
+                <div class="row">
+                    <div class="col-6 pe-0">
+                        <ng-select
+                            [items]="months"
+                            bindLabel="months"
+                            bindValue="months"
+                            [(ngModel)]="fiscalYearEndMonth"
+                            [ngModelOptions]="{standalone: true}"
+                            [clearable]="false"
+                            (change)="setFiscalEndMonthsDays()"
+                        >
+                        </ng-select>
+                    </div>
+                    <div class="col-6 ps-0">
+                        <ng-select
+                            [items]="fiscalYearEndDays"
+                            bindLabel="fiscalYearEndDays"
+                            bindValue="fiscalYearEndDays"
+                            formControlName="fiscalYearEndDays"
+                            [clearable]="false"
+                        >
+                        </ng-select>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+
+    <hr class="line-border my-5" />
+
+    <div class="row justify-content-center mb-5">
+        <div class="col-12 text-center">
+            <button type="button" class="btn bg-primary px-5" (click)="dismissModel()">Save & Close</button>
+        </div>
+    </div>
+</div>

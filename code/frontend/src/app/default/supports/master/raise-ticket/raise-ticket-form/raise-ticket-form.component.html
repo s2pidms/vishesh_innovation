@@ -1,0 +1,158 @@
+<form [formGroup]="form" class="formCard card">
+    <div class="container">
+        <div class="row form-header">
+            <div class="col heading">
+                <label>Ticket [{{ this.action | titlecase }}]</label>
+            </div>
+        </div>
+        <div class="form-body">
+            <div class="row mb-4">
+                <div class="col-md-4">
+                    <div class="row">
+                        <div class="col-6">
+                            <label class="form-label">Ticket#<span class="text-danger">*</span></label
+                            ><input class="form-control" formControlName="issueNumber" type="text" readonly />
+                        </div>
+                        <div class="col-6">
+                            <label class="form-label"> Date<span class="text-danger">*</span></label>
+                            <input class="form-control" formControlName="issueDate" readonly type="date" />
+                        </div>
+                    </div>
+                </div>
+
+                <ng-container *ngIf="['edit', 'view'].includes(action)"> </ng-container>
+
+                <div [ngClass]="['edit', 'view'].includes(action) ? 'col-md-4  ' : 'col-md-4  '">
+                    <label class="form-label">Module Name<span class="text-danger">*</span></label>
+                    <ng-select
+                        [items]="moduleList"
+                        bindLabel="title"
+                        bindValue="title"
+                        formControlName="issueTitle"
+                        [clearable]="false"
+                        (change)="setModule($event)"
+                    >
+                    </ng-select>
+                </div>
+                <div [ngClass]="['edit', 'view'].includes(action) ? 'col-md-4' : 'col-md-4'">
+                    <label class="form-label"> Sub Module Name<span class="text-danger">*</span></label>
+                    <select class="form-select" formControlName="subModuleName">
+                        <option [value]="''" disabled="">Select Sub Module Name</option>
+                        <option [value]="item.title" *ngFor="let item of subModuleNames">
+                            {{ item.title }}
+                        </option>
+                    </select>
+                </div>
+            </div>
+            <div class="row mb-4">
+                <div class="col-md-4">
+                    <label class="form-label"> Ticket Type<span class="text-danger"></span> </label>
+                    <select class="form-select" formControlName="ticketType">
+                        <option [value]="''" selected disabled>Select Ticket Type</option>
+                        <option [value]="item.value" *ngFor="let item of ticketType">
+                            {{ item.label }}
+                        </option>
+                    </select>
+                </div>
+                <div class="col-md-4">
+                    <label class="form-label"> Ticket Priority <span class="text-danger"></span> </label>
+                    <select class="form-select" formControlName="priority">
+                        <option [value]="''" selected disabled>Select Ticket Priority</option>
+                        <option [value]="item.value" *ngFor="let item of priority">
+                            {{ item.label }}
+                        </option>
+                    </select>
+                </div>
+                <div class="col-md-4">
+                    <label class="form-label">
+                        <Script></Script> Ticket Severity
+                        <span class="text-danger"></span>
+                    </label>
+                    <select class="form-select" formControlName="severity">
+                        <option [value]="''" selected disabled>Select Ticket Severity</option>
+                        <option [value]="item.value" *ngFor="let item of severity">
+                            {{ item.label }}
+                        </option>
+                    </select>
+                </div>
+            </div>
+            <div class="row mb-4">
+                <div [ngClass]="['edit', 'view'].includes(action) ? 'col-md-6 mb-3' : 'col-md-12 mb-3'">
+                    <label class="form-label">Ticket Description<span class="text-danger">*</span></label>
+
+                    <textarea
+                        class="form-control form-text-area"
+                        formControlName="issueDescription"
+                        rows="3"
+                    ></textarea>
+                </div>
+
+                <div *ngIf="['edit', 'view'].includes(action)" class="col-md-6 mb-4">
+                    <label class="form-label">Ticket Resolution<span class="text-danger"></span></label>
+
+                    <textarea class="form-control form-text-area" formControlName="issueResolution" rows="3"></textarea>
+                </div>
+            </div>
+            <div class="row mb-4">
+                <div class="col-md-6 px-0">
+                    <app-file-upload
+                        [fileName]="form.controls['issueAttachment'].value"
+                        [url]="form.controls['url'].value"
+                        [label]="'Attachment'"
+                        [(file)]="issueAttachmentFile"
+                    ></app-file-upload>
+                </div>
+                <div class="col-md-6">
+                    <div class="row">
+                        <div *ngIf="['edit', 'view'].includes(action)" class="col-4">
+                            <label class="form-label">Raised By<span class="text-danger"></span></label>
+                            <input class="form-control" formControlName="raisedBy" type="text" readonly />
+                        </div>
+                        <div class="col-4">
+                            <ng-container *ngIf="['edit', 'view'].includes(action)">
+                                <label class="form-label"> Status<span class="text-danger">*</span></label
+                                ><select (change)="setFormField()" class="form-select" formControlName="issueStatus">
+                                    <option value="" disabled="">Select Module Name</option>
+                                    <option *ngFor="let item of issueStatus" [value]="item">
+                                        {{ item }}
+                                    </option>
+                                </select>
+                            </ng-container>
+                        </div>
+                        <div class="col-4">
+                            <ng-container *ngIf="['edit', 'view'].includes(action)">
+                                <label class="form-label"> Closed on<span class="text-danger">*</span></label>
+                                <input class="form-control" formControlName="closedOn" type="date" />
+                            </ng-container>
+                        </div>
+                        <div *ngIf="action === 'create'" class="col-4">
+                            <label class="form-label">Raised By<span class="text-danger"></span></label>
+                            <input class="form-control" formControlName="raisedBy" type="text" readonly />
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <hr class="row line-border" />
+        <div class="row mb-0">
+            <div class="col-6">
+                <ng-container *ngIf="['edit', 'view'].includes(action)">
+                    <button (click)="openRevisionReview()" class="btn btn-primary px-4 me-4 mb-3">History</button>
+                    <button (click)="openViewResolutionComments()" class="btn btn-primary px-4 mb-3">
+                        View Resolution Comments
+                    </button>
+                </ng-container>
+            </div>
+            <div class="col-6">
+                <div *ngIf="!['view'].includes(action)" class="d-flex justify-content-end mb-3">
+                    <div class="d-grid col-md-2 me-5">
+                        <button class="btn btn-primary" type="button" (click)="reset()">Reset</button>
+                    </div>
+                    <div class="d-grid col-md-2">
+                        <button type="submit" class="btn btn-primary" (click)="submit()">Save</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>

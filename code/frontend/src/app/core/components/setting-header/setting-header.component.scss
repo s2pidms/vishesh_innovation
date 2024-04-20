@@ -1,0 +1,42 @@
+.pagination {
+    margin-bottom: 0 !important;
+}
+ngb-pagination ::ng-deep ul.pagination {
+    margin: 0 !important;
+}
+.page-label {
+    color: var(--bs-dark);
+    padding: 0 1rem;
+    font-size: 1.4rem;
+}
+
+// ngb-pagination ::ng-deep ul > li:not(.active) > a {
+//   border: none !important;
+//   background-color: #c8c3be !important;
+//   color: var(--bs-white) !important;
+//   padding: 0rem 0.6rem !important;
+//   border-radius: 0.07rem !important;
+//   height: 1.6rem !important;
+// }
+ngb-pagination ::ng-deep ul > li:not(.active) > a {
+    border: none !important;
+    color: var(--bs-white) !important;
+    background-color: #ffffff !important;
+    box-shadow: none;
+}
+
+.fa {
+    font-size: 1.6rem !important;
+    //   padding-top: 0.12rem !important;
+    //   padding-bottom: 0rem !important;
+}
+.input-group-text {
+    border-radius: 0 !important;
+    height: 2.8rem !important;
+    width: 3rem;
+}
+
+.settingMargin {
+    margin-top: 1.5rem;
+    margin-bottom: 1.5rem;
+}

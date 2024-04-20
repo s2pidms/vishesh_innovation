@@ -1,0 +1,44 @@
+<div class="reportTablePage">
+    <div class="table-body pb-0 shadow-none">
+        <div class="row table-header">
+            <div class="col">
+                <label class="heading">Travel Request Report</label>
+            </div>
+        </div>
+        <div class="table-responsive mb-0">
+            <app-setting-header
+                [data]="{page,pageSize,collection,search,type: 'list' ,pdfDisplay : true}"
+                (dataChange)="eventHeader($event)"
+            >
+            </app-setting-header>
+            <table class="table table-bordered">
+                <thead class="bg-primary">
+                    <tr class="text-white">
+                        <th sortable="travelCode" (sort)="onSort($event)">Travel Code</th>
+                        <th sortable="raisedBy" (sort)="onSort($event)">Raised By</th>
+                        <th sortable="travelStartDate" (sort)="onSort($event)">Travel Start Date</th>
+                        <th sortable="travelEndDate" (sort)="onSort($event)">Travel End Date</th>
+                        <th sortable="totalDays" (sort)="onSort($event)">Total # of Days</th>
+                        <th sortable="purposeOfTravel" (sort)="onSort($event)">Purpose of Travel</th>
+                        <th sortable="estimatedBudget" (sort)="onSort($event)">Estimated Budget</th>
+                        <th sortable="costAllocation" (sort)="onSort($event)">Cost Allocation</th>
+                        <th sortable="status" (sort)="onSort($event)">Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let u of tableData; trackBy: trackByFn">
+                        <td>{{ u?.travelCode }}</td>
+                        <td>{{ u?.raisedBy }}</td>
+                        <td>{{ u?.travelStartDate }}</td>
+                        <td>{{ u?.travelEndDate }}</td>
+                        <td>{{ u?.totalDays }}</td>
+                        <td>{{ u?.purposeOfTravel }}</td>
+                        <td>{{ u?.estimatedBudget }}</td>
+                        <td>{{ u?.costAllocation }}</td>
+                        <td>{{ u?.status }}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

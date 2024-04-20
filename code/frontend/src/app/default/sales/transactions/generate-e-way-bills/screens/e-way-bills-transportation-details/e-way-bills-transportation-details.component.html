@@ -1,0 +1,80 @@
+<div class="modelPage">
+  <div class="modal-header">
+    <div class="heading">Transportation Details</div>
+    <div>
+      <button type="button" class="btn btn-cross btn-sm" aria-label="Close" (click)="dismissModel()">
+        <i class="fa fa-times-circle" aria-hidden="true"></i>
+      </button>
+    </div>
+  </div>
+  <div class="">
+    <div class="container-fluid">
+      <div class="row mt-4">
+        <form [formGroup]="form">
+          <div class="row mb-4 px-5">
+            <div class="col-4">
+              <label class="form-label mb-0">
+                Transporter ID <span class="text-danger"></span>
+              </label>
+              <input class="form-control" type="text" formControlName="transporterId" [ngClass]="{
+                  'is-invalid': f['transporterId'].invalid && submitted
+                }" />
+            </div>
+
+            <div class="col-4">
+              <label class="form-label mb-0">
+                Transporter Name <span class="text-danger"></span>
+              </label>
+              <input class="form-control" type="text" formControlName="transporterName" [ngClass]="{
+                  'is-invalid': f['transporterName'].invalid && submitted
+                }" />
+            </div>
+
+            <div class="col-4">
+              <label class="form-label mb-0">
+                Mode of Transport<span class="text-danger"></span>
+              </label>
+              <select class="form-select" formControlName="transMode" [ngClass]="{
+                'is-invalid': f['transMode'].invalid && submitted
+              }">
+                <option value="null">Select Mode</option>
+                <option value="1">Road-1</option>
+                <option value="2">Rail-2</option>
+                <option value="3">Air-3</option>
+                <option value="4">Ship-4</option>
+              </select>
+            </div>
+          </div>
+          <div class="row mb-4 px-5">
+            <div class="col-4">
+              <label class="form-label mb-0">
+                Vehicle No. <span class="text-danger"></span>
+              </label>
+              <input class="form-control" type="text" formControlName="vehicleNo" />
+            </div>
+            <div class="col-4">
+              <label class="form-label mb-0">
+                Transporter Document No.<span class="text-danger"></span>
+              </label>
+              <input class="form-control" type="text" formControlName="transDocNo" />
+            </div>
+            <div class="col-4">
+              <label class="form-label mb-0">
+                Transporter Document Date<span class="text-danger"></span>
+              </label>
+              <input class="form-control" type="text" formControlName="transDocDate" />
+            </div>
+          </div>
+        </form>
+
+        <hr class="line-border mb-5 px-05" />
+
+        <div class="text-center mb-5">
+          <button type="button" class="btn bg-primary px-5" (click)="dismissModel()">
+            Save & Close
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

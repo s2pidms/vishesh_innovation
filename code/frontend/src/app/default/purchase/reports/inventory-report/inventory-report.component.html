@@ -1,0 +1,158 @@
+<div class="reportTablePage">
+    <div class="table-body pb-0 shadow-none">
+        <div class="row table-header">
+            <div class="col">
+                <label class="heading">Inventory Report (IR) - Stores</label>
+            </div>
+        </div>
+        <div class="row my-4">
+            <div class="col-3 ps-5 separate-row">
+                <label class="form-label">Report Name</label>
+                <select (change)="setReportName()" [(ngModel)]="reportName" class="form-select">
+                    <option [value]="item.value" *ngFor="let item of reportNameArr">
+                        {{ item.label }}
+                    </option>
+                </select>
+                <span class="set-position">
+                    <img src="./assets/new_icons/redstroke.svg" alt="" height="27" width="8" />
+                </span>
+            </div>
+            <div *ngIf="[reportNameObj.aodInventoryBySupplier].includes(reportName)" class="col-3 separate-row">
+                <label class="form-label">Report Specific Search</label>
+                <ng-select
+                    [items]="suppliersArr"
+                    bindLabel="supplierName"
+                    bindValue="_id"
+                    [clearable]="false"
+                    [(ngModel)]="supplierId"
+                >
+                </ng-select>
+
+                <span class="set-position">
+                    <img src="./assets/new_icons/redstroke.svg" alt="" height="27" width="8" />
+                </span>
+            </div>
+            <div *ngIf="[reportNameObj.aodInventoryByItem].includes(reportName)" class="col-3 separate-row">
+                <label class="form-label">Report Specific Search</label>
+                <ng-select
+                    [items]="itemsListArr"
+                    bindLabel="itemName"
+                    bindValue="_id"
+                    [clearable]="false"
+                    [(ngModel)]="itemId"
+                >
+                </ng-select>
+
+                <span class="set-position">
+                    <img src="./assets/new_icons/redstroke.svg" alt="" height="27" width="8" />
+                </span>
+            </div>
+            <div *ngIf="[reportNameObj.aodInventoryByLocation].includes(reportName)" class="col-3 separate-row">
+                <label class="form-label">Report Specific Search</label>
+                <ng-select
+                    [items]="locationArr"
+                    bindLabel="label"
+                    bindValue="value"
+                    [clearable]="false"
+                    [(ngModel)]="location"
+                >
+                </ng-select>
+
+                <span class="set-position">
+                    <img src="./assets/new_icons/redstroke.svg" alt="" height="27" width="8" />
+                </span>
+            </div>
+            <div class="col-3">
+                <label class="form-label"> As on Date <span class="text-danger"></span> </label>
+                <input class="form-control" type="date" [(ngModel)]="toDate" />
+            </div>
+
+            <div class="col-3 align-self-end separate-image">
+                <span class="image-position">
+                    <img src="./assets/new_icons/redstroke.svg" alt="" height="27" width="8" />
+                </span>
+                <button type="button" class="btn btn-primary px-4 me-3" (click)="getAll()">Apply Filter</button>
+
+                <button type="button" class="btn btn-primary px-4 ms-4" (click)="reset()">Reset Filter</button>
+            </div>
+        </div>
+        <hr class="row line-border" />
+        <div class="table-responsive mb-0">
+            <app-setting-header
+                [data]="{page,pageSize,collection,search,type: 'list',pdfDisplay : true}"
+                (dataChange)="eventHeader($event)"
+            >
+            </app-setting-header>
+            <table class="table table-bordered table-sticky">
+                <thead class="bg-primary">
+                    <tr class="text-white">
+                        <th sortable="itemCode" (sort)="onSort($event)">Item Code</th>
+                        <th class="text-start" sortable="itemName" (sort)="onSort($event)">Item Name</th>
+                        <th class="text-start" sortable="itemDescription" (sort)="onSort($event)">Item Description</th>
+                        <th sortable="UOM" (sort)="onSort($event)">UoM</th>
+                        <th sortable="closedIRQty" (sort)="onSort($event)">Quantity</th>
+                        <th sortable="purchaseRatINR" (sort)="onSort($event)">Unit Rate</th>
+                        <th sortable="lineValue" (sort)="onSort($event)">Line Value</th>
+                        <th sortable="MRNNumber" (sort)="onSort($event)">MRN No.</th>
+                        <th sortable="batchDate" (sort)="onSort($event)">Batch Date</th>
+                        <th>Aging</th>
+                        <th sortable="expiryDate" (sort)="onSort($event)">B/B Date</th>
+                        <th sortable="supplierName" (sort)="onSort($event)">Supplier N'/Name</th>
+                        <th sortable="deliveryLocation" (sort)="onSort($event)">Location</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let u of tableData; trackBy: trackByFn">
+                        <td>{{ u?.itemCode }}</td>
+                        <td class="text-start" [style.width]="itemName.clientWidth" #itemName>
+                            <span class="pointer" [ngbTooltip]="u.itemName" [positionTarget]="itemName">
+                                {{ u?.itemName }}
+                            </span>
+                        </td>
+                        <td class="text-start" [style.width]="itemDescription.clientWidth" #itemDescription>
+                            <span class="pointer" [ngbTooltip]="u.itemDescription" [positionTarget]="itemDescription">
+                                {{ u?.itemDescription }}
+                            </span>
+                        </td>
+                        <td>{{ u?.UOM | UOMUnitsMaster }}</td>
+                        <td>{{ u?.closedIRQty | number : "1.2-2" }}</td>
+                        <td>{{ u?.purchaseRatINR | number : "1.2-2" }}</td>
+                        <td>{{ u?.lineValue | number : "1.2-2" }}</td>
+                        <td>
+                            {{ u?.MRNNumber }}
+                        </td>
+                        <td>{{ u?.batchDate | date : "dd-MM-YYYY" }}</td>
+                        <td>
+                            <span class="d-flex justify-content-center">
+                                <div style="height: 1.8rem" *ngIf="u?.status == 'green'" class="flaggreen"></div>
+                                <div style="height: 1.8rem" *ngIf="u?.status == 'red'" class="flagred"></div>
+                                <div style="height: 1.8rem" *ngIf="u?.status == 'orange'" class="flagYellow"></div>
+                            </span>
+                        </td>
+                        <td>
+                            {{ u?.expiryDate }}
+                        </td>
+                        <td>{{ u?.supplierName }}</td>
+                        <td>
+                            {{ u?.deliveryLocation }}
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="table-footer">
+            <hr class="row line-border" />
+            <div class="row align-items-center mt-3">
+                <div class="col-3">
+                    <div class="d-flex justify-content-center">
+                        <div class="col-form-label text-nowrap pe-1 pt-0 ms-3">
+                            Inventory Value <i class="fa fa-caret-right fa-5x mx-2"></i>
+                            <button type="button" class="btn btn-info py-1 ms-2">{{ "INR" | companyCurrency }}</button>
+                        </div>
+                        <input [value]="inventoryValue | number : '1.2-2'" class="form-control" type="text" readonly />
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

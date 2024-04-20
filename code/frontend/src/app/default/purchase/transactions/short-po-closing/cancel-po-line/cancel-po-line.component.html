@@ -1,0 +1,60 @@
+<div class="modelPage">
+    <div class="modal-header">
+        <div class="heading">Are you sure that you want to Cancel PO Line Item?</div>
+        <div>
+            <button
+                type="button"
+                class="btn btn-cross btn-sm"
+                aria-label="Close"
+                (click)="activeModal.close(tableData)"
+            >
+                <i class="fa fa-times-circle" aria-hidden="true"></i>
+            </button>
+        </div>
+    </div>
+    <div class="row">
+        <Form [formGroup]="form">
+            <div class="">
+                <h5 class="px-5 mt-4">PO Line Details:</h5>
+                <div style="min-height: 15rem" class="table-responsive px-5">
+                    <table class="table table-bordered table-sticky">
+                        <tbody>
+                            <tr>
+                                <td class="text-start">PO #</td>
+                                <td>{{ tableData?.POLineNumber }}</td>
+                            </tr>
+                            <tr>
+                                <td class="text-start">PO Date</td>
+                                <td>{{ tableData?.PODate }}</td>
+                            </tr>
+                            <tr>
+                                <td class="text-start">Item Name</td>
+                                <td>{{ tableData?.itemName }}</td>
+                            </tr>
+                            <tr>
+                                <td class="text-start">Balance Qty</td>
+                                <td>{{ tableData?.balancedQty | number : "1.2-2" }}</td>
+                            </tr>
+                            <tr>
+                                <td class="text-start">Cancel Qty</td>
+                                <td>{{ tableData?.balancedQty | number : "1.2-2" }}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="col px-5">
+                    <label class="form-label mb-3"> Cancellation Reason<span class="text-danger">*</span> </label>
+                    <input class="form-control" type="text" formControlName="canceledReason" />
+                </div>
+                <hr class="line-border my-3 px-5" />
+
+                <div class="text-center d-grid gap-2 d-md-block mb-4">
+                    <button class="btn btn-primary px-5 me-4" type="button" (click)="activeModal.close(tableData)">
+                        Close
+                    </button>
+                    <button (click)="save()" type="button" class="btn btn-primary px-5">Save</button>
+                </div>
+            </div>
+        </Form>
+    </div>
+</div>

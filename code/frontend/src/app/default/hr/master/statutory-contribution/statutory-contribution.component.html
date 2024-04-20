@@ -1,0 +1,625 @@
+<form [formGroup]="form">
+    <div class="row justify-content-center">
+        <div class="col-md-11">
+            <ul ngbNav #nav="ngbNav" [(activeId)]="active" class="nav-pills tabs-card row">
+                <li formGroupName="employeeProvidentFund" [ngbNavItem]="1" class="col d-grid pe-2">
+                    <a ngbNavLink>EPF</a>
+                    <ng-template ngbNavContent>
+                        <div id="epf">
+                            <div class="establishmentId">
+                                <div class="row mb-4">
+                                    <h4 class="text-primary text-center mb-4">
+                                        Employee's Provident Fund
+                                        <span class="text-secondary">
+                                            {{
+                                                statutorySetUp?.employeeProvidentFund?.establishmentId
+                                                    ? "[Edit]"
+                                                    : "[Create]"
+                                            }}
+                                        </span>
+                                    </h4>
+                                </div>
+                            </div>
+                            <div class="row mb-4">
+                                <div class="col-md-8">
+                                    <div class="row mb-4">
+                                        <div class="col-md-6">
+                                            <label class="form-label my-2">
+                                                Establishment Id
+                                                <span class="text-danger">*</span>
+                                            </label>
+                                            <input
+                                                class="form-control"
+                                                type="text"
+                                                maxLength="21"
+                                                formControlName="establishmentId"
+                                            />
+                                            <validation-messages
+                                                class="error-left"
+                                                [control]="EPF['controls']['establishmentId']"
+                                            >
+                                            </validation-messages>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <label class="form-label my-2">
+                                                Labour Identification No. (LIN)
+                                                <span class="text-danger">*</span>
+                                            </label>
+                                            <input
+                                                class="form-control"
+                                                type="text"
+                                                maxLength="10"
+                                                formControlName="labourIdentificationNo"
+                                            />
+                                            <validation-messages
+                                                class="error-left"
+                                                [control]="EPF['controls']['labourIdentificationNo']"
+                                            >
+                                            </validation-messages>
+                                        </div>
+                                    </div>
+                                    <div class="row mb-4">
+                                        <div class="col-md-6">
+                                            <label class="form-label my-2">
+                                                Deduction Cycle
+                                                <span class="text-danger">*</span>
+                                            </label>
+
+                                            <select class="form-select" formControlName="deductionCycle">
+                                                <option [value]="null" disabled selected>Select</option>
+                                                <option value="Monthly">Monthly</option>
+                                                <option value="Yearly">Yearly</option>
+                                                <option value="Half-yearly">Half-Yearly</option>
+                                            </select>
+                                            <validation-messages
+                                                class="error-left"
+                                                [control]="EPF['controls']['deductionCycle']"
+                                            >
+                                            </validation-messages>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <label class="form-label my-2">
+                                                Employee's Contribution Rate (EPF)
+                                                <span class="text-danger">*</span>
+                                            </label>
+                                            <div class="d-flex inputGroup">
+                                                <input
+                                                    class="form-control"
+                                                    type="number"
+                                                    formControlName="employeeContributionRate"
+                                                />
+                                                <span class="input-group-text"> % of PF WAGE </span>
+                                            </div>
+                                            <validation-messages
+                                                class="error-left"
+                                                [control]="EPF['controls']['employeeContributionRate']"
+                                            >
+                                            </validation-messages>
+                                        </div>
+                                    </div>
+                                    <div class="row mb-4">
+                                        <div class="col-md-6">
+                                            <label class="form-label my-2">
+                                                Employer's Contribution rate (EPF)
+                                                <span class="text-danger">*</span>
+                                            </label>
+                                            <div class="d-flex inputGroup">
+                                                <input
+                                                    class="form-control"
+                                                    type="number"
+                                                    formControlName="employeeContributionRateToEPF"
+                                                />
+                                                <span class="input-group-text"> % of PF WAGE </span>
+                                            </div>
+                                            <validation-messages
+                                                class="error-left"
+                                                [control]="EPF['controls']['employeeContributionRateToEPF']"
+                                            >
+                                            </validation-messages>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <label class="form-label my-2">
+                                                Employer's Contribution rate (EPS)
+                                                <span class="text-danger">*</span>
+                                            </label>
+                                            <div class="d-flex inputGroup">
+                                                <input
+                                                    class="form-control"
+                                                    type="number"
+                                                    formControlName="employeeContributionRateToEPS"
+                                                />
+                                                <span class="input-group-text"> % of PF WAGE </span>
+                                            </div>
+                                            <validation-messages
+                                                class="error-left"
+                                                [control]="EPF['controls']['employeeContributionRateToEPS']"
+                                            >
+                                            </validation-messages>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-4 ps-5">
+                                    <h4 class="text-primary mb-4">Check if applicable</h4>
+                                    <div class="form-check mb-4">
+                                        <p class="form-check-label">
+                                            <input
+                                                class="form-check-input me-3"
+                                                type="checkbox"
+                                                formControlName="includeEmployerContributionInCTC"
+                                            />
+                                            Include Employer's Contribution in CTC
+                                        </p>
+                                    </div>
+
+                                    <div class="form-check mb-5">
+                                        <p class="form-check-label">
+                                            <input
+                                                class="form-check-input me-3"
+                                                type="checkbox"
+                                                formControlName="proRateBasedCalculationLOP"
+                                            />
+                                            Pro-Rate Based Calculation (LOP)
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="d-flex justify-content-center mt-3">
+                                <div class="d-grid col-md-2">
+                                    <button
+                                        appAccessControl
+                                        [accessType]="rolePermissionActions.createAction"
+                                        type="button"
+                                        class="btn btn-primary"
+                                        (click)="submit()"
+                                    >
+                                        Save
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </ng-template>
+                </li>
+                <li formGroupName="employeeStateInsurance" [ngbNavItem]="2" class="col d-grid px-2">
+                    <a ngbNavLink>ESI</a>
+                    <ng-template ngbNavContent>
+                        <div id="esi">
+                            <div class="row mb-4">
+                                <h4 class="text-primary text-center mb-4">
+                                    Employee's State Insurance
+                                    <span class="text-secondary">
+                                        {{
+                                            statutorySetUp?.employeeStateInsurance?.employerESINo
+                                                ? "[Edit]"
+                                                : "[Create]"
+                                        }}
+                                    </span>
+                                </h4>
+                            </div>
+                            <div class="row mb-4">
+                                <div class="col-md-8">
+                                    <div class="row mb-4">
+                                        <div class="col-md-6">
+                                            <label class="form-label my-2">
+                                                Employer's ESI Number
+                                                <span class="text-danger">*</span>
+                                            </label>
+                                            <input class="form-control" type="text" formControlName="employerESINo" />
+                                            <validation-messages
+                                                class="error-left"
+                                                [control]="ESI['controls']['employerESINo']"
+                                            >
+                                            </validation-messages>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <label class="form-label my-2">
+                                                Deduction Cycle
+                                                <span class="text-danger">*</span>
+                                            </label>
+
+                                            <select class="form-select" formControlName="deductionCycle">
+                                                <option value="" disabled>Select</option>
+                                                <option value="Monthly">Monthly</option>
+                                                <option value="Yearly">Yearly</option>
+                                                <option value="Half-yearly">Half-Yearly</option>
+                                            </select>
+                                            <validation-messages
+                                                class="error-left"
+                                                [control]="ESI['controls']['deductionCycle']"
+                                            >
+                                            </validation-messages>
+                                        </div>
+                                    </div>
+                                    <div class="row mb-4">
+                                        <div class="col-md-6">
+                                            <label class="form-label my-2">
+                                                Employee's Contribution Rate
+                                                <span class="text-danger">*</span>
+                                            </label>
+                                            <div class="d-flex inputGroup">
+                                                <input
+                                                    class="form-control"
+                                                    type="number"
+                                                    formControlName="employeeContributionRate"
+                                                />
+                                                <div class="d-flex inputGroup-append">
+                                                    <span class="input-group-text"> % of Gross Pay </span>
+                                                </div>
+                                            </div>
+                                            <validation-messages
+                                                class="error-left"
+                                                [control]="ESI['controls']['employeeContributionRate']"
+                                            >
+                                            </validation-messages>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <label class="form-label my-2">
+                                                Employer's Contribution Rate
+                                                <span class="text-danger">*</span>
+                                            </label>
+                                            <div class="d-flex inputGroup">
+                                                <input
+                                                    class="form-control"
+                                                    type="number"
+                                                    formControlName="employerContributionRate"
+                                                />
+                                                <div class="d-flex inputGroup-append">
+                                                    <span class="input-group-text"> % of Gross Pay </span>
+                                                </div>
+                                            </div>
+                                            <validation-messages
+                                                class="error-left"
+                                                [control]="ESI['controls']['employerContributionRate']"
+                                            >
+                                            </validation-messages>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-4 ps-5">
+                                    <h4 class="text-primary mb-4">Check if applicable</h4>
+                                    <div class="form-check mb-4">
+                                        <p class="form-check-label text-nowrap">
+                                            <input
+                                                class="form-check-input me-3"
+                                                type="checkbox"
+                                                formControlName="includeEmployerContributionInCTC"
+                                            />
+                                            Include Employer's Contribution in CTC
+                                        </p>
+                                    </div>
+                                    <div class="form-check mb-4">
+                                        <p class="form-check-label text-nowrap">
+                                            <input
+                                                class="form-check-input me-3"
+                                                type="checkbox"
+                                                formControlName="proRateBasedCalculationLOP"
+                                            />
+                                            Pro-Rate Based Calculation (LOP)
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="d-flex justify-content-center mt-5">
+                                <div class="d-grid col-md-2">
+                                    <button
+                                        appAccessControl
+                                        [accessType]="rolePermissionActions.createAction"
+                                        type="button"
+                                        class="btn btn-primary"
+                                        (click)="submit()"
+                                    >
+                                        Save
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </ng-template>
+                </li>
+                <li formGroupName="professionalTax" [ngbNavItem]="3" class="col d-grid px-2">
+                    <a ngbNavLink>Professional Tax</a>
+                    <ng-template ngbNavContent>
+                        <div id="prof">
+                            <div class="">
+                                <h4 class="text-primary text-center mb-4">
+                                    Professional Tax
+                                    <span class="text-secondary">
+                                        {{ statutorySetUp?.professionalTax?.employerPTNo ? "[Edit]" : "[Create]" }}
+                                    </span>
+                                </h4>
+                            </div>
+                            <div class="">
+                                <div class="row mb-4">
+                                    <div class="col-md-4">
+                                        <label class="form-label my-2">
+                                            State (Place of work)
+                                            <span class="text-danger">*</span>
+                                        </label>
+
+                                        <select
+                                            class="form-select"
+                                            formControlName="statePlaceOfWork"
+                                            (change)="setProfessionalTax()"
+                                        >
+                                            <option value="" selected disabled>Select State</option>
+                                            <option *ngFor="let s of statesOfIndia" [value]="s">
+                                                {{ s }}
+                                            </option>
+                                        </select>
+                                        <validation-messages
+                                            class="error-left"
+                                            [control]="PT['controls']['statePlaceOfWork']"
+                                        >
+                                        </validation-messages>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <label class="form-label my-2">
+                                            Employer's PT Number
+                                            <span class="text-danger">*</span>
+                                        </label>
+                                        <input class="form-control" type="number" formControlName="employerPTNo" />
+                                        <validation-messages
+                                            class="error-left"
+                                            [control]="PT['controls']['employerPTNo']"
+                                        >
+                                        </validation-messages>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <label class="form-label my-2">
+                                            Deduction Cycle<span class="text-danger">*</span>
+                                        </label>
+
+                                        <select class="form-select" formControlName="deductionCycle">
+                                            <option value="" disabled>Select</option>
+                                            <option value="Monthly">Monthly</option>
+                                            <option value="Yearly">Yearly</option>
+                                            <option value="Half-yearly">Half-Yearly</option>
+                                        </select>
+                                        <validation-messages
+                                            class="error-left"
+                                            [control]="PT['controls']['deductionCycle']"
+                                        >
+                                        </validation-messages>
+                                    </div>
+                                </div>
+                                <div class="row mb-4">
+                                    <div class="col-md-6">
+                                        <label class="form-label my-2">
+                                            PT Deductions - Slabs for Female Employees
+                                            <span class="text-danger">*</span>
+                                        </label>
+                                        <div class="table-responsive">
+                                            <table class="table table-bordered">
+                                                <tbody>
+                                                    <tr *ngFor="let m of FemaleProfessionalTax">
+                                                        <td *ngIf="m?.minSalary == 0">
+                                                            gross salary upto {{ m?.maxSalary }}
+                                                        </td>
+                                                        <td *ngIf="m?.maxSalary == 0">
+                                                            gross salary more than {{ m?.minSalary }}
+                                                        </td>
+                                                        <td *ngIf="m?.minSalary && m?.maxSalary">
+                                                            gross salary: {{ m?.minSalary }} to
+                                                            {{ m?.maxSalary }}
+                                                        </td>
+                                                        <td class="text-center">
+                                                            {{ m?.amount ? "Rs. " + m?.amount : "Nil" }}
+                                                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                                            <span *ngIf="m?.isFebAmount" data-tip data-for="infoTip">
+                                                                <svg
+                                                                    tooltipClass="my-tooltip-class "
+                                                                    ngbTooltip="Rs.300 in February Month"
+                                                                    xmlns="http://www.w3.org/2000/svg"
+                                                                    width="16"
+                                                                    height="16"
+                                                                    fill="red"
+                                                                    class="bi bi-info-circle pointer"
+                                                                    viewBox="0 0 16 16"
+                                                                >
+                                                                    <path
+                                                                        d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"
+                                                                    />
+                                                                    <path
+                                                                        d="m8.93 6.588-2.29.287-.082.38.45.083c.294.07.352.176.288.469l-.738 3.468c-.194.897.105 1.319.808 1.319.545 0 1.178-.252 1.465-.598l.088-.416c-.2.176-.492.246-.686.246-.275 0-.375-.193-.304-.533L8.93 6.588zM9 4.5a1 1 0 1 1-2 0 1 1 0 0 1 2 0z"
+                                                                    />
+                                                                </svg>
+                                                            </span>
+                                                        </td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label class="form-label my-2">
+                                            PT Deductions - Slabs for Male Employees
+                                            <span class="text-danger">*</span>
+                                        </label>
+                                        <div class="table-responsive">
+                                            <table class="table table-bordered table-text-font">
+                                                <tbody>
+                                                    <tr *ngFor="let m of maleProfessionalTax">
+                                                        <td *ngIf="m?.minSalary == 0">
+                                                            gross salary upto {{ m?.maxSalary }}
+                                                        </td>
+                                                        <td *ngIf="m?.maxSalary == 0">
+                                                            gross salary more than {{ m?.minSalary }}
+                                                        </td>
+                                                        <td *ngIf="m?.minSalary && m?.maxSalary">
+                                                            gross salary: {{ m?.minSalary }} to
+                                                            {{ m?.maxSalary }}
+                                                        </td>
+                                                        <td class="text-center">
+                                                            {{ m?.amount ? "Rs. " + m?.amount : "Nil" }}
+                                                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                                            <span *ngIf="m?.isFebAmount" data-tip data-for="infoTip">
+                                                                <svg
+                                                                    tooltipClass="my-tooltip-class "
+                                                                    ngbTooltip="Rs.300 in February Month"
+                                                                    xmlns="http://www.w3.org/2000/svg"
+                                                                    width="16"
+                                                                    height="16"
+                                                                    fill="red"
+                                                                    class="bi bi-info-circle pointer"
+                                                                    viewBox="0 0 16 16"
+                                                                >
+                                                                    <path
+                                                                        d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"
+                                                                    />
+                                                                    <path
+                                                                        d="m8.93 6.588-2.29.287-.082.38.45.083c.294.07.352.176.288.469l-.738 3.468c-.194.897.105 1.319.808 1.319.545 0 1.178-.252 1.465-.598l.088-.416c-.2.176-.492.246-.686.246-.275 0-.375-.193-.304-.533L8.93 6.588zM9 4.5a1 1 0 1 1-2 0 1 1 0 0 1 2 0z"
+                                                                    />
+                                                                </svg>
+                                                            </span>
+                                                        </td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="d-flex justify-content-center mt-5">
+                                    <div class="d-grid col-md-2">
+                                        <button
+                                            appAccessControl
+                                            [accessType]="rolePermissionActions.createAction"
+                                            type="button"
+                                            class="btn btn-primary"
+                                            (click)="submit()"
+                                        >
+                                            Save
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </ng-template>
+                </li>
+                <li formGroupName="labourWelfareFund" [ngbNavItem]="4" class="col d-grid px-2">
+                    <a ngbNavLink>LWF </a>
+                    <ng-template ngbNavContent>
+                        <div id="lwf">
+                            <div class="">
+                                <h4 class="text-primary text-center mb-4">
+                                    Labour Welfare Fund
+                                    <span class="text-secondary">
+                                        {{ statutorySetUp?.labourWelfareFund?.registrationNo ? "[Edit]" : "[Create]" }}
+                                    </span>
+                                </h4>
+                            </div>
+                            <div class="">
+                                <div class="row mb-4">
+                                    <div class="col-md-4">
+                                        <label class="form-label my-2">
+                                            State (Place of work)
+                                            <span class="text-danger">*</span>
+                                        </label>
+
+                                        <select class="form-select" formControlName="statePlaceOfWork">
+                                            <option value="" selected disabled>Select State</option>
+                                            <option *ngFor="let s of statesOfIndia" [value]="s">
+                                                {{ s }}
+                                            </option>
+                                        </select>
+                                        <validation-messages
+                                            class="error-left"
+                                            [control]="LWF['controls']['statePlaceOfWork']"
+                                        >
+                                        </validation-messages>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <label class="form-label my-2">
+                                            Registration No.
+                                            <span class="text-danger">*</span>
+                                        </label>
+                                        <input class="form-control" type="text" formControlName="registrationNo" />
+                                        <validation-messages
+                                            class="error-left"
+                                            [control]="LWF['controls']['registrationNo']"
+                                        >
+                                        </validation-messages>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <label class="form-label my-2">
+                                            Deduction Cycle <span class="text-danger">*</span>
+                                        </label>
+                                        <select class="form-select" formControlName="deductionCycle">
+                                            <option value="" disabled>Select</option>
+                                            <option value="Monthly">Monthly</option>
+                                            <option value="Yearly">Yearly</option>
+                                            <option value="Half-yearly">Half-Yearly</option>
+                                        </select>
+                                        <validation-messages
+                                            class="error-left"
+                                            [control]="LWF['controls']['deductionCycle']"
+                                        >
+                                        </validation-messages>
+                                    </div>
+                                </div>
+                                <div class="row mb-4">
+                                    <div class="col-md-4">
+                                        <label class="form-label my-2">
+                                            Employees's Contribution (₹)
+                                            <span class="text-danger">*</span>
+                                        </label>
+                                        <input
+                                            class="form-control"
+                                            type="text"
+                                            formControlName="employeeContribution"
+                                        />
+                                        <validation-messages
+                                            class="error-left"
+                                            [control]="LWF['controls']['employeeContribution']"
+                                        >
+                                        </validation-messages>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <label class="form-label my-2">
+                                            Employers's Contribution (₹)
+                                            <span class="text-danger">*</span>
+                                        </label>
+                                        <input
+                                            class="form-control"
+                                            type="text"
+                                            formControlName="employerContribution"
+                                        />
+                                        <validation-messages
+                                            class="error-left"
+                                            [control]="LWF['controls']['employerContribution']"
+                                        >
+                                        </validation-messages>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <label class="form-label my-2">
+                                            Contribution Month
+                                            <span class="text-danger">*</span>
+                                        </label>
+                                        <input class="form-control" type="text" formControlName="contributionMonths" />
+                                        <validation-messages
+                                            class="error-left"
+                                            [control]="LWF['controls']['contributionMonths']"
+                                        >
+                                        </validation-messages>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="d-flex justify-content-center mt-5">
+                                <div class="d-grid col-md-2">
+                                    <button
+                                        appAccessControl
+                                        [accessType]="rolePermissionActions.createAction"
+                                        type="button"
+                                        class="btn btn-primary"
+                                        (click)="submit()"
+                                    >
+                                        Save
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </ng-template>
+                </li>
+            </ul>
+
+            <div [ngbNavOutlet]="nav" class="mt-2"></div>
+        </div>
+    </div>
+</form>

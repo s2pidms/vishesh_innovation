@@ -1,0 +1,94 @@
+<div class="reportTablePage">
+    <div class="table-body pb-0 shadow-none">
+        <div class="row table-header">
+            <div class="col">
+                <label class="heading">Employee Attendance Report</label>
+            </div>
+        </div>
+        <div class="row my-4">
+            <div class="col-9">
+                <div class="row">
+                    <div class="col-3 ps-3 pe-0">
+                        <label class="form-label"> Employee Name<span class="text-danger"></span> </label>
+
+                        <ng-select
+                            [items]="employee"
+                            bindLabel="label"
+                            bindValue="value"
+                            [multiple]="false"
+                            [(ngModel)]="user"
+                            [clearable]="false"
+                        >
+                        </ng-select>
+                    </div>
+                    <div class="col-3 ps-5 separate-row">
+                        <label class="form-label"> Attendance month</label>
+                        <select [(ngModel)]="attendanceForMonthYear" class="form-select">
+                            <option value="" disabled>Select Month</option>
+                            <option [value]="item.value" *ngFor="let item of monthOptions">
+                                {{ item.value | date : "MMMM YYYY" }}
+                            </option>
+                        </select>
+                        <span class="set-position">
+                            <img src="./assets/new_icons/redstroke.svg" alt="" height="27" width="8" />
+                        </span>
+                    </div>
+                    <div class="col-3">
+                        <label class="form-label"> From Date<span class="text-danger">*</span> </label>
+                        <input class="form-control" type="date" [(ngModel)]="fromDate" />
+                    </div>
+                    <div class="col-3">
+                        <label class="form-label">
+                            To Date
+                            <span class="text-danger">*</span>
+                        </label>
+                        <input class="form-control" type="date" [(ngModel)]="toDate" />
+                    </div>
+                </div>
+            </div>
+            <div class="col-3 align-self-end separate-image">
+                <span class="image-position">
+                    <img src="./assets/new_icons/redstroke.svg" alt="" height="27" width="8" />
+                </span>
+                <button type="button" class="btn btn-primary px-4 me-3" (click)="getAllData()">Apply Filter</button>
+                <button type="button" class="btn btn-primary px-4 ms-4" (click)="clearFilter()">Reset Filter</button>
+            </div>
+        </div>
+        <hr class="row line-border" />
+        <div class="table-responsive mb-0">
+            <app-setting-header
+                [data]="{page,pageSize,collection,search,type: 'list',pdfDisplay:true}"
+                (dataChange)="eventHeader($event)"
+            >
+            </app-setting-header>
+            <table class="table table-bordered table-sticky">
+                <thead class="bg-primary">
+                    <tr class="text-white">
+                        <th sortable="employeeCode" (sort)="onSort($event)">Employee Code</th>
+                        <th class="text-start" sortable="employeeName" (sort)="onSort($event)">Employee Name</th>
+                        <th sortable="monthDays" (sort)="onSort($event)">Month Days</th>
+                        <th sortable="weeklyOff" (sort)="onSort($event)">Weekly Off</th>
+                        <th sortable="paidHolidays" (sort)="onSort($event)">Paid Holidays</th>
+                        <th sortable="paidLeaves" (sort)="onSort($event)">Paid Leaves</th>
+                        <th sortable="presentDays" (sort)="onSort($event)">Present Days</th>
+                        <th sortable="LOPDiff" (sort)="onSort($event)">LOP[Diff]</th>
+                        <th sortable="status" (sort)="onSort($event)">Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let u of tableData; trackBy: trackByFn">
+                        <td>{{ u?.employeeCode }}</td>
+                        <td class="text-start">{{ u?.employeeName }}</td>
+                        <td>{{ u?.monthDays }}</td>
+                        <td>{{ u?.weeklyOff }}</td>
+                        <td>{{ u?.paidHolidays }}</td>
+                        <td>{{ u?.paidLeaves }}</td>
+                        <td>{{ u?.presentDays }}</td>
+                        <td>{{ u?.LOPDiff }}</td>
+                        <td>{{ u?.status }}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

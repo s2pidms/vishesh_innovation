@@ -1,0 +1,77 @@
+<div class="modelPage">
+    <div class="modal-header">
+        <div class="heading">Dispatch Schedule</div>
+        <div>
+            <button type="button" class="btn btn-cross btn-sm" aria-label="Close" (click)="activeModal.close()">
+                <i class="fa fa-times-circle" aria-hidden="true"></i>
+            </button>
+        </div>
+    </div>
+    <div class="container-fluid">
+        <div class="row px-5 mt-5">
+            <div class="ps-0 col-6">
+                <div class="d-flex align-items-center">
+                    <div class="col-form-label text-nowrap">
+                        Quantity
+                        <i class="fa fa-caret-right fs-4 mx-1"></i>
+                    </div>
+                    <input type="number" class="form-control" [(ngModel)]="SOQty" readonly />
+                </div>
+            </div>
+            <div class="col-6 pe-0">
+                <div class="d-flex align-items-center">
+                    <div for="deliveryCount" class="col-form-label text-nowrap">
+                        Delivery Count
+                        <i class="fa fa-caret-right fs-4 mx-1"></i>
+                    </div>
+                    <input
+                        [disabled]="!['create', 'edit'].includes(action)"
+                        type="number"
+                        class="form-control"
+                        [(ngModel)]="deliveryCount"
+                        id="deliveryCount"
+                        name="deliveryCount"
+                        min="1"
+                        max="5"
+                        readonly
+                    />
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-12 my-3 px-0">
+                <hr class="line-border" />
+            </div>
+        </div>
+        <div class="row px-5">
+            <div style="min-height: 25rem" class="table-responsive ps-0 pe-0">
+                <table class="table table-bordered table-sticky">
+                    <thead class="bg-primary">
+                        <tr class="text-white">
+                            <th>Schedule #</th>
+                            <th>Quantity</th>
+                            <th>UoM</th>
+                            <th>Expected Dispatch Date</th>
+                            <th>PPIC Date</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let u of deliveryScheduleArr; let i = index">
+                            <td>{{ u?.scheduleNo }}</td>
+                            <td>
+                                {{ u?.quantity | number : "1.2-2" }}
+                            </td>
+                            <td>{{ u?.UOM }}</td>
+                            <td>
+                                {{ u?.dispatchDate ? (u?.dispatchDate | date : "dd-MM-YYYY") : null }}
+                            </td>
+                            <td>
+                                {{ u?.PPICDate ? (u?.PPICDate | date : "dd-MM-YYYY") : null }}
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>

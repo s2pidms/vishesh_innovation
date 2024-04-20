@@ -1,0 +1,148 @@
+<div class="modelPage">
+    <div class="modal-header">
+        <div *ngIf="channelPartnerHeading != 'Channel Partner Bank Details'" class="heading">Supplier Bank Details</div>
+        <div *ngIf="channelPartnerHeading == 'Channel Partner Bank Details'" class="heading">
+            {{ channelPartnerHeading }}
+        </div>
+        <div>
+            <button
+                type="button"
+                class="btn btn-cross btn-sm"
+                aria-label="Close"
+                (click)="activeModal.close(supplierBankDetailsArray)"
+            >
+                <i class="fa fa-times-circle" aria-hidden="true"></i>
+            </button>
+        </div>
+    </div>
+    <div class="container-fluid">
+        <div class="row">
+            <form [formGroup]="form">
+                <div class="row my-4 px-5">
+                    <div class="col-md-4 ps-0">
+                        <label class="form-label mb-2"> Beneficiary Name <span class="text-danger">*</span> </label>
+                        <input class="form-control" type="text" formControlName="befName" />
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label mb-2"> Bank Name <span class="text-danger">*</span> </label>
+                        <input class="form-control" type="text" formControlName="bankName" />
+                    </div>
+                    <div class="col-md-4 pe-0">
+                        <label class="form-label mb-2"> Account Type </label>
+                        <div>
+                            <select class="form-select" formControlName="accountType">
+                                <option [value]="null" selected disabled>Select</option>
+                                <option [value]="'Current'">Current</option>
+                                <option [value]="'Saving'">Saving</option>
+                                <option [value]="'Cash Credit - CC'">Cash Credit - CC</option>
+                                <option [value]="'Over Draft - OD'">Over Draft - OD</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row mb-2 px-5">
+                    <div class="col-md-4 ps-0">
+                        <label class="form-label mb-2"> Account No. <span class="text-danger">*</span> </label>
+                        <input class="form-control" type="text" formControlName="accountNumber" />
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label mb-2"> IFS Code <span class="text-danger">*</span> </label>
+                        <input class="form-control" type="text" formControlName="bankIFSCCode" />
+                    </div>
+                    <div class="col-md-4 pe-0">
+                        <label class="form-label mb-2">
+                            Swift Code [For Imports]<span class="text-danger">*</span>
+                        </label>
+                        <input class="form-control" type="text" formControlName="bankSwiftCode" />
+                    </div>
+                </div>
+            </form>
+
+            <div class="col text-center my-4">
+                <button
+                    class="btn bg-primary px-5"
+                    type="button"
+                    [disabled]="btnDisable || action == 'view'"
+                    (click)="save()"
+                >
+                    Add
+                </button>
+            </div>
+
+            <hr class="line-border mb-0" />
+            <div class="px-5 mt-0">
+                <app-setting-header
+                    [data]="{page,pageSize,collection,search ,excelDisplay : 'none'}"
+                    (dataChange)="eventHeader($event)"
+                >
+                </app-setting-header>
+            </div>
+
+            <div style="min-height: 23rem" class="table-responsive px-5">
+                <table class="table table-bordered table-sticky">
+                    <thead class="bg-primary">
+                        <tr class="text-white">
+                            <th>Beneficiary Name</th>
+                            <th>Bank Name</th>
+                            <th>Account Type</th>
+                            <th>Account No.</th>
+                            <th>IFS/Swift Code</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr
+                            *ngFor="
+                                let u of supplierBankDetailsArray
+                                    | searchFi1ter : search
+                                    | slice : (page - 1) * pageSize : (page - 1) * pageSize + pageSize;
+                                let i = index
+                            "
+                        >
+                            <td>{{ u.befName }}</td>
+                            <td>{{ u.bankName }}</td>
+                            <td>{{ u.accountType }}</td>
+                            <td>{{ u.accountNumber }}</td>
+                            <td>{{ u.bankIFSCCode }}</td>
+                            <td>
+                                <div class="dropdown">
+                                    <button class="dropbtn"></button>
+                                    <div class="dropdown-content">
+                                        <a
+                                            [class.disable]="this.action == 'view'"
+                                            href="javascript:void(0)"
+                                            (click)="patchItem(u, i, 'view')"
+                                        >
+                                            <i class="fa fa-eye fa-lg me-2 text-primary" aria-hidden="true"></i>
+                                            View
+                                        </a>
+                                        <a
+                                            [class.disable]="this.action == 'view'"
+                                            href="javascript:void(0)"
+                                            (click)="patchItem(u, i, 'edit')"
+                                        >
+                                            <i
+                                                class="fa fa-pencil-square-o fa-lg me-2 text-primary"
+                                                aria-hidden="true"
+                                            ></i>
+                                            Edit
+                                        </a>
+                                        <a
+                                            [class.disable]="this.action == 'view'"
+                                            href="javascript:void(0)"
+                                            (click)="deleteItem(i)"
+                                        >
+                                            <i class="fa fa-trash me-2 text-primary" aria-hidden="true"></i>
+                                            Delete
+                                        </a>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>

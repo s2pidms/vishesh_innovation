@@ -1,0 +1,88 @@
+<div class="listCard card">
+    <div class="table-header">
+        <label class="heading">Item Master Summary</label>
+    </div>
+    <div appAccessControl [accessType]="rolePermissionActions.createAction" class="text-center">
+        <button class="btn btn-primary btn-add" type="button" (click)="navigateTo('../form', {}, 'create')">
+            <i class="fa fa-plus-square fa-lg me-2" aria-hidden="true"></i>
+            New Item
+        </button>
+    </div>
+    <hr class="line-border" />
+    <div class="table-responsive">
+        <app-setting-header [data]="{page,pageSize,collection,search,type: 'list'}" (dataChange)="eventHeader($event)">
+        </app-setting-header>
+
+        <table class="table table-bordered">
+            <thead class="bg-primary">
+                <tr class="text-white">
+                    <th sortable="itemCode" (sort)="onSort($event)">Item Code</th>
+                    <th class="text-start" sortable="itemName" (sort)="onSort($event)">Item Name</th>
+                    <th class="text-start" sortable="itemDescription" (sort)="onSort($event)">Item Description</th>
+                    <th sortable="hsn" (sort)="onSort($event)">HSN Code</th>
+                    <th sortable="conversionOfUnits" (sort)="onSort($event)">Unit Conversion</th>
+                    <th sortable="orderInfoUOM" (sort)="onSort($event)">UoM</th>
+                    <th sortable="itemROL" (sort)="onSort($event)">RO Level</th>
+                    <th sortable="itemAMU" (sort)="onSort($event)">RO Qty</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                <tr *ngFor="let i of itemData; trackBy: trackByFn">
+                    <td>{{ i?.itemCode }}</td>
+                    <td class="text-start" [style.width]="itemName.clientWidth" #itemName>
+                        <span class="pointer" [positionTarget]="itemName" [ngbTooltip]="i.itemName">
+                            {{ i.itemName }}
+                        </span>
+                    </td>
+                    <td class="text-start" [style.width]="itemDescription.clientWidth" #itemDescription>
+                        <span class="pointer" [positionTarget]="itemDescription" [ngbTooltip]="i.itemDescription">
+                            {{ i.itemDescription }}
+                        </span>
+                    </td>
+                    <td>{{ i?.hsn }}</td>
+                    <td>{{ i?.conversionOfUnits }}</td>
+                    <td>{{ i?.orderInfoUOM | UOMUnitsMaster }}</td>
+                    <td>{{ i?.itemROL }}</td>
+                    <td>{{ i?.itemAMU }}</td>
+                    <td>
+                        <div class="dropdown">
+                            <button class="dropbtn"></button>
+                            <div class="dropdown-content">
+                                <a
+                                    appAccessControl
+                                    [accessType]="rolePermissionActions.viewAction"
+                                    href="javascript:void(0)"
+                                    (click)="navigateTo('../form', i, 'view')"
+                                >
+                                    <i class="fa fa-eye fa-lg me-2 text-primary" aria-hidden="true"></i>
+                                    View
+                                </a>
+                                <a
+                                    appAccessControl
+                                    [accessType]="rolePermissionActions.editAction"
+                                    href="javascript:void(0)"
+                                    (click)="navigateTo('../form', i, 'edit')"
+                                >
+                                    <i class="fa fa-pencil-square-o fa-lg me-2 text-primary" aria-hidden="true"></i>
+                                    Edit
+                                </a>
+                                <a
+                                    appAccessControl
+                                    [accessType]="rolePermissionActions.editAction"
+                                    [class.disable]="i.isActive == 'Inactive'"
+                                    href="javascript:void(0)"
+                                    (click)="navigateTo('../form', i, 'copy')"
+                                >
+                                    <i class="fa fa-clone fa-lg me-2 text-primary" aria-hidden="true"></i>
+                                    Copy
+                                </a>
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>

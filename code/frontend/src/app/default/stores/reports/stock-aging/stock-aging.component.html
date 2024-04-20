@@ -1,0 +1,98 @@
+<div class="reportTablePage">
+    <div class="col-md-12 pb-0 table-body shadow-none">
+        <div class="row table-header">
+            <div class="col">
+                <label class="heading">Stock Aging Report</label>
+            </div>
+        </div>
+        <div class="row mt-4 mb-4">
+            <div class="col-3 ps-5 separate-row">
+                <label class="form-label"> Item Code </label>
+                <ng-select
+                    [items]="items"
+                    bindLabel="itemCode"
+                    bindValue="_id"
+                    [multiple]="false"
+                    [(ngModel)]="itemId"
+                    [clearable]="false"
+                >
+                    >
+                </ng-select>
+                <span class="set-position">
+                    <img src="./assets/new_icons/redstroke.svg" alt="" height="27" width="8" />
+                </span>
+            </div>
+            <div class="col-3">
+                <label class="form-label"> From Date<span class="text-danger">*</span> </label>
+                <input class="form-control" type="date" [(ngModel)]="fromDate" />
+            </div>
+            <div class="col-3">
+                <label class="form-label">
+                    To Date
+                    <span class="text-danger">*</span>
+                </label>
+                <input class="form-control" type="date" [(ngModel)]="toDate" />
+            </div>
+            <div class="col-3 align-self-end separate-image">
+                <span class="image-position">
+                    <img src="./assets/new_icons/redstroke.svg" alt="" height="27" width="8" />
+                </span>
+                <button type="button" class="btn btn-primary px-4 me-3" (click)="getInitialData()">Apply Filter</button>
+                <button type="button" class="btn btn-primary px-4 ms-4" (click)="reset()">Reset Filter</button>
+            </div>
+        </div>
+        <hr class="row line-border" />
+
+        <div class="table-responsive mb-0">
+            <app-setting-header
+                [data]="{page,pageSize,collection,search,type: 'list',pdfDisplay:true}"
+                (dataChange)="eventHeader($event)"
+            >
+            </app-setting-header>
+            <table class="table table-bordered table-sticky">
+                <thead class="bg-primary">
+                    <tr class="text-white">
+                        <th sortable="itemCode" (sort)="onSort($event)">Item Code</th>
+                        <th class="text-start" sortable="itemName" (sort)="onSort($event)">Item Name</th>
+                        <th class="text-start" sortable="itemDescription" (sort)="onSort($event)">Item Description</th>
+                        <th sortable="GINDateS" (sort)="onSort($event)">GIN Date</th>
+                        <th sortable="GINQty" (sort)="onSort($event)">GIN Qty</th>
+                        <th sortable="perishableGoods" (sort)="onSort($event)">Perishable</th>
+                        <th sortable="shelfLife" (sort)="onSort($event)">Shelf Life (Months)</th>
+                        <th sortable="expiryDate" (sort)="onSort($event)">Expiry Date</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let u of tableData; trackBy: trackByFn">
+                        <td>{{ u?.itemCode }}</td>
+                        <td class="text-start" [style.width]="itemName.clientWidth" #itemName>
+                            <span class="pointer" [positionTarget]="itemName" [ngbTooltip]="u.itemName">
+                                {{ u?.itemName }}
+                            </span>
+                        </td>
+                        <td class="text-start" [style.width]="itemDescription.clientWidth" #itemDescription>
+                            <span class="pointer" [positionTarget]="itemDescription" [ngbTooltip]="u.itemDescription">
+                                {{ u?.itemDescription }}
+                            </span>
+                        </td>
+                        <td>{{ u?.GINDateS }}</td>
+                        <td>{{ u?.GINQty }}</td>
+                        <td>{{ u?.perishableGoods }}</td>
+                        <td>{{ u?.shelfLife }}</td>
+                        <td>
+                            <div *ngIf="u?.status == 'yellow'" class="text-warning">
+                                {{ u?.expiryDate | date : "dd-MM-yyyy" }}
+                            </div>
+                            <div *ngIf="u?.status == 'green'" class="text-success">
+                                {{ u?.expiryDate | date : "dd-MM-yyyy" }}
+                            </div>
+                            <div *ngIf="u?.status == 'red'" class="text-danger">
+                                {{ u?.expiryDate | date : "dd-MM-yyyy" }}
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

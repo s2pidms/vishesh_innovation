@@ -1,0 +1,114 @@
+<div class="listCard card">
+    <div class="table-header">
+        <label class="heading">ASN summary</label>
+    </div>
+
+    <div appAccessControl [accessType]="rolePermissionActions.createAction" class="text-center">
+        <button class="btn btn-primary btn-add" type="button" (click)="navigateTo('../form', {}, 'create')">
+            <i class="fa fa-plus-square fa-lg me-2" aria-hidden="true"></i>
+            Create ASN
+        </button>
+    </div>
+    <hr class="line-border" />
+    <div class="table-responsive">
+        <app-setting-header [data]="{page,pageSize,collection,search,type: 'list'}" (dataChange)="eventHeader($event)">
+        </app-setting-header>
+        <table class="table table-bordered">
+            <thead class="bg-info">
+                <tr class="text-white">
+                    <th sortable="ASNNumber" (sort)="onSort($event)">ASN #</th>
+                    <th sortable="salesInvoiceNumber" (sort)="onSort($event)">Invoice #</th>
+                    <th class="text-start" sortable="customerName" (sort)="onSort($event)">Customer Name</th>
+                    <th sortable="stateOfSupply" (sort)="onSort($event)">State of supply</th>
+                    <th sortable="totalNoOfBoxes" (sort)="onSort($event)">Total Boxes</th>
+                    <th sortable="totalGrossWeight" (sort)="onSort($event)">Total Weight(kgs)</th>
+                    <th sortable="transporter" (sort)="onSort($event)">Transporter</th>
+                    <th sortable="ASNStatus" (sort)="onSort($event)">Status</th>
+
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let u of tableData; trackBy: trackByFn">
+                    <td>{{ u?.ASNNumber }}</td>
+                    <td>{{ u?.salesInvoiceNumber }}</td>
+                    <td class="text-start" [style.width]="customerName.clientWidth" #customerName>
+                        <span class="pointer" [positionTarget]="customerName" [ngbTooltip]="u.customerName">
+                            {{ u.customerName ? u.customerName : null }}
+                        </span>
+                    </td>
+                    <td>{{ u?.stateOfSupply }}</td>
+                    <td>{{ u?.totalNoOfBoxes }}</td>
+                    <td>{{ u?.totalGrossWeight }}</td>
+                    <td>{{ u?.transporter }}</td>
+                    <td>{{ u?.ASNStatus }}</td>
+                    <td>
+                        <div class="dropdown">
+                            <button class="dropbtn"></button>
+                            <div class="dropdown-content">
+                                <a
+                                    appAccessControl
+                                    [accessType]="rolePermissionActions.viewAction"
+                                    href="javascript:void(0)"
+                                    (click)="navigateTo('../form', u, 'view')"
+                                >
+                                    <i class="fa fa-eye fa-lg me-2 text-primary" aria-hidden="true"></i>
+                                    View
+                                </a>
+                                <a
+                                    appAccessControl
+                                    [accessType]="rolePermissionActions.editAction"
+                                    [class.disable]="u?.ASNStatus === 'Approved' || u?.ASNStatus === 'Rejected'"
+                                    href="javascript:void(0)"
+                                    (click)="navigateTo('../form', u, 'edit')"
+                                >
+                                    <i class="fa fa-pencil-square-o fa-lg me-2 text-primary" aria-hidden="true"></i>
+                                    Edit
+                                </a>
+                                <a
+                                    appAccessControl
+                                    [accessType]="rolePermissionActions.createAction"
+                                    [class.disable]="u?.ASNStatus === 'Approved' || u?.ASNStatus === 'Rejected'"
+                                    href="javascript:void(0)"
+                                    (click)="navigateToPrint('/#/print/asn_box_label', u, 'print')"
+                                >
+                                    <i class="fa fa-tag fa-lg me-3 text-primary" aria-hidden="true"></i>
+                                    Box Label
+                                </a>
+                                <a
+                                    appAccessControl
+                                    [accessType]="rolePermissionActions.generateReportAction"
+                                    href="javascript:void(0)"
+                                    [class.disable]="u?.ASNStatus === 'created'"
+                                    (click)="update(u._id, 'Report Generated')"
+                                >
+                                    <img src="./assets/images/new.svg" width="16" class="me-2" />
+                                    Generate Report
+                                </a>
+                                <a
+                                    appAccessControl
+                                    [accessType]="rolePermissionActions.createAction"
+                                    [class.disable]="u?.ASNStatus === 'Approved' || u?.ASNStatus === 'Rejected'"
+                                    href="javascript:void(0)"
+                                    (click)="navigateToPrint('/#/print/asn', u, 'print')"
+                                >
+                                    <i class="fa fa-print fa-lg me-3 text-primary" aria-hidden="true"></i>
+                                    Print Preview
+                                </a>
+                                <!-- <a
+                                    appAccessControl
+                                    [accessType]="rolePermissionActions.createAction"
+                                    href="javascript:void(0)"
+                                    (click)="sendMail(u?._id)"
+                                >
+                                    <i class="fa fa-bell-o fa-lg text-primary me-3" aria-hidden="true"></i>
+                                    Notify customer
+                                </a> -->
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>

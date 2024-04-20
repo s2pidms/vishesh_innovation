@@ -1,0 +1,16 @@
+[
+    {
+        "_id": "6565b1d4ce8ccfc98a361066",
+        "menuItemId": "64a6c1e33339d4dc9d8141ac",
+        "module": "Accounts",
+        "roles": [],
+        "type": "MASTER",
+        "order": 1,
+        "isDisplay": true,
+        "title": "Customer Address",
+        "displayName": "Customer Address",
+        "disabled": false,
+        "url": "/default/accounts/master/customer_address/form",
+        "items": []
+    }
+]

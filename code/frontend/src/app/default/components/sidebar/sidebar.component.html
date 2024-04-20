@@ -1,0 +1,48 @@
+
+<div class="sidebar pe-0">
+  <div
+    *ngFor="let s of menuItems; let i = index"
+    (click)="navigateTo(s.path, s.isMenuActive)"
+    class="linkContainer"
+    [color]="s.color"
+    appSideNavHover
+    [ngStyle]="
+      s.isMenuActive && router.url.includes(s.isActive)
+        ? {
+            background: getBackgroundColor(s.color)
+          }
+        : {}
+    "
+    [ngClass]="
+      s.isMenuActive && router.url.includes(s.isActive) ? s.activeClass : ''
+    "
+  >
+    <a href="javascript:void(0)">
+      <div class="partA">
+        <img src="{{ s.image }}" alt="{{ s.title }}" />
+      </div>
+      <div
+        class="partB"
+        [ngStyle]="{
+          'border-left': '1px solid',
+          'border-color': s.color,
+          color: s.color
+        }"
+      >
+        <h6
+          class="linkTitle"
+          [ngClass]="s.title == 'Powered by IDMS' ? 'poweredByTitle' : ''"
+        >
+          {{ s.title }}
+        </h6>
+      </div>
+    </a>
+    <div class="separatorLine" *ngIf="s.title == 'Support'">
+      <img
+        src="./assets/sideNavIcon/height_separator.svg"
+        alt="{{ s.title }}"
+        height="2px"
+      />
+    </div>
+  </div>
+</div>

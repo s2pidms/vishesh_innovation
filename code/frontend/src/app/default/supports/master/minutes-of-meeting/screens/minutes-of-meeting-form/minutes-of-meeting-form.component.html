@@ -1,0 +1,194 @@
+<form [formGroup]="form" class="formCard card">
+    <div class="container">
+        <div class="row form-header">
+            <div class="col heading">
+                <label class="">Minutes of Meeting ({{ action | titlecase }})</label>
+            </div>
+        </div>
+        <div class="form-body">
+            <div class="row">
+                <div class="col-3">
+                    <div class="row">
+                        <div class="col-6 pe-2">
+                            <label class="form-label mb-0"> MoM Code <span class="text-danger">*</span> </label>
+                            <input class="form-control" type="text" formControlName="MOMCode" readonly />
+                        </div>
+                        <div class="col-6 ps-2 pe-0">
+                            <label class="form-label mb-0"> MoM Date <span class="text-danger">*</span> </label>
+                            <input class="form-control" type="date" formControlName="MOMDate" readonly />
+                        </div>
+                    </div>
+                </div>
+                <div class="col-3">
+                    <label class="form-label mb-0"> MoM Title <span class="text-danger">*</span> </label>
+                    <input class="form-control" type="text" formControlName="MOMTitle" />
+                </div>
+                <div class="col-3">
+                    <div class="row">
+                        <div class="col-6 ps-0 pe-2">
+                            <label class="form-label mb-0"> Meeting Type <span class="text-danger">*</span> </label>
+                            <select class="form-select" formControlName="meetingType">
+                                <option [value]="null" selected disabled>Select Meeting Type</option>
+                                <option [value]="item.value" *ngFor="let item of meetingType">
+                                    {{ item.label }}
+                                </option>
+                            </select>
+                        </div>
+                        <div class="col-6 ps-2 pe-0">
+                            <label class="form-label mb-0"> Organizer <span class="text-danger">*</span> </label>
+                            <input class="form-control" type="text" formControlName="organizer" readonly />
+                        </div>
+                    </div>
+                </div>
+                <div class="col-3">
+                    <label class="form-label mb-0"> Venue <span class="text-danger">*</span> </label>
+                    <input class="form-control" type="text" formControlName="venue" />
+                </div>
+            </div>
+        </div>
+        <hr class="row line-border" />
+        <div class="row mb-4" formGroupName="meetingInfo">
+            <div class="col-3 pe-0">
+                <label class="form-label">Action Point <span class="text-danger">*</span></label>
+                <input class="form-control" type="text" formControlName="actionPoint" />
+            </div>
+            <div class="col-3">
+                <label class="form-label">
+                    Owner
+                    <span class="text-danger">*</span>
+                </label>
+                <input class="form-control" type="text" formControlName="owner" />
+            </div>
+
+            <div class="col-3 ps-0">
+                <div class="row">
+                    <div class="col-6 pe-0">
+                        <label class="form-label"> Target Date <span class="text-danger">*</span> </label>
+                        <input class="form-control" type="Date" formControlName="targetDate" />
+                    </div>
+                    <div class="col-6 pe-0">
+                        <label class="form-label"> Review Date<span class="text-danger">*</span> </label>
+                        <input class="form-control" type="Date" formControlName="reviewDate" />
+                    </div>
+                </div>
+            </div>
+            <div class="col-3">
+                <div class="row">
+                    <div class="col-7 pe-4">
+                        <label class="form-label mb-0"> Status <span class="text-danger">*</span> </label>
+                        <select class="form-select" formControlName="status">
+                            <option [value]="null" selected disabled>Select Status</option>
+                            <option [value]="item.value" *ngFor="let item of meetingStatus">
+                                {{ item.label }}
+                            </option>
+                        </select>
+                    </div>
+                    <div class="col-5 ps-2 d-flex align-items-end justify-content-end">
+                        <button [disabled]="action == 'view'" class="btn btn-primary" (click)="addMeetingDetails()">
+                            (+) Add
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-4"></div>
+        </div>
+        <hr class="row line-border" />
+        <div class="">
+            <app-setting-header
+                [data]="{page,pageSize,collection,search, excelDisplay : 'none'}"
+                (dataChange)="eventHeader($event)"
+            >
+            </app-setting-header>
+        </div>
+
+        <div class="table-responsive mt-0 text-wrap" style="min-height: 18rem">
+            <table class="table table-bordered mt-0 table-sm">
+                <thead class="bg-info">
+                    <tr class="text-white">
+                        <th>#</th>
+                        <th class="text-start" sortable="actionPoint" (sort)="onSort($event)">Action Point</th>
+                        <th class="text-start" sortable="owner" (sort)="onSort($event)">Owner</th>
+                        <th sortable="targetDate" (sort)="onSort($event)">Target Date</th>
+                        <th sortable="reviewDate" (sort)="onSort($event)">Review Date</th>
+                        <th sortable="status" (sort)="onSort($event)">Status</th>
+                        <th class="text-start" sortable="remarks" (sort)="onSort($event)">Remarks</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    <tr
+                        *ngFor="
+                            let u of meetingInfoArr
+                                | searchFi1ter : search
+                                | slice : (page - 1) * pageSize : (page - 1) * pageSize + pageSize;
+                            trackBy: trackByFn;
+                            let i = index
+                        "
+                    >
+                        <td>{{ 1 + i + (page - 1) * pageSize }}</td>
+                        <td class="text-start">
+                            <span class="pointer" [ngbTooltip]="u.actionPoint" placement="right">
+                                {{ u.actionPoint | truncate : 50 }}
+                            </span>
+                        </td>
+                        <td class="text-start">
+                            <span class="pointer" [ngbTooltip]="u?.owner" placement="right">
+                                {{ u?.owner | truncate : 50 }}
+                            </span>
+                        </td>
+                        <td>{{ u?.targetDate | date : "dd-MM-YYYY" }}</td>
+
+                        <td>{{ u?.reviewDate | date : "dd-MM-YYYY" }}</td>
+
+                        <td>{{ u?.status }}</td>
+                        <div class="d-flex justify-content-center">
+                            <input
+                                class="form-control w-25"
+                                type="text"
+                                [(ngModel)]="u.remarks"
+                                [ngModelOptions]="{standalone: true}"
+                            />
+                        </div>
+                        <td>
+                            <div class="dropdown">
+                                <button class="dropbtn"></button>
+                                <div class="dropdown-content">
+                                    <a
+                                        [class.disable]="this.action == 'view'"
+                                        href="javascript:void(0)"
+                                        (click)="patchItem(u, i, 'edit')"
+                                    >
+                                        <i class="fa fa-pencil-square-o fa-lg me-2 text-primary" aria-hidden="true"></i>
+                                        Edit
+                                    </a>
+                                    <a
+                                        [class.disable]="this.action == 'view'"
+                                        href="javascript:void(0)"
+                                        (click)="deleteItem(i)"
+                                    >
+                                        <i class="fa fa-trash fa-lg me-2 text-primary" aria-hidden="true"></i>
+                                        Delete
+                                    </a>
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <hr class="row line-border" />
+        <div class="row align-items-center mt-3">
+            <div class="col-6">
+                <button class="btn btn-primary px-5" (click)="openAttendeesModal()">Attendees</button>
+            </div>
+            <div class="col-6 text-end">
+                <div *ngIf="!['view'].includes(action)" class="d-grid gap-2 d-md-block">
+                    <button class="btn btn-primary px-5 me-4" type="button" (click)="reset()">Reset</button>
+                    <button type="button" class="btn btn-primary px-5" (click)="submit()">Save</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>

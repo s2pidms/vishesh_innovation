@@ -1,0 +1,84 @@
+<Form [formGroup]="form" class="formCard card">
+    <div class="container">
+        <div class="row form-header">
+            <div class="col heading">Asset Class ({{ this.action | titlecase }})</div>
+        </div>
+        <div class="form-body">
+            <div class="row">
+                <div class="col">
+                    <label class="form-label">Order <span class="text-danger">*</span></label>
+                    <input class="form-control" formControlName="order" />
+                </div>
+                <div class="col">
+                    <label class="form-label">Asset Class Name <span class="text-danger">*</span></label>
+                    <input class="form-control" formControlName="assetClassName" />
+                </div>
+                <div class="col">
+                    <label class="form-label">Type<span class="text-danger">*</span></label>
+                    <select class="form-select" formControlName="type">
+                        <option [value]="null" selected disabled>Select Type</option>
+                        <option *ngFor="let item of assetClassTypeArr" [value]="item.value">
+                            {{ item.label }}
+                        </option>
+                    </select>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col">
+                    <label class="form-label">Depreciation<span class="text-danger">*</span></label>
+                    <select class="form-select" formControlName="depreciation">
+                        <option [value]="null" selected disabled>Select Depreciation</option>
+                        <option *ngFor="let item of depreciationAndEnergySpecArr" [value]="item.value">
+                            {{ item.label }}
+                        </option>
+                    </select>
+                </div>
+                <div class="col">
+                    <label class="form-label">Energy Specification<span class="text-danger">*</span></label>
+                    <select class="form-select" formControlName="energySpecification">
+                        <option [value]="null" selected disabled>Select Energy Specification</option>
+                        <option *ngFor="let item of depreciationAndEnergySpecArr" [value]="item.value">
+                            {{ item.label }}
+                        </option>
+                    </select>
+                </div>
+                <div class="col">
+                    <label class="form-label">Category Prefix <span class="text-danger">*</span></label>
+                    <input class="form-control" formControlName="prefix" />
+                </div>
+            </div>
+            <div class="row">
+                <div class="col">
+                    <label class="form-label">Auto Increment No.<span class="text-danger">*</span></label>
+                    <input class="form-control" type="number" formControlName="nextAutoIncrement" />
+                </div>
+                <div class="col">
+                    <label class="form-label">Digit<span class="text-danger"></span></label>
+                    <input class="form-control" type="number" formControlName="digit" />
+                </div>
+                <div class="col">
+                    <label class="form-label">Active<span class="text-danger">*</span></label>
+                    <select class="form-select" formControlName="status">
+                        <option [value]="null" selected disabled>Select Status</option>
+                        <option value="Active">Active</option>
+                        <option value="Inactive">Inactive</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        <hr *ngIf="action !== 'view'" class="row line-border" />
+        <div class="row">
+            <div class="col-12">
+                <div *ngIf="action !== 'view'" class="d-flex justify-content-center">
+                    <div class="d-grid col-md-1 mx-5" [ngClass]="{'d-none': action == 'View'}">
+                        <button type="button" class="btn btn-primary" (click)="reset()">Reset</button>
+                    </div>
+                    <div class="d-grid col-md-1 me-3" [ngClass]="{'d-none': action == 'View'}">
+                        <button type="button" class="btn btn-primary" (click)="submit()">Save</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</Form>

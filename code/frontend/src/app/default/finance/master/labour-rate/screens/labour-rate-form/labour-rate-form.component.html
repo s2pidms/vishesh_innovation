@@ -1,0 +1,84 @@
+<div class="formCard card">
+    <div class="container">
+        <div class="row form-header">
+            <div class="col heading">
+                <label class="">Labour Rate Master (For Costing)</label>
+            </div>
+        </div>
+        <div class="form-body">
+            <div class="row mt-4 justify-content-center">
+                <div class="col-9 px-0">
+                    <div class="table-responsive">
+                        <table class="table table-bordered table-sticky">
+                            <thead class="bg-primary">
+                                <tr class="text-white">
+                                    <th class="text-start">Category</th>
+                                    <th>Monthly Salary ({{ "INR" | companyCurrency }})</th>
+                                    <th>Day/Month</th>
+                                    <th>Shift Hrs</th>
+                                    <th>Salary (INR)/Hour</th>
+                                    <th>Revision Dt.</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr *ngFor="let item of tableData; trackBy: trackByFn; let i = index">
+                                    <td class="text-start">{{ item.category }}</td>
+                                    <td>
+                                        <div class="d-flex justify-content-center">
+                                            <input
+                                                class="form-control form-control-sm w-25"
+                                                type="number"
+                                                [(ngModel)]="item.monthlySalary"
+                                                (input)="setSalaryPerHrs(item, i)"
+                                            />
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="d-flex justify-content-center">
+                                            <input
+                                                class="form-control form-control-sm w-25"
+                                                type="number"
+                                                [(ngModel)]="item.daysPerMonth"
+                                                (input)="setSalaryPerHrs(item, i)"
+                                            />
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="d-flex justify-content-center">
+                                            <input
+                                                class="form-control form-control-sm w-25"
+                                                type="number"
+                                                [(ngModel)]="item.shiftHrs"
+                                                (input)="setSalaryPerHrs(item, i)"
+                                            />
+                                        </div>
+                                    </td>
+                                    <td>{{ item.salaryPerHour }}</td>
+                                    <td>
+                                        <div class="d-flex justify-content-center">
+                                            <input
+                                                class="form-control form-control-sm w-25"
+                                                type="date"
+                                                [(ngModel)]="item.revisionDate"
+                                            />
+                                        </div>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <hr class="row line-border" />
+        <div class="row my-3">
+            <div appAccessControl [accessType]="rolePermissionActions.createAction" class="col text-center">
+                <div class="d-grid gap-2 d-md-block">
+                    <button type="button" class="btn btn-primary px-5 me-3" (click)="reset()">Reset</button>
+                    <button class="btn btn-primary px-5" type="button" (click)="update()">Save</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,135 @@
+<div class="modelPage">
+  <div class="modal-header">
+    <div class="heading">Review History</div>
+    <div>
+      <button
+        type="button"
+        class="btn btn-cross btn-sm"
+        aria-label="Close"
+        (click)="activeModal.close()"
+      >
+        <i class="fa fa-times-circle" aria-hidden="true"></i>
+      </button>
+    </div>
+  </div>
+</div>
+
+<div
+  class="modelPage pb-4"
+  *ngFor="
+    let c of reviewHistory
+      | searchFi1ter : search
+      | slice : (page - 1) * pageSize : (page - 1) * pageSize + pageSize
+  "
+>
+  <div class="modal-body">
+    <div class="row mt-0">
+      <div class="col-12 d-flex justify-content-center">
+        <ngb-pagination
+          *ngIf="reviewHistory.length > 0"
+          [collectionSize]="reviewHistory.length"
+          [(page)]="page"
+          [pageSize]="pageSize"
+          [boundaryLinks]="false"
+        >
+          <ng-template ngbPaginationPrevious>
+            <img src="./assets/new_icons/pagination_prev.svg" width="20rem" />
+          </ng-template>
+          <ng-template ngbPaginationNext>
+            <img src="./assets/new_icons/pagination_next.svg" width="20rem" />
+          </ng-template>
+          <ng-template ngbPaginationPages let-page let-pages="pages">
+            <li
+              class="ngb-custom-pages-item align-self-center"
+              *ngIf="pages.length > 0"
+            >
+              <span class="page-label me-2 ms-1">
+                Page {{ page }} of {{ pages[pages.length - 1] }}
+              </span>
+            </li>
+          </ng-template>
+        </ngb-pagination>
+      </div>
+    </div>
+    <div class="row mt-4">
+      <div class="col-4">
+        <div class="d-flex align-items-center">
+          <div class="col-form-label text-nowrap">
+            Review No.
+            <i class="fa fa-caret-right fa-1x mx-1"></i>
+          </div>
+          <div class="d-flex inputGroup">
+            <input
+              [disabled]="action != 'create'"
+              type="text"
+              class="form-control"
+              [(ngModel)]="c.reviewNo"
+            />
+          </div>
+        </div>
+      </div>
+      <div class="col-4">
+        <div class="d-flex align-items-center">
+          <div class="col-form-label text-nowrap">
+            Review Date
+            <i class="fa fa-caret-right fa-1x mx-1"></i>
+          </div>
+
+          <input
+            [disabled]="action != 'create'"
+            type="date"
+            class="form-control"
+            [(ngModel)]="c.reviewDate"
+          />
+        </div>
+      </div>
+      <div class="col-4">
+        <div class="d-flex align-items-center">
+          <div class="col-form-label text-nowrap">
+            Reviewed by <span class="text-danger">*</span>
+            <i class="fa fa-caret-right fa-1x mx-1"></i>
+          </div>
+
+          <input
+            [disabled]="action != 'create'"
+            type="text"
+            class="form-control"
+            [(ngModel)]="c.reviewBy"
+          />
+        </div>
+      </div>
+    </div>
+
+    <div class="row mt-4">
+      <div class="table-responsive">
+        <table class="table table-bordered table-sticky">
+          <thead class="bg-primary">
+            <tr class="text-white">
+              <th>{{ labels.srNo }}</th>
+              <th class="text-start">{{ labels.question }}</th>
+              <th>{{ labels.check }}</th>
+              <th class="text-start">{{ labels.remark }}</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let t of c.technicalReview">
+              <td>{{ t.orderNo }}</td>
+              <td class="text-start">{{ t.questionnaire }}</td>
+              <td>
+                <input
+                  disabled
+                  class="form-check-input"
+                  type="checkbox"
+                  [(ngModel)]="t.isChecked"
+                />
+              </td>
+              <td class="text-start">
+                {{ t.remarks }}
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>

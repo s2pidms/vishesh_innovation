@@ -1,0 +1,157 @@
+<form [formGroup]="form" class="formCard card">
+    <div class="container">
+        <div class="row form-header">
+            <div class="col heading">
+                <label class="">Process Specification by Product Category</label>
+            </div>
+        </div>
+        <div class="form-body">
+            <div class="row d-flex justify-content-between">
+                <div class="col-3">
+                    <label class="form-label">Product No. <span class="text-danger"></span></label>
+                    <ng-select
+                        [items]="masterData.productCategoryOptions"
+                        bindLabel="productNumber"
+                        bindValue="_id"
+                        formControlName="productCategory"
+                        [clearable]="false"
+                        (change)="setItemDetails($event)"
+                    >
+                    </ng-select>
+                </div>
+                <div class="col-3">
+                    <label class="form-label">Product Code <span class="text-danger"></span></label>
+                    <ng-select
+                        [items]="masterData.productCategoryOptions"
+                        bindLabel="productCode"
+                        bindValue="productCode"
+                        formControlName="productCode"
+                        [clearable]="false"
+                        (change)="setItemDetails($event)"
+                    >
+                    </ng-select>
+                </div>
+                <div class="col-3">
+                    <label class="form-label">DD/Display Value<span class="text-danger">*</span></label>
+                    <input class="form-control" type="text" readonly formControlName="displayProductCategoryName" />
+                </div>
+                <div class="col-3">
+                    <label class="form-label">Application<span class="text-danger"></span></label>
+                    <input class="form-control" type="text" formControlName="application" readonly />
+                </div>
+            </div>
+        </div>
+        <hr class="row line-border" />
+
+        <app-setting-header
+            [data]="{page,pageSize,collection,search, excelDisplay : 'none'}"
+            (dataChange)="eventHeader($event)"
+        >
+        </app-setting-header>
+        <div class="table-responsive" style="min-height: 19.5rem">
+            <table class="table table-bordered table-sticky mt-1">
+                <thead class="bg-secondary">
+                    <tr class="text-white">
+                        <th sortable="seq" (sort)="onSort($event)">Seq.</th>
+                        <th sortable="processId" (sort)="onSort($event)">Process ID</th>
+                        <th class="text-start" sortable="processName" (sort)="onSort($event)">Process Name</th>
+                        <th sortable="unitProcessOutput" (sort)="onSort($event)">Output Unit</th>
+                        <!-- <th sortable="standardOutputPerHr" (sort)="onSort($event)">Output/Hr</th> -->
+                        <th sortable="allocationOfSkilledLabour" (sort)="onSort($event)">S/L</th>
+                        <th sortable="allocationOfSemiSkilledLabour" (sort)="onSort($event)">SS/L</th>
+                        <th sortable="allocationOfUnSkilledLabour" (sort)="onSort($event)">US/L</th>
+                        <th sortable="totalLabourHeadCount" (sort)="onSort($event)">HC</th>
+                        <th sortable="labourRatePerHr" (sort)="onSort($event)">Labour Rate/Hr</th>
+                        <th sortable="totalAllocatedAssetCostPerHr" (sort)="onSort($event)">Asset Rate/Hr</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr
+                        *ngFor="
+                            let u of masterData.processMasterList
+                                | searchFi1ter : search
+                                | slice : (page - 1) * pageSize : (page - 1) * pageSize + pageSize;
+                            trackBy: trackByFn;
+                            let i = index
+                        "
+                    >
+                        <td>
+                            <div class="d-flex justify-content-center">
+                                <span *ngIf="['view', 'Converted to SKU'].includes(action)">
+                                    {{ u?.seq | number : "1.2-2" }}
+                                </span>
+                                <input
+                                    *ngIf="!['view', 'Converted to SKU'].includes(action)"
+                                    class="form-control form-control-sm w-25"
+                                    type="number"
+                                    [(ngModel)]="u.seq"
+                                    [ngModelOptions]="{standalone: true}"
+                                />
+                            </div>
+                        </td>
+                        <td>{{ u.processId }}</td>
+                        <td class="text-start" [style.width]="processName.clientWidth" #processName>
+                            <span class="pointer" [positionTarget]="processName" [ngbTooltip]="u.processName">
+                                {{ u.processName ? u.processName : null }}
+                            </span>
+                        </td>
+                        <td>{{ u.unitProcessOutput }}</td>
+                        <!-- <td>{{ u.standardOutputPerHr }}</td> -->
+                        <td>
+                            {{ u.allocationOfSkilledLabour }}
+                        </td>
+                        <td>
+                            {{ u.allocationOfSemiSkilledLabour }}
+                        </td>
+                        <td>
+                            {{ u.allocationOfUnSkilledLabour }}
+                        </td>
+                        <td>
+                            {{ u.totalLabourHeadCount }}
+                        </td>
+                        <td>
+                            {{ u?.labourRatePerHr }}
+                        </td>
+                        <td>
+                            {{ u.totalAllocatedAssetCostPerHr }}
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <hr *ngIf="'view' != action" class="row line-border" />
+
+        <div
+            *ngIf="'view' != action"
+            class="row my-3"
+            appAccessControl
+            [accessType]="rolePermissionActions.createAction"
+        >
+            <div class="col text-center">
+                <div class="d-grid gap-2 d-md-block">
+                    <button type="button" class="btn btn-primary px-5 me-3" (click)="reset()">Reset</button>
+                    <button
+                        type="button"
+                        class="btn btn-primary px-3 me-1"
+                        [disabled]="!isESCPreview"
+                        (click)="ESCPreview()"
+                    >
+                        Esc
+                    </button>
+                    <button
+                        type="button"
+                        class="btn btn-primary px-4 me-3"
+                        [disabled]="isConditionPreview"
+                        (click)="preview()"
+                    >
+                        Preview
+                    </button>
+                    <button class="btn btn-primary px-5" type="button" [disabled]="!isPreview" (click)="submit()">
+                        Save
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>

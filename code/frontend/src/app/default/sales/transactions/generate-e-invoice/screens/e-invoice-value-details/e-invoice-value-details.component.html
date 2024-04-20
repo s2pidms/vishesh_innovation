@@ -1,0 +1,113 @@
+<div class="modelPage">
+    <div class="modal-header">
+        <div class="heading">Value Details</div>
+        <div>
+            <button type="button" class="btn btn-cross btn-sm" aria-label="Close" (click)="dismissModel()">
+                <i class="fa fa-times-circle" aria-hidden="true"></i>
+            </button>
+        </div>
+    </div>
+    <div class="">
+        <div class="container-fluid">
+            <div class="row mt-4">
+                <form [formGroup]="form">
+                    <div class="row mb-4 px-5">
+                        <div class="col ps-0">
+                            <label class="form-label mb-0"> Ass Value<span class="text-danger"></span> </label>
+                            <input
+                                class="form-control"
+                                type="number"
+                                formControlName="AssVal"
+                                [ngClass]="{
+                                    'is-invalid': form['controls']['AssVal'].invalid && submitted
+                                }"
+                            />
+                        </div>
+                        <div class="col">
+                            <label class="form-label mb-0"> CGST Value<span class="text-danger"></span> </label>
+                            <input
+                                class="form-control"
+                                type="number"
+                                formControlName="CgstVal"
+                                [ngClass]="{
+                                    'is-invalid': form['controls']['CgstVal'].invalid && submitted
+                                }"
+                            />
+                        </div>
+
+                        <div class="col">
+                            <label class="form-label mb-0">
+                                <Section></Section>SGST Value<span class="text-danger"></span>
+                            </label>
+                            <input
+                                class="form-control"
+                                type="number"
+                                formControlName="SgstVal"
+                                [ngClass]="{
+                                    'is-invalid': form['controls']['SgstVal'].invalid && submitted
+                                }"
+                            />
+                        </div>
+
+                        <div class="col pe-0">
+                            <label class="form-label mb-0"> IGST Value<span class="text-danger"></span> </label>
+                            <input
+                                class="form-control"
+                                type="number"
+                                formControlName="IgstVal"
+                                [ngClass]="{
+                                    'is-invalid': form['controls']['IgstVal'].invalid && submitted
+                                }"
+                            />
+                        </div>
+                    </div>
+
+                    <div class="row mb-5 px-5">
+                        <div class="col-4 ps-0">
+                            <label class="form-label mb-0"> Other Charges<span class="text-danger"></span> </label>
+                            <input
+                                class="form-control"
+                                type="number"
+                                formControlName="OthChrg"
+                                readonly
+                                [ngClass]="{
+                                    'is-invalid': form['controls']['OthChrg'].invalid && submitted
+                                }"
+                            />
+                        </div>
+                        <div class="col-4">
+                            <label class="form-label mb-0"> Round off Amount<span class="text-danger"></span> </label>
+                            <input
+                                class="form-control"
+                                type="number"
+                                formControlName="RndOffAmt"
+                                [ngClass]="{
+                                    'is-invalid': form['controls']['RndOffAmt'].invalid && submitted
+                                }"
+                            />
+                        </div>
+                        <div class="col-4 pe-0">
+                            <label class="form-label mb-0">
+                                Total Invoice Value<span class="text-danger"></span>
+                            </label>
+                            <input
+                                class="form-control"
+                                type="number"
+                                formControlName="TotInvVal"
+                                [ngClass]="{
+                                    'is-invalid': form['controls']['TotInvVal'].invalid && submitted
+                                }"
+                            />
+                        </div>
+                    </div>
+                </form>
+
+                <hr class="line-border mb-5 px-05" />
+
+                <div class="text-center mb-5">
+                    <button type="button" class="btn bg-primary px-5" (click)="dismissModel()">Save & Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

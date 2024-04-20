@@ -1,0 +1,26 @@
+.assetCalendarTD {
+    background-color: transparent;
+    background-image: url("./../../../../../../../assets/new_icons/Asset_Calendar.svg");
+    background-size: 100% 100%;
+    border: 0;
+    color: white;
+    height: 1.6rem;
+    width: 1.6rem;
+}
+.setSOType {
+    // pointer-events: none;
+    cursor: pointer;
+    opacity: 0.5;
+}
+.fa {
+    font-size: 1.6rem !important;
+}
+
+.box {
+    display: grid;
+    place-items: center;
+    div {
+        height: 1rem;
+        width: 1rem;
+    }
+}

@@ -1,0 +1,118 @@
+<form [formGroup]="form" class="formCard card">
+    <div class="container">
+        <div class="row form-header">
+            <div class="col heading">
+                <label>Salary Advance Summary [{{ this.action | titlecase }}]</label>
+            </div>
+        </div>
+        <div class="form-body">
+            <div class="row mb-4">
+                <div class="col-4">
+                    <label class="form-label"> Employee Name<span class="text-danger">*</span> </label>
+                    <ng-select
+                        (change)="selectedEmployee($event)"
+                        [items]="masterData.employeesOptions"
+                        bindLabel="label"
+                        bindValue="value"
+                        [clearable]="false"
+                        formControlName="employeeId"
+                        class="my-2"
+                    >
+                    </ng-select>
+                </div>
+                <div class="col-4">
+                    <label class="form-label">Employee Code</label>
+                    <input
+                        class="form-control my-2"
+                        id="employeeCode"
+                        type="text"
+                        readonly
+                        formControlName="employeeCode"
+                    />
+                </div>
+                <div class="col-4">
+                    <label class="form-label"> Request Date <span class="text-danger">*</span> </label>
+                    <input
+                        class="form-control my-2"
+                        id="requestDate"
+                        type="date"
+                        formControlName="requestDate"
+                        readonly
+                    />
+                </div>
+            </div>
+            <div class="row mb-4">
+                <div class="col-4">
+                    <label class="form-label"> Amount<span class="text-danger">*</span> </label>
+                    <div class="d-flex inputGroup">
+                        <div class="input-group-text rounded-0">&#8377;</div>
+                        <input class="form-control my-2" id="amount" type="number" formControlName="amount" />
+                    </div>
+                </div>
+                <div class="col-4">
+                    <label class="form-label"> Tenure[Months]<span class="text-danger">*</span> </label>
+                    <input formControlName="tenureMonths" class="form-control my-2" type="number" />
+                </div>
+                <div class="col-4">
+                    <label class="form-label"> Repay Start-Month'Year<span class="text-danger">*</span> </label>
+                    <input
+                        (change)="handleDates()"
+                        formControlName="repayStartMonthYear"
+                        class="form-control my-2"
+                        type="month"
+                        name="repayStartMonthYear"
+                    />
+                </div>
+            </div>
+            <div class="row mb-4">
+                <div class="col-4">
+                    <label class="form-label"> Repay End - Month'Year<span class="text-danger">*</span> </label>
+                    <input
+                        class="form-control my-2"
+                        id="repayEndMonthYear"
+                        formControlName="repayEndMonthYear"
+                        required
+                        type="month"
+                        readonly
+                    />
+                </div>
+                <div class="col-4">
+                    <label class="form-label"> Repay Amount/Month<span class="text-danger">*</span> </label>
+                    <div class="d-flex inputGroup">
+                        <div class="input-group-text rounded-0">&#8377;</div>
+                        <input
+                            formControlName="repayAmountPerMonth"
+                            class="form-control my-2"
+                            id="repayAmountPerMonth"
+                            type="text"
+                            readonly
+                        />
+                    </div>
+                </div>
+                <div class="col-4">
+                    <label class="form-label">Reason for advance</label>
+                    <input
+                        formControlName="reasonForAdvance"
+                        class="form-control my-2"
+                        id="reasonForAdvance"
+                        type="text"
+                    />
+                </div>
+            </div>
+
+            <hr *ngIf="action !== 'view'" class="row line-border" />
+            <div *ngIf="action !== 'view'" class="d-flex justify-content-center mb-3">
+                <div *ngIf="action == 'create'" class="d-grid col-md-1 me-4">
+                    <button class="btn btn-primary" type="button" (click)="reset()">Reset</button>
+                </div>
+                <div class="d-grid col-md-1">
+                    <button class="btn btn-primary" type="submit" (click)="submit()">
+                        {{ action == "edit" || action == "create" ? "Save" : null }}
+                        {{ action == "approve" ? "Approve" : null }}
+                        {{ action == "reject" ? "Reject" : null }}
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>

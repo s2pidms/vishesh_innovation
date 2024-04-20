@@ -1,0 +1,64 @@
+<Form class="px-2" [formGroup]="form" class="formCard card">
+    <div class="container">
+        <div class="row form-header">
+            <div class="col heading ms-2">
+                <label> Generate Tax Invoice</label>
+            </div>
+        </div>
+        <div class="form-body">
+            <div class="row">
+                <div class="col-3">
+                    <label class="form-label"> DRN No. <span class="text-danger"></span> </label>
+                    <ng-select
+                        [items]="shipmentIdArr"
+                        bindLabel="DRNId.DRNNumber"
+                        bindValue="_id"
+                        [clearable]="false"
+                        formControlName="shipmentPlanningId"
+                        (change)="setShipmentName($event)"
+                    >
+                    </ng-select>
+                </div>
+
+                <div class="col-3">
+                    <label class="form-label"> Tax Invoice No. <span class="text-danger"></span> </label>
+                    <input class="form-control" type="text" readonly formControlName="salesInvoiceNumber" />
+                </div>
+
+                <div class="col-3">
+                    <label class="form-label"> Tax Invoice Date<span class="text-danger"></span> </label>
+                    <input class="form-control" type="date" formControlName="salesInvoiceDate" readonly />
+                </div>
+
+                <div class="col-3">
+                    <label class="form-label"> Customer Name <span class="text-danger"></span> </label>
+                    <ng-select
+                        [items]="shipmentNameOptions"
+                        bindLabel="customerName"
+                        bindValue="_id"
+                        [clearable]="false"
+                        formControlName="customer"
+                    >
+                    </ng-select>
+                </div>
+            </div>
+
+            <hr class="row line-border my-4" />
+
+            <div class="row justify-content-center mb-4">
+                <div
+                    appAccessControl
+                    [accessType]="rolePermissionActions.createAction"
+                    class="col-6 d-flex justify-content-center"
+                >
+                    <button type="button" class="btn btn-primary text-white mx-4 px-3" (click)="navigateTo()">
+                        Preview Tax Invoice
+                    </button>
+                    <button (click)="submit()" class="btn btn-primary text-white mx-4 px-3" type="button">
+                        Generate Tax Invoice
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</Form>

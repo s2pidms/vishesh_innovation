@@ -1,0 +1,93 @@
+[
+    {
+        "_id": "652123b15c2c7cde6871a4d0",
+        "menuItemId": "64a6c1e33339d4dc9d8141ad",
+        "module": "Finance",
+        "type": "TRANSACTION",
+        "order": 1,
+        "isDisplay": true,
+        "title": "Bill of Material",
+        "displayName": "Bill Of Material",
+        "disabled": false,
+        "url": "./../../transactions/bill-of-material/list",
+        "items": [
+            {
+                "menuItemId": "64a6c1e33339d4dc9d8141ad",
+                "module": "Finance",
+                "type": "MASTER",
+                "order": 1,
+                "isDisplay": true,
+                "title": "BoM of Product",
+                "displayName": "BoM of Product",
+                "disabled": false,
+                "url": "../bom_of_product/list",
+                "_id": "656ae19f6af3bcb4ec7f3fd8"
+            },
+            {
+                "menuItemId": "64a6c1e33339d4dc9d8141ad",
+                "module": "Finance",
+                "type": "MASTER",
+                "order": 2,
+                "isDisplay": true,
+                "title": "BoM of SKU",
+                "displayName": "BoM of SKU",
+                "disabled": false,
+                "url": "../bom_of_sku/list",
+                "_id": "656ae19f6af3bcb4ec7f3fd9"
+            },
+            {
+                "menuItemId": "64a6c1e33339d4dc9d8141ad",
+                "module": "Finance",
+                "type": "MASTER",
+                "order": 3,
+                "isDisplay": true,
+                "title": "BoM of Child Part",
+                "displayName": "BoM of Child Part",
+                "disabled": false,
+                "url": "../bom_of_child_item/list",
+                "_id": "656ae19f6af3bcb4ec7f3fda"
+            },
+            {
+                "menuItemId": "64a6c1e33339d4dc9d8141ad",
+                "module": "Finance",
+                "type": "MASTER",
+                "order": 4,
+                "isDisplay": true,
+                "title": "BoM of Gr. Child Part",
+                "displayName": "BoM of Gr. Child Part",
+                "disabled": false,
+                "url": "../bom_of_gr_child_item/list",
+                "_id": "656ae19f6af3bcb4ec7f3fdb"
+            }
+        ],
+        "roles": []
+    },
+    {
+        "_id": "65214e416dda7b965c538abe",
+        "menuItemId": "64a6c1e33339d4dc9d8141ad",
+        "module": "Finance",
+        "type": "TRANSACTION",
+        "order": 2,
+        "isDisplay": true,
+        "title": "Direct Cost",
+        "displayName": "Direct Cost",
+        "disabled": false,
+        "url": "/default/finance/transactions/direct_cost/list",
+        "items": [],
+        "roles": []
+    },
+    {
+        "_id": "6521531d9d45469a59bf2dab",
+        "menuItemId": "64a6c1e33339d4dc9d8141ad",
+        "module": "Finance",
+        "type": "TRANSACTION",
+        "order": 3,
+        "isDisplay": true,
+        "title": "Cost Sheet",
+        "displayName": "Cost Sheet",
+        "disabled": false,
+        "url": "/default/finance/transactions/sku_cost_sheet/list",
+        "items": [],
+        "roles": []
+    }
+]

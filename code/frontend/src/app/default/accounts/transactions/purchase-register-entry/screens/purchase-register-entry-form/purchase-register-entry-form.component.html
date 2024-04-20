@@ -1,0 +1,229 @@
+<form [formGroup]="form" class="formCard card">
+    <div class="container">
+        <div class="row form-header">
+            <div class="col heading">
+                <label>Purchase Register (Entry) </label>
+            </div>
+        </div>
+        <div class="form-body mt-3">
+            <div class="row">
+                <div class="col-2 pe-3">
+                    <label class="form-label"> P/Entry No. <span class="text-danger">*</span> </label>
+                    <input class="form-control bg-white-smoke" type="text" formControlName="PEntryNo" readonly />
+                </div>
+                <div class="col-2 ps-3">
+                    <label class="form-label">P/Entry Date <span class="text-danger">*</span> </label>
+                    <input type="date" class="form-control bg-white-smoke" formControlName="PEntryDate" />
+                </div>
+                <div class="col-4">
+                    <label class="form-label"> Supplier Name <span class="text-danger">*</span> </label>
+                    <ng-select
+                        [items]="masterData.suppliersOptions"
+                        bindLabel="supplierName"
+                        bindValue="supplierName"
+                        formControlName="supplierName"
+                        [clearable]="false"
+                        (change)="setSupplierDetails($event)"
+                    >
+                    </ng-select>
+                </div>
+                <div class="col-4">
+                    <label class="form-label"> GSTIN of Supplier <span class="text-danger"></span> </label>
+                    <input class="form-control bg-white-smoke" type="text" formControlName="supplierGST" readonly />
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-4">
+                    <label class="form-label"> Purchase Category <span class="text-danger">*</span> </label>
+                    <ng-select
+                        [items]="masterData.purchaseCategoryOptions"
+                        bindLabel="parameterLabel"
+                        bindValue="parameterName"
+                        formControlName="purchaseCategory"
+                        [clearable]="false"
+                    >
+                    </ng-select>
+                </div>
+                <div class="col-4">
+                    <label class="form-label"> Tax Invoice No. <span class="text-danger">*</span> </label>
+                    <input class="form-control" type="text" formControlName="taxInvoiceNo" />
+                </div>
+                <div class="col-4">
+                    <label class="form-label">Tax Invoice Date <span class="text-danger">*</span> </label>
+                    <input type="date" class="form-control" formControlName="taxInvoiceDate" />
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-4">
+                    <label class="form-label"> Taxable Amount <span class="text-danger">*</span> </label>
+                    <div class="d-flex">
+                        <span class="input-group-text text-secondary combine-INR">
+                            {{ "INR" | companyCurrency }}
+                            <div class="vr ms-3"></div>
+                        </span>
+                        <input
+                            (input)="setTotalGST()"
+                            class="form-control border-start-0 ps-1"
+                            type="number"
+                            formControlName="taxableAmt"
+                            placeholder="0.00"
+                        />
+                    </div>
+                </div>
+                <div class="col-4">
+                    <label class="form-label"> SGST Amount <span class="text-danger">*</span> </label>
+                    <div class="d-flex">
+                        <span
+                            [ngClass]="
+                                this.f['IGSTAmt'].value > 0
+                                    ? 'input-group-text text-secondary combine-INR bg-white-smoke'
+                                    : 'input-group-text text-secondary combine-INR'
+                            "
+                        >
+                            {{ "INR" | companyCurrency }}
+                            <div class="vr ms-3"></div>
+                        </span>
+                        <input
+                            (input)="setTotalGST()"
+                            class="form-control border-start-0 ps-1"
+                            type="number"
+                            formControlName="SGSTAmt"
+                            placeholder="0.00"
+                        />
+                    </div>
+                </div>
+                <div class="col-4">
+                    <label class="form-label">CGST Amount <span class="text-danger">*</span> </label>
+                    <div class="d-flex">
+                        <span
+                            [ngClass]="
+                                this.f['IGSTAmt'].value > 0
+                                    ? 'input-group-text text-secondary combine-INR bg-white-smoke'
+                                    : 'input-group-text text-secondary combine-INR'
+                            "
+                        >
+                            {{ "INR" | companyCurrency }}
+                            <div class="vr ms-3"></div>
+                        </span>
+                        <input
+                            (input)="setTotalGST()"
+                            class="form-control border-start-0 ps-1"
+                            type="number"
+                            formControlName="CGSTAmt"
+                            placeholder="0.00"
+                        />
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-4">
+                    <label class="form-label"> IGST Amount <span class="text-danger">*</span> </label>
+                    <div class="d-flex">
+                        <span
+                            [ngClass]="
+                                this.f['SGSTAmt'].value > 0 || this.f['CGSTAmt'].value > 0
+                                    ? 'input-group-text text-secondary combine-INR bg-white-smoke'
+                                    : 'input-group-text text-secondary combine-INR'
+                            "
+                        >
+                            {{ "INR" | companyCurrency }}
+                            <div class="vr ms-3"></div>
+                        </span>
+                        <input
+                            (input)="setTotalGST()"
+                            class="form-control border-start-0 ps-1"
+                            type="number"
+                            formControlName="IGSTAmt"
+                            placeholder="0.00"
+                        />
+                    </div>
+                </div>
+                <div class="col-4">
+                    <label class="form-label"> Total Amount <span class="text-danger">*</span> </label>
+                    <div class="d-flex">
+                        <span class="input-group-text text-secondary combine-INR bg-mix-pink-color">
+                            {{ "INR" | companyCurrency }}
+                            <div class="vr ms-3"></div>
+                        </span>
+                        <input
+                            class="form-control bg-mix-pink-color border-start-0 ps-1"
+                            type="number"
+                            formControlName="totalAmt"
+                            placeholder="0.00"
+                            readonly
+                        />
+                    </div>
+                </div>
+                <div class="col-4">
+                    <label class="form-label">TCS Amount <span class="text-danger">*</span> </label>
+                    <div class="d-flex">
+                        <span class="input-group-text text-secondary combine-INR">
+                            {{ "INR" | companyCurrency }}
+                            <div class="vr ms-3"></div>
+                        </span>
+                        <input
+                            (input)="setTotalAmount()"
+                            class="form-control border-start-0 ps-1"
+                            type="number"
+                            formControlName="TCSAmt"
+                            placeholder="0.00"
+                        />
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-4">
+                    <label class="form-label"> Round off Amount <span class="text-danger">*</span> </label>
+                    <div class="d-flex">
+                        <span class="input-group-text text-secondary combine-INR">
+                            {{ "INR" | companyCurrency }}
+                            <div class="vr ms-3"></div>
+                        </span>
+                        <input
+                            (input)="setTotalAmount()"
+                            class="form-control border-start-0 ps-1"
+                            type="number"
+                            formControlName="roundOffAmt"
+                            placeholder="0.00"
+                        />
+                    </div>
+                </div>
+                <div class="col-4">
+                    <label class="form-label"> Net Amount <span class="text-danger"></span> </label>
+                    <div class="d-flex">
+                        <span class="input-group-text text-secondary combine-INR bg-mix-pink-color">
+                            {{ "INR" | companyCurrency }}
+                            <div class="vr ms-3"></div>
+                        </span>
+                        <input
+                            class="form-control bg-mix-pink-color border-start-0 ps-1"
+                            type="number"
+                            formControlName="roundOffTotalAmt"
+                            placeholder="0.00"
+                            readonly
+                        />
+                    </div>
+                </div>
+                <div class="col-4">
+                    <label class="form-label">Remarks <span class="text-danger"></span> </label>
+                    <input class="form-control" type="text" formControlName="remarks" />
+                </div>
+            </div>
+        </div>
+        <hr class="row line-border mt-5" />
+        <div class="row mt-4">
+            <div *ngIf="!['view'].includes(action)" class="col-3 ms-0">
+                <button (click)="openCustomersDetailsModal()" class="btn btn-primary px-4">View MRN</button>
+            </div>
+            <div *ngIf="!['view'].includes(action)" class="col-4 mb-3"></div>
+            <div *ngIf="!['view'].includes(action)" class="col-5 text-end mb-3">
+                <button class="btn btn-primary ms-3 text-nowrap col-3" type="button" (click)="reset()">Reset</button>
+                <button class="btn btn-primary px-5 ms-3 col-3" type="button" (click)="submit()">Save</button>
+            </div>
+            <div *ngIf="['view'].includes(action)" class="col-7 mb-3"></div>
+            <div *ngIf="['view'].includes(action)" class="col-5 text-end mb-3">
+                <button class="btn btn-primary ms-3 text-nowrap col-3" type="button" (click)="back()">Close</button>
+            </div>
+        </div>
+    </div>
+</form>

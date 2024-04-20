@@ -1,0 +1,29 @@
+export interface ISupplementaryPODetails {
+    POLineNumber: number;
+    item: string;
+    UOM: string;
+    primaryUnit: string;
+    POQty: number;
+    standardRate: number;
+    purchaseRate: number;
+    lineValue: number;
+    linePPV: number;
+    deliveryDate: string;
+    gst: number;
+    igst: number;
+    cgst: number;
+    sgst: number;
+    receivedQty: number;
+    invoicedQty: number;
+    balancedQty: number;
+    canceledQty: number;
+    markedForAlternateSupplier: string;
+    lineStatus?: string;
+    lineRemarks?: string;
+    itemCode: string;
+    itemName: string;
+    itemDescription: string;
+    orderInfoUOM: string;
+    unitConversion: string;
+    GRNQty: number;
+}

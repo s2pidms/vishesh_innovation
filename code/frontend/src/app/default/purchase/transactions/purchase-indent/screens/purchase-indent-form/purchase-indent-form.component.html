@@ -1,0 +1,261 @@
+<Form class="px-2" [formGroup]="form" class="formCard card">
+    <div class="container">
+        <div class="row form-header">
+            <div class="col heading">
+                <label> {{ this.action | titlecase }} Purchase Indent </label>
+            </div>
+        </div>
+        <div class="form-body">
+            <div class="row">
+                <div class="col-6 pe-0">
+                    <div class="row mb-0">
+                        <div class="col-3 pe-3">
+                            <label class="form-label"> Indent Order No.</label>
+                            <input class="form-control" type="text" formControlName="indentOrderNo" readonly />
+                        </div>
+                        <div class="col-4 pe-5">
+                            <label class="form-label">Indent Order Date</label>
+                            <input class="form-control" type="date" formControlName="indentOrderDate" />
+                        </div>
+                        <div class="col-5 ps-0">
+                            <label class="form-label"> Purchase Category<span class="text-danger">*</span> </label>
+                            <ng-select
+                                [items]="masterData.purchaseCategoryOptions"
+                                bindLabel="label"
+                                bindValue="value"
+                                [clearable]="false"
+                                formControlName="purchaseCategory"
+                                (change)="getChannelPartner($event)"
+                            >
+                            </ng-select>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-6 ps-5">
+                    <div class="row">
+                        <div class="col-7">
+                            <label class="form-label"> Channel Partner <span class="text-danger pe-5">*</span> </label>
+
+                            <div class="d-flex align-items-center">
+                                <div class="col-11">
+                                    <ng-select
+                                        [items]="channelPartnerOptions"
+                                        bindLabel="label"
+                                        bindValue="value"
+                                        [clearable]="false"
+                                        formControlName="channelPartner"
+                                        (change)="channelPartnerValueChange($event)"
+                                    >
+                                    </ng-select>
+                                </div>
+                                <div
+                                    style="height: 2.9rem"
+                                    class="set-input-group-text input-group-text bg-primary pointer col-auto"
+                                    id="basic-addon1"
+                                    (click)="openChannelPartnerDetailsModal()"
+                                >
+                                    <i class="fa fa-search text-white fs-4" aria-hidden="true"></i>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-5">
+                            <label class="form-label">Indent Category</label>
+                            <select
+                                (change)="setPOValidity()"
+                                class="form-select fs-5"
+                                formControlName="indentCategory"
+                            >
+                                <option [value]="null" disabled>Select PO Type</option>
+                                <option [value]="item" *ngFor="let item of indentCategoryArr">
+                                    {{ item }}
+                                </option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <hr class="row line-border" />
+
+        <app-setting-header
+            [data]="{page,pageSize,collection,search, excelDisplay : 'none'}"
+            (dataChange)="eventHeader($event)"
+        >
+        </app-setting-header>
+        <div class="table-responsive" style="min-height: 22rem">
+            <table class="table table-bordered table-sticky text-center">
+                <thead class="bg-primary">
+                    <tr class="text-white">
+                        <th sortable="itemCode" (sort)="onSort($event)">Item Code</th>
+                        <th class="text-start" sortable="name" (sort)="onSort($event)">Item Name</th>
+                        <th class="text-start" sortable="description" (sort)="onSort($event)">Item Description</th>
+                        <th sortable="UOM" (sort)="onSort($event)">UoM</th>
+                        <th sortable="currency" (sort)="onSort($event)">Ccy</th>
+                        <th sortable="standardRate" (sort)="onSort($event)" *ngIf="['view'].includes(action)">
+                            Standard Rate
+                        </th>
+                        <th sortable="purchaseRate" (sort)="onSort($event)">P/Rate</th>
+                        <th sortable="IOQty" (sort)="onSort($event)">IO Qty</th>
+                        <th sortable="lineValue" (sort)="onSort($event)">Line Value</th>
+                        <th sortable="deliveryDate" (sort)="onSort($event)">D/Sch</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr
+                        *ngFor="
+                            let u of filterItems
+                                | searchFi1ter : search
+                                | slice : (page - 1) * pageSize : (page - 1) * pageSize + pageSize;
+                            let i = index;
+                            trackBy: trackByFn
+                        "
+                    >
+                        <td>{{ u?.itemCode }}</td>
+                        <td class="text-start" [style.width]="itemName.clientWidth" #itemName>
+                            <span class="pointer" [positionTarget]="itemName" [ngbTooltip]="u.itemName">
+                                {{ u?.itemName }}
+                            </span>
+                        </td>
+                        <td class="text-start" [style.width]="itemDescription.clientWidth" #itemDescription>
+                            <span class="pointer" [positionTarget]="itemDescription" [ngbTooltip]="u.itemDescription">
+                                {{ u?.itemDescription }}
+                            </span>
+                        </td>
+                        <td>
+                            <div class="d-flex justify-content-between px-2">
+                                <span
+                                    [ngbTooltip]="u.unitConversion"
+                                    placement="top"
+                                    [ngClass]="
+                                        u.UOM == u.secondaryUnit ? 'text-primary pointer' : 'text-secondary pointer'
+                                    "
+                                    >{{ u?.UOM | UOMUnitsMaster }}</span
+                                >
+                                <span class="pointer d-flex align-items-center">
+                                    <div
+                                        (click)="setConversionOfUnit(u)"
+                                        *ngIf="u.stdCostUom2 && u.stdCostUom1 && u.primaryUnit && u.secondaryUnit"
+                                        class="unit-switch-rev"
+                                    ></div>
+                                    <div
+                                        *ngIf="!(u.stdCostUom2 && u.stdCostUom1 && u.primaryUnit && u.secondaryUnit)"
+                                        class="unit-switch-gray"
+                                    ></div>
+                                </span>
+                            </div>
+                        </td>
+                        <td>
+                            {{ u?.currency }}
+                        </td>
+                        <td *ngIf="['view'].includes(action)">
+                            {{ u.standardRate }}
+                        </td>
+                        <td>
+                            <div class="d-flex justify-content-center">
+                                <span *ngIf="['approve', 'reject', 'view', 'generate', 'cancel'].includes(action)">
+                                    {{ u.purchaseRate | number : "1.2-2" }}
+                                </span>
+                                <input
+                                    *ngIf="!['approve', 'reject', 'view', 'generate', 'cancel'].includes(action)"
+                                    class="form-control form-control-sm w-25"
+                                    type="number"
+                                    [(ngModel)]="u.purchaseRate"
+                                    [ngModelOptions]="{standalone: true}"
+                                    (input)="lineValueRate(u.PILineNumber, u)"
+                                />
+                            </div>
+                        </td>
+                        <td>
+                            <div class="d-flex justify-content-center">
+                                <span *ngIf="['approve', 'reject', 'view', 'generate', 'cancel'].includes(action)">
+                                    {{ u.IOQty | number : "1.2-2" }}
+                                </span>
+                                <input
+                                    *ngIf="!['approve', 'reject', 'view', 'generate', 'cancel'].includes(action)"
+                                    class="form-control form-control-sm w-25"
+                                    type="number"
+                                    [(ngModel)]="u.IOQty"
+                                    min="0"
+                                    [ngModelOptions]="{standalone: true}"
+                                    (input)="lineValueRate(u.PILineNumber, u)"
+                                />
+                            </div>
+                        </td>
+
+                        <td>{{ u?.lineValue | number : "1.2-2" }}</td>
+                        <td>
+                            <span class="d-flex justify-content-center pointer" (click)="openPOScheduleModal(u)">
+                                <div class="assetCalendarTD"></div>
+                            </span>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <hr class="row line-border" />
+        <div class="row">
+            <div class="col-3 pe-0">
+                <div class="d-flex justify-content-center">
+                    <div class="col-form-label text-nowrap pe-1 pt-1">
+                        Total Item Value <span class="ms-1 me-2">&#9654;</span>
+                        <!-- <div class="btn btn-info py-1 ms-2">
+                  <label>{{ f["currency"].value }}</label>
+              </div> -->
+                    </div>
+                    <div class="d-flex">
+                        <span class="input-group-text combine-INR text-secondary">
+                            {{ f["currency"].value }}
+                            <div class="vr ms-3"></div>
+                        </span>
+                        <input
+                            class="form-control border-start-0 ps-0"
+                            type="number"
+                            formControlName="netPIValue"
+                            readonly
+                        />
+                    </div>
+                </div>
+            </div>
+            <div class="col-4 pe-0">
+                <div class="d-flex justify-content-center">
+                    <div class="col-form-label text-nowrap pe-1 pt-1">
+                        Remarks <span class="ms-1 me-2">&#9654;</span>
+                    </div>
+                    <input class="form-control" type="text" formControlName="remarks" />
+                </div>
+            </div>
+            <!-- <div *ngIf="action == 'reject'" class="col-6">
+                <div class="d-flex justify-content-start align-items-start">
+                    <div class="col-form-label text-nowrap">Rejection Remarks</div>
+                    <input class="form-control mx-2" type="text" formControlName="remarks" />
+                </div>
+            </div> -->
+            <div class="col-5 ps-0 d-flex justify-content-end">
+                <div *ngIf="['create', 'edit'].includes(action)" class="d-grid gap-2 d-md-block">
+                    <button type="button" class="btn btn-primary px-5 me-3" (click)="reset()">Reset</button>
+                    <button
+                        type="button"
+                        class="btn btn-primary me-1"
+                        [disabled]="!isESCPreview"
+                        (click)="ESCPreview()"
+                    >
+                        Esc
+                    </button>
+                    <button type="button" class="btn btn-primary px-4 me-3" (click)="preview()">Preview</button>
+                    <button class="btn btn-primary px-5" type="button" [disabled]="!isPreview" (click)="submit()">
+                        Save
+                    </button>
+                </div>
+
+                <div *ngIf="action == 'reject'" class="col-5 text-end">
+                    <button type="button" class="btn btn-primary px-5" (click)="submit()">Reject</button>
+                </div>
+
+                <div *ngIf="action == 'approve'" class="col-5 d-flex justify-content-end">
+                    <button type="button" class="btn btn-primary px-5" (click)="submit()">Approve</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</Form>

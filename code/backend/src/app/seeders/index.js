@@ -1,0 +1,37 @@
+const {subModuleInsert} = require("./subModule.seeder");
+const {roleInsert} = require("./role.seeder");
+const {menuItemInsert} = require("./menuItem.seeder");
+const {appParameterInsert, deleteManyAppParameter} = require("./appParameter.seeder");
+const {attributesConfigurationInsert} = require("./attributesConfiguration.seeder");
+const {labelMasterInsert} = require("./labelMaster.seeder");
+const {purchaseSACInsert} = require("./purchaseSAC.seeder");
+const {mailConfigInsert} = require("./mailConfig.seeder");
+const {operatingExpensesInsert} = require("./operatingExpenses.seeder");
+const {companyInsert, superAdminUserInsert} = require("./superadminUser.seeder");
+const {permissionForSuperAdmin} = require("../controllers/v1/settings/subModulePermissions/subModulePermissions");
+const {triggers} = require("../middleware/cronJobs");
+const {updateBalanceJCCQtyOfSO} = require("../controllers/v1/sales/salesOrder/salesOrder");
+const {UOMUnitMasterInert} = require("./UOMUnitMasters.seeder");
+const {updateManyUOMUnit} = require("./updateUOM.seeder");
+const {processMasterInsert} = require("./processMaster.seeder");
+
+exports.mainDataInsertFn = async () => {
+    // await updateManyUOMUnit();
+    // await updateBalanceJCCQtyOfSO();
+    let companyId = await companyInsert();
+    // await processMasterInsert(companyId);
+    triggers();
+    await roleInsert(companyId);
+    await superAdminUserInsert(companyId);
+    await subModuleInsert();
+    await menuItemInsert(companyId);
+    await appParameterInsert(companyId);
+    await attributesConfigurationInsert();
+    await labelMasterInsert(companyId);
+    await purchaseSACInsert(companyId);
+    await mailConfigInsert(companyId);
+    await operatingExpensesInsert(companyId);
+    await permissionForSuperAdmin(companyId);
+    await deleteManyAppParameter();
+    await UOMUnitMasterInert(companyId);
+};

@@ -1,0 +1,131 @@
+<div class="row justify-content-center form-page" #elementToPrint>
+  <div class="col-md-11 card-form mb-4">
+    <div class="row form-header">
+      <div class="col heading ms-2">
+        <label class="">Cost Estimate Calculator</label>
+      </div>
+    </div>
+    <div class="form-body px-4 py-2">
+      <div class="row mx-0">
+        <div class="col-3 pe-3 ps-0">
+          <label class="form-label mb-2"> Select D-SKU</label>
+          <ng-select
+            [items]="masterData.DSKUOptions"
+            bindLabel="dSKUNo"
+            bindValue="_id"
+            [(ngModel)]="skuId"
+            [clearable]="false"
+            (change)="getAllSOConfirmationById($event)"
+          >
+          </ng-select>
+        </div>
+
+        <div class="col-3 px-3">
+          <label class="form-label mb-2">
+            Select {{ "D-SKU Name" | labelTranslate }}</label
+          >
+          <ng-select
+            [items]="masterData.DSKUOptions"
+            bindLabel="SKUName"
+            bindValue="_id"
+            [clearable]="false"
+            [(ngModel)]="skuId"
+            (change)="getAllSOConfirmationById($event)"
+          >
+          </ng-select>
+        </div>
+
+        <div class="col-3 mt-1 px-3">
+          <label class="form-label mb-2">
+            {{ "D-SKU Description" | labelTranslate }}
+            <span class="text-danger">*</span>
+          </label>
+          <input
+            class="form-control"
+            type="text"
+            [(ngModel)]="SKUDescription"
+            readonly
+          />
+        </div>
+        <div class="col-3 d-flex align-items-end pe-0">
+          <button
+            class="btn btn-primary px-5 me-5"
+            type="button"
+            (click)="reset()"
+          >
+            Reset
+          </button>
+          <button
+            class="btn btn-primary px-5"
+            type="button"
+            (click)="printElement()"
+            [disabled]="masterData.costSheetList.length == 0"
+          >
+            Export
+          </button>
+        </div>
+      </div>
+      <ng-container *ngIf="masterData.costSheetList.length">
+        <hr class="line-border" />
+        <div class="table-responsive text-wrap">
+          <table class="table table-bordered table-sm">
+            <thead class="bg-primary">
+              <tr class="text-white">
+                <th sortable="seq" (sort)="onSort($event)">SN</th>
+                <th sortable="specificationCode" (sort)="onSort($event)">
+                  Cost Type
+                </th>
+                <th
+                  sortable="characteristic"
+                  (sort)="onSort($event)"
+                  class="text-start"
+                >
+                  Cost Element/Particulars
+                </th>
+                <th sortable="UOM" (sort)="onSort($event)">D-SKU Unit</th>
+                <th sortable="testStandard" (sort)="onSort($event)">
+                  Cost INR/D-SKU Unit
+                </th>
+                <th sortable="measuringInstrument" (sort)="onSort($event)">
+                  %
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr
+                *ngFor="
+                  let u of masterData.costSheetList
+                    | searchFi1ter : search
+                    | slice
+                      : (page - 1) * pageSize
+                      : (page - 1) * pageSize + pageSize;
+                  let i = index
+                "
+              >
+                <td>
+                  {{ i + 1 }}
+                </td>
+                <td>{{ u?.componentType }}</td>
+                <td class="text-start">{{ u?.costElement }}</td>
+                <td>{{ u?.SKUUnit }}</td>
+                <td>
+                  <div class="d-flex justify-content-center">
+                    <input
+                      type="number"
+                      class="form-control form-control-cs w-25"
+                      [(ngModel)]="u.costPerSKUUnit"
+                      [ngModelOptions]="{ standalone: true }"
+                      (input)="change()"
+                      [readonly]="[4, 8, 9].includes(i)"
+                    />
+                  </div>
+                </td>
+                <td>{{ u?.percentage }}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </ng-container>
+    </div>
+  </div>
+</div>

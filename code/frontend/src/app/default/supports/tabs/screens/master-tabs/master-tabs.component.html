@@ -1,0 +1,16 @@
+<div class="container-fluid tabs-card-page">
+  <div class="row row-cols-1 row-cols-md-3">
+    <div class="col d-flex justify-content-center" *ngFor="let t of cards">
+      <div
+        class="card masterCard"
+        [ngClass]="t.disabled ? 'disabled' : ''"
+        [routerLink]="t.url"
+        routerLinkActive="true"
+      >
+        <div class="card-body d-flex align-content-center">
+          <h5 class="card-title align-self-center">{{ t.title }}</h5>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

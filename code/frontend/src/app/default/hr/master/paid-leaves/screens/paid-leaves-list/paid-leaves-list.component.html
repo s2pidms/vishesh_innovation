@@ -1,0 +1,71 @@
+<div class="listCard card">
+    <div class="table-header">
+        <label class="heading">Paid Leaves Summary</label>
+    </div>
+
+    <div appAccessControl [accessType]="rolePermissionActions.createAction" class="text-center">
+        <button class="plusIconSvg btn btn-primary me-1"></button>
+        <button
+            class="btn btn-primary btn-add px-5"
+            type="button"
+            (click)="navigateTo('/default/HR/master/paid_leaves/pl-form', null, 'create')"
+        >
+            Paid Leaves
+        </button>
+    </div>
+    <hr class="line-border" />
+    <div class="table-responsive">
+        <app-setting-header [data]="{page,pageSize,collection,search,type: 'list'}" (dataChange)="eventHeader($event)">
+        </app-setting-header>
+
+        <table class="table table-bordered">
+            <thead class="bg-primary">
+                <tr class="text-white">
+                    <th sortable="calendarYear" (sort)="onSort($event)">Calendar Year</th>
+                    <th sortable="empCode" (sort)="onSort($event)">Employee Code</th>
+                    <th class="text-start" sortable="empFullName" (sort)="onSort($event)">Employee Name</th>
+                    <th sortable="casualLeaveCL" (sort)="onSort($event)">Paid Leaves</th>
+                    <th sortable="sickLeaveSL" (sort)="onSort($event)">Compensatory Off [C/Off]</th>
+                    <th sortable="privilegeLeavePL" (sort)="onSort($event)">Advance Leaves</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                <tr *ngFor="let u of tableData; trackBy: trackByFn">
+                    <td>{{ u?.calendarYear }}</td>
+                    <td>{{ u?.empCode }}</td>
+                    <td class="text-start">{{ u?.empFullName }}</td>
+                    <td>{{ u?.casualLeaveCL }}</td>
+                    <td>{{ u?.privilegeLeavePL }}</td>
+                    <td>{{ u?.sickLeaveSL }}</td>
+                    <td>
+                        <div class="dropdown">
+                            <button class="dropbtn"></button>
+                            <div class="dropdown-content">
+                                <a
+                                    appAccessControl
+                                    [accessType]="rolePermissionActions.viewAction"
+                                    href="javascript:void(0)"
+                                    (click)="navigateTo('/default/HR/master/paid_leaves/pl-form', u?._id, 'view')"
+                                >
+                                    <i class="fa fa-eye fa-lg me-2 text-primary" aria-hidden="true"></i>
+                                    View
+                                </a>
+                                <a
+                                    appAccessControl
+                                    [accessType]="rolePermissionActions.editAction"
+                                    href="javascript:void(0)"
+                                    (click)="navigateTo('/default/HR/master/paid_leaves/pl-form', u?._id, 'edit')"
+                                >
+                                    <i class="fa fa-pencil-square-o fa-lg me-2 text-primary" aria-hidden="true"></i>
+                                    Edit
+                                </a>
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>

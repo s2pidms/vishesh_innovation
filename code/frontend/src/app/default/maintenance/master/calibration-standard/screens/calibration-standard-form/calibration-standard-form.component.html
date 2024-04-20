@@ -1,0 +1,124 @@
+<Form [formGroup]="form" class="formCard card">
+    <div class="container">
+        <div class="row form-header">
+            <div class="col heading">
+                <label>{{ this.action | titlecase }} Calibration Standard</label>
+            </div>
+        </div>
+        <div class="form-body">
+            <div class="row">
+                <div class="col-md-3">
+                    <label class="form-label"> Standard Code <span class="text-danger"></span> </label>
+                    <input class="form-control" type="text" formControlName="standardCode" readonly />
+                </div>
+                <div class="col-md-3">
+                    <label class="form-label"> Standard Name <span class="text-danger"></span> </label>
+                    <input class="form-control" type="text" formControlName="standardName" />
+                </div>
+                <div class="col-md-3">
+                    <label class="form-label"> Standard Type<span class="text-danger"></span> </label>
+                    <select class="form-select" formControlName="standardType">
+                        <option [value]="''" selected disabled>Select Standard Type</option>
+                        <option [value]="item.value" *ngFor="let item of masterData?.standardTypeOptions">
+                            {{ item.label }}
+                        </option>
+                    </select>
+                </div>
+                <div class="col-md-3">
+                    <label class="form-label">
+                        Measurement Range
+                        <span class="text-danger"></span>
+                    </label>
+
+                    <input class="form-control" type="text" formControlName="measurementRange" />
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-3">
+                    <label class="form-label">
+                        Calibration Method
+                        <span class="text-danger"></span>
+                    </label>
+
+                    <input class="form-control" type="text" formControlName="calibrationMethod" />
+                </div>
+                <div class="col-md-3">
+                    <label class="form-label">
+                        Calibration Interval
+                        <span class="text-danger"></span>
+                    </label>
+                    <input class="form-control" type="text" formControlName="calibrationInterval" />
+                </div>
+                <div class="col-md-3">
+                    <label class="form-label">
+                        Calibration Agency
+                        <span class="text-danger"></span>
+                    </label>
+                    <select class="form-select" formControlName="calibrationAgency">
+                        <option [value]="''" selected disabled>Select Calibration Agency</option>
+                        <option [value]="item.parameterName" *ngFor="let item of masterData?.calibrationAgencyOptions">
+                            {{ item.parameterLabel }}
+                        </option>
+                    </select>
+                </div>
+                <div class="col-md-3">
+                    <label class="form-label">
+                        Traceability
+                        <span class="text-danger"></span>
+                    </label>
+
+                    <input class="form-control" type="text" formControlName="traceability" />
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-3">
+                    <label class="form-label">
+                        Standard Location
+                        <span class="text-danger"></span>
+                    </label>
+                    <select class="form-select" formControlName="standardLocation">
+                        <option [value]="''" selected disabled>Select Location</option>
+                        <option [value]="item.value" *ngFor="let item of masterData?.locationOptions">
+                            {{ item.label }}
+                        </option>
+                    </select>
+                </div>
+                <div class="col-md-3">
+                    <label class="form-label">
+                        Standard Status
+                        <span class="text-danger">*</span>
+                    </label>
+                    <select class="form-select" formControlName="status">
+                        <option [value]="null" selected disabled>Select Standard Status</option>
+                        <option *ngFor="let s of masterData?.standardStatusOptions" [value]="s.value">
+                            {{ s?.label }}
+                        </option>
+                    </select>
+                </div>
+                <div class="col-md-3">
+                    <label class="form-label">
+                        Calibration Cost
+                        <span class="text-danger"></span>
+                    </label>
+                    <input class="form-control" type="number" formControlName="calibrationCost" />
+                </div>
+                <div class="col-md-3">
+                    <label class="form-label">
+                        Last Calibration Date
+                        <span class="text-danger"></span>
+                    </label>
+                    <input class="form-control" type="date" formControlName="lastCalibrationDate" />
+                </div>
+            </div>
+        </div>
+        <hr *ngIf="action !== 'view'" class="row line-border" />
+        <div *ngIf="action !== 'view'" class="d-flex justify-content-center mb-3">
+            <div class="d-grid col-md-1 me-5" [ngClass]="{'d-none': action == 'View'}">
+                <button class="btn btn-primary" type="button" (click)="reset()">Reset</button>
+            </div>
+            <div class="d-grid col-md-1" [ngClass]="{'d-none': action == 'View'}">
+                <button class="btn btn-primary" type="button" (click)="submit()">Save</button>
+            </div>
+        </div>
+    </div>
+</Form>

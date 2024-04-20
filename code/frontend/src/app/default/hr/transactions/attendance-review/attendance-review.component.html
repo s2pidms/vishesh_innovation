@@ -1,0 +1,126 @@
+<!-- <div class="row justify-content-center">
+  <div class="col-md-11"> -->
+<div class="listCard card mb-4">
+    <div class="table-header">
+        <label class="heading">Attendance Review</label>
+    </div>
+    <div class="row justify-content-center mt-4 ">
+        <div class="col-4">
+            <div class="row">
+                <div class="col-6 mt-1 pe-1">
+                    <label class="form-label text-nowrap"
+                        >Attendance for Month'Year<span class="text-danger"></span
+                    ></label>
+                </div>
+                <div class="col-1 ps-3 pe-0">
+                    <i class="fa fa-caret-right mt-1 text-secondary"></i>
+                </div>
+                <div class="col-5 ps-0">
+                    <select [(ngModel)]="attendanceForMonthYear" class="form-select" (change)="getAllData()">
+                        <option [value]="null" disabled>Select Month</option>
+                        <option [value]="item.value" *ngFor="let item of monthOptions">
+                            {{ item.value | date : "MMMM YYYY" }}
+                        </option>
+                    </select>
+                </div>
+            </div>
+            <!-- <div class="">
+                <label class="text-center mb-2 form-label">Attendance for Month'Year</label>
+                <select [(ngModel)]="attendanceForMonthYear" class="form-select" (change)="getAllData()">
+                    <option [value]="null" disabled>Select Month</option>
+                    <option [value]="item.value" *ngFor="let item of monthOptions">
+                        {{ item.value | date : "MMMM YYYY" }}
+                    </option>
+                </select>
+            </div> -->
+        </div>
+    </div>
+    <hr class="row mt-3 line-border" />
+    <div class="table-responsive" style="min-height: 33rem">
+        <app-setting-header [data]="{page,pageSize,collection,search}" (dataChange)="eventHeader($event)">
+        </app-setting-header>
+        <table class="table table-bordered table-sticky">
+            <thead class="bg-primary">
+                <tr class="text-white">
+                    <th sortable="employeeCode" (sort)="onSort($event)">Employee Code</th>
+                    <th class="text-start" sortable="employeeName" (sort)="onSort($event)">Employee Name</th>
+                    <th sortable="monthDays" (sort)="onSort($event)">Month Days</th>
+                    <th sortable="weeklyOff" (sort)="onSort($event)">Weekly Off</th>
+                    <th sortable="paidHolidays" (sort)="onSort($event)">Paid Holidays</th>
+                    <th sortable="paidLeaves" (sort)="onSort($event)">Paid Leaves</th>
+                    <th sortable="ODDays" (sort)="onSort($event)">OD Days</th>
+                    <th sortable="presentDays" (sort)="onSort($event)">Present Days</th>
+                    <th sortable="LOPDiff" (sort)="onSort($event)">LOP/Diff</th>
+                    <th sortable="isActive" (sort)="onSort($event)">Status</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr
+                    *ngFor="
+                        let u of tableData
+                            | searchFi1ter : search
+                            | slice : (page - 1) * pageSize : (page - 1) * pageSize + pageSize;
+                        trackBy: trackByFn
+                    "
+                >
+                    <td>{{ u?.employeeCode }}</td>
+                    <td class="text-start">{{ u?.employeeName }}</td>
+                    <td>{{ u?.monthDays }}</td>
+                    <td>{{ u?.weeklyOff }}</td>
+                    <td>{{ u?.paidHolidays }}</td>
+                    <td>
+                        <span *ngIf="u.status && !(u.status == 'Draft' && u._id == flag)">{{ u.paidLeaves }}</span>
+                        <input
+                            *ngIf="!u.status || (u.status == 'Draft' && u._id == flag)"
+                            class="form-control form-control-sm w-25"
+                            type="number"
+                            [(ngModel)]="u.paidLeaves"
+                            (input)="setLOP(u._id, u)"
+                        />
+                    </td>
+                    <td>{{ u?.ODDays }}</td>
+                    <td>
+                        <span *ngIf="u.status && !(u.status == 'Draft' && u._id == flag)">{{ u.presentDays }}</span>
+                        <input
+                            *ngIf="!u.status || (u.status == 'Draft' && u._id == flag)"
+                            class="form-control form-control-sm w-25"
+                            type="number"
+                            [(ngModel)]="u.presentDays"
+                            (input)="setLOP(u._id, u)"
+                        />
+                    </td>
+                    <td>{{ u?.LOPDiff }}</td>
+                    <td>{{ u?.status }}</td>
+                    <td>
+                        <div class="dropdown">
+                            <button class="dropbtn"></button>
+                            <div class="dropdown-content">
+                                <a
+                                    appAccessControl
+                                    [accessType]="rolePermissionActions.editAction"
+                                    href="javascript:void(0)"
+                                    (click)="flag = u._id"
+                                >
+                                    <i class="fa fa-pencil-square-o fa-lg me-2 text-primary" aria-hidden="true"></i>
+                                    Edit
+                                </a>
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <hr class="line-border" />
+    <div appAccessControl [accessType]="rolePermissionActions.createAction" class="text-center mt-3">
+        <button type="button" class="btn bg-primary px-5 mx-2" (click)="reset()">Reset</button>
+        <button class="btn bg-primary px-5 mx-2" type="button" [disabled]="btnFlag" (click)="create('Draft')">
+            Save
+        </button>
+        <button type="button" class="btn bg-primary px-5 mx-2" [disabled]="btnFlag" (click)="create('Approved')">
+            Approve
+        </button>
+    </div>
+</div>
+<!-- </div> -->

@@ -1,0 +1,68 @@
+<div class="listCard card">
+    <div class="table-header">
+        <label class="heading">Task Summary</label>
+    </div>
+
+    <div appAccessControl [accessType]="rolePermissionActions.createAction" class="text-center">
+        <button class="btn btn-primary btn-add" type="button" (click)="navigateTo('../form', {}, 'create')">
+            <i class="fa fa-plus-square fa-lg me-2" aria-hidden="true"></i>
+            Task Master
+        </button>
+    </div>
+    <hr class="line-border" />
+    <div class="table-responsive">
+        <app-setting-header [data]="{page,pageSize,collection,search,type: 'list'}" (dataChange)="eventHeader($event)">
+        </app-setting-header>
+
+        <table class="table table-bordered">
+            <thead class="bg-secondary">
+                <tr class="text-white">
+                    <th sortable="taskCode" (sort)="onSort($event)">Task Code</th>
+                    <th class="text-start" sortable="taskName" (sort)="onSort($event)">Task Name</th>
+                    <th class="text-start" sortable="taskDescription" (sort)="onSort($event)">Task Description</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let u of tableData; trackBy: trackByFn">
+                    <td>{{ u?.taskCode }}</td>
+                    <td class="text-start" [style.width]="taskName.clientWidth" #taskName>
+                        <span class="pointer" [ngbTooltip]="u.taskName" [positionTarget]="taskName">
+                            {{ u.taskName }}
+                        </span>
+                    </td>
+                    <td class="text-start" [style.width]="taskDescription.clientWidth" #taskDescription>
+                        <span class="pointer" [ngbTooltip]="u.taskDescription" [positionTarget]="taskDescription">
+                            {{ u.taskDescription }}
+                        </span>
+                    </td>
+                    <td>
+                        <div class="dropdown">
+                            <button class="dropbtn"></button>
+                            <div class="dropdown-content">
+                                <a
+                                    appAccessControl
+                                    [accessType]="rolePermissionActions.viewAction"
+                                    href="javascript:void(0)"
+                                    (click)="navigateTo('../form', u, 'view')"
+                                >
+                                    <i class="fa fa-eye fa-lg me-2 text-primary" aria-hidden="true"></i>
+                                    View
+                                </a>
+                                <a
+                                    appAccessControl
+                                    [accessType]="rolePermissionActions.editAction"
+                                    href="javascript:void(0)"
+                                    (click)="navigateTo('../form', u, 'edit')"
+                                >
+                                    <i class="fa fa-pencil-square-o fa-lg me-2 text-primary" aria-hidden="true"></i>
+                                    Edit
+                                </a>
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>

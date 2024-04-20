@@ -1,0 +1,91 @@
+<div class="reportTablePage">
+    <div class="table-body pb-0 shadow-none">
+        <div class="row table-header">
+            <div class="col">
+                <label class="heading">GRN Discrepancy Report</label>
+            </div>
+        </div>
+        <div class="row my-4">
+            <div class="col-3 ps-5 separate-row">
+                <label class="form-label">Supplier<span class="text-danger">*</span> </label>
+
+                <ng-select
+                    [items]="supplierOptions"
+                    bindLabel="supplierName"
+                    bindValue="_id"
+                    [clearable]="false"
+                    [(ngModel)]="supplier"
+                >
+                </ng-select>
+                <span class="set-position">
+                    <img src="./assets/new_icons/redstroke.svg" alt="" height="27" width="8" />
+                </span>
+            </div>
+
+            <div class="col">
+                <label class="form-label">From Date<span class="text-danger">*</span> </label>
+                <input class="form-control" type="date" [(ngModel)]="fromDate" />
+            </div>
+            <div class="col">
+                <label class="form-label">To Date<span class="text-danger">*</span> </label>
+                <input class="form-control" type="date" [(ngModel)]="toDate" />
+            </div>
+
+            <div class="col-3 align-self-end separate-image">
+                <span class="image-position">
+                    <img src="./assets/new_icons/redstroke.svg" alt="" height="27" width="8" />
+                </span>
+
+                <button type="button" class="btn btn-primary px-4 me-3" (click)="getAll()">Apply Filter</button>
+
+                <button type="button" class="btn btn-primary px-4 ms-4" (click)="reset()">Reset Filter</button>
+            </div>
+        </div>
+
+        <hr class="row line-border" />
+        <div class="table-responsive mb-0">
+            <app-setting-header
+                [data]="{page,pageSize,collection,search,type: 'list',pdfDisplay:true}"
+                (dataChange)="eventHeader($event)"
+            >
+            </app-setting-header>
+            <table class="table table-bordered">
+                <thead class="bg-primary">
+                    <tr class="text-white">
+                        <th sortable="GRNNumber" (sort)="onSort($event)">GRN #</th>
+                        <th sortable="GRNDateS" (sort)="onSort($event)">GRN Date</th>
+                        <th class="text-start" sortable="supplierName" (sort)="onSort($event)">Supplier</th>
+                        <th sortable="PONumber" (sort)="onSort($event)">PO #</th>
+                        <th sortable="itemCode" (sort)="onSort($event)">Item Code</th>
+
+                        <th class="text-start" sortable="itemDescription" (sort)="onSort($event)">Item Description</th>
+                        <th sortable="POQty" (sort)="onSort($event)">PO Qty</th>
+                        <th sortable="GRNDetails.GRNQty" (sort)="onSort($event)">Received Qty</th>
+                        <th sortable="discrepancy" (sort)="onSort($event)">Discrepancy</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let u of tableData">
+                        <td>{{ u?.GRNNumber }}</td>
+                        <td>{{ u?.GRNDateS }}</td>
+                        <td class="text-start" [style.width]="supplierName.clientWidth" #supplierName>
+                            <span class="pointer" [positionTarget]="supplierName" [ngbTooltip]="u.supplierName">
+                                {{ u?.supplierName }}
+                            </span>
+                        </td>
+                        <td>{{ u?.PONumber }}</td>
+                        <td>{{ u?.itemCode }}</td>
+                        <td class="text-start" [style.width]="itemDescription.clientWidth" #itemDescription>
+                            <span class="pointer" [positionTarget]="itemDescription" [ngbTooltip]="u.itemDescription">
+                                {{ u?.itemDescription }}
+                            </span>
+                        </td>
+                        <td>{{ u?.POQty }}</td>
+                        <td>{{ u?.GRNQty }}</td>
+                        <td>{{ u?.discrepancy }}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

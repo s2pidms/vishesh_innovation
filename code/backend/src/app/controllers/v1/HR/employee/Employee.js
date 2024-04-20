@@ -1,0 +1,694 @@
+const fs = require("fs");
+const Model = require("../../../../models/HR/employeeModel");
+const EmployeeRepository = require("../../../../models/HR/repository/employeeRepository");
+const userModel = require("../../../../models/settings/userModel");
+const roleModel = require("../../../../models/settings/roleModel");
+const AutoIncrement = require("../../../../models/settings/autoIncrementModel");
+const MESSAGES = require("../../../../helpers/messages.options");
+const path = require("path");
+const {USER_MODULE_PREFIX} = require("../../../../helpers/moduleConstants");
+const {getAutoIncrementNumber} = require("../../../../helpers/utility");
+const {readExcel} = require("../../../../middleware/readExcel");
+const {generateCreateData} = require("../../../../helpers/global.options");
+const {findAppParameterValue} = require("../../settings/appParameter/appParameter");
+const {CONSTANTS} = require("../../../../../config/config");
+const {default: mongoose} = require("mongoose");
+const column = require("../../../../mocks/excelUploadColumn/employeeKeys.json");
+const {dateToAnyFormat, getEndDateTime, getStartDateTime} = require("../../../../helpers/dateTime");
+const {
+    getAllEmployeeAttributes,
+    getAllEmployeeExcelAttributes,
+    getAllEmployeeExitReportAttributes
+} = require("../../../../models/HR/helpers/employeeHelper");
+const {getAllModuleMaster} = require("../../settings/module-master/module-master");
+const {getAllDepartments} = require("../../settings/department/department");
+const {getAndSetAutoIncrementNo} = require("../../settings/autoIncrement/autoIncrement");
+const {EMPLOYEE} = require("../../../../mocks/schemasConstant/HRConstant");
+const ObjectId = mongoose.Types.ObjectId;
+// @desc    getAll Employee Record
+exports.getAll = async (req, res) => {
+    try {
+        let project = getAllEmployeeAttributes();
+        if (req.query.excel == "true") {
+            project = getAllEmployeeExcelAttributes();
+        }
+        let pipeline = [
+            {
+                $match: {empStatus: {$ne: "I"}, company: ObjectId(req.user.company)}
+            },
+            {
+                $addFields: {
+                    empDOBS: {$dateToString: {format: "%d-%m-%Y", date: "$empDOB"}},
+                    empJoiningDateS: {$dateToString: {format: "%d-%m-%Y", date: "$repayEndMonthYear"}}
+                }
+            },
+            {
+                $lookup: {
+                    from: "Employee",
+                    localField: "empReportTo",
+                    foreignField: "_id",
+                    pipeline: [{$project: {empFullName: 1}}],
+                    as: "empReportTo"
+                }
+            },
+            {
+                $unwind: {path: "$empReportTo", preserveNullAndEmptyArrays: true}
+            }
+        ];
+        let rows = await EmployeeRepository.getAllPaginate({pipeline, project, queryParams: req.query});
+        return res.success(rows);
+    } catch (e) {
+        console.error("getAll Employee", e);
+        const errors = MESSAGES.apiErrorStrings.SERVER_ERROR;
+        return res.serverError(errors);
+    }
+};
+
+// @desc    create Employee new Record
+exports.create = async (req, res) => {
+    try {
+        const {empCode} = req.body;
+        const userExists = await userModel.findOne({email: empCode, company: req.user.company});
+        const employeeExists = await Model.findOne({
+            empCode,
+            company: req.user.company
+        });
+        if (userExists || employeeExists) {
+            if (
+                req.files["empPhoto"] &&
+                req.files["empPhoto"].length > 0 &&
+                fs.existsSync(req.files["empPhoto"][0].path)
+            ) {
+                fs.unlinkSync(req.files["empPhoto"][0].path);
+            }
+            if (
+                req.files["empResume"] &&
+                req.files["empResume"].length > 0 &&
+                fs.existsSync(req.files["empResume"][0].path)
+            ) {
+                fs.unlinkSync(req.files["empResume"][0].path);
+            }
+            if (
+                req.files["empAadharCard"] &&
+                req.files["empAadharCard"].length > 0 &&
+                fs.existsSync(req.files["empAadharCard"][0].path)
+            ) {
+                fs.unlinkSync(req.files["empAadharCard"][0].path);
+            }
+            if (
+                req.files["empPanCard"] &&
+                req.files["empPanCard"].length > 0 &&
+                fs.existsSync(req.files["empPanCard"][0].path)
+            ) {
+                fs.unlinkSync(req.files["empPanCard"][0].path);
+            }
+            if (
+                req.files["empExpCertificate"] &&
+                req.files["empExpCertificate"].length > 0 &&
+                fs.existsSync(req.files["empExpCertificate"][0].path)
+            ) {
+                fs.unlinkSync(req.files["empExpCertificate"][0].path);
+            }
+            if (
+                req.files["empRelievingLetter"] &&
+                req.files["empRelievingLetter"].length > 0 &&
+                fs.existsSync(req.files["empRelievingLetter"][0].path)
+            ) {
+                fs.unlinkSync(req.files["empRelievingLetter"][0].path);
+            }
+            let errors = MESSAGES.apiErrorStrings.Data_EXISTS("Employee");
+            return res.preconditionFailed(errors);
+        }
+        let createdObj = {
+            company: req.user.company,
+            createdBy: req.user.sub,
+            updatedBy: req.user.sub,
+            ...req.body
+        };
+        if (createdObj.empPermanentAddress) {
+            createdObj.empPermanentAddress = JSON.parse(createdObj.empPermanentAddress);
+        }
+        if (createdObj.empPresentAddress) {
+            createdObj.empPresentAddress = JSON.parse(createdObj.empPresentAddress);
+        }
+        if (req.files) {
+            if (req.files["empPhoto"] && req.files["empPhoto"].length > 0) {
+                createdObj["empPhoto"] = req.files["empPhoto"][0].filename;
+            }
+            if (req.files["empResume"] && req.files["empResume"].length > 0) {
+                createdObj["empResume"] = req.files["empResume"][0].filename;
+            }
+            if (req.files["empAadharCard"] && req.files["empAadharCard"].length > 0) {
+                createdObj["empAadharCard"] = req.files["empAadharCard"][0].filename;
+            }
+            if (req.files["empPanCard"] && req.files["empPanCard"].length > 0) {
+                createdObj["empPanCard"] = req.files["empPanCard"][0].filename;
+            }
+            if (req.files["empExpCertificate"] && req.files["empExpCertificate"].length > 0) {
+                createdObj["empExpCertificate"] = req.files["empExpCertificate"][0].filename;
+            }
+            if (req.files["empRelievingLetter"] && req.files["empRelievingLetter"].length > 0) {
+                createdObj["empRelievingLetter"] = req.files["empRelievingLetter"][0].filename;
+            }
+        }
+        if (createdObj.isLogin == "true") {
+            let role = await roleModel.findOne({roleName: "Employee"});
+            let user = {
+                company: req.user.company,
+                createdBy: req.user.sub,
+                updatedBy: req.user.sub,
+                role: [role._id],
+                userCode: "U00001",
+                name: `${createdObj.empFirstName} ${createdObj.empLastName}`,
+                email: empCode,
+                password: CONSTANTS.employeePassword,
+                isActive: true
+            };
+            const createUser = await userModel.create(user);
+            if (createUser) {
+                createdObj.userId = createUser._id;
+            }
+        }
+        createdObj.empFullName = createdObj.empFirstName + " " + createdObj.empLastName;
+        const saveObj = new Model(createdObj);
+        const itemDetails = await saveObj.save();
+        if (itemDetails) {
+            return res.success({
+                message: MESSAGES.apiSuccessStrings.ADDED("Employee")
+            });
+        } else {
+            const errors = MESSAGES.apiErrorStrings.INVALID_REQUEST;
+            return res.serverError(errors);
+        }
+    } catch (e) {
+        console.error("create Employee", e);
+        const errors = MESSAGES.apiErrorStrings.SERVER_ERROR;
+        return res.serverError(errors);
+    }
+};
+// @desc    update Employee  Record
+exports.update = async (req, res) => {
+    try {
+        const {empCode} = req.body;
+        let employee = await Model.findById(req.params.id);
+        if (!employee) {
+            if (
+                req.files["empPhoto"] &&
+                req.files["empPhoto"].length > 0 &&
+                fs.existsSync(req.files["empPhoto"][0].path)
+            ) {
+                fs.unlinkSync(req.files["empPhoto"][0].path);
+            }
+            if (
+                req.files["empResume"] &&
+                req.files["empResume"].length > 0 &&
+                fs.existsSync(req.files["empResume"][0].path)
+            ) {
+                fs.unlinkSync(req.files["empResume"][0].path);
+            }
+            if (
+                req.files["empAadharCard"] &&
+                req.files["empAadharCard"].length > 0 &&
+                fs.existsSync(req.files["empAadharCard"][0].path)
+            ) {
+                fs.unlinkSync(req.files["empAadharCard"][0].path);
+            }
+            if (
+                req.files["empPanCard"] &&
+                req.files["empPanCard"].length > 0 &&
+                fs.existsSync(req.files["empPanCard"][0].path)
+            ) {
+                fs.unlinkSync(req.files["empPanCard"][0].path);
+            }
+            if (
+                req.files["empExpCertificate"] &&
+                req.files["empExpCertificate"].length > 0 &&
+                fs.existsSync(req.files["empExpCertificate"][0].path)
+            ) {
+                fs.unlinkSync(req.files["empExpCertificate"][0].path);
+            }
+            if (
+                req.files["empRelievingLetter"] &&
+                req.files["empRelievingLetter"].length > 0 &&
+                fs.existsSync(req.files["empRelievingLetter"][0].path)
+            ) {
+                fs.unlinkSync(req.files["empRelievingLetter"][0].path);
+            }
+            const errors = MESSAGES.apiErrorStrings.INVALID_REQUEST;
+            return res.preconditionFailed(errors);
+        }
+        employee.updatedBy = req.user.sub;
+
+        employee.company = employee.company;
+
+        if (req.body.empPermanentAddress) {
+            req.body.empPermanentAddress = JSON.parse(req.body.empPermanentAddress);
+        }
+        if (req.body.empPresentAddress) {
+            req.body.empPresentAddress = JSON.parse(req.body.empPresentAddress);
+        }
+
+        employee = await generateCreateData(employee, req.body);
+        let createUser = await userModel.findOne({email: empCode, company: req.user.company});
+
+        if (employee.isLogin) {
+            if (!createUser) {
+                let role = await roleModel.findOne({roleName: "Employee"});
+                const autoIncrementedNo = await AutoIncrement.getNextId("User", USER_MODULE_PREFIX, req.user.company);
+                let user = new userModel({
+                    company: req.user.company,
+                    createdBy: req.user.sub,
+                    updatedBy: req.user.sub,
+                    role: [role._id],
+                    userCode: getAutoIncrementNumber(USER_MODULE_PREFIX.charAt(0), " ", autoIncrementedNo, 4),
+                    name: `${employee.empFirstName} ${employee.empLastName}`,
+                    email: empCode,
+                    password: CONSTANTS.employeePassword,
+                    isActive: true
+                });
+                createUser = await user.save();
+                employee.userId = createUser?._id ?? null;
+            }
+        } else {
+            if (createUser) {
+                if (createUser.isActive) {
+                    await userModel.updateOne(
+                        {_id: createUser._id},
+                        {
+                            $set: {
+                                isActive: false
+                            }
+                        },
+                        {new: true, useFindAndModify: false}
+                    );
+                }
+            }
+        }
+
+        if (employee) {
+            employee.userId = createUser?._id ?? null;
+            if (req.files) {
+                if (req.files["empPhoto"] && req.files["empPhoto"].length > 0) {
+                    if (employee.empPhoto) {
+                        let destination = path.join(__dirname, `/../../../../../assets/employee/${employee.empPhoto}`);
+                        if (fs.existsSync(destination)) {
+                            fs.unlinkSync(destination);
+                        }
+                    }
+                    employee["empPhoto"] = req.files["empPhoto"][0].filename;
+                }
+                if (req.files["empResume"] && req.files["empResume"].length > 0) {
+                    if (employee.empResume) {
+                        let destination = path.join(__dirname, `/../../../../../assets/employee/${employee.empResume}`);
+                        if (fs.existsSync(destination)) {
+                            fs.unlinkSync(destination);
+                        }
+                    }
+                    employee["empResume"] = req.files["empResume"][0].filename;
+                }
+                if (req.files["empAadharCard"] && req.files["empAadharCard"].length > 0) {
+                    if (employee.empAadharCard) {
+                        let destination = path.join(
+                            __dirname,
+                            `/../../../../../assets/employee/${employee.empAadharCard}`
+                        );
+                        if (fs.existsSync(destination)) {
+                            fs.unlinkSync(destination);
+                        }
+                    }
+                    employee["empAadharCard"] = req.files["empAadharCard"][0].filename;
+                }
+                if (req.files["empPanCard"] && req.files["empPanCard"].length > 0) {
+                    if (employee.empPanCard) {
+                        let destination = path.join(
+                            __dirname,
+                            `/../../../../../assets/employee/${employee.empPanCard}`
+                        );
+                        if (fs.existsSync(destination)) {
+                            fs.unlinkSync(destination);
+                        }
+                    }
+                    employee["empPanCard"] = req.files["empPanCard"][0].filename;
+                }
+                if (req.files["empExpCertificate"] && req.files["empExpCertificate"].length > 0) {
+                    if (employee.empExpCertificate) {
+                        let destination = path.join(
+                            __dirname,
+                            `/../../../../../assets/employee/${employee.empExpCertificate}`
+                        );
+                        if (fs.existsSync(destination)) {
+                            fs.unlinkSync(destination);
+                        }
+                    }
+                    employee["empExpCertificate"] = req.files["empExpCertificate"][0].filename;
+                }
+                if (req.files["empRelievingLetter"] && req.files["empRelievingLetter"].length > 0) {
+                    if (employee.empRelievingLetter) {
+                        let destination = path.join(
+                            __dirname,
+                            `/../../../../../assets/employee/${employee.empRelievingLetter}`
+                        );
+                        if (fs.existsSync(destination)) {
+                            fs.unlinkSync(destination);
+                        }
+                    }
+                    employee["empRelievingLetter"] = req.files["empRelievingLetter"][0].filename;
+                }
+            }
+
+            employee["empFullName"] = employee["empFirstName"] + " " + employee["empLastName"];
+            await employee.save();
+            return res.success({
+                message: MESSAGES.apiSuccessStrings.UPDATE("Employee has been")
+            });
+        } else {
+            const errors = MESSAGES.apiErrorStrings.INVALID_REQUEST;
+            return res.preconditionFailed(errors);
+        }
+    } catch (e) {
+        console.error("update Employee", e);
+        const errors = MESSAGES.apiErrorStrings.SERVER_ERROR;
+        return res.serverError(errors);
+    }
+};
+// @desc    deleteById Employee Record
+exports.deleteById = async (req, res) => {
+    try {
+        const deleteItem = await Model.findById(req.params.id);
+        if (deleteItem) {
+            await deleteItem.remove();
+            return res.success({
+                message: MESSAGES.apiSuccessStrings.DELETED("Employee")
+            });
+        } else {
+            let errors = MESSAGES.apiSuccessStrings.DATA_NOT_EXISTS("Employee");
+            return res.preconditionFailed(errors);
+        }
+    } catch (e) {
+        console.error("deleteById Employee", e);
+        const errors = MESSAGES.apiErrorStrings.SERVER_ERROR;
+        return res.serverError(errors);
+    }
+};
+// @desc    getAllMasterData Employee Record
+exports.getAllMasterData = async (req, res) => {
+    try {
+        const autoIncrementNo = await getAndSetAutoIncrementNo(EMPLOYEE.AUTO_INCREMENT_DATA(), req.user.company);
+        const empDepartmentsOptions = await getAllDepartments(req.user.company, {departmentName: 1});
+        const empDesignationsOptions = await getAllModuleMaster(req.user.company, "EMP_DESIGN");
+        const empTypesOptions = await getAllModuleMaster(req.user.company, "EMP_TYPE");
+        const empGradesOptions = await getAllModuleMaster(req.user.company, "EMP_GRADE");
+        const empCadresOptions = await getAllModuleMaster(req.user.company, "EMP_CADRE");
+        const joiningLocation = await findAppParameterValue("JOINING_LOCATION", req.user.company);
+        const employeesOptions = await EmployeeRepository.filteredEmployeeList([
+            {$match: {empStatus: "A", company: ObjectId(req.user.company)}},
+            {$sort: {createdAt: 1}},
+            {
+                $project: {
+                    _id: 0,
+                    label: {$concat: ["$empCode", "-", "$empFullName"]},
+                    value: "$_id"
+                }
+            }
+        ]);
+        return res.success({
+            employeesOptions,
+            autoIncrementNo,
+            empDesignationsOptions,
+            empGradesOptions,
+            empTypesOptions,
+            empDepartmentsOptions,
+            empCadresOptions,
+            joiningLocationOptions: joiningLocation.split(",").map(x => {
+                return {
+                    label: x,
+                    value: x
+                };
+            })
+        });
+    } catch (error) {
+        console.error("getAllMasterData Employee", error);
+        const errors = MESSAGES.apiErrorStrings.SERVER_ERROR;
+        return res.serverError(errors);
+    }
+};
+
+exports.getById = async (req, res) => {
+    try {
+        let existing = await Model.findById(req.params.id);
+        if (!existing) {
+            let errors = MESSAGES.apiSuccessStrings.DATA_NOT_EXISTS("Paid Holiday");
+            return res.unprocessableEntity(errors);
+        }
+        return res.success(existing);
+    } catch (e) {
+        console.error("getById Employee", e);
+        const errors = MESSAGES.apiErrorStrings.SERVER_ERROR;
+        return res.serverError(errors);
+    }
+};
+exports.employeeExitReport = async (req, res) => {
+    try {
+        const {fromDate = null, toDate = null} = req.query;
+        let project = getAllEmployeeExitReportAttributes();
+        let query = {
+            company: ObjectId(req.user.company),
+            empStatus: "I",
+            ...(!!toDate &&
+                !!fromDate && {
+                    empDateOfResignation: {
+                        $lte: getEndDateTime(toDate),
+                        $gte: getStartDateTime(fromDate)
+                    }
+                })
+        };
+        let pipeline = [
+            {
+                $match: query
+            },
+            {
+                $addFields: {
+                    empDateOfResignationS: {$dateToString: {format: "%d-%m-%Y", date: "$empDateOfResignation"}},
+                    empJoiningDateS: {$dateToString: {format: "%d-%m-%Y", date: "$empJoiningDate"}}
+                }
+            }
+        ];
+        let rows = await EmployeeRepository.getAllPaginate({
+            pipeline,
+            project,
+            queryParams: req.query
+        });
+        return res.success(rows);
+    } catch (error) {
+        console.error("Error while fetching  Emp exit report ", error);
+        const errors = MESSAGES.apiErrorStrings.SERVER_ERROR;
+        return res.serverError(errors);
+    }
+};
+
+exports.gradeStructure = async (req, res) => {
+    const rows = await Model.aggregate([
+        {
+            $match: {
+                company: ObjectId(req.user.company),
+                empStatus: "A"
+            }
+        },
+        {
+            $group: {
+                _id: "$empGrade",
+                employees: {
+                    $push: {
+                        empFullName: "$$ROOT.empFullName",
+                        empCode: "$$ROOT.empCode"
+                    }
+                }
+            }
+        }
+    ]);
+    const empGrades = await findAppParameterValue("EMP_GRADE", req.user.company);
+    return res.success({
+        rows,
+        grades: empGrades.split(",")
+    });
+};
+exports.employeeDepartmentWiseStructure = async (req, res) => {
+    try {
+        const {employeeId} = req.query;
+        let emp = await Model.findById(employeeId);
+        const rows = await Model.aggregate([
+            {
+                $match: {
+                    $or: [{empDepartment: emp.empDepartment}, {empGrade: "1 - CEO/ED/MD"}],
+                    company: ObjectId(req.user.company),
+                    empStatus: {$in: ["A"]}
+                }
+            },
+            {
+                $group: {
+                    _id: "$empGrade",
+                    employees: {
+                        $push: {
+                            empFullName: "$$ROOT.empFullName",
+                            empCode: "$$ROOT.empCode"
+                        }
+                    }
+                }
+            }
+        ]);
+        const empGrades = await findAppParameterValue("EMP_GRADE", req.user.company);
+        return res.success({
+            rows,
+            grades: empGrades.split(",")
+        });
+    } catch (error) {
+        console.error(error);
+    }
+};
+
+exports.findAllEmployees = async () => {
+    let rows = await Model.aggregate([
+        {$match: {empStatus: "A"}},
+        {
+            $project: {
+                empCode: 1,
+                empFullName: 1,
+                empDesignation: 1,
+                empJoiningDate: 1,
+                empJoiningLocation: 1,
+                empReportTo: 1,
+                empCadre: 1,
+                empGender: 1,
+                empDOB: 1,
+                empEmailCompany: 1,
+                empGrade: 1,
+                empDepartment: 1,
+                empType: 1
+            }
+        },
+        {$sort: {createdAt: +1}}
+    ]);
+    return rows;
+};
+exports.getEmployeeById = async employeeId => {
+    try {
+        const employee = await Model.findOne({_id: employeeId});
+        return employee;
+    } catch (error) {
+        console.error(error);
+    }
+};
+exports.getEmployeeCounts = async company => {
+    try {
+        const result = await Model.aggregate([
+            {
+                $match: {
+                    company: ObjectId(company),
+                    empStatus: "A"
+                }
+            },
+            {
+                $group: {
+                    _id: null,
+                    maleEmployees: {$sum: {$cond: [{$eq: ["$empGender", "Male"]}, 1, 0]}},
+                    femaleEmployees: {$sum: {$cond: [{$eq: ["$empGender", "Female"]}, 1, 0]}}
+                }
+            },
+            {
+                $project: {
+                    _id: 0,
+                    maleEmployees: 1,
+                    femaleEmployees: 1,
+                    activeEmployees: {$sum: ["$maleEmployees", "$femaleEmployees"]}
+                }
+            }
+        ]);
+        return result.length > 0 ? result[0] : [];
+    } catch (error) {
+        console.error("Not able to get record ", error);
+    }
+};
+
+exports.uploadEmployeeFile = async (req, res) => {
+    try {
+        let fname = req.file.filename;
+        let jsonData = await readExcel(fname, column);
+        for (let i = 0; i < jsonData.length; i++) {
+            const ele = jsonData[i];
+            if (!!ele.empDOB) {
+                ele.empDOB = dateToAnyFormat(ele.empDOB, "MM/DD/YYYY");
+            } else {
+                ele.empDOB = null;
+            }
+            if (!!ele.empSpouseDOB) {
+                ele.empSpouseDOB = dateToAnyFormat(ele.empSpouseDOB, "MM/DD/YYYY");
+            } else {
+                ele.empSpouseDOB = null;
+            }
+            if (!!ele.empFatherDOB) {
+                ele.empFatherDOB = dateToAnyFormat(ele.empFatherDOB, "MM/DD/YYYY");
+            } else {
+                ele.empFatherDOB = null;
+            }
+            if (!!ele.empMotherDOB) {
+                ele.empMotherDOB = dateToAnyFormat(ele.empMotherDOB, "MM/DD/YYYY");
+            } else {
+                ele.empMotherDOB = null;
+            }
+            if (!!ele.empJoiningDate) {
+                ele.empJoiningDate = dateToAnyFormat(ele.empJoiningDate, "MM/DD/YYYY");
+            } else {
+                ele.empJoiningDate = null;
+            }
+        }
+        const arr = [];
+        let employeeData = jsonData.map(x => {
+            const {line1, line2, line3, state, city, pinCode, country, ...rest} = x;
+            let address = {
+                line1,
+                line2,
+                line3,
+                state,
+                city,
+                pinCode,
+                country
+            };
+            rest.empPermanentAddress = [address];
+            rest.empPresentAddress = [address];
+            return rest;
+        });
+    } catch (e) {
+        const errors = MESSAGES.apiErrorStrings.SERVER_ERROR;
+        throw new Error(e);
+    }
+};
+
+exports.getTotalNoOfEmployeesPerDay = async company => {
+    const currentDate = dateToAnyFormat(new Date(), "YYYY-MM-DD");
+    const rows = await Model.aggregate([
+        {
+            $addFields: {
+                matchDate: {$dateToString: {format: "%Y-%m-%d", date: "$createdAt"}}
+            }
+        },
+        {
+            $match: {
+                company: ObjectId(company),
+                matchDate: currentDate
+            }
+        },
+        {
+            $group: {
+                _id: null,
+                count: {$sum: {$cond: [{$eq: ["$empStatus", "A"]}, 1, 0]}}
+            }
+        },
+        {
+            $project: {
+                _id: 0,
+                count: 1
+            }
+        }
+    ]);
+    return rows[0]?.count || 0;
+};

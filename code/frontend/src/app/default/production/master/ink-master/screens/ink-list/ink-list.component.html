@@ -1,0 +1,88 @@
+<div class="listCard card">
+    <div class="table-header">
+        <label class="heading">Formulation Master Summary</label>
+    </div>
+
+    <div appAccessControl [accessType]="rolePermissionActions.createAction" class="text-center">
+        <button class="btn btn-primary btn-add" type="button" (click)="navigateTo('../form', null, 'create')">
+            <i class="fa fa-plus-square fa-lg me-2" aria-hidden="true"></i>
+            Add Formulation
+        </button>
+    </div>
+    <hr class="line-border" />
+    <div class="table-responsive">
+        <app-setting-header [data]="{page,pageSize,collection,search,type: 'list'}" (dataChange)="eventHeader($event)">
+        </app-setting-header>
+        <table class="table table-bordered">
+            <thead class="bg-primary">
+                <tr class="text-white">
+                    <th sortable="itemCode" (sort)="onSort($event)">{{ "Item Code" | labelTranslate }}</th>
+                    <th sortable="itemName" class="text-start" (sort)="onSort($event)">
+                        {{ "Item Name" | labelTranslate }}
+                    </th>
+                    <th sortable="itemDescription" class="text-start" (sort)="onSort($event)">
+                        {{ "Item Description" | labelTranslate }}
+                    </th>
+                    <th sortable="UoM" (sort)="onSort($event)">UoM</th>
+                    <!-- <th sortable="HSNCode" (sort)="onSort($event)">HSN Code</th> -->
+                    <th sortable="inkCostPerGm" (sort)="onSort($event)">Ink Cost/gram</th>
+                    <th sortable="totalQtyPerGm" (sort)="onSort($event)">Total Qty</th>
+                    <th sortable="totalCostPerGm" (sort)="onSort($event)">Total Cost</th>
+                    <th sortable="status" (sort)="onSort($event)">Status</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let item of tableData; trackBy: trackByFn">
+                    <td>{{ item?.itemCode }}</td>
+                    <td class="text-start" [style.width]="itemName.clientWidth" #itemName>
+                        <span class="pointer" [positionTarget]="itemName" [ngbTooltip]="item.itemName">
+                            {{ item.itemName }}
+                        </span>
+                    </td>
+                    <td class="text-start" [style.width]="itemDescription.clientWidth" #itemDescription>
+                        <span class="pointer" [positionTarget]="itemDescription" [ngbTooltip]="item.itemDescription">
+                            {{ item.itemDescription }}
+                        </span>
+                    </td>
+                    <td>{{ item?.UoM }}</td>
+                    <!-- <td>{{ item?.HSNCode }}</td> -->
+                    <td>{{ item.inkCostPerGm }}</td>
+                    <td>{{ item.totalQtyPerGm }}</td>
+                    <td>{{ item.totalCostPerGm }}</td>
+                    <td>
+                        <span class="d-flex justify-content-center">
+                            <div *ngIf="item.status == 'Active'" class="statusActive"></div>
+                            <div *ngIf="item.status == 'Inactive'" class="statusInActive"></div>
+                        </span>
+                    </td>
+                    <td>
+                        <div class="dropdown">
+                            <button class="dropbtn"></button>
+                            <div class="dropdown-content">
+                                <a
+                                    appAccessControl
+                                    [accessType]="rolePermissionActions.viewAction"
+                                    href="javascript:void(0)"
+                                    (click)="navigateTo('../form', item, 'view')"
+                                >
+                                    <i class="fa fa-eye fa-lg me-2 text-primary" aria-hidden="true"></i>
+                                    View
+                                </a>
+                                <a
+                                    appAccessControl
+                                    [accessType]="rolePermissionActions.editAction"
+                                    href="javascript:void(0)"
+                                    (click)="navigateTo('../form', item, 'edit')"
+                                >
+                                    <i class="fa fa-pencil-square-o fa-lg me-2 text-primary" aria-hidden="true"></i>
+                                    Edit
+                                </a>
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>

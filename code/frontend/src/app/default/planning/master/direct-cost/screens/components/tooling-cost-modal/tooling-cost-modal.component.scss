@@ -1,0 +1,30 @@
+.form-control-sl {
+    margin: 0px !important;
+    height: 2.4rem !important;
+    width: 12rem !important;
+    text-align: center !important;
+}
+.form-control-tc-lg {
+    margin: 0px !important;
+    height: 2.4rem !important;
+    width: 16rem !important;
+    text-align: start !important;
+}
+
+.set-image {
+    width: 100%;
+    margin-top: -1rem !important;
+}
+.seperate-row {
+    position: relative;
+    .minus-icon {
+        position: absolute;
+        left: -1.1rem;
+        top: -0.1rem;
+    }
+    .add-icon {
+        position: absolute;
+        right: -1.1rem;
+        top: -0.1rem;
+    }
+}

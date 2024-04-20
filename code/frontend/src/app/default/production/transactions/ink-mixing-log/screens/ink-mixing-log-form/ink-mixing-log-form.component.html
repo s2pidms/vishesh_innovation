@@ -1,0 +1,229 @@
+<form [formGroup]="form" class="formCard card">
+    <div class="container">
+        <div class="row form-header">
+            <div class="col heading">
+                <label class=""> Ink Mixing </label>
+            </div>
+        </div>
+        <div class="form-body">
+            <div class="row">
+                <div class="col-4 pe-3">
+                    <div class="row">
+                        <div class="col-6">
+                            <label class="form-label">Job Card No. <span class="text-danger">*</span></label>
+                            <div class="d-flex align-items-center">
+                                <div class="col-11">
+                                    <ng-select
+                                        [items]="masterData.JCOptions"
+                                        bindLabel="jobCardNo"
+                                        bindValue="jobCardNo"
+                                        [clearable]="false"
+                                        formControlName="jobCardNo"
+                                        (change)="setJobCardId($event)"
+                                    >
+                                    </ng-select>
+                                </div>
+                                <div
+                                    style="height: 2.9rem"
+                                    class="set-input-group-text input-group-text bg-primary pointer col-auto"
+                                    id="basic-addon1"
+                                    (click)="openJobCardDetailsModal()"
+                                >
+                                    <i class="fa fa-search text-white fs-4" aria-hidden="true"></i>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-6 pe-5">
+                            <label class="form-label">SKU No. <span class="text-danger"> </span></label>
+                            <input type="text" class="form-control bg-white-smoke" formControlName="SKUNo" readonly />
+                        </div>
+                    </div>
+                </div>
+                <div class="col-3 ps-0 pe-5">
+                    <label class="form-label">SKU Name <span class="text-danger"> </span></label>
+                    <input type="text" class="form-control bg-white-smoke" formControlName="SKUName" readonly />
+                </div>
+                <div class="col-5 ps-3">
+                    <div class="row">
+                        <div class="col-6 ps-0 pe-3">
+                            <label class="form-label">SKU Description <span class="text-danger"> </span></label>
+                            <input
+                                type="text"
+                                class="form-control bg-white-smoke"
+                                formControlName="SKUDescription"
+                                readonly
+                            />
+                        </div>
+                        <div class="col-6">
+                            <div class="row">
+                                <div class="col-5 ps-3">
+                                    <label class="form-label">UoM <span class="text-danger"> </span></label>
+                                    <input
+                                        type="text"
+                                        class="form-control bg-white-smoke"
+                                        formControlName="SKUDescription"
+                                        readonly
+                                    />
+                                </div>
+                                <div class="col-7 ps-0">
+                                    <label class="form-label">SKU Batch Qty <span class="text-danger"> </span></label>
+                                    <input
+                                        type="text"
+                                        class="form-control bg-white-smoke"
+                                        formControlName="SKUDescription"
+                                        readonly
+                                    />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <hr class="row line-border" />
+
+        <app-setting-header
+            [data]="{page,pageSize,collection,search, excelDisplay : 'none'}"
+            (dataChange)="eventHeader($event)"
+        >
+        </app-setting-header>
+        <div class="table-responsive" style="min-height: 20rem">
+            <table class="table table-bordered table-sticky">
+                <thead class="bg-primary">
+                    <tr class="text-white">
+                        <th>SN</th>
+                        <th>Item Code</th>
+                        <th class="text-start">Item Name</th>
+                        <th class="text-start">Item Description</th>
+                        <th>Mesh</th>
+                        <th>BoM Qty</th>
+                        <th>Add New Batch</th>
+                        <th>Ink Batch Qty.</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr
+                        *ngFor="
+                            let g of masterData.mergeList
+                                | searchFi1ter : search
+                                | slice : (page - 1) * pageSize : (page - 1) * pageSize + pageSize;
+                            let i = index;
+                            trackBy: trackByFn
+                        "
+                    >
+                        <td>{{ g.MRNNumber }}</td>
+                        <td>{{ g.itemCode }}</td>
+                        <td class="text-start" [style.width]="itemName.clientWidth" #itemName>
+                            <span class="pointer" [ngbTooltip]="g.itemName" [positionTarget]="itemName">
+                                {{ g.itemName }}
+                            </span>
+                        </td>
+                        <td class="text-start" [style.width]="itemDescription.clientWidth" #itemDescription>
+                            <span class="pointer" [ngbTooltip]="g.itemDescription" [positionTarget]="itemDescription">
+                                {{ g.itemDescription }}
+                            </span>
+                        </td>
+                        <!-- <td>{{ g.conversionOfUnits }}</td> -->
+                        <td>
+                            <div class="d-flex justify-content-between px-2">
+                                <span
+                                    [ngbTooltip]="g.conversionOfUnits"
+                                    placement="top"
+                                    [ngClass]="
+                                        g.UOM == g.secondaryUnit ? 'text-primary pointer' : 'text-secondary pointer'
+                                    "
+                                    >{{ g?.UOM }}</span
+                                >
+                                <span class="pointer d-flex align-items-center">
+                                    <div
+                                        (click)="setConversionOfUnit(g)"
+                                        *ngIf="g.secondaryUnit"
+                                        class="unit-switch-rev"
+                                    ></div>
+                                    <div *ngIf="!g.secondaryUnit" class="unit-switch-gray"></div>
+                                </span>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="d-flex justify-content-center">
+                                <span *ngIf="['approve', 'reject', 'view', 'Acknowledged'].includes(action)">
+                                    {{ g.issueQty | number : "1.2-2" }}
+                                </span>
+                                <input
+                                    *ngIf="!['approve', 'reject', 'view', 'Acknowledged'].includes(action)"
+                                    class="form-control form-control-sm w-25"
+                                    type="number"
+                                    [(ngModel)]="g.issueQty"
+                                    [ngModelOptions]="{standalone: true}"
+                                    (input)="changeGIQty(g)"
+                                />
+                            </div>
+                        </td>
+                        <td>
+                            <div class="d-flex justify-content-center align-items-center">
+                                <!-- <button class="plusIconSvg btn btn-primary   form-btn-sm py-0"></button> -->
+                                <button
+                                    type="button"
+                                    class="btn btn-primary form-btn-sm py-0"
+                                    (click)="openBatchModal()"
+                                >
+                                    New Batch
+                                </button>
+                            </div>
+                        </td>
+                        <td>
+                            <input
+                                class="form-check-input pointer"
+                                type="checkbox"
+                                [(ngModel)]="g.processStatus"
+                                [ngModelOptions]="{standalone: true}"
+                                [disabled]="['view', 'approve'].includes(action)"
+                            />
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <hr class="row line-border" />
+        <div class="row">
+            <div class="col-12 d-flex justify-content-center">
+                <!-- <button
+                  *ngIf="!['reject', 'Acknowledged', 'approve', 'view'].includes(action)"
+                  type="button"
+                  class="btn bg-primary px-5 me-3"
+                  (click)="reset()"
+              >
+                  Reset
+              </button>
+              <button
+                  *ngIf="!['reject', 'Acknowledged', 'approve', 'view'].includes(action)"
+                  type="button"
+                  class="btn btn-primary px-4 me-1"
+                  [disabled]="!isESCPreview"
+                  (click)="ESCPreview()"
+              >
+                  Esc
+              </button>
+              <button
+                  *ngIf="!['reject', 'Acknowledged', 'approve', 'view'].includes(action)"
+                  type="button"
+                  class="btn bg-primary px-4 me-3"
+                  (click)="preview()"
+              >
+                  Preview
+              </button> -->
+                <!-- [disabled]="!isPreview" -->
+
+                <button
+                    *ngIf="!['reject', 'Acknowledged', 'approve', 'view'].includes(action)"
+                    type="button"
+                    class="btn bg-primary px-5"
+                    (click)="submit()"
+                >
+                    Save
+                </button>
+            </div>
+        </div>
+    </div>
+</form>

@@ -1,0 +1,102 @@
+<form [formGroup]="form" class="formCard card">
+    <div class="container">
+        <div class="row form-header">
+            <div class="col heading">
+                <label>Invoice Payment ({{ this.action | titlecase }}) </label>
+            </div>
+        </div>
+        <div class="form-body">
+            <div class="row">
+                <div class="col-3">
+                    <label class="form-label"> Customer<span class="text-danger">*</span> </label>
+                    <ng-select
+                        [items]="customerNamesList"
+                        bindLabel="customerName"
+                        bindValue="customerName"
+                        formControlName="customerName"
+                        [clearable]="false"
+                        (change)="setProjectDetails($event)"
+                    >
+                    </ng-select>
+                </div>
+                <div class="col-3">
+                    <label class="form-label"> Project<span class="text-danger">*</span> </label>
+                    <ng-select
+                        [items]="projectsOptions"
+                        bindLabel="projectName"
+                        bindValue="projectName"
+                        [clearable]="false"
+                        formControlName="projectName"
+                        (change)="setProjectId($event)"
+                    >
+                    </ng-select>
+                </div>
+                <div class="col-3">
+                    <label class="form-label"> Outstanding Amount <span class="text-danger"></span> </label>
+                    <input class="form-control" type="text" formControlName="outstandingAmount" readonly />
+                </div>
+                <div class="col-3">
+                    <label class="form-label d-flex justify-content-between">
+                        Invoice
+                        <button
+                            [disabled]="!form.controls['serviceInvoiceNumber'].value"
+                            (click)="SIDetails()"
+                            class="btn btn-primary form-btn-sm py-0"
+                            type="button"
+                        >
+                            Details
+                        </button>
+                    </label>
+                    <ng-select
+                        [items]="serviceInvoiceOptions"
+                        bindLabel="serviceInvoiceNumber"
+                        bindValue="serviceInvoiceNumber"
+                        formControlName="serviceInvoiceNumber"
+                        [clearable]="false"
+                        (change)="setInvoiceDetails($event)"
+                    >
+                    </ng-select>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-3">
+                    <label class="form-label">
+                        Invoice Date
+                        <span class="text-danger">*</span>
+                    </label>
+                    <input class="form-control" type="date" formControlName="serviceInvoiceDate" readonly />
+                </div>
+                <div class="col-md-3">
+                    <label class="form-label">
+                        Invoice Amount (W/O GST)
+                        <span class="text-danger"></span>
+                    </label>
+                    <input class="form-control" type="text" formControlName="totalValue" readonly />
+                </div>
+                <div class="col-md-3">
+                    <label class="form-label">
+                        Invoice Amount (With GST)
+                        <span class="text-danger"></span>
+                    </label>
+                    <input class="form-control" type="text" formControlName="totalAmountWithTax" readonly />
+                </div>
+                <div class="col-3 d-flex align-items-end">
+                    <div class="d-grid flex-grow-1">
+                        <button (click)="openInvoicePaymentModel()" class="btn btn-primary" type="button">
+                            Invoice Payment
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <hr *ngIf="action != 'view'" class="row line-border" />
+        <div *ngIf="action != 'view'" class="d-flex justify-content-center mb-3">
+            <div class="d-grid col-md-1 me-5" [ngClass]="{'d-none': action == 'View'}">
+                <button class="btn btn-primary" type="button" (click)="reset()">Reset</button>
+            </div>
+            <div class="d-grid col-md-1" [ngClass]="{'d-none': action == 'View'}">
+                <button class="btn btn-primary" type="button" (click)="submit()">Save</button>
+            </div>
+        </div>
+    </div>
+</form>

@@ -1,0 +1,122 @@
+<div class="listCard card">
+    <div class="table-header">
+        <label class="heading">Supplier Summary</label>
+    </div>
+
+    <div appAccessControl [accessType]="rolePermissionActions.createAction" class="text-center">
+        <button class="btn btn-primary btn-add" type="button" (click)="navigateTo('../form', null, 'create')">
+            <i class="fa fa-plus-square fa-lg me-2" aria-hidden="true"></i>
+            Supplier
+        </button>
+    </div>
+
+    <hr class="row line-border" />
+    <div class="table-responsive">
+        <app-setting-header [data]="{page,pageSize,collection,search,type: 'list'}" (dataChange)="eventHeader($event)">
+        </app-setting-header>
+
+        <table class="table table-bordered">
+            <thead class="bg-primary">
+                <tr class="text-white">
+                    <th sortable="supplierCode" (sort)="onSort($event)">Supplier Code</th>
+                    <th class="text-start" sortable="supplierName" (sort)="onSort($event)">Supplier Name</th>
+                    <th sortable="supplierPurchaseType" (sort)="onSort($event)">Category</th>
+                    <th sortable="country" (sort)="onSort($event)">Country</th>
+                    <th sortable="supplierGST" (sort)="onSort($event)">GSTIN</th>
+                    <th>View Address</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let u of tableData; trackBy: trackByFn; let i = index">
+                    <td>{{ u?.supplierCode }}</td>
+                    <td class="text-start" [style.width]="supplierName.clientWidth" #supplierName>
+                        <span class="pointer" [positionTarget]="supplierName" [ngbTooltip]="u.supplierName">
+                            {{ u.supplierName }}
+                        </span>
+                    </td>
+                    <td>{{ u?.supplierPurchaseType }}</td>
+                    <td>{{ u?.country }}</td>
+                    <td>{{ u?.supplierGST }}</td>
+                    <td>
+                        <a href="javascript:void(0)" (click)="open(u)">
+                            <i class="fa fa-address-card text-primary" aria-hidden="true"></i>
+                        </a>
+                    </td>
+                    <td>
+                        <div class="dropdown">
+                            <button class="dropbtn"></button>
+                            <div class="dropdown-content">
+                                <a
+                                    appAccessControl
+                                    [accessType]="rolePermissionActions.viewAction"
+                                    href="javascript:void(0)"
+                                    (click)="navigateTo('../form', u?._id, 'view')"
+                                >
+                                    <i class="fa fa-eye fa-lg me-2 text-primary" aria-hidden="true"></i>
+                                    View
+                                </a>
+                                <a
+                                    appAccessControl
+                                    [accessType]="rolePermissionActions.editAction"
+                                    href="javascript:void(0)"
+                                    (click)="navigateTo('../form', u?._id, 'edit')"
+                                >
+                                    <i class="fa fa-pencil-square-o fa-lg me-2 text-primary" aria-hidden="true"></i>
+                                    Edit
+                                </a>
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<ng-template #alertMsg let-modal>
+    <div class="row mt-4 me-2">
+        <div class="col-md-10 col-sm-10">
+            <h1 class="text-primary ms-4" *ngIf="tableDataObject.supplierName">
+                {{ tableDataObject.supplierName }}
+            </h1>
+        </div>
+        <div class="col-md-2 col-sm-2">
+            <button
+                type="button"
+                class="close btn btn-primary"
+                data-dismiss="modal"
+                aria-label="Close"
+                (click)="modal.dismiss('Cross click')"
+            >
+                Close
+            </button>
+        </div>
+    </div>
+    <div class="modal-body text-center px-0">
+        <div class="row">
+            <div class="col-md-6">
+                <h2 class="text-start ms-4">Shipping Address</h2>
+                <div *ngFor="let s of tableData">
+                    <div *ngFor="let add of s.supplierShippingAddress" class="text-primary text-start">
+                        <h5>{{ add?.line1 }}</h5>
+                    </div>
+                </div>
+
+                <div class="text-start ms-4">
+                    <button type="button" class="btn btn-primary mt-4">Copy Shipping Address</button>
+                </div>
+            </div>
+
+            <div class="col-md-6">
+                <h2 class="text-start">Billing Address</h2>
+                <div class="text-primary text-start" *ngFor="let s of tableData">
+                    <h5 *ngFor="let add of s.supplierBillingAddress">{{ add.line1 }}</h5>
+                </div>
+                <div class="text-start">
+                    <button type="button" class="btn btn-primary mt-4">Copy Billing Address</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</ng-template>

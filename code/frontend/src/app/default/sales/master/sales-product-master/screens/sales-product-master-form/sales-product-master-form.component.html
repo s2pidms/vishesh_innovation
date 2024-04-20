@@ -1,0 +1,143 @@
+<form [formGroup]="form" class="formCard card">
+    <div class="container">
+        <div class="row form-header">
+            <div class="col heading">
+                <label>Product Master ({{ action | titlecase }})</label>
+            </div>
+        </div>
+        <div class="form-body">
+            <div class="row mb-5 mt-3">
+                <div class="col-5">
+                    <label class="form-label"> Product Code<span class="text-danger">*</span> </label>
+                    <input
+                        class="form-control bg-yellow-color"
+                        type="text"
+                        formControlName="productMasterNo"
+                        readonly
+                    />
+                </div>
+            </div>
+            <hr class="row line-border" />
+            <div class="row">
+                <div class="col-3 pe-5">
+                    <label class="form-label"> Product Category <span class="text-danger">*</span> </label>
+                    <div class="d-flex align-items-center">
+                        <div class="col-11">
+                            <ng-select
+                                [items]="masterData.productCategories"
+                                bindLabel="label"
+                                bindValue="value"
+                                formControlName="productCategory"
+                                [clearable]="false"
+                                (change)="setProductCode()"
+                            >
+                            </ng-select>
+                        </div>
+                        <div
+                            style="height: 2.9rem"
+                            class="input-group-text bg-primary pointer fs-4 col-auto"
+                            id="basic-addon1"
+                            (click)="openProductCategoryModal()"
+                        >
+                            <i class="fa fa-search text-white" aria-hidden="true"></i>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-3">
+                    <label class="form-label">Cap Diameter (mm)<span class="text-danger">*</span> </label>
+                    <input class="form-control" type="number" formControlName="capDia" (change)="setProductCode()" />
+                </div>
+                <div class="col-3">
+                    <label class="form-label">Thread Type<span class="text-danger">*</span> </label>
+                    <select class="form-select" formControlName="threadType" (change)="setProductCode()">
+                        <option value="null" selected disabled>Select Thread Type</option>
+                        <option *ngFor="let item of masterData.threadTypeOptions" [value]="item.parameterName">
+                            {{
+                                item?.parameterLabel == "NA"
+                                    ? item?.parameterLabel + " - " + item?.parameterName
+                                    : item?.parameterLabel
+                            }}
+                        </option>
+                    </select>
+                </div>
+                <div class="col-3">
+                    <label class="form-label"> Cap Height (mm) <span class="text-danger">*</span> </label>
+                    <input class="form-control" type="number" formControlName="capHeight" (change)="setProductCode()" />
+                </div>
+            </div>
+            <div class="row mt-4">
+                <div class="col-3">
+                    <label class="form-label"> Cap Finish <span class="text-danger">*</span> </label>
+                    <select class="form-select" formControlName="capFinish" (change)="setProductCode()">
+                        <option value="null" selected disabled>Select Cap Finish</option>
+                        <option *ngFor="let item of masterData.finishCapOptions" [value]="item.parameterName">
+                            {{ item?.parameterLabel + " - " + item?.parameterName }}
+                        </option>
+                    </select>
+                </div>
+                <div class="col-3">
+                    <label class="form-label">Orifice (mm)<span class="text-danger">*</span> </label>
+                    <select class="form-select" formControlName="orifice" (change)="setProductCode()">
+                        <option value="null" selected disabled>Select Orifice</option>
+                        <option *ngFor="let item of masterData.orificeOptions" [value]="item.parameterName">
+                            {{
+                                item?.parameterLabel == "NA"
+                                    ? item?.parameterLabel + " - " + item?.parameterName
+                                    : item?.parameterLabel
+                            }}
+                        </option>
+                    </select>
+                </div>
+                <div class="col-3">
+                    <label class="form-label"> Shoulder Type</label>
+                    <select class="form-select" formControlName="shoulderType" (change)="setProductCode()">
+                        <option value="null" selected disabled>Select Shoulder Type</option>
+                        <option *ngFor="let item of masterData.shoulderType" [value]="item.parameterName">
+                            {{ item?.parameterLabel + " - " + item?.parameterName }}
+                        </option>
+                    </select>
+                </div>
+                <div class="col-3">
+                    <label class="form-label">Weight (g)<span class="text-danger">*</span> </label>
+                    <input class="form-control" type="text" formControlName="weight" />
+                </div>
+            </div>
+        </div>
+
+        <hr class="row line-border mt-4" />
+
+        <div class="row my-4">
+            <div class="col-4 pe-0">
+                <button class="plusIconSvg btn btn-primary me-1"></button>
+                <button (click)="openMouldInfoModal()" class="btn btn-primary me-5 px-4" type="button">
+                    Mould Info
+                </button>
+                <button class="plusIconSvg btn btn-primary me-1"></button>
+                <button (click)="openPackingStdModal()" class="btn btn-primary me-5 px-4" type="button">
+                    Packing Std
+                </button>
+            </div>
+            <div class="col-3 ps-0">
+                <div class="d-flex align-items-center">
+                    <div class="col-md-auto text-nowrap">
+                        <button type="button" class="btn btn-primary px-3">Status</button>
+                    </div>
+
+                    <select class="form-select statusSelectBorder" formControlName="status">
+                        <option [value]="'null'" selected disabled>Select Status</option>
+                        <option value="Active">Active</option>
+                        <option value="Inactive">Inactive</option>
+                    </select>
+                    <span class="input-group-text statusSpanHeight">
+                        <div class="statusActive" *ngIf="form.value['status'] == 'Active'" class="statusActive"></div>
+                        <div class="statusInActive" *ngIf="form.value['status'] == 'Inactive'"></div>
+                    </span>
+                </div>
+            </div>
+            <div class="col-5 text-end">
+                <button class="btn btn-primary px-5 me-5" type="button" (click)="reset()">Reset</button>
+                <button class="btn btn-primary px-5" type="button" (click)="submit()">Save</button>
+            </div>
+        </div>
+    </div>
+</form>

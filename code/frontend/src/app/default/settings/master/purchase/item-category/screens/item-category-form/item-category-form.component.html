@@ -1,0 +1,78 @@
+<form [formGroup]="form" class="formCard card">
+    <div class="container">
+        <div class="row form-header">
+            <div class="col heading">Enter Item Category [{{ this.action | titlecase }}]</div>
+        </div>
+        <div class="form-body">
+            <div class="row">
+                <div class="col">
+                    <label class="form-label">Category Name <span class="text-danger">*</span></label>
+                    <input class="form-control" formControlName="category" />
+                </div>
+                <div class="col">
+                    <label class="form-label">Category Prefix <span class="text-danger">*</span></label>
+                    <input class="form-control" formControlName="prefix" />
+                </div>
+
+                <div class="col">
+                    <label class="form-label">Active<span class="text-danger">*</span></label>
+                    <select class="form-select" formControlName="categoryStatus">
+                        <option [value]="null" selected disabled>Select Status</option>
+                        <option value="Active">Active</option>
+                        <option value="Inactive">Inactive</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col">
+                    <label class="form-label">Auto Increment No.<span class="text-danger">*</span></label>
+                    <input class="form-control" type="number" formControlName="nextAutoIncrement" />
+                </div>
+                <div class="col">
+                    <label class="form-label">Digit<span class="text-danger"></span></label>
+                    <input class="form-control" type="number" formControlName="digit" />
+                </div>
+                <div class="col">
+                    <label class="form-label">Application<span class="text-danger">*</span></label>
+                    <input class="form-control" type="text" formControlName="application" />
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-2">
+                    <input formControlName="inkMaster" class="form-check-input me-2" type="checkbox" />
+                    <label class="form-check-label text-nowrap" for="flexCheckDefault"> Ink Master </label>
+                </div>
+                <div class="col-2">
+                    <input formControlName="BOM" class="form-check-input me-2" type="checkbox" />
+                    <label class="form-check-label text-nowrap" for="flexCheckDefault"> BOM </label>
+                </div>
+                <div class="col-2">
+                    <input formControlName="stockPreparation" class="form-check-input me-2" type="checkbox" />
+                    <label class="form-check-label text-nowrap" for="flexCheckDefault"> Stock Preparation </label>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-6 pb-4 mt-4">
+                <div class="d-flex col content-start">
+                    <div class="d-grid col-md-4 ms-3">
+                        <button type="button" class="btn btn-primary" (click)="openSub()">Add Sub Category</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-6 pb-4 mt-4">
+                <div *ngIf="action !== 'view'" class="d-flex justify-content-end">
+                    <div class="d-grid col-md-2 mx-5" [ngClass]="{'d-none': action == 'View'}">
+                        <button type="button" class="btn btn-primary" (click)="reset()">Reset</button>
+                    </div>
+                    <div class="d-grid col-md-2 me-3" [ngClass]="{'d-none': action == 'View'}">
+                        <button type="button" class="btn btn-primary" (click)="submit()">Save</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>

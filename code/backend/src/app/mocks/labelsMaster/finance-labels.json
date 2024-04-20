@@ -1,0 +1,22 @@
+[
+    {
+        "menuItemId": "64a6c1e33339d4dc9d8141ad",
+        "labelName": "SKU Name",
+        "displayLabelName": "SKU Name"
+    },
+    {
+        "menuItemId": "64a6c1e33339d4dc9d8141ad",
+        "labelName": "SKU Description",
+        "displayLabelName": "SKU Description"
+    },
+    {
+        "menuItemId": "64a6c1e33339d4dc9d8141ad",
+        "labelName": "D-SKU Name",
+        "displayLabelName": "D-SKU Name"
+    },
+    {
+        "menuItemId": "64a6c1e33339d4dc9d8141ad",
+        "labelName": "D-SKU Description",
+        "displayLabelName": "D-SKU Description"
+    }
+]

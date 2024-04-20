@@ -1,0 +1,71 @@
+<div class="listCard card">
+    <div class="table-header">
+        <label class="heading">Service Summary</label>
+    </div>
+    <div appAccessControl [accessType]="rolePermissionActions.createAction" class="text-center">
+        <button class="btn btn-primary btn-add" type="button" (click)="navigateTo('../form', null, 'create')">
+            <i class="fa fa-plus-square fa-lg me-2" aria-hidden="true"></i>
+            Add Service
+        </button>
+    </div>
+    <hr class="line-border" />
+    <div class="table-responsive">
+        <app-setting-header [data]="{page,pageSize,collection,search,type: 'list'}" (dataChange)="eventHeader($event)">
+        </app-setting-header>
+        <table class="table table-bordered">
+            <thead class="bg-primary">
+                <tr class="text-white">
+                    <th sortable="serviceCode" (sort)="onSort($event)">Service Code</th>
+                    <th class="text-start" sortable="serviceDescription" (sort)="onSort($event)">
+                        Service Description
+                    </th>
+                    <th sortable="sacId.sacCode" (sort)="onSort($event)">SAC</th>
+                    <th sortable="igst" (sort)="onSort($event)">IGST</th>
+                    <th sortable="cgst" (sort)="onSort($event)">CGST</th>
+                    <th sortable="sgst" (sort)="onSort($event)">SGST</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let u of tableData; trackBy: trackByFn">
+                    <td>{{ u?.serviceCode }}</td>
+                    <td class="text-start" [style.width]="serviceDescription.clientWidth" #serviceDescription>
+                        <span class="pointer" [positionTarget]="serviceDescription" [ngbTooltip]="u.serviceDescription">
+                            {{ u.serviceDescription }}
+                        </span>
+                    </td>
+                    <td>{{ u?.sacCode }}</td>
+                    <td>{{ u?.igst }}</td>
+                    <td>{{ u?.cgst }}</td>
+                    <td>{{ u?.sgst }}</td>
+
+                    <td>
+                        <div class="dropdown">
+                            <button class="dropbtn"></button>
+                            <div class="dropdown-content">
+                                <a
+                                    appAccessControl
+                                    [accessType]="rolePermissionActions.viewAction"
+                                    href="javascript:void(0)"
+                                    (click)="navigateTo('../form', u?._id, 'view')"
+                                >
+                                    <i class="fa fa-eye fa-lg me-2 text-primary" aria-hidden="true"></i>
+                                    View
+                                </a>
+                                <a
+                                    appAccessControl
+                                    [accessType]="rolePermissionActions.editAction"
+                                    href="javascript:void(0)"
+                                    (click)="navigateTo('../form', u?._id, 'edit')"
+                                >
+                                    <i class="fa fa-pencil-square-o fa-lg me-2 text-primary" aria-hidden="true"></i>
+                                    Edit
+                                </a>
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>

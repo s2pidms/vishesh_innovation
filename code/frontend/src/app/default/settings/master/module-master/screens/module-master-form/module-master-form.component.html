@@ -1,0 +1,54 @@
+<form [formGroup]="form" class="formCard card">
+    <div class="container">
+        <div class="row form-header">
+            <div class="col heading">
+                <label>{{ title }} Master</label>
+            </div>
+        </div>
+        <div class="form-body">
+            <div class="row">
+                <div class="col-3">
+                    <label class="form-label"> Label<span class="text-danger"></span> </label>
+                    <input class="form-control" type="text" formControlName="parameterLabel" />
+                </div>
+                <div class="col-3">
+                    <label class="form-label"> Value<span class="text-danger"></span> </label>
+                    <input class="form-control" type="text" formControlName="parameterName" />
+                </div>
+                <div class="col-3">
+                    <label class="form-label"> Order <span class="text-danger"></span> </label>
+                    <input class="form-control" type="number" formControlName="order" />
+                </div>
+
+                <div class="col-3">
+                    <label class="form-label">
+                        Status
+                        <span class="text-danger">*</span>
+                    </label>
+                    <div class="d-flex inputGroup skuForm">
+                        <select class="form-select statusSelectBorder" formControlName="status">
+                            <option [value]="null" selected disabled>Select Status</option>
+                            <option [value]="'Active'">Active</option>
+                            <option [value]="'Inactive'">Inactive</option>
+                        </select>
+                        <div class="input-group-text bg-white">
+                            <div class="col-md-auto my-4 align-self-center">
+                                <div *ngIf="form.value['status'] == 'Active'" class="statusActive"></div>
+                                <div *ngIf="form.value['status'] == 'Inactive'" class="statusInActive"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div *ngIf="action != 'view'" class="d-flex justify-content-center mb-3">
+            <div class="d-grid col-md-1 me-5">
+                <button class="btn btn-primary btn-lg" type="button" (click)="reset()">Reset</button>
+            </div>
+            <div class="d-grid col-md-1">
+                <button class="btn btn-primary btn-lg" type="button" (click)="submit()">Save</button>
+            </div>
+        </div>
+    </div>
+</form>

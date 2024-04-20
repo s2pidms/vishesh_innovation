@@ -1,0 +1,115 @@
+<div class="listCard card">
+    <div class="table-header">
+        <label class="heading">Proforma Invoice Summary</label>
+    </div>
+
+    <div appAccessControl [accessType]="rolePermissionActions.createAction" class="text-center">
+        <button class="btn btn-primary btn-add" type="button" (click)="navigateTo('../form', {}, 'create')">
+            <i class="fa fa-plus-square fa-lg me-2" aria-hidden="true"></i>
+            Create Proforma Invoice
+        </button>
+    </div>
+
+    <hr class="line-border" />
+    <div class="table-responsive">
+        <app-setting-header [data]="{page,pageSize,collection,search,type: 'list'}" (dataChange)="eventHeader($event)">
+        </app-setting-header>
+        <table class="table table-bordered">
+            <thead class="bg-primary">
+                <tr class="text-white">
+                    <th sortable="PINumber" (sort)="onSort($event)">PI No.</th>
+                    <th sortable="PIDateS" (sort)="onSort($event)">PI Date</th>
+                    <th sortable="PONumber" (sort)="onSort($event)">PO No.</th>
+                    <th sortable="salesCategory" (sort)="onSort($event)">Sales Category</th>
+                    <th class="text-start" sortable="customer" (sort)="onSort($event)">Customer Name</th>
+                    <th sortable="currency" (sort)="onSort($event)">Ccy</th>
+                    <th sortable="PITotalAmount" (sort)="onSort($event)">PI Amount</th>
+                    <th sortable="PIStatus" (sort)="onSort($event)">PI Status</th>
+                    <th sortable="status" (sort)="onSort($event)">Action</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                <tr *ngFor="let u of tableData; trackBy: trackByFn">
+                    <td>{{ u?.PINumber }}</td>
+                    <td>{{ u?.PIDateS }}</td>
+                    <td>{{ u?.PONumber }}</td>
+                    <td>{{ u?.salesCategory }}</td>
+                    <td class="text-start" [style.width]="customer.clientWidth" #customer>
+                        <span class="pointer" [positionTarget]="customer" [ngbTooltip]="u.customer">
+                            {{ u.customer }}
+                        </span>
+                    </td>
+                    <td>{{ u?.currency }}</td>
+                    <td>{{ u?.PITotalAmount }}</td>
+                    <td>{{ u?.PIStatus }}</td>
+                    <td>
+                        <div class="dropdown">
+                            <button class="dropbtn"></button>
+                            <div class="dropdown-content">
+                                <a
+                                    appAccessControl
+                                    [accessType]="rolePermissionActions.viewAction"
+                                    href="javascript:void(0)"
+                                    (click)="navigateTo('../form', u, 'view')"
+                                >
+                                    <i class="fa fa-eye fa-lg me-2 text-primary" aria-hidden="true"></i>
+                                    View
+                                </a>
+                                <a
+                                    appAccessControl
+                                    [accessType]="rolePermissionActions.editAction"
+                                    [class.disable]="u?.PIStatus === 'Approved'"
+                                    href="javascript:void(0)"
+                                    (click)="navigateTo('../form', u, 'edit')"
+                                >
+                                    <i class="fa fa-pencil-square-o fa-lg me-2 text-primary" aria-hidden="true"></i>
+                                    Edit
+                                </a>
+                                <a
+                                    appAccessControl
+                                    [accessType]="rolePermissionActions.approveAction"
+                                    href="javascript:void(0)"
+                                    [class.disable]="u?.PIStatus === 'Approved'"
+                                    (click)="navigateTo('../form', u, 'reject')"
+                                >
+                                    <i class="fa fa fa-times fa-lg text-primary" aria-hidden="true"></i>
+                                    Reject
+                                </a>
+                                <a
+                                    appAccessControl
+                                    [accessType]="rolePermissionActions.approveAction"
+                                    [class.disable]="u?.PIStatus === 'Approved'"
+                                    href="javascript:void(0)"
+                                    (click)="navigateTo('../form', u, 'approve')"
+                                >
+                                    <i class="fa fa-check fa-lg text-success" aria-hidden="true"></i>
+                                    Approve
+                                </a>
+                                <a
+                                    appAccessControl
+                                    [accessType]="rolePermissionActions.createAction"
+                                    [class.disable]="u?.PIStatus === 'Created'"
+                                    href="javascript:void(0)"
+                                    (click)="update(u, 'Converted to SO')"
+                                >
+                                    <img src="./assets/images/new.svg" width="14" class="me-3" />
+                                    Convert to SO
+                                </a>
+                                <a
+                                    appAccessControl
+                                    [accessType]="rolePermissionActions.createAction"
+                                    href="javascript:void(0)"
+                                    (click)="navigateToPrint('/#/print/pi_print', u, 'print')"
+                                >
+                                    <i class="fa fa-print fa-lg me-3 text-primary" aria-hidden="true"></i>
+                                    Print
+                                </a>
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>

@@ -1,0 +1,27 @@
+<div class="modelPage">
+    <div class="">
+        <div class="container-fluid px-0">
+            <div style="min-height: 33.1rem" class="row px-5 mt-4 mb-5 form-page px-5">
+                <div class="col-12 px-5">
+                    <div class="row px-3">
+                        <div class="col-12 px-0">
+                            <div class="col pt-3">
+                                <textarea
+                                    class="form-control form-text-area"
+                                    [(ngModel)]="GRNRemarks"
+                                    [ngModelOptions]="{standalone: true}"
+                                    rows="10"
+                                    readonly
+                                ></textarea>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="text-center">
+                <div *ngIf="['create', 'edit'].includes(action)" class="text-center mt-5 mb-5"></div>
+            </div>
+        </div>
+    </div>
+</div>

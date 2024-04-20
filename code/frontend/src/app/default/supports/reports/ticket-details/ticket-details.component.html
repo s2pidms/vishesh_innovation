@@ -1,0 +1,94 @@
+<div class="reportTablePage m-0">
+    <div class="table-body pb-0 shadow-none">
+        <div class="row table-header">
+            <div class="col">
+                <label class="heading">Ticket Details Report</label>
+            </div>
+        </div>
+        <div class="row my-4">
+            <div class="col-3 ps-5 separate-row">
+                <label class="form-label">Ticket Status<span class="text-danger">*</span> </label>
+                <select class="form-select" [(ngModel)]="issueStatus">
+                    <option value="" disabled="">Select Ticket Status</option>
+                    <option *ngFor="let item of issueStatusArr" [value]="item">
+                        {{ item }}
+                    </option>
+                </select>
+                <span class="set-position">
+                    <img src="./assets/new_icons/redstroke.svg" alt="" height="27" width="8" />
+                </span>
+            </div>
+            <div class="col-3">
+                <label class="form-label">From Date<span class="text-danger">*</span> </label>
+
+                <input class="form-control" type="date" [(ngModel)]="fromDate" />
+            </div>
+            <div class="col-3">
+                <label class="form-label">To Date<span class="text-danger">*</span> </label>
+
+                <input class="form-control" type="date" [(ngModel)]="toDate" />
+            </div>
+
+            <div class="col-3 align-self-end separate-image">
+                <span class="image-position">
+                    <img src="./assets/new_icons/redstroke.svg" alt="" height="27" width="8" />
+                </span>
+                <button type="button" class="btn btn-primary px-4 me-3" (click)="getAll()">Apply Filter</button>
+
+                <button type="button" class="btn btn-primary px-4 ms-4" (click)="reset()">Reset Filter</button>
+            </div>
+        </div>
+        <hr class="row line-border" />
+
+        <div class="table-responsive">
+            <app-setting-header
+                [data]="{page,pageSize,collection,search,type: 'list' ,pdfDisplay:true}"
+                (dataChange)="eventHeader($event)"
+            >
+            </app-setting-header>
+            <table class="table table-bordered table-sticky">
+                <thead class="bg-primary">
+                    <tr class="text-white">
+                        <th sortable="issueNumber" (sort)="onSort($event)">Ticket #</th>
+                        <th sortable="issueDate" (sort)="onSort($event)">Date</th>
+                        <th sortable="issueTitle" (sort)="onSort($event)">Title</th>
+                        <th class="text-start" sortable="issueDescription" (sort)="onSort($event)">Description</th>
+                        <th class="text-start" sortable="issueResolution" (sort)="onSort($event)">Ticket Resolution</th>
+                        <th sortable="issueStatus" (sort)="onSort($event)">Status</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    <tr *ngFor="let u of tableData; trackBy: trackByFn">
+                        <td>{{ u?.issueNumber }}</td>
+                        <td>{{ u?.issueDate }}</td>
+                        <td>{{ u?.issueTitle }}</td>
+                        <td class="text-start" [style.width]="issueDescription.clientWidth" #issueDescription>
+                            <span class="pointer" [positionTarget]="issueDescription" [ngbTooltip]="u.issueDescription">
+                                {{ u.issueDescription }}
+                            </span>
+                        </td>
+                        <td class="text-start" [style.width]="issueResolution.clientWidth" #issueResolution>
+                            <span class="pointer" [positionTarget]="issueResolution" [ngbTooltip]="u.issueResolution">
+                                {{ u.issueResolution }}
+                            </span>
+                        </td>
+                        <td>
+                            {{ u?.issueStatus }}
+                        </td>
+                        <td>
+                            <img
+                                class="pointer"
+                                src="./assets/images/file_pdf.png"
+                                width="20rem"
+                                alt=""
+                                (click)="navigateTo(u?._id, 'print')"
+                            />
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

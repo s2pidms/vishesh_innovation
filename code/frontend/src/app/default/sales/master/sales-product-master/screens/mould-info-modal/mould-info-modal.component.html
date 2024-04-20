@@ -1,0 +1,84 @@
+<div class="modelPage">
+    <div class="modal-header">
+        <div class="heading">Mould Summary</div>
+        <div>
+            <button type="button" class="btn btn-cross btn-sm" aria-label="Close" (click)="this.activeModal.close()">
+                <i class="fa fa-times-circle" aria-hidden="true"></i>
+            </button>
+        </div>
+    </div>
+    <div class="">
+        <div class="container-fluid">
+            <div class="row justify-content-center">
+                <div class="col-12 px-0 mt-4">
+                    <div class="px-5 mt-0">
+                        <app-setting-header
+                            [data]="{page,pageSize,collection,search ,excelDisplay : 'none'}"
+                            (dataChange)="eventHeader($event)"
+                        >
+                        </app-setting-header>
+                    </div>
+                    <div style="min-height: 33rem" class="table-responsive px-5">
+                        <table class="table table-bordered table-sticky">
+                            <thead class="bg-primary">
+                                <tr class="text-white">
+                                    <th sortable="mouldNo" (sort)="onSort($event)">Mould No.</th>
+                                    <th sortable="mouldName" (sort)="onSort($event)" class="text-start">Mould Name</th>
+                                    <th sortable="noOfCavities" (sort)="onSort($event)">No. of Cavities</th>
+                                    <!-- <th sortable="MRNStatus" (sort)="onSort($event)">TBD/Width (mm)</th>
+                                    <th sortable="mouldTBDDimension" (sort)="onSort($event)">TBD/Length (mm)</th> -->
+                                    <th sortable="mouldTBDDimension" (sort)="onSort($event)">Mould TBD/Dimensions</th>
+                                    <th sortable="mouldSupplier" (sort)="onSort($event)">Mould Supplier</th>
+                                    <th sortable="partNo" (sort)="onSort($event)">Supplier Mould/Part No.</th>
+                                    <th>Select</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr
+                                    *ngFor="
+                                        let u of mouldInfo
+                                            | searchFi1ter : search
+                                            | slice : (page - 1) * pageSize : (page - 1) * pageSize + pageSize;
+                                        let i = index
+                                    "
+                                >
+                                    <td>{{ u?.mouldNo }}</td>
+                                    <td class="text-start">{{ u?.mouldName }}</td>
+                                    <td>
+                                        {{ u?.noOfCavities }}
+                                    </td>
+                                    <!-- <td>{{ u?.TBDPerWidth }}</td> -->
+                                    <td>{{ u?.mouldTBDDimension }}</td>
+                                    <td>{{ u?.mouldSupplier }}</td>
+                                    <td>{{ u?.partNo }}</td>
+                                    <td>
+                                        <input
+                                            [(ngModel)]="u.select"
+                                            class="form-check-input pointer"
+                                            type="checkbox"
+                                        />
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col px-0 mb-3">
+                    <hr class="line-border" />
+                </div>
+            </div>
+            <div class="text-center mb-4">
+                <button class="btn btn-primary px-5 me-4" type="button" (click)="reset()">Reset</button>
+                <button type="button" class="btn btn-primary me-1" [disabled]="!isESCPreview" (click)="ESCPreview()">
+                    Esc
+                </button>
+                <button class="btn btn-primary px-4 me-4" type="button" (click)="preview()">Preview</button>
+                <button type="button" class="btn btn-primary px-5" [disabled]="!isPreview" (click)="dismissModel()">
+                    Save
+                </button>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,244 @@
+<form [formGroup]="form" class="formCard card">
+    <div class="container">
+        <div class="row form-header">
+            <div class="col heading">
+                <label>Supplier Info</label>
+            </div>
+        </div>
+        <div class="form-body">
+            <div class="row">
+                <div class="col">
+                    <label class="form-label"> Supplier Code </label>
+                    <input class="form-control" type="text" formControlName="supplierCode" readonly />
+                </div>
+                <div class="col">
+                    <label class="form-label">
+                        Supplier Name [Legal Entity]
+                        <span class="text-danger">*</span>
+                    </label>
+                    <input class="form-control" type="text" formControlName="supplierName" />
+                </div>
+                <div class="col">
+                    <label class="form-label"> Supplier Nick Name </label>
+                    <input class="form-control" type="text" formControlName="supplierNickName" />
+                </div>
+                <div class="col">
+                    <label class="form-label"> Supplier Category<span class="text-danger">*</span> </label>
+                    <select
+                        class="form-select"
+                        formControlName="supplierPurchaseType"
+                        (change)="supplierCategoryImports()"
+                    >
+                        <option [value]="null" selected disabled>Select Category</option>
+                        <option *ngFor="let p of masterData?.purchaseTypesOptions" [value]="p?.value">
+                            {{ p?.label }}
+                        </option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col">
+                    <label class="form-label"> PAN Card No.<span class="text-danger">*</span> </label>
+                    <input class="form-control" type="text" formControlName="supplierPAN" />
+                </div>
+                <div class="col">
+                    <label class="form-label"> GST Classification </label>
+                    <select class="form-select" formControlName="GSTClassification">
+                        <option value="null" selected disabled>Select</option>
+                        <option value="Regular B2B">Regular B2B</option>
+                        <option value="Composition Dealer">Composition Dealer</option>
+                        <option value="SEZ Supplier">SEZ Supplier</option>
+                        <option value="E-Com Operator">E-Com Operator</option>
+                        <option value="Unregistered Dealer">Unregistered Dealer</option>
+                    </select>
+                </div>
+                <div class="col">
+                    <label class="form-label"> GSTIN No.<span class="text-danger">*</span> </label>
+                    <input class="form-control" type="text" formControlName="supplierGST" />
+                </div>
+                <div class="col">
+                    <label class="form-label"> Udyam Aadhaar Registration No.<span class="text-danger">*</span> </label>
+                    <input class="form-control" type="text" formControlName="supplierUdyogAadhar" />
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col">
+                    <label class="form-label"> MSME Classification </label>
+                    <select class="form-select" formControlName="MSMEClassification">
+                        <option [value]="null" selected disabled>Select</option>
+                        <option value="Micro">Micro</option>
+                        <option value="Small">Small</option>
+                        <option value="Medium">Medium</option>
+                        <option value="Large">Large</option>
+                    </select>
+                </div>
+                <div class="col">
+                    <label class="form-label"> Currency<span class="text-danger">*</span> </label>
+                    <select class="form-select" formControlName="supplierCurrency">
+                        <option value="null" selected disabled>Select Currency</option>
+                        <option *ngFor="let c of masterData?.currenciesOptions" [value]="c?.value">
+                            {{ c?.label }}
+                        </option>
+                    </select>
+                </div>
+                <div class="col">
+                    <label class="form-label"> Payment Terms<span class="text-danger">*</span> </label>
+                    <select class="form-select" formControlName="supplierPaymentTerms">
+                        <option value="null" selected>Select Payment Terms</option>
+                        <option *ngFor="let p of masterData?.paymentTermsOptions" [value]="p.value">
+                            {{ p?.label }}
+                        </option>
+                    </select>
+                </div>
+                <div class="col">
+                    <label class="form-label"> Freight/Inco Terms<span class="text-danger">*</span> </label>
+                    <select class="form-select" formControlName="supplierINCOTerms">
+                        <option value="null" selected disabled>Select Freight/Inco Terms</option>
+                        <option *ngFor="let p of masterData?.freightTermsOptions" [value]="p?.parameterName">
+                            {{ p?.parameterLabel }}
+                        </option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="mt-4 d-flex justify-content-start">
+                <h4 class="mb-1 me-3 form-label customerHeading">Bill From Address</h4>
+                <span>
+                    <img src="./assets/new_icons/redstroke.svg" alt="" height="18" width="8" />
+                </span>
+                <h4 (click)="addShippingAddressModel()" class="ms-3 openModelLink pointer text-primary">
+                    Click here to add Ship From Address(if other than Bill From address)
+                </h4>
+            </div>
+        </div>
+        <hr class="row line-border" />
+
+        <ng-container>
+            <div formGroupName="supplierBillingAddressForm" class="row">
+                <div class="col">
+                    <label class="form-label"> Country <span class="text-danger">*</span> </label>
+                    <select
+                        *ngIf="this.form.controls['supplierPurchaseType'].value == 'Imports'"
+                        class="form-select"
+                        formControlName="country"
+                    >
+                        <option [value]="null" selected disabled>Select Country</option>
+                        <option *ngFor="let item of masterData?.purchaseCountryOptions" [value]="item.parameterName">
+                            {{ item.parameterLabel }}
+                        </option>
+                    </select>
+                    <input
+                        *ngIf="
+                            !this.form.controls['supplierPurchaseType'].value ||
+                            this.form.controls['supplierPurchaseType'].value == 'Domestic'
+                        "
+                        type="text"
+                        class="form-control"
+                        formControlName="country"
+                    />
+                </div>
+                <div class="col">
+                    <label class="form-label"> State/Province <span class="text-danger">*</span> </label>
+                    <select
+                        *ngIf="
+                            !this.form.controls['supplierPurchaseType'].value ||
+                            this.form.controls['supplierPurchaseType'].value == 'Domestic'
+                        "
+                        class="form-select"
+                        formControlName="state"
+                    >
+                        <option value="" selected disabled>Select State</option>
+                        <option *ngFor="let s of statesOfIndia" [value]="s">
+                            {{ s }}
+                        </option>
+                    </select>
+                    <input
+                        *ngIf="this.form.controls['supplierPurchaseType'].value == 'Imports'"
+                        type="text"
+                        class="form-control"
+                        formControlName="state"
+                    />
+                </div>
+                <div class="col">
+                    <label class="form-label"> City/District <span class="text-danger">*</span> </label>
+                    <input type="text" class="form-control" formControlName="city" />
+                </div>
+                <div class="col">
+                    <label class="form-label"> Pin Code <span class="text-danger">*</span> </label>
+                    <input
+                        oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
+                        type="number"
+                        maxlength="6"
+                        class="form-control"
+                        formControlName="pinCode"
+                    />
+                </div>
+            </div>
+            <div formGroupName="supplierBillingAddressForm" class="row mt-4">
+                <div class="col">
+                    <label class="form-label">Address Line 1 <span class="text-danger">*</span> </label>
+                    <input type="text" class="form-control" formControlName="line1" />
+                </div>
+                <div class="col">
+                    <label class="form-label">Address Line 2 <span class="text-danger">*</span></label>
+                    <input type="text" class="form-control" formControlName="line2" />
+                </div>
+                <div class="col">
+                    <label class="form-label">Address Line 3 <span class="text-danger">*</span></label>
+                    <input type="text" class="form-control" formControlName="line3" />
+                </div>
+                <div class="col">
+                    <label class="form-label">Address Line 4 <span class="text-danger">*</span></label>
+                    <input type="text" class="form-control" formControlName="line4" />
+                </div>
+            </div>
+            <hr class="row line-border" />
+
+            <div class="row mb-4">
+                <div [ngClass]="action == 'view' ? 'col-md-3  mt-3 pt-3' : 'col-3 mt-3 pt-3'" class="col-3 mt-3 pt-3">
+                    <div class="d-grid col-auto">
+                        <button (click)="openPurchaseDetailsModal()" class="btn bg-primary" type="button">
+                            Add Purchase Details
+                        </button>
+                    </div>
+                </div>
+                <div [ngClass]="action == 'view' ? 'col-md-3  mt-3 pt-3' : 'col-2 mt-3 pt-3'" class="col-2 mt-3 pt-3">
+                    <div class="d-grid col-auto">
+                        <button (click)="openContactDetailsModal()" class="btn bg-primary" type="button">
+                            Add Contact Details
+                        </button>
+                    </div>
+                </div>
+                <div [ngClass]="action == 'view' ? 'col-md-3  mt-3 pt-3' : 'col-2 mt-3 pt-3'" class="col-2 mt-3 pt-3">
+                    <div class="d-grid col-auto">
+                        <button (click)="openBankDetailsModal()" class="btn bg-primary" type="button">
+                            Add Bank Details
+                        </button>
+                    </div>
+                </div>
+                <div [ngClass]="action == 'view' ? 'col-md-3  ' : 'col-3 pe-0'" class="col-3">
+                    <label class="form-label">
+                        Status
+                        <span class="text-danger">*</span>
+                    </label>
+                    <div class="d-flex">
+                        <select class="form-select statusSelectBorder" formControlName="isSupplierActive">
+                            <option [value]="null" selected disabled>Select Status</option>
+                            <option [value]="'A'">Active</option>
+                            <option [value]="'I'">Inactive</option>
+                        </select>
+                        <span class="input-group-text statusSpanHeight">
+                            <div *ngIf="form.value['isSupplierActive'] == 'A'" class="statusActive"></div>
+                            <div *ngIf="form.value['isSupplierActive'] == 'I'" class="statusInActive"></div>
+                        </span>
+                    </div>
+                </div>
+                <div *ngIf="action != 'view'" class="col-2 text-end mt-3 pt-3">
+                    <button class="btn btn-primary px-5" type="button" (click)="submit()">Save</button>
+                </div>
+            </div>
+        </ng-container>
+    </div>
+</form>

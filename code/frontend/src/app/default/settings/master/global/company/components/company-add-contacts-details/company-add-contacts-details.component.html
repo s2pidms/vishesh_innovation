@@ -1,0 +1,167 @@
+<div class="modelPage">
+  <div class="modal-header">
+    <div class="heading">Company Key Contacts</div>
+    <div>
+      <button
+        type="button"
+        class="btn btn-cross btn-sm"
+        aria-label="Close"
+        (click)="activeModal.close(companyContactInfoArray)"
+      >
+        <i class="fa fa-times-circle" aria-hidden="true"></i>
+      </button>
+    </div>
+  </div>
+  <div class="container-fluid">
+    <div class="row">
+      <form [formGroup]="form">
+        <div class="row px-3 mt-4">
+          <div class="col">
+            <label class="form-label mb-2">
+              Department<span class="text-danger">*</span>
+            </label>
+            <select class="form-select" formControlName="department">
+              <option [value]="null" selected disabled>
+                Select Department
+              </option>
+              <option *ngFor="let d of departmentsOptions" [value]="d.value">
+                {{ d?.label }}
+              </option>
+            </select>
+          </div>
+          <div class="col">
+            <label class="form-label mb-2">
+              Contact Person's Name<span class="text-danger">*</span>
+            </label>
+            <input
+              class="form-control"
+              type="text"
+              formControlName="contactPersonName"
+            />
+          </div>
+          <div class="col">
+            <label class="form-label mb-2">
+              Designation
+              <span class="text-danger">*</span>
+            </label>
+            <input
+              class="form-control"
+              type="text"
+              formControlName="designation"
+            />
+          </div>
+          <div class="col">
+            <label class="form-label mb-2">
+              Mobile No. <span class="text-danger">*</span>
+            </label>
+            <input
+              class="form-control"
+              type="text"
+              formControlName="companyContactPersonNumber"
+            />
+          </div>
+          <div class="col">
+            <label class="form-label mb-2">
+              E-mail ID<span class="text-danger">*</span>
+            </label>
+            <input
+              class="form-control"
+              type="text"
+              formControlName="companyContactPersonEmail"
+            />
+          </div>
+        </div>
+      </form>
+      <hr class="line-border mb-0 mt-4" />
+
+      <div class="col text-center mt-4">
+        <button
+          class="btn bg-primary px-5"
+          type="button"
+          [disabled]="btnDisable || action == 'view'"
+          (click)="save()"
+        >
+          Add
+        </button>
+      </div>
+      <div class="px-5 mt-0">
+        <app-setting-header
+          [data]="{page,pageSize,collection,search ,excelDisplay : 'none'}"
+          (dataChange)="eventHeader($event)"
+        >
+        </app-setting-header>
+      </div>
+      <div style="min-height: 19rem" class="table-responsive px-5">
+        <table class="table table-bordered table-sticky">
+          <thead class="bg-primary">
+            <tr class="text-white">
+              <th>Department</th>
+              <th class="text-start">Name of Contact Person</th>
+              <th>Designation</th>
+              <th>Mobile No.</th>
+              <th>E-mail ID</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr
+              *ngFor="
+                let u of companyContactInfoArray
+                  | searchFi1ter : search
+                  | slice
+                    : (page - 1) * pageSize
+                    : (page - 1) * pageSize + pageSize;
+                let i = index
+              "
+            >
+              <td>{{ u?.department }}</td>
+              <td class="text-start">{{ u?.contactPersonName }}</td>
+              <td>{{ u?.designation }}</td>
+              <td>{{ u?.companyContactPersonNumber }}</td>
+              <td>{{ u?.companyContactPersonEmail }}</td>
+
+              <td>
+                <div class="dropdown">
+                  <button class="dropbtn"></button>
+                  <div class="dropdown-content">
+                    <a
+                      href="javascript:void(0)"
+                      (click)="patchItem(u, i, 'view')"
+                    >
+                      <i
+                        class="fa fa-eye fa-lg me-2 text-primary"
+                        aria-hidden="true"
+                      ></i>
+                      View
+                    </a>
+                    <a
+                      href="javascript:void(0)"
+                      (click)="patchItem(u, i, 'edit')"
+                    >
+                      <i
+                        class="fa fa-pencil-square-o fa-lg me-2 text-primary"
+                        aria-hidden="true"
+                      ></i>
+                      Edit
+                    </a>
+                    <a
+                      [class.disable]="this.action == 'view'"
+                      href="javascript:void(0)"
+                      (click)="deleteItem(i)"
+                    >
+                      <i
+                        class="fa fa-trash me-2 text-primary"
+                        aria-hidden="true"
+                      ></i>
+                      Delete
+                    </a>
+                  </div>
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>

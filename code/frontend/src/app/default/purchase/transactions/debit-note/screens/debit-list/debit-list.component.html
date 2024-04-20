@@ -1,0 +1,102 @@
+<div class="listCard card">
+    <div class="table-header">
+        <label class="heading">Debit Note Summary</label>
+    </div>
+    <div appAccessControl [accessType]="rolePermissionActions.createAction" class="text-center">
+        <button class="btn btn-primary btn-add" type="button" (click)="navigateTo('../form', {}, 'create')">
+            <i class="fa fa-plus-square fa-lg me-2" aria-hidden="true"></i>
+            Generate Debit Note
+        </button>
+    </div>
+    <hr class="line-border" />
+    <div class="table-responsive">
+        <app-setting-header [data]="{page,pageSize,collection,search,type: 'list'}" (dataChange)="eventHeader($event)">
+        </app-setting-header>
+        <table class="table table-bordered">
+            <thead class="bg-primary">
+                <tr class="text-white">
+                    <th sortable="DNNumber" (sort)="onSort($event)">DN No.</th>
+                    <th sortable="DNDateS" (sort)="onSort($event)">DN Date</th>
+                    <th sortable="purchaseCategory" (sort)="onSort($event)">Purchase Category</th>
+                    <th class="text-start" sortable="supplierName" (sort)="onSort($event)">Supplier Name</th>
+                    <th sortable="currency" (sort)="onSort($event)">Currency</th>
+                    <th sortable="netDNValue" (sort)="onSort($event)">DN Net Value</th>
+                    <th sortable="DNStatus" (sort)="onSort($event)">DN Status</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let u of tableData; trackBy: trackByFn; let i = index">
+                    <td>{{ u?.DNNumber }}</td>
+                    <td>{{ u?.DNDateS }}</td>
+                    <td>{{ u?.purchaseCategory }}</td>
+                    <td class="text-start" [style.width]="supplierName.clientWidth" #supplierName>
+                        <span class="pointer" [positionTarget]="supplierName" [ngbTooltip]="u.supplierName">
+                            {{ u.supplierName }}
+                        </span>
+                    </td>
+                    <td>{{ u?.currency }}</td>
+                    <td>{{ u?.netDNValue }}</td>
+                    <td>{{ u?.DNStatus }}</td>
+                    <td>
+                        <div class="dropdown">
+                            <button class="dropbtn"></button>
+                            <div class="dropdown-content">
+                                <a
+                                    appAccessControl
+                                    [accessType]="rolePermissionActions.viewAction"
+                                    href="javascript:void(0)"
+                                    (click)="navigateTo('../form', u, 'view')"
+                                >
+                                    <i class="fa fa-eye fa-lg text-primary" aria-hidden="true"></i>
+                                    View
+                                </a>
+                                <a
+                                    appAccessControl
+                                    [accessType]="rolePermissionActions.editAction"
+                                    href="javascript:void(0)"
+                                    [class.disable]="u?.DNStatus === 'Approved' || u?.DNStatus === 'Rejected'"
+                                    (click)="navigateTo('../form', u, 'edit')"
+                                >
+                                    <i class="fa fa-pencil-square-o fa-lg me-2 text-primary" aria-hidden="true"></i>
+                                    Edit
+                                </a>
+                                <a
+                                    appAccessControl
+                                    [accessType]="rolePermissionActions.approveAction"
+                                    href="javascript:void(0)"
+                                    [class.disable]="u?.DNStatus === 'Approved' || u?.DNStatus === 'Rejected'"
+                                    (click)="navigateTo('../form', u, 'approve')"
+                                >
+                                    <i class="fa fa-check fa-lg text-success" aria-hidden="true"></i>
+                                    Approve
+                                </a>
+                                <a
+                                    appAccessControl
+                                    [accessType]="rolePermissionActions.approveAction"
+                                    href="javascript:void(0)"
+                                    [class.disable]="u?.DNStatus === 'Approved' || u?.DNStatus === 'Rejected'"
+                                    (click)="navigateTo('../form', u, 'reject')"
+                                >
+                                    <i class="fa fa-close fa-lg text-primary" aria-hidden="true"></i>
+                                    Reject
+                                </a>
+                                <a
+                                    appAccessControl
+                                    [accessType]="rolePermissionActions.generateReportAction"
+                                    href="javascript:void(0)"
+                                    [class.disable]="u?.DNStatus === 'Awaiting Approval' || u?.DNStatus === 'Rejected'"
+                                    (click)="update(u, 'Report Generated')"
+                                >
+                                    <img src="./assets/images/new.svg" width="14" class="me-3" />
+
+                                    Generate Report
+                                </a>
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>

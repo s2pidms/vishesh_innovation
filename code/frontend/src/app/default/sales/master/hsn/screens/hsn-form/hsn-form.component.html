@@ -1,0 +1,83 @@
+<form [formGroup]="form" class="formCard card">
+    <div class="container">
+        <div class="row form-header">
+            <div class="col heading">
+                <label>HSN</label>
+            </div>
+        </div>
+        <div class="form-body">
+            <div class="row">
+                <div class="col-md-4">
+                    <label class="form-label"
+                        >HSN Code
+                        <span class="text-danger">*</span>
+                    </label>
+                    <input
+                        oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
+                        maxlength="8"
+                        class="form-control"
+                        type="number"
+                        formControlName="hsnCode"
+                    />
+                    <validation-messages class="error-left" [control]="form.controls['hsnCode']"> </validation-messages>
+                </div>
+                <div class="col-md-4">
+                    <label class="form-label">Description of Goods <span class="text-danger">*</span></label>
+                    <input class="form-control" type="text" formControlName="goodsDescription" />
+                    <validation-messages class="error-left" [control]="form.controls['goodsDescription']">
+                    </validation-messages>
+                </div>
+                <div class="col-md-4">
+                    <label class="form-label">GST Rate % <span class="text-danger">*</span></label>
+                    <input class="form-control" type="number" formControlName="gstRate" />
+                    <validation-messages class="error-left" [control]="form.controls['gstRate']"> </validation-messages>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-4">
+                    <label class="form-label">IGST Rate % <span class="text-danger">*</span></label>
+                    <input class="form-control" type="number" formControlName="igstRate" />
+                    <validation-messages class="error-left" [control]="form.controls['igstRate']">
+                    </validation-messages>
+                </div>
+                <div class="col-md-4">
+                    <label class="form-label">CGST Rate % <span class="text-danger">*</span></label>
+                    <input class="form-control" type="number" formControlName="cgstRate" />
+                    <validation-messages class="error-left" [control]="form.controls['cgstRate']">
+                    </validation-messages>
+                </div>
+                <div class="col-md-4">
+                    <label class="form-label">SGST Rate % <span class="text-danger">*</span></label>
+                    <input class="form-control" type="number" formControlName="sgstRate" />
+                    <validation-messages class="error-left" [control]="form.controls['sgstRate']">
+                    </validation-messages>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-4">
+                    <label class="form-label mb-2">UTGST Rate % <span class="text-danger">*</span></label>
+                    <input class="form-control" type="number" formControlName="ugstRate" />
+                    <validation-messages class="error-left" [control]="form.controls['ugstRate']">
+                    </validation-messages>
+                </div>
+                <div class="col-md-4" formGroupName="revision">
+                    <label class="form-label mb-2">Revision No.</label>
+                    <input class="form-control" type="number" formControlName="revisionNo" />
+                </div>
+                <div class="col-md-4" formGroupName="revision">
+                    <label class="form-label mb-2">Revision Date <span class="text-danger">*</span></label>
+                    <input class="form-control" type="date" formControlName="revisionDate" />
+                </div>
+            </div>
+        </div>
+        <hr *ngIf="action !== 'view'" class="row line-border" />
+        <div *ngIf="action !== 'view'" class="d-flex justify-content-center mb-3">
+            <div class="d-grid col-md-1 mx-5" [ngClass]="{'d-none': action == 'View'}">
+                <button type="button" class="btn btn-primary" (click)="reset()">Reset</button>
+            </div>
+            <div class="d-grid col-md-1" [ngClass]="{'d-none': action == 'View'}">
+                <button type="button" class="btn btn-primary" (click)="submit()">Save</button>
+            </div>
+        </div>
+    </div>
+</form>

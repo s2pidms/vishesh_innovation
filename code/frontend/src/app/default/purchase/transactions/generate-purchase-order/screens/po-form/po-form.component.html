@@ -1,0 +1,462 @@
+<Form class="px-2" [formGroup]="form" class="formCard card">
+    <div class="container">
+        <div class="row form-header">
+            <div class="col heading">
+                <label> {{ this.action | titlecase }} Purchase Order </label>
+            </div>
+        </div>
+        <div class="form-body">
+            <div class="row mb-0">
+                <div class="col-md-5">
+                    <div class="row">
+                        <div class="col-5">
+                            <label class="form-label mb-1"> Purchase Category<span class="text-danger">*</span> </label>
+                            <!-- <select
+                        class="form-select fs-5"
+                        formControlName="purchaseCategory"
+                        (change)="getSuppliers($event)"
+                    >
+                        <option [value]="null" disabled>Select</option>
+                        <option [value]="ele.value" *ngFor="let ele of masterData.purchaseCategoryOptions">
+                            {{ ele.label }}
+                        </option>
+                    </select> -->
+                            <ng-select
+                                [items]="masterData.purchaseCategoryOptions"
+                                bindLabel="label"
+                                bindValue="value"
+                                [clearable]="false"
+                                formControlName="purchaseCategory"
+                                (change)="getSuppliers($event)"
+                            >
+                            </ng-select>
+                        </div>
+                        <div class="col-3 px-0">
+                            <label class="form-label mb-1"> PO No.</label>
+                            <input readonly class="form-control" type="text" formControlName="PONumber" />
+                        </div>
+                        <div class="col-4 ps-2 pe-5">
+                            <label class="form-label mb-1">PO Date</label>
+                            <input
+                                (input)="setPOValidityFromPODate()"
+                                class="form-control"
+                                type="date"
+                                formControlName="PODate"
+                            />
+                        </div>
+                    </div>
+                </div>
+                <div class="col-7 ps-3">
+                    <div class="row">
+                        <div class="col-5 ps-0 pe-4">
+                            <label class="form-label mb-1">
+                                Supplier Name <span class="text-danger pe-5">*</span>
+                            </label>
+
+                            <div class="d-flex align-items-center">
+                                <div class="col-11">
+                                    <ng-select
+                                        [items]="supplierOptions"
+                                        bindLabel="label"
+                                        bindValue="value"
+                                        [clearable]="false"
+                                        formControlName="supplier"
+                                        placeholder="Select a Supplier"
+                                        (change)="supplierValueChange($event)"
+                                    >
+                                    </ng-select>
+                                </div>
+                                <div
+                                    style="height: 2.9rem"
+                                    class="set-input-group-text input-group-text bg-primary pointer col-auto"
+                                    id="basic-addon1"
+                                    (click)="openSupplierDetailsModal()"
+                                >
+                                    <i class="fa fa-search text-white" aria-hidden="true"></i>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-3">
+                            <label class="form-label mb-1"> Order Reference</label>
+                            <input class="form-control" type="text" formControlName="orderReference" />
+                        </div>
+                        <div class="col-1 px-0">
+                            <label class="form-label mb-1"> Ccy</label>
+                            <input class="form-control" type="text" formControlName="currency" readonly />
+                        </div>
+                        <div class="col-3">
+                            <label class="form-label mb-1">PO Type</label>
+                            <select (change)="setPOValidity()" class="form-select fs-5" formControlName="POType">
+                                <option [value]="null" disabled>Select PO Type</option>
+                                <option [value]="item" *ngFor="let item of POTypeArr">
+                                    {{ item }}
+                                </option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <hr class="row line-border" />
+
+        <div class="row justify-content-between">
+            <div class="col-4">
+                <div class="d-flex">
+                    <div class="set-input-group-text input-group-text bg-primary" id="basic-addon1">
+                        <i class="fa fa-search text-white" aria-hidden="true"></i>
+                    </div>
+                    <div>
+                        <input
+                            type="text"
+                            class="form-control"
+                            [(ngModel)]="search"
+                            [ngModelOptions]="{standalone: true}"
+                        />
+                    </div>
+                </div>
+            </div>
+            <div class="col-4 d-flex justify-content-center">
+                <ngb-pagination
+                    *ngIf="filterItems.length > 0"
+                    [collectionSize]="filterItems.length"
+                    [(page)]="page"
+                    [pageSize]="pageSize"
+                    [boundaryLinks]="false"
+                >
+                    <ng-template ngbPaginationPrevious>
+                        <img src="./assets/new_icons/pagination_prev.svg" width="20rem" />
+                    </ng-template>
+                    <ng-template ngbPaginationNext>
+                        <img src="./assets/new_icons/pagination_next.svg" width="20rem" />
+                    </ng-template>
+                    <ng-template ngbPaginationPages let-page let-pages="pages">
+                        <li class="ngb-custom-pages-item align-self-center" *ngIf="pages.length > 0">
+                            <span class="page-label me-2 ms-1"> Page {{ page }} of {{ pages[pages.length - 1] }} </span>
+                        </li>
+                    </ng-template>
+                </ngb-pagination>
+            </div>
+            <div class="col-4"></div>
+        </div>
+
+        <div class="table-responsive" style="min-height: 19rem">
+            <table class="table table-bordered table-sticky text-center">
+                <thead class="bg-primary">
+                    <tr class="text-white">
+                        <th sortable="itemCode" (sort)="onSort($event)">Item Code</th>
+                        <th class="text-start" sortable="name" (sort)="onSort($event)">Item Name</th>
+                        <th class="text-start" sortable="description" (sort)="onSort($event)">Item Description</th>
+                        <!-- <th sortable="unitConversion" (sort)="onSort($event)">Conversion</th> -->
+                        <th sortable="UOM" (sort)="onSort($event)">UoM</th>
+                        <!-- <th sortable="unitConversion" (sort)="onSort($event)">CoU</th> -->
+
+                        <th sortable="standardRate" (sort)="onSort($event)" *ngIf="['view'].includes(action)">
+                            Standard Rate
+                        </th>
+                        <th sortable="purchaseRate" (sort)="onSort($event)">P/Rate</th>
+                        <th sortable="POQty" (sort)="onSort($event)">PO Qty</th>
+                        <th sortable="lineValue" (sort)="onSort($event)">Line Value</th>
+                        <th
+                            sortable="linePPV"
+                            (sort)="onSort($event)"
+                            *ngIf="['approve', 'reject', 'view'].includes(action)"
+                        >
+                            Line PPV
+                        </th>
+                        <th sortable="deliveryDate" (sort)="onSort($event)">Delivery Dt.</th>
+                        <th sortable="deliveryDate" (sort)="onSort($event)">Sch.</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr
+                        *ngFor="
+                            let u of filterItems
+                                | searchFi1ter : search
+                                | slice : (page - 1) * pageSize : (page - 1) * pageSize + pageSize;
+                            let i = index;
+                            trackBy: trackByFn
+                        "
+                    >
+                        <td>{{ u?.itemCode }}</td>
+                        <td class="text-start" [style.width]="name.clientWidth" #name>
+                            <span class="pointer" [positionTarget]="name" [ngbTooltip]="u.name">
+                                {{ u?.name }}
+                            </span>
+                        </td>
+                        <td class="text-start" [style.width]="description.clientWidth" #description>
+                            <span class="pointer" [positionTarget]="description" [ngbTooltip]="u.description">
+                                {{ u?.description }}
+                            </span>
+                        </td>
+                        <td>
+                            <div class="d-flex justify-content-between px-2">
+                                <span
+                                    [ngbTooltip]="u.unitConversion"
+                                    placement="top"
+                                    [ngClass]="
+                                        u.UOM == u.secondaryUnit ? 'text-primary pointer' : 'text-secondary pointer'
+                                    "
+                                    >{{ u?.UOM | UOMUnitsMaster }}</span
+                                >
+                                <span class="pointer d-flex align-items-center">
+                                    <div
+                                        (click)="setConversionOfUnit(u)"
+                                        *ngIf="u.stdCostUom2 && u.stdCostUom1 && u.primaryUnit && u.secondaryUnit"
+                                        class="unit-switch-rev"
+                                    ></div>
+                                    <div
+                                        *ngIf="!(u.stdCostUom2 && u.stdCostUom1 && u.primaryUnit && u.secondaryUnit)"
+                                        class="unit-switch-gray"
+                                    ></div>
+                                </span>
+                            </div>
+                        </td>
+
+                        <td *ngIf="['view'].includes(action)">
+                            {{ u.standardRate }}
+                        </td>
+                        <td>
+                            <div class="d-flex justify-content-center">
+                                <span *ngIf="['approve', 'reject', 'view', 'generate', 'cancel'].includes(action)">
+                                    {{ u.purchaseRate | number : "1.2-2" }}
+                                </span>
+                                <input
+                                    *ngIf="!['approve', 'reject', 'view', 'generate', 'cancel'].includes(action)"
+                                    class="form-control form-control-sm w-25"
+                                    type="number"
+                                    [(ngModel)]="u.purchaseRate"
+                                    [ngModelOptions]="{standalone: true}"
+                                    (input)="lineValueRate(u.POLineNumber, u)"
+                                />
+                            </div>
+                        </td>
+                        <td>
+                            <div class="d-flex justify-content-center">
+                                <span *ngIf="['approve', 'reject', 'view', 'generate', 'cancel'].includes(action)">
+                                    {{ u.POQty | number : "1.2-2" }}
+                                </span>
+                                <input
+                                    *ngIf="!['approve', 'reject', 'view', 'generate', 'cancel'].includes(action)"
+                                    class="form-control form-control-sm w-25"
+                                    type="number"
+                                    [(ngModel)]="u.POQty"
+                                    min="0"
+                                    [ngModelOptions]="{standalone: true}"
+                                    (input)="lineValueRate(u.POLineNumber, u)"
+                                />
+                            </div>
+                        </td>
+                        <td>{{ u?.lineValue | number : "1.2-2" }}</td>
+                        <td *ngIf="['approve', 'reject', 'view'].includes(action)">
+                            {{ u?.linePPV | number : "1.2-2" }}
+                        </td>
+                        <td>
+                            <div class="d-flex justify-content-center">
+                                <span *ngIf="['approve', 'reject', 'view', 'generate', 'cancel'].includes(action)">
+                                    {{ u.deliveryDate }}
+                                </span>
+                                <input
+                                    [min]="minDate.toISOString().split('T')[0]"
+                                    *ngIf="!['approve', 'reject', 'view', 'generate', 'cancel'].includes(action)"
+                                    class="form-control form-control-sm w-25"
+                                    type="date"
+                                    [(ngModel)]="u.deliveryDate"
+                                    [ngModelOptions]="{standalone: true}"
+                                />
+                            </div>
+                        </td>
+                        <td>
+                            <span
+                                *ngIf="this.form.controls['POType'].value == POTypeObj.PLANNED_PO"
+                                class="d-flex justify-content-center pointer"
+                                (click)="openPOScheduleModal(u)"
+                            >
+                                <div class="assetCalendarTD"></div>
+                            </span>
+                            <span
+                                *ngIf="
+                                    !this.form.controls['POType'].value ||
+                                    this.form.controls['POType'].value == POTypeObj.BLANKET_PO ||
+                                    this.form.controls['POType'].value == POTypeObj.STANDARD_PO
+                                "
+                                class="d-flex justify-content-center setPOType"
+                            >
+                                <div class="assetCalendarTD"></div>
+                            </span>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <hr class="row line-border" />
+        <div class="row">
+            <div class="col-md-12 d-flex">
+                <div class="d-flex justify-content-center">
+                    <div class="col-form-label text-nowrap pe-1 pt-1">
+                        Total Item Value:
+                        <!-- <div class="btn btn-info py-1 ms-2">
+                        <label>{{ f["currency"].value }}</label>
+                    </div> -->
+                    </div>
+                    <div class="d-flex">
+                        <span class="input-group-text combine-INR text-secondary">
+                            {{ f["currency"].value }}
+                            <div class="vr ms-3"></div>
+                        </span>
+                        <input
+                            class="form-control border-start-0 ps-0"
+                            type="number"
+                            formControlName="totalLineValue"
+                            readonly
+                        />
+                    </div>
+                </div>
+                <div class="d-flex justify-content-center">
+                    <div class="mx-2 align-self-center mb-2">
+                        <i class="fa fa-plus fa-lg text-info" aria-hidden="true"></i>
+                    </div>
+                    <div class="text-nowrap">
+                        <button
+                            type="button "
+                            class="btn btn-sm btn-primary me-2 d-flex align-items-center mb-2"
+                            (click)="openOtherChargesModal()"
+                        >
+                            <span>Add Other Charges</span>
+                        </button>
+                    </div>
+
+                    <div class="d-flex inputGroup">
+                        <!-- <div class="col-form-label text-nowrap pe-1 pt-0">
+                        <div class="btn btn-info py-1 ms-2">
+                            <label>{{ f["currency"].value }}</label>
+                        </div>
+                    </div> -->
+                        <div class="d-flex">
+                            <span class="input-group-text combine-INR text-secondary">
+                                {{ f["currency"].value }}
+                                <div class="vr ms-3"></div>
+                            </span>
+                            <input
+                                type="text"
+                                class="form-control mt-0 w-25 border-start-0 ps-0"
+                                readOnly
+                                [(ngModel)]="otherCharges.totalAmount"
+                                [ngModelOptions]="{standalone: true}"
+                            />
+                        </div>
+                    </div>
+                </div>
+                <div class="d-flex inputGroup"></div>
+                <div class="mx-2 align-text-top">
+                    <div class="fs-3 fw-bolder text-info me-0" aria-hidden="true">=</div>
+                </div>
+                <div class="d-flex justify-content-center">
+                    <div class="col-form-label text-nowrap pe-1 pt-1">
+                        Net PO Value:
+                        <!-- <div class="btn btn-info py-1 ms-2">
+                        <label>{{ f["currency"].value }}</label>
+                    </div> -->
+                    </div>
+                    <div class="d-flex">
+                        <span class="input-group-text combine-INR text-secondary">
+                            {{ f["currency"].value }}
+                            <div class="vr ms-3"></div>
+                        </span>
+                        <input
+                            class="form-control ps-0 border-start-0"
+                            type="number"
+                            formControlName="netPOValue"
+                            readonly
+                        />
+                    </div>
+                </div>
+                <div class="d-flex justify-content-center">
+                    <div class="col-form-label text-nowrap pe-1 ms-5 pt-1">
+                        PPV:
+                        <!-- <div class="btn btn-info py-1 ms-2">
+                        <label>{{ f["currency"].value }}</label>
+                    </div> -->
+                    </div>
+                    <div class="d-flex">
+                        <span class="input-group-text combine-INR text-secondary">
+                            {{ f["currency"].value }}
+                            <div class="vr ms-3"></div>
+                        </span>
+                        <input
+                            class="form-control ps-0 border-start-0"
+                            type="text"
+                            readonly
+                            formControlName="totalPPV"
+                        />
+                    </div>
+                </div>
+            </div>
+        </div>
+        <hr class="row line-border" />
+        <div class="row">
+            <div class="col-2 pe-0">
+                <button (click)="openPOTermsModal()" type="button" class="btn btn-primary px-3">Review PO Terms</button>
+            </div>
+            <div *ngIf="!['cancel', 'reject'].includes(action)" class="col-3 ps-4 pe-5">
+                <div class="d-flex align-items-center">
+                    <div class="col-form-label text-nowrap">
+                        PO Validity <span class="text-danger pe-2">*</span>
+                        <i class="fa fa-caret-right fa-5x mx-1"></i>
+                    </div>
+                    <input class="form-control" type="date" formControlName="POValidity" />
+                </div>
+            </div>
+            <div *ngIf="!['cancel', 'reject'].includes(action)" class="col-3"></div>
+            <div *ngIf="action == 'reject'" class="col-6">
+                <div class="d-flex justify-content-start align-items-start">
+                    <div class="col-form-label text-nowrap">Rejection Remarks</div>
+                    <input class="form-control mx-2" type="text" formControlName="remarks" />
+                </div>
+            </div>
+            <div *ngIf="action == 'cancel'" class="col-6">
+                <div class="d-flex justify-content-start align-items-start">
+                    <div class="col-form-label text-nowrap">
+                        Reason for Cancellation <span class="text-danger">*</span>
+                    </div>
+                    <input class="form-control mx-2" type="text" formControlName="cancellationReason" />
+                </div>
+            </div>
+            <div class="col-4 ps-0 d-flex justify-content-end">
+                <div *ngIf="['create', 'edit'].includes(action)" class="d-grid gap-2 d-md-block">
+                    <button type="button" class="btn btn-primary px-5 me-3" (click)="reset()">Reset</button>
+                    <button
+                        type="button"
+                        class="btn btn-primary me-1"
+                        [disabled]="!isESCPreview"
+                        (click)="ESCPreview()"
+                    >
+                        Esc
+                    </button>
+                    <button type="button" class="btn btn-primary px-4 me-3" (click)="preview()">Preview</button>
+                    <button class="btn btn-primary px-5" type="button" [disabled]="!isPreview" (click)="submit()">
+                        Save
+                    </button>
+                </div>
+                <div *ngIf="['view'].includes(action)">
+                    <button class="btn btn-primary px-5" type="button" (click)="navigateTo()">
+                        Back To Action Center
+                    </button>
+                </div>
+
+                <div *ngIf="action == 'reject'" class="col-5 text-end">
+                    <button type="button" class="btn btn-primary px-5" (click)="submit()">Reject</button>
+                </div>
+                <div *ngIf="action == 'amend'" class="col-5 text-end">
+                    <button type="button" class="btn btn-primary px-5" (click)="submit()">Amend PO</button>
+                </div>
+                <div *ngIf="action == 'cancel'" class="col-5 text-end">
+                    <button type="button" class="btn btn-primary px-5" (click)="openCancelModal()">Cancel</button>
+                </div>
+
+                <div *ngIf="action == 'approve'" class="col-5 d-flex justify-content-end">
+                    <button type="button" class="btn btn-primary px-5" (click)="submit()">Approve</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</Form>

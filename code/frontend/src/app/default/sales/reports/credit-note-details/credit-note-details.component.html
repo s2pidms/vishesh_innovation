@@ -1,0 +1,83 @@
+<div class="reportTablePage">
+    <div class="row justify-content-center">
+        <div class="col-md-12">
+            <div class="row pb-4 mb-4 border-bottom mx-0">
+                <div class="col mt-1 ps-0 pe-3">
+                    <label class="form-label mb-2"> Select Customer</label>
+                    <ng-select
+                        [items]="customerOptions"
+                        bindLabel="customerName"
+                        bindValue="_id"
+                        [clearable]="false"
+                        [(ngModel)]="customerId"
+                    >
+                    </ng-select>
+                </div>
+                <div class="col mt-1 px-3">
+                    <label class="form-label mb-2"> Select Status <span class="text-danger">*</span> </label>
+                    <ng-select
+                        [items]="statusOptions"
+                        bindLabel="statusOptions"
+                        bindValue="statusOptions"
+                        [clearable]="false"
+                        [(ngModel)]="status"
+                    >
+                    </ng-select>
+                </div>
+                <div class="col mt-1 px-3">
+                    <label class="form-label mb-2"> From Date <span class="text-danger">*</span> </label>
+                    <input class="form-control" type="date" [(ngModel)]="fromDate" />
+                </div>
+
+                <div class="col mt-1 px-3">
+                    <label class="form-label mb-2"> To Date <span class="text-danger">*</span> </label>
+                    <input class="form-control" type="date" [(ngModel)]="toDate" />
+                </div>
+
+                <div class="col-auto align-self-end ps-3 pe-0">
+                    <button type="button" class="btn btn-primary" (click)="getAll()">Apply Filter</button>
+                </div>
+
+                <div class="col-auto align-self-end ps-3 pe-0">
+                    <button type="button" class="btn btn-primary" (click)="reset()">Reset Filter</button>
+                </div>
+            </div>
+
+            <app-setting-header
+                [data]="{page,pageSize,collection,search,type: 'list'}"
+                (dataChange)="eventHeader($event)"
+            >
+            </app-setting-header>
+            <div class="table-responsive mb-0">
+                <table class="table table-bordered table-sticky">
+                    <thead class="bg-primary">
+                        <tr class="text-white">
+                            <th sortable="CNNumber" (sort)="onSort($event)">Credit Note #</th>
+                            <th sortable="CNDateS" (sort)="onSort($event)">Date</th>
+                            <th class="text-start" sortable="customerName" (sort)="onSort($event)">Customer</th>
+                            <th sortable="SKUCode" (sort)="onSort($event)">SKU Code</th>
+                            <th class="text-start" sortable="SKUDescription" (sort)="onSort($event)">
+                                {{ "SKU Description" | labelTranslate }}
+                            </th>
+                            <th sortable="returnQty" (sort)="onSort($event)">Quantity</th>
+                            <th sortable="standardRate" (sort)="onSort($event)">Rate</th>
+                            <th sortable="lineValue" (sort)="onSort($event)">Total Amount</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let u of tableData; trackBy: trackByFn">
+                            <td>{{ u?.CNNumber }}</td>
+                            <td>{{ u?.CNDateS }}</td>
+                            <td class="text-start">{{ u?.customerName }}</td>
+                            <td>{{ u?.SKUCode }}</td>
+                            <td class="text-start">{{ u?.SKUDescription }}</td>
+                            <td>{{ u?.returnQty }}</td>
+                            <td>{{ u?.standardRate }}</td>
+                            <td>{{ u?.lineValue }}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>

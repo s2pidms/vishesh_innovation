@@ -1,0 +1,30 @@
+export interface Items {
+    _id: string;
+    itemType: string;
+    itemCode: string;
+    itemName: string;
+    itemDescription: string;
+    hsn: string;
+    primaryUnit: string;
+    orderInfoUOM: string;
+    perishableGoods: string;
+    shelfLife: number;
+    tdsFile: string;
+    msdsFile: string;
+    storageTemp: number;
+    storageHumidity: number;
+    itemAMU: string;
+    itemROL: string;
+    conversionOfUnits: string;
+    drawing: string;
+    specialStorageInstruction: string;
+    isActive: string;
+    supplierName: string;
+    supplierCurrency: string;
+    spin: string;
+    stdCostUom1: number;
+    tdsFileUrl: string;
+    msdsFileUrl: string;
+    drawingUrl?: string;
+    QCLevels?: string;
+}

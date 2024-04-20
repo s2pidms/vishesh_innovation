@@ -1,0 +1,72 @@
+<div class="modelPage">
+  <div class="modal-header">
+    <div class="heading">Item Details</div>
+    <div>
+      <button
+        type="button"
+        class="btn btn-cross btn-sm"
+        aria-label="Close"
+        (click)="dismissModel()"
+      >
+        <i class="fa fa-times-circle" aria-hidden="true"></i>
+      </button>
+    </div>
+  </div>
+  <div class="">
+    <div class="container-fluid">
+      <div class="row mt-4">
+        <div class="table-responsive mb-5 px-5">
+          <table class="table table-bordered">
+            <thead class="bg-primary">
+              <tr class="text-white">
+                <th>Sr No.</th>
+                <th class="text-start">Prd Desc</th>
+                <th>HSN</th>
+                <th>Qty</th>
+                <th>Unit</th>
+                <th>Unit Price</th>
+                <th>Total Amt</th>
+                <th>Dist</th>
+                <th>GST Rate</th>
+                <th>Igst Amt</th>
+                <th>Cgst Amt</th>
+                <th>Sgst Amt</th>
+                <th>Total Item Value</th>
+              </tr>
+            </thead>
+
+            <tbody>
+              <tr *ngFor="let u of itemDetailsArr">
+                <td>{{ u?.SlNo }}</td>
+                <td class="text-start">{{ u?.PrdDesc }}</td>
+                <td>{{ u?.HsnCd }}</td>
+                <td>{{ u?.Qty }}</td>
+                <td>{{ u?.Unit }}</td>
+                <td>{{ u?.UnitPrice }}</td>
+                <td>{{ u?.TotAmt | number : "1.2-2" }}</td>
+                <td>{{ u?.Discount }}</td>
+                <td>{{ u?.GstRt }}</td>
+                <td>{{ u?.IgstAmt }}</td>
+                <td>{{ u?.CgstAmt }}</td>
+                <td>{{ u?.SgstAmt }}</td>
+                <td>{{ u?.TotItemVal | number : "1.2-2" }}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <hr class="line-border mb-5 px-05" />
+
+        <div class="text-center mb-5">
+          <button
+            type="button"
+            class="btn bg-primary px-5"
+            (click)="dismissModel()"
+          >
+            Save & Close
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

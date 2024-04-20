@@ -1,0 +1,31 @@
+<div class="row justify-content-center">
+    <div class="col-md-11">
+        <app-setting-header [data]="{page,pageSize,collection,search,type: 'list'}" (dataChange)="eventHeader($event)">
+        </app-setting-header>
+
+        <div class="table-responsive">
+            <table class="table table-bordered table-sticky">
+                <thead class="bg-primary">
+                    <tr class="text-white">
+                        <th sortable="" (sort)="onSort($event)">Opportunity Name</th>
+                        <th class="text-start" sortable="" (sort)="onSort($event)">Salesperson</th>
+                        <th sortable="" (sort)="onSort($event)">Customer Name</th>
+                        <th sortable="" (sort)="onSort($event)">Amount ({{ "INR" | companyCurrency }})</th>
+                        <th sortable="" (sort)="onSort($event)">Outcome</th>
+                        <th sortable="" (sort)="onSort($event)">Reason for Loss</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>{{ 0 }}</td>
+                        <td>{{ 0 }}</td>
+                        <td>{{ 0 }}</td>
+                        <td>{{ 00 }}</td>
+                        <td>{{ 0 }}</td>
+                        <td>{{ 0 }}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,151 @@
+<Form class="px-2" [formGroup]="form" class="formCard card">
+    <div class="container">
+        <div class="row form-header">
+            <div class="col heading">
+                <label class="">Goods Receipt Acknowledgement </label>
+            </div>
+        </div>
+        <div class="form-body">
+            <div class="row">
+                <div class="col">
+                    <label for="" class="form-label">Goods Request No.<span class="text-danger">*</span></label>
+                    <ng-select
+                        [items]="GROptions"
+                        bindLabel="GRNumber"
+                        bindValue="_id"
+                        formControlName="GRNumber"
+                        [clearable]="false"
+                        (change)="getGoodRequisitionById()"
+                        (change)="deptValue($event)"
+                    >
+                    </ng-select>
+                </div>
+
+                <div class="col">
+                    <label for="" class="form-label">Goods Request Date</label>
+                    <input type="date" class="form-control" formControlName="GRDate" readonly />
+                </div>
+                <div class="col">
+                    <label for="" class="form-label">Goods Issue Date</label>
+                    <input type="date" class="form-control" formControlName="GIDate" />
+                </div>
+                <div class="col">
+                    <label for="" class="form-label">Location (Store)</label>
+
+                    <input type="text" class="form-control" formControlName="deliveryLocation" readonly />
+                </div>
+                <div class="col">
+                    <label for="" class="form-label">Department (GR by)</label>
+
+                    <input type="text" class="form-control" formControlName="department" readonly />
+                </div>
+            </div>
+            <hr class="row line-border" />
+            <app-setting-header
+                [data]="{page,pageSize,collection,search, excelDisplay : 'none'}"
+                (dataChange)="eventHeader($event)"
+            >
+            </app-setting-header>
+            <div class="table-responsive" style="min-height: 25.5rem">
+                <table class="table table-bordered table-sticky mt-1">
+                    <thead class="bg-primary">
+                        <tr class="text-white">
+                            <th sortable="GRLineNumber" (sort)="onSort($event)">MRN No.</th>
+                            <th sortable="itemCode" (sort)="onSort($event)">MRN Date</th>
+                            <th sortable="itemName" (sort)="onSort($event)">Item Code</th>
+                            <th class="text-start" sortable="itemName" (sort)="onSort($event)">Item Name</th>
+                            <th class="text-start" sortable="itemDescription" (sort)="onSort($event)">
+                                Item Description
+                            </th>
+                            <th sortable="conversionOfUnits" (sort)="onSort($event)">UoM</th>
+                            <th sortable="primaryUnit" (sort)="onSort($event)">GR Qty</th>
+                            <th sortable="closedIRQty" (sort)="onSort($event)">Issue Qty.</th>
+                            <th sortable="GRQty" (sort)="onSort($event)">Receipt Qty.</th>
+                            <th sortable="GRQty" (sort)="onSort($event)">Diff. Qty.</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr
+                            *ngFor="
+                                let item of GIDetailsArray
+                                    | searchFi1ter : search
+                                    | slice : (page - 1) * pageSize : (page - 1) * pageSize + pageSize;
+                                trackBy: trackByFn;
+                                let i = index
+                            "
+                        >
+                            <td>{{ item.mrnNo }}</td>
+                            <td>{{ item.MRNDate | date : "dd-MM-YYYY" }}</td>
+                            <td>{{ item.itemCode }}</td>
+                            <td class="text-start" [style.width]="itemName.clientWidth" #itemName>
+                                <span class="pointer" [positionTarget]="itemName" [ngbTooltip]="item.itemName">
+                                    {{ item?.itemName }}
+                                </span>
+                            </td>
+                            <td class="text-start" [style.width]="itemDescription.clientWidth" #itemDescription>
+                                <span
+                                    class="pointer"
+                                    [positionTarget]="itemDescription"
+                                    [ngbTooltip]="item.itemDescription"
+                                >
+                                    {{ item?.itemDescription }}
+                                </span>
+                            </td>
+                            <td>{{ item.UOM | UOMUnitsMaster }}</td>
+                            <td>{{ item.GRQty }}</td>
+                            <td>{{ item.GIQty }}</td>
+                            <td>
+                                <div class="d-flex justify-content-center">
+                                    <span *ngIf="['view'].includes(action)"> {{ item.receiptQty }} </span>
+                                    <input
+                                        *ngIf="!['view'].includes(action)"
+                                        (input)="setDiffQty(item, i)"
+                                        class="form-control form-control-sm w-25"
+                                        type="number"
+                                        [(ngModel)]="item.receiptQty"
+                                        [ngModelOptions]="{standalone: true}"
+                                    />
+                                </div>
+                            </td>
+                            <td>{{ item.diffQty }}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="row">
+                <div class="col-4">
+                    <div class="row">
+                        <div>
+                            <div class="d-flex align-items-center">
+                                <div class="col-md-auto text-nowrap">
+                                    <button type="button" class="btn btn-primary px-3">Remarks</button>
+                                </div>
+
+                                <input class="form-control" type="text" formControlName="remarks" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-auto ms-auto">
+                    <div *ngIf="buttonCondition && action != 'view'" class="text-end">
+                        <button type="button" class="btn btn-primary px-5" (click)="submit()">
+                            Acknowledge Receipt Qty.
+                        </button>
+                    </div>
+                    <div *ngIf="!buttonCondition && action != 'view'" class="text-end">
+                        <button type="button" class="btn btn-primary px-5" (click)="submit()">
+                            Acknowledge Receipt Qty. & Report Discrepancy
+                        </button>
+                    </div>
+                    <div *ngIf="action == 'view'" class="col-md-auto ms-auto">
+                        <button class="btn btn-primary px-5" type="button" (click)="navigateTo('../list', {}, '')">
+                            Back
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</Form>

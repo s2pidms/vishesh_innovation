@@ -1,0 +1,89 @@
+<div class="listCard card">
+    <div class="table-header">
+        <label class="heading">Goods Transfer (Intra) Summary</label>
+    </div>
+
+    <div appAccessControl [accessType]="rolePermissionActions.createAction" class="text-center">
+        <button class="plusIconSvg btn btn-primary me-1"></button>
+        <button class="btn bg-primary btn-add px-4" (click)="navigateTo('../form', {}, 'create')">
+            Goods Transfer (Intra)
+        </button>
+    </div>
+    <hr class="line-border" />
+    <div class="table-responsive">
+        <app-setting-header [data]="{page,pageSize,collection,search,type: 'list'}" (dataChange)="eventHeader($event)">
+        </app-setting-header>
+
+        <table class="table table-bordered">
+            <thead class="bg-primary">
+                <tr class="text-white">
+                    <th sortable="GTRequestNo" (sort)="onSort($event)">GT Req #</th>
+                    <th sortable="GTRequestDate" (sort)="onSort($event)">GTR Dt.</th>
+                    <th sortable="GTDate" (sort)="onSort($event)">GT Dt.</th>
+                    <th sortable="location" (sort)="onSort($event)">Location</th>
+                    <th sortable="fromDepartment" (sort)="onSort($event)">From Department</th>
+                    <th sortable="toDepartment" (sort)="onSort($event)">To Department</th>
+                    <th sortable="status" (sort)="onSort($event)">Status</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let g of tableData; trackBy: trackByFn">
+                    <td>{{ g.GTRequestNo }}</td>
+                    <td>{{ g.GTRequestDate }}</td>
+                    <td>{{ g.GTDate }}</td>
+                    <td>{{ g.location }}</td>
+                    <td>{{ g.fromDepartment }}</td>
+                    <td>{{ g.toDepartment }}</td>
+                    <td>{{ g.status }}</td>
+                    <td>
+                        <div class="dropdown">
+                            <button class="dropbtn"></button>
+                            <div class="dropdown-content">
+                                <a
+                                    appAccessControl
+                                    [accessType]="rolePermissionActions.viewAction"
+                                    href="javascript:void(0)"
+                                    (click)="navigateTo('../form', g, 'view')"
+                                >
+                                    <i class="fa fa-eye fa-lg me-2 text-primary" aria-hidden="true"></i>
+                                    View
+                                </a>
+                                <a
+                                    appAccessControl
+                                    [accessType]="rolePermissionActions.editAction"
+                                    href="javascript:void(0)"
+                                    [class.disable]="g?.status === 'Approved' || g?.status === 'Rejected'"
+                                    (click)="navigateTo('../form', g, 'edit')"
+                                >
+                                    <i class="fa fa-pencil-square-o fa-lg me-2 text-primary" aria-hidden="true"></i>
+                                    Edit
+                                </a>
+                                <a
+                                    appAccessControl
+                                    [accessType]="rolePermissionActions.approveAction"
+                                    href="javascript:void(0)"
+                                    [class.disable]="g?.status === 'Approved' || g?.status === 'Rejected'"
+                                    (click)="navigateTo('../form', g, 'approve')"
+                                >
+                                    <i class="fa fa-check fa-lg me-2 text-success" aria-hidden="true"></i>
+                                    Approve
+                                </a>
+                                <a
+                                    appAccessControl
+                                    [accessType]="rolePermissionActions.approveAction"
+                                    href="javascript:void(0)"
+                                    [class.disable]="g?.status === 'Approved' || g?.status === 'Rejected'"
+                                    (click)="navigateTo('../form', g, 'reject')"
+                                >
+                                    <i class="fa fa-close me-3 text-primary" aria-hidden="true"></i>
+                                    Reject
+                                </a>
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>

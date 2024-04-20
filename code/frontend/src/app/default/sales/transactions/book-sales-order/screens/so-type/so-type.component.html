@@ -1,0 +1,29 @@
+<div class="modelPage">
+    <div class="modal-header">
+        <div class="heading">PO Type</div>
+        <div>
+            <button type="button" class="btn btn-cross btn-sm" aria-label="Close" (click)="dismissModel()">
+                <i class="fa fa-times-circle" aria-hidden="true"></i>
+            </button>
+        </div>
+    </div>
+    <div class="">
+        <div class="container-fluid">
+            <div class="row justify-content-center">
+                <div class="col-10 px-0">
+                    <div class="row px-5 my-5">
+                        <div class="col-12">
+                            <label class="form-label">PO Type</label>
+                            <select [disabled]="action != 'create'" class="form-select mb-1" [(ngModel)]="SOType">
+                                <option value="null" selected disabled>Select PO Type</option>
+                                <option [value]="item.value" *ngFor="let item of SOTypeArr">
+                                    {{ item?.label }}
+                                </option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

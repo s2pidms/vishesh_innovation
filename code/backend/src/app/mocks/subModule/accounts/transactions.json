@@ -1,0 +1,44 @@
+[
+    {
+        "_id": "656f5c12ea223fba9ce67502",
+        "menuItemId": "64a6c1e33339d4dc9d8141ac",
+        "module": "Accounts",
+        "type": "TRANSACTION",
+        "order": 1,
+        "isDisplay": true,
+        "title": "Travel Request",
+        "displayName": "Travel Request",
+        "disabled": false,
+        "url": "/default/accounts/transactions/travel_request/list",
+        "roles": [],
+        "items": []
+    },
+    {
+        "_id": "6538ed359cfe0f1ec4597812",
+        "menuItemId": "64a6c1e33339d4dc9d8141ac",
+        "module": "Accounts",
+        "type": "TRANSACTION",
+        "order": 2,
+        "isDisplay": true,
+        "title": "Invoice Payment",
+        "displayName": "Invoice Payment",
+        "disabled": false,
+        "url": "/default/accounts/transactions/invoice_payment/list",
+        "roles": [],
+        "items": []
+    },
+    {
+        "_id": "660655241cb22dbbe1b6a924",
+        "menuItemId": "64a6c1e33339d4dc9d8141ac",
+        "module": "Accounts",
+        "type": "TRANSACTION",
+        "order": 3,
+        "isDisplay": true,
+        "title": "Purchase Register Entry",
+        "displayName": "Purchase Register Entry",
+        "disabled": false,
+        "url": "/default/accounts/transactions/purchase_register_entry/form",
+        "roles": [],
+        "items": []
+    }
+]

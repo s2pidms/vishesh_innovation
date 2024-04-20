@@ -1,0 +1,380 @@
+<div class="table-responsive shadow">
+    <table class="table">
+        <tr>
+            <td colspan="12">
+                <div class="text-center">
+                    <img src="{{ tableData?.company?.SOPdfHeaderUrl }}" class="img-pdfHeader" />
+                </div>
+            </td>
+        </tr>
+
+        <tr class="head-row">
+            <td colspan="12" class="text-center">
+                <h1 class="fs-1">Proforma Invoice</h1>
+            </td>
+        </tr>
+        <tr class="head-row">
+            <th colspan="4" class="bg-grey">
+                <label class="heading">Buyer's Details [Bill To]</label>
+            </th>
+            <th colspan="4" class="bg-grey">
+                <label class="heading">Consignee Details [Ship To]</label>
+            </th>
+            <th colspan="4" class="bg-grey">
+                <label class="heading">Proforma Details</label>
+            </th>
+        </tr>
+        <tr>
+            <td colspan="4" rowspan="2">
+                <p>{{ tableData?.customer?.customerName }}</p>
+                <p>
+                    {{ tableData?.customer?.customerBillingAddress?.line1 }}
+                </p>
+                <p>
+                    {{ tableData?.customer?.customerBillingAddress?.line2 }}
+                </p>
+                <p>
+                    {{ tableData?.customer?.customerBillingAddress?.line3 }}
+                </p>
+                <p>
+                    {{
+                        tableData?.customer?.customerBillingAddress?.city
+                            ? tableData?.customer?.customerBillingAddress?.city
+                            : tableData?.customer?.customerBillingAddress?.district
+                    }}, {{ tableData?.customer?.customerBillingAddress?.state }},
+                    {{ tableData?.customer?.customerBillingAddress?.pinCode }},
+                    {{ tableData?.customer?.customerBillingAddress?.country }}
+                </p>
+                <p>Tax No.: {{ tableData?.customer?.GSTIN }}</p>
+            </td>
+            <td colspan="4" rowspan="2">
+                <p>{{ tableData?.customer?.customerName }}</p>
+                <p>
+                    {{ tableData?.customer?.customerShippingAddress?.line1 }}
+                </p>
+                <p>
+                    {{ tableData?.customer?.customerShippingAddress?.line2 }}
+                </p>
+                <p>
+                    {{ tableData?.customer?.customerShippingAddress?.line3 }}
+                </p>
+                <p>
+                    {{
+                        tableData?.customer?.customerShippingAddress?.city
+                            ? tableData?.customer?.customerShippingAddress?.city
+                            : tableData?.customer?.customerShippingAddress?.district
+                    }}, {{ tableData?.customer?.customerShippingAddress?.state }},
+                    {{ tableData?.customer?.customerShippingAddress?.pinCode }},
+                    {{ tableData?.customer?.customerShippingAddress?.country }}
+                </p>
+                <p>Tax No.: {{ tableData?.customer?.GSTIN }}</p>
+            </td>
+            <td colspan="4">
+                <p>Proforma Invoice No.: {{ tableData?.PINumber }}</p>
+                <p>
+                    Proforma Invoice Date:
+                    {{ tableData?.PIDate | date : "dd-MMM-yy" }}
+                </p>
+            </td>
+        </tr>
+        <tr>
+            <td colspan="4">
+                <p>
+                    Order Reference:
+                    {{ tableData?.PONumber }}
+                </p>
+
+                <p>
+                    Order Reference Date:
+                    {{ tableData?.PODate | date : "dd-MMM-yy" }}
+                </p>
+            </td>
+        </tr>
+        <tr>
+            <td colspan="4">
+                <p class="sub-text">
+                    Mobile No.:
+                    {{ tableData?.customer?.customerContactInfo?.contactPersonNumber }}
+                </p>
+                <p class="sub-text">
+                    E-mail:
+                    {{ tableData?.customer?.customerContactInfo?.contactPersonEmail }}
+                </p>
+            </td>
+            <td colspan="4">
+                <p class="sub-text">
+                    Mobile No.:
+                    {{ tableData?.customer?.customerContactInfo?.contactPersonNumber }}
+                </p>
+                <p class="sub-text">
+                    E-mail:
+                    {{ tableData?.customer?.customerContactInfo?.contactPersonEmail }}
+                </p>
+            </td>
+            <td colspan="4">
+                <p class="fs-3 sub-text">
+                    Currency:
+                    {{ tableData?.currency }}
+                </p>
+            </td>
+        </tr>
+        <tr>
+            <td colspan="12">
+                <div class="py-2 sub-text">
+                    Dear Sir/Madam,<br />
+
+                    We thankfully acknowledge the receipt of your order confirmation and are pleased to submit our
+                    Proforma Invoice for releasing payment as below.
+                </div>
+            </td>
+        </tr>
+        <tr class="head-row text-center w-100 text-nowrap">
+            <th colspan="1" class="text-center">#</th>
+            <th colspan="3" class="text-start">Product Description</th>
+            <th colspan="1" class="text-center">HSN Code</th>
+            <th colspan="1" class="text-center">UoM</th>
+            <th colspan="1" class="text-center">Quantity</th>
+            <th colspan="1" class="text-center">Rate/Unit</th>
+            <th colspan="1" class="text-center">Disc %</th>
+            <th colspan="1" class="text-center">Net Rate</th>
+            <th colspan="2" class="text-center">Amount</th>
+        </tr>
+        <tr class="text-wrap" *ngFor="let s of tableData?.PIDetails; let i = index">
+            <td colspan="1" class="text-center">
+                {{ s?.PILineNumber }}
+            </td>
+            <td colspan="3">
+                <p>
+                    {{ s?.SKU?.SKUNo }} | CPIN/Part No.
+                    {{ s?.SKU?.customerInfo[0]?.customerPartNo }}
+                </p>
+                <p>{{ s?.SKU?.SKUName }}</p>
+                <p>{{ s?.SKU?.SKUDescription }}</p>
+            </td>
+
+            <td colspan="1" class="text-center">
+                {{ s?.SKU?.hsn }}
+            </td>
+            <td colspan="1" class="text-center">
+                {{ s?.UOM }}
+            </td>
+            <td colspan="1" class="text-center">
+                {{ s?.orderedQty | number : ".2-2" }}
+            </td>
+            <td colspan="1" class="text-center">
+                {{ s?.standardRate | number : ".2-2" }}
+            </td>
+            <td colspan="1" class="text-center">
+                {{ s?.discount | number : ".2-2" }}
+            </td>
+            <td colspan="1" class="text-center">
+                {{ s?.netRate | number : ".2-2" }}
+            </td>
+            <td colspan="2" class="text-center">
+                {{ s?.lineValue | number : ".2-2" }}
+            </td>
+        </tr>
+        <tr *ngFor="let d of tableData.rowRepeat; let j = index">
+            <td colspan="1" class="text-center">
+                <p class="py-3">
+                    {{ tableData.PIDetails.length + j + 1 }}
+                </p>
+            </td>
+            <td colspan="3" class="text-center"></td>
+            <td colspan="1" class="text-center"></td>
+            <td colspan="1" class="text-center"></td>
+            <td colspan="1" class="text-center"></td>
+            <td colspan="1" class="text-center"></td>
+            <td colspan="1" class="text-center"></td>
+            <td colspan="1" class="text-center"></td>
+            <td colspan="2" class="text-center"></td>
+        </tr>
+        <tr>
+            <td colspan="11 " class="text-end">
+                <p></p>
+            </td>
+            <td colspan="1" class="text-center"></td>
+        </tr>
+        <tr>
+            <th colspan="11" class="text-end">
+                <p>Total Amount</p>
+            </th>
+            <th colspan="1" class="text-center">
+                {{ tableData?.totalTaxableAmount | number : ".2-2" }}
+            </th>
+        </tr>
+        <tr class="border-btm">
+            <td colspan="12 ">
+                <div class="py-2"></div>
+            </td>
+        </tr>
+
+        <tr class="border-btm">
+            <td colspan="12">
+                <div class="row justify-content-between">
+                    <div class="col-8 h-100 p-0 pe-4">
+                        <h4 class="my-2">General Terms & Conditions</h4>
+                        <table class="table">
+                            <tr>
+                                <td>Payment Terms</td>
+                                <td>
+                                    {{ tableData?.customer?.customerPaymentTerms }}
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>Mode of Transport</td>
+                                <td colspan="2">
+                                    {{ tableData?.modeOfTransport }}
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>Freight Term</td>
+                                <td>
+                                    {{ tableData?.frightTerms }}
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>Destination Port</td>
+                                <td>
+                                    {{ tableData?.destination }}
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>Tentative Dispatch Date</td>
+                                <td>
+                                    {{ tableData?.PIDetails[0]?.SOLineTargetDate | date : "dd-MM-yyyy" }}
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>Proforma Invoice validity</td>
+                                <td>
+                                    {{ tableData?.PIValidityDate | date : "dd-MM-yyyy" }}
+                                </td>
+                            </tr>
+                        </table>
+                        <div class="py-3"></div>
+                        <table class="table">
+                            <tr>
+                                <th>
+                                    Total Invoice Amount (In words):
+                                    {{ tableData?.currency }}
+                                    {{ tableData.PITotalAmount ?? 0 | toWords }}
+                                </th>
+                            </tr>
+                        </table>
+                    </div>
+                    <div class="col-4 h-100 p-0">
+                        <h4 class="my-2">Tax Invoice Summary | Currency {{ tableData?.currency }}</h4>
+                        <table class="table">
+                            <tr>
+                                <th>Total Amount</th>
+                                <th class="text-center">
+                                    {{ tableData?.PITotalAmount ? (tableData?.PITotalAmount | number : ".2-2") : "-" }}
+                                </th>
+                            </tr>
+                            <tr>
+                                <td class="sub-text">Output S-GST - Not Applicable</td>
+                                <td class="text-center sub-text">-</td>
+                            </tr>
+                            <tr>
+                                <td class="sub-text">Output C-GST - Not Applicable</td>
+                                <td class="text-center sub-text">-</td>
+                            </tr>
+                            <tr>
+                                <td class="sub-text">Output I-GST - Not Applicable</td>
+                                <td class="text-center sub-text">-</td>
+                            </tr>
+                            <tr>
+                                <td class="sub-text">Rounded off [+/-]</td>
+                                <td class="text-center sub-text">-</td>
+                            </tr>
+                            <tr>
+                                <th>Total Invoice Amount</th>
+                                <th class="text-center">
+                                    <b>
+                                        {{ tableData?.PITotalAmount | number : ".2-2" }}
+                                    </b>
+                                </th>
+                            </tr>
+                        </table>
+                        <div class="py-3"></div>
+                        <table class="table">
+                            <tr>
+                                <th>Payment Due Date</th>
+                                <th class="text-center">
+                                    {{ tableData?.PIValidityDate | date : "dd-MM-yyyy" }}
+                                </th>
+                            </tr>
+                        </table>
+                        <div class="py-2"></div>
+                    </div>
+                </div>
+            </td>
+        </tr>
+
+        <tr>
+            <td colspan="12">
+                <div class="row justify-content-between mt-3">
+                    <div class="col-8 h-100 p-0 pe-4">
+                        <table class="table">
+                            <tr>
+                                <th colspan="8">Bank Details</th>
+                            </tr>
+                            <tr>
+                                <td colspan="3">Beneficiary Name</td>
+                                <td colspan="5">
+                                    <p>{{ tableData?.company?.companyBefName }}</p>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td colspan="3">Bank Name & Branch</td>
+                                <td colspan="5">
+                                    {{ tableData?.company?.companyBankName }}
+                                </td>
+                            </tr>
+                            <tr>
+                                <td colspan="3">
+                                    <p>Account No.</p>
+                                </td>
+                                <td colspan="5">
+                                    {{ tableData?.company?.companyAccountNumber }}
+                                </td>
+                            </tr>
+                            <tr>
+                                <td colspan="3">
+                                    <p>SWIFT Code</p>
+                                </td>
+                                <td colspan="5">{{ tableData?.company?.swiftCode }}</td>
+                            </tr>
+                            <tr>
+                                <td colspan="3">
+                                    <p>Intermediary Bank</p>
+                                </td>
+                                <td colspan="5">
+                                    {{ tableData?.company?.intermediaryBank }}
+                                </td>
+                            </tr>
+                            <tr>
+                                <td colspan="3">
+                                    <P>Intermediary Bank SWIFT Code</P>
+                                </td>
+                                <td colspan="5">
+                                    {{ tableData?.company?.intermediaryBankSwiftCode }}
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                    <div class="col-4 h-100 text-center p-0 pe-0">
+                        <table class="table">
+                            <tr>
+                                <td colspan="12" class="text-center">
+                                    <img src="{{ tableData?.company?.PISignatureUrl }}" class="img-sign" />
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+            </td>
+        </tr>
+    </table>
+</div>

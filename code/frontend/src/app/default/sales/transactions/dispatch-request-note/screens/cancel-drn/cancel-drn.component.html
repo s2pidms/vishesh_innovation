@@ -1,0 +1,53 @@
+<div class="listCard card">
+    <div class="table-header">
+        <label class="heading">Cancellation DRN Summary</label>
+    </div>
+
+    <hr class="line-border" />
+    <div class="table-responsive">
+        <app-setting-header [data]="{page,pageSize,collection,search,type: 'list'}" (dataChange)="eventHeader($event)">
+        </app-setting-header>
+        <table class="table table-bordered">
+            <thead class="bg-info">
+                <tr class="text-white">
+                    <th sortable="DRNNumber" (sort)="onSort($event)">DRN No.</th>
+                    <th sortable="DRNDateS" (sort)="onSort($event)">DRN Date</th>
+                    <th sortable="salesCategory" (sort)="onSort($event)">Customer Category</th>
+                    <th class="text-start" sortable="customerName" (sort)="onSort($event)">Customer Name</th>
+                    <th sortable="DRNStatus" (sort)="onSort($event)">DRN Status</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let u of tableData; trackBy: trackByFn">
+                    <td>{{ u?.DRNNumber }}</td>
+                    <td>{{ u?.DRNDateS }}</td>
+                    <td>{{ u?.salesCategory }}</td>
+                    <td class="text-start" [style.width]="customerName.clientWidth" #customerName>
+                        <span class="pointer" [positionTarget]="customerName" [ngbTooltip]="u.customerName">
+                            {{ u.customerName }}
+                        </span>
+                    </td>
+                    <td>{{ u.DRNStatus }}</td>
+                    <td>
+                        <div class="dropdown">
+                            <button class="dropbtn"></button>
+                            <div class="dropdown-content">
+                                <a
+                                    appAccessControl
+                                    [accessType]="rolePermissionActions.approveAction"
+                                    href="javascript:void(0)"
+                                    [class.disable]="u?.DRNStatus == 'Cancelled'"
+                                    (click)="navigateTo('../form', u, 'cancel')"
+                                >
+                                    <i class="fa fa-close fa-lg text-primary" aria-hidden="true"></i>
+                                    Cancel
+                                </a>
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>

@@ -1,0 +1,1022 @@
+<div class="grnPrint">
+    <div class="row m-0 justify-content-center">
+        <div class="col-11 text-end mt-2 px-0">
+            <div *ngIf="buttonCondition == 'true'" id="btnDisplay">
+                <button class="btn btn-primary" type="button" (click)="windowPrint()" *ngIf="pdfAction != 'pdf'">
+                    <img src="./assets/images/print.png" width="20px" height="14px" class="mb-2" />&nbsp;&nbsp; Print
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div class="row tablePage m-0">
+        <div class="col-md-11 table-body px-0 pb-0 mb-4">
+            <div class="row table-header mx-0">
+                <div class="col d-flex justify-content-center">
+                    <label class="heading text-center"> Feasibility Commitment </label>
+                </div>
+            </div>
+
+            <Form [formGroup]="form">
+                <div class="row my-4 px-4">
+                    <div class="col-4">
+                        <div class="row">
+                            <div class="col-7 pe-5">
+                                <label class="form-label"> NPD No. <span class="text-danger">*</span> </label>
+                                <ng-select
+                                    [items]="masterData.NPDOptions"
+                                    bindLabel="NPDNo"
+                                    bindValue="_id"
+                                    [clearable]="false"
+                                    (change)="setReference($event)"
+                                    formControlName="NPD"
+                                >
+                                </ng-select>
+                            </div>
+                            <div class="col-5 ps-0">
+                                <label class="form-label"> NPD Date <span class="text-danger"></span> </label>
+                                <input type="date" class="form-control" formControlName="NPDDate" readonly />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-8">
+                        <div class="row">
+                            <div class="col-4">
+                                <label class="form-label mb-0 d-flex justify-content-between">
+                                    Project Name
+                                    <span class="text-danger"></span>
+                                </label>
+                                <input type="text" class="form-control" formControlName="projectName" readonly />
+                            </div>
+
+                            <div class="col-4">
+                                <label class="form-label">
+                                    Product Category
+                                    <span class="text-danger"></span>
+                                </label>
+                                <ng-select
+                                    [items]="masterData.NPDOptions"
+                                    bindLabel="productCategory"
+                                    bindValue="productCategory"
+                                    [clearable]="false"
+                                    formControlName="productCategory"
+                                    [readonly]="true"
+                                >
+                                </ng-select>
+                            </div>
+                            <div class="col-4">
+                                <label class="form-label">
+                                    Customer Name
+                                    <span class="text-danger"></span>
+                                </label>
+                                <ng-select
+                                    *ngIf="action == 'create'"
+                                    [items]="masterData.NPDOptions"
+                                    bindLabel="name"
+                                    bindValue="name"
+                                    [clearable]="false"
+                                    formControlName="name"
+                                    [readonly]="true"
+                                >
+                                </ng-select>
+                                <input
+                                    *ngIf="['view', 'edit', 'print'].includes(action)"
+                                    type="text"
+                                    class="form-control"
+                                    readonly
+                                    formControlName="name"
+                                />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </Form>
+            <hr class="line-border" />
+
+            <div class="row mb-2 px-4">
+                <div class="col-12 d-flex justify-content-center">
+                    <h2 class="text-secondary">Customer Inputs</h2>
+                </div>
+            </div>
+
+            <div class="row mb-0 px-4">
+                <div class="col-12">
+                    <div class="row">
+                        <div class="col-4">
+                            <div class="d-flex align-items-center">
+                                <div class="col-form-label text-nowrap">
+                                    Review No.
+                                    <span class="text-danger">*</span>
+                                    <i class="fa fa-caret-right fa-1x mx-1"></i>
+                                </div>
+                                <div class="d-flex inputGroup flex-grow-1">
+                                    <input
+                                        type="text"
+                                        class="form-control"
+                                        [(ngModel)]="customerInputsObj.reviewNo"
+                                        [disabled]="action == 'view'"
+                                        readonly
+                                    />
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-4">
+                            <div class="d-flex align-items-center">
+                                <div class="col-form-label text-nowrap">
+                                    Review Date
+                                    <span class="text-danger">*</span>
+                                    <i class="fa fa-caret-right fa-1x mx-1"></i>
+                                </div>
+                                <input
+                                    [disabled]="action == 'view'"
+                                    type="date"
+                                    class="form-control"
+                                    [(ngModel)]="customerInputsObj.reviewDate"
+                                    readonly
+                                />
+                            </div>
+                        </div>
+                        <div class="col-4">
+                            <div class="d-flex align-items-center">
+                                <div class="col-form-label text-nowrap">
+                                    Reviewed by <span class="text-danger">*</span>
+                                    <i class="fa fa-caret-right fa-1x mx-1"></i>
+                                </div>
+                                <div class="flex-grow-1">
+                                    <input
+                                        [disabled]="action == 'view'"
+                                        type="text"
+                                        class="form-control"
+                                        [(ngModel)]="customerInputsObj.reviewBy"
+                                        readonly
+                                    />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row d-flex justify-content-center">
+                        <div class="table-responsive mb-0" style="min-height: 18rem">
+                            <table class="table table-bordered table-sticky">
+                                <thead class="bg-primary">
+                                    <tr class="text-white">
+                                        <th>Sr. No.</th>
+                                        <th class="text-start">Customer Inputs Review - Questionnaire</th>
+                                        <th>Check if "Yes"</th>
+                                        <th class="text-start">Remarks</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr *ngFor="let t of customerInputsObj.technicalReview">
+                                        <td>{{ t.orderNo }}</td>
+                                        <td class="text-start">{{ t.questionnaire }}</td>
+                                        <td>
+                                            <input
+                                                [disabled]="action == 'view'"
+                                                class="form-check-input"
+                                                type="checkbox"
+                                                [(ngModel)]="t.isChecked"
+                                            />
+                                        </td>
+                                        <td class="text-start">
+                                            <span *ngIf="action == 'view'">{{ t.remarks }}</span>
+                                            <input
+                                                *ngIf="'edit create'.includes(action)"
+                                                type="text"
+                                                class="form-control"
+                                                [(ngModel)]="t.remarks"
+                                            />
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <div class="row my-3">
+                        <div class="col-5 pe-0 d-flex align-items-end">
+                            <div>
+                                <div class="d-flex">
+                                    <div class="col-form-label text-nowrap pt-1">
+                                        Review output <span class="text-danger pe-2">*</span>
+                                        <span>&#9654;</span>
+                                    </div>
+                                    <select
+                                        [disabled]="action == 'view'"
+                                        class="form-select statusSelectBorder mx-2"
+                                        [(ngModel)]="customerInputsObj.status"
+                                    >
+                                        <option [value]="null" selected disabled>Select Review output</option>
+                                        <option *ngFor="let u of statusArr" [value]="u">{{ u }}</option>
+                                    </select>
+                                    <span class="input-group-text statusSpanHeight">
+                                        <div
+                                            *ngIf="customerInputsObj['status'] == 'Feasible'"
+                                            class="statusActive"
+                                        ></div>
+                                        <div
+                                            *ngIf="customerInputsObj['status'] == 'Not Feasible'"
+                                            class="statusInActive"
+                                        ></div>
+                                        <div
+                                            *ngIf="customerInputsObj['status'] == 'Additional Review Required'"
+                                            class="statusYellow"
+                                        ></div>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-5 pe-0 d-flex align-items-end">
+                            <div>
+                                <div class="d-flex">
+                                    <div class="col-form-label text-nowrap pt-1">
+                                        Feasibility Done By <span class="text-danger pe-1"></span>
+                                        <span>&#9654;</span>
+                                    </div>
+                                    <input
+                                        [disabled]="action == 'view'"
+                                        type="text"
+                                        class="form-control mx-2"
+                                        [(ngModel)]="customerInputsObj.feasibilityDoneBy"
+                                    />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <hr class="line-border" />
+
+            <div class="row mb-2 px-4">
+                <div class="col-12 d-flex justify-content-center">
+                    <h2 class="text-secondary">Technical Review</h2>
+                </div>
+            </div>
+
+            <div class="row mb-0 px-4">
+                <div class="col-12">
+                    <div class="row">
+                        <div class="col-4">
+                            <div class="d-flex align-items-center">
+                                <div class="col-form-label text-nowrap">
+                                    Review No.
+                                    <span class="text-danger">*</span>
+                                    <i class="fa fa-caret-right fa-1x mx-1"></i>
+                                </div>
+                                <div class="d-flex inputGroup flex-grow-1">
+                                    <input
+                                        type="text"
+                                        class="form-control"
+                                        [(ngModel)]="technicalObj.reviewNo"
+                                        [disabled]="action == 'view'"
+                                        readonly
+                                    />
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-4">
+                            <div class="d-flex align-items-center">
+                                <div class="col-form-label text-nowrap">
+                                    Review Date
+                                    <span class="text-danger">*</span>
+                                    <i class="fa fa-caret-right fa-1x mx-1"></i>
+                                </div>
+                                <input
+                                    [disabled]="action == 'view'"
+                                    type="date"
+                                    class="form-control"
+                                    [(ngModel)]="technicalObj.reviewDate"
+                                    readonly
+                                />
+                            </div>
+                        </div>
+                        <div class="col-4">
+                            <div class="d-flex align-items-center">
+                                <div class="col-form-label text-nowrap">
+                                    Reviewed by <span class="text-danger">*</span>
+                                    <i class="fa fa-caret-right fa-1x mx-1"></i>
+                                </div>
+                                <div class="flex-grow-1">
+                                    <input
+                                        [disabled]="action == 'view'"
+                                        type="text"
+                                        class="form-control"
+                                        [(ngModel)]="technicalObj.reviewBy"
+                                        readonly
+                                    />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row d-flex justify-content-center">
+                        <div class="table-responsive mb-0" style="min-height: 18rem">
+                            <table class="table table-bordered table-sticky">
+                                <thead class="bg-primary">
+                                    <tr class="text-white">
+                                        <th>Sr. No.</th>
+                                        <th class="text-start">Technical Review - Questionnaire</th>
+                                        <th>Check if "Yes"</th>
+                                        <th class="text-start">Remarks</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr *ngFor="let t of technicalObj.technicalReview">
+                                        <td>{{ t.orderNo }}</td>
+                                        <td class="text-start">{{ t.questionnaire }}</td>
+                                        <td>
+                                            <input
+                                                [disabled]="action == 'view'"
+                                                class="form-check-input"
+                                                type="checkbox"
+                                                [(ngModel)]="t.isChecked"
+                                            />
+                                        </td>
+                                        <td class="text-start">
+                                            <span *ngIf="action == 'view'">{{ t.remarks }}</span>
+                                            <input
+                                                *ngIf="'edit create'.includes(action)"
+                                                type="text"
+                                                class="form-control"
+                                                [(ngModel)]="t.remarks"
+                                            />
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <div class="row my-3">
+                        <div class="col-5 pe-0 d-flex align-items-end">
+                            <div>
+                                <div class="d-flex">
+                                    <div class="col-form-label text-nowrap pt-1">
+                                        Review output <span class="text-danger pe-2">*</span>
+                                        <span>&#9654;</span>
+                                    </div>
+                                    <select
+                                        [disabled]="action == 'view'"
+                                        class="form-select statusSelectBorder mx-2"
+                                        [(ngModel)]="technicalObj.status"
+                                    >
+                                        <option [value]="null" selected disabled>Select Review output</option>
+                                        <option *ngFor="let u of statusArr" [value]="u">{{ u }}</option>
+                                    </select>
+                                    <span class="input-group-text statusSpanHeight">
+                                        <div *ngIf="technicalObj['status'] == 'Feasible'" class="statusActive"></div>
+                                        <div
+                                            *ngIf="technicalObj['status'] == 'Not Feasible'"
+                                            class="statusInActive"
+                                        ></div>
+                                        <div
+                                            *ngIf="technicalObj['status'] == 'Additional Review Required'"
+                                            class="statusYellow"
+                                        ></div>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-5 pe-0 d-flex align-items-end">
+                            <div>
+                                <div class="d-flex">
+                                    <div class="col-form-label text-nowrap pt-1">
+                                        Feasibility Done By <span class="text-danger pe-1"></span>
+                                        <span>&#9654;</span>
+                                    </div>
+                                    <input
+                                        [disabled]="action == 'view'"
+                                        type="text"
+                                        class="form-control mx-2"
+                                        [(ngModel)]="technicalObj.feasibilityDoneBy"
+                                    />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <hr class="line-border" />
+
+            <div class="row mb-2 px-4">
+                <div class="col-12 d-flex justify-content-center">
+                    <h2 class="text-secondary">Economic Review</h2>
+                </div>
+            </div>
+
+            <div class="row mb-0 px-4">
+                <div class="col-12">
+                    <div class="row">
+                        <div class="col-4">
+                            <div class="d-flex align-items-center">
+                                <div class="col-form-label text-nowrap">
+                                    Review No.
+                                    <span class="text-danger">*</span>
+                                    <i class="fa fa-caret-right fa-1x mx-1"></i>
+                                </div>
+                                <div class="d-flex inputGroup flex-grow-1">
+                                    <input
+                                        type="text"
+                                        class="form-control"
+                                        [(ngModel)]="economicObj.reviewNo"
+                                        [disabled]="action == 'view'"
+                                        readonly
+                                    />
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-4">
+                            <div class="d-flex align-items-center">
+                                <div class="col-form-label text-nowrap">
+                                    Review Date
+                                    <span class="text-danger">*</span>
+                                    <i class="fa fa-caret-right fa-1x mx-1"></i>
+                                </div>
+                                <input
+                                    [disabled]="action == 'view'"
+                                    type="date"
+                                    class="form-control"
+                                    [(ngModel)]="economicObj.reviewDate"
+                                    readonly
+                                />
+                            </div>
+                        </div>
+                        <div class="col-4">
+                            <div class="d-flex align-items-center">
+                                <div class="col-form-label text-nowrap">
+                                    Reviewed by <span class="text-danger">*</span>
+                                    <i class="fa fa-caret-right fa-1x mx-1"></i>
+                                </div>
+                                <div class="flex-grow-1">
+                                    <input
+                                        [disabled]="action == 'view'"
+                                        type="text"
+                                        class="form-control"
+                                        [(ngModel)]="economicObj.reviewBy"
+                                        readonly
+                                    />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row d-flex justify-content-center">
+                        <div class="table-responsive mb-0" style="min-height: 18rem">
+                            <table class="table table-bordered table-sticky">
+                                <thead class="bg-primary">
+                                    <tr class="text-white">
+                                        <th>Sr. No.</th>
+                                        <th class="text-start">Economic Review - Questionnaire</th>
+                                        <th>Check if "Yes"</th>
+                                        <th class="text-start">Remarks</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr *ngFor="let t of economicObj.technicalReview">
+                                        <td>{{ t.orderNo }}</td>
+                                        <td class="text-start">{{ t.questionnaire }}</td>
+                                        <td>
+                                            <input
+                                                [disabled]="action == 'view'"
+                                                class="form-check-input"
+                                                type="checkbox"
+                                                [(ngModel)]="t.isChecked"
+                                            />
+                                        </td>
+                                        <td class="text-start">
+                                            <span *ngIf="action == 'view'">{{ t.remarks }}</span>
+                                            <input
+                                                *ngIf="'edit create'.includes(action)"
+                                                type="text"
+                                                class="form-control"
+                                                [(ngModel)]="t.remarks"
+                                            />
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <div class="row my-3">
+                        <div class="col-5 pe-0 d-flex align-items-end">
+                            <div>
+                                <div class="d-flex">
+                                    <div class="col-form-label text-nowrap pt-1">
+                                        Review output <span class="text-danger pe-2">*</span>
+                                        <span>&#9654;</span>
+                                    </div>
+                                    <select
+                                        [disabled]="action == 'view'"
+                                        class="form-select statusSelectBorder mx-2"
+                                        [(ngModel)]="economicObj.status"
+                                    >
+                                        <option [value]="null" selected disabled>Select Review output</option>
+                                        <option *ngFor="let u of statusArr" [value]="u">{{ u }}</option>
+                                    </select>
+                                    <span class="input-group-text statusSpanHeight">
+                                        <div *ngIf="economicObj['status'] == 'Feasible'" class="statusActive"></div>
+                                        <div
+                                            *ngIf="economicObj['status'] == 'Not Feasible'"
+                                            class="statusInActive"
+                                        ></div>
+                                        <div
+                                            *ngIf="economicObj['status'] == 'Additional Review Required'"
+                                            class="statusYellow"
+                                        ></div>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-5 pe-0 d-flex align-items-end">
+                            <div>
+                                <div class="d-flex">
+                                    <div class="col-form-label text-nowrap pt-1">
+                                        Feasibility Done By <span class="text-danger pe-1"></span>
+                                        <span>&#9654;</span>
+                                    </div>
+                                    <input
+                                        [disabled]="action == 'view'"
+                                        type="text"
+                                        class="form-control mx-2"
+                                        [(ngModel)]="economicObj.feasibilityDoneBy"
+                                    />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <hr class="line-border" />
+
+            <div class="row mb-2 px-4">
+                <div class="col-12 d-flex justify-content-center">
+                    <h2 class="text-secondary">Legal Review</h2>
+                </div>
+            </div>
+
+            <div class="row mb-0 px-4">
+                <div class="col-12">
+                    <div class="row">
+                        <div class="col-4">
+                            <div class="d-flex align-items-center">
+                                <div class="col-form-label text-nowrap">
+                                    Review No.
+                                    <span class="text-danger">*</span>
+                                    <i class="fa fa-caret-right fa-1x mx-1"></i>
+                                </div>
+                                <div class="d-flex inputGroup flex-grow-1">
+                                    <input
+                                        type="text"
+                                        class="form-control"
+                                        [(ngModel)]="legalObj.reviewNo"
+                                        [disabled]="action == 'view'"
+                                        readonly
+                                    />
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-4">
+                            <div class="d-flex align-items-center">
+                                <div class="col-form-label text-nowrap">
+                                    Review Date
+                                    <span class="text-danger">*</span>
+                                    <i class="fa fa-caret-right fa-1x mx-1"></i>
+                                </div>
+                                <input
+                                    [disabled]="action == 'view'"
+                                    type="date"
+                                    class="form-control"
+                                    [(ngModel)]="legalObj.reviewDate"
+                                    readonly
+                                />
+                            </div>
+                        </div>
+                        <div class="col-4">
+                            <div class="d-flex align-items-center">
+                                <div class="col-form-label text-nowrap">
+                                    Reviewed by <span class="text-danger">*</span>
+                                    <i class="fa fa-caret-right fa-1x mx-1"></i>
+                                </div>
+                                <div class="flex-grow-1">
+                                    <input
+                                        [disabled]="action == 'view'"
+                                        type="text"
+                                        class="form-control"
+                                        [(ngModel)]="legalObj.reviewBy"
+                                        readonly
+                                    />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row d-flex justify-content-center">
+                        <div class="table-responsive mb-0" style="min-height: 18rem">
+                            <table class="table table-bordered table-sticky">
+                                <thead class="bg-primary">
+                                    <tr class="text-white">
+                                        <th>Sr. No.</th>
+                                        <th class="text-start">Legal Review - Questionnaire</th>
+                                        <th>Check if "Yes"</th>
+                                        <th class="text-start">Remarks</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr *ngFor="let t of legalObj.technicalReview">
+                                        <td>{{ t.orderNo }}</td>
+                                        <td class="text-start">{{ t.questionnaire }}</td>
+                                        <td>
+                                            <input
+                                                [disabled]="action == 'view'"
+                                                class="form-check-input"
+                                                type="checkbox"
+                                                [(ngModel)]="t.isChecked"
+                                            />
+                                        </td>
+                                        <td class="text-start">
+                                            <span *ngIf="action == 'view'">{{ t.remarks }}</span>
+                                            <input
+                                                *ngIf="'edit create'.includes(action)"
+                                                type="text"
+                                                class="form-control"
+                                                [(ngModel)]="t.remarks"
+                                            />
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <div class="row my-3">
+                        <div class="col-5 pe-0 d-flex align-items-end">
+                            <div>
+                                <div class="d-flex">
+                                    <div class="col-form-label text-nowrap pt-1">
+                                        Review output <span class="text-danger pe-2">*</span>
+                                        <span>&#9654;</span>
+                                    </div>
+                                    <select
+                                        [disabled]="action == 'view'"
+                                        class="form-select statusSelectBorder mx-2"
+                                        [(ngModel)]="legalObj.status"
+                                    >
+                                        <option [value]="null" selected disabled>Select Review output</option>
+                                        <option *ngFor="let u of statusArr" [value]="u">{{ u }}</option>
+                                    </select>
+                                    <span class="input-group-text statusSpanHeight">
+                                        <div *ngIf="legalObj['status'] == 'Feasible'" class="statusActive"></div>
+                                        <div *ngIf="legalObj['status'] == 'Not Feasible'" class="statusInActive"></div>
+                                        <div
+                                            *ngIf="legalObj['status'] == 'Additional Review Required'"
+                                            class="statusYellow"
+                                        ></div>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-5 pe-0 d-flex align-items-end">
+                            <div>
+                                <div class="d-flex">
+                                    <div class="col-form-label text-nowrap pt-1">
+                                        Feasibility Done By <span class="text-danger pe-1"></span>
+                                        <span>&#9654;</span>
+                                    </div>
+                                    <input
+                                        [disabled]="action == 'view'"
+                                        type="text"
+                                        class="form-control mx-2"
+                                        [(ngModel)]="legalObj.feasibilityDoneBy"
+                                    />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <hr class="line-border" />
+
+            <div class="row mb-2 px-4">
+                <div class="col-12 d-flex justify-content-center">
+                    <h2 class="text-secondary">Operational Review</h2>
+                </div>
+            </div>
+
+            <div class="row mb-0 px-4">
+                <div class="col-12">
+                    <div class="row">
+                        <div class="col-4">
+                            <div class="d-flex align-items-center">
+                                <div class="col-form-label text-nowrap">
+                                    Review No.
+                                    <span class="text-danger">*</span>
+                                    <i class="fa fa-caret-right fa-1x mx-1"></i>
+                                </div>
+                                <div class="d-flex inputGroup flex-grow-1">
+                                    <input
+                                        type="text"
+                                        class="form-control"
+                                        [(ngModel)]="operationalObj.reviewNo"
+                                        [disabled]="action == 'view'"
+                                        readonly
+                                    />
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-4">
+                            <div class="d-flex align-items-center">
+                                <div class="col-form-label text-nowrap">
+                                    Review Date
+                                    <span class="text-danger">*</span>
+                                    <i class="fa fa-caret-right fa-1x mx-1"></i>
+                                </div>
+                                <input
+                                    [disabled]="action == 'view'"
+                                    type="date"
+                                    class="form-control"
+                                    [(ngModel)]="operationalObj.reviewDate"
+                                    readonly
+                                />
+                            </div>
+                        </div>
+                        <div class="col-4">
+                            <div class="d-flex align-items-center">
+                                <div class="col-form-label text-nowrap">
+                                    Reviewed by <span class="text-danger">*</span>
+                                    <i class="fa fa-caret-right fa-1x mx-1"></i>
+                                </div>
+                                <div class="flex-grow-1">
+                                    <input
+                                        [disabled]="action == 'view'"
+                                        type="text"
+                                        class="form-control"
+                                        [(ngModel)]="operationalObj.reviewBy"
+                                        readonly
+                                    />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row d-flex justify-content-center">
+                        <div class="table-responsive mb-0" style="min-height: 18rem">
+                            <table class="table table-bordered table-sticky">
+                                <thead class="bg-primary">
+                                    <tr class="text-white">
+                                        <th>Sr. No.</th>
+                                        <th class="text-start">Operational Review - Questionnaire</th>
+                                        <th>Check if "Yes"</th>
+                                        <th class="text-start">Remarks</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr *ngFor="let t of operationalObj.technicalReview">
+                                        <td>{{ t.orderNo }}</td>
+                                        <td class="text-start">{{ t.questionnaire }}</td>
+                                        <td>
+                                            <input
+                                                [disabled]="action == 'view'"
+                                                class="form-check-input"
+                                                type="checkbox"
+                                                [(ngModel)]="t.isChecked"
+                                            />
+                                        </td>
+                                        <td class="text-start">
+                                            <span *ngIf="action == 'view'">{{ t.remarks }}</span>
+                                            <input
+                                                *ngIf="'edit create'.includes(action)"
+                                                type="text"
+                                                class="form-control"
+                                                [(ngModel)]="t.remarks"
+                                            />
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <div class="row my-3">
+                        <div class="col-5 pe-0 d-flex align-items-end">
+                            <div>
+                                <div class="d-flex">
+                                    <div class="col-form-label text-nowrap pt-1">
+                                        Review output <span class="text-danger pe-2">*</span>
+                                        <span>&#9654;</span>
+                                    </div>
+                                    <select
+                                        [disabled]="action == 'view'"
+                                        class="form-select statusSelectBorder mx-2"
+                                        [(ngModel)]="operationalObj.status"
+                                    >
+                                        <option [value]="null" selected disabled>Select Review output</option>
+                                        <option *ngFor="let u of statusArr" [value]="u">{{ u }}</option>
+                                    </select>
+                                    <span class="input-group-text statusSpanHeight">
+                                        <div *ngIf="operationalObj['status'] == 'Feasible'" class="statusActive"></div>
+                                        <div
+                                            *ngIf="operationalObj['status'] == 'Not Feasible'"
+                                            class="statusInActive"
+                                        ></div>
+                                        <div
+                                            *ngIf="operationalObj['status'] == 'Additional Review Required'"
+                                            class="statusYellow"
+                                        ></div>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-5 pe-0 d-flex align-items-end">
+                            <div>
+                                <div class="d-flex">
+                                    <div class="col-form-label text-nowrap pt-1">
+                                        Feasibility Done By <span class="text-danger pe-1"></span>
+                                        <span>&#9654;</span>
+                                    </div>
+                                    <input
+                                        [disabled]="action == 'view'"
+                                        type="text"
+                                        class="form-control mx-2"
+                                        [(ngModel)]="operationalObj.feasibilityDoneBy"
+                                    />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <hr class="line-border" />
+
+            <div class="row mb-2 px-4">
+                <div class="col-12 d-flex justify-content-center">
+                    <h2 class="text-secondary">Scheduling Review</h2>
+                </div>
+            </div>
+
+            <div class="row mb-0 px-4">
+                <div class="col-12">
+                    <div class="row">
+                        <div class="col-4">
+                            <div class="d-flex align-items-center">
+                                <div class="col-form-label text-nowrap">
+                                    Review No.
+                                    <span class="text-danger">*</span>
+                                    <i class="fa fa-caret-right fa-1x mx-1"></i>
+                                </div>
+                                <div class="d-flex inputGroup flex-grow-1">
+                                    <input
+                                        type="text"
+                                        class="form-control"
+                                        [(ngModel)]="schedulingObj.reviewNo"
+                                        [disabled]="action == 'view'"
+                                        readonly
+                                    />
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-4">
+                            <div class="d-flex align-items-center">
+                                <div class="col-form-label text-nowrap">
+                                    Review Date
+                                    <span class="text-danger">*</span>
+                                    <i class="fa fa-caret-right fa-1x mx-1"></i>
+                                </div>
+                                <input
+                                    [disabled]="action == 'view'"
+                                    type="date"
+                                    class="form-control"
+                                    [(ngModel)]="schedulingObj.reviewDate"
+                                    readonly
+                                />
+                            </div>
+                        </div>
+                        <div class="col-4">
+                            <div class="d-flex align-items-center">
+                                <div class="col-form-label text-nowrap">
+                                    Reviewed by <span class="text-danger">*</span>
+                                    <i class="fa fa-caret-right fa-1x mx-1"></i>
+                                </div>
+                                <div class="flex-grow-1">
+                                    <input
+                                        [disabled]="action == 'view'"
+                                        type="text"
+                                        class="form-control"
+                                        [(ngModel)]="schedulingObj.reviewBy"
+                                        readonly
+                                    />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row d-flex justify-content-center">
+                        <div class="table-responsive mb-0" style="min-height: 18rem">
+                            <table class="table table-bordered table-sticky">
+                                <thead class="bg-primary">
+                                    <tr class="text-white">
+                                        <th>Sr. No.</th>
+                                        <th class="text-start">Scheduling Review - Questionnaire</th>
+                                        <th>Check if "Yes"</th>
+                                        <th class="text-start">Remarks</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr *ngFor="let t of schedulingObj.technicalReview">
+                                        <td>{{ t.orderNo }}</td>
+                                        <td class="text-start">{{ t.questionnaire }}</td>
+                                        <td>
+                                            <input
+                                                [disabled]="action == 'view'"
+                                                class="form-check-input"
+                                                type="checkbox"
+                                                [(ngModel)]="t.isChecked"
+                                            />
+                                        </td>
+                                        <td class="text-start">
+                                            <span *ngIf="action == 'view'">{{ t.remarks }}</span>
+                                            <input
+                                                *ngIf="'edit create'.includes(action)"
+                                                type="text"
+                                                class="form-control"
+                                                [(ngModel)]="t.remarks"
+                                            />
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <div class="row my-3">
+                        <div class="col-5 pe-0 d-flex align-items-end">
+                            <div>
+                                <div class="d-flex">
+                                    <div class="col-form-label text-nowrap pt-1">
+                                        Review output <span class="text-danger pe-2">*</span>
+                                        <span>&#9654;</span>
+                                    </div>
+                                    <select
+                                        [disabled]="action == 'view'"
+                                        class="form-select statusSelectBorder mx-2"
+                                        [(ngModel)]="schedulingObj.status"
+                                    >
+                                        <option [value]="null" selected disabled>Select Review output</option>
+                                        <option *ngFor="let u of statusArr" [value]="u">{{ u }}</option>
+                                    </select>
+                                    <span class="input-group-text statusSpanHeight">
+                                        <div *ngIf="schedulingObj['status'] == 'Feasible'" class="statusActive"></div>
+                                        <div
+                                            *ngIf="schedulingObj['status'] == 'Not Feasible'"
+                                            class="statusInActive"
+                                        ></div>
+                                        <div
+                                            *ngIf="schedulingObj['status'] == 'Additional Review Required'"
+                                            class="statusYellow"
+                                        ></div>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-5 pe-0 d-flex align-items-end">
+                            <div>
+                                <div class="d-flex">
+                                    <div class="col-form-label text-nowrap pt-1">
+                                        Feasibility Done By <span class="text-danger pe-1"></span>
+                                        <span>&#9654;</span>
+                                    </div>
+                                    <input
+                                        [disabled]="action == 'view'"
+                                        type="text"
+                                        class="form-control mx-2"
+                                        [(ngModel)]="schedulingObj.feasibilityDoneBy"
+                                    />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <ng-container [formGroup]="form">
+                <hr *ngIf="f['reasonToConvert'].value" class="line-border" />
+
+                <div *ngIf="f['reasonToConvert'].value" class="row mb-4 px-4">
+                    <div class="col-6">
+                        <div class="d-flex">
+                            <div class="col-form-label text-nowrap pt-1">
+                                Reason to Convert <span class="text-danger pe-2">*</span>
+                                <span>&#9654;</span>
+                            </div>
+                            <input type="text" class="form-control" formControlName="reasonToConvert" readonly />
+                        </div>
+                    </div>
+                </div>
+            </ng-container>
+        </div>
+    </div>
+</div>

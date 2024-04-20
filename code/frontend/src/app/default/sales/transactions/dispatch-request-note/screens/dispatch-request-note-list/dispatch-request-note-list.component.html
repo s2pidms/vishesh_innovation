@@ -1,0 +1,79 @@
+<div class="listCard card">
+    <div class="table-header">
+        <label class="heading">DRN Summary</label>
+    </div>
+
+    <div appAccessControl [accessType]="rolePermissionActions.createAction" class="text-center">
+        <button class="btn btn-primary btn-add" type="button" (click)="navigateTo('../form', {}, 'create')">
+            <i class="fa fa-plus-square fa-lg me-2" aria-hidden="true"></i>
+            Dispatch Request Note [DRN]
+        </button>
+    </div>
+    <hr class="line-border" />
+    <div class="table-responsive">
+        <app-setting-header [data]="{page,pageSize,collection,search,type: 'list'}" (dataChange)="eventHeader($event)">
+        </app-setting-header>
+        <table class="table table-bordered">
+            <thead class="bg-info">
+                <tr class="text-white">
+                    <th sortable="DRNNumber" (sort)="onSort($event)">DRN No.</th>
+                    <th sortable="DRNDateS" (sort)="onSort($event)">DRN Date</th>
+                    <th sortable="salesCategory" (sort)="onSort($event)">Customer Category</th>
+                    <th class="text-start" sortable="customerName" (sort)="onSort($event)">Customer Name</th>
+                    <th sortable="DRNStatus" (sort)="onSort($event)">DRN Status</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let u of tableData; trackBy: trackByFn">
+                    <td>{{ u?.DRNNumber }}</td>
+                    <td>{{ u?.DRNDateS }}</td>
+                    <td>{{ u?.salesCategory }}</td>
+                    <td class="text-start" [style.width]="customerName.clientWidth" #customerName>
+                        <span class="pointer" [positionTarget]="customerName" [ngbTooltip]="u.customerName">
+                            {{ u.customerName }}
+                        </span>
+                    </td>
+                    <td>{{ u.DRNStatus }}</td>
+                    <td>
+                        <div class="dropdown">
+                            <button class="dropbtn"></button>
+                            <div class="dropdown-content">
+                                <a
+                                    appAccessControl
+                                    [accessType]="rolePermissionActions.viewAction"
+                                    href="javascript:void(0)"
+                                    (click)="navigateTo('../form', u, 'view')"
+                                >
+                                    <i class="fa fa-eye fa-lg me-2 text-primary" aria-hidden="true"></i>
+                                    View
+                                </a>
+
+                                <a
+                                    appAccessControl
+                                    [accessType]="rolePermissionActions.approveAction"
+                                    [class.disable]="u?.DRNStatus === 'Approved' || u?.DRNStatus === 'Rejected'"
+                                    href="javascript:void(0)"
+                                    (click)="navigateTo('../form', u, 'rejection')"
+                                >
+                                    <i class="fa fa fa-times fa-lg me-3 text-primary" aria-hidden="true"></i>
+                                    Reject
+                                </a>
+                                <a
+                                    appAccessControl
+                                    [accessType]="rolePermissionActions.approveAction"
+                                    [class.disable]="u?.DRNStatus === 'Approved' || u?.DRNStatus === 'Rejected'"
+                                    href="javascript:void(0)"
+                                    (click)="navigateTo('../form', u, 'approval')"
+                                >
+                                    <i class="fa fa-check fa-lg text-success" aria-hidden="true"></i>
+                                    Approve
+                                </a>
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>

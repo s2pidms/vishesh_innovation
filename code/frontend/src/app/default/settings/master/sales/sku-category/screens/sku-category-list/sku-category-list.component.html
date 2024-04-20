@@ -1,0 +1,76 @@
+<div class="listCard card">
+    <div class="table-header">
+        <label class="heading">Product Category Master Summary</label>
+    </div>
+
+    <div appAccessControl [accessType]="rolePermissionActions.createAction" class="text-center">
+        <button
+            class="btn btn-primary btn-add"
+            type="button"
+            (click)="navigateTo('/default/settings/master/sales/sku_category/form', {}, 'create')"
+        >
+            <i class="fa fa-plus-square fa-lg me-2" aria-hidden="true"></i>
+            Product Category Master
+        </button>
+    </div>
+    <hr class="line-border" />
+    <div class="table-responsive">
+        <app-setting-header [data]="{page,pageSize,collection,search,type: 'list'}" (dataChange)="eventHeader($event)">
+        </app-setting-header>
+
+        <table class="table table-bordered">
+            <thead class="bg-secondary">
+                <tr class="text-white">
+                    <!-- <th sortable="SKUCategoryName" (sort)="onSort($event)">Product Category Name</th> -->
+                    <th sortable="SKUCategoryName" (sort)="onSort($event)">Product No.</th>
+                    <th sortable="productCode" (sort)="onSort($event)">Product Code</th>
+                    <th sortable="displayProductCategoryName" (sort)="onSort($event)">DD/Display Value</th>
+                    <th sortable="SKUCategoryPrefix" (sort)="onSort($event)">Product Category Prefix</th>
+                    <th sortable="digit" (sort)="onSort($event)">Digit</th>
+                    <th sortable="SKUCategoryAutoIncrement" (sort)="onSort($event)">
+                        Auto Increment No.
+                    </th>
+                    <th sortable="application" (sort)="onSort($event)">Application</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let u of tableData; trackBy: trackByFn">
+                    <!-- <td>{{ u?.SKUCategoryName }}</td> -->
+                    <td>{{ u?.productNumber }}</td>
+                    <td>{{ u?.productCode }}</td>
+                    <td>{{ u?.displayProductCategoryName }}</td>
+                    <td>{{ u?.SKUCategoryPrefix }}</td>
+                    <td>{{ u?.digit }}</td>
+                    <td>{{ u?.SKUCategoryAutoIncrement }}</td>
+                    <td>{{ u?.application }}</td>
+                    <td>
+                        <div class="dropdown">
+                            <button class="dropbtn"></button>
+                            <div class="dropdown-content">
+                                <a
+                                    appAccessControl
+                                    [accessType]="rolePermissionActions.viewAction"
+                                    href="javascript:void(0)"
+                                    (click)="navigateTo('/default/settings/master/sales/sku_category/form', u, 'view')"
+                                >
+                                    <i class="fa fa-eye fa-lg me-2 text-primary" aria-hidden="true"></i>
+                                    View
+                                </a>
+                                <a
+                                    appAccessControl
+                                    [accessType]="rolePermissionActions.editAction"
+                                    href="javascript:void(0)"
+                                    (click)="navigateTo('/default/settings/master/sales/sku_category/form', u, 'edit')"
+                                >
+                                    <i class="fa fa-pencil-square-o fa-lg me-2 text-primary" aria-hidden="true"></i>
+                                    Edit
+                                </a>
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>

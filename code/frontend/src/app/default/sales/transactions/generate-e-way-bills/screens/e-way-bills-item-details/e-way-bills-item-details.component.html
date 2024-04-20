@@ -1,0 +1,139 @@
+<div class="modelPage">
+  <div class="modal-header">
+    <div class="heading">Item Details</div>
+    <div>
+      <button
+        type="button"
+        class="btn btn-cross btn-sm"
+        aria-label="Close"
+        (click)="dismissModel()"
+      >
+        <i class="fa fa-times-circle" aria-hidden="true"></i>
+      </button>
+    </div>
+  </div>
+  <div class="">
+    <div class="container-fluid">
+      <div class="row mt-4">
+        <form [formGroup]="form">
+          <div class="row mb-4 px-5">
+            <div class="col-4 ps-0">
+              <label class="form-label mb-0">
+                Other Amounts <span class="text-danger"></span>
+              </label>
+              <input
+                class="form-control"
+                type="number"
+                formControlName="otherValue"
+              />
+            </div>
+
+            <div class="col-4">
+              <label class="form-label mb-0">
+                Total Tax<span class="text-danger"></span>
+              </label>
+              <input
+                class="form-control"
+                type="number"
+                formControlName="totalValue"
+              />
+            </div>
+
+            <div class="col-4 pe-0">
+              <label class="form-label mb-0">
+                CGST Amount<span class="text-danger"></span>
+              </label>
+              <input
+                class="form-control"
+                type="number"
+                formControlName="cgstValue"
+              />
+            </div>
+          </div>
+
+          <div class="row mb-5 px-5">
+            <div class="col-4 ps-0">
+              <label class="form-label mb-0">
+                SGST Amount<span class="text-danger"></span>
+              </label>
+              <input
+                class="form-control"
+                type="number"
+                formControlName="sgstValue"
+              />
+            </div>
+            <div class="col-4">
+              <label class="form-label mb-0">
+                IGST Amount<span class="text-danger"></span>
+              </label>
+              <input
+                class="form-control"
+                type="number"
+                formControlName="igstValue"
+              />
+            </div>
+            <div class="col-4 pe-0">
+              <label class="form-label mb-0">
+                Total Inv. Amount <span class="text-danger"></span>
+              </label>
+              <input
+                class="form-control"
+                type="number"
+                formControlName="totInvValue"
+                [ngClass]="{
+                  'is-invalid': f['totInvValue'].invalid && submitted
+                }"
+              />
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="table-responsive mb-5 px-5">
+              <table class="table table-bordered">
+                <thead class="bg-primary">
+                  <tr class="text-white">
+                    <th>Product Name</th>
+                    <th class="text-start">Description</th>
+                    <th>HSN</th>
+                    <th>Quantity</th>
+                    <th>Unit</th>
+                    <th>Taxable Value</th>
+                    <th>CGST Rate</th>
+                    <th>SGST Rate</th>
+                    <th>IGST Rate</th>
+                  </tr>
+                </thead>
+
+                <tbody>
+                  <tr *ngFor="let u of itemDetailsArr">
+                    <td>{{ u?.productName }}</td>
+                    <td class="text-start">{{ u?.productDesc }}</td>
+                    <td>{{ u?.hsnCode }}</td>
+                    <td>{{ u?.quantity }}</td>
+                    <td>{{ u?.qtyUnit }}</td>
+                    <td>{{ u?.taxableAmount | number : "1.2-2" }}</td>
+                    <td>{{ u?.cgstRate }}</td>
+                    <td>{{ u?.sgstRate }}</td>
+                    <td>{{ u?.igstRate }}</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </form>
+
+        <hr class="line-border mb-5 px-05" />
+
+        <div class="text-center mb-5">
+          <button
+            type="button"
+            class="btn bg-primary px-5"
+            (click)="dismissModel()"
+          >
+            Save & Close
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

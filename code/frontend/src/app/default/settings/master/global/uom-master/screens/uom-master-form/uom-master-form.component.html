@@ -1,0 +1,63 @@
+<form [formGroup]="form" class="formCard card">
+    <div class="container">
+        <div class="row form-header">
+            <div class="col heading">
+                <label>UoM Master ({{ action | titlecase }}) </label>
+            </div>
+        </div>
+        <div class="form-body">
+            <div class="row">
+                <div class="col-4">
+                    <label class="form-label">UoM Code <span class="text-danger">*</span></label>
+                    <input class="form-control" type="text" formControlName="UOMCode" readonly />
+                </div>
+                <div class="col-4">
+                    <label class="form-label">UoM Order <span class="text-danger">*</span></label>
+                    <input class="form-control" type="text" formControlName="UOMOrder" />
+                </div>
+                <div class="col-4">
+                    <label class="form-label">UoM Description <span class="text-danger">*</span></label>
+                    <input class="form-control" type="text" formControlName="UOMDescription" />
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-4">
+                    <label class="form-label">UoM GST Code<span class="text-danger">*</span></label>
+                    <input class="form-control" type="text" formControlName="GST" />
+                </div>
+                <div class="col-4">
+                    <label class="form-label">Abbreviation <span class="text-danger">*</span></label>
+                    <input class="form-control" type="text" formControlName="abbreviation" />
+                </div>
+                <div class="col-4">
+                    <label class="form-label">
+                        Status
+                        <span class="text-danger">*</span>
+                    </label>
+                    <div class="d-flex inputGroup skuForm">
+                        <select class="form-select statusSelectBorder" formControlName="status">
+                            <option [value]="null" selected disabled>Select Status</option>
+                            <option [value]="'Active'">Active</option>
+                            <option [value]="'Inactive'">Inactive</option>
+                        </select>
+                        <div class="input-group-text bg-white">
+                            <div class="col-md-auto my-4 align-self-center">
+                                <div *ngIf="form.value['status'] == 'Active'" class="statusActive"></div>
+                                <div *ngIf="form.value['status'] == 'Inactive'" class="statusInActive"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <hr class="row line-border" />
+        <div *ngIf="action !== 'view'" class="d-flex justify-content-center mb-3">
+            <div class="d-grid col-md-1 mx-5" [ngClass]="{'d-none': action == 'View'}">
+                <button type="button" class="btn btn-primary" (click)="reset()">Reset</button>
+            </div>
+            <div class="d-grid col-md-1" [ngClass]="{'d-none': action == 'View'}">
+                <button type="button" class="btn btn-primary" (click)="submit()">Save</button>
+            </div>
+        </div>
+    </div>
+</form>

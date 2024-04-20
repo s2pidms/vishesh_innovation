@@ -1,0 +1,53 @@
+<div class="listCard card">
+    <div class="table-header">
+        <div class="col heading">
+            <label>Label Master</label>
+        </div>
+    </div>
+    <div class="table-responsive">
+        <app-setting-header
+            [data]="{page,pageSize,collection,search, excelDisplay : 'none'}"
+            (dataChange)="eventHeader($event)"
+        >
+        </app-setting-header>
+        <table class="table table-bordered">
+            <thead class="bg-primary">
+                <tr class="text-white">
+                    <th>Sr No.</th>
+                    <th>Label Title</th>
+                    <th>Label Display Name</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                <ng-container
+                    *ngFor="
+                        let item of labelData
+                            | searchFi1ter : search
+                            | slice : (page - 1) * pageSize : (page - 1) * pageSize + pageSize;
+                        let i = index;
+                        trackBy: trackByFn
+                    "
+                >
+                    <tr>
+                        <td>
+                            {{ 1 + i + (page - 1) * pageSize }}
+                        </td>
+                        <td>
+                            {{ item.labelName }}
+                        </td>
+                        <td>
+                            <input [(ngModel)]="item.displayLabelName" class="form-control" type="text" />
+                        </td>
+
+                        <td>
+                            <div class="d-flex justify-content-center">
+                                <button class="btn btn-primary py-0" (click)="update(item)">Update</button>
+                            </div>
+                        </td>
+                    </tr>
+                </ng-container>
+            </tbody>
+        </table>
+    </div>
+</div>

@@ -1,0 +1,86 @@
+<div class="listCard card">
+    <div class="table-header">
+        <label class="heading">Mould Master Summary</label>
+    </div>
+
+    <div appAccessControl [accessType]="rolePermissionActions.createAction" class="text-center">
+        <button class="plusIconSvg btn btn-primary me-1"></button>
+        <button class="btn btn-primary btn-add px-5" type="button" (click)="navigateTo('../form', null, 'create')">
+            Mould
+        </button>
+    </div>
+    <hr class="line-border" />
+    <div class="table-responsive">
+        <app-setting-header [data]="{page,pageSize,collection,search,type: 'list'}" (dataChange)="eventHeader($event)">
+        </app-setting-header>
+        <table class="table table-bordered">
+            <thead class="bg-primary">
+                <tr class="text-white">
+                    <th sortable="mouldNo" (sort)="onSort($event)">Mould ID</th>
+                    <th class="text-start" sortable="mouldName" (sort)="onSort($event)">Mould Description</th>
+                    <th class="text-start" sortable="mouldType" (sort)="onSort($event)">Mould Type</th>
+                    <th sortable="noOfCavities" (sort)="onSort($event)">Cavities</th>
+                    <!-- <th sortable="TBDPerWidth" (sort)="onSort($event)">TBD/Width (mm)</th> -->
+                    <th sortable="mouldTBDDimension" (sort)="onSort($event)">TBD - (mm x mm)</th>
+                    <th class="text-start" sortable="mouldSupplier" (sort)="onSort($event)">Supplier Nick Name</th>
+                    <th sortable="partNo" (sort)="onSort($event)">S/Part No.</th>
+                    <th sortable="mouldBatchDate" (sort)="onSort($event)">Mould B/D</th>
+                    <!-- <th sortable="status" (sort)="onSort($event)">Status</th> -->
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let u of tableData; trackBy: trackByFn">
+                    <td>{{ u?.mouldNo }}</td>
+                    <td class="text-start" [style.width]="mouldName.clientWidth" #mouldName>
+                        <span class="pointer" [positionTarget]="mouldName" [ngbTooltip]="u.mouldName">
+                            {{ u?.mouldName }}
+                        </span>
+                    </td>
+                    <td class="text-start">{{ u?.mouldType }}</td>
+                    <td>{{ u?.noOfCavities }}</td>
+                    <!-- <td>{{ u?.TBDPerWidth }}</td> -->
+                    <td>{{ u?.mouldTBDDimension }}</td>
+                    <td class="text-start" [style.width]="mouldSupplier.clientWidth" #mouldSupplier>
+                        <span class="pointer" [positionTarget]="mouldSupplier" [ngbTooltip]="u.mouldSupplier">
+                            {{ u?.mouldSupplier }}
+                        </span>
+                    </td>
+                    <td>{{ u?.partNo }}</td>
+                    <td>{{ u?.mouldBatchDate }}</td>
+                    <!-- <td>
+                        <span class="d-flex justify-content-center">
+                            <div *ngIf="u.status == 'Active'" class="statusActive"></div>
+                            <div *ngIf="u.status == 'Inactive'" class="statusInActive"></div>
+                        </span>
+                    </td> -->
+                    <td>
+                        <div class="dropdown">
+                            <button class="dropbtn"></button>
+                            <div class="dropdown-content">
+                                <a
+                                    appAccessControl
+                                    [accessType]="rolePermissionActions.viewAction"
+                                    href="javascript:void(0)"
+                                    (click)="navigateTo('../form', u?._id, 'view')"
+                                >
+                                    <i class="fa fa-eye fa-lg me-2 text-primary" aria-hidden="true"></i>
+                                    View
+                                </a>
+                                <a
+                                    appAccessControl
+                                    [accessType]="rolePermissionActions.editAction"
+                                    href="javascript:void(0)"
+                                    (click)="navigateTo('../form', u?._id, 'edit')"
+                                >
+                                    <i class="fa fa-pencil-square-o fa-lg me-2 text-primary" aria-hidden="true"></i>
+                                    Edit
+                                </a>
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
