@@ -19,8 +19,14 @@ const {
     supportsDashboard
 } = require("../controllers/v1/dashboard/dash_function");
 const {mailTriggerCycle} = require("../controllers/v1/settings/mailTrigger/mailTrigger");
+const AuditRepository = require("../models/settings/repository/auditRepository");
 exports.triggers = async () => {
-    await Promise.all([triggerLeaveApplicationStatusToAvailed(), triggerDashboard(), executeMailTrigger()]);
+    await Promise.all([
+        triggerLeaveApplicationStatusToAvailed(),
+        triggerDashboard(),
+        executeMailTrigger(),
+        emptyAudit()
+    ]);
 };
 
 const triggerLeaveApplicationStatusToAvailed = async () => {
@@ -28,7 +34,6 @@ const triggerLeaveApplicationStatusToAvailed = async () => {
         cron.schedule("0 0 * * *", async function () {
             updateLeaveApplicationStatusToAvailed();
             getValidityData();
-            mailTriggerCycle();
         });
     } catch (error) {
         console.error(`Error: triggerLeaveApplicationStatusToAvailed ${error}`);
@@ -69,6 +74,17 @@ const triggerDashboard = async () => {
         });
     } catch (error) {
         console.error(`Error: triggerDashboard ${error}`);
+        process.exit(1);
+    }
+};
+
+const emptyAudit = async () => {
+    try {
+        cron.schedule("0 7 * * 0", async function () {
+            await AuditRepository.deleteManyDoc({});
+        });
+    } catch (error) {
+        console.error(`Error: executeMailTrigger ${error}`);
         process.exit(1);
     }
 };

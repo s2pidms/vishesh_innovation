@@ -1217,3 +1217,22 @@ exports.updateSalesInvoiceOnPDIRGenerate = async (company, salesInvoiceId) => {
         console.error("updateSalesInvoiceOnPDIRGenerate::::: Error in updating Sales Invoice ======= ", error);
     }
 };
+
+exports.update = asyncHandler(async (req, res) => {
+    try {
+        let itemDetails = await SalesInvoiceRepository.getDocById(req.params.id);
+        if (!itemDetails) {
+            const errors = MESSAGES.apiErrorStrings.INVALID_REQUEST;
+            return res.preconditionFailed(errors);
+        }
+        itemDetails.updatedBy = req.user.sub;
+        itemDetails = await SalesInvoiceRepository.updateDoc(itemDetails, req.body);
+        return res.success({
+            message: MESSAGES.apiSuccessStrings.UPDATE("salesInvoice has been")
+        });
+    } catch (e) {
+        console.error("update salesInvoice", e);
+        const errors = MESSAGES.apiErrorStrings.SERVER_ERROR;
+        return res.serverError(errors);
+    }
+});

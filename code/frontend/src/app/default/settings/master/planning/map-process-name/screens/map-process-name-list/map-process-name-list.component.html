@@ -1,0 +1,51 @@
+<div class="listCard card">
+    <div class="table-header">
+        <label class="heading">Map Process Name Summary</label>
+    </div>
+    <hr class="line-border" />
+    <div class="table-responsive">
+        <app-setting-header [data]="{page,pageSize,collection,search,type: 'list'}" (dataChange)="eventHeader($event)">
+        </app-setting-header>
+
+        <table class="table table-bordered">
+            <thead class="bg-secondary">
+                <tr class="text-white">
+                    <th sortable="processId" (sort)="onSort($event)">Process ID</th>
+                    <th sortable="processName" (sort)="onSort($event)">Process Name</th>
+                    <th class="text-start" sortable="processOriginalName" (sort)="onSort($event)">
+                        Map Process Original Name
+                    </th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let u of tableData; trackBy: trackByFn">
+                    <td>{{ u?.processId }}</td>
+                    <td>{{ u?.processName }}</td>
+                    <td>
+                        <select class="form-select" [(ngModel)]="u.processOriginalName">
+                            <option value="null" selected disabled>Select Process Original Name</option>
+                            <option [value]="item.value" *ngFor="let item of processOptions">
+                                {{ item?.label }}
+                            </option>
+                        </select>
+                    </td>
+                    <td>
+                        <div class="dropdown">
+                            <button class="dropbtn"></button>
+                            <div class="dropdown-content">
+                                <a
+                                    href="javascript:void(0)"
+                                    (click)="update(u, {processOriginalName: u.processOriginalName})"
+                                >
+                                    <i class="fa fa-pencil-square-o fa-lg me-2 text-primary" aria-hidden="true"></i>
+                                    Update
+                                </a>
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>

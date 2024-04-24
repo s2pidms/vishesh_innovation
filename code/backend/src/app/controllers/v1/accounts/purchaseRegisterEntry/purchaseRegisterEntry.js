@@ -13,11 +13,21 @@ const {getAllModuleMaster} = require("../../settings/module-master/module-master
 const {filteredMRNList} = require("../../../../models/quality/repository/mrnRepository");
 const {getAllSuppliers} = require("../../purchase/suppliers/suppliers");
 const {getEndDateTime, getStartDateTime} = require("../../../../helpers/dateTime");
+const {OPTIONS} = require("../../../../helpers/global.options");
 
 exports.getAll = asyncHandler(async (req, res) => {
     try {
         let project = getAllPurchaseRegistryEntryAttributes();
-        let pipeline = [{$match: {company: ObjectId(req.user.company)}}];
+        let pipeline = [
+            {
+                $match: {
+                    company: ObjectId(req.user.company),
+                    status: {
+                        $nin: [OPTIONS.defaultStatus.REPORT_GENERATED]
+                    }
+                }
+            }
+        ];
         let rows = await PurchaseRegistryEntryRepository.getAllPaginate({
             pipeline,
             project,
@@ -123,7 +133,8 @@ exports.getAllMasterData = asyncHandler(async (req, res) => {
                     _id: 0,
                     supplierName: 1,
                     supplier: "$_id",
-                    supplierGST: 1
+                    supplierGST: 1,
+                    supplierCurrency: 1
                 }
             }
         ]);
@@ -183,6 +194,7 @@ exports.getAllReports = asyncHandler(async (req, res) => {
         const {supplier = null, toDate = null, fromDate = null} = req.query;
         let query = {
             company: ObjectId(req.user.company),
+            status: OPTIONS.defaultStatus.REPORT_GENERATED,
             ...(!!supplier && {
                 supplier: ObjectId(supplier)
             }),

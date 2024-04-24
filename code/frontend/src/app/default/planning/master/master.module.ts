@@ -94,6 +94,19 @@ const routes: Routes = [
                     import("./../../sales/master/sales-product-master/sales-product-master.module").then(
                         m => m.SalesProductMasterModule
                     )
+            },
+            {
+                path: "hsn_master",
+                loadChildren: () => import("./hsn-master/hsn-master.module").then(m => m.HSNMasterModule)
+            },
+            {
+                path: "sac_master",
+                loadChildren: () => import("./sac-master/sac-master.module").then(m => m.SACMasterModule)
+            },
+            {
+                path: "transporter",
+                loadChildren: () =>
+                    import("./../../sales/master/transporter/transporter.module").then(m => m.TransporterModule)
             }
         ]
     }

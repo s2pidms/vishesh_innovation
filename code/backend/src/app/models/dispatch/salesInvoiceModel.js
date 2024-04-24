@@ -714,6 +714,16 @@ const salesInvoiceSchema = mongoose.Schema(
                 type: String,
                 required: false
             }
+        },
+        eInvoiceStatus: {
+            type: Boolean,
+            required: false,
+            default: false
+        },
+        eWayBillStatus: {
+            type: Boolean,
+            required: false,
+            default: false
         }
     },
     {

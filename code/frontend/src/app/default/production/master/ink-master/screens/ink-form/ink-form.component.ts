@@ -212,15 +212,16 @@ export class InkFormComponent implements OnInit {
                         this.isPreview = true;
                         this.form.disable();
                         this.form.controls["status"].enable();
+                        if (this.action != "view") {
+                            this.form.controls["itemDescription"].enable();
+                        }
                     }
                 });
         });
     }
-
     setHSNCode(event: any) {
         this.form.controls["HSNCode"].setValue(event?.value);
     }
-
     setPrimaryUnit() {
         let UOM = this.form.controls["UoM"].value;
         this.form.controls["primaryUnit"].setValue(UOM);

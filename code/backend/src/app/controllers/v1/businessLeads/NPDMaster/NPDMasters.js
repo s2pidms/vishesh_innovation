@@ -393,7 +393,12 @@ exports.getAllMasterData = asyncHandler(async (req, res) => {
         return res.success({
             autoIncrementNo,
             attributesList,
-            uomOptions: units,
+            uomOptions: units.map(x => {
+                return {
+                    value: x.value,
+                    label: x.label
+                };
+            }),
             customersOptions,
             inkList,
             categoryList,

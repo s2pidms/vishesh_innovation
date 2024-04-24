@@ -15,7 +15,7 @@ export class ChildPartInfoModalComponent implements OnInit {
     @Input() flag: boolean = false;
     @Input() ModalUOMsUnit: any = [];
     @Input() WXLDimensionsUnit: any = [];
-    @Input() dualUnits = {};
+    @Input() dualUnits: any = {};
     @Input() dimensionData = {};
     DDetailsFlag: any = null;
     primaryUnit = ["SHT", "RL"];
@@ -47,7 +47,6 @@ export class ChildPartInfoModalComponent implements OnInit {
 
     ngOnInit(): void {
         console.log("dualUnits", this.dualUnits);
-
         this.form.patchValue(this.dualUnits);
         this.f["secondaryUnit"].setValue("sqm");
         // this.f["secondaryUnit"].disable();
@@ -55,6 +54,17 @@ export class ChildPartInfoModalComponent implements OnInit {
             this.form.disable();
         }
         console.log("this.form.", this.form.value);
+        let itemCodeSplit = this.dualUnits.itemCode.split("/")[0];
+        console.log("itemCodeSplit", itemCodeSplit);
+        if (!this.dualUnits.primaryToSecondaryConversion) {
+            if (itemCodeSplit == "M10") {
+                this.f["primaryUnit"].setValue("SHT");
+                console.log(" this.f .", this.f["primaryUnit"].value);
+            } else if (itemCodeSplit == "M30") {
+                this.f["primaryUnit"].setValue("RL");
+            }
+            this.setDescription();
+        }
     }
 
     setDescription() {

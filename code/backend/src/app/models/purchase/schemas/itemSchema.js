@@ -286,6 +286,10 @@ exports.SCHEMA = {
                 type: String,
                 required: false
             },
+            supplierDescription: {
+                type: String,
+                required: false
+            },
             spin: {
                 type: String,
                 required: false

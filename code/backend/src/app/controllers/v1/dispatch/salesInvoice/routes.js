@@ -9,7 +9,8 @@ const {
     previewTaxInv,
     getAllSILineDetails,
     getAllEwayBillList,
-    getSalesInvoiceByIdForPDF
+    getSalesInvoiceByIdForPDF,
+    update
 } = require("./salesInvoice");
 const {getAllReports, getAllSalesAndInvoiceAnalysis, getAllSalesRegisterReports} = require("./salesInvoiceReports");
 const {eWayBillGenerate, eInvoiceGenerate} = require("./e-way");
@@ -28,4 +29,5 @@ app.get("/getAllSalesRegisterReports", getAllSalesRegisterReports);
 app.get("/getAllEwayBillList", getAllEwayBillList);
 app.post("/eWayBillGenerate", eWayBillGenerate);
 app.post("/eInvoiceGenerate", eInvoiceGenerate);
+app.put("/update/:id", validate("checkParamId"), update);
 module.exports = app;

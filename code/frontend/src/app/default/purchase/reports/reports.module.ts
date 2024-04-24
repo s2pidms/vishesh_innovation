@@ -108,6 +108,11 @@ const routes: Routes = [
             {
                 path: "purchase_indent",
                 loadChildren: () => import("./purchase-indent/purchase-indent.module").then(m => m.PurchaseIndentModule)
+            },
+            {
+                path: "reorder_levelR",
+                loadChildren: () =>
+                    import("./../../stores/reports/reorder-level/reorder-level.module").then(m => m.ReorderLevelModule)
             }
         ]
     }

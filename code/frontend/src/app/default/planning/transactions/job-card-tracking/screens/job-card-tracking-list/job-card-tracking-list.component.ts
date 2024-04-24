@@ -5,6 +5,8 @@ import {LIST_DEFAULT_PERMISSION_ACTIONS} from "@mocks/constant";
 import {MenuTitleService, SpinnerService} from "@core/services";
 import {JobCardOutputService} from "@services/production";
 import {IJobCardTrackingMasterData} from "@mocks/models/planning/transactions/jobCardTrackingMasterData";
+import {ViewJcStatusComponent} from "../view-jc-status/view-jc-status.component";
+import {NgbModal} from "@ng-bootstrap/ng-bootstrap";
 
 @Component({
     selector: "app-job-card-tracking-list",
@@ -28,7 +30,8 @@ export class JobCardTrackingListComponent implements OnInit {
         private spinner: SpinnerService,
         private activatedRoute: ActivatedRoute,
         private jobCardOutputService: JobCardOutputService,
-        private menuTitleService: MenuTitleService
+        private menuTitleService: MenuTitleService,
+        private modalService: NgbModal
     ) {}
 
     ngOnInit(): void {
@@ -72,7 +75,24 @@ export class JobCardTrackingListComponent implements OnInit {
     trackByFn(index: number, item: any) {
         return item?._id;
     }
-
+    openStatusDetailsModal(item: any) {
+        if (item?.jobCardEntry?.length > 0) {
+            const modalRef = this.modalService.open(ViewJcStatusComponent, {
+                centered: true,
+                windowClass: "custom-modal",
+                backdrop: "static",
+                keyboard: false
+            });
+            modalRef.componentInstance.jobCardEntryList = item.jobCardEntry;
+            modalRef.result.then(
+                (success: any) => {
+                    if (success) {
+                    }
+                },
+                (reason: any) => {}
+            );
+        }
+    }
     openDemoDetailsModal(item: any) {
         // if (item.demoSchedule.length > 0) {
         //     const modalRef = this.modalService.open(DemoDetailsModalComponent, {

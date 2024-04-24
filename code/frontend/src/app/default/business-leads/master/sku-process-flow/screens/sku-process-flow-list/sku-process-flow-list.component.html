@@ -49,7 +49,7 @@
                             {{ u?.SKUDescription }}
                         </span>
                     </td>
-                    <td>{{ u?.primaryUnit | UOMUnitsMaster }}</td>
+                    <td>{{ u?.primaryUnit | SalesUOMUnitMaster }}</td>
                     <td class="text-start" [style.width]="productCategory.clientWidth" #productCategory>
                         <span class="pointer" [ngbTooltip]="u.productCategory" [positionTarget]="productCategory">
                             {{ u?.productCategory }}

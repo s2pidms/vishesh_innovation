@@ -86,7 +86,7 @@
                                 {{ u?.SKUDescription }}
                             </span>
                         </td>
-                        <td>{{ u?.UOM }}</td>
+                        <td>{{ u?.UOM | SalesUOMUnitMaster }}</td>
                         <td>{{ u?.dispatchQty }}</td>
                     </tr>
                 </tbody>

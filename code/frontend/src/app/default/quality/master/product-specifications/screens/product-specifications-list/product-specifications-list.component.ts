@@ -38,8 +38,13 @@ export class ProductSpecificationsListComponent implements OnInit, OnDestroy {
         this.getAll();
     }
 
-    navigateTo(path: string, id: any, action: string) {
-        this.router.navigate([path], {queryParams: {id, action}});
+    navigateTo(path: string, u: any, action: string) {
+        if (u.status == "Inactive" && action == "copy") {
+            return null;
+        } else {
+            this.router.navigate([path], {relativeTo: this.activatedRoute, queryParams: {id: u?._id, action}});
+            return;
+        }
     }
     trackByFn(index: number, item: any) {
         return item?._id;

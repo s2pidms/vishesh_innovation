@@ -1,7 +1,6 @@
 const mongoose = require("mongoose");
 const Audit = require("../../controllers/v1/settings/audit/audit");
 const {OPTIONS} = require("../../helpers/global.options");
-const {findAppParameterValue} = require("../../controllers/v1/settings/appParameter/appParameter");
 const {PRODUCT_MASTER: SCHEMA_CONST} = require("../../mocks/schemasConstant/planningConstant");
 const {getAndSetAutoIncrementNo} = require("../../controllers/v1/settings/autoIncrement/autoIncrement");
 const {paginatePlugin} = require("../plugins/paginatePlugin");

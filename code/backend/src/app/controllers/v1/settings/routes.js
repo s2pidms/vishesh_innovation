@@ -28,6 +28,7 @@ const productCategory = require("./productCategoryMaster/routes");
 const mailTrigger = require("./mailTrigger/routes");
 const UOMUnitMaster = require("./UOMUnitMaster/routes");
 const mouldMaster = require("./mouldMaster/routes");
+const SalesUOMUnitMaster = require("./SalesUOMUnitMaster/routes");
 
 router.use("/user", user);
 router.use("/role", role);
@@ -58,5 +59,6 @@ router.use("/productCategory", productCategory);
 router.use("/mailTrigger", mailTrigger);
 router.use("/UOMUnitMaster", UOMUnitMaster);
 router.use("/mouldMaster", mouldMaster);
+router.use("/SalesUOMUnitMaster", SalesUOMUnitMaster);
 
 module.exports = router;

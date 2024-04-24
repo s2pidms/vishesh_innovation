@@ -8,6 +8,7 @@ const {getAllCheckedItemCategoriesList} = require("../../purchase/itemCategoryMa
 const {OPTIONS} = require("../../../../helpers/global.options");
 const {STOCK_PREP_UOM, GOODS_TRANSFER_REQUEST_DEPT} = require("../../../../mocks/constantData");
 const {getAllModuleMaster} = require("../../settings/module-master/module-master");
+const InventoryRepository = require("../../../../models/stores/repository/inventoryCorrectionRepository");
 
 exports.getAll = asyncHandler(async (req, res) => {
     try {
@@ -42,7 +43,11 @@ exports.createOrUpdate = asyncHandler(async (req, res) => {
                 updatedBy: req.user.sub,
                 ...req.body
             };
-            await StockCuttingRepository.createDoc(createdObj);
+            let itemSelected = createdObj.stockCuttingDetails.find(x => x.isSelectItem)?.reference;
+            const itemDetails = await StockCuttingRepository.createDoc(createdObj);
+            if (itemDetails) {
+                await updateInvOnStockCutting(itemDetails.stockCuttingDetails, itemSelected);
+            }
         }
         res.success({
             message: MESSAGES.apiSuccessStrings.ADDED("Stock Cutting Log")
@@ -53,6 +58,70 @@ exports.createOrUpdate = asyncHandler(async (req, res) => {
         return res.serverError(errors);
     }
 });
+const updateInvOnStockCutting = async (stockCuttingDetails, itemSelected) => {
+    try {
+        let bulkUpdateOperations = [];
+        stockCuttingDetails = stockCuttingDetails.filter(x => x.reference == itemSelected);
+        for await (const stock of stockCuttingDetails) {
+            for await (const openingStock of stock.PPICOpeningStock) {
+                let updateOperation = {
+                    updateOne: {
+                        filter: {_id: openingStock.inventory},
+                        update: {
+                            $set: {closedIRQty: 0}
+                        }
+                    }
+                };
+                bulkUpdateOperations.push(updateOperation);
+            }
+            for await (const stockToProd of stock.PPICToProductionGT) {
+                let inventoryCreateObj = await InventoryRepository.getDocById(stockToProd.inventory);
+                if (inventoryCreateObj) {
+                    inventoryCreateObj._id = null;
+                    inventoryCreateObj.department = GOODS_TRANSFER_REQUEST_DEPT.PRODUCTION;
+                    inventoryCreateObj.length = stockToProd.length;
+                    inventoryCreateObj.width = stockToProd.width;
+                    inventoryCreateObj.SQM = stockToProd.MF;
+                    inventoryCreateObj.itemDescription = stockToProd.itemDescription;
+                    inventoryCreateObj.UOM = stockToProd.U1;
+                    inventoryCreateObj.primaryUnit = stockToProd.U1;
+                    inventoryCreateObj.secondaryUnit = stockToProd.U2;
+                    inventoryCreateObj.closedIRQty = stockToProd.U1Qty;
+
+                    let insertOperations = {
+                        insertOne: {document: inventoryCreateObj}
+                    };
+                    bulkUpdateOperations.push(insertOperations);
+                }
+            }
+            for await (const stockToPlanning of stock.PPICClosingStockActual) {
+                let inventoryCreateObj = await InventoryRepository.getDocById(stockToPlanning.inventory);
+                if (inventoryCreateObj) {
+                    inventoryCreateObj._id = null;
+                    inventoryCreateObj.department = GOODS_TRANSFER_REQUEST_DEPT.PLANNING;
+                    inventoryCreateObj.length = stockToPlanning.length;
+                    inventoryCreateObj.width = stockToPlanning.width;
+                    inventoryCreateObj.SQM = stockToPlanning.MF;
+                    inventoryCreateObj.itemDescription = stockToPlanning.itemDescription;
+                    inventoryCreateObj.UOM = stockToPlanning.U1;
+                    inventoryCreateObj.primaryUnit = stockToPlanning.U1;
+                    inventoryCreateObj.secondaryUnit = stockToPlanning.U2;
+                    inventoryCreateObj.closedIRQty = stockToPlanning.U1Qty;
+                    let insertOperations = {
+                        insertOne: {document: inventoryCreateObj}
+                    };
+                    bulkUpdateOperations.push(insertOperations);
+                }
+            }
+        }
+        if (bulkUpdateOperations.length > 0) {
+            await InventoryRepository.bulkWriteDoc(bulkUpdateOperations);
+        }
+    } catch (error) {
+        console.error("error", error);
+    }
+};
+
 exports.update = asyncHandler(async (req, res) => {
     try {
         let itemDetails = await StockCuttingRepository.getDocById(req.params.id);
@@ -74,17 +143,17 @@ exports.update = asyncHandler(async (req, res) => {
 
 exports.getAllMasterData = asyncHandler(async (req, res) => {
     try {
-        let stockCuttingData = {};
-        stockCuttingData = await StockCuttingRepository.findOneDoc({
-            jobCard: ObjectId(req.query.jobCard),
-            SKU: ObjectId(req.query.SKU)
-        });
         const processNames = await getAllModuleMaster(req.user.company, "STOCK_PROCESS_NAME");
         let itemCategoriesList = await getAllCheckedItemCategoriesList({
             categoryStatus: OPTIONS.defaultStatus.ACTIVE,
             stockPreparation: true
         });
         itemCategoriesList = itemCategoriesList.map(x => x.category);
+        let stockCuttingData = {};
+        stockCuttingData = await StockCuttingRepository.findOneDoc({
+            jobCard: ObjectId(req.query.jobCard),
+            SKU: ObjectId(req.query.SKU)
+        });
         if (!stockCuttingData) {
             let BOMOfSKUData = await filteredBoMOfSKUList([
                 {
@@ -95,9 +164,6 @@ exports.getAllMasterData = asyncHandler(async (req, res) => {
                 {
                     $sort: {SKUCode: 1}
                 },
-                // {
-                //     $unwind: "$BOMOfSKUDetails"
-                // },
                 {
                     $lookup: {
                         from: "Items",
@@ -113,12 +179,6 @@ exports.getAllMasterData = asyncHandler(async (req, res) => {
                         as: "item"
                     }
                 },
-                // {
-                //     $unwind: {
-                //         path: "$item",
-                //         preserveNullAndEmptyArrays: true
-                //     }
-                // },
                 {
                     $match: {
                         ...(itemCategoriesList.length > 0 && {"item.itemType": {$in: itemCategoriesList}})
@@ -130,12 +190,6 @@ exports.getAllMasterData = asyncHandler(async (req, res) => {
                         localField: "BOMOfSKUDetails.reference",
                         foreignField: "item",
                         pipeline: [
-                            // {
-                            //     $group: {
-                            //         _id: {itemId: "$item", UOM: "$UOM"},
-                            //         closedIRQty: {$sum: "$closedIRQty"}
-                            //     }
-                            // },
                             {
                                 $match: {
                                     department: GOODS_TRANSFER_REQUEST_DEPT.PLANNING
@@ -192,6 +246,7 @@ exports.getAllMasterData = asyncHandler(async (req, res) => {
                             },
                             {
                                 $project: {
+                                    inventory: "$_id",
                                     MRNNo: "$MRNNumber",
                                     MRN: "$MRN",
                                     item: "$item",
@@ -274,6 +329,7 @@ exports.getAllMasterData = asyncHandler(async (req, res) => {
                                     U2: "$$details.secondaryUnit",
                                     U2Qty: {$literal: 0},
                                     select: {$literal: false},
+                                    isSaved: {$literal: false},
                                     U2TotalQty: {$literal: 0},
                                     PPICOpeningStock: "$inventory",
                                     PPICToProductionGT: "$PPICToProductionGT",
@@ -364,6 +420,114 @@ exports.getAllMasterData = asyncHandler(async (req, res) => {
         return res.success({stockCutting: stockCuttingData, processNames, shiftOptions});
     } catch (error) {
         console.error("getAllMasterData Screen Making Log", error);
+        const errors = MESSAGES.apiErrorStrings.SERVER_ERROR;
+        return res.serverError(errors);
+    }
+});
+
+exports.getInventoryItemsOnSelect = asyncHandler(async (req, res) => {
+    try {
+        let stockCuttingInvItems = [];
+        stockCuttingInvItems = await StockCuttingRepository.filteredStockCuttingList([
+            {
+                $match: {
+                    jobCard: ObjectId(req.query.jobCard),
+                    SKU: ObjectId(req.query.SKU)
+                }
+            },
+            {
+                $unwind: "$stockCuttingDetails"
+            },
+            {
+                $match: {
+                    "stockCuttingDetails.reference": ObjectId(req.query.reference)
+                }
+            },
+            {
+                $unwind: "$stockCuttingDetails.PPICOpeningStock"
+            },
+            {$replaceRoot: {newRoot: "$stockCuttingDetails.PPICOpeningStock"}}
+        ]);
+        if (stockCuttingInvItems.length == 0) {
+            stockCuttingInvItems = await InventoryRepository.filteredInventoryCorrectionList([
+                {
+                    $match: {
+                        item: ObjectId(req.query.reference),
+                        department: GOODS_TRANSFER_REQUEST_DEPT.PLANNING
+                    }
+                },
+                {
+                    $addFields: {
+                        U1Qty: {
+                            $cond: [
+                                {$eq: ["$UOM", STOCK_PREP_UOM.SQM]},
+                                {
+                                    $cond: [
+                                        {$ne: [{$type: "$primaryToSecondaryConversion"}, "missing"]},
+                                        {
+                                            $round: [
+                                                {
+                                                    $divide: ["$closedIRQty", "$primaryToSecondaryConversion"]
+                                                },
+                                                2
+                                            ]
+                                        },
+                                        {
+                                            $cond: [
+                                                {
+                                                    $ne: [{$type: "$secondaryToPrimaryConversion"}, "missing"]
+                                                },
+                                                {
+                                                    $round: [
+                                                        {
+                                                            $multiply: ["$closedIRQty", "$secondaryToPrimaryConversion"]
+                                                        },
+                                                        2
+                                                    ]
+                                                },
+                                                "$closedIRQty"
+                                            ]
+                                        }
+                                    ]
+                                },
+                                "$closedIRQty"
+                            ]
+                        },
+                        MF: {$ifNull: ["$primaryToSecondaryConversion", "$secondaryToPrimaryConversion"]}
+                    }
+                },
+                {
+                    $project: {
+                        inventory: "$_id",
+                        MRNNo: "$MRNNumber",
+                        MRN: "$MRN",
+                        item: "$item",
+                        itemCode: 1,
+                        itemName: 1,
+                        itemDescription: 1,
+                        U1: "$primaryUnit",
+                        U1Qty: 1,
+                        width: 1,
+                        widthUnit: "mm",
+                        length: 1,
+                        lengthUnit: "mm",
+                        MF: 1,
+                        U2: "$secondaryUnit",
+                        U2Qty: {
+                            $round: [
+                                {
+                                    $multiply: ["$U1Qty", "$MF"]
+                                },
+                                3
+                            ]
+                        }
+                    }
+                }
+            ]);
+        }
+        return res.success({stockCuttingInvItems});
+    } catch (error) {
+        console.error("getInventoryItemsOnSelect Stock Cutting", error);
         const errors = MESSAGES.apiErrorStrings.SERVER_ERROR;
         return res.serverError(errors);
     }

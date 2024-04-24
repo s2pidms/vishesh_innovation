@@ -3,6 +3,7 @@ export interface PurchaseRegisterEntry {
     PEntryNo: string;
     PEntryDate: string;
     supplierName: string;
+    supplierCurrency: string;
     supplierGST: string;
     purchaseCategory: string;
     taxInvoiceNo: string;

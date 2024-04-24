@@ -432,11 +432,13 @@ ng g c shared/modals/sub-category
 ng g m print-screen/sample-jc-creation-print  --route sample_jc_creation_print --module=print-screen-routing.module
 ng g c print-screen/job-card-print/screen/PI-schedule-print-screen
 
-ng g m default/finance/master/bill-of-material/screens/bom-of-product --route bom_of_product --module=bill-of-material.module
 
-ng g c default/finance/master/bill-of-material/screens/bom-of-product/bom-of-product-list
-ng g c default/finance/master/bill-of-material/screens/bom-of-product/bom-of-product-form
-ng g c default/finance/master/routing-master/screens/resource-management
+ng g m default/planning/master/SAC-master --route sac_master --module=master.module 
+ng g m default/planning/master/HSN-master/screens/bom-of-product --route bom_of_product --module=bill-of-material.module
+
+ng g c default/planning/master/bill-of-material/screens/bom-of-product/bom-of-product-list
+ng g c default/planning/master/bill-of-material/screens/bom-of-product/bom-of-product-form
+ng g c default/planning/master/routing-master/screens/resource-management
 
 ng g m default/production/transactions/stock-cutting --route stock_cutting --module=transactions.module 
 ng g c default/production/transactions/stock-cutting/stock-cutting-form
@@ -472,7 +474,7 @@ ng g m default/stores/reports/ir-report-name-wise --route ir_report_name_wise --
 
 ng g m default/planning/transactions/job-card-tracking --route job_card_tracking_list --module=transactions.module
 ng g c default/planning/transactions/job-card-tracking/screens/job-card-tracking-list
-ng g c default/planning/transactions/job-card-tracking/screens/job-card-tracking-form
+ng g c default/planning/transactions/job-card-tracking/screens/view-jc-status
 ng g c default/planning/transactions/GI-PPIC-to-production/screens/GI-PPIC-to-production-remarks
 
 ng g c default/planning/master/direct-cost/screens/components/labour-cost-modal
@@ -739,9 +741,19 @@ ng g m default/accounts/reports/sales-register-report --route sales_register_rep
 
 ng g m default/accounts/transactions/purchase-register-entry --route purchase_register_entry --module=transactions.module
 ng g c default/accounts/transactions/purchase-register-entry/screens/purchase-register-entry-form
+ng g c default/accounts/transactions/purchase-register-entry/screens/purchase-register-entry-list
 ng g c default/accounts/transactions/purchase-register-entry/screens/view-MRN-modal
 
 
 ng g m default/settings/master/production/mould-master --route mould_master --module=production.module
 ng g c default/settings/master/production/mould-master/screens/mould_master-list
 ng g c default/settings/master/production/mould-master/screens/mould_master-form
+
+ng g m default/settings/master/planning/map-process-name --route map_process_name --module=planning.module
+ng g c default/settings/master/planning/map-process-name/screens/map_process_name_list
+
+ng g m default/settings/master/sales/sales-uom-unit-master --route sales_uom_unit_master --module=sales.module
+ng g c default/settings/master/sales/sales-uom-unit-master/screens/sales_uom_unit_master_form
+ng g c default/settings/master/sales/sales-uom-unit-master/screens/sales_uom_unit_master_list
+
+

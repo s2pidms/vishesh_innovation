@@ -45,7 +45,7 @@
                             {{ u.SKUDescription }}
                         </span>
                     </td>
-                    <td>{{ u?.UOM }}</td>
+                    <td>{{ u?.UOM | SalesUOMUnitMaster }}</td>
                     <td>{{ u?.totalBatchQuantity }}</td>
                     <td>{{ u.batchOutputQty }}</td>
                     <td>{{ u.batchNumber }}</td>

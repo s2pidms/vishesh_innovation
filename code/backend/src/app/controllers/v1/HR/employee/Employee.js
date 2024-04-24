@@ -24,6 +24,13 @@ const {getAllModuleMaster} = require("../../settings/module-master/module-master
 const {getAllDepartments} = require("../../settings/department/department");
 const {getAndSetAutoIncrementNo} = require("../../settings/autoIncrement/autoIncrement");
 const {EMPLOYEE} = require("../../../../mocks/schemasConstant/HRConstant");
+const {
+    EMP_GENDER,
+    EMP_MARITAL_STATUS,
+    INDIAN_STATES,
+    BOOLEAN_VALUES,
+    EMP_ACCOUNT_TYPE
+} = require("../../../../mocks/constantData");
 const ObjectId = mongoose.Types.ObjectId;
 // @desc    getAll Employee Record
 exports.getAll = async (req, res) => {
@@ -390,18 +397,27 @@ exports.deleteById = async (req, res) => {
         return res.serverError(errors);
     }
 };
-// @desc    getAllMasterData Employee Record
 exports.getAllMasterData = async (req, res) => {
     try {
         const autoIncrementNo = await getAndSetAutoIncrementNo(EMPLOYEE.AUTO_INCREMENT_DATA(), req.user.company);
-        const empDepartmentsOptions = await getAllDepartments(req.user.company, {departmentName: 1});
-        const empDesignationsOptions = await getAllModuleMaster(req.user.company, "EMP_DESIGN");
-        const empTypesOptions = await getAllModuleMaster(req.user.company, "EMP_TYPE");
-        const empGradesOptions = await getAllModuleMaster(req.user.company, "EMP_GRADE");
-        const empCadresOptions = await getAllModuleMaster(req.user.company, "EMP_CADRE");
-        const joiningLocation = await findAppParameterValue("JOINING_LOCATION", req.user.company);
+        const options = await dropDownOptions(req.user.company);
+        return res.success({autoIncrementNo, ...options});
+    } catch (error) {
+        console.error("getAllMasterData Employee", error);
+        const errors = MESSAGES.apiErrorStrings.SERVER_ERROR;
+        return res.serverError(errors);
+    }
+};
+const dropDownOptions = async company => {
+    try {
+        const empDepartmentsOptions = await getAllDepartments(company, {departmentName: 1});
+        const empDesignationsOptions = await getAllModuleMaster(company, "EMP_DESIGN");
+        const empTypesOptions = await getAllModuleMaster(company, "EMP_TYPE");
+        const empGradesOptions = await getAllModuleMaster(company, "EMP_GRADE");
+        const empCadresOptions = await getAllModuleMaster(company, "EMP_CADRE");
+        const joiningLocation = await findAppParameterValue("JOINING_LOCATION", company);
         const employeesOptions = await EmployeeRepository.filteredEmployeeList([
-            {$match: {empStatus: "A", company: ObjectId(req.user.company)}},
+            {$match: {empStatus: "A", company: ObjectId(company)}},
             {$sort: {createdAt: 1}},
             {
                 $project: {
@@ -411,9 +427,8 @@ exports.getAllMasterData = async (req, res) => {
                 }
             }
         ]);
-        return res.success({
+        return {
             employeesOptions,
-            autoIncrementNo,
             empDesignationsOptions,
             empGradesOptions,
             empTypesOptions,
@@ -425,14 +440,11 @@ exports.getAllMasterData = async (req, res) => {
                     value: x
                 };
             })
-        });
+        };
     } catch (error) {
-        console.error("getAllMasterData Employee", error);
-        const errors = MESSAGES.apiErrorStrings.SERVER_ERROR;
-        return res.serverError(errors);
+        console.error(error);
     }
 };
-
 exports.getById = async (req, res) => {
     try {
         let existing = await Model.findById(req.params.id);
@@ -691,4 +703,219 @@ exports.getTotalNoOfEmployeesPerDay = async company => {
         }
     ]);
     return rows[0]?.count || 0;
+};
+
+exports.checkEmployeeValidation = async (empData, column, company) => {
+    try {
+        const requiredFields = [
+            "empFirstName",
+            "empLastName",
+            "empGender",
+            "empEmailCompany",
+            "empJoiningDate",
+            "empDesignation",
+            "empDepartment"
+        ];
+        const falseArr = OPTIONS.falsyArray;
+        let {
+            // employeesOptions,
+            empDesignationsOptions,
+            empGradesOptions,
+            empTypesOptions,
+            empDepartmentsOptions,
+            empCadresOptions,
+            joiningLocationOptions
+        } = await dropDownOptions(company);
+        let dropdownCheck = [
+            {
+                key: "empGender",
+                options: EMP_GENDER
+            },
+            {
+                key: "empMartialStatus",
+                options: EMP_MARITAL_STATUS
+            },
+            {
+                key: "state",
+                options: INDIAN_STATES
+            },
+            {
+                key: "empJoiningLocation",
+                options: joiningLocationOptions
+            },
+            {
+                key: "empCadre",
+                options: empCadresOptions.map(x => {
+                    return {
+                        label: x.label,
+                        value: x.value
+                    };
+                })
+            },
+            {
+                key: "empDesignation",
+                options: empDesignationsOptions.map(x => {
+                    return {
+                        label: x.label,
+                        value: x.value
+                    };
+                })
+            },
+            {
+                key: "empDepartment",
+                options: empDepartmentsOptions.map(x => {
+                    return {
+                        label: x.departmentName,
+                        value: x.departmentName
+                    };
+                })
+            },
+            {
+                key: "empType",
+                options: empTypesOptions.map(x => {
+                    return {
+                        label: x.label,
+                        value: x.value
+                    };
+                })
+            },
+            {
+                key: "empGrade",
+                options: empGradesOptions.map(x => {
+                    return {
+                        label: x.label,
+                        value: x.value
+                    };
+                })
+            },
+            {
+                key: "empOTApplicability",
+                options: [
+                    {
+                        label: BOOLEAN_VALUES.YES,
+                        value: BOOLEAN_VALUES.YES
+                    },
+                    {
+                        label: BOOLEAN_VALUES.NO,
+                        value: BOOLEAN_VALUES.NO
+                    }
+                ]
+            },
+            {
+                key: "empAccType",
+                options: EMP_ACCOUNT_TYPE
+            }
+        ];
+        for await (const x of empData) {
+            x.isValid = true;
+            x.message = null;
+            for (const ele of Object.values(column)) {
+                if (requiredFields.includes(ele) && falseArr.includes(x[ele])) {
+                    x.isValid = false;
+                    x.message = validationJson[ele] ?? `${ele} is Required`;
+                    break;
+                }
+                for (const dd of dropdownCheck) {
+                    if (ele == dd.key && !dd.options.map(values => values.value).includes(x[ele])) {
+                        x.isValid = false;
+                        x.message = `${ele} is Invalid Value & Value Must be ${dd.options.map(values => values.value)}`;
+                        break;
+                    }
+                }
+                if (
+                    await SKUMasterRepository.findOneDoc(
+                        {empFirstName: x["empFirstName"], empLastName: x["empLastName"]},
+                        {
+                            _id: 1
+                        }
+                    )
+                ) {
+                    x.isValid = false;
+                    x.message = `${ele} is already exists`;
+                    break;
+                }
+            }
+        }
+        const inValidRecords = empData.filter(x => !x.isValid);
+        const validRecords = empData.filter(x => x.isValid);
+        return {inValidRecords, validRecords};
+    } catch (error) {
+        console.error(error);
+    }
+};
+
+exports.bulkInsertEmployeeByCSV = async (jsonData, {company, createdBy, updatedBy}) => {
+    try {
+        const employeesOptions = await EmployeeRepository.filteredEmployeeList([
+            {$match: {empStatus: "A", company: ObjectId(company)}},
+            {
+                $project: {
+                    _id: 0,
+                    label: "$empFullName",
+                    value: "$_id"
+                }
+            }
+        ]);
+        let missingEmployeeReportToName = [];
+        for (const ele of jsonData) {
+            for (const employee of employeesOptions) {
+                if (ele.empReportTo.trim() == employee.label) {
+                    ele.empReportTo = employee.value.valueOf();
+                }
+            }
+            if (!ele.empReportTo) {
+                missingEmployeeReportToName.push(ele.empReportTo);
+            }
+            if (!!ele.empDOB) {
+                ele.empDOB = dateToAnyFormat(ele.empDOB, "MM/DD/YYYY");
+            } else {
+                ele.empDOB = null;
+            }
+            if (!!ele.empSpouseDOB) {
+                ele.empSpouseDOB = dateToAnyFormat(ele.empSpouseDOB, "MM/DD/YYYY");
+            } else {
+                ele.empSpouseDOB = null;
+            }
+            if (!!ele.empFatherDOB) {
+                ele.empFatherDOB = dateToAnyFormat(ele.empFatherDOB, "MM/DD/YYYY");
+            } else {
+                ele.empFatherDOB = null;
+            }
+            if (!!ele.empMotherDOB) {
+                ele.empMotherDOB = dateToAnyFormat(ele.empMotherDOB, "MM/DD/YYYY");
+            } else {
+                ele.empMotherDOB = null;
+            }
+            if (!!ele.empJoiningDate) {
+                ele.empJoiningDate = dateToAnyFormat(ele.empJoiningDate, "MM/DD/YYYY");
+            } else {
+                ele.empJoiningDate = null;
+            }
+        }
+        let employeeData = jsonData.map(x => {
+            const {line1, line2, line3, state, city, pinCode, country, ...rest} = x;
+            let address = {
+                line1,
+                line2,
+                line3,
+                state,
+                city,
+                pinCode,
+                country
+            };
+            rest.empPermanentAddress = [address];
+            rest.empPresentAddress = [address];
+            rest.company = company;
+            rest.createdBy = createdBy;
+            rest.updatedBy = updatedBy;
+            rest.empCode = "0000";
+            return rest;
+        });
+        for await (const item of employeeData) {
+            await EmployeeRepository.createDoc(item);
+        }
+        return {message: "Uploaded successfully!"};
+    } catch (error) {
+        console.error(error);
+    }
 };

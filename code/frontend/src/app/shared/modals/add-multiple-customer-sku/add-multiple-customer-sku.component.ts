@@ -27,7 +27,7 @@ export class AddMultipleCustomerSkuComponent implements OnInit {
         customerName: new UntypedFormControl(null, [Validators.required]),
         customer: new UntypedFormControl(null),
         customerPartNo: new UntypedFormControl(null, [Validators.required]),
-        customerCurrency: new UntypedFormControl(null),
+        customerCurrency: new UntypedFormControl({value: null, disabled: true}),
         standardSellingRate: new UntypedFormControl(null),
         monthlyOffTake: new UntypedFormControl(null),
         PONo: new UntypedFormControl(null),
@@ -77,9 +77,11 @@ export class AddMultipleCustomerSkuComponent implements OnInit {
         if (this.validationService.checkErrors(this.form, this.findFormErrors)) {
             return;
         }
+        this.form.controls["customerCurrency"].enable();
         let formData = this.form.value;
         if (!formData.standardSellingRate) {
             this.toastService.warning("Selling Price [Excl. of GST] is required !");
+            this.form.controls["customerCurrency"].disable();
             return;
         }
         if ((formData.index || formData.index == 0) && formData.index >= 0) {
@@ -92,6 +94,7 @@ export class AddMultipleCustomerSkuComponent implements OnInit {
         this.collection = this.customerInfoArray.length;
         this.selectedCustomerDetails = {};
         this.form.reset();
+        this.form.controls["customerCurrency"].disable();
     }
 
     patchItem(formData: any, index: number, action: string) {
@@ -103,6 +106,7 @@ export class AddMultipleCustomerSkuComponent implements OnInit {
         } else {
             this.form.enable();
             this.btnDisable = false;
+            this.form.controls["customerCurrency"].disable();
         }
     }
 

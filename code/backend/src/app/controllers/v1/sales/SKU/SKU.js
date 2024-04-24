@@ -432,7 +432,12 @@ const dropDownOptions = async company => {
             hsnCodesOptions,
             customersOptions,
             shoulderTypeOptions,
-            UOMOptions: units,
+            UOMOptions: units.map(x => {
+                return {
+                    value: x.value,
+                    label: x.label
+                };
+            }),
             autoIncValues,
             productCategoryOptions: productCategories,
             WXLDimensionsUnit: WXLDimensionsUnit.split(",").map(x => x)
@@ -971,7 +976,11 @@ exports.getMouldDataBySKUId = asyncHandler(async (req, res) => {
             {
                 $unwind: "$mouldInfo"
             },
-
+            {
+                $match: {
+                    "mouldInfo.select": true
+                }
+            },
             {
                 $group: {
                     _id: {

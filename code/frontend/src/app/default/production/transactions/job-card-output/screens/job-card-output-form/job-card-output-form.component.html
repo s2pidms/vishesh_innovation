@@ -42,7 +42,12 @@
                         UoM
                         <span class="text-danger"></span>
                     </label>
-                    <input class="form-control" formControlName="UOM" type="text" readonly />
+                    <input
+                        class="form-control"
+                        value="{{ form.controls['UOM'].value | SalesUOMUnitMaster }}"
+                        type="text"
+                        readonly
+                    />
                 </div>
 
                 <div class="col-md-3">

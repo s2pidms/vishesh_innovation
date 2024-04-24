@@ -12,6 +12,9 @@ import TABLE_HEADERS_FOR_SUPPLIER from "./tableHeadersForSupplier";
 import TABLE_HEADERS_FOR_ITEMS from "./tableHeadersForItems";
 import TABLE_HEADERS_FOR_CUSTOMER from "./tableHeadersForCustomer";
 import TABLE_HEADERS_FOR_INVENTORY from "./tableHeadersForInventory";
+import TABLE_HEADERS_FOR_EMPLOYEE from "./tableHeadersForEmployee";
+import TABLE_HEADERS_FOR_SKU_MASTER from "./tableHeadersForSKUMaster";
+import TABLE_HEADERS_FOR_FGIN from "./tableHeadersForFGIN";
 
 @Component({
     selector: "app-custom-upload-data",
@@ -46,6 +49,12 @@ export class CustomUploadDataComponent implements OnInit {
             this.tableHead = TABLE_HEADERS_FOR_CUSTOMER;
         } else if (this.type == "InventoryCorrection") {
             this.tableHead = TABLE_HEADERS_FOR_INVENTORY;
+        } else if (this.type == "Employee") {
+            this.tableHead = TABLE_HEADERS_FOR_EMPLOYEE;
+        } else if (this.type == "SKUMaster") {
+            this.tableHead = TABLE_HEADERS_FOR_SKU_MASTER;
+        } else if (this.type == "FGIN") {
+            this.tableHead = TABLE_HEADERS_FOR_FGIN;
         }
     }
 
@@ -112,6 +121,12 @@ export class CustomUploadDataComponent implements OnInit {
         } else if (this.type == "Customer") {
             text = "./assets/upload-data-excel-csv/customer.csv";
         } else if (this.type == "InventoryCorrection") {
+            text = "./assets/upload-data-excel-csv/inventory.csv";
+        } else if (this.type == "Employee") {
+            text = "./assets/upload-data-excel-csv/inventory.csv";
+        } else if (this.type == "SKUMaster") {
+            text = "./assets/upload-data-excel-csv/inventory.csv";
+        } else if (this.type == "FGIN") {
             text = "./assets/upload-data-excel-csv/inventory.csv";
         }
         fs.saveAs(text);

@@ -20,6 +20,11 @@ const routes: Routes = [
     {
         path: "invoice_QR_Code",
         loadChildren: () => import("./invoice-qr-code/invoice-qr-code.module").then(m => m.InvoiceQRCodeModule)
+    },
+    {
+        path: "sales_uom_unit_master",
+        loadChildren: () =>
+            import("./sales-uom-unit-master/sales-uom-unit-master.module").then(m => m.SalesUomUnitMasterModule)
     }
 ];
 

@@ -18,6 +18,8 @@ export class AppGlobalService {
     rolesPermission: any = [];
     labelsJSON: any = [];
     UOMUintMasterOptions: any = [];
+    UOMDefaultValueOptions: any = [];
+    salesUOMUintMasterOptions: any = [];
     cardData: any = [];
     accessType: any = LIST_DEFAULT_PERMISSION_ACTIONS.downloadAction;
     constructor(private menuService: MenuService, private storageService: StorageService) {}
@@ -94,8 +96,10 @@ export class AppGlobalService {
         const pickData = this.pickValue(data, ["menuItems"]);
         this.rolesPermission = data?.rolesPermission;
         this.labelsJSON = data?.labelsJSON;
+        this.UOMDefaultValueOptions = data?.UOMDefaultValue;
         this.UOMUintMasterOptions = data?.UOMUintMasterJSON;
-        
+        this.salesUOMUintMasterOptions = data?.salesUOMUintMaster;
+
         const menu = pickData["menuItems"]?.find((x: any) => x._id == id);
         const roles = menu?.roles ?? [];
 

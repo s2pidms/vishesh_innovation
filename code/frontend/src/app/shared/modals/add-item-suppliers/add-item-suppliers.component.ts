@@ -37,6 +37,7 @@ export class AddItemSuppliersComponent implements OnInit {
     form = new UntypedFormGroup({
         index: new UntypedFormControl(-1),
         supplierName: new UntypedFormControl(""),
+        supplierDescription: new UntypedFormControl(""),
         supplierCurrency: new UntypedFormControl(""),
         supplierId: new UntypedFormControl("", [Validators.required]),
         spin: new UntypedFormControl(""),
@@ -74,6 +75,9 @@ export class AddItemSuppliersComponent implements OnInit {
                 this.unitConversionFlag == 1 ? 1 : this.unitConversionFlag == 2 ? this.secondaryToPrimaryConversion : 1
             } ${this.primaryUnit}`;
         }
+
+        // this.form.controls["uom1"].disable();
+        // this.form.controls["uom2"].disable();
     }
 
     setUnit2PurchaseCost() {
@@ -113,6 +117,7 @@ export class AddItemSuppliersComponent implements OnInit {
         if (this.validationService.checkErrors(this.form, this.findFormErrors)) {
             return;
         }
+        // this.form.enable();
         let formData = this.form.value;
         if (!formData.uom1) {
             this.toastService.warning("Unit 1 is required !");
@@ -120,6 +125,8 @@ export class AddItemSuppliersComponent implements OnInit {
         }
         if (!formData.stdCostUom1) {
             this.toastService.warning("Purchase Cost is required !");
+            // this.form.controls["uom1"].disable();
+            // this.form.controls["uom2"].disable();
             return;
         }
         if ((formData.index || formData.index == 0) && formData.index >= 0) {
@@ -137,6 +144,8 @@ export class AddItemSuppliersComponent implements OnInit {
         if (this.secondaryUnit) {
             this.form.controls["uom2"].setValue(this.secondaryUnit);
         }
+        // this.form.controls["uom1"].disable();
+        // this.form.controls["uom2"].disable();
     }
 
     patchItem(formData: any, index: number, action: string) {
@@ -148,6 +157,8 @@ export class AddItemSuppliersComponent implements OnInit {
         } else {
             this.form.enable();
             this.btnDisable = false;
+            // this.form.controls["uom1"].disable();
+            // this.form.controls["uom2"].disable();
         }
     }
 

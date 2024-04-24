@@ -10,7 +10,7 @@ import {PRODUCT_MASTER_SOURCE_OF_MFG} from "@mocks/constant";
 import {ProductAttributesModalComponent} from "../components";
 import {ProductMasterService} from "@services/planning";
 import {PRODUCT_MASTER_FORM_ERRORS} from "@mocks/validations/planning";
-import {ToastService, SpinnerService, UtilityService} from "@core/services";
+import {ToastService, SpinnerService, UtilityService, AppGlobalService} from "@core/services";
 import {IProductMasterData} from "@mocks/models/planning/masters";
 import {ProductCategoryModalComponent} from "src/app/default/sales/master/sku/screens/product-category-modal/product-category-modal.component";
 
@@ -24,7 +24,7 @@ export class ProductMasterFormComponent implements OnInit {
     action: string = "create";
     productSourceOfMFGObj: any = PRODUCT_MASTER_SOURCE_OF_MFG;
     sourceOfMFGArr: any = this.productSourceOfMFGObj.getAllProductSourceOfMFG();
-
+    salesUOMUintMasterOptions: any = [];
     masterData: IProductMasterData = {
         autoIncrementNo: "",
         hsnCodes: [],
@@ -32,7 +32,7 @@ export class ProductMasterFormComponent implements OnInit {
         UOMOptions: [],
         WXLDimensionsUnit: []
     };
-
+    UOMDefaultValueOptions: any = [];
     form: any = new UntypedFormGroup({
         _id: new UntypedFormControl(null),
         productNo: new UntypedFormControl(null),
@@ -82,13 +82,32 @@ export class ProductMasterFormComponent implements OnInit {
         private validationService: ValidationService,
         private modalService: NgbModal,
         private location: Location,
-        private utilityService: UtilityService
+        private utilityService: UtilityService,
+        private appGlobalService: AppGlobalService
     ) {}
 
     ngOnInit(): void {
+        this.salesUOMUintMasterOptions = this.appGlobalService.salesUOMUintMasterOptions;
+        AppGlobalService;
         this.getInitialData();
-    }
 
+        this.UOMDefaultValueOptions = this.appGlobalService?.UOMDefaultValueOptions;
+        if (this.UOMDefaultValueOptions?.length > 0) {
+            if (!this.f["primaryUnit"].value) {
+                let primaryUnitData: any = null;
+                primaryUnitData = this.findValue(this.UOMDefaultValueOptions, "SALES_UOM");
+                this.f["primaryUnit"].setValue(primaryUnitData);
+            }
+            if (!this.f["secondaryUnit"].value) {
+                let secondaryUnitData: any = null;
+                secondaryUnitData = this.findValue(this.UOMDefaultValueOptions, "SALES_SECONDARY_UNIT");
+                this.f["secondaryUnit"].setValue(secondaryUnitData);
+            }
+        }
+    }
+    findValue(array: any, value: any) {
+        return array?.find((x: any) => x?.parameterLabel == value)?.parameterName;
+    }
     reset() {
         this.form.reset();
         this.getInitialData();
@@ -176,7 +195,7 @@ export class ProductMasterFormComponent implements OnInit {
             keyboard: false
         });
 
-        modalRef.componentInstance.ModalUOMsUnit = this.masterData?.UOMOptions;
+        modalRef.componentInstance.ModalUOMsUnit = this.salesUOMUintMasterOptions;
         modalRef.componentInstance.WXLDimensionsUnit = this.masterData?.WXLDimensionsUnit;
         modalRef.componentInstance.dualUnits = {
             primaryUnit: this.form.value.primaryUnit,

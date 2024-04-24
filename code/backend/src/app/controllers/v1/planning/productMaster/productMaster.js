@@ -1,7 +1,6 @@
 const asyncHandler = require("express-async-handler");
 const Model = require("../../../../models/planning/productMasterModel");
 const MESSAGES = require("../../../../helpers/messages.options");
-const {outputData, getAllAggregationFooter} = require("../../../../helpers/utility");
 const {generateCreateData, getMatchData, OPTIONS} = require("../../../../helpers/global.options");
 const {findAppParameterValue} = require("../../settings/appParameter/appParameter");
 const units = require("../../../../mocks/unit.json");
@@ -151,7 +150,12 @@ exports.getAllMasterData = asyncHandler(async (req, res) => {
         return res.success({
             autoIncrementNo,
             hsnCodes,
-            UOMOptions: units,
+            UOMOptions: units.map(x => {
+                return {
+                    value: x.value,
+                    label: x.label
+                };
+            }),
             // productCategories: productCategories.split(",").map(x => {
             //     return {
             //         label: x,

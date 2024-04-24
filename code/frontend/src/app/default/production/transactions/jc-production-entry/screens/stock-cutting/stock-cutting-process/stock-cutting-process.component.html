@@ -33,7 +33,7 @@
                 </div>
                 <div class="col-4 d-flex justify-content-center align-items-center">
                     <ngb-pagination
-                        [collectionSize]="selectedStockCuttingData?.PPICOpeningStock.length"
+                        [collectionSize]="selectedStockCuttingData.stockCuttingDetails[0]?.PPICOpeningStock?.length"
                         [(page)]="page"
                         [pageSize]="pageSize"
                         [boundaryLinks]="false"
@@ -65,7 +65,7 @@
                         <input
                             class="form-control bg-magenta-black"
                             type="text"
-                            [(ngModel)]="selectedStockCuttingData.U2TotalQty"
+                            [(ngModel)]="selectedStockCuttingData.stockCuttingDetails[0].U2TotalQty"
                             readonly
                         />
                     </div>
@@ -77,19 +77,19 @@
             <table class="table table-bordered mt-0 table-sm">
                 <thead class="bg-info">
                     <tr class="text-white">
-                        <th sortable="MRNNumber" (sort)="onSort($event)">MRN No.</th>
+                        <th sortable="MRNNo" (sort)="onSort($event)">MRN No.</th>
                         <th sortable="itemCode" (sort)="onSort($event)">Item Code</th>
                         <th class="text-start" sortable="itemName" (sort)="onSort($event)">Item Name</th>
                         <th class="text-start" sortable="itemDescription" (sort)="onSort($event)">Item Description</th>
-                        <th sortable="closedIRQty" (sort)="onSort($event)">U1</th>
-                        <th sortable="closedIRQty" (sort)="onSort($event)">U1 Qty</th>
+                        <th sortable="U1" (sort)="onSort($event)">U1</th>
+                        <th sortable="U1Qty" (sort)="onSort($event)">U1 Qty</th>
                         <th sortable="width" (sort)="onSort($event)">Width</th>
-                        <th sortable="width" (sort)="onSort($event)">Unit</th>
+                        <th sortable="widthUnit" (sort)="onSort($event)">Unit</th>
                         <th sortable="length" (sort)="onSort($event)">Length</th>
-                        <th sortable="length" (sort)="onSort($event)">Unit</th>
-                        <th sortable="SQM" (sort)="onSort($event)">U2 qty/U1</th>
-                        <th sortable="roll" (sort)="onSort($event)">U2</th>
-                        <th sortable="status" (sort)="onSort($event)">U2 Qty</th>
+                        <th sortable="lengthUnit" (sort)="onSort($event)">Unit</th>
+                        <th sortable="MF" (sort)="onSort($event)">U2 qty/U1</th>
+                        <th sortable="U2" (sort)="onSort($event)">U2</th>
+                        <th sortable="U2Qty" (sort)="onSort($event)">U2 Qty</th>
                         <th sortable="select" (sort)="onSort($event)">Select</th>
                     </tr>
                 </thead>
@@ -97,7 +97,7 @@
                 <tbody>
                     <tr
                         *ngFor="
-                            let u of selectedStockCuttingData.PPICOpeningStock
+                            let u of selectedStockCuttingData.stockCuttingDetails[0].PPICOpeningStock
                                 | searchFi1ter : search
                                 | slice : (page - 1) * pageSize : (page - 1) * pageSize + pageSize;
                             trackBy: trackByFn;
@@ -147,6 +147,7 @@
                                 [(ngModel)]="u.select"
                                 [ngModelOptions]="{standalone: true}"
                                 (change)="setSelectData(u)"
+                                [disabled]="selectedStockCuttingData.stockCuttingDetails[0].isSaved == true"
                             />
                             <!-- <input
                                 class="form-check-input pointer"
@@ -170,33 +171,33 @@
             <table class="table table-bordered mt-0 table-sm">
                 <thead class="bg-info">
                     <tr class="text-white">
-                        <th sortable="MRNNumber" (sort)="onSort($event)">MRN No.</th>
+                        <th sortable="MRNNo" (sort)="onSort($event)">MRN No.</th>
                         <th sortable="itemCode" (sort)="onSort($event)">Item Code</th>
                         <th class="text-start" sortable="itemName" (sort)="onSort($event)">Item Name</th>
                         <th class="text-start" sortable="itemDescription" (sort)="onSort($event)">Item Description</th>
-                        <th sortable="closedIRQty" (sort)="onSort($event)">U1</th>
-                        <th sortable="closedIRQty" (sort)="onSort($event)">U1 Qty</th>
+                        <th sortable="U1" (sort)="onSort($event)">U1</th>
+                        <th sortable="U1Qty" (sort)="onSort($event)">U1 Qty</th>
                         <th sortable="width" (sort)="onSort($event)">Width</th>
-                        <th sortable="width" (sort)="onSort($event)">Unit</th>
+                        <th sortable="widthUnit" (sort)="onSort($event)">Unit</th>
                         <th sortable="length" (sort)="onSort($event)">Length</th>
-                        <th sortable="length" (sort)="onSort($event)">Unit</th>
-                        <th sortable="SQM" (sort)="onSort($event)">U2 qty/U1</th>
-                        <th sortable="roll" (sort)="onSort($event)">U2</th>
-                        <th sortable="status" (sort)="onSort($event)">U2 Qty</th>
+                        <th sortable="lengthUnit" (sort)="onSort($event)">Unit</th>
+                        <th sortable="MF" (sort)="onSort($event)">U2 qty/U1</th>
+                        <th sortable="U2" (sort)="onSort($event)">U2</th>
+                        <th sortable="U2Qty" (sort)="onSort($event)">U2 Qty</th>
                     </tr>
                 </thead>
 
                 <tbody>
                     <tr
                         *ngFor="
-                            let u of selectedStockCuttingData.PPICToProductionGT
+                            let u of selectedStockCuttingData.stockCuttingDetails[0].PPICToProductionGT
                                 | searchFi1ter : search
                                 | slice : (page - 1) * pageSize : (page - 1) * pageSize + pageSize;
                             trackBy: trackByFn;
                             let i = index
                         "
                     >
-                        <td>{{ u?.MRNNo }}</td>
+                        <td>-</td>
                         <td>{{ u?.itemCode }}</td>
                         <td class="text-start" [style.width]="itemName.clientWidth" #itemName>
                             <span class="pointer" [ngbTooltip]="u.itemName" [positionTarget]="itemName">
@@ -213,10 +214,20 @@
                         </td>
 
                         <td>
-                            <span *ngIf="['RL'].includes(u?.U1)">
+                            <span
+                                *ngIf="
+                                    ['RL'].includes(u?.U1) ||
+                                    selectedStockCuttingData.stockCuttingDetails[0].isSaved == true
+                                "
+                            >
                                 {{ u?.U1Qty | number : "1.2-2" }}
                             </span>
-                            <div *ngIf="['SHT'].includes(u?.U1)" class="d-flex justify-content-center">
+                            <div
+                                *ngIf="
+                                    ['SHT'].includes(u?.U1) && !selectedStockCuttingData.stockCuttingDetails[0].isSaved
+                                "
+                                class="d-flex justify-content-center"
+                            >
                                 <input
                                     class="form-control text-center form-control-size-sx"
                                     type="number"
@@ -234,10 +245,20 @@
                             {{ u?.widthUnit }}
                         </td>
                         <td>
-                            <span *ngIf="['SHT'].includes(u?.U1)">
+                            <span
+                                *ngIf="
+                                    ['SHT'].includes(u?.U1) ||
+                                    selectedStockCuttingData.stockCuttingDetails[0].isSaved == true
+                                "
+                            >
                                 {{ u?.length | number : "1.2-2" }}
                             </span>
-                            <div *ngIf="['RL'].includes(u?.U1)" class="d-flex justify-content-center">
+                            <div
+                                *ngIf="
+                                    ['RL'].includes(u?.U1) && !selectedStockCuttingData.stockCuttingDetails[0].isSaved
+                                "
+                                class="d-flex justify-content-center"
+                            >
                                 <input
                                     class="form-control text-center form-control-size-sx"
                                     type="number"
@@ -271,12 +292,19 @@
                     <button
                         type="button"
                         class="btn btn-primary px-3 me-1"
-                        [disabled]="!isESCPreview"
+                        [disabled]="!isESCPreview || selectedStockCuttingData.stockCuttingDetails[0].isSaved == true"
                         (click)="ESCPreview()"
                     >
                         Esc
                     </button>
-                    <button type="button" class="btn btn-primary px-3 me-3" (click)="preview()">Preview</button>
+                    <button
+                        [disabled]="selectedStockCuttingData.stockCuttingDetails[0].isSaved == true"
+                        type="button"
+                        class="btn btn-primary px-3 me-3"
+                        (click)="preview()"
+                    >
+                        Preview
+                    </button>
                     <button
                         class="btn btn-primary px-5"
                         type="button"

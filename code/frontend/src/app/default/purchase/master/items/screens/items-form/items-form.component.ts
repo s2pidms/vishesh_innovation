@@ -51,6 +51,7 @@ export class ItemsFormComponent implements OnInit {
     POTypeObj: any = INDENT_CATEGORY;
     channelPartnerOptions: any = [];
     UOMUintMasterOptions: any = [];
+    UOMDefaultValueOptions: any = [];
     masterData: IItemMasterData = {
         autoIncrementNo: "",
         itemCategories: [],
@@ -173,8 +174,29 @@ export class ItemsFormComponent implements OnInit {
         this.form.valueChanges.subscribe((x: any) => {
             this.unsavedChanges = true;
         });
-    }
 
+        this.UOMDefaultValueOptions = this.appGlobalService?.UOMDefaultValueOptions;
+        if (this.UOMDefaultValueOptions?.length > 0) {
+            if (!this.f["orderInfoUOM"].value) {
+                let primaryUnitData: any = null;
+                primaryUnitData = this.findValue(this.UOMDefaultValueOptions, "PURCHASE_UOM");
+                this.f["orderInfoUOM"].setValue(primaryUnitData);
+            }
+            if (!this.f["primaryUnit"].value) {
+                let primaryUnitData: any = null;
+                primaryUnitData = this.findValue(this.UOMDefaultValueOptions, "PURCHASE_PRIMARY_UNIT");
+                this.f["primaryUnit"].setValue(primaryUnitData);
+            }
+            if (!this.f["secondaryUnit"].value) {
+                let secondaryUnitData: any = null;
+                secondaryUnitData = this.findValue(this.UOMDefaultValueOptions, "PURCHASE_SECONDARY_UNIT");
+                this.f["secondaryUnit"].setValue(secondaryUnitData);
+            }
+        }
+    }
+    findValue(array: any, value: any) {
+        return array?.find((x: any) => x?.parameterLabel == value)?.parameterName;
+    }
     // Method to check if there are unsaved changes
     canDeactivate(): Observable<boolean> | Promise<boolean> | boolean | any {
         if (this.unsavedChanges) {

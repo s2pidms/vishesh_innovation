@@ -94,7 +94,7 @@
                                 {{ u?.SKUDescription ? u?.SKUDescription : null }}
                             </span>
                         </td>
-                        <td>{{ u?.UOM }}</td>
+                        <td>{{ u?.UOM | SalesUOMUnitMaster }}</td>
                         <td class="py-0 text-center">
                             <div class="d-flex justify-content-start align-items-center">
                                 <span class="input-group-text text-secondary combine-INR border border-0">

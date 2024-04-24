@@ -240,74 +240,86 @@ const PPIC_STAGES = {
         return [this.R2R, this.R2S];
     }
 };
-const INVENTORY_CREATE_OBJ = {
-    company: null,
-    createdBy: null,
-    updatedBy: null,
-    ICDate: null,
-    GINDate: null,
-    GIN: null,
-    MRN: null,
-    supplier: null,
-    MRNNumber: null,
-    ICStatus: null,
-    UOM: null,
-    primaryToSecondaryConversion: null,
-    secondaryToPrimaryConversion: null,
-    primaryUnit: null,
-    secondaryUnit: null,
-    conversionOfUnits: null,
-    item: null,
-    itemCode: null,
-    itemName: null,
-    itemDescription: null,
-    itemType: null,
-    itemSubCategory: null,
-    // openIRQty: null,
-    updatedQty: null,
-    closedIRQty: null,
-    standardRate: null,
-    purchaseRate: null,
-    purchaseRateUSD: null,
-    purchaseRatINR: null,
-    lineValueINR: null,
-    batchDate: null,
-    deliveryLocation: null,
-    department: null,
-    storageLocationMapping: {
-        subLocation: null,
-        rowNo: null,
-        rackNo: null,
-        binNo: null,
-        otherId: null
+const PROCESS = [
+    {
+        label: "Stock Preparation",
+        value: "Stock Preparation"
     },
-    type: null,
-    SQM: null,
-    roll: null,
-    width: null,
-    length: null,
-    expiryDate: null,
-    stage: null,
-    noOfRollsToBeSlit: null,
-    sqmToBeProcessed: null,
-    recovery: null,
-    recoveryPercentage: null,
-    wastage: null,
-    wastagePercentage: null,
-    productionRemarks: {
-        prodRemarks: null,
-        checkedBy: null,
-        approvedBy: null,
-        approvedDate: null
+    {
+        label: "Ink Mixing",
+        value: "Ink Mixing"
     },
-    QARemarks: {
-        QARemark: null,
-        checkedBy: null,
-        approvedBy: null,
-        approvedDate: null
+    {
+        label: "Screen Making",
+        value: "Screen Making"
     }
-};
-
+];
+const EMP_GENDER = [
+    {
+        label: "Male",
+        value: "Male"
+    },
+    {
+        label: "Female",
+        value: "Female"
+    }
+];
+const EMP_MARITAL_STATUS = [
+    {
+        label: "Married",
+        value: "Married"
+    },
+    {
+        label: "Unmarried",
+        value: "Unmarried"
+    }
+];
+const EMP_ACCOUNT_TYPE = [
+    {
+        label: "Current",
+        value: "Current"
+    },
+    {
+        label: "Saving",
+        value: "Saving"
+    }
+];
+const INDIAN_STATES = [
+    "Andhra Pradesh",
+    "Arunachal Pradesh",
+    "Assam",
+    "Bihar",
+    "Chandigarh (UT)",
+    "Chhattisgarh",
+    "Dadra and Nagar Haveli (UT)",
+    "Daman and Diu (UT)",
+    "Delhi (NCT)",
+    "Goa",
+    "Gujarat",
+    "Haryana",
+    "Himachal Pradesh",
+    "Jammu and Kashmir",
+    "Jharkhand",
+    "Karnataka",
+    "Kerala",
+    "Lakshadweep (UT)",
+    "Madhya Pradesh",
+    "Maharashtra",
+    "Manipur",
+    "Meghalaya",
+    "Mizoram",
+    "Nagaland",
+    "Odisha",
+    "Puducherry (UT)",
+    "Punjab",
+    "Rajasthan",
+    "Tamil Nadu",
+    "Telangana",
+    "Tripura",
+    "Uttarakhand",
+    "Uttar Pradesh",
+    "West Bengal"
+];
 module.exports = {
     SALES_CATEGORY,
     CHILD_ITEM_CATEGORY_NAME,
@@ -332,6 +344,10 @@ module.exports = {
     STOCK_PREP_UOM,
     INK_MIXING_UOM,
     GOODS_TRANSFER_REQUEST_DEPT,
-    INVENTORY_CREATE_OBJ,
-    PPIC_STAGES
+    PPIC_STAGES,
+    PROCESS,
+    EMP_GENDER,
+    EMP_MARITAL_STATUS,
+    INDIAN_STATES,
+    EMP_ACCOUNT_TYPE
 };

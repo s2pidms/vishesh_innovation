@@ -22,7 +22,8 @@ export class SalesInvoiceService {
         getByIdPath: (id: string) => `/dispatch/salesInvoice/getById/${id}`,
         getSalesInvoiceByIdForPDFPath: (id: string) => `/dispatch/salesInvoice/getSalesInvoiceByIdForPDF/${id}`,
         deletePath: (id: string) => `/dispatch/salesInvoice/delete/${id}`,
-        previewTaxInvPath: `/dispatch/salesInvoice/previewTaxInv`
+        previewTaxInvPath: `/dispatch/salesInvoice/previewTaxInv`,
+        updatePath: (id: string) => `/dispatch/salesInvoice/update/${id}`,
     };
     constructor(private http: ApiService) {}
 
@@ -73,5 +74,8 @@ export class SalesInvoiceService {
     }
     previewTaxInv(payload: any) {
         return this.http.post(this.routes.previewTaxInvPath, payload).pipe(map((res: any) => res));
+    }
+    update(id: string, payload: any) {
+        return this.http.put(this.routes.updatePath(id), payload).pipe(map((res: any) => res));
     }
 }

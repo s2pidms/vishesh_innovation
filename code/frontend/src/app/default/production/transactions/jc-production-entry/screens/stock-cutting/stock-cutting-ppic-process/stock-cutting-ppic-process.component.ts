@@ -28,6 +28,12 @@ import {Router} from "@angular/router";
                 //     margin-top: -1rem !important;
                 // }
             }
+            .yellow-color {
+                color: #ffc800 !important;
+            }
+            .green-color {
+                color: #00ff00 !important;
+            }
         `
     ]
 })
@@ -35,8 +41,10 @@ export class StockCuttingPPICProcessComponent implements OnInit {
     @ViewChildren(NgbdSortableHeader) headers: QueryList<NgbdSortableHeader> | any;
     @Input() selectedStockCuttingData: any = {};
     @Input() shiftOptions: any = [];
+    @Input() stockCuttingDetails: any = [];
     @Input() action: string = "create";
-    PPICClosingStockActual: any = [];
+    oldPPICClosingStockActual: any = [];
+    oldSelectedStockCuttingData: any = {};
     trackByFn(index: number, item: any) {
         return item?._id;
     }
@@ -51,19 +59,20 @@ export class StockCuttingPPICProcessComponent implements OnInit {
     ) {}
     processNames: any = "slit";
     ngOnInit(): void {
-        console.log("selectedStockCuttingData", this.selectedStockCuttingData);
+        this.oldSelectedStockCuttingData = JSON.parse(JSON.stringify(this.selectedStockCuttingData));
 
-        let MFArray = this.selectedStockCuttingData.PPICOpeningStock.map((obj: any) => obj?.MF);
+        let MFArray = this.selectedStockCuttingData.stockCuttingDetails[0].PPICOpeningStock.map((obj: any) => obj?.MF);
         let maxValue = Math.max(...MFArray);
 
-        let maxObject = this.selectedStockCuttingData.PPICOpeningStock.find((obj: any) => obj?.MF == maxValue);
+        let maxObject = this.selectedStockCuttingData.stockCuttingDetails[0].PPICOpeningStock.find(
+            (obj: any) => obj?.MF == maxValue
+        );
 
-        console.log("maxObject", maxObject);
-
-        this.selectedStockCuttingData.PPICClosingStockCalculated =
-            this.selectedStockCuttingData?.PPICClosingStockCalculated?.map((x: any) => {
+        this.selectedStockCuttingData.stockCuttingDetails[0].PPICClosingStockCalculated =
+            this.selectedStockCuttingData.stockCuttingDetails[0]?.PPICClosingStockCalculated?.map((x: any) => {
                 x.MRNNo = maxObject?.MRNNo;
                 x.MRN = maxObject?.MRN;
+                x.inventory = maxObject?.inventory;
                 x.item = maxObject?.item ?? maxObject?.reference;
                 x.itemCode = maxObject?.itemCode;
                 x.itemName = maxObject?.itemName;
@@ -73,72 +82,96 @@ export class StockCuttingPPICProcessComponent implements OnInit {
                 x.widthUnit = maxObject?.widthUnit;
                 x.length = maxObject?.length;
                 x.lengthUnit = maxObject?.lengthUnit;
-                x.MF = +maxObject?.MF.toFixed(2);
+                x.MF = +(+maxObject?.MF).toFixed(2);
                 x.U2 = maxObject?.U2;
                 x.U2Qty = +(
-                    this.selectedStockCuttingData?.U2TotalQty -
-                    this.selectedStockCuttingData?.PPICToProductionGT[0]?.U2Qty
+                    this.selectedStockCuttingData.stockCuttingDetails[0]?.U2TotalQty -
+                    this.selectedStockCuttingData.stockCuttingDetails[0]?.PPICToProductionGT[0]?.U2Qty
                 ).toFixed(2);
 
                 x.U1Qty = +(x?.U2Qty / x?.MF).toFixed(2);
                 return x;
             });
 
-        this.selectedStockCuttingData.PPICClosingStockActual =
-            this.selectedStockCuttingData?.PPICClosingStockActual?.map((x: any) => {
+        if (this.selectedStockCuttingData.stockCuttingDetails[0].PPICClosingStockActual[0].MRNNo == null) {
+            this.selectedStockCuttingData.stockCuttingDetails[0].PPICClosingStockActual =
+                this.selectedStockCuttingData.stockCuttingDetails[0]?.PPICClosingStockActual?.map((x: any) => {
+                    x.MRNNo = maxObject?.MRNNo;
+                    x.MRN = maxObject?.MRN;
+                    x.inventory = maxObject?.inventory;
+                    x.item = maxObject?.item ?? maxObject?.reference;
+                    x.itemCode = maxObject?.itemCode;
+                    x.itemName = maxObject?.itemName;
+                    x.itemDescription = `${maxObject?.width} ${maxObject?.widthUnit} X ${maxObject?.length} ${maxObject?.lengthUnit}`;
+                    x.U1 = maxObject?.U1;
+                    x.width = maxObject?.width;
+                    x.widthUnit = maxObject?.widthUnit;
+                    x.length = maxObject?.length;
+                    x.lengthUnit = maxObject?.lengthUnit;
+                    x.MF = 0;
+                    x.U2 = maxObject?.U2;
+                    // x.U2Qty = +(
+                    //     this.selectedStockCuttingData.stockCuttingDetails[0]?.U2TotalQty -
+                    //     this.selectedStockCuttingData.stockCuttingDetails[0]?.PPICToProductionGT[0]?.U2Qty
+                    // ).toFixed(2);
+                    // x.U1Qty = +(x?.U2Qty / maxObject?.MF).toFixed(2);
+                    // x.U1Qty = Math.trunc(x.U1Qty);
+                    x.U2Qty = 0;
+                    x.U1Qty = 0;
+                    return x;
+                });
+        } else {
+            this.selectedStockCuttingData.stockCuttingDetails[0].PPICClosingStockActual =
+                this.selectedStockCuttingData.stockCuttingDetails[0]?.PPICClosingStockActual;
+        }
+
+        this.selectedStockCuttingData.stockCuttingDetails[0].PPICToProductionGT =
+            this.selectedStockCuttingData.stockCuttingDetails[0]?.PPICToProductionGT?.map((x: any) => {
                 x.MRNNo = maxObject?.MRNNo;
                 x.MRN = maxObject?.MRN;
-                x.item = maxObject?.item ?? maxObject?.reference;
-                x.itemCode = maxObject?.itemCode;
-                x.itemName = maxObject?.itemName;
-                x.itemDescription = `${maxObject?.width} ${maxObject?.widthUnit} X ${maxObject?.length} ${maxObject?.lengthUnit}`;
-                x.U1 = maxObject?.U1;
-                x.width = maxObject?.width;
-                x.widthUnit = maxObject?.widthUnit;
-                x.length = maxObject?.length;
-                x.lengthUnit = maxObject?.lengthUnit;
-                x.MF = 0;
-                x.U2 = maxObject?.U2;
-                // x.U2Qty = +(
-                //     this.selectedStockCuttingData?.U2TotalQty -
-                //     this.selectedStockCuttingData?.PPICToProductionGT[0]?.U2Qty
-                // ).toFixed(2);
-                // x.U1Qty = +(x?.U2Qty / maxObject?.MF).toFixed(2);
-                // x.U1Qty = Math.trunc(x.U1Qty);
-                x.U2Qty = 0;
-                x.U1Qty = 0;
+                x.inventory = maxObject?.inventory;
+
                 return x;
             });
 
-        this.PPICClosingStockActual = JSON.parse(JSON.stringify(this.selectedStockCuttingData.PPICClosingStockActual));
+        this.oldPPICClosingStockActual = JSON.parse(
+            JSON.stringify(this.selectedStockCuttingData.stockCuttingDetails[0].PPICClosingStockActual)
+        );
     }
 
     deleteTableRow() {
-        if (this.selectedStockCuttingData.PPICClosingStockActual.length > 1) {
-            this.selectedStockCuttingData.PPICClosingStockActual.pop();
+        if (
+            this.selectedStockCuttingData.stockCuttingDetails[0].PPICClosingStockActual.length > 1 &&
+            !this.selectedStockCuttingData.stockCuttingDetails[0].isSaved
+        ) {
+            this.selectedStockCuttingData.stockCuttingDetails[0].PPICClosingStockActual.pop();
             this.calActualClosingStock();
         }
     }
     addTableRow() {
-        this.selectedStockCuttingData.PPICClosingStockActual = [
-            ...this.selectedStockCuttingData.PPICClosingStockActual,
-            ...JSON.parse(JSON.stringify(this.PPICClosingStockActual))
-        ];
+        if (!this.selectedStockCuttingData.stockCuttingDetails[0].isSaved) {
+            this.selectedStockCuttingData.stockCuttingDetails[0].PPICClosingStockActual = [
+                ...this.selectedStockCuttingData.stockCuttingDetails[0].PPICClosingStockActual,
+                ...JSON.parse(JSON.stringify(this.oldPPICClosingStockActual))
+            ];
+        }
     }
 
     setActualClosingStock(ele: any, index: any) {
-        // let index = this.selectedStockCuttingData?.PPICClosingStockActual?.map((x: any) => x.reference).indexOf(
+        // let index = this.selectedStockCuttingData.stockCuttingDetails[0]?.PPICClosingStockActual?.map((x: any) => x.reference).indexOf(
         //     ele?.reference
         // );
         let DFW = ele?.widthUnit == "mm" ? 1000 : 1;
         let DFL = ele?.lengthUnit == "mm" ? 1000 : 1;
-        this.selectedStockCuttingData.PPICClosingStockActual[index].MF = +(
+        this.selectedStockCuttingData.stockCuttingDetails[0].PPICClosingStockActual[index].MF = +(
             +(ele.width * ele.length) /
             (DFW * DFL)
         ).toFixed(2);
-        this.selectedStockCuttingData.PPICClosingStockActual[index].U2Qty = +(ele.U1Qty * ele.MF).toFixed(2);
+        this.selectedStockCuttingData.stockCuttingDetails[0].PPICClosingStockActual[index].U2Qty = +(
+            ele.U1Qty * ele.MF
+        ).toFixed(2);
 
-        this.selectedStockCuttingData.PPICClosingStockActual[
+        this.selectedStockCuttingData.stockCuttingDetails[0].PPICClosingStockActual[
             index
         ].itemDescription = `${ele?.width} ${ele?.widthUnit} X ${ele?.length} ${ele?.lengthUnit}`;
 
@@ -146,29 +179,26 @@ export class StockCuttingPPICProcessComponent implements OnInit {
     }
 
     calActualClosingStock() {
-        let totalRejectionQty = this.selectedStockCuttingData?.PPICClosingStockActual?.reduce(
+        let totalRejectionQty = this.selectedStockCuttingData.stockCuttingDetails[0]?.PPICClosingStockActual?.reduce(
             (a: any, c: any) => +a + +c?.U2Qty,
             0
         ).toFixed(2);
 
-        this.selectedStockCuttingData.rejectionQty = +(
-            this.selectedStockCuttingData.PPICClosingStockCalculated[0]?.U2Qty - +totalRejectionQty
+        this.selectedStockCuttingData.stockCuttingDetails[0].rejectionQty = +(
+            this.selectedStockCuttingData.stockCuttingDetails[0].PPICClosingStockCalculated[0]?.U2Qty -
+            +totalRejectionQty
         ).toFixed(2);
 
-        this.selectedStockCuttingData.rejectionPercent = +(
-            (this.selectedStockCuttingData.rejectionQty /
-                this.selectedStockCuttingData.PPICClosingStockCalculated[0]?.U2Qty) *
+        this.selectedStockCuttingData.stockCuttingDetails[0].rejectionPercent = +(
+            (this.selectedStockCuttingData.stockCuttingDetails[0].rejectionQty /
+                this.selectedStockCuttingData.stockCuttingDetails[0].PPICClosingStockCalculated[0]?.U2Qty) *
             100
         ).toFixed(2);
     }
 
-    totalAddition(itemDetails: any, decimalDigit: number) {
-        return itemDetails.reduce((a: number, c: number) => +a + +c, 0).toFixed(+decimalDigit);
-    }
-
     submit() {
         // this.calTotalFn();
-        let totalRejectionQty = this.selectedStockCuttingData?.PPICClosingStockActual?.reduce(
+        let totalRejectionQty = this.selectedStockCuttingData.stockCuttingDetails[0]?.PPICClosingStockActual?.reduce(
             (a: any, c: any) => +a + +c?.U2Qty,
             0
         ).toFixed(2);
@@ -177,19 +207,29 @@ export class StockCuttingPPICProcessComponent implements OnInit {
             return;
         }
         if (
-            +this.selectedStockCuttingData.rejectionPercent > 100 ||
-            +this.selectedStockCuttingData.rejectionPercent < 0
+            +this.selectedStockCuttingData.stockCuttingDetails[0].rejectionPercent > 100 ||
+            +this.selectedStockCuttingData.stockCuttingDetails[0].rejectionPercent < 0
         ) {
             this.toastService.error("Recovery must be between 0 and 100% !!");
             return;
         }
 
-        // if (+totalRejectionQty > +this.selectedStockCuttingData.PPICClosingStockCalculated[0]?.U2Qty) {
+        // if (+totalRejectionQty > +this.selectedStockCuttingData.stockCuttingDetails[0].PPICClosingStockCalculated[0]?.U2Qty) {
         //     this.toastService.error("Recovery must be between 0 and 100% !!");
         //     return;
         // }
 
-        console.log("this.selectedStockCuttingData", this.selectedStockCuttingData);
+        this.selectedStockCuttingData.stockCuttingDetails[0].isSaved = true;
+        this.selectedStockCuttingData.stockCuttingDetails[0].isSelectItem = true;
+
+        let stock = this.stockCuttingDetails.filter(
+            (x: any) => x.reference != this.selectedStockCuttingData.stockCuttingDetails[0].reference
+        );
+
+        this.selectedStockCuttingData.stockCuttingDetails = [
+            ...this.selectedStockCuttingData.stockCuttingDetails,
+            ...stock
+        ];
 
         if (this.selectedStockCuttingData) {
             this.spinner.show();
@@ -203,9 +243,15 @@ export class StockCuttingPPICProcessComponent implements OnInit {
     }
 
     reset() {
-        this.selectedStockCuttingData.PPICClosingStockActual = JSON.parse(JSON.stringify(this.PPICClosingStockActual));
-        this.selectedStockCuttingData.rejectionQty = 0;
-        this.selectedStockCuttingData.rejectionPercent = 0;
+        this.selectedStockCuttingData.stockCuttingDetails[0].rejectionQty =
+            this.oldSelectedStockCuttingData.stockCuttingDetails[0].rejectionQty;
+        this.selectedStockCuttingData.stockCuttingDetails[0].rejectionPercent =
+            this.oldSelectedStockCuttingData.stockCuttingDetails[0].rejectionPercent;
+
+        this.selectedStockCuttingData.stockCuttingDetails[0].PPICClosingStockActual = JSON.parse(
+            JSON.stringify(this.oldPPICClosingStockActual)
+        );
+
         // this.calActualClosingStock();
     }
 
@@ -218,12 +264,12 @@ export class StockCuttingPPICProcessComponent implements OnInit {
         });
 
         modalRef.componentInstance.action = this.action;
-        modalRef.componentInstance.logEntry = this.selectedStockCuttingData?.logEntry;
+        modalRef.componentInstance.logEntry = this.selectedStockCuttingData.stockCuttingDetails[0]?.logEntry;
         modalRef.componentInstance.shiftOptions = this.shiftOptions;
         modalRef.result.then(
             (success: any) => {
                 // if (success) {
-                // this.selectedStockCuttingData?.logEntry = success?.selectedStockCuttingData?.logEntry
+                // this.selectedStockCuttingData.stockCuttingDetails[0]?.logEntry = success?.selectedStockCuttingData.stockCuttingDetails[0]?.logEntry
                 // }
             },
             (reason: any) => {}

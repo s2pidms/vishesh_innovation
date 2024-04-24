@@ -6,7 +6,7 @@ const {getEndDateTime, getStartDateTime} = require("../../../../helpers/dateTime
 const {getAllAuditAttributes} = require("../../../../models/settings/helpers/auditHelper");
 const memoryCacheHandler = require("../../../../utilities/memoryCacheHandler");
 const AuditRepository = require("../../../../models/settings/repository/auditRepository");
-// const AppParameter = require("../appParameter/appParameter");
+const AppParameter = require("../appParameter/appParameter");
 const ObjectId = mongoose.Types.ObjectId;
 exports.getAll = asyncHandler(async (req, res) => {
     try {
@@ -67,10 +67,10 @@ exports.getById = asyncHandler(async (req, res) => {
 });
 
 exports.auditModule = async auditData => {
-    // const auditFlagValue = await AppParameter.findAppParameterValue("AUDIT_FLAG", auditData.company);
-    // if (auditFlagValue == "yes") {
-    await AuditRepository.createDoc(auditData);
-    // }
+    const auditFlagValue = await AppParameter.findAppParameterValue("AUDIT_FLAG", auditData.company);
+    if (auditFlagValue == "yes") {
+        await AuditRepository.createDoc(auditData);
+    }
 };
 
 exports.getAllApiStack = asyncHandler(async (req, res) => {

@@ -185,7 +185,7 @@
             </table>
         </div>
 
-        <hr class="row line-border" />
+        <hr *ngIf="'view' != action" class="row line-border" />
 
         <div *ngIf="'view' != action" class="row" appAccessControl [accessType]="rolePermissionActions.createAction">
             <div class="col text-center">

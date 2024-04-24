@@ -10,6 +10,7 @@ export class StockCuttingService {
         createOrUpdatePath: "/production/stockCutting/createOrUpdate",
         getAllPath: "/production/stockCutting/getAll",
         getAllMasterDataPath: "/production/stockCutting/getAllMasterData",
+        getInventoryItemsOnSelectPath: "/production/stockCutting/getInventoryItemsOnSelect",
         getByIdPath: (id: string) => `/production/stockCutting/getById/${id}`
     };
     constructor(private http: ApiService) {}
@@ -26,5 +27,8 @@ export class StockCuttingService {
 
     getById(id: string) {
         return this.http.get(this.routes.getByIdPath(id)).pipe(map((res: any) => res));
+    }
+    getInventoryItemsOnSelect(params: any) {
+        return this.http.get(this.routes.getInventoryItemsOnSelectPath, params).pipe(map((res: any) => res));
     }
 }

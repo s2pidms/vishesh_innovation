@@ -9,7 +9,6 @@ const {
     getFiscalMonthsName
 } = require("../../../../utilities/utility");
 const {getAllSKUCategory} = require("../../settings/SKUCategoryMaster/SKUCategoryMaster");
-const {getCompanyLocations} = require("../../settings/company/company");
 const FGINHelper = require("../../../../models/stores/helpers/FGINHelper");
 const {getAndSetAutoIncrementNo} = require("../../settings/autoIncrement/autoIncrement");
 const {FGIN_SCHEMA} = require("../../../../mocks/schemasConstant/storesConstant");
@@ -17,6 +16,7 @@ const {filteredSKUMasterList} = require("../../../../models/sales/repository/SKU
 const FGINRepository = require("../../../../models/stores/repository/FGINRepository");
 const {filteredProductCategoryMasterList} = require("../../../../models/settings/repository/productCategoryRepository");
 const {dateToAnyFormat} = require("../../../../helpers/dateTime");
+const {filteredCompanyList} = require("../../../../models/settings/repository/companyRepository");
 const ObjectId = mongoose.Types.ObjectId;
 
 exports.getAll = async (req, res) => {
@@ -172,7 +172,7 @@ exports.getAllMasterData = async (req, res) => {
             {...FGIN_SCHEMA.AUTO_INCREMENT_DATA()},
             req.user.company
         );
-        const location = await getCompanyLocations(req.user.company);
+        const options = await dropDownOptions(req.user.company);
         let SKUCategoryList = await getAllSKUCategory(req.user.company, null);
         if (SKUCategoryList.length > 0) {
             // productCategories = SKUCategoryList.map(x => x.displayProductCategoryName);
@@ -216,12 +216,7 @@ exports.getAllMasterData = async (req, res) => {
         }
         return res.success({
             autoIncrementNo,
-            location: location.split(",").map(x => {
-                return {
-                    label: x,
-                    value: x
-                };
-            }),
+            ...options,
             productCategories: [
                 {
                     label: "All",
@@ -234,6 +229,28 @@ exports.getAllMasterData = async (req, res) => {
         console.error("getAllMasterData   Finished Goods Inward Entry", error);
         const errors = MESSAGES.apiErrorStrings.SERVER_ERROR;
         return res.serverError(errors);
+    }
+};
+const dropDownOptions = async company => {
+    try {
+        const location = await filteredCompanyList([
+            {
+                $match: {
+                    _id: ObjectId(company)
+                }
+            },
+            {$unwind: "$placesOfBusiness"},
+            {$group: {_id: null, locationIDs: {$addToSet: "$placesOfBusiness.locationID"}}},
+            {
+                $unwind: "$locationIDs"
+            },
+            {$project: {_id: 0, label: "$locationIDs", value: "$locationIDs"}}
+        ]);
+        return {
+            location: location
+        };
+    } catch (error) {
+        console.error("error", error);
     }
 };
 exports.getAllFGINMasterData = async (req, res) => {
@@ -507,5 +524,91 @@ exports.getAllFGINByProductCategory = async (req, res) => {
         console.error("getById Finished Goods Inward Entry", e);
         const errors = MESSAGES.apiErrorStrings.SERVER_ERROR;
         return res.serverError(errors);
+    }
+};
+
+exports.checkFGINValidation = async (FGINData, column, company) => {
+    try {
+        const requiredFields = ["FGINDate", "SKUName", "FGINQuantity", "batchNo", "manufacturingDate"];
+        const falseArr = OPTIONS.falsyArray;
+        let {location} = await dropDownOptions(company);
+        let dropdownCheck = [
+            {
+                key: "location",
+                options: location
+            }
+        ];
+        for await (const x of FGINData) {
+            x.isValid = true;
+            x.message = null;
+            for (const ele of Object.values(column)) {
+                if (requiredFields.includes(ele) && falseArr.includes(x[ele])) {
+                    x.isValid = false;
+                    x.message = validationJson[ele] ?? `${ele} is Required`;
+                    break;
+                }
+                for (const dd of dropdownCheck) {
+                    if (ele == dd.key && !dd.options.map(values => values.value).includes(x[ele])) {
+                        x.isValid = false;
+                        x.message = `${ele} is Invalid Value & Value Must be ${dd.options.map(values => values.value)}`;
+                        break;
+                    }
+                }
+                if (
+                    await SKUMasterRepository.findOneDoc(
+                        {SKUName: x["SKUName"], SKUDescription: x["SKUDescription"]},
+                        {
+                            _id: 1
+                        }
+                    )
+                ) {
+                    x.isValid = false;
+                    x.message = `${ele} is already exists`;
+                    break;
+                }
+            }
+        }
+        const inValidRecords = FGINData.filter(x => !x.isValid);
+        const validRecords = FGINData.filter(x => x.isValid);
+        return {inValidRecords, validRecords};
+    } catch (error) {
+        console.error(error);
+    }
+};
+
+exports.bulkInsertFGINByCSV = async (jsonData, {company, createdBy, updatedBy}) => {
+    try {
+        const SKUOptions = await filteredSKUMasterList([
+            {$match: {company: ObjectId(company), isActive: "A"}},
+            {
+                $project: {
+                    label: "$SKUName",
+                    value: "$_id"
+                }
+            }
+        ]);
+        let missingSKUName = [];
+        for (const ele of jsonData) {
+            for (const SKU of SKUOptions) {
+                if (ele.SKUName.trim() == SKU.label) {
+                    ele.SKUId = SKU.value.valueOf();
+                }
+            }
+            if (!ele.SKUName || !ele.SKUId) {
+                missingSKUName.push(ele.SKUName ? ele.SKUName : ele.SKUDescription);
+            }
+        }
+        let FGINData = jsonData.map(x => {
+            x.company = company;
+            x.createdBy = createdBy;
+            x.updatedBy = updatedBy;
+            return x;
+        });
+        for await (const item of FGINData) {
+            await FGINRepository.createDoc(item);
+        }
+        return {message: "Uploaded successfully!"};
+    } catch (error) {
+        console.error(error);
     }
 };

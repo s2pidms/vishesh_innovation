@@ -1,7 +1,7 @@
 import {Component, Input, OnInit, QueryList, ViewChildren} from "@angular/core";
 import {NgbActiveModal} from "@ng-bootstrap/ng-bootstrap";
 import {NgbdSortableHeader} from "@directives/sortable.directive";
-import {UtilityService} from "@core/services";
+import {ToastService, UtilityService} from "@core/services";
 
 @Component({
     selector: "app-generate-report-modal",
@@ -12,7 +12,11 @@ export class GenerateReportModalComponent implements OnInit {
     @Input() generateReport: any = {};
     @Input() billFromLocationOptions: any = {};
 
-    constructor(public activeModal: NgbActiveModal, private utilityService: UtilityService) {}
+    constructor(
+        public activeModal: NgbActiveModal,
+        private utilityService: UtilityService,
+        private toastService: ToastService
+    ) {}
 
     ngOnInit(): void {
         if (this.generateReport.jobCardClosureDate) {
@@ -27,6 +31,19 @@ export class GenerateReportModalComponent implements OnInit {
     }
 
     dismissModel() {
+        // if (!this.generateReport.batchInputQty) {
+        //     this.toastService.warning("Batch Input Quantity is Required");
+        //     return;
+        // }
+        if (this.generateReport.checkoutStatus == "Skip Integration" && !this.generateReport.batchOutputQty) {
+            this.toastService.warning("Batch Output Quantity is Required");
+            return;
+        }
+        // if (!this.generateReport.batchRejQty) {
+        //     this.toastService.warning("Batch Rejection Quantity is Required");
+        //     return;
+        // }
+
         this.activeModal.close(this.generateReport);
     }
 }

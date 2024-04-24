@@ -2,7 +2,7 @@ import {Component, OnInit, QueryList, ViewChildren} from "@angular/core";
 import {UntypedFormControl, UntypedFormGroup, Validators} from "@angular/forms";
 import {Location} from "@angular/common";
 import {mergeMap, of} from "rxjs";
-import {ActivatedRoute} from "@angular/router";
+import {ActivatedRoute, Router} from "@angular/router";
 import {NgbModal} from "@ng-bootstrap/ng-bootstrap";
 import {ToastService} from "@core/services";
 import {SpinnerService, UtilityService} from "@core/services";
@@ -19,10 +19,18 @@ import {
     ScreenMakingLogFormComponent
 } from "../components";
 import {StockCuttingFormComponent} from "../stock-cutting/stock-cutting-form/stock-cutting-form.component";
+import {CancelPoComponent} from "@shared/modals";
 
 @Component({
     selector: "app-jc-production-entry-form",
-    templateUrl: "./jc-production-entry-form.component.html"
+    templateUrl: "./jc-production-entry-form.component.html",
+    styles: [
+        `
+            .set-margin {
+                margin-bottom: 29.9rem;
+            }
+        `
+    ]
 })
 export class JcProductionEntryFormComponent implements OnInit {
     @ViewChildren(NgbdSortableHeader) headers: QueryList<NgbdSortableHeader> | any;
@@ -31,7 +39,7 @@ export class JcProductionEntryFormComponent implements OnInit {
     isESCPreview = false;
     action: string = "create";
     page: number = 1;
-    pageSize: number = 10;
+    pageSize: number = 8;
     collection: number = 0;
     column: string = "createdAt";
     direction: number = -1;
@@ -66,6 +74,7 @@ export class JcProductionEntryFormComponent implements OnInit {
         "Through Punching": null,
         Packing: null
     };
+    showSKUFlow: boolean = false;
     constructor(
         private jobCardEntryService: JobCardEntryService,
         private activatedRoute: ActivatedRoute,
@@ -74,7 +83,8 @@ export class JcProductionEntryFormComponent implements OnInit {
         private validationService: ValidationService,
         private modalService: NgbModal,
         private utilityService: UtilityService,
-        private location: Location
+        private location: Location,
+        private router: Router
     ) {}
 
     form = new UntypedFormGroup({
@@ -125,9 +135,22 @@ export class JcProductionEntryFormComponent implements OnInit {
             formData.status = "Approved";
         }
         formData.productionEntry = this.JCEntryDetailsList;
-        console.log("formData.productionEntry", formData.productionEntry);
+
+        if (formData.generateReport.checkoutStatus == "Skip Integration" && !formData.generateReport.batchOutputQty) {
+            this.toastService.warning("In Generate Report Batch Output Quantity is Required");
+            return;
+        }
 
         this.create(formData);
+    }
+
+    skipIntegration() {
+        let formData: any = this.form.value;
+        if (formData.generateReport.checkoutStatus == "Skip Integration") {
+            this.openSkippingIntegrationModal();
+        } else {
+            this.submit();
+        }
     }
     trackByFn(index: number, item: any) {
         return item?._id;
@@ -201,25 +224,6 @@ export class JcProductionEntryFormComponent implements OnInit {
         });
     }
 
-    setMachineId(item: any, event: any) {
-        if (["create", "edit"].includes(this.action)) {
-            let index = this.JCEntryDetailsList.findIndex((x: any) => x.process == item?.process);
-            this.JCEntryDetailsList[index].machine = event?.machine;
-            this.JCEntryDetailsList[index].machineName = event?.machineName;
-        }
-    }
-
-    changeMachineDetails(item: any) {
-        if (["create", "edit"].includes(this.action)) {
-            let index = this.JCEntryDetailsList.findIndex((x: any) => x.process == item?.process);
-            if (!item.isMachineToggle) {
-                this.JCEntryDetailsList[index].isMachineToggle = true;
-            } else {
-                this.JCEntryDetailsList[index].isMachineToggle = false;
-            }
-        }
-    }
-
     setJobCardId(item: any) {
         this.selectedJobCardDetails = item;
         this.f["jobCardNo"].setValue(item?.jobCardNo);
@@ -260,8 +264,18 @@ export class JcProductionEntryFormComponent implements OnInit {
             this.f["generateReport"].setValue(success?.jobCardEntryData?.generateReport);
             this.spinner.hide();
             if (this.JCEntryDetailsList.length == 0) {
+                this.showSKUFlow = true;
                 this.toastService.warning(`SKU has no defined processes. Please set them up in SKU Process Flow.`);
+            } else {
+                this.showSKUFlow = false;
             }
+            this.collection = this.JCEntryDetailsList.length;
+        });
+    }
+
+    defineSKUProcessFlow() {
+        this.router.navigate(["default/planning/master/sku_process_flow/form"], {
+            queryParams: {id: this.f["SKU"].value, action: "processFlow"}
         });
     }
 
@@ -308,8 +322,8 @@ export class JcProductionEntryFormComponent implements OnInit {
     }
 
     openProdInfoModal(item: any) {
-        if (this.componentModal[item.processName]) {
-            const modalRef = this.modalService.open(this.componentModal[item.processName], {
+        if (this.componentModal[item.processOriginalName]) {
+            const modalRef = this.modalService.open(this.componentModal[item.processOriginalName], {
                 centered: true,
                 size: "xl",
                 backdrop: "static",
@@ -393,6 +407,27 @@ export class JcProductionEntryFormComponent implements OnInit {
                 if (success) {
                     console.log("success", success);
                     this.form.controls["generateReport"].setValue(success);
+                }
+            },
+            (reason: any) => {}
+        );
+    }
+
+    openSkippingIntegrationModal() {
+        const modalRef = this.modalService.open(CancelPoComponent, {
+            centered: true,
+            size: "sm",
+            backdrop: "static",
+            keyboard: false
+        });
+
+        modalRef.componentInstance.action = this.action;
+        modalRef.componentInstance.heading = "Job card Entry";
+        modalRef.componentInstance.cancelText = "Do You Want To Proceed By Skipping The  Integration ?";
+        modalRef.result.then(
+            (success: any) => {
+                if (success == "Yes") {
+                    this.submit();
                 }
             },
             (reason: any) => {}

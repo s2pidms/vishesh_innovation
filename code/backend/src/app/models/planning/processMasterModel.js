@@ -26,6 +26,10 @@ const processMasterSchema = mongoose.Schema(
             type: String,
             required: false
         },
+        processOriginalName: {
+            type: String,
+            required: false
+        },
         processName: {
             type: String,
             required: false

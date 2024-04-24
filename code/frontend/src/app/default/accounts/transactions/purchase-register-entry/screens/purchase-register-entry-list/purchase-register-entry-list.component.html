@@ -1,0 +1,98 @@
+<div class="listCard card">
+    <div class="table-header">
+        <label class="heading">Purchase Register Summary</label>
+    </div>
+    <div appAccessControl [accessType]="rolePermissionActions.createAction" class="text-center">
+        <button class="plusIconSvg btn btn-primary me-1"></button>
+        <button class="btn btn-primary btn-add px-4" type="button" (click)="navigateTo('../form', {}, 'create')">
+            Purchase Entry
+        </button>
+    </div>
+    <hr class="line-border" />
+    <div class="table-responsive">
+        <app-setting-header [data]="{page,pageSize,collection,search,type: 'list'}" (dataChange)="eventHeader($event)">
+        </app-setting-header>
+
+        <table class="table table-bordered">
+            <thead class="bg-primary">
+                <tr class="text-white">
+                    <th sortable="PEntryNo" (sort)="onSort($event)">PE No.</th>
+                    <th class="text-start" sortable="supplierName" (sort)="onSort($event)">Supplier Name</th>
+                    <th sortable="taxInvoiceNo" (sort)="onSort($event)">Tax Inv No.</th>
+                    <th sortable="taxInvoiceDate" (sort)="onSort($event)">Tax Inv Dt.</th>
+                    <th sortable="supplierCurrency" (sort)="onSort($event)">Ccy</th>
+                    <th sortable="totalAmt" (sort)="onSort($event)">Total Amount</th>
+                    <th sortable="TCSAmt" (sort)="onSort($event)">TCS Amount</th>
+                    <th sortable="roundOffAmt" (sort)="onSort($event)">Round off</th>
+                    <th sortable="roundOffTotalAmt" (sort)="onSort($event)">Net Amount</th>
+                    <th sortable="status" (sort)="onSort($event)">Status</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let u of tableData; trackBy: trackByFn">
+                    <td>{{ u?.PEntryNo }}</td>
+                    <td class="text-start" [style.width]="supplierName.clientWidth" #supplierName>
+                        <span class="pointer" [positionTarget]="supplierName" [ngbTooltip]="u.supplierName">
+                            {{ u.supplierName }}
+                        </span>
+                    </td>
+                    <td>{{ u?.taxInvoiceNo }}</td>
+                    <td>{{ u?.taxInvoiceDate }}</td>
+                    <td>{{ u?.supplierCurrency }}</td>
+                    <td>{{ u?.totalAmt }}</td>
+                    <td>{{ u?.TCSAmt }}</td>
+                    <td>{{ u?.roundOffAmt }}</td>
+                    <td>{{ u?.roundOffTotalAmt }}</td>
+                    <td>{{ u?.status }}</td>
+                    <td>
+                        <div class="dropdown">
+                            <button class="dropbtn"></button>
+                            <div class="dropdown-content">
+                                <a
+                                    appAccessControl
+                                    [accessType]="rolePermissionActions.viewAction"
+                                    href="javascript:void(0)"
+                                    (click)="navigateTo('../form', u, 'view')"
+                                >
+                                    <i class="fa fa-eye fa-lg me-2 text-primary" aria-hidden="true"></i>
+                                    View
+                                </a>
+                                <a
+                                    appAccessControl
+                                    [accessType]="rolePermissionActions.editAction"
+                                    href="javascript:void(0)"
+                                    [class.disable]="u?.status === 'Cancelled' || u?.status === 'Report Generated'"
+                                    (click)="navigateTo('../form', u, 'edit')"
+                                >
+                                    <i class="fa fa-pencil-square-o fa-lg me-2 text-primary" aria-hidden="true"></i>
+                                    Edit
+                                </a>
+                                <a
+                                    appAccessControl
+                                    [accessType]="rolePermissionActions.approveAction"
+                                    href="javascript:void(0)"
+                                    [class.disable]="u?.status === 'Approved' || u?.status === 'Cancelled'"
+                                    (click)="navigateTo('../form', u, 'cancel')"
+                                >
+                                    <i class="fa fa fa-times fa-lg me-2 text-primary" aria-hidden="true"></i>
+                                    Cancel
+                                </a>
+                                <a
+                                    appAccessControl
+                                    [accessType]="rolePermissionActions.generateReportAction"
+                                    [class.disable]="u?.status === 'Cancelled'"
+                                    href="javascript:void(0)"
+                                    (click)="update(u, 'Report Generated')"
+                                >
+                                    <img src="./assets/images/new.svg" width="14" class="me-3" />
+                                    Generate Report
+                                </a>
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>

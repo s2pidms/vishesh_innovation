@@ -10,16 +10,6 @@ const moduleMasterSchema = mongoose.Schema(
             required: true,
             ref: "Company"
         },
-        createdBy: {
-            type: mongoose.Schema.Types.ObjectId,
-            required: false,
-            ref: "User"
-        },
-        updatedBy: {
-            type: mongoose.Schema.Types.ObjectId,
-            required: false,
-            ref: "User"
-        },
         type: {
             type: String,
             required: false
@@ -47,6 +37,7 @@ const moduleMasterSchema = mongoose.Schema(
     },
     {
         timestamps: true,
+        versionKey: false,
         collection: SCHEMA_CONST.COLLECTION_NAME
     }
 );

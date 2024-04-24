@@ -1,0 +1,60 @@
+<div class="modelPage">
+    <div class="modal-header">
+        <div class="heading">Job Card Entry Status</div>
+        <div>
+            <button type="button" class="btn btn-cross btn-sm" aria-label="Close" (click)="this.activeModal.close()">
+                <i class="fa fa-times-circle" aria-hidden="true"></i>
+            </button>
+        </div>
+    </div>
+    <div class="">
+        <div class="container-fluid">
+            <div class="row justify-content-center">
+                <div class="col-12 px-0 mt-4">
+                    <div class="px-5 mt-0">
+                        <app-setting-header
+                            [data]="{page,pageSize,collection,search ,excelDisplay : 'none'}"
+                            (dataChange)="eventHeader($event)"
+                        >
+                        </app-setting-header>
+                    </div>
+                    <div style="min-height: 33rem" class="table-responsive px-5">
+                        <table class="table table-bordered table-sticky">
+                            <thead class="bg-primary">
+                                <tr class="text-white">
+                                    <th sortable="seq" (sort)="onSort($event)">PRC Seq.</th>
+                                    <th sortable="processName" (sort)="onSort($event)" class="text-start">
+                                        Process Name
+                                    </th>
+                                    <th sortable="processStatus" (sort)="onSort($event)">Status</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr
+                                    *ngFor="
+                                        let u of jobCardEntryList
+                                            | searchFi1ter : search
+                                            | slice : (page - 1) * pageSize : (page - 1) * pageSize + pageSize;
+                                        let i = index
+                                    "
+                                >
+                                    <td>{{ u?.seq ?? i + 1 }}</td>
+                                    <td class="text-start" [style.width]="processName.clientWidth" #processName>
+                                        <span
+                                            class="pointer"
+                                            [positionTarget]="processName"
+                                            [ngbTooltip]="u.processName"
+                                        >
+                                            {{ u?.processName }}
+                                        </span>
+                                    </td>
+                                    <td>{{ u?.processStatus ? "Yes" : "No" }}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

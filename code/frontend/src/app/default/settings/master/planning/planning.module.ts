@@ -10,6 +10,10 @@ const routes: Routes = [
         path: "child_item_category",
         loadChildren: () =>
             import("./child-item-category/child-item-category.module").then(m => m.ChildItemCategoryModule)
+    },
+    {
+        path: "map_process_name",
+        loadChildren: () => import("./map-process-name/map-process-name.module").then(m => m.MapProcessNameModule)
     }
 ];
 

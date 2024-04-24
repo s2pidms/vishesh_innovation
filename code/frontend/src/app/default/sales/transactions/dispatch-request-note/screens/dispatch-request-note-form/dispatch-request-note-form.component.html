@@ -146,7 +146,7 @@
                                 {{ d?.SKUDescription }}
                             </span>
                         </td>
-                        <td>{{ d?.UOM | UOMUnitsMaster }}</td>
+                        <td>{{ d?.UOM | SalesUOMUnitMaster }}</td>
                         <td>{{ d?.DRNLineNumber }}</td>
                         <td>{{ d?.SOBalancedQty | number : ".2-2" }}</td>
                         <td>{{ d?.plannedDispatchDt | date : "dd-MM-YYYY" }}</td>

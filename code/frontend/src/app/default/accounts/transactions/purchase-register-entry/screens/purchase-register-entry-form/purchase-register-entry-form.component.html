@@ -215,10 +215,22 @@
             <div *ngIf="!['view'].includes(action)" class="col-3 ms-0">
                 <button (click)="openCustomersDetailsModal()" class="btn btn-primary px-4">View MRN</button>
             </div>
-            <div *ngIf="!['view'].includes(action)" class="col-4 mb-3"></div>
-            <div *ngIf="!['view'].includes(action)" class="col-5 text-end mb-3">
+            <div *ngIf="action == 'cancel'" class="col-6">
+                <div class="d-flex justify-content-start align-items-start">
+                    <div class="col-form-label text-nowrap pt-1">
+                        Reason for Cancellation <span class="text-danger">*</span>
+                        <span>&#9654;</span>
+                    </div>
+                    <input class="form-control mx-2" type="text" formControlName="cancellationReason" />
+                </div>
+            </div>
+            <div *ngIf="!['view', 'cancel'].includes(action)" class="col-4 mb-3"></div>
+            <div *ngIf="!['view', 'cancel'].includes(action)" class="col-5 text-end mb-3">
                 <button class="btn btn-primary ms-3 text-nowrap col-3" type="button" (click)="reset()">Reset</button>
                 <button class="btn btn-primary px-5 ms-3 col-3" type="button" (click)="submit()">Save</button>
+            </div>
+            <div *ngIf="action == 'cancel'" class="content-end col-3">
+                <button class="btn btn-primary px-5" type="button" (click)="openCancelModal()">Cancel</button>
             </div>
             <div *ngIf="['view'].includes(action)" class="col-7 mb-3"></div>
             <div *ngIf="['view'].includes(action)" class="col-5 text-end mb-3">

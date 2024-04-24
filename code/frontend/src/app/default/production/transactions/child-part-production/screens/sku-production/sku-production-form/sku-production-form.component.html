@@ -144,7 +144,7 @@
                                 />
                             </div>
                         </td>
-                        <td>{{ g.UOM }}</td>
+                        <td>{{ g.UOM | SalesUOMUnitMaster }}</td>
                         <td>
                             <div class="d-flex justify-content-center">
                                 <span *ngIf="['view', 'approve', 'cancel'].includes(action)">{{ g.batchQty }}</span>

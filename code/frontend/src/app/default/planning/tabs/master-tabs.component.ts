@@ -10,7 +10,7 @@ import {AppGlobalService, MenuTitleService, SpinnerService, StorageService} from
     template: `<appTabCard
         [data]="{
                   cards,
-                  noOfCards:4,
+                  noOfCards:5,
                   cardClass:'masterCard'
                 }"
         (dataChange)="navigateTo($event)"
@@ -48,7 +48,7 @@ export class MasterTabsComponent implements OnInit {
         };
         this.subModulesService.getAll(payload).subscribe(success => {
             this.cards = success.rows;
-            let dummyCount = 4 - this.cards.length;
+            let dummyCount = 5 - this.cards.length;
             if (dummyCount > 0) {
                 for (var i = 0; i < dummyCount; i++) {
                     this.cards.push({

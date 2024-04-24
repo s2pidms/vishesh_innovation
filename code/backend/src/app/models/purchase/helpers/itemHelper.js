@@ -14,6 +14,7 @@ exports.getAllItemAttributes = () => {
         itemDescription: 1,
         hsn: 1,
         supplierName: "$supplierDetails.supplierName",
+        supplierDescription: "$supplierDetails.supplierDescription",
         supplierCurrency: "$supplierDetails.supplierCurrency",
         spin: "$supplierDetails.spin",
         stdCostUom1: "$supplierDetails.stdCostUom1",
@@ -46,6 +47,7 @@ exports.getAllItemExcelAttributes = () => {
         itemDescription: 1,
         hsn: 1,
         supplierName: "$supplierDetails.supplierName",
+        supplierDescription: "$supplierDetails.supplierDescription",
         supplierCurrency: "$supplierDetails.supplierCurrency",
         spin: "$supplierDetails.spin",
         stdCostUom1: "$supplierDetails.stdCostUom1",
@@ -72,6 +74,7 @@ exports.getAllItemReportsAttributes = () => {
     return {
         supplier: "$supplierDetails.supplierId._id",
         supplierName: "$supplierDetails.supplierId.supplierName",
+        supplierDescription: "$supplierDetails.supplierId.supplierDescription",
         unitPrice: 1,
         currency: "$supplierDetails.supplierCurrency",
         itemCode: 1,

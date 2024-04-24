@@ -67,10 +67,22 @@ export class StockCuttingFormComponent implements OnInit {
     }
 
     setSelectData(u: any) {
-        this.selectedStockCuttingData = u;
+        this.selectedStockCuttingData = {
+            stockCuttingDetails: [u],
+
+            SKUName: this.stockCutting.SKUName,
+            SKUDescription: this.stockCutting.SKUDescription,
+            processName: this.stockCutting.processName,
+            jobCard: this.stockCutting.jobCard,
+            jobCardNo: this.stockCutting.jobCardNo,
+            SKU: this.stockCutting.SKU,
+            SKUNo: this.stockCutting.SKUNo,
+            UOM: this.stockCutting.UOM,
+            SKUBatchQty: this.stockCutting.SKUBatchQty
+        };
         this.stockCutting.stockCuttingDetails = this.stockCutting?.stockCuttingDetails.map((x: any) => {
             x.select = false;
-            if (x.reference == this.selectedStockCuttingData.reference) {
+            if (x.reference == this.selectedStockCuttingData.stockCuttingDetails[0].reference) {
                 x.select = true;
             }
             return x;
@@ -90,6 +102,11 @@ export class StockCuttingFormComponent implements OnInit {
         this.spinner.show();
         this.stockCuttingService.getAllMasterData(this.selectedDetails).subscribe(result => {
             this.stockCutting = result.stockCutting;
+            this.stockCutting.stockCuttingDetails = this.stockCutting?.stockCuttingDetails?.map((x: any) => {
+                x.select = false;
+                return x;
+            });
+            this.stockCutting.processName = null;
             this.processNames = result.processNames;
             this.shiftOptions = result.shiftOptions;
             this.collection = this.stockCutting?.stockCuttingDetails?.length;
@@ -111,22 +128,14 @@ export class StockCuttingFormComponent implements OnInit {
 
         const modalRef = this.modalService.open(StockCuttingProcessComponent, {
             centered: true,
-            size: "xl",
+            windowClass: "modelPage",
             backdrop: "static",
             keyboard: false
         });
         modalRef.componentInstance.action = this.action;
+        modalRef.componentInstance.stockCuttingDetails = this.stockCutting?.stockCuttingDetails;
         modalRef.componentInstance.selectedStockCuttingData = this.selectedStockCuttingData;
         modalRef.componentInstance.shiftOptions = this.shiftOptions;
-
-        modalRef.result.then(
-            (success: any) => {
-                // if (success) {
-                // this.selectedStockCuttingData = success?.selectedStockCuttingData
-                // }
-            },
-            (reason: any) => {}
-        );
     }
 
     onSort({column, direction}: SortEvent) {

@@ -55,7 +55,18 @@ exports.getAllReports = asyncHandler(async (req, res) => {
                     from: "Supplier",
                     localField: "supplier",
                     foreignField: "_id",
-                    pipeline: [{$project: {_id: 0, supplierName: 1, supplierGST: 1}}],
+                    pipeline: [
+                        {
+                            $project: {
+                                _id: 0,
+                                supplierName: 1,
+                                supplierGST: 1,
+                                exportsCategory: {
+                                    $regexMatch: {input: "$supplierPurchaseType", regex: /imports/, options: "i"}
+                                }
+                            }
+                        }
+                    ],
                     as: "supplier"
                 }
             },
@@ -78,71 +89,88 @@ exports.getAllReports = asyncHandler(async (req, res) => {
             {
                 $addFields: {
                     locationCond: {
-                        $cond: [{$eq: ["$company.GSTINForAdditionalPlace", "supplier.supplierGST"]}, true, false]
+                        $cond: [
+                            {
+                                $and: [{$eq: ["$company.GSTINForAdditionalPlace", "supplier.supplierGST"]}]
+                            },
+                            true,
+                            false
+                        ]
                     }
                 }
             },
             {
                 $addFields: {
                     GSTAmount: {
-                        $divide: [
+                        $cond: [
+                            {$eq: ["$supplier.exportsCategory", true]},
+                            0,
                             {
-                                $reduce: {
-                                    input: "$PODetails",
-                                    initialValue: 0,
-                                    in: {
-                                        $sum: [
-                                            "$$value",
-                                            {
+                                $divide: [
+                                    {
+                                        $reduce: {
+                                            input: "$PODetails",
+                                            initialValue: 0,
+                                            in: {
                                                 $sum: [
+                                                    "$$value",
                                                     {
-                                                        $cond: [
-                                                            {$eq: ["$locationCond", true]},
-                                                            [
-                                                                {$multiply: ["$$this.sgst", "$$this.lineValue"]},
-                                                                {$multiply: ["$$this.cgst", "$$this.lineValue"]}
-                                                            ],
-                                                            {$multiply: ["$$this.igst", "$$this.lineValue"]}
-                                                        ]
-                                                    },
-                                                    {
-                                                        $cond: [
-                                                            {$gt: ["$otherCharges.totalAmount", 0]},
+                                                        $sum: [
                                                             {
                                                                 $cond: [
                                                                     {$eq: ["$locationCond", true]},
                                                                     [
                                                                         {
                                                                             $multiply: [
-                                                                                SACObj.sgstRate,
-                                                                                "$otherCharges.totalAmount"
+                                                                                "$$this.sgst",
+                                                                                "$$this.lineValue"
                                                                             ]
                                                                         },
-                                                                        {
-                                                                            $multiply: [
-                                                                                SACObj.cgstRate,
-                                                                                "$otherCharges.totalAmount"
-                                                                            ]
-                                                                        }
+                                                                        {$multiply: ["$$this.cgst", "$$this.lineValue"]}
                                                                     ],
-                                                                    {
-                                                                        $multiply: [
-                                                                            SACObj.igstRate,
-                                                                            "$otherCharges.totalAmount"
-                                                                        ]
-                                                                    }
+                                                                    {$multiply: ["$$this.igst", "$$this.lineValue"]}
                                                                 ]
                                                             },
-                                                            0
+                                                            {
+                                                                $cond: [
+                                                                    {$gt: ["$otherCharges.totalAmount", 0]},
+                                                                    {
+                                                                        $cond: [
+                                                                            {$eq: ["$locationCond", true]},
+                                                                            [
+                                                                                {
+                                                                                    $multiply: [
+                                                                                        SACObj.sgstRate,
+                                                                                        "$otherCharges.totalAmount"
+                                                                                    ]
+                                                                                },
+                                                                                {
+                                                                                    $multiply: [
+                                                                                        SACObj.cgstRate,
+                                                                                        "$otherCharges.totalAmount"
+                                                                                    ]
+                                                                                }
+                                                                            ],
+                                                                            {
+                                                                                $multiply: [
+                                                                                    SACObj.igstRate,
+                                                                                    "$otherCharges.totalAmount"
+                                                                                ]
+                                                                            }
+                                                                        ]
+                                                                    },
+                                                                    0
+                                                                ]
+                                                            }
                                                         ]
                                                     }
                                                 ]
                                             }
-                                        ]
-                                    }
-                                }
-                            },
-                            100
+                                        }
+                                    },
+                                    100
+                                ]
+                            }
                         ]
                     }
                 }

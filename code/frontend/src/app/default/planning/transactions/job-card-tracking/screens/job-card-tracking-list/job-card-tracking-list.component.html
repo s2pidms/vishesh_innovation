@@ -78,7 +78,7 @@
 >
     <div class="container">
         <div class="row justify-content-between px-3 mt-3 mb-0">
-            <div class="col-6">
+            <div class="col-7">
                 <div class="row mb-0">
                     <div class="col-4">
                         <div class="row">
@@ -98,7 +98,7 @@
                         <div class="row">
                             <div class="col-11 px-0">
                                 <div class="text-secondary fs-5">
-                                    {{ item?.customerName }}
+                                    {{ item?.SKUName }}
                                 </div>
                                 <div class="sub-text text-black-50 mt-1 fs-">
                                     {{ item?.SKUNo }}
@@ -129,9 +129,9 @@
                     </div>
                 </div>
             </div>
-            <div class="col-6 px-0">
+            <div class="col-5 px-0">
                 <div class="row mb-0">
-                    <div class="col-4 pe-0">
+                    <div class="col-5 pe-0">
                         <div class="row">
                             <div class="col-11">
                                 <div class="fs-5 text-black-50">
@@ -163,14 +163,14 @@
                             </div>
                         </div>
                     </div>
-                    <div class="col-4 pe-0">
+                    <div class="col-5 pe-0">
                         <div class="row">
                             <div class="col ms-3">
                                 <div class="fs-5 text-black-50">
                                     Batch Input Qty:
                                     <span class="text-secondary">
                                         {{ item?.totalBatchQuantity }}
-                                        <span class="text-black-50"> {{ item?.UOM }} </span>
+                                        <span class="text-black-50"> {{ item?.UOM | SalesUOMUnitMaster }} </span>
                                     </span>
                                 </div>
                                 <div class="fs-5 text-black-50">
@@ -186,7 +186,7 @@
                         </div>
                     </div>
 
-                    <div class="sub-text col-2 d-flex">
+                    <!-- <div class="sub-text col-2 d-flex">
                         <span class="greenStatus pt-3 pe-2"> Status </span>
                         <span>
                             <img
@@ -197,12 +197,26 @@
                                 class="pointer pt-3"
                             />
                         </span>
-                    </div>
-                    <div class="col-2 text-center d-flex mt-4">
-                        <div class="dropdown">
+                    </div> -->
+                    <div class="col-2 text-center sub-text d-flex mt-4">
+                        <span (click)="openStatusDetailsModal(item)" class="greenStatus pointer">Status</span>
+
+                        <!-- <div class="dropdown">
                             <button class="dropbtn" style="width: 4rem"></button>
-                            <!-- <div class="dropdown-content">
-                                <a
+                            <div class="dropdown-content"> -->
+                        <!-- <a
+                                    appAccessControl
+                                    [accessType]="rolePermissionActions.editAction"
+                                    href="javascript:void(0)" 
+                                >
+                                    <i
+                                        class="fa fa-trophy text-primary"
+                                        aria-hidden="true"
+                                        style="margin-right: 0.8rem !important"
+                                    ></i>
+                                    Status
+                                </a> -->
+                        <!-- <a
                                     appAccessControl
                                     [accessType]="rolePermissionActions.editAction"
                                     href="javascript:void(0)"
@@ -214,8 +228,8 @@
                                         style="margin-right: 0.8rem !important"
                                     ></i>
                                     Lead Won
-                                </a>
-                                <a
+                                </a> -->
+                        <!-- <a
                                     appAccessControl
                                     [accessType]="rolePermissionActions.editAction"
                                     href="javascript:void(0)"
@@ -227,8 +241,8 @@
                                         style="margin-right: 0.7rem !important"
                                     ></i>
                                     Lead Lost
-                                </a>
-                                <a
+                                </a> -->
+                        <!-- <a
                                     [class.disable]="item.demoSchedule.length == 0"
                                     appAccessControl
                                     [accessType]="rolePermissionActions.editAction"
@@ -248,8 +262,8 @@
                                         style="margin-right: 0.9rem !important"
                                     ></i>
                                     Reset-a-demo
-                                </a>
-                                <a
+                                </a> -->
+                        <!-- <a
                                     [class.disable]="item.commercialProposal.length == 0"
                                     appAccessControl
                                     [accessType]="rolePermissionActions.editAction"
@@ -269,9 +283,9 @@
                                         style="margin-right: 0.5rem !important"
                                     ></i>
                                     Revise Proposal
-                                </a>
-                            </div> -->
-                        </div>
+                                </a> -->
+                        <!-- </div>
+                        </div> -->
                     </div>
                 </div>
             </div>

@@ -116,7 +116,12 @@ let headers: any = [
         ...EXCEL_STYLE
     },
     {
-        header: "Supplier Part No.",
+        header: "Supplier Item Description",
+        key: "supplierDescription",
+        ...EXCEL_STYLE
+    },
+    {
+        header: "Supplier Item Code",
         key: "spin",
         ...EXCEL_STYLE
     },

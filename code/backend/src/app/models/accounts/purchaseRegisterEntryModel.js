@@ -43,6 +43,10 @@ const purchaseRegistryEntrySchema = mongoose.Schema(
             type: String,
             required: false
         },
+        supplierCurrency: {
+            type: String,
+            required: false
+        },
         purchaseCategory: {
             type: String,
             required: false
@@ -95,11 +99,19 @@ const purchaseRegistryEntrySchema = mongoose.Schema(
             type: String,
             required: false
         },
+        cancellationReason: {
+            type: String,
+            required: false
+        },
         status: {
             type: String,
             required: false,
-            enum: [OPTIONS.defaultStatus.CREATED],
-            default: OPTIONS.defaultStatus.CREATED
+            enum: [
+                OPTIONS.defaultStatus.AWAITING_APPROVAL,
+                OPTIONS.defaultStatus.CANCELLED,
+                OPTIONS.defaultStatus.REPORT_GENERATED
+            ],
+            default: OPTIONS.defaultStatus.AWAITING_APPROVAL
         }
     },
     {

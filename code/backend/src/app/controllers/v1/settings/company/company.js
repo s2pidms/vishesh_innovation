@@ -16,6 +16,11 @@ const {bulkInsertItemsByCSV, checkItemsValidation} = require("../../purchase/ite
 const {bulkInsertCustomersByCSV, checkCustomersValidation} = require("../../sales/customerMaster/customerMaster");
 const {bulkInsertInventoryByCSV, checkInventoryValidation} = require("../../stores/Inventory/Inventory");
 const {checkSKUValidation, bulkInsertSKUByCSV} = require("../../sales/SKU/SKU");
+const {
+    checkFGINValidation,
+    bulkInsertFGINByCSV
+} = require("../../stores/finishedGoodsInwardEntry/finishedGoodsInwardEntry");
+const {checkEmployeeValidation, bulkInsertEmployeeByCSV} = require("../../HR/employee/Employee");
 const ObjectId = mongoose.Types.ObjectId;
 exports.getAll = asyncHandler(async (req, res) => {
     try {
@@ -573,6 +578,12 @@ exports.uploadAndCheckCSVFile = async (req, res) => {
         if (req.body.collectionName == "SKUMaster") {
             rows = await checkSKUValidation(jsonData, excelJson[req.body.collectionName], req.user.company);
         }
+        if (req.body.collectionName == "FGIN") {
+            rows = await checkFGINValidation(jsonData, excelJson[req.body.collectionName], req.user.company);
+        }
+        if (req.body.collectionName == "Employee") {
+            rows = await checkEmployeeValidation(jsonData, excelJson[req.body.collectionName], req.user.company);
+        }
         return res.success(rows);
     } catch (e) {
         const errors = MESSAGES.apiErrorStrings.SERVER_ERROR;
@@ -610,6 +621,20 @@ exports.bulkInsertByCSVFile = async (req, res) => {
         }
         if (req.body.collectionName == "SKUMaster") {
             rows = await bulkInsertSKUByCSV(req.body.validRecords, {
+                company: req.user.company,
+                createdBy: req.user.sub,
+                updatedBy: req.user.sub
+            });
+        }
+        if (req.body.collectionName == "FGIN") {
+            rows = await bulkInsertFGINByCSV(req.body.validRecords, {
+                company: req.user.company,
+                createdBy: req.user.sub,
+                updatedBy: req.user.sub
+            });
+        }
+        if (req.body.collectionName == "Employee") {
+            rows = await bulkInsertEmployeeByCSV(req.body.validRecords, {
                 company: req.user.company,
                 createdBy: req.user.sub,
                 updatedBy: req.user.sub

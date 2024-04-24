@@ -3,6 +3,7 @@ const Audit = require("../../controllers/v1/settings/audit/audit");
 const {STOCK_CUTTING: SCHEMA_CONSTANT} = require("../../mocks/schemasConstant/productionConstant");
 const {paginatePlugin} = require("../plugins/paginatePlugin");
 const {PPIC_STAGES} = require("../../mocks/constantData");
+const { setTwoDecimal } = require("../../helpers/utility");
 const stockCuttingSchema = mongoose.Schema(
     {
         company: {
@@ -127,8 +128,17 @@ const stockCuttingSchema = mongoose.Schema(
                     type: Boolean,
                     required: false
                 },
+                isSaved: {
+                    type: Boolean,
+                    required: false
+                },
                 PPICOpeningStock: [
                     {
+                        inventory: {
+                            type: mongoose.Schema.Types.ObjectId,
+                            required: false,
+                            ref: "InventoryCorrection"
+                        },
                         MRNNo: {
                             type: String,
                             required: false
@@ -208,6 +218,11 @@ const stockCuttingSchema = mongoose.Schema(
                 },
                 PPICToProductionGT: [
                     {
+                        inventory: {
+                            type: mongoose.Schema.Types.ObjectId,
+                            required: false,
+                            ref: "InventoryCorrection"
+                        },
                         MRNNo: {
                             type: String,
                             required: false
@@ -278,6 +293,11 @@ const stockCuttingSchema = mongoose.Schema(
                 ],
                 PPICClosingStockCalculated: [
                     {
+                        inventory: {
+                            type: mongoose.Schema.Types.ObjectId,
+                            required: false,
+                            ref: "InventoryCorrection"
+                        },
                         MRNNo: {
                             type: String,
                             required: false
@@ -348,6 +368,11 @@ const stockCuttingSchema = mongoose.Schema(
                 ],
                 PPICClosingStockActual: [
                     {
+                        inventory: {
+                            type: mongoose.Schema.Types.ObjectId,
+                            required: false,
+                            ref: "InventoryCorrection"
+                        },
                         MRNNo: {
                             type: String,
                             required: false

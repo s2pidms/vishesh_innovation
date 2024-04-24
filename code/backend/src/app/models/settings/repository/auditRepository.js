@@ -20,6 +20,9 @@ module.exports = {
     deleteDoc: async match => {
         return await Model.deleteOne(match);
     },
+    deleteManyDoc: async match => {
+        return await Model.deleteMany(match);
+    },
     filteredAuditList: async pipeline => {
         return await Model.aggregate(pipeline);
     }

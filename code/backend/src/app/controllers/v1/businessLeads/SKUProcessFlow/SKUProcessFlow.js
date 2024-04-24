@@ -162,6 +162,7 @@ exports.getAllMasterData = asyncHandler(async (req, res) => {
                     seq: null,
                     process: "$_id",
                     processId: 1,
+                    processOriginalName: 1,
                     processName: 1,
                     sourceOfManufacturing: 1,
                     primaryAssetAllocation: 1,

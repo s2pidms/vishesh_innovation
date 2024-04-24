@@ -59,11 +59,14 @@
                         <th sortable="ewayBillNo" (sort)="onSort($event)">E-way Bill</th>
                         <th sortable="salesInvoiceDateS" (sort)="onSort($event)">E-Invoicing</th>
                         <th>View/Print</th>
+                        <th *ngIf="this.user == superAdminId">Action</th>
                     </tr>
                 </thead>
                 <tbody>
                     <tr *ngFor="let u of tableData; trackBy: trackByFn">
-                        <td>{{ u?.salesInvoiceNumber }}</td>
+                        <td>
+                            {{ u?.salesInvoiceNumber }}
+                        </td>
                         <td>{{ u?.salesInvoiceDateS }}</td>
                         <td>{{ u?.salesInvoiceTotalAmount | number : ".2-2" }}</td>
                         <td>{{ u?.salesInvoiceTotalTaxAmount | number : ".2-2" }}</td>
@@ -75,6 +78,7 @@
                         </td>
                         <td>
                             <a
+                                *ngIf="u?.eWayBillStatus != true"
                                 style="text-decoration: none"
                                 [href]="'https://my.gstzen.in' + u?.EWayBillPdfUrl"
                                 target="_blank"
@@ -83,9 +87,9 @@
                                 {{ u?.ewayBillNo }}
                             </a>
                         </td>
-
                         <td>
                             <a
+                                *ngIf="u?.eInvoiceStatus != true"
                                 style="text-decoration: none"
                                 [href]="'https://my.gstzen.in' + u?.InvoicePdfUrl"
                                 target="_blank"
@@ -96,12 +100,34 @@
                         </td>
                         <td>
                             <div appAccessControl [accessType]="rolePermissionActions.viewAction">
-                                <img
+                                <!-- <img
                                     class="pointer"
                                     src="./assets/images/file_pdf.png"
                                     width="20rem"
                                     (click)="navigateTo(u?._id, 'print')"
+                                /> -->
+                                <img
+                                    class="pointer"
+                                    src="./assets/new_icons/pdf_icon.svg"
+                                    width="15rem"
+                                    alt=""
+                                    (click)="navigateTo(u?._id, 'print')"
                                 />
+                            </div>
+                        </td>
+                        <td *ngIf="this.user == superAdminId" class="py-0">
+                            <div class="dropdown">
+                                <button class="dropbtn"></button>
+                                <div class="dropdown-content">
+                                    <a href="javascript:void(0)" (click)="update(u?._id, {eWayBillStatus: true})">
+                                        <i class="fa fa-close fa-lg text-danger" aria-hidden="true"></i>
+                                        E-Way Bill
+                                    </a>
+                                    <a href="javascript:void(0)" (click)="update(u?._id, {eInvoiceStatus: true})">
+                                        <i class="fa fa-close fa-lg text-danger" aria-hidden="true"></i>
+                                        E-Invoice
+                                    </a>
+                                </div>
                             </div>
                         </td>
                     </tr>

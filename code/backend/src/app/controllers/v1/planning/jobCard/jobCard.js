@@ -752,6 +752,7 @@ exports.getAllJobTrackingMasterData = asyncHandler(async (req, res) => {
                         {
                             $project: {
                                 SKUNo: 1,
+                                SKUName: 1,
                                 layoutDimensionsUnit: "$dimensionsDetails.layoutDimensions.unit",
                                 layoutDimensionsWidth: "$dimensionsDetails.layoutDimensions.width",
                                 layoutDimensionsLength: "$dimensionsDetails.layoutDimensions.length",
@@ -813,6 +814,43 @@ exports.getAllJobTrackingMasterData = asyncHandler(async (req, res) => {
                 }
             },
             {
+                $lookup: {
+                    from: "JobCardEntry",
+                    let: {jobCard: "$jobCard", skuId: "$SKU._id"},
+                    pipeline: [
+                        {
+                            $match: {
+                                $expr: {
+                                    $and: [{$eq: ["$jobCard", "$$jobCard"]}, {$eq: ["$SKU", "$$skuId"]}]
+                                }
+                            }
+                        },
+                        {
+                            $project: {
+                                productionEntry: {
+                                    $map: {
+                                        input: "$productionEntry",
+                                        as: "details",
+                                        in: {
+                                            seq: "$$details.seq",
+                                            processName: "$$details.processName",
+                                            processStatus: "$$details.processStatus"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    ],
+                    as: "jobCardEntry"
+                }
+            },
+            {
+                $unwind: {
+                    path: "$jobCardEntry",
+                    preserveNullAndEmptyArrays: true
+                }
+            },
+            {
                 $project: {
                     jobCardNo: 1,
                     jobCardDate: {$dateToString: {format: "%d-%m-%Y", date: "$jobCardDate"}},
@@ -824,6 +862,7 @@ exports.getAllJobTrackingMasterData = asyncHandler(async (req, res) => {
                         ]
                     },
                     SKUNo: "$SKU.SKUNo",
+                    SKUName: "$SKU.SKUName",
                     UOM: 1,
                     totalBatchQuantity: 1,
                     manufacturingDate: "$batchInfo.manufacturingDate",
@@ -833,7 +872,8 @@ exports.getAllJobTrackingMasterData = asyncHandler(async (req, res) => {
                     layoutDimensionsLength: "$SKU.layoutDimensionsLength",
                     layoutDimensionsUps: "$SKU.layoutDimensionsUps",
                     totalNoOfColors: "$SKU.totalNoOfColors",
-                    batchOutputQty: "$jobCardOutput.batchOutputQty"
+                    batchOutputQty: "$jobCardOutput.batchOutputQty",
+                    jobCardEntry: "$jobCardEntry.productionEntry"
                 }
             },
             {$sort: {jobCardNo: 1}}

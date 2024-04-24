@@ -45,9 +45,6 @@ exports.createOrUpdate = asyncHandler(async (req, res) => {
         if (existing) {
             existing.updatedBy = req.user.sub;
             existing = await JobCardEntryRepository.updateDoc(existing, req.body);
-            if (existing.generateReport.checkoutStatus == OPTIONS.defaultStatus.MARK_AS_COMPLETED) {
-                createFGIN(existing._id, req.user);
-            }
         } else {
             let createdObj = {
                 company: req.user.company,
@@ -55,7 +52,14 @@ exports.createOrUpdate = asyncHandler(async (req, res) => {
                 updatedBy: req.user.sub,
                 ...req.body
             };
-            await JobCardEntryRepository.createDoc(createdObj);
+            existing = await JobCardEntryRepository.createDoc(createdObj);
+        }
+        if (
+            [OPTIONS.defaultStatus.MARK_AS_COMPLETED, OPTIONS.defaultStatus.SKIP_INTEGRATION].includes(
+                existing.generateReport.checkoutStatus
+            )
+        ) {
+            createFGIN(existing._id, req.user);
         }
         res.success({
             message: MESSAGES.apiSuccessStrings.ADDED("Job Card Entry")
@@ -99,50 +103,6 @@ const createFGIN = async (jobCardEntryId, user) => {
         console.error("error", error);
     }
 };
-// exports.update = asyncHandler(async (req, res) => {
-//     try {
-//         let itemDetails = await JobCardEntryRepository.getDocById(req.params.id);
-//         if (!itemDetails) {
-//             const errors = MESSAGES.apiErrorStrings.INVALID_REQUEST;
-//             return res.preconditionFailed(errors);
-//         }
-//         itemDetails.updatedBy = req.user.sub;
-//         if (req.body.status && req.body.status == OPTIONS.defaultStatus.MARK_AS_COMPLETED) {
-//             req.body.approvedDate = new Date();
-//         }
-//         itemDetails = await JobCardEntryRepository.updateDoc(itemDetails, req.body);
-//         if (itemDetails.status == OPTIONS.defaultStatus.REPORT_GENERATED) {
-//             let SKUDetails = await SKUMasterRepository.getDocById(itemDetails.SKU, {shelfLife: 1, customerInfo: 1});
-//             let fginData = {
-//                 company: itemDetails.company,
-//                 createdBy: req.user.sub,
-//                 updatedBy: req.user.sub,
-//                 FGINNo: "FGIN000",
-//                 SKUId: itemDetails.SKU,
-//                 SKUNo: itemDetails.SKUNo,
-//                 SKUName: itemDetails.SKUName,
-//                 SKUDescription: itemDetails.SKUDescription,
-//                 UOM: itemDetails.UOM,
-//                 partNo: SKUDetails?.customerInfo[0].customerPartNo,
-//                 FGINDate: itemDetails.approvedDate,
-//                 manufacturingDate: itemDetails.approvedDate,
-//                 expiryDate: getExpiryDate(SKUDetails?.shelfLife, new Date()),
-//                 FGINQuantity: itemDetails.batchOutputQty,
-//                 previousDRNQty: 0,
-//                 batchNo: itemDetails.batchNumber,
-//                 location: itemDetails.location
-//             };
-//             await FGINRepository.createDoc(fginData);
-//         }
-//         return res.success({
-//             message: MESSAGES.apiSuccessStrings.UPDATE("Job Card Entry has been")
-//         });
-//     } catch (e) {
-//         console.error("update Job Card Entry", e);
-//         const errors = MESSAGES.apiErrorStrings.SERVER_ERROR;
-//         return res.serverError(errors);
-//     }
-// });
 
 exports.getAllMasterData = asyncHandler(async (req, res) => {
     try {
@@ -163,7 +123,18 @@ exports.getAllMasterData = asyncHandler(async (req, res) => {
                     from: "JobCardEntry",
                     localField: "_id",
                     foreignField: "jobCard",
-                    pipeline: [{$match: {"generateReport.checkoutStatus": OPTIONS.defaultStatus.MARK_AS_COMPLETED}}],
+                    pipeline: [
+                        {
+                            $match: {
+                                "generateReport.checkoutStatus": {
+                                    $in: [
+                                        OPTIONS.defaultStatus.MARK_AS_COMPLETED,
+                                        OPTIONS.defaultStatus.SKIP_INTEGRATION
+                                    ]
+                                }
+                            }
+                        }
+                    ],
                     as: "jobCardEntry"
                 }
             },
@@ -529,10 +500,28 @@ exports.getJCEntryDataByJobCardId = asyncHandler(async (req, res) => {
                 $unwind: "$PFDetails"
             },
             {
+                $lookup: {
+                    from: "ProcessMaster",
+                    localField: "PFDetails.process",
+                    foreignField: "_id",
+                    pipeline: [
+                        {
+                            $match: {
+                                status: OPTIONS.defaultStatus.ACTIVE
+                            }
+                        },
+                        {$project: {processOriginalName: 1}}
+                    ],
+                    as: "processMaster"
+                }
+            },
+            {$unwind: "$processMaster"},
+            {
                 $project: {
                     seq: "$PFDetails.seq",
                     process: "$PFDetails.process",
                     processName: "$PFDetails.processName",
+                    processOriginalName: "$processMaster.processOriginalName",
                     IPQALog: {
                         adherenceToProcessStd: {$literal: false},
                         inProcessInfo: [

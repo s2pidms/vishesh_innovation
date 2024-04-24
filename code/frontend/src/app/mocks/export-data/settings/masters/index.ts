@@ -21,3 +21,4 @@ export * from "./UploadDataForItem";
 export * from "./UploadDataForCustomer";
 export * from "./UploadDataForSupplier";
 export * from "./mouldMaster";
+export * from "./mapProcessName";

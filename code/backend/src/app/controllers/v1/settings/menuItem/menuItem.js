@@ -9,6 +9,8 @@ const LabelMaster = require("../label-master/label-master");
 const memoryCacheHandler = require("../../../../utilities/memoryCacheHandler");
 const UOMUnitMasterRepository = require("../../../../models/settings/repository/UOMUnitMasterRepository");
 const {ObjectId} = require("../../../../../config/mongoose");
+const SalesUOMUnitMasterRepository = require("../../../../models/settings/repository/SalesUOMUnitMasterRepository");
+const {getAllModuleMaster} = require("../module-master/module-master");
 
 exports.getAll = asyncHandler(async (req, res) => {
     try {
@@ -138,11 +140,38 @@ exports.getAllGlobalData = asyncHandler(async (req, res) => {
                 }
             }
         ]);
+        const UOMDefaultValue = await getAllModuleMaster(req.user.company, "DEFAULT_UNIT_VALUE");
+        const salesUOMUintMaster = await SalesUOMUnitMasterRepository.filteredSalesUOMUnitMasterList([
+            {
+                $match: {
+                    company: ObjectId(req.user.company),
+                    status: OPTIONS.defaultStatus.ACTIVE
+                }
+            },
+            {
+                $sort: {order: 1}
+            },
+            {
+                $project: {
+                    label: 1,
+                    value: 1,
+                    _id: 0
+                }
+            }
+        ]);
         const menuItems = await checkMenuItemInCacheBySystem(req.user.company, system);
         const userRoles = await User.getAllRoleByUserId(req.user.company, req.user.sub);
         const rolesPermission = await SubModulePermissions.getAllSubModulePermissions(userRoles);
         let roles = await getAllRoles(req.user.company, true);
-        return res.success({menuItems, roles, rolesPermission, labelsJSON, UOMUintMasterJSON});
+        return res.success({
+            menuItems,
+            roles,
+            rolesPermission,
+            labelsJSON,
+            UOMUintMasterJSON,
+            salesUOMUintMaster,
+            UOMDefaultValue
+        });
     } catch (e) {
         const errors = MESSAGES.apiErrorStrings.SERVER_ERROR;
         res.serverError(errors);

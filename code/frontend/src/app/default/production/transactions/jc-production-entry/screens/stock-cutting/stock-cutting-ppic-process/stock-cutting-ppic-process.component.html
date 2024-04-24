@@ -8,9 +8,16 @@
         </div>
     </div>
     <div class="container">
-        <div class="row mb-0">
+        <div class="row d-flex mb-0">
             <div class="mt-1 line-border-with-title">
                 <span class="px-4"> PPIC Closing Stock </span>
+                <div class="d-flex align-items-center">
+                    <i
+                        [ngbTooltip]="'Calculated'"
+                        class="fa fa-star fa-lg ms-2 pointer yellow-color"
+                        aria-hidden="true"
+                    ></i>
+                </div>
             </div>
         </div>
 
@@ -38,7 +45,7 @@
                         <tbody>
                             <tr
                                 *ngFor="
-                                    let u of selectedStockCuttingData.PPICClosingStockCalculated;
+                                    let u of selectedStockCuttingData.stockCuttingDetails[0].PPICClosingStockCalculated;
                                     trackBy: trackByFn;
                                     let i = index
                                 "
@@ -98,6 +105,13 @@
         <div class="row mt-4">
             <div class="mt-5 line-border-with-title">
                 <span class="px-4"> PPIC Closing Stock </span>
+                <div class="d-flex align-items-center">
+                    <i
+                        [ngbTooltip]="'Actual'"
+                        class="fa fa-star fa-lg ms-2 pointer green-color"
+                        aria-hidden="true"
+                    ></i>
+                </div>
             </div>
         </div>
 
@@ -125,20 +139,21 @@
                         <tbody>
                             <tr
                                 *ngFor="
-                                    let u of selectedStockCuttingData.PPICClosingStockActual;
+                                    let u of selectedStockCuttingData.stockCuttingDetails[0].PPICClosingStockActual;
                                     trackBy: trackByFn;
                                     let i = index
                                 "
                             >
                                 <td>
-                                    <div class="d-flex justify-content-center">
+                                    {{ u.MRNNo }}
+                                    <!-- <div class="d-flex justify-content-center">
                                         <input
                                             class="form-control text-center form-control-size-sx"
                                             type="text"
                                             [(ngModel)]="u.MRNNo"
                                             [ngModelOptions]="{standalone: true}"
                                         />
-                                    </div>
+                                    </div> -->
                                 </td>
                                 <td>{{ u?.itemCode }}</td>
                                 <td class="text-start" [style.width]="itemName.clientWidth" #itemName>
@@ -151,10 +166,15 @@
                                         class="pointer"
                                         [ngbTooltip]="u.itemDescription"
                                         [positionTarget]="itemDescription"
+                                        *ngIf="selectedStockCuttingData.stockCuttingDetails[0].isSaved == true"
                                     >
+                                        {{ u.itemDescription }}
                                     </span>
 
-                                    <div class="d-flex justify-content-center">
+                                    <div
+                                        *ngIf="!selectedStockCuttingData.stockCuttingDetails[0].isSaved"
+                                        class="d-flex justify-content-center"
+                                    >
                                         <input
                                             class="form-control text-center form-control-size-sm"
                                             type="text"
@@ -169,7 +189,13 @@
                                 </td>
 
                                 <td>
-                                    <div class="d-flex justify-content-center">
+                                    <span *ngIf="selectedStockCuttingData.stockCuttingDetails[0].isSaved == true">
+                                        {{ u.U1Qty }}
+                                    </span>
+                                    <div
+                                        *ngIf="!selectedStockCuttingData.stockCuttingDetails[0].isSaved"
+                                        class="d-flex justify-content-center"
+                                    >
                                         <input
                                             class="form-control text-center form-control-size-sx"
                                             type="number"
@@ -181,7 +207,13 @@
                                 </td>
 
                                 <td>
-                                    <div class="d-flex justify-content-center">
+                                    <span *ngIf="selectedStockCuttingData.stockCuttingDetails[0].isSaved == true">
+                                        {{ u.width }}
+                                    </span>
+                                    <div
+                                        *ngIf="!selectedStockCuttingData.stockCuttingDetails[0].isSaved"
+                                        class="d-flex justify-content-center"
+                                    >
                                         <input
                                             class="form-control text-center form-control-size-sx"
                                             type="number"
@@ -195,7 +227,13 @@
                                     {{ u?.widthUnit }}
                                 </td>
                                 <td>
-                                    <div class="d-flex justify-content-center">
+                                    <span *ngIf="selectedStockCuttingData.stockCuttingDetails[0].isSaved == true">
+                                        {{ u.length }}
+                                    </span>
+                                    <div
+                                        *ngIf="!selectedStockCuttingData.stockCuttingDetails[0].isSaved"
+                                        class="d-flex justify-content-center"
+                                    >
                                         <input
                                             class="form-control text-center form-control-size-sx"
                                             type="number"
@@ -209,7 +247,13 @@
                                     {{ u?.lengthUnit }}
                                 </td>
                                 <td>
-                                    <div class="d-flex justify-content-center">
+                                    <span *ngIf="selectedStockCuttingData.stockCuttingDetails[0].isSaved == true">
+                                        {{ u.MF }}
+                                    </span>
+                                    <div
+                                        *ngIf="!selectedStockCuttingData.stockCuttingDetails[0].isSaved"
+                                        class="d-flex justify-content-center"
+                                    >
                                         <input
                                             class="form-control text-center form-control-size-sx"
                                             type="number"
@@ -223,7 +267,13 @@
                                     {{ u?.U2 }}
                                 </td>
                                 <td>
-                                    <div class="d-flex justify-content-center">
+                                    <span *ngIf="selectedStockCuttingData.stockCuttingDetails[0].isSaved == true">
+                                        {{ u.U2Qty }}
+                                    </span>
+                                    <div
+                                        *ngIf="!selectedStockCuttingData.stockCuttingDetails[0].isSaved"
+                                        class="d-flex justify-content-center"
+                                    >
                                         <input
                                             class="form-control text-center form-control-size-sx"
                                             type="number"
@@ -287,7 +337,7 @@
                         <input
                             type="number"
                             class="form-control ps-2 pe-0 border-start-0 bg-magenta-black"
-                            [(ngModel)]="selectedStockCuttingData.rejectionQty"
+                            [(ngModel)]="selectedStockCuttingData.stockCuttingDetails[0].rejectionQty"
                             readonly
                         />
                     </div>
@@ -295,7 +345,7 @@
                         <input
                             type="text"
                             class="form-control ps-2 pe-0 bg-magenta-black border-end-0"
-                            [value]="selectedStockCuttingData.rejectionPercent"
+                            [value]="selectedStockCuttingData.stockCuttingDetails[0].rejectionPercent"
                             readonly
                         />
                         <span
@@ -309,8 +359,22 @@
             </div>
             <div class="col-1 ps-0 d-flex align-items-center"></div>
             <div class="col-4 mb-0 d-flex align-self-end justify-content-end">
-                <button class="btn btn-primary px-5 me-4" type="button" (click)="reset()">Reset</button>
-                <button class="btn btn-primary px-5" type="button" (click)="submit()">Save</button>
+                <button
+                    [disabled]="selectedStockCuttingData.stockCuttingDetails[0].isSaved == true"
+                    class="btn btn-primary px-5 me-4"
+                    type="button"
+                    (click)="reset()"
+                >
+                    Reset
+                </button>
+                <button
+                    [disabled]="selectedStockCuttingData.stockCuttingDetails[0].isSaved == true"
+                    class="btn btn-primary px-5"
+                    type="button"
+                    (click)="submit()"
+                >
+                    Save
+                </button>
             </div>
         </div>
     </div>

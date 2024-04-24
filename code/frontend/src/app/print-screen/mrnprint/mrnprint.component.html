@@ -120,7 +120,8 @@
                             <input
                                 [(ngModel)]="MRNRemark"
                                 [ngModelOptions]="{standalone: true}"
-                                class="form-control"
+                                [ngbTooltip]="MRNRemark"
+                                class="form-control pointer"
                                 type="text"
                                 readonly
                             />

@@ -7,7 +7,7 @@
         <button
             class="btn btn-primary btn-add"
             type="button"
-            (click)="navigateTo('/default/quality/master/rm_specifications/form', null, 'create')"
+            (click)="navigateTo('../form', {}, 'create')"
         >
             RM Specification
         </button>
@@ -58,7 +58,7 @@
                                     [accessType]="rolePermissionActions.viewAction"
                                     href="javascript:void(0)"
                                     (click)="
-                                        navigateTo('/default/quality/master/rm_specifications/form', u?._id, 'view')
+                                        navigateTo('../form', u, 'view')
                                     "
                                 >
                                     <i class="fa fa-eye fa-lg me-2 text-primary" aria-hidden="true"></i>
@@ -69,11 +69,21 @@
                                     [accessType]="rolePermissionActions.editAction"
                                     href="javascript:void(0)"
                                     (click)="
-                                        navigateTo('/default/quality/master/rm_specifications/form', u?._id, 'edit')
+                                        navigateTo('../form', u, 'edit')
                                     "
                                 >
                                     <i class="fa fa-pencil-square-o fa-lg me-2 text-primary" aria-hidden="true"></i>
                                     Edit
+                                </a>
+                                <a  
+                                    appAccessControl
+                                    [accessType]="rolePermissionActions.editAction"
+                                    [class.disable]="u.status == 'Inactive'"
+                                    href="javascript:void(0)"
+                                    (click)="navigateTo('../form', u, 'copy')"
+                                >
+                                    <i class="fa fa-clone fa-lg me-2 text-primary" aria-hidden="true"></i>
+                                    Copy
                                 </a>
                             </div>
                         </div>

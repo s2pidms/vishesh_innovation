@@ -28,7 +28,7 @@ export class SKUCustomerInjectionMoldingComponent implements OnInit {
         customer: new UntypedFormControl(null),
         customerPartDescription: new UntypedFormControl(null, [Validators.required]),
         customerPartNo: new UntypedFormControl(null, [Validators.required]),
-        customerCurrency: new UntypedFormControl(null),
+        customerCurrency: new UntypedFormControl({value: null, disabled: true}),
         standardSellingRate: new UntypedFormControl(null)
     });
 
@@ -78,11 +78,14 @@ export class SKUCustomerInjectionMoldingComponent implements OnInit {
         if (this.validationService.checkErrors(this.form, this.findFormErrors)) {
             return;
         }
+        this.form.controls["customerCurrency"].enable();
         let formData = this.form.value;
         if (!formData.standardSellingRate) {
             this.toastService.warning("Rate/U1 is required !");
+            this.form.controls["customerCurrency"].disable();
             return;
         }
+
         if ((formData.index || formData.index == 0) && formData.index >= 0) {
             // edit
             this.customerInfoArray.splice(formData.index, 1, formData);
@@ -93,6 +96,7 @@ export class SKUCustomerInjectionMoldingComponent implements OnInit {
         this.collection = this.customerInfoArray.length;
         this.selectedCustomerDetails = {};
         this.form.reset();
+        this.form.controls["customerCurrency"].disable();
     }
 
     patchItem(formData: any, index: number, action: string) {
@@ -104,6 +108,7 @@ export class SKUCustomerInjectionMoldingComponent implements OnInit {
         } else {
             this.form.enable();
             this.btnDisable = false;
+            this.form.controls["customerCurrency"].disable();
         }
     }
 

@@ -2,7 +2,7 @@ const asyncHandler = require("express-async-handler");
 const MESSAGES = require("../../../../helpers/messages.options");
 const {OPTIONS} = require("../../../../helpers/global.options");
 const {getAllProcessMasterAttributes} = require("../../../../models/planning/helpers/processMasterHelper");
-const {ASSET_CLASS_NAMES} = require("../../../../mocks/constantData");
+const {ASSET_CLASS_NAMES, PROCESS} = require("../../../../mocks/constantData");
 const {getAllLabourRateMasterList} = require("../../finance/labour-rate-master/labour-rate-master");
 const {default: mongoose} = require("mongoose");
 const {PROCESS_MASTER} = require("../../../../mocks/schemasConstant/planningConstant");
@@ -216,3 +216,31 @@ exports.getAllProcessMasterForDirectCost = async company => {
 //     }
 //     return totalLabourSalary;
 // }
+
+exports.getAllMapProcessNames = asyncHandler(async (req, res) => {
+    try {
+        let project = {
+            _id: 1,
+            processOriginalName: {$ifNull: ["$processOriginalName", null]},
+            processName: 1,
+            processId: 1
+        };
+        let pipeline = [
+            {
+                $match: {
+                    company: ObjectId(req.user.company),
+                    status: OPTIONS.defaultStatus.ACTIVE
+                }
+            }
+        ];
+        let rows = await ProcessRepository.getAllPaginate({pipeline, project, queryParams: req.query});
+        return res.success({
+            ...rows,
+            processOptions: PROCESS
+        });
+    } catch (error) {
+        console.error("getAllMapProcessNames Process Master", error);
+        const errors = MESSAGES.apiErrorStrings.SERVER_ERROR;
+        return res.serverError(errors);
+    }
+});

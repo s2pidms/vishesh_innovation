@@ -2,7 +2,7 @@ import {Component, OnInit} from "@angular/core";
 import {UntypedFormControl, UntypedFormGroup, Validators} from "@angular/forms";
 import {ActivatedRoute} from "@angular/router";
 import {SKUService} from "@services/sales";
-import {SpinnerService} from "@core/services";
+import {AppGlobalService, SpinnerService} from "@core/services";
 import {ToastService} from "@core/services";
 import {Observable, mergeMap, of} from "rxjs";
 import {ValidationService} from "@core/components";
@@ -50,8 +50,10 @@ export class SKUFormComponent implements OnInit, CanComponentDeactivate {
     companyTypeInjectionMolding = COMPANY_TYPE_INJECTION_MOLDING;
     SKUCategoryValues: any = {};
     selectedDetails: any = {};
+    UOMDefaultValueOptions: any = [];
     tableHead: any = TABLE_HEADERS;
     SKUStageObj: any = SKU_STAGE_OPTIONS;
+    salesUOMUintMasterOptions: any = [];
     SKUStageArr: any = this.SKUStageObj.getAllSKUStage();
     masterData: ISKUMasterMasterData = {
         companyType: "",
@@ -204,14 +206,34 @@ export class SKUFormComponent implements OnInit, CanComponentDeactivate {
         private validationService: ValidationService,
         private modalService: NgbModal,
         private utilityService: UtilityService,
-        private location: Location
+        private location: Location,
+        private appGlobalService: AppGlobalService
     ) {}
 
     ngOnInit(): void {
+        this.salesUOMUintMasterOptions = this.appGlobalService.salesUOMUintMasterOptions;
         this.getInitialData();
         this.form.valueChanges.subscribe((x: any) => {
             this.unsavedChanges = true;
         });
+
+        this.UOMDefaultValueOptions = this.appGlobalService?.UOMDefaultValueOptions;
+        if (this.UOMDefaultValueOptions?.length > 0) {
+            if (!this.f["primaryUnit"].value) {
+                let primaryUnitData: any = null;
+                primaryUnitData = this.findValue(this.UOMDefaultValueOptions, "SALES_UOM");
+                this.f["primaryUnit"].setValue(primaryUnitData);
+            }
+            if (!this.f["secondaryUnit"].value) {
+                let secondaryUnitData: any = null;
+                secondaryUnitData = this.findValue(this.UOMDefaultValueOptions, "SALES_SECONDARY_UNIT");
+                this.f["secondaryUnit"].setValue(secondaryUnitData);
+            }
+        }
+    }
+
+    findValue(array: any, value: any) {
+        return array?.find((x: any) => x?.parameterLabel == value)?.parameterName;
     }
 
     // Method to check if there are unsaved changes
@@ -490,7 +512,7 @@ export class SKUFormComponent implements OnInit, CanComponentDeactivate {
             keyboard: false
         });
 
-        modalRef.componentInstance.ModalUOMsUnit = this.masterData?.UOMOptions;
+        modalRef.componentInstance.ModalUOMsUnit = this.salesUOMUintMasterOptions;
         modalRef.componentInstance.WXLDimensionsUnit = this.masterData?.WXLDimensionsUnit;
         modalRef.componentInstance.dualUnits = {
             primaryUnit: this.form.value.primaryUnit,
@@ -682,7 +704,6 @@ export class SKUFormComponent implements OnInit, CanComponentDeactivate {
         modalRef.componentInstance.tableHead = this.tableHead;
         modalRef.componentInstance.bodyList = this.masterData?.mouldInfo;
         modalRef.componentInstance._id = this.form.controls["SKUName"].value;
-        console.log("this.masterData?.mouldInfo", this.masterData?.mouldInfo);
         modalRef.result.then(
             (success: any) => {
                 if (success) {
@@ -702,7 +723,6 @@ export class SKUFormComponent implements OnInit, CanComponentDeactivate {
                         primaryPacking: success?.selectedDetails?.packingStdDetails?.qtyPerPrimaryPack,
                         secondaryPacking: success?.selectedDetails?.packingStdDetails?.qtyPerSecondaryPack
                     });
-                    console.log("success---", success);
                     // this.getGTRequestDetails(success?.selectedDetails);
                 }
             },

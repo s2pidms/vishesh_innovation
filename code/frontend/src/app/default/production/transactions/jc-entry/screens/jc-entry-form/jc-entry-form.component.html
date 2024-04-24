@@ -58,7 +58,12 @@
                     <div class="row">
                         <div class="col-5 ps-2 pe-3">
                             <label for="" class="form-label"> UoM <span class="text-danger"> </span></label>
-                            <input type="text" class="form-control" formControlName="UOM" readonly />
+                            <input
+                                type="text"
+                                class="form-control"
+                                value="{{ form.controls['UOM'].value | SalesUOMUnitMaster }}"
+                                readonly
+                            />
                         </div>
                         <div class="col-7 ps-2">
                             <label for="" class="form-label"> Batch Qty. <span class="text-danger"> </span></label>
@@ -155,9 +160,7 @@
                     <select class="form-select statusSelectBorder" formControlName="status">
                         <option [value]="null" selected disabled>Select Status</option>
                         <option value="In-Process">In-Process</option>
-                        <option value="Mark As Completed" [disabled]="isMarkAsCompleted">
-                            Mark As Completed
-                        </option>
+                        <option value="Mark As Completed" [disabled]="isMarkAsCompleted">Mark As Completed</option>
                     </select>
                     <span class="input-group-text statusSpanHeight">
                         <div class="statusYellow" *ngIf="form.value['status'] == 'In-Process'"></div>

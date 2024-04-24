@@ -314,3 +314,20 @@ exports.MOULD_MASTER = {
         };
     }
 };
+
+exports.SALES_UOM_UNIT_MASTER = {
+    COLLECTION_NAME: "SalesUOMUnitMaster",
+    ADDED_ACTION: "Sales UOM Unit Master created",
+    UPDATED_ACTION: "Sales UOM Unit Master updated",
+    MODULE_NAME: "Sales UOM Unit Master",
+    MODULE: "SalesUOMUnitMaster",
+    MODULE_PREFIX: "null",
+    AUTO_INCREMENT_DATA: function () {
+        return {
+            moduleName: this.MODULE_NAME,
+            module: this.MODULE,
+            company: null,
+            modulePrefix: this.MODULE_PREFIX
+        };
+    }
+}

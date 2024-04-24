@@ -11,11 +11,10 @@
         <div class="container-fluid px-0">
             <form [formGroup]="form">
                 <div class="row px-5 mt-4">
-                    <div class="col-5 separate-row">
+                    <div class="col-7 separate-row">
                         <div class="row">
-                            <div class="col-7 pe-5">
+                            <div class="col-5 pe-5">
                                 <label class="form-label"> Supplier Name<span class="text-danger">*</span> </label>
-
                                 <div class="d-flex align-items-center">
                                     <div class="col-11">
                                         <ng-select
@@ -38,14 +37,20 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-5 ps-0">
-                                <label class="form-label"> Supplier Part No. </label>
+                            <div class="col-3 ps-0">
+                                <label class="form-label"> Supplier Item Code </label>
                                 <input class="form-control" type="text" formControlName="spin" />
                             </div>
+                            <div class="col-4 px-0">
+                                <label class="form-label">
+                                    Supplier Item Description <span class="text-danger">*</span>
+                                </label>
+                                <input class="form-control" type="text" formControlName="supplierDescription" />
+                            </div>
                         </div>
-                        <span class="set-position mt-1">
+                        <!-- <span class="set-position mt-1">
                             <img src="./assets/new_icons/redstroke.svg" alt="" height="27" width="8" />
-                        </span>
+                        </span> -->
                     </div>
 
                     <!-- <div class="col-md-3">
@@ -53,7 +58,7 @@
                         <input class="form-control" type="text" formControlName="supplierCurrency" />
                     </div> -->
 
-                    <div class="col-7">
+                    <div class="col-5">
                         <div class="row">
                             <div class="col-5 pe-0">
                                 <div class="d-flex">
@@ -123,7 +128,7 @@
                                     </div>
                                     <div class="col-8">
                                         <label class="form-label">
-                                            Purchase Cost <span class="text-danger"></span>
+                                            Purchase Cost <span class="text-danger">*</span>
                                         </label>
                                         <div class="d-flex">
                                             <span class="input-group-text combine-INR text-secondary">
@@ -185,7 +190,8 @@
                             <thead class="bg-primary">
                                 <tr class="text-white">
                                     <th class="text-start">Supplier Name</th>
-                                    <th>Supplier Part No.</th>
+                                    <th>Supplier Item Code</th>
+                                    <th class="text-start">Supplier Item Description</th>
                                     <!-- <th>Currency</th> -->
                                     <th>Unit 1</th>
                                     <th>Purchase Cost</th>
@@ -213,6 +219,19 @@
                                         </span>
                                     </td>
                                     <td>{{ u?.spin }}</td>
+                                    <td
+                                        class="text-start"
+                                        [style.width]="supplierDescription.clientWidth"
+                                        #supplierDescription
+                                    >
+                                        <span
+                                            class="pointer"
+                                            [positionTarget]="supplierDescription"
+                                            [ngbTooltip]="u.supplierDescription"
+                                        >
+                                            {{ u?.supplierDescription }}
+                                        </span>
+                                    </td>
                                     <!-- <td>{{ u?.supplierCurrency }}</td> -->
                                     <td>{{ u?.uom1 ? (u?.uom1 | UOMUnitsMaster) : null }}</td>
                                     <td>{{ u?.stdCostUom1 }}</td>

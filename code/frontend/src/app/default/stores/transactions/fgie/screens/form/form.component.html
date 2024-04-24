@@ -52,7 +52,7 @@
                     <select class="form-select" formControlName="UOM">
                         <option [value]="null" selected disabled>Select UoM</option>
                         <option [value]="u.value" *ngFor="let u of UOMOption">
-                            {{ u.label }}
+                            {{ u.label | SalesUOMUnitMaster }}
                         </option>
                     </select>
                 </div>

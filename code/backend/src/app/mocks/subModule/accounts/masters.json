@@ -6,7 +6,7 @@
         "roles": [],
         "type": "MASTER",
         "order": 1,
-        "isDisplay": true,
+        "isDisplay": false,
         "title": "Customer Address",
         "displayName": "Customer Address",
         "disabled": false,

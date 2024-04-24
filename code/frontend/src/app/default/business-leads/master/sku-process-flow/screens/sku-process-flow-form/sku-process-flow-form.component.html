@@ -124,7 +124,7 @@
 
         <hr *ngIf="action != 'view'" class="row line-border" />
 
-        <div *ngIf="action != 'view'" class="row" appAccessControl [accessType]="rolePermissionActions.createAction">
+        <div *ngIf="action != 'view'" class="row"  >
             <div class="col text-center">
                 <div class="d-grid gap-2 d-md-block">
                     <button type="button" class="btn btn-primary px-5 me-3" (click)="reset()">Reset</button>

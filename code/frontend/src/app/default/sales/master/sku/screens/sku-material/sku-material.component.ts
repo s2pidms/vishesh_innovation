@@ -53,6 +53,8 @@ export class SkuMaterialComponent implements OnInit {
     ) {}
 
     ngOnInit(): void {
+        console.log("this.dimensionsDetails", this.dimensionsDetails);
+
         if (this.dimensionsDetails) {
             this.layoutDimensionsUps = this.dimensionsDetails?.layoutDimensions?.ups;
             this.materialInfoArr = this.materialInfoArr?.map((x: any) => {
@@ -113,7 +115,10 @@ export class SkuMaterialComponent implements OnInit {
     setSKUPerUnit(item: any, event: any) {
         let index = this.materialInfoArr.map((x: any) => x.item).indexOf(item.item);
         this.materialInfoArr[index].layoutDimArea = this.materialSKUUnit;
-        if (this.materialInfoArr[index].UoM.toLowerCase() == "sqm") {
+        if (
+            this.materialInfoArr[index].UoM.toLowerCase() == "sqm" ||
+            ["SHT", "RL"].includes(this.materialInfoArr[index].UoM)
+        ) {
             if (event.target.checked == true) {
                 this.materialInfoArr[index].qtyPerSKUUnit = this.materialSKUUnit ?? 0;
             } else {
@@ -145,7 +150,7 @@ export class SkuMaterialComponent implements OnInit {
                 this.materialInfoArr[index].width &&
                 this.materialInfoArr[index].length
             ) {
-                this.materialInfoArr[index].qtyPerSKUUnit = +this.materialInfoArr[index].layoutDimArea.toFixed(4);
+                this.materialInfoArr[index].qtyPerSKUUnit = +this.materialInfoArr[index]?.layoutDimArea?.toFixed(4);
             } else {
                 this.materialInfoArr[index].qtyPerSKUUnit = +(
                     item.qtyPerSKUUnit / item.primaryToSecondaryConversion
@@ -165,6 +170,7 @@ export class SkuMaterialComponent implements OnInit {
 
         modalRef.componentInstance.dualUnits = {
             primaryUnit: item?.primaryUnit,
+            itemCode: item?.itemCode,
             secondaryUnit: item?.secondaryUnit ?? "sqm",
             primaryConversion: item?.primaryConversion ?? 1,
             primaryToSecondaryConversion: item?.primaryToSecondaryConversion ?? null,
@@ -172,8 +178,8 @@ export class SkuMaterialComponent implements OnInit {
             childItemDescription: item?.childItemDescription,
             widthUnit: item?.widthUnit ?? "mm",
             lengthUnit: item?.lengthUnit ?? "mm",
-            width: item?.width,
-            length: item?.length
+            width: item?.width ?? this.dimensionsDetails.layoutDimensions?.width,
+            length: item?.length ?? this.dimensionsDetails.layoutDimensions?.length
         };
         modalRef.result.then(
             (success: any) => {
@@ -197,7 +203,11 @@ export class SkuMaterialComponent implements OnInit {
                     this.materialInfoArr[index].width = success?.width;
                     this.materialInfoArr[index].length = success?.length;
 
-                    if ((success.UOM == "SHT" || success.UOM == "RL") && this.materialInfoArr[index].qtyPerSKUUnit) {
+                    if (
+                        success.UOM == "SHT" ||
+                        success.UOM == "RL"
+                        //  && this.materialInfoArr[index].qtyPerSKUUnit
+                    ) {
                         this.materialInfoArr[index].qtyPerSKUUnit = +(1 / this.layoutDimensionsUps).toFixed(4);
                     }
                 }

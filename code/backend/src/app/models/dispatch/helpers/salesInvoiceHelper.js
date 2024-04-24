@@ -21,7 +21,9 @@ exports.getAllReportsAttributes = () => {
         InvoicePdfUrl: 1,
         SignedQrCodeImgUrl: 1,
         Irn: 1,
-        AckNo: 1
+        AckNo: 1,
+        eInvoiceStatus: 1,
+        eWayBillStatus: 1
     };
 };
 exports.getAllSalesRegisterReportsAttributes = () => {

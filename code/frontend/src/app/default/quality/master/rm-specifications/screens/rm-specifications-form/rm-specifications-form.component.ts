@@ -12,6 +12,7 @@ import {RMSpecificationMasterService} from "@services/quality";
 import {ValidationService} from "@core/components";
 import {RM_SPECIFICATION_MASTER_FORM_ERRORS} from "@mocks/validations/quality/rmSpecification.validation";
 import {IRMSpecificationsMasterData} from "@mocks/models/quality/master";
+import {Location} from "@angular/common";
 
 @Component({
     selector: "app-rm-specifications-form",
@@ -70,7 +71,8 @@ export class RmSpecificationsFormComponent implements OnInit {
         private utilityService: UtilityService,
         private router: Router,
         private validationService: ValidationService,
-        private activatedRoute: ActivatedRoute
+        private activatedRoute: ActivatedRoute,
+        private location: Location
     ) {}
 
     ngOnInit(): void {
@@ -100,6 +102,9 @@ export class RmSpecificationsFormComponent implements OnInit {
         }
 
         let formData: any = this.form.value;
+        if (this.action == "copy") {
+            delete formData._id;
+        }
         formData.specificationInfo = this.masterData?.specificationList
             .filter((x: any) => x.seq > 0)
             .sort((a: any, b: any) => a.seq - b.seq);
@@ -127,7 +132,7 @@ export class RmSpecificationsFormComponent implements OnInit {
             this.submitted = false;
             this.spinner.hide();
             this.toastService.success(success.message);
-            this.router.navigate(["/default/quality/master/rm_specifications/list"]);
+            this.location.back();
         });
     }
 
@@ -137,7 +142,7 @@ export class RmSpecificationsFormComponent implements OnInit {
             this.spinner.hide();
             this.submitted = false;
             this.toastService.success(success.message);
-            this.router.navigate(["/default/quality/master/rm_specifications/list"]);
+            this.location.back();
         });
     }
 
@@ -208,12 +213,18 @@ export class RmSpecificationsFormComponent implements OnInit {
                         this.ESCPreviewArr = [...success.specificationInfo, ...specificationListData];
                     }
                     this.collection = this.masterData?.specificationList.length;
+                    this.filterItemList = this.masterData?.itemsListOptions;
+                    this.filterItemList = this.filterItemList.filter((x: any) => x.itemType == success?.itemCategory);
                     this.form.patchValue(success);
                     if (this.action != "create") {
                         this.isESCPreview = true;
                         this.isConditionPreview = true;
                         this.isPreview = true;
                         this.form.disable();
+                    }
+                    if (this.action == "copy") {
+                        this.form.enable();
+                        delete success._id;
                     }
                 });
         });

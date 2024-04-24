@@ -8,6 +8,7 @@ import {
     MenuTitleService,
     SpinnerService,
     StorageService,
+    ToastService,
     UtilityService
 } from "@core/services";
 import {NgbdSortableHeader, SortEvent} from "@directives/sortable.directive";
@@ -55,6 +56,8 @@ export class SalesRegisterWOTaxComponent implements OnInit, OnDestroy {
     menuTitleData: any = {};
     tabType: any = "";
     subscription!: Subscription;
+    superAdminId: any = "64a687b4e9143bffd820fb3d";
+    user: any = "";
     constructor(
         private salesInvoiceService: SalesInvoiceService,
         private exportExcelService: ExportExcelService,
@@ -64,10 +67,13 @@ export class SalesRegisterWOTaxComponent implements OnInit, OnDestroy {
         private utilityService: UtilityService,
         private appGlobalService: AppGlobalService,
         private storageService: StorageService,
+        private toastService: ToastService,
         private activatedRoute: ActivatedRoute
     ) {}
 
     ngOnInit(): void {
+        this.user = this.storageService.get("IDMSAUser")?.roles?.find((x: any) => x == this.superAdminId);
+
         this.page = Number(this.activatedRoute.snapshot.queryParamMap.get("page") ?? 1);
         this.getFiscalDate();
         this.getAll();
@@ -189,6 +195,15 @@ export class SalesRegisterWOTaxComponent implements OnInit, OnDestroy {
             this.tableData = success.rows;
             this.originTableData = success.rows;
             this.collection = success.count;
+            this.spinner.hide();
+        });
+    }
+
+    update(id: any, item: any) {
+        this.spinner.show();
+        this.salesInvoiceService.update(id, item).subscribe(success => {
+            this.toastService.success(success.message);
+            this.getAll();
             this.spinner.hide();
         });
     }

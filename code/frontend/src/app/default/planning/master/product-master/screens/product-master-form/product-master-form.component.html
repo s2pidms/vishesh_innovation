@@ -75,7 +75,7 @@
                     </label>
                     <select class="form-select" formControlName="primaryUnit">
                         <option value="null" selected disabled>Select Primary Unit</option>
-                        <option *ngFor="let u of masterData?.UOMOptions" [value]="u.value">
+                        <option *ngFor="let u of salesUOMUintMasterOptions" [value]="u.value">
                             {{ u?.label }}
                         </option>
                     </select>

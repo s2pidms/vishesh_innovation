@@ -19,4 +19,6 @@ export interface salesRegisterWoTax {
     ewayBillNo?: string;
     InvoicePdfUrl?: string;
     AckNo?: string;
+    eWayBillStatus: boolean;
+    eInvoiceStatus: boolean;
 }

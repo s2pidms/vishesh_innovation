@@ -140,7 +140,7 @@
                             </span>
                         </td>
                         <td>{{ u?.partNo }}</td>
-                        <td>{{ u?.UOM | UOMUnitsMaster }}</td>
+                        <td>{{ u?.UOM | SalesUOMUnitMaster }}</td>
                         <td>
                             <div class="d-flex justify-content-center">
                                 <span *ngIf="['approve', 'view', 'generate'].includes(action)">

@@ -349,7 +349,7 @@ exports.getAllItems = async (company, project = {}) => {
             .sort({itemCode: -1})
             .populate(
                 "supplierDetails.supplierId",
-                "supplierCode supplierName supplierPurchaseType supplierCurrency itemCode itemName itemDescription"
+                "supplierCode supplierName supplierDescription supplierPurchaseType supplierCurrency itemCode itemName itemDescription"
             );
         return rows;
     } catch (e) {

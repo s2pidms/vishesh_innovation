@@ -19,7 +19,7 @@
                                 bindValue="parameterName"
                                 bindLabel="parameterLabel"
                                 [clearable]="false"
-                                [(ngModel)]="processName"
+                                [(ngModel)]="stockCutting.processName"
                                 (change)="setProcessName($event)"
                             >
                                 <!-- [clearable]="false"
@@ -123,10 +123,10 @@
                         </td>
                         <td>{{ u?.U1 }}</td>
                         <td>
-                            <span *ngIf="['RL'].includes(u?.U1)">
+                            <span *ngIf="['RL'].includes(u?.U1) || u.isSaved == true">
                                 {{ u?.U1Qty | number : "1.2-2" }}
                             </span>
-                            <div *ngIf="['SHT'].includes(u?.U1)" class="d-flex justify-content-center">
+                            <div *ngIf="['SHT'].includes(u?.U1) && !u.isSaved" class="d-flex justify-content-center">
                                 <input
                                     class="form-control text-center form-control-size-sx"
                                     type="number"
@@ -144,10 +144,10 @@
                         </td>
 
                         <td>
-                            <span *ngIf="['SHT'].includes(u?.U1)">
+                            <span *ngIf="['SHT'].includes(u?.U1) || u.isSaved == true">
                                 {{ u?.length | number : "1.2-2" }}
                             </span>
-                            <div *ngIf="['RL'].includes(u?.U1)" class="d-flex justify-content-center">
+                            <div *ngIf="['RL'].includes(u?.U1) && !u.isSaved" class="d-flex justify-content-center">
                                 <input
                                     class="form-control text-center form-control-size-sx"
                                     type="number"

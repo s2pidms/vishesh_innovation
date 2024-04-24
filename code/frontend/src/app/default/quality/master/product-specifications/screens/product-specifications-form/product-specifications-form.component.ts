@@ -16,7 +16,7 @@ import {NgbModal} from "@ng-bootstrap/ng-bootstrap";
 
 @Component({
     selector: "app-product-specifications-form",
-    templateUrl: "./product-specifications-form.component.html",
+    templateUrl: "./product-specifications-form.component.html"
 })
 export class ProductSpecificationsFormComponent implements OnInit {
     @ViewChildren(NgbdSortableHeader) headers: QueryList<NgbdSortableHeader> | any;
@@ -100,6 +100,9 @@ export class ProductSpecificationsFormComponent implements OnInit {
         }
 
         let formData: any = this.form.value;
+        if (this.action == "copy") {
+            delete formData._id;
+        }
         formData.specificationInfo = this.masterData?.specificationList
             .filter((x: any) => x.seq > 0)
             .sort((a: any, b: any) => a.seq - b.seq);
@@ -202,12 +205,23 @@ export class ProductSpecificationsFormComponent implements OnInit {
                         this.ESCPreviewArr = [...success.specificationInfo, ...specificationListData];
                     }
                     this.collection = this.masterData?.specificationList.length;
+
+                    this.filterSKUList = this.masterData?.SKUOptions;
+                    this.filterSKUList = this.filterSKUList.filter(
+                        (x: any) => x.productCategory == success?.productCategory
+                    );
+
                     this.form.patchValue(success);
                     if (this.action != "create") {
                         this.isESCPreview = true;
                         this.isConditionPreview = true;
                         this.isPreview = true;
                         this.form.disable();
+                    }
+
+                    if (this.action == "copy") {
+                        this.form.enable();
+                        delete success._id;
                     }
                 });
         });

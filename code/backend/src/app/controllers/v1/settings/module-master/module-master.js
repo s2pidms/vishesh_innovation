@@ -32,8 +32,6 @@ exports.create = asyncHandler(async (req, res) => {
     try {
         let createdObj = {
             company: req.user.company,
-            createdBy: req.user.sub,
-            updatedBy: req.user.sub,
             ...req.body
         };
         const itemDetails = await ModuleMasterRepository.createDoc(createdObj);

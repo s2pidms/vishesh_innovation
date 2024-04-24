@@ -33,6 +33,7 @@ export class GrandChildItemFormComponent implements OnInit {
     };
     supplierDetails: any = [];
     UOMUintMasterOptions: any = [];
+    UOMDefaultValueOptions: any = [];
 
     constructor(
         private activatedRoute: ActivatedRoute,
@@ -109,8 +110,28 @@ export class GrandChildItemFormComponent implements OnInit {
         this.UOMUintMasterOptions = this.appGlobalService.UOMUintMasterOptions;
         this.getInitialData();
         // this.form.controls["avgConsumptionPerMonth"].disable();
+        this.UOMDefaultValueOptions = this.appGlobalService?.UOMDefaultValueOptions;
+        if (this.UOMDefaultValueOptions?.length > 0) {
+            if (!this.f["unitOfMeasurement"].value) {
+                let primaryUnitData: any = null;
+                primaryUnitData = this.findValue(this.UOMDefaultValueOptions, "PURCHASE_UOM");
+                this.f["unitOfMeasurement"].setValue(primaryUnitData);
+            }
+            if (!this.f["primaryUnit"].value) {
+                let primaryUnitData: any = null;
+                primaryUnitData = this.findValue(this.UOMDefaultValueOptions, "PURCHASE_PRIMARY_UNIT");
+                this.f["primaryUnit"].setValue(primaryUnitData);
+            }
+            if (!this.f["secondaryUnit"].value) {
+                let secondaryUnitData: any = null;
+                secondaryUnitData = this.findValue(this.UOMDefaultValueOptions, "PURCHASE_SECONDARY_UNIT");
+                this.f["secondaryUnit"].setValue(secondaryUnitData);
+            }
+        }
     }
-
+    findValue(array: any, value: any) {
+        return array?.find((x: any) => x?.parameterLabel == value)?.parameterName;
+    }
     trackByFn(index: number, item: any) {
         return item?._id;
     }

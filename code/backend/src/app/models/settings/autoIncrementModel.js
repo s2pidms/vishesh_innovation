@@ -3,7 +3,7 @@ const {
     SETTINGS_AUTO_INCREMENT_MASTER_ADDED,
     SETTINGS_AUTO_INCREMENT_MASTER_UPDATED
 } = require("../../helpers/auditAction");
-const Audit = require("../../controllers/v1/settings/audit/audit");
+const {auditModule} = require("../../controllers/v1/settings/audit/audit");
 const {AUTO_INCREMENT: SCHEMA_CONST} = require("../../mocks/schemasConstant/settingsConstant");
 const {paginatePlugin} = require("../plugins/paginatePlugin");
 
@@ -155,5 +155,5 @@ const auditTrail = async (master, modifiedPaths, isNew, isModified) => {
         action: isNew ? SETTINGS_AUTO_INCREMENT_MASTER_ADDED : SETTINGS_AUTO_INCREMENT_MASTER_UPDATED,
         fieldsModified: modifiedPaths.toString()
     };
-    await Audit.auditModule(auditTrail);
+    await auditModule(auditTrail);
 };
