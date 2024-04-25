@@ -13,6 +13,7 @@ import {
     UtilityService
 } from "@core/services";
 import {QuotationOfSKUService} from "@services/sales/quotationOfSKU.service";
+import {IQuotationOfSKU} from "@mocks/models/sales/reports";
 @Component({
     selector: "app-quotation-sku-report",
     templateUrl: "./quotation-sku-report.component.html"
@@ -26,7 +27,7 @@ export class QuotationSkuReportComponent implements OnInit, OnDestroy {
     column: string = "createdAt";
     direction: number = -1;
     search: string = "";
-    tableData: any = [];
+    tableData: IQuotationOfSKU[] = [];
     company: any = {};
     originTableData: any = [];
     customerOptions: any = [];

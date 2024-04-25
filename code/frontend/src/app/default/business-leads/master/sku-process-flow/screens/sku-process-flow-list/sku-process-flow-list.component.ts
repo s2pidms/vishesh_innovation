@@ -9,6 +9,7 @@ import {ProductSpecification} from "@mocks/models/quality/master";
 import {SKUProcessFlowService} from "@services/business-leads";
 import {NgbModal} from "@ng-bootstrap/ng-bootstrap";
 import {CopyProcessFlowModalComponent, StatusSummaryModalComponent} from "../components";
+import {ISKUProcessFlow} from "@mocks/models/business-leads/masters";
 
 @Component({
     selector: "app-sku-process-flow-list",
@@ -23,7 +24,7 @@ export class SkuProcessFlowListComponent implements OnInit, OnDestroy {
     column: string = "createdAt";
     direction: number = -1;
     search: string = "";
-    tableData: any = [];
+    tableData: ISKUProcessFlow[] = [];
     rolePermissionActions: any = LIST_DEFAULT_PERMISSION_ACTIONS;
     subscription!: Subscription;
     totalAmounts = {};

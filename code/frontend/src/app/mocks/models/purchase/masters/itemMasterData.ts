@@ -3,6 +3,7 @@ import {IParameterICommonData} from "@mocks/models/planning/transactions";
 
 export interface IItemMasterData {
     autoIncrementNo: string;
+    companyType: string;
     HSNCodesList: IHSNCodes[];
     QCLevelsOptions: IParameterICommonData[] | any;
     itemCategories: string[];

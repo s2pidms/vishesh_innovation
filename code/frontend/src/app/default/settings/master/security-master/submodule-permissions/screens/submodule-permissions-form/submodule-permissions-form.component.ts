@@ -112,6 +112,14 @@ export class SubmodulePermissionsFormComponent implements OnInit {
     }
 
     getFilterData() {
+        if (!this.role) {
+            this.toastService.warning("Role is Required !");
+            return;
+        }
+        if (!this.menuItemId) {
+            this.toastService.warning("Business Function/Module is Required !");
+            return;
+        }
         this.spinner.show();
         let payload = {
             module: this.module,

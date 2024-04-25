@@ -25,7 +25,6 @@ export class AuditListComponent implements OnInit {
     userId: any = "";
     fromDate = this.utilityService.getCurrentMonthDates().toDate;
     toDate = this.utilityService.getCurrentMonthDates().toDate;
-
     rolePermissionActions: any = LIST_DEFAULT_PERMISSION_ACTIONS;
     constructor(
         private auditService: AuditService,
@@ -87,7 +86,6 @@ export class AuditListComponent implements OnInit {
             this.spinner.hide();
         });
     }
-
     onSort({column, direction}: SortEvent) {
         this.headers.forEach((header: any) => {
             if (header.sortable !== column) {

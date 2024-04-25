@@ -148,14 +148,14 @@ exports.update = asyncHandler(async (req, res) => {
 
 exports.getAllMasterData = asyncHandler(async (req, res) => {
     try {
+        const options = await dropDownOptions(req.user.company);
         let assetClassOptions = await getAllAssetClassList(req.user.company, {
             assetClassName: 1,
             depreciation: 1,
             energySpecification: 1,
             digit: 1,
             nextAutoIncrement: 1,
-            prefix: 1,
-            assetClassName: 1
+            prefix: 1
         });
         let autoIncValues = {};
         if (assetClassOptions.length > 0) {
@@ -169,17 +169,11 @@ exports.getAllMasterData = asyncHandler(async (req, res) => {
             }
         }
         const assetConfigurationOptions = await getAllModuleMaster(req.user.company, "ASSET_MASTER_CONF");
-        let location = await findAppParameterValue("LOCATION", req.user.company);
         return res.success({
             autoIncValues,
             assetClassOptions,
             assetConfigurationOptions,
-            locationOptions: location.split(",").map(x => {
-                return {
-                    label: x,
-                    value: x
-                };
-            })
+            ...options
         });
     } catch (error) {
         console.error("getAllMasterData Asset", error);
@@ -187,7 +181,21 @@ exports.getAllMasterData = asyncHandler(async (req, res) => {
         return res.serverError(errors);
     }
 });
-
+const dropDownOptions = async company => {
+    try {
+        let location = await findAppParameterValue("LOCATION", company);
+        return {
+            locationOptions: location.split(",").map(x => {
+                return {
+                    label: x,
+                    value: x
+                };
+            })
+        };
+    } catch (error) {
+        console.error(error);
+    }
+};
 exports.getAllAssetMasterList = async (company, assetClassName, project = {}) => {
     try {
         let rows = await Model.find(
@@ -277,3 +285,109 @@ exports.getAllAssetData = asyncHandler(async company => {
         console.error("Not able to get record ", error);
     }
 });
+
+exports.checkAssetValidation = async (assetData, column, company) => {
+    try {
+        const requiredFields = ["assetName", "assetDescription", "assetPurchaseCost"];
+        const falseArr = OPTIONS.falsyArray;
+        let {locationOptions} = await dropDownOptions(company);
+        let dropdownCheck = [
+            {
+                key: "location",
+                options: locationOptions
+            }
+        ];
+        for await (const x of assetData) {
+            x.isValid = true;
+            x.message = null;
+            for (const ele of Object.values(column)) {
+                if (requiredFields.includes(ele) && falseArr.includes(x[ele])) {
+                    x.isValid = false;
+                    x.message = validationJson[ele] ?? `${ele} is Required`;
+                    break;
+                }
+                for (const dd of dropdownCheck) {
+                    if (ele == dd.key && !dd.options.map(values => values.value).includes(x[ele])) {
+                        x.isValid = false;
+                        x.message = `${ele} is Invalid Value & Value Must be ${dd.options.map(values => values.value)}`;
+                        break;
+                    }
+                }
+                if (
+                    await AssetMasterRepository.findOneDoc(
+                        {assetName: x["assetName"], assetDescription: x["assetDescription"]},
+                        {
+                            _id: 1
+                        }
+                    )
+                ) {
+                    x.isValid = false;
+                    x.message = `${ele} is already exists`;
+                    break;
+                }
+            }
+        }
+        const inValidRecords = assetData.filter(x => !x.isValid);
+        const validRecords = assetData.filter(x => x.isValid);
+        return {inValidRecords, validRecords};
+    } catch (error) {
+        console.error(error);
+    }
+};
+
+exports.bulkInsertAssetByCSV = async (jsonData, {company, createdBy, updatedBy}) => {
+    try {
+        let assetClassOptions = await getAllAssetClassList(req.user.company, {
+            assetClassName: 1,
+            depreciation: 1,
+            energySpecification: 1,
+            digit: 1,
+            nextAutoIncrement: 1,
+            prefix: 1
+        });
+        let missingAssetClassName = [];
+        for (const ele of jsonData) {
+            for (const asset of assetClassOptions) {
+                if (ele.assetType.trim() == asset.assetClassName) {
+                    ele.assetClassId = asset._id.valueOf();
+                }
+            }
+            if (!ele.assetType || !ele.assetClassId) {
+                missingAssetClassName.push(ele.assetType ? ele.assetType : ele.assetClassName);
+            }
+        }
+        console.log("missingAssetClassName", missingAssetClassName);
+        let assetData = jsonData.map(x => {
+            const {
+                assetPurchaseCost,
+                financeCost,
+                totalAssetClass,
+                estimatedUsefulLifeInYear,
+                noOfOperationalDaysPerYear,
+                noOfShiftsRunPerDays,
+                machineEfficiencyPercentage,
+                ...rest
+            } = x;
+            let details = {
+                assetPurchaseCost,
+                financeCost,
+                totalAssetClass,
+                estimatedUsefulLifeInYear,
+                noOfOperationalDaysPerYear,
+                noOfShiftsRunPerDays,
+                machineEfficiencyPercentage
+            };
+            rest.costingInput = details;
+            rest.company = company;
+            rest.createdBy = createdBy;
+            rest.updatedBy = updatedBy;
+            return rest;
+        });
+        for await (const item of assetData) {
+            await AssetMasterRepository.createDoc(item);
+        }
+        return {message: "Uploaded successfully!"};
+    } catch (error) {
+        console.error(error);
+    }
+};

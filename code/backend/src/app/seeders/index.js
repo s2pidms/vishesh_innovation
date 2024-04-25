@@ -13,7 +13,8 @@ const {triggers} = require("../middleware/cronJobs");
 const {updateBalanceJCCQtyOfSO} = require("../controllers/v1/sales/salesOrder/salesOrder");
 const {UOMUnitMasterInert} = require("./UOMUnitMasters.seeder");
 const {updateManyUOMUnit} = require("./updateUOM.seeder");
-const { salesUOMUnitMasterInert } = require("./salesUOMUnitMasters.seeder");
+const {salesUOMUnitMasterInert} = require("./salesUOMUnitMasters.seeder");
+const {companyTypeWiseInsert} = require("./companyTypeWise.seeder");
 
 exports.mainDataInsertFn = async () => {
     // await updateManyUOMUnit();
@@ -34,4 +35,6 @@ exports.mainDataInsertFn = async () => {
     await deleteManyAppParameter();
     await UOMUnitMasterInert(companyId);
     await salesUOMUnitMasterInert(companyId);
+
+    await companyTypeWiseInsert(companyId);
 };

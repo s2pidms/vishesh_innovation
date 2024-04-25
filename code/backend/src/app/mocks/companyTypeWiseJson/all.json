@@ -1,0 +1,38 @@
+[
+    {
+        "type": "DEFAULT_UNIT_VALUE",
+        "parameterName": "KGS",
+        "parameterLabel": "SALES_PRIMARY_UNIT",
+        "order": 1
+    },
+    {
+        "type": "DEFAULT_UNIT_VALUE",
+        "parameterName": "BAG",
+        "parameterLabel": "SALES_SECONDARY_UNIT",
+        "order": 2
+    },
+    {
+        "type": "DEFAULT_UNIT_VALUE",
+        "parameterName": "BAG",
+        "parameterLabel": "SALES_UOM",
+        "order": 3
+    },
+    {
+        "type": "DEFAULT_UNIT_VALUE",
+        "parameterName": "kg",
+        "parameterLabel": "PURCHASE_UOM",
+        "order": 4
+    },
+    {
+        "type": "DEFAULT_UNIT_VALUE",
+        "parameterName": "RL",
+        "parameterLabel": "PURCHASE_PRIMARY_UNIT",
+        "order": 5
+    },
+    {
+        "type": "DEFAULT_UNIT_VALUE",
+        "parameterName": "SHT",
+        "parameterLabel": "PURCHASE_SECONDARY_UNIT",
+        "order": 6
+    }
+]

@@ -1,8 +1,6 @@
 export interface IProformaInvoicePIPrintScreen {
     _id: string
     company: Company
-    createdBy: string
-    updatedBy: string
     salesCategory: string
     customer: Customer
     quotationProformaRef: any
@@ -26,9 +24,6 @@ export interface IProformaInvoicePIPrintScreen {
     PICancellationReason: any
     isActive: boolean
     PIStatus: string
-    createdAt: string
-    updatedAt: string
-    __v: number
     totalTaxableAmount: number
     GSTDetails: Gstdetail[]
     PITotalCGSTAmount: number

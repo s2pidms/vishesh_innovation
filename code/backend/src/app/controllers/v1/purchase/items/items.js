@@ -15,10 +15,8 @@ const {default: mongoose} = require("mongoose");
 const {getAllItemCategory} = require("../itemCategoryMaster/itemCategoryMaster");
 const {getCurrentDate} = require("../../../../helpers/dateTime");
 const {readExcel} = require("../../../../middleware/readExcel");
-const column = require("../../../../mocks/excelUploadColumn/itemKeys.json");
 const updateColumn = require("../../../../mocks/excelUploadColumn/itemQCLevelKeys.json");
 const ObjectId = mongoose.Types.ObjectId;
-const {itemsUpload} = require("../../../../middleware/itemsUpload");
 const {
     getAllItemAttributes,
     getAllItemExcelAttributes,
@@ -32,6 +30,7 @@ const validationJson = require("../../../../mocks/excelUploadColumn/validation.j
 const {filteredChannelPartnerList} = require("../../../../models/purchase/repository/channelPartnerRepository");
 const {findAppParameterValue} = require("../../settings/appParameter/appParameter");
 const {INK_MIXING_UOM} = require("../../../../mocks/constantData");
+const CompanyRepository = require("../../../../models/settings/repository/companyRepository");
 // @desc    getAll Items Record
 
 exports.getAll = asyncHandler(async (req, res) => {
@@ -250,8 +249,10 @@ exports.getAllMasterData = asyncHandler(async (req, res) => {
         }
         options.itemCategories = options.itemCategories.map(x => x.category);
         let WXLDimensionsUnit = await findAppParameterValue("WXL_DIMENSIONS_UNIT", req.user.company);
+        const companyData = await CompanyRepository.getDocById(req.user.company, {companyType: 1});
         return res.success({
             autoIncValues,
+            companyType: companyData?.companyType,
             WXLDimensionsUnit: WXLDimensionsUnit.split(",").map(x => x),
             ...options
         });

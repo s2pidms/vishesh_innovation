@@ -5,6 +5,7 @@ import {NgbdSortableHeader, SortEvent} from "@directives/sortable.directive";
 import {ExportExcelService, ExportToPDFService, SpinnerService, UtilityService} from "@core/services";
 import {FinishedGoodsInwardEntryService} from "@services/stores";
 import {FG_INVENTORY_VALUE_REPORT_DATA, FG_INVENTORY_VALUE_PDF_DATA} from "@mocks/export-data/finance/reports";
+import {IFGInventoryValue} from "@mocks/models/finance/reports";
 
 @Component({
     selector: "app-fg-inventory-value",
@@ -20,7 +21,7 @@ export class FGInventoryValueComponent implements OnInit, OnDestroy {
     column: string = "createdAt";
     direction: number = -1;
     search: string = "";
-    tableData: any = [];
+    tableData: IFGInventoryValue[] = [];
     location: any = "";
     locations: any = [];
     totalLineValue: number = 0;

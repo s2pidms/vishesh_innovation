@@ -2,7 +2,7 @@ import {Component, OnInit, QueryList, ViewChildren} from "@angular/core";
 
 import {Router} from "@angular/router";
 import {NgbdSortableHeader, SortEvent} from "@directives/sortable.directive";
-import {ToastService} from "@core/services";
+import {StorageService, ToastService} from "@core/services";
 import {PayrollService} from "@services/hr";
 import {Payroll} from "@interfaces/payroll";
 import {ExportExcelService, MenuTitleService, SpinnerService} from "@core/services";
@@ -36,6 +36,8 @@ export class PayrollComponent implements OnInit {
     submitted = false;
     date = new Date();
     flag: number = -1;
+    superAdminId: any = "64a687b4e9143bffd820fb3d";
+
     month: any = new Date(this.date.getFullYear(), this.date.getMonth() + 1, 1).toISOString().slice(0, 7);
     monthOptions = [
         {
@@ -49,20 +51,25 @@ export class PayrollComponent implements OnInit {
         }
     ];
     btnFlag: boolean = true;
+    showHeader: boolean = true;
     rolePermissionActions: any = LIST_DEFAULT_PERMISSION_ACTIONS;
     constructor(
         private router: Router,
+        private storageService: StorageService,
         private spinner: SpinnerService,
         private toastService: ToastService,
         private payrollService: PayrollService,
         private exportExcelService: ExportExcelService
     ) {}
 
-    ngOnInit(): void {}
+    ngOnInit(): void {
+        this.user = this.storageService.get("IDMSAUser")?.roles?.find((x: any) => x == this.superAdminId);
+    }
     trackByFn(index: number, item: any) {
         return item?._id;
     }
     reset() {
+        this.showHeader = true;
         this.payrollForMonthYear = null;
         this.tableData = [];
         this.collection = this.tableData.length;
@@ -85,6 +92,7 @@ export class PayrollComponent implements OnInit {
             this.tableData = [];
             this.payrollForMonthYear = null;
             this.flag = -1;
+            this.showHeader = true;
             this.toastService.success(success.message);
         });
     }
@@ -114,7 +122,10 @@ export class PayrollComponent implements OnInit {
         this.spinner.show();
         this.payrollService.getAllMasterData(this.payrollForMonthYear).subscribe(success => {
             this.spinner.hide();
-            this.tableData = success.salaryPayrollOfMonth;
+            this.tableData = success?.salaryPayrollOfMonth?.map((x: any) => {
+                x.showFields = false;
+                return x;
+            });
             this.collection = success.salaryPayrollOfMonth.length;
             this.btnFlag = this.tableData.every((x: any) => x.status == "Approved");
         });
@@ -134,6 +145,12 @@ export class PayrollComponent implements OnInit {
                 const res = x < y ? -1 : x > y ? 1 : 0;
                 return direction === "asc" ? res : -res;
             });
+        }
+    }
+    update(item: any) {
+        if (item?.status == "Draft") {
+            item.showFields = true;
+            this.showHeader = false;
         }
     }
 

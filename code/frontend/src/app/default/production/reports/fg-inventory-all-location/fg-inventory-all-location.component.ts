@@ -8,6 +8,7 @@ import {
     FG_INVENTORY_FOR_ALL_LOCATION_PDF_DATA,
     FG_INVENTORY_FOR_ALL_LOCATION_REPORT_DATA
 } from "@mocks/export-data/planning/reports";
+import {IFGInventoryForAllLocation} from "@mocks/models/production/reports";
 
 @Component({
     selector: "app-fg-inventory-all-location",
@@ -22,7 +23,7 @@ export class FGInventoryAllLocationComponent implements OnInit, OnDestroy {
     column: string = "createdAt";
     direction: number = -1;
     search: string = "";
-    tableData: any = [];
+    tableData: IFGInventoryForAllLocation[] = [];
     location: any = "";
     locationArr: any = [];
     GRStatus: string = "All";

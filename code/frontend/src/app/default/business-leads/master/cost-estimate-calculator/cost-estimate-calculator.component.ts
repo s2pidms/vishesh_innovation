@@ -42,7 +42,6 @@ export class CostEstimateCalculatorComponent implements OnInit {
     ngOnInit(): void {
         this.getAllMasterData();
     }
-
     navigateTo(path: string, id: any, action: string) {
         this.router.navigate([path], {queryParams: {id, action}});
     }
@@ -58,7 +57,6 @@ export class CostEstimateCalculatorComponent implements OnInit {
         this.masterData.costSheetList = [];
         this.getAllMasterData();
     }
-
     getAllMasterData() {
         this.spinner.show();
         this.costEstimateService.getAllDSKUCostEstimateMasterData({}).subscribe(result => {
@@ -69,7 +67,6 @@ export class CostEstimateCalculatorComponent implements OnInit {
             this.spinner.hide();
         });
     }
-
     getAllSOConfirmationById(ev: any) {
         this.spinner.show();
         this.SKUNo = ev.dSKUNo;
@@ -85,7 +82,6 @@ export class CostEstimateCalculatorComponent implements OnInit {
             this.spinner.hide();
         });
     }
-
     change() {
         let data = this.masterData?.costSheetList.map((x: any) => {
             if (x.isTotal) {

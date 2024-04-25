@@ -1,8 +1,6 @@
 export interface IServiceInvoicePrintScreen {
     _id: string;
     company: Company;
-    createdBy: string;
-    updatedBy: string;
     serviceInvoiceNumber: string;
     serviceInvoiceDate: string;
     customerCategory: string;
@@ -22,10 +20,6 @@ export interface IServiceInvoicePrintScreen {
     totalAmountWithTax: number;
     remarks: any;
     GSTDetails: Gstdetail[];
-    status: string;
-    createdAt: string;
-    updatedAt: string;
-    __v: number;
 }
 
 export interface Company {

@@ -16,11 +16,9 @@ export class LeadConversionComponent implements OnInit {
     search: string = "";
     tableData: any = [];
     originTableData: any = [];
-
     constructor() {}
 
     ngOnInit(): void {}
-
     eventHeader(event: any) {
         switch (event.key) {
             case "SEARCH":

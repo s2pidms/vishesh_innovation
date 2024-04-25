@@ -1,8 +1,6 @@
 export interface ISalesDebit {
     _id: string;
     company: Company;
-    createdBy: string;
-    updatedBy: string;
     DNNumber: string;
     DNDate: string;
     salesCategory: string;
@@ -17,9 +15,6 @@ export interface ISalesDebit {
     netDNValue: number;
     otherCharges: OtherCharges;
     DNStatus: string;
-    createdAt: string;
-    updatedAt: string;
-    __v: number;
     GSTDetails: Gstdetail[];
     totalCGSTAmount: number;
     totalSGSTAmount: number;

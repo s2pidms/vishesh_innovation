@@ -21,6 +21,7 @@ const {
     bulkInsertFGINByCSV
 } = require("../../stores/finishedGoodsInwardEntry/finishedGoodsInwardEntry");
 const {checkEmployeeValidation, bulkInsertEmployeeByCSV} = require("../../HR/employee/Employee");
+const {checkAssetValidation, bulkInsertAssetByCSV} = require("../../finance/assetMaster/assetMaster");
 const ObjectId = mongoose.Types.ObjectId;
 exports.getAll = asyncHandler(async (req, res) => {
     try {
@@ -584,6 +585,9 @@ exports.uploadAndCheckCSVFile = async (req, res) => {
         if (req.body.collectionName == "Employee") {
             rows = await checkEmployeeValidation(jsonData, excelJson[req.body.collectionName], req.user.company);
         }
+        if (req.body.collectionName == "Asset") {
+            rows = await checkAssetValidation(jsonData, excelJson[req.body.collectionName], req.user.company);
+        }
         return res.success(rows);
     } catch (e) {
         const errors = MESSAGES.apiErrorStrings.SERVER_ERROR;
@@ -635,6 +639,13 @@ exports.bulkInsertByCSVFile = async (req, res) => {
         }
         if (req.body.collectionName == "Employee") {
             rows = await bulkInsertEmployeeByCSV(req.body.validRecords, {
+                company: req.user.company,
+                createdBy: req.user.sub,
+                updatedBy: req.user.sub
+            });
+        }
+        if (req.body.collectionName == "Asset") {
+            rows = await bulkInsertAssetByCSV(req.body.validRecords, {
                 company: req.user.company,
                 createdBy: req.user.sub,
                 updatedBy: req.user.sub

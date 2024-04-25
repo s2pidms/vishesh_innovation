@@ -16,7 +16,7 @@ import {
 } from "@shared/modals";
 import {SKU_FORM_ERRORS} from "@mocks/validations/sales";
 import {UtilityService} from "@core/services";
-import {COMPANY_TYPE_INJECTION_MOLDING, SKU_STAGE_OPTIONS} from "@mocks/constant";
+import {COMPANY_TYPE_INJECTION_MOLDING, COMPANY_TYPE_IP_MANUFACTURING, SKU_STAGE_OPTIONS} from "@mocks/constant";
 import {SkuAttributesComponent} from "../sku-attributes/sku-attributes.component";
 import {InkHsnModalComponent} from "src/app/default/production/master/ink-master/screens/ink-hsn-modal/ink-hsn-modal.component";
 import {Location} from "@angular/common";
@@ -48,6 +48,7 @@ export class SKUFormComponent implements OnInit, CanComponentDeactivate {
     // productionLayoutFile: any = null;
     photoFile: any = null;
     companyTypeInjectionMolding = COMPANY_TYPE_INJECTION_MOLDING;
+    companyTypeIPManufacturing = COMPANY_TYPE_IP_MANUFACTURING;
     SKUCategoryValues: any = {};
     selectedDetails: any = {};
     UOMDefaultValueOptions: any = [];
@@ -364,6 +365,8 @@ export class SKUFormComponent implements OnInit, CanComponentDeactivate {
     }
     setAutoIncrementNo(ev: any) {
         this.form.controls["SKUNo"].setValue(this.SKUCategoryValues[ev.value]);
+        this.form.controls["SKUName"].setValue(null);
+        this.mouldData = [];
         if (this.masterData?.mapHSNCategoryList.length > 0) {
             this.form.controls["hsn"].setValue(
                 this.masterData?.mapHSNCategoryList.find((x: any) => x.productCategory == ev.value)?.HSNCode ?? null
@@ -723,6 +726,8 @@ export class SKUFormComponent implements OnInit, CanComponentDeactivate {
                         primaryPacking: success?.selectedDetails?.packingStdDetails?.qtyPerPrimaryPack,
                         secondaryPacking: success?.selectedDetails?.packingStdDetails?.qtyPerSecondaryPack
                     });
+                    this.mouldData = success?.selectedDetails?.mouldInfo;
+
                     // this.getGTRequestDetails(success?.selectedDetails);
                 }
             },
@@ -736,8 +741,15 @@ export class SKUFormComponent implements OnInit, CanComponentDeactivate {
                 category
             })
             .subscribe(success => {
-                this.mouldData = success.mouldData;
                 this.masterData.mouldInfo = success.mouldInfo;
+
+                if (this.f["SKUName"].value) {
+                    let productMasterNo: any = this.masterData?.mouldInfo?.find(
+                        (x: any) => x?.productMasterNo == this.f["SKUName"].value
+                    );
+
+                    this.mouldData = productMasterNo?.mouldInfo;
+                }
                 this.spinner.hide();
             });
     }

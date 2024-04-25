@@ -17,3 +17,5 @@ export * from "./fgInventoryAllLocation";
 export * from "./salesOrderReport";
 export * from "./saleDebitNote";
 export * from "./salesOrderStatusReport";
+export * from "./quotationOfSKU";
+export * from "./quotationOfDSKU";

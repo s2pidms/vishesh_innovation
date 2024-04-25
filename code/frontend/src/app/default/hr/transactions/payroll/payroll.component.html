@@ -42,8 +42,8 @@
                 <tr class="text-white">
                     <th sortable="employeeCode" (sort)="onSort($event)">Employee Code</th>
                     <th class="text-start" sortable="employeeName" (sort)="onSort($event)">Employee Name</th>
-                    <th sortable="department" (sort)="onSort($event)">Department</th>
-                    <th sortable="paidDays" (sort)="onSort($event)">Paid Days</th>
+                    <th *ngIf="showHeader" sortable="department" (sort)="onSort($event)">Department</th>
+                    <th *ngIf="showHeader" sortable="paidDays" (sort)="onSort($event)">Paid Days</th>
                     <th sortable="gross" (sort)="onSort($event)">Gross</th>
                     <th sortable="PF" (sort)="onSort($event)">PF</th>
                     <th sortable="ESIC" (sort)="onSort($event)">ESIC</th>
@@ -66,25 +66,67 @@
                 >
                     <td>{{ u?.employeeCode }}</td>
                     <td class="text-start">{{ u?.employeeName }}</td>
-                    <td>{{ u?.department }}</td>
-                    <td>{{ u?.paidDays }}</td>
+                    <td *ngIf="showHeader">{{ u?.department }}</td>
+                    <td *ngIf="showHeader">{{ u?.paidDays }}</td>
                     <td>{{ u?.gross | number : "1.2-2" }}</td>
-                    <td>{{ u?.PF | number : "1.2-2" }}</td>
-                    <td>{{ u?.ESIC | number : "1.2-2" }}</td>
                     <td>
-                        <span *ngIf="u.status && !(u.status == 'Draft' && u._id == flag)">{{
+                        <span *ngIf="!u.showFields"> {{ u?.PF | number : "1.2-2" }}</span>
+
+                        <input
+                            *ngIf="u.showFields"
+                            class="form-control form-control-xs w-25"
+                            type="number"
+                            [(ngModel)]="u.PF"
+                            (input)="setNetPayable(u.employeeId, u)"
+                        />
+                    </td>
+                    <td>
+                        <span *ngIf="!u.showFields"> {{ u?.ESIC | number : "1.2-2" }}</span>
+
+                        <input
+                            *ngIf="u.showFields"
+                            class="form-control form-control-xs w-25"
+                            type="number"
+                            [(ngModel)]="u.ESIC"
+                            (input)="setNetPayable(u.employeeId, u)"
+                        />
+                    </td>
+                    <td>
+                        <span *ngIf="u.status && !(u.status == 'Draft' && u._id == flag) && !u.showFields">{{
                             u.TDS | number : "1.2-2"
                         }}</span>
                         <input
-                            *ngIf="!u.status || (u.status == 'Draft' && u._id == flag)"
-                            class="form-control form-control-sm w-25"
+                            *ngIf="!u.status || (u.status == 'Draft' && u._id == flag) || u.showFields"
+                            class="form-control form-control-xs w-25"
                             type="number"
                             [(ngModel)]="u.TDS"
                             (input)="setNetPayable(u.employeeId, u)"
                         />
                     </td>
-                    <td>{{ u?.PT | number : "1.2-2" }}</td>
-                    <td>{{ u?.advSalary | number : "1.2-2" }}</td>
+                    <td>
+                        <span>
+                            <span *ngIf="!u.showFields"> {{ u?.PT | number : "1.2-2" }}</span>
+                        </span>
+                        <input
+                            *ngIf="u.showFields"
+                            class="form-control form-control-xs w-25"
+                            type="number"
+                            [(ngModel)]="u.PT"
+                            (input)="setNetPayable(u.employeeId, u)"
+                        />
+                    </td>
+                    <td>
+                        <span>
+                            <span *ngIf="!u.showFields"> {{ u?.advSalary | number : "1.2-2" }}</span>
+                        </span>
+                        <input
+                            *ngIf="u.showFields"
+                            class="form-control form-control-xs w-25"
+                            type="number"
+                            [(ngModel)]="u.advSalary"
+                            (input)="setNetPayable(u.employeeId, u)"
+                        />
+                    </td>
                     <td>{{ u?.netPayable | number : "1.2-2" }}</td>
                     <td>{{ u?.status }}</td>
                     <td>
@@ -92,6 +134,7 @@
                             <button class="dropbtn"></button>
                             <div class="dropdown-content">
                                 <a
+                                    [class.disable]="u.status == 'Approved'"
                                     appAccessControl
                                     [accessType]="rolePermissionActions.editAction"
                                     href="javascript:void(0)"
@@ -99,6 +142,17 @@
                                 >
                                     <i class="fa fa-pencil-square-o fa-lg me-2 text-primary" aria-hidden="true"></i>
                                     Edit
+                                </a>
+                                <a
+                                    [class.disable]="u.status == 'Approved'"
+                                    *ngIf="user == superAdminId"
+                                    appAccessControl
+                                    [accessType]="rolePermissionActions.editAction"
+                                    href="javascript:void(0)"
+                                    (click)="update(u)"
+                                >
+                                    <i class="fa fa-pencil-square-o fa-lg me-2 text-primary" aria-hidden="true"></i>
+                                    Update
                                 </a>
                             </div>
                         </div>

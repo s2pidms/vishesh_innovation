@@ -120,7 +120,9 @@ export class SkuMaterialComponent implements OnInit {
             ["SHT", "RL"].includes(this.materialInfoArr[index].UoM)
         ) {
             if (event.target.checked == true) {
-                this.materialInfoArr[index].qtyPerSKUUnit = this.materialSKUUnit ?? 0;
+                if (this.materialInfoArr[index].qtyPerSKUUnit == 0) {
+                    this.materialInfoArr[index].qtyPerSKUUnit = this.materialSKUUnit ?? 0;
+                }
             } else {
                 this.materialInfoArr[index].qtyPerSKUUnit = 0;
             }

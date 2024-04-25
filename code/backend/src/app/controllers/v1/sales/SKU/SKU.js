@@ -965,39 +965,39 @@ exports.getAllSKUByCategory = async (category, company, project = {}) => {
 
 exports.getMouldDataBySKUId = asyncHandler(async (req, res) => {
     try {
-        let mouldData = await filteredSalesProductMasterList([
-            {
-                $match: {
-                    company: ObjectId(req.user.company),
-                    status: OPTIONS.defaultStatus.ACTIVE,
-                    productCategory: req.query.category
-                }
-            },
-            {
-                $unwind: "$mouldInfo"
-            },
-            {
-                $match: {
-                    "mouldInfo.select": true
-                }
-            },
-            {
-                $group: {
-                    _id: {
-                        mouldNo: "$mouldInfo.mouldNo"
-                    }
-                }
-            },
-            {
-                $project: {
-                    mouldNo: "$_id.mouldNo",
-                    _id: 0
-                }
-            },
-            {
-                $sort: {mouldNo: 1}
-            }
-        ]);
+        // let mouldData = await filteredSalesProductMasterList([
+        //     {
+        //         $match: {
+        //             company: ObjectId(req.user.company),
+        //             status: OPTIONS.defaultStatus.ACTIVE,
+        //             productCategory: req.query.category
+        //         }
+        //     },
+        //     {
+        //         $unwind: "$mouldInfo"
+        //     },
+        //     {
+        //         $match: {
+        //             "mouldInfo.select": true
+        //         }
+        //     },
+        //     {
+        //         $group: {
+        //             _id: {
+        //                 mouldNo: "$mouldInfo.mouldNo"
+        //             }
+        //         }
+        //     },
+        //     {
+        //         $project: {
+        //             mouldNo: "$_id.mouldNo",
+        //             _id: 0
+        //         }
+        //     },
+        //     {
+        //         $sort: {mouldNo: 1}
+        //     }
+        // ]);
         let company = await CompanyRepository.getDocById(req.user.company, {companyType: 1});
         let mouldInfo = [];
         if (company.companyType == COMPANY_TYPE.INJECTION_MOULDING) {
@@ -1021,6 +1021,15 @@ exports.getMouldDataBySKUId = asyncHandler(async (req, res) => {
                         shoulderType: 1,
                         weight: 1,
                         packingStdDetails: 1,
+                        mouldInfo: {
+                            $map: {
+                                input: "$mouldInfo",
+                                as: "info",
+                                in: {
+                                    mouldNo: "$$info.mouldNo"
+                                }
+                            }
+                        },
                         // qtyPerPrimaryPack: "$packingStdDetails.qtyPerPrimaryPack",
                         // qtyPerSecondaryPack: "$packingStdDetails.qtyPerSecondaryPack",
                         _id: 1
@@ -1051,7 +1060,7 @@ exports.getMouldDataBySKUId = asyncHandler(async (req, res) => {
             //     }
             // ]);
         }
-        return res.success({mouldData, mouldInfo});
+        return res.success({mouldInfo});
     } catch (e) {
         console.error("getMouldDataBySKUId", e);
         const errors = MESSAGES.apiErrorStrings.SERVER_ERROR;

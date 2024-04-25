@@ -213,6 +213,7 @@ export class InkFormComponent implements OnInit {
                         this.form.disable();
                         this.form.controls["status"].enable();
                         if (this.action != "view") {
+                            this.form.controls["itemName"].enable();
                             this.form.controls["itemDescription"].enable();
                         }
                     }

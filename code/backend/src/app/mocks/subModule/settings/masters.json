@@ -65,8 +65,8 @@
                 "type": "MASTER",
                 "order": 5,
                 "isDisplay": false,
-                "title": "Default Unit Value",
-                "displayName": "Default Unit Value",
+                "title": "Default Value",
+                "displayName": "Default Value",
                 "disabled": false,
                 "url": "/default/settings/master/module_master/list/DEFAULT_UNIT_VALUE",
                 "_id": "6628cbd2bc19d3c8752d8b9e"
@@ -1150,8 +1150,8 @@
                 "type": "MASTER",
                 "order": 5,
                 "isDisplay": false,
-                "title": "SKU Master",
-                "displayName": "SKU Master",
+                "title": "Upload SKU Master",
+                "displayName": "Upload SKU Master",
                 "disabled": false,
                 "url": "/default/settings/master/upload_data/form/SKUMaster",
                 "_id": "65d9eae851f103a23ee3b732"
@@ -1162,8 +1162,8 @@
                 "type": "MASTER",
                 "order": 6,
                 "isDisplay": false,
-                "title": "FGIN",
-                "displayName": "FGIN",
+                "title": "Upload FGIN",
+                "displayName": "Upload FGIN",
                 "disabled": false,
                 "url": "/default/settings/master/upload_data/form/FGIN",
                 "_id": "65605419dc0c650792282c7a"
@@ -1174,11 +1174,23 @@
                 "type": "MASTER",
                 "order": 7,
                 "isDisplay": false,
-                "title": "Employee",
-                "displayName": "Employee",
+                "title": "Upload Employee",
+                "displayName": "Upload Employee",
                 "disabled": false,
                 "url": "/default/settings/master/upload_data/form/Employee",
                 "_id": "657158c46846809274599430"
+            },
+            {
+                "menuItemId": "64a6c1e33339d4dc9d8141ae",
+                "module": "Settings",
+                "type": "MASTER",
+                "order": 8,
+                "isDisplay": false,
+                "title": "Upload Asset",
+                "displayName": "Upload Asset",
+                "disabled": false,
+                "url": "/default/settings/master/upload_data/form/Asset",
+                "_id": "6629f0ecd4af732529f196b4"
             }
         ],
         "roles": []

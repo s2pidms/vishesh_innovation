@@ -97,7 +97,6 @@ export class AppParameterListComponent implements OnInit {
             this.getAll();
         });
     }
-
     pdfDownload(data: any) {
         let outPut = APPLICATION_PARAMETERS_PDF_DATA(data);
         this.exportToPDFService.generatePdf(outPut.tableData, outPut.title);

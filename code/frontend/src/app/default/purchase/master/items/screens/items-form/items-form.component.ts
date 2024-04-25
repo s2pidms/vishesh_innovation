@@ -16,7 +16,7 @@ import {PURCHASE_ITEM_FORM_ERRORS} from "@mocks/validations/purchase/item.valida
 import {ValidationService} from "@core/components";
 import {StockLevelsComponent} from "src/app/default/planning/master/child-item/screens/stock-levels/stock-levels.component";
 import {ItemAttributesComponent} from "../item-attributes/item-attributes.component";
-import {INDENT_CATEGORY, QC_LEVEL_STATUS} from "@mocks/constant";
+import {COMPANY_TYPE_IP_MANUFACTURING, INDENT_CATEGORY, QC_LEVEL_STATUS} from "@mocks/constant";
 import {InkHsnModalComponent} from "src/app/default/production/master/ink-master/screens/ink-hsn-modal/ink-hsn-modal.component";
 import {AppGlobalService, SpinnerService, ToastService, UtilityService} from "@core/services";
 import {IItemMasterData} from "@mocks/models/purchase/masters";
@@ -54,6 +54,7 @@ export class ItemsFormComponent implements OnInit {
     UOMDefaultValueOptions: any = [];
     masterData: IItemMasterData = {
         autoIncrementNo: "",
+        companyType: "",
         itemCategories: [],
         HSNCodesList: [],
         suppliersOptions: [],
@@ -61,6 +62,7 @@ export class ItemsFormComponent implements OnInit {
         QCLevelsOptions: [],
         WXLDimensionsUnit: []
     };
+    companyTypeIPManufacturing = COMPANY_TYPE_IP_MANUFACTURING;
 
     constructor(
         private activatedRoute: ActivatedRoute,

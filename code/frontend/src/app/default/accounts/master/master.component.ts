@@ -1,14 +1,11 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnInit} from "@angular/core";
 
 @Component({
-  selector: 'app-master',
-  template:'<div class="container main-content-wrapper"><router-outlet></router-outlet></div>',
+    selector: "app-master",
+    template: '<div class="main-content-wrapper"><router-outlet></router-outlet></div>'
 })
 export class MasterComponent implements OnInit {
+    constructor() {}
 
-  constructor() { }
-
-  ngOnInit(): void {
-  }
-
+    ngOnInit(): void {}
 }

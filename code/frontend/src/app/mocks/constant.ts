@@ -383,3 +383,4 @@ export const SKU_COST_SHEET_PARTICULARS = {
 };
 
 export const COMPANY_TYPE_INJECTION_MOLDING = "Injection Molding";
+export const COMPANY_TYPE_IP_MANUFACTURING = "Industrial Products Manufacturing";

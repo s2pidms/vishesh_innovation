@@ -1,12 +1,12 @@
 export default [
     {
-        value: "customerName",
-        label: "Customer Name",
+        value: "empFirstName",
+        label: "Emp First Name",
         class: "text-start"
     },
     {
-        value: "GSTIN",
-        label: "GSTIN",
+        value: "empLastName",
+        label: "Emp Last Name",
         class: ""
     },
     {

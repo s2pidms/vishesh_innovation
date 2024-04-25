@@ -42,7 +42,6 @@ const companySchema = mongoose.Schema(
             type: String,
             required: true
         },
-
         GSTClassification: {
             type: String,
             required: false

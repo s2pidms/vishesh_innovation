@@ -13,6 +13,7 @@ import {
 } from "@core/services";
 import {QuotationOfDSKUService} from "@services/sales/quotationOfDSKU.service";
 import {QUOTATION_DSKU_PDF_DATA, QUOTATION_DSKU_REPORT_DATA} from "@mocks/export-data/sales/reports";
+import {IQuotationOfDSKU} from "@mocks/models/sales/reports";
 
 @Component({
     selector: "app-quotation-dsku-report",
@@ -27,7 +28,7 @@ export class QuotationDskuReportComponent implements OnInit, OnDestroy {
     column: string = "createdAt";
     direction: number = -1;
     search: string = "";
-    tableData: any = [];
+    tableData: IQuotationOfDSKU[] = [];
     company: any = {};
     originTableData: any = [];
     customerOptions: any = [];

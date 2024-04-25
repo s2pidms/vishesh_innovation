@@ -335,7 +335,7 @@
         "title": "SAC Master",
         "displayName": "SAC Master",
         "disabled": false,
-        "url": "/default/planning/master/hsn_master/list",
+        "url": "/default/planning/master/sac_master/list",
         "items": [
             {
                 "menuItemId": "64a6c1e33339d4dc9d8141a4",
@@ -346,7 +346,7 @@
                 "title": "Purchase SAC Master",
                 "displayName": "Purchase SAC Master",
                 "disabled": false,
-                "url": "/default/planning/master/hsn_master/purchase_sac_master/list",
+                "url": "/default/planning/master/sac_master/purchase_sac_master/list",
                 "_id": "6628f3eeb0241ce6ce372a1c"
             },
             {
@@ -358,7 +358,7 @@
                 "title": "Sales SAC Master",
                 "displayName": "Sales SAC Master",
                 "disabled": false,
-                "url": "/default/planning/master/hsn_master/sales_sac_master/list",
+                "url": "/default/planning/master/sac_master/sales_sac_master/list",
                 "_id": "6628f3f9b0241ce6ce372a1d"
             }
         ],

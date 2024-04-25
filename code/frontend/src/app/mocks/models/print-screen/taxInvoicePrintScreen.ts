@@ -1,8 +1,6 @@
 export interface ITaxInvoicePrintScreen {
     _id: string;
     company: Company;
-    createdBy: string;
-    updatedBy: string;
     salesInvoiceNumber: string;
     salesInvoiceDate: string;
     shipmentPlanningId: ShipmentPlanningId;

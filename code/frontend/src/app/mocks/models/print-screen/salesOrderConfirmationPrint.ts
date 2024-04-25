@@ -1,8 +1,6 @@
 export interface ISalesOrderConfirmationPrintScreen {
     _id: string;
     company: Company;
-    createdBy: string;
-    updatedBy: string;
     salesCategory: string;
     customer: Customer;
     quotationProformaRef: any;
@@ -31,9 +29,6 @@ export interface ISalesOrderConfirmationPrintScreen {
     isActive: boolean;
     otherCharges: OtherCharges;
     SOStatus: string;
-    createdAt: string;
-    updatedAt: string;
-    __v: number;
     GSTDetails: Gstdetail[];
     totalTaxableAmount: number;
     totalCGSTAmount: number;
@@ -109,8 +104,6 @@ export interface PlacesOfBusiness {
 export interface Customer {
     _id: string;
     company: string;
-    createdBy: string;
-    updatedBy: string;
     customerCode: string;
     customerName: string;
     customerNickName: string;
@@ -133,16 +126,12 @@ export interface Customer {
     isCustomerActive: string;
     customerWebsite: string;
     customerBankDetails: any[];
-    createdAt: string;
-    updatedAt: string;
-    __v: number;
 }
 
 export interface CustomerBillingAddress {
     line1: string;
     line2: string;
     line3: string;
-    line4: string;
     state: string;
     city: string;
     district: string;
@@ -168,9 +157,6 @@ export interface CustomerShippingAddress {
 }
 
 export interface CustomerContactInfo {
-    contactPersonName: string;
-    contactPersonDesignation: string;
-    contactPersonDepartment: string;
     contactPersonNumber: string;
     contactPersonEmail: string;
     _id: string;

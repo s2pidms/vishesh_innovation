@@ -44,7 +44,6 @@ export class SalesRegisterReportComponent implements OnInit, OnDestroy {
     menuTitleData: any = {};
     tabType: any = "";
     subscription!: Subscription;
-
     constructor(
         private salesInvoiceService: SalesInvoiceService,
         private spinner: SpinnerService,
@@ -55,7 +54,6 @@ export class SalesRegisterReportComponent implements OnInit, OnDestroy {
         private activatedRoute: ActivatedRoute,
         private exportToPDFService: ExportToPDFService
     ) {}
-
     ngOnInit(): void {
         this.page = Number(this.activatedRoute.snapshot.queryParamMap.get("page") ?? 1);
         this.getFiscalDate();
@@ -70,13 +68,11 @@ export class SalesRegisterReportComponent implements OnInit, OnDestroy {
             this.tabType = "reports";
         }
     }
-
     getFiscalDate() {
         let monthDates = this.utilityService.getCurrentMonthDates();
         this.fromDate = monthDates.fromDate;
         this.toDate = monthDates.toDate;
     }
-
     trackByFn(index: number, item: any) {
         return item?._id;
     }
@@ -87,7 +83,6 @@ export class SalesRegisterReportComponent implements OnInit, OnDestroy {
         this.SKUId = "";
         this.getAll();
     }
-
     setReportName() {
         if (this.reportName == this.reportNameObj.taxInvoiceByCustomer) {
             this.SKUId = "";

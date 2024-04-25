@@ -4,12 +4,16 @@ const {default: mongoose} = require("mongoose");
 const MenuItem = require("../menuItem/menuItem");
 const User = require("../user/user");
 const {getAllRoles} = require("../role/role");
-const {getAllSubModuleManagementAttributes} = require("../../../../models/settings/helpers/subModuleManagementHelper");
+const {
+    getAllSubModuleManagementAttributes,
+    getAllFilteredCardsManagementAttributes
+} = require("../../../../models/settings/helpers/subModuleManagementHelper");
 const ObjectId = mongoose.Types.ObjectId;
 const subModuleJson = require("../../../../utilities/module");
 const SubModuleRepository = require("../../../../models/settings/repository/subModuleRepository");
 const {getAllAggregationFooter, outputData} = require("../../../../helpers/utility");
 const {getMatchData} = require("../../../../helpers/global.options");
+
 exports.getAll = asyncHandler(async (req, res) => {
     try {
         const roles = await getAllRoles(req.user.company, true);
@@ -249,3 +253,25 @@ exports.getAllSubModule = async module => {
         console.error("getAllSubModule", e);
     }
 };
+
+// exports.getAllFilteredCardsManagement = asyncHandler(async (req, res) => {
+//     try {
+//         const {module = null, type = null} = req.query;
+//         let project = getAllFilteredCardsManagementAttributes();
+//         let pipeline = [
+//             {
+//                 $match: {
+//                     company: ObjectId(req.user.company),
+//                     ...(!!module && {module: ObjectId(module)}),
+//                     ...(!!type && {type: ObjectId(type)})
+//                 }
+//             }
+//         ];
+//         let rows = await SubModuleRepository.getAllPaginate({pipeline, project, queryParams: req.query});
+//         return res.success(rows);
+//     } catch (e) {
+//         console.error("getAll", e);
+//         const errors = MESSAGES.apiErrorStrings.SERVER_ERROR;
+//         return res.serverError(errors);
+//     }
+// });

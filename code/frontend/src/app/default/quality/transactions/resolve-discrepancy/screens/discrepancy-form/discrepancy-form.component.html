@@ -1,5 +1,5 @@
 <form [formGroup]="form" class="formCard card">
-    <div class="container">
+    <div class="set-remaining-margin">
         <div class="row form-header">
             <div class="col heading">
                 <label class="">Resolve Discrepancy</label>
@@ -117,7 +117,7 @@
                                 {{ g.itemDescription }}
                             </span>
                         </td>
-                        <td>{{ g.UOM | UOMUnitsMaster  }}</td>
+                        <td>{{ g.UOM | UOMUnitsMaster }}</td>
                         <td>
                             {{ g.GIQty | number : "1.2-2" }}
                         </td>

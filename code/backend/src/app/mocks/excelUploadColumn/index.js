@@ -5,6 +5,7 @@ const inventoryColumns = require("./inventoryKeys.json");
 const SKUColumns = require("./skuKeys.json");
 const FGINColumns = require("./FGINKeys.json");
 const employeeColumns = require("./employeeKeys.json");
+const assetColumns = require("./assetKeys.json");
 
 module.exports = {
     Supplier: supplierColumns,
@@ -13,5 +14,6 @@ module.exports = {
     InventoryCorrection: inventoryColumns,
     SKUMaster: SKUColumns,
     FGIN: FGINColumns,
-    Employee: employeeColumns
+    Employee: employeeColumns,
+    Asset: assetColumns
 };
