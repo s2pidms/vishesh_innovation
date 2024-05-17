@@ -201,5 +201,68 @@
         "url": "/default/business-leads/master/map_category_hsn/list",
         "items": [],
         "roles": []
+    },
+    {
+        "_id": "662cba5bfe3de479c01ec258",
+        "menuItemId": "64a6c1e33339d4dc9d8141a2",
+        "module": "Business Leads",
+        "type": "MASTER",
+        "order": 12,
+        "isDisplay": false,
+        "title": "SKU Attributes",
+        "displayName": "SKU Attributes",
+        "disabled": false,
+        "url": "/default/business-leads/master/sku_attributes/tab_list",
+        "items": [
+            {
+                "menuItemId": "64a6c1e33339d4dc9d8141a2",
+                "module": "Business Leads",
+                "type": "MASTER",
+                "order": 1,
+                "isDisplay": false,
+                "title": "SKU Attributes Tracking",
+                "displayName": "SKU Attributes Tracking",
+                "disabled": false,
+                "url": "/default/business-leads/master/sku_attributes/sku_attribute_tracking/list",
+                "_id": "663b0cc2cf939ebabc267e9c"
+            },
+            {
+                "menuItemId": "64a6c1e33339d4dc9d8141a2",
+                "module": "Business Leads",
+                "type": "MASTER",
+                "order": 2,
+                "isDisplay": false,
+                "title": "SKU Dimension Master",
+                "displayName": "SKU Dimension Master",
+                "disabled": false,
+                "url": "/default/business-leads/master/sku_attributes/sku_dimension_master/list",
+                "_id": "662cba68fe3de479c01ec259"
+            },
+            {
+                "menuItemId": "64a6c1e33339d4dc9d8141a2",
+                "module": "Business Leads",
+                "type": "MASTER",
+                "order": 3,
+                "isDisplay": false,
+                "title": "SKU Material Master",
+                "displayName": "SKU Material Master",
+                "disabled": false,
+                "url": "/default/business-leads/master/sku_attributes/sku_material_master/list",
+                "_id": "662cba76fe3de479c01ec25a"
+            },
+            {
+                "menuItemId": "64a6c1e33339d4dc9d8141a2",
+                "module": "Business Leads",
+                "type": "MASTER",
+                "order": 4,
+                "isDisplay": false,
+                "title": "SKU Ink Master",
+                "displayName": "SKU Ink Master",
+                "disabled": false,
+                "url": "/default/business-leads/master/sku_attributes/sku_ink_master/list",
+                "_id": "662cba80fe3de479c01ec25b"
+            }
+        ],
+        "roles": []
     }
 ]

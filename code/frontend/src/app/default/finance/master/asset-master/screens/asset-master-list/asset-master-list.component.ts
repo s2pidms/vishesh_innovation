@@ -2,11 +2,20 @@ import {Component, OnDestroy, OnInit, QueryList, ViewChildren} from "@angular/co
 import {ActivatedRoute, Router} from "@angular/router";
 import {Subscription} from "rxjs";
 import {NgbdSortableHeader, SortEvent} from "@directives/sortable.directive";
-import {LIST_DEFAULT_PERMISSION_ACTIONS} from "@mocks/constant";
-import {AppGlobalService, ExportExcelService, ExportToPDFService, SpinnerService} from "@core/services";
+import {LIST_DEFAULT_PERMISSION_ACTIONS, superAdminId} from "@mocks/constant";
+import {
+    AppGlobalService,
+    ExportExcelService,
+    ExportToPDFService,
+    SpinnerService,
+    StorageService,
+    ToastService
+} from "@core/services";
 import {AssetMasterService} from "@services/finance";
 import {ASSET_MASTER_DATA, ASSET_MASTER_PDF_DATA} from "@mocks/export-data/finance/masters";
 import {Asset} from "@mocks/models/finance/masters";
+import {ConfirmDeleteComponent} from "@shared/modals";
+import {NgbModal} from "@ng-bootstrap/ng-bootstrap";
 
 @Component({
     selector: "app-asset-master-list",
@@ -31,6 +40,8 @@ export class AssetMasterListComponent implements OnInit, OnDestroy {
     search: string = "";
     tableData: Asset[] = [];
     menuItemId: string = "";
+    superAdminId: any = superAdminId;
+    user: any = "";
     financeMenuItemId: string = "64a6c1e33339d4dc9d8141ad";
     rolePermissionActions: any = LIST_DEFAULT_PERMISSION_ACTIONS;
     subscription!: Subscription;
@@ -41,10 +52,14 @@ export class AssetMasterListComponent implements OnInit, OnDestroy {
         private activatedRoute: ActivatedRoute,
         private assetMasterService: AssetMasterService,
         private exportToPDFService: ExportToPDFService,
-        private appGlobalService: AppGlobalService
+        private appGlobalService: AppGlobalService,
+        private storageService: StorageService,
+        private toastService: ToastService,
+        private modalService: NgbModal
     ) {}
 
     ngOnInit(): void {
+        this.user = this.storageService.get("IDMSAUser")?.roles?.find((x: any) => x == this.superAdminId);
         this.menuItemId = this.appGlobalService.menuItemId;
         this.page = Number(this.activatedRoute.snapshot.queryParamMap.get("page") ?? 1);
         this.getAll();
@@ -72,6 +87,33 @@ export class AssetMasterListComponent implements OnInit, OnDestroy {
             }
             this.spinner.hide();
         });
+    }
+    delete(id: any) {
+        this.spinner.show();
+        this.assetMasterService.delete(id).subscribe(success => {
+            this.spinner.hide();
+            this.toastService.success(success.message);
+            this.getAll();
+        });
+    }
+    openConfirmModal(id: any, code: any) {
+        const modalRef = this.modalService.open(ConfirmDeleteComponent, {
+            centered: true,
+            size: "md",
+            backdrop: "static",
+            keyboard: false
+        });
+
+        modalRef.componentInstance.heading = "Confirm Deletion";
+        modalRef.componentInstance.confirmText = `Confirm Deletion of Asset Number ${code} ?`;
+        modalRef.result.then(
+            (success: any) => {
+                if (success.title == "Yes") {
+                    this.delete(id);
+                }
+            },
+            (reason: any) => {}
+        );
     }
     ngOnDestroy(): void {
         if (this.subscription) this.subscription.unsubscribe();

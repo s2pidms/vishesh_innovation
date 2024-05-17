@@ -527,7 +527,23 @@ exports.bulkInsertCustomersByCSV = async (jsonData, {company, createdBy, updated
             company: company
         });
         let customerData = jsonData.map(x => {
-            const {line1, line2, line3, country, state, city, district, pinCode, contactPersonName, ...rest} = x;
+            const {
+                line1,
+                line2,
+                line3,
+                country,
+                state,
+                city,
+                district,
+                pinCode,
+
+                contactPersonName,
+                contactPersonDesignation,
+                contactPersonDepartment,
+                contactPersonNumber,
+                contactPersonEmail,
+                ...rest
+            } = x;
             let address = {
                 line1,
                 line2,
@@ -539,8 +555,16 @@ exports.bulkInsertCustomersByCSV = async (jsonData, {company, createdBy, updated
                 pinCode,
                 contactPersonName: rest.customerName
             };
+            let contactInfo = {
+                contactPersonName,
+                contactPersonDesignation,
+                contactPersonDepartment,
+                contactPersonNumber,
+                contactPersonEmail
+            };
             rest.customerBillingAddress = [address];
             rest.customerShippingAddress = [address];
+            rest.customerContactInfo = [contactInfo];
             rest.company = company;
             rest.createdBy = createdBy;
             rest.updatedBy = updatedBy;

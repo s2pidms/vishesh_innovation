@@ -5,7 +5,8 @@ import {
     UPLOAD_DATA_FOR_CUSTOMER_INVENTORY,
     UPLOAD_DATA_FOR_ITEM_INVENTORY,
     UPLOAD_DATA_FOR_SUPPLIER_INVENTORY,
-    UPLOAD_DATA_FOR_VALIDATE_INVENTORY
+    UPLOAD_DATA_FOR_VALIDATE_INVENTORY,
+    UPLOAD_DATA_FOR_VALIDATE_SKU
 } from "@mocks/export-data/settings/masters";
 import {ExportExcelService} from "@core/services";
 
@@ -48,6 +49,8 @@ export class CustomUploadDetailsComponent implements OnInit {
                     this.excelDownloadForCustomer();
                 } else if (this.type == "InventoryCorrection") {
                     this.excelDownloadForInventory();
+                } else if (this.type == "SKUMaster") {
+                    this.excelDownloadForSKU();
                 }
                 break;
             case "PAGE":
@@ -60,6 +63,9 @@ export class CustomUploadDetailsComponent implements OnInit {
 
     excelDownloadForInventory() {
         this.exportExcelService.exportExcel(UPLOAD_DATA_FOR_VALIDATE_INVENTORY(this.inValidRecords));
+    }
+    excelDownloadForSKU() {
+        this.exportExcelService.exportExcel(UPLOAD_DATA_FOR_VALIDATE_SKU(this.inValidRecords));
     }
     excelDownloadForItem() {
         this.exportExcelService.exportExcel(UPLOAD_DATA_FOR_ITEM_INVENTORY(this.inValidRecords));

@@ -68,6 +68,11 @@ const routes: Routes = [
                 path: "jc_production_entry",
                 loadChildren: () =>
                     import("./jc-production-entry/jc-production-entry.module").then(m => m.JcProductionEntryModule)
+            },
+            {
+                path: "production_processes",
+                loadChildren: () =>
+                    import("./production-processes/production-processes.module").then(m => m.ProductionProcessesModule)
             }
         ]
     }

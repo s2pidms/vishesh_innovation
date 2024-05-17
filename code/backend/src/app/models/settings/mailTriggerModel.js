@@ -73,7 +73,7 @@ mailTriggerSchema.pre("save", async function (next) {
     next();
 });
 mailTriggerSchema.plugin(paginatePlugin);
-
+mailTriggerSchema.index({createdAt: 1}, {expireAfterSeconds: 604800});
 const MailTrigger = mongoose.model(SCHEMA_CONST.COLLECTION_NAME, mailTriggerSchema);
 
 module.exports = MailTrigger;

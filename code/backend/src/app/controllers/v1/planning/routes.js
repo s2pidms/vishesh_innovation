@@ -14,6 +14,7 @@ const SKUCostSheet = require("./SKUCostSheet/routes");
 const jobCard = require("./jobCard/routes");
 const goodsIssuePPICToProduction = require("./goodsIssuePPICToProduction/routes");
 const goodsTransferRequest = require("./goodsTransferRequest/routes");
+const stockPreparation = require("./stockPreparation/routes");
 
 router.use("/billOfMaterial", BOM);
 router.use("/SFGStock", SFGStock);
@@ -29,5 +30,6 @@ router.use("/SKUCostSheet", SKUCostSheet);
 router.use("/jobCard", jobCard);
 router.use("/goodsIssuePPICToProduction", goodsIssuePPICToProduction);
 router.use("/goodsTransferRequest", goodsTransferRequest);
+router.use("/stockPreparation", stockPreparation);
 
 module.exports = router;

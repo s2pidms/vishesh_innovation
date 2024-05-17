@@ -1,5 +1,6 @@
 const {default: mongoose} = require("mongoose");
 const {OPTIONS} = require("../../../helpers/global.options");
+const {setTwoDecimal} = require("../../../helpers/utility");
 
 exports.SCHEMA = {
     company: {
@@ -83,20 +84,12 @@ exports.SCHEMA = {
     },
     freightChargesPaid: {
         type: Number,
-        set: value => {
-            if (![undefined, null, "NaN"].includes(value) && typeof +value == "number") {
-                return parseFloat(value).toFixed(2);
-            }
-        },
+        set: value => setTwoDecimal(value),
         required: false
     },
     otherChargesPaid: {
         type: Number,
-        set: value => {
-            if (![undefined, null, "NaN"].includes(value) && typeof +value == "number") {
-                return parseFloat(value).toFixed(2);
-            }
-        },
+        set: value => setTwoDecimal(value),
         required: false
     },
     deliveryLocation: {
@@ -108,20 +101,10 @@ exports.SCHEMA = {
         {
             GRNLineNumber: {
                 type: Number,
-                set: value => {
-                    if (![undefined, null, "NaN"].includes(value) && typeof +value == "number") {
-                        return parseFloat(value).toFixed(2);
-                    }
-                },
                 required: false
             },
             POLineNumber: {
                 type: Number,
-                set: value => {
-                    if (![undefined, null, "NaN"].includes(value) && typeof +value == "number") {
-                        return parseFloat(value).toFixed(2);
-                    }
-                },
                 required: false
             },
             item: {
@@ -155,38 +138,22 @@ exports.SCHEMA = {
             },
             POQty: {
                 type: Number,
-                set: value => {
-                    if (![undefined, null, "NaN"].includes(value) && typeof +value == "number") {
-                        return parseFloat(value).toFixed(2);
-                    }
-                },
+                set: value => setTwoDecimal(value),
                 required: false
             },
             GRNQty: {
                 type: Number,
-                set: value => {
-                    if (![undefined, null, "NaN"].includes(value) && typeof +value == "number") {
-                        return parseFloat(value).toFixed(2);
-                    }
-                },
+                set: value => setTwoDecimal(value),
                 required: false
             },
             standardRate: {
                 type: Number,
-                set: value => {
-                    if (![undefined, null, "NaN"].includes(value) && typeof +value == "number") {
-                        return parseFloat(value).toFixed(2);
-                    }
-                },
+                set: value => setTwoDecimal(value, 3),
                 required: false
             },
             purchaseRate: {
                 type: Number,
-                set: value => {
-                    if (![undefined, null, "NaN"].includes(value) && typeof +value == "number") {
-                        return parseFloat(value).toFixed(2);
-                    }
-                },
+                set: value => setTwoDecimal(value, 3),
                 required: false
             },
             // receivedQty: {
@@ -200,40 +167,24 @@ exports.SCHEMA = {
             // },
             invoicedQty: {
                 type: Number,
-                set: value => {
-                    if (![undefined, null, "NaN"].includes(value) && typeof +value == "number") {
-                        return parseFloat(value).toFixed(2);
-                    }
-                },
+                set: value => setTwoDecimal(value),
                 required: false,
                 default: 0
             },
             balancedQty: {
                 type: Number,
-                set: value => {
-                    if (![undefined, null, "NaN"].includes(value) && typeof +value == "number") {
-                        return parseFloat(value).toFixed(2);
-                    }
-                },
+                set: value => setTwoDecimal(value),
                 required: false,
                 default: 0
             },
             rejectedQty: {
                 type: Number,
-                set: value => {
-                    if (![undefined, null, "NaN"].includes(value) && typeof +value == "number") {
-                        return parseFloat(value).toFixed(2);
-                    }
-                },
+                set: value => setTwoDecimal(value),
                 required: false
             },
             canceledQty: {
                 type: Number,
-                set: value => {
-                    if (![undefined, null, "NaN"].includes(value) && typeof +value == "number") {
-                        return parseFloat(value).toFixed(2);
-                    }
-                },
+                set: value => setTwoDecimal(value),
                 required: false,
                 default: 0
             },

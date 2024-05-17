@@ -4,11 +4,13 @@ import {Component, OnInit} from "@angular/core";
 import {ActivatedRoute, Router} from "@angular/router";
 import {Subscription} from "rxjs";
 import {NgbdSortableHeader, SortEvent} from "@directives/sortable.directive";
-import {ExportExcelService, ExportToPDFService, SpinnerService} from "@core/services";
+import {ExportExcelService, ExportToPDFService, SpinnerService, StorageService, ToastService} from "@core/services";
 import {salesServiceMasterService} from "@services/sales";
-import {LIST_DEFAULT_PERMISSION_ACTIONS} from "@mocks/constant";
+import {LIST_DEFAULT_PERMISSION_ACTIONS, superAdminId} from "@mocks/constant";
 import {SERVICE_MASTER_PDF_DATA, SERVICE_MASTER_REPORT_DATA} from "@mocks/export-data/sales/master";
 import {salesService} from "@mocks/models/sales/master";
+import {NgbModal} from "@ng-bootstrap/ng-bootstrap";
+import {ConfirmDeleteComponent} from "@shared/modals";
 @Component({
     selector: "app-service-list",
     templateUrl: "./service-list.component.html"
@@ -23,6 +25,8 @@ export class ServiceListComponent implements OnInit, OnDestroy {
     direction: number = -1;
     search: string = "";
     tableData: salesService[] = [];
+    superAdminId: any = superAdminId;
+    user: any = "";
     rolePermissionActions: any = LIST_DEFAULT_PERMISSION_ACTIONS;
     originTableData: any;
     subscription!: Subscription;
@@ -32,10 +36,14 @@ export class ServiceListComponent implements OnInit, OnDestroy {
         private spinner: SpinnerService,
         private salesServiceMaster: salesServiceMasterService,
         private activatedRoute: ActivatedRoute,
-        private exportToPDFService: ExportToPDFService
+        private exportToPDFService: ExportToPDFService,
+        private storageService: StorageService,
+        private toastService: ToastService,
+        private modalService: NgbModal
     ) {}
 
     ngOnInit(): void {
+        this.user = this.storageService.get("IDMSAUser")?.roles?.find((x: any) => x == this.superAdminId);
         this.page = Number(this.activatedRoute.snapshot.queryParamMap.get("page") ?? 1);
         this.getAll();
     }
@@ -117,5 +125,32 @@ export class ServiceListComponent implements OnInit, OnDestroy {
         this.column = column;
         this.direction = direction == "asc" ? 1 : -1;
         this.getAll();
+    }
+    delete(id: any) {
+        this.spinner.show();
+        this.salesServiceMaster.delete(id).subscribe(success => {
+            this.spinner.hide();
+            this.toastService.success(success.message);
+            this.getAll();
+        });
+    }
+    openConfirmModal(id: any, code: any) {
+        const modalRef = this.modalService.open(ConfirmDeleteComponent, {
+            centered: true,
+            size: "md",
+            backdrop: "static",
+            keyboard: false
+        });
+
+        modalRef.componentInstance.heading = "Confirm Deletion";
+        modalRef.componentInstance.confirmText = `Confirm Deletion of Service Code ${code} ?`;
+        modalRef.result.then(
+            (success: any) => {
+                if (success.title == "Yes") {
+                    this.delete(id);
+                }
+            },
+            (reason: any) => {}
+        );
     }
 }

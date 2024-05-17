@@ -1,0 +1,63 @@
+<form [formGroup]="form" class="formCard card">
+    <div class="set-remaining-margin">
+        <div class="row form-header">
+            <div class="col heading">
+                <label>Add Service Charges</label>
+            </div>
+        </div>
+        <div class="form-body">
+            <div class="row">
+                <div class="col-md-2">
+                    <label class="form-label"> Order <span class="text-danger"></span> </label>
+                    <input class="form-control" type="number" formControlName="order" />
+                </div>
+                <div class="col-md-3">
+                    <label class="form-label"> Description of Services <span class="text-danger"></span> </label>
+                    <input class="form-control" type="text" formControlName="description" />
+                </div>
+                <div class="col-md-2">
+                    <label class="form-label"> SAC Code <span class="text-danger">*</span> </label>
+                    <ng-select
+                        [items]="masterData.SACOptions"
+                        bindLabel="SACCode"
+                        bindValue="SACCode"
+                        formControlName="SACCode"
+                        [clearable]="false"
+                        (change)="setSAC($event)"
+                    >
+                    </ng-select>
+                </div>
+                <div class="col-md-2">
+                    <label class="form-label"> GST Rate % <span class="text-danger"></span> </label>
+                    <input class="form-control" type="number" formControlName="GSTRate" />
+                </div>
+                <div class="col">
+                    <label class="form-label">
+                        Status
+                        <span class="text-danger"></span>
+                    </label>
+                    <div class="d-flex">
+                        <select class="form-select statusSelectBorder" formControlName="status">
+                            <option [value]="null" selected disabled>Select Status</option>
+                            <option [value]="'Active'">Active</option>
+                            <option [value]="'Inactive'">Inactive</option>
+                        </select>
+                        <span class="input-group-text statusSpanHeight">
+                            <div *ngIf="form.value['status'] == 'Active'" class="statusActive"></div>
+                            <div *ngIf="form.value['status'] == 'Inactive'" class="statusInActive"></div>
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <hr *ngIf="action !== 'view'" class="row line-border" />
+        <div *ngIf="action != 'view'" class="d-flex justify-content-center mb-3">
+            <div class="d-grid col-md-1 me-5">
+                <button class="btn btn-primary btn-lg" type="button" (click)="reset()">Reset</button>
+            </div>
+            <div class="d-grid col-md-1">
+                <button class="btn btn-primary btn-lg" type="button" (click)="submit()">Save</button>
+            </div>
+        </div>
+    </div>
+</form>

@@ -4,7 +4,7 @@ const {generatePdfPuppeteer} = require("../../../../helpers/pupeeteerGeneratePdf
 const {CONSTANTS} = require("../../../../../config/config");
 const {formatDate} = require("../../../../helpers/dateTime");
 const {mailConfigHelper} = require("../../../../helpers/mailConfigHelper");
-const {STORES_MAIL_CONST} = require("../../../../mocks/mailTriggerConstants");
+const {STORES_MAIL_CONST, DEFAULT_MAIL_RECEIVER} = require("../../../../mocks/mailTriggerConstants");
 const {OPTIONS} = require("../../../../helpers/global.options");
 const {getContactStr} = require("../../../../helpers/utility");
 

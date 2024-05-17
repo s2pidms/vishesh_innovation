@@ -47,7 +47,7 @@
                                     </span>
                                 </td>
                                 <td>{{ FIFODetails?.UOM | UOMUnitsMaster }}</td>
-                                <td>{{ FIFODetails?.GTRQty }}</td>
+                                <td>{{ FIFODetails?.GTRQty ? (FIFODetails?.GTRQty | number : "1.2-2") : null }}</td>
                             </tr>
                         </tbody>
                     </table>

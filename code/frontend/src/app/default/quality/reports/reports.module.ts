@@ -39,7 +39,14 @@ const routes: Routes = [
                         m => m.SupplierEvaluationRModule
                     )
             },
-            {path: "MRN_report", loadChildren: () => import("./mrn/mrn.module").then(m => m.MRNModule)}
+            {path: "MRN_report", loadChildren: () => import("./mrn/mrn.module").then(m => m.MRNModule)},
+            {
+                path: "sales_register_wo_tax",
+                loadChildren: () =>
+                    import("./../../sales/reports/sales-register-wo-tax/sales-register-wo-tax.module").then(
+                        m => m.SalesRegisterWOTaxModule
+                    )
+            }
         ]
     }
 ];

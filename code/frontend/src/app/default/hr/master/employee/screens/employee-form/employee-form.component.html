@@ -1,704 +1,141 @@
-<form [formGroup]="form">
-    <div class="row justify-content-center">
-        <div class="col-md-11">
-            <ul ngbNav #nav="ngbNav" [(activeId)]="active" class="nav-pills tabs-card row">
-                <li [ngbNavItem]="1" class="col d-grid pe-2">
-                    <a ngbNavLink>Employee Info</a>
-                    <ng-template ngbNavContent>
-                        <div class="row mb-3">
-                            <div class="col-md-6 row mb-3 align-items-center">
-                                <label class="col-sm-auto col-form-label align-self-center">
-                                    Employee Code <span class="text-danger">*</span>
-                                </label>
-                                <div class="col-sm-6 ps-0">
-                                    <input class="form-control" type="text" formControlName="empCode" readOnly />
-                                    <validation-messages class="error-left" [control]="f['empCode']">
-                                    </validation-messages>
-                                </div>
-                            </div>
-                            <div class="col-md-6">
-                                <div class="form-check mt-2">
-                                    <label class="form-check-label text-nowrap">
-                                        Create login
-                                        <input
-                                            class="form-check-input me-3"
-                                            type="checkbox"
-                                            formControlName="isLogin"
-                                        />
-                                    </label>
-                                </div>
-                            </div>
-                            <div class="w-100">
-                                <hr class="empContainerRuler text-primary" />
-                            </div>
-                        </div>
-                        <div id="empinfo">
-                            <div class="row mb-4">
-                                <div class="col-md-4">
-                                    <label class="form-label"> First Name <span class="text-danger">*</span> </label>
-                                    <input class="form-control" type="text" formControlName="empFirstName" />
-                                    <validation-messages class="error-left" [control]="f['empFirstName']">
-                                    </validation-messages>
-                                </div>
+<form [formGroup]="form" class="formCard card">
+    <div class="set-remaining-margin">
+        <div class="row form-header">
+            <div class="col heading">
+                <label>Employee Master</label>
+            </div>
+        </div>
+        <div class="form-body">
+            <div class="row m-0">
+                <div class="col-md-6 row align-items-center">
+                    <label class="col-sm-auto col-form-label align-self-center">
+                        Employee Code <span class="text-danger">*</span>
+                    </label>
+                    <div class="col-sm-6 ps-0">
+                        <input class="form-control" type="text" formControlName="empCode" readonly />
+                        <validation-messages class="error-left" [control]="f['empCode']"> </validation-messages>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-check mt-2">
+                        <label class="form-check-label text-nowrap">
+                            Create login
+                            <input class="form-check-input me-3" type="checkbox" formControlName="isLogin" />
+                        </label>
+                    </div>
+                </div>
+            </div>
+            <hr class="row line-border" />
+            <div class="row mb-3">
+                <div class="col-md-4">
+                    <label class="form-label"> First Name <span class="text-danger">*</span> </label>
+                    <input class="form-control" type="text" formControlName="empFirstName" />
+                    <validation-messages class="error-left" [control]="f['empFirstName']"> </validation-messages>
+                </div>
 
-                                <div class="col-md-4">
-                                    <label class="form-label"> Middle Name </label>
-                                    <input class="form-control" type="text" formControlName="empMiddleName" />
-                                </div>
+                <div class="col-md-4">
+                    <label class="form-label"> Middle Name </label>
+                    <input class="form-control" type="text" formControlName="empMiddleName" />
+                </div>
 
-                                <div class="col-md-4">
-                                    <label class="form-label"> Last Name <span class="text-danger">*</span> </label>
-                                    <input class="form-control" type="text" formControlName="empLastName" />
-                                    <validation-messages class="error-left" [control]="f['empLastName']">
-                                    </validation-messages>
-                                </div>
-                            </div>
+                <div class="col-md-4">
+                    <label class="form-label"> Last Name <span class="text-danger">*</span> </label>
+                    <input class="form-control" type="text" formControlName="empLastName" />
+                    <validation-messages class="error-left" [control]="f['empLastName']"> </validation-messages>
+                </div>
+            </div>
+            <div class="row mb-3">
+                <div class="col-md-4">
+                    <label class="form-label"> Gender </label>
+                    <select class="form-select" formControlName="empGender">
+                        <option [value]="null" disabled>Select Gender</option>
+                        <option value="Male">Male</option>
+                        <option value="Female">Female</option>
+                    </select>
+                </div>
+                <div class="col-md-4">
+                    <label class="form-label"> Date of Birth </label>
+                    <input class="form-control" type="date" formControlName="empDOB" />
+                </div>
+                <div class="col-md-4">
+                    <label class="form-label"> Mobile No. </label>
+                    <input class="form-control" type="text" maxlength="10" formControlName="empContactNo" />
+                </div>
+            </div>
+            <div class="row mb-3">
+                <div class="col-md-4">
+                    <label class="form-label"> Aadhaar Card No. </label>
+                    <input class="form-control" type="number" maxlength="12" formControlName="empAadharNo" />
+                </div>
+                <div class="col-md-4">
+                    <label class="form-label"> Pan Card No. </label>
+                    <input class="form-control" type="text" maxlength="10" formControlName="empPANNo" />
+                </div>
+                <div class="col-md-4">
+                    <label class="form-label"> Marital Status </label>
+                    <select class="form-select" formControlName="empMartialStatus">
+                        <option [value]="null" selected disabled>Select</option>
+                        <option value="Married">Married</option>
+                        <option value="Unmarried">Unmarried</option>
+                    </select>
+                </div>
+            </div>
+            <div class="row mb-3">
+                <div class="col-md-4">
+                    <label class="form-label"> Education/Qualification </label>
+                    <input class="form-control" type="text" formControlName="qualification" />
+                </div>
+                <div class="col-md-4">
+                    <label class="form-label"> PF/UAN No. </label>
+                    <input class="form-control" type="text" formControlName="empPFNo" />
+                </div>
+                <div class="col-md-4">
+                    <label class="form-label"> ESIC No. </label>
+                    <input class="form-control" type="text" formControlName="empESICNo" />
+                </div>
+            </div>
+            <div class="row mb-3">
+                <div class="col-md-4">
+                    <label class="form-label"> E-mail ID [Company] <span class="text-danger">*</span> </label>
+                    <input class="form-control" type="email" formControlName="empEmailCompany" />
+                    <validation-messages class="error-left" [control]="f['empEmailCompany']"> </validation-messages>
+                </div>
+                <div class="col-md-4">
+                    <label class="form-label"> E-mail ID [Personal - 1] </label>
+                    <input class="form-control" type="email" formControlName="empEmailPersonal1" />
+                </div>
+                <div class="col-md-4">
+                    <label class="form-label"> E-mail ID [Personal - 2] </label>
+                    <input class="form-control" type="email" formControlName="empEmailPersonal2" />
+                </div>
+            </div>
+        </div>
+        <hr class="row line-border mb-4" />
 
-                            <div class="row mb-4">
-                                <div class="col-md-4">
-                                    <label class="form-label"> Gender </label>
-                                    <select class="form-select" formControlName="empGender">
-                                        <option [value]="null" disabled>Select Gender</option>
-                                        <option value="Male">Male</option>
-                                        <option value="Female">Female</option>
-                                    </select>
-                                </div>
-                                <div class="col-md-4">
-                                    <label class="form-label"> Date of Birth </label>
-                                    <input class="form-control" type="date" formControlName="empDOB" />
-                                </div>
-                                <div class="col-md-4">
-                                    <label class="form-label"> Mobile No. </label>
-                                    <input
-                                        class="form-control"
-                                        type="text"
-                                        maxLength="10"
-                                        formControlName="empContactNo"
-                                    />
-                                </div>
-                            </div>
-
-                            <div class="row mb-4">
-                                <div class="col-md-4">
-                                    <label class="form-label"> Aadhaar Card No. </label>
-                                    <input
-                                        class="form-control"
-                                        type="number"
-                                        maxLength="12"
-                                        formControlName="empAadharNo"
-                                    />
-                                </div>
-                                <div class="col-md-4">
-                                    <label class="form-label"> Pan Card No. </label>
-                                    <input class="form-control" type="text" maxLength="10" formControlName="empPANNo" />
-                                </div>
-                                <div class="col-md-4">
-                                    <label class="form-label"> Marital Status </label>
-                                    <select class="form-select" formControlName="empMartialStatus">
-                                        <option [value]="null" selected disabled>Select</option>
-                                        <option value="Married">Married</option>
-                                        <option value="Unmarried">Unmarried</option>
-                                    </select>
-                                </div>
-                            </div>
-
-                            <div class="row mb-4">
-                                <div class="col-md-4">
-                                    <label class="form-label"> Education/Qualification </label>
-                                    <input class="form-control" type="text" formControlName="qualification" />
-                                </div>
-                                <div class="col-md-4">
-                                    <label class="form-label"> PF/UAN No. </label>
-                                    <input class="form-control" type="text" formControlName="empPFNo" />
-                                </div>
-                                <div class="col-md-4">
-                                    <label class="form-label"> ESIC No. </label>
-                                    <input class="form-control" type="text" formControlName="empESICNo" />
-                                </div>
-                            </div>
-                            <div class="row mb-4">
-                                <div class="col-md-4">
-                                    <label class="form-label">
-                                        E-mail ID [Company] <span class="text-danger">*</span>
-                                    </label>
-                                    <input class="form-control" type="email" formControlName="empEmailCompany" />
-                                    <validation-messages class="error-left" [control]="f['empEmailCompany']">
-                                    </validation-messages>
-                                </div>
-                                <div class="col-md-4">
-                                    <label class="form-label"> E-mail ID [Personal - 1] </label>
-                                    <input class="form-control" type="email" formControlName="empEmailPersonal1" />
-                                </div>
-                                <div class="col-md-4">
-                                    <label class="form-label"> E-mail ID [Personal - 2] </label>
-                                    <input class="form-control" type="email" formControlName="empEmailPersonal2" />
-                                </div>
-                            </div>
-                            <div class="d-flex justify-content-center mt-5">
-                                <div class="d-grid col-md-auto me-5">
-                                    <button
-                                        type="button"
-                                        class="btn back-arrow"
-                                        (click)="nav.select(active + 6)"
-                                    ></button>
-                                </div>
-                                <div class="d-grid col-md-auto me-5">
-                                    <button
-                                        type="button"
-                                        class="btn next-arrow"
-                                        (click)="nav.select(active + 1)"
-                                    ></button>
-                                </div>
-                            </div>
-                        </div>
-                    </ng-template>
-                </li>
-                <li [ngbNavItem]="2" class="col d-grid px-2">
-                    <a ngbNavLink>Family Info</a>
-                    <ng-template ngbNavContent>
-                        <div id="familyinfo">
-                            <div class="row mb-4">
-                                <div class="col-md-4">
-                                    <label class="form-label"> Father's Full Name </label>
-                                    <input class="form-control" type="text" formControlName="empFatherFullName" />
-                                </div>
-                                <div class="col-md-4">
-                                    <label class="form-label"> Father's Date of Birth </label>
-                                    <input class="form-control" type="date" formControlName="empFatherDOB" />
-                                </div>
-                                <div class="col-md-4">
-                                    <label class="form-label"> Father's Occupation </label>
-                                    <input class="form-control" type="text" formControlName="empFatherOccupation" />
-                                </div>
-                            </div>
-                            <div class="row mb-4">
-                                <div class="col-md-4">
-                                    <label class="form-label"> Mother's Full Name </label>
-                                    <input class="form-control" type="text" formControlName="empMotherFullName" />
-                                </div>
-                                <div class="col-md-4">
-                                    <label class="form-label"> Mother's Date of Birth </label>
-                                    <input class="form-control" type="date" formControlName="empMotherDOB" />
-                                </div>
-                                <div class="col-md-4">
-                                    <label class="form-label"> Mother's Occupation </label>
-                                    <input class="form-control" type="text" formControlName="empMotherOccupation" />
-                                </div>
-                            </div>
-                            <div class="row mb-4">
-                                <div class="col-md-4">
-                                    <label class="form-label"> Spouse's Full Name </label>
-                                    <input class="form-control" type="text" formControlName="empSpouseFullName" />
-                                </div>
-                                <div class="col-md-4">
-                                    <label class="form-label"> Spouse's Date of Birth </label>
-                                    <input class="form-control" type="date" formControlName="empSpouseDOB" />
-                                </div>
-                                <div class="col-md-4">
-                                    <label class="form-label"> Spouse's Occupation </label>
-                                    <input class="form-control" type="text" formControlName="empSpouseOccupation" />
-                                </div>
-                            </div>
-                            <div class="row mb-4">
-                                <div class="col-md-4">
-                                    <label class="form-label"> No. of Dependent Children </label>
-                                    <input class="form-control" type="number" formControlName="noOfDependentChildren" />
-                                </div>
-                                <div class="col-md-4">
-                                    <label class="form-label ls-tight text-nowrap">
-                                        Full name of dependent child [1]
-                                    </label>
-                                    <input
-                                        class="form-control"
-                                        type="text"
-                                        formControlName="fullNameOfDependentChild1"
-                                    />
-                                </div>
-                                <div class="col-md-4">
-                                    <label class="form-label ls-tight text-nowrap">
-                                        Full name of dependent child [2]
-                                    </label>
-                                    <input
-                                        class="form-control"
-                                        type="text"
-                                        formControlName="fullNameOfDependentChild2"
-                                    />
-                                </div>
-                            </div>
-                            <div class="d-flex justify-content-center mt-5">
-                                <div class="d-grid col-md-auto me-5">
-                                    <button
-                                        type="button"
-                                        class="btn back-arrow"
-                                        (click)="nav.select(active - 1)"
-                                    ></button>
-                                </div>
-                                <div class="d-grid col-md-auto me-5">
-                                    <button
-                                        type="button"
-                                        class="btn next-arrow"
-                                        (click)="nav.select(active + 1)"
-                                    ></button>
-                                </div>
-                            </div>
-                        </div>
-                    </ng-template>
-                </li>
-                <li [ngbNavItem]="3" class="col d-grid px-2">
-                    <a ngbNavLink>Address</a>
-                    <ng-template ngbNavContent>
-                        <div id="addressinfo">
-                            <div class="row">
-                                <div class="col-md-6">
-                                    <h4 class="text-primary">Permanent Address</h4>
-                                </div>
-                                <div class="col-md-6">
-                                    <div class="row">
-                                        <div class="col-md-10 offset-2 d-flex justify-content-between">
-                                            <h4 class="text-primary">Present Address</h4>
-
-                                            <h4 class="text-primary pointer" (click)="copyAddress()">Copy Address ▼</h4>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="row mb-4 border-bottom border-top border-2 mx-1">
-                                <div class="col-md-6 border-end border-2 ps-0" formGroupName="empPermanentAddress">
-                                    <div class="row my-4">
-                                        <div class="col-md-10">
-                                            <label class="form-label"> Address Line 1 </label>
-                                            <input class="form-control" formControlName="line1" />
-                                        </div>
-                                    </div>
-                                    <div class="row mb-4">
-                                        <div class="col-md-10">
-                                            <label class="form-label"> Address Line 2 </label>
-                                            <input class="form-control" type="text" formControlName="line2" />
-                                        </div>
-                                    </div>
-                                    <div class="row mb-4">
-                                        <div class="col-md-10">
-                                            <label class="form-label"> Address Line 3 </label>
-                                            <input class="form-control" type="text" formControlName="line3" />
-                                        </div>
-                                    </div>
-                                    <div class="row mb-4">
-                                        <div class="col-md-5">
-                                            <label class="form-label"> City/District </label>
-                                            <input class="form-control" type="text" formControlName="city" />
-                                        </div>
-
-                                        <div class="col-md-5">
-                                            <label class="form-label"> Pincode </label>
-                                            <input class="form-control" type="number" formControlName="pinCode" />
-                                        </div>
-                                    </div>
-                                    <div class="row mb-4">
-                                        <div class="col-md-5">
-                                            <label class="form-label">
-                                                State/Province <span class="text-danger">*</span>
-                                            </label>
-                                            <select class="form-select" formControlName="state">
-                                                <option value="" selected disabled>Select State</option>
-                                                <option *ngFor="let s of statesOfIndia" [value]="s">
-                                                    {{ s }}
-                                                </option>
-                                            </select>
-                                        </div>
-                                        <div class="col-md-5">
-                                            <label class="form-label"> Country </label>
-                                            <input class="form-control" type="text" formControlName="country" />
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-md-6 pe-0" formGroupName="empPresentAddress">
-                                    <div class="">
-                                        <div class="row my-4">
-                                            <div class="col-md-10 offset-md-2">
-                                                <label class="form-label"> Address Line 1 </label>
-                                                <input class="form-control" type="text" formControlName="line1" />
-                                            </div>
-                                        </div>
-                                        <div class="row mb-4">
-                                            <div class="col-md-10 offset-md-2">
-                                                <label class="form-label"> Address Line 2 </label>
-                                                <input class="form-control" type="text" formControlName="line2" />
-                                            </div>
-                                        </div>
-                                        <div class="row mb-4">
-                                            <div class="col-md-10 offset-md-2">
-                                                <label class="form-label"> Address Line 3 </label>
-                                                <input class="form-control" type="text" formControlName="line3" />
-                                            </div>
-                                        </div>
-                                        <div class="row mb-4">
-                                            <div class="col-md-5 offset-md-2">
-                                                <label class="form-label"> City/District </label>
-                                                <input class="form-control" type="text" formControlName="city" />
-                                            </div>
-                                            <div class="col-md-5">
-                                                <label class="form-label"> Pincode </label>
-                                                <input class="form-control" type="number" formControlName="pinCode" />
-                                            </div>
-                                        </div>
-                                        <div class="row mb-4">
-                                            <div class="col-md-5 offset-md-2">
-                                                <label class="form-label">
-                                                    State/Province <span class="text-danger">*</span>
-                                                </label>
-                                                <select class="form-select" formControlName="state">
-                                                    <option value="" selected disabled>Select State</option>
-                                                    <option *ngFor="let s of statesOfIndia" [value]="s">
-                                                        {{ s }}
-                                                    </option>
-                                                </select>
-                                            </div>
-                                            <div class="col-md-5">
-                                                <label class="form-label"> Country </label>
-                                                <input class="form-control" type="text" formControlName="country" />
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="d-flex justify-content-center mt-5">
-                                <div class="d-grid col-md-auto me-5">
-                                    <button
-                                        type="button"
-                                        class="btn back-arrow"
-                                        (click)="nav.select(active - 1)"
-                                    ></button>
-                                </div>
-                                <div class="d-grid col-md-auto me-5">
-                                    <button
-                                        type="button"
-                                        class="btn next-arrow"
-                                        (click)="nav.select(active + 1)"
-                                    ></button>
-                                </div>
-                            </div>
-                        </div>
-                    </ng-template>
-                </li>
-                <li [ngbNavItem]="4" class="col d-grid px-2">
-                    <a ngbNavLink>Joining Details </a>
-                    <ng-template ngbNavContent>
-                        <div id="joininginfo">
-                            <div class="row mb-4">
-                                <div class="col-md-4">
-                                    <label class="form-label"> Joining Date </label>
-                                    <input class="form-control" type="date" formControlName="empJoiningDate" />
-                                    <validation-messages class="error-left" [control]="f['empJoiningDate']">
-                                    </validation-messages>
-                                </div>
-                                <div class="col-md-4">
-                                    <label class="form-label"> Joining Location </label>
-
-                                    <select class="form-select" type="text" formControlName="empJoiningLocation">
-                                        <option [value]="null" selected disabled>Select Location</option>
-                                        <option [value]="j.value" *ngFor="let j of masterData.joiningLocationOptions">
-                                            {{ j.label }}
-                                        </option>
-                                    </select>
-                                </div>
-                                <div class="col-md-4">
-                                    <label class="form-label"> Cadre </label>
-
-                                    <select class="form-select" formControlName="empCadre">
-                                        <option [value]="null" selected disabled>Select Cadre</option>
-                                        <option [value]="item.parameterName" *ngFor="let item of masterData.empCadresOptions">
-                                            {{ item.parameterLabel }}
-                                        </option>
-                                    </select>
-                                </div>
-                            </div>
-                            <div class="row mb-4">
-                                <div class="col-md-4">
-                                    <label class="form-label"> Designation </label>
-                                    <select class="form-select" formControlName="empDesignation">
-                                        <option [value]="null" selected disabled>Select Designation</option>
-                                        <option [value]="item.parameterName" *ngFor="let item of masterData.empDesignationsOptions">
-                                            {{ item.parameterLabel }}
-                                        </option>
-                                    </select>
-                                    <validation-messages class="error-left" [control]="f['empDesignation']">
-                                    </validation-messages>
-                                </div>
-                                <div class="col-md-4">
-                                    <label class="form-label"> Department </label>
-                                    <select class="form-select" formControlName="empDepartment">
-                                        <option [value]="null" selected disabled>Select Department</option>
-                                        <option [value]="item.departmentName" *ngFor="let item of masterData.empDepartmentsOptions">
-                                            {{ item.departmentName }}
-                                        </option>
-                                    </select>
-                                    <validation-messages class="error-left" [control]="f['empDepartment']">
-                                    </validation-messages>
-                                </div>
-                                <div class="col-md-4">
-                                    <label class="form-label"> Reporting Officer [RO] </label>
-                                    <ng-select
-                                        [items]="masterData.employeesOptions"
-                                        bindLabel="label"
-                                        bindValue="value"
-                                        formControlName="empReportTo"
-                                    >
-                                    </ng-select>
-                                    <validation-messages class="error-left" [control]="f['empReportTo']">
-                                    </validation-messages>
-                                </div>
-                            </div>
-                            <div class="row mb-4">
-                                <div class="col-md-4">
-                                    <label class="form-label"> Employment Type </label>
-                                    <select class="form-select" formControlName="empType">
-                                        <option [value]="null" selected disabled>Select Employment Type</option>
-                                        <option [value]="d.parameterName" *ngFor="let d of masterData.empTypesOptions">
-                                            {{ d.parameterLabel }}
-                                        </option>
-                                    </select>
-                                    <validation-messages class="error-left" [control]="f['empCode']">
-                                    </validation-messages>
-                                </div>
-                                <div class="col-md-4">
-                                    <label class="form-label"> Grade </label>
-                                    <select class="form-select" formControlName="empGrade">
-                                        <option [value]="null" selected disabled>Select Grade</option>
-                                        <option [value]="item.parameterName" *ngFor="let item of masterData.empGradesOptions">
-                                            {{ item.parameterLabel }}
-                                        </option>
-                                    </select>
-                                    <validation-messages class="error-left" [control]="f['empCode']">
-                                    </validation-messages>
-                                </div>
-                                <div class="col-md-4">
-                                    <label class="form-label"> OT Applicability </label>
-                                    <select class="form-select" formControlName="empOTApplicability">
-                                        <option [value]="null" disabled>Select OT</option>
-                                        <option value="Yes">Yes</option>
-                                        <option value="No">No</option>
-                                    </select>
-                                </div>
-                            </div>
-
-                            <div class="d-flex justify-content-center mt-5">
-                                <div class="d-grid col-md-auto me-5">
-                                    <button
-                                        type="button"
-                                        class="btn back-arrow"
-                                        (click)="nav.select(active - 1)"
-                                    ></button>
-                                </div>
-                                <div class="d-grid col-md-auto me-5">
-                                    <button
-                                        type="button"
-                                        class="btn next-arrow"
-                                        (click)="nav.select(active + 1)"
-                                    ></button>
-                                </div>
-                            </div>
-                        </div>
-                    </ng-template>
-                </li>
-                <li [ngbNavItem]="5" class="col d-grid px-2">
-                    <a ngbNavLink>Credentials </a>
-                    <ng-template ngbNavContent>
-                        <div id="credentials">
-                            <div class="row mb-4">
-                                <div class="col-md-6">
-                                    <app-file-upload
-                                        [fileName]="f['empPhoto'].value"
-                                        [url]="f['empPhotoUrl'].value"
-                                        [label]="'Employee Photo'"
-                                        [(file)]="empPhotoFile"
-                                    ></app-file-upload>
-                                </div>
-                                <div class="col-md-6">
-                                    <app-file-upload
-                                        [fileName]="f['empAadharCard'].value"
-                                        [url]="f['empAadharCardUrl'].value"
-                                        [label]="'Aadhaar Card'"
-                                        [(file)]="empAadharCardFile"
-                                    ></app-file-upload>
-                                </div>
-                            </div>
-                            <div class="row mb-4">
-                                <div class="col-md-6">
-                                    <app-file-upload
-                                        [fileName]="f['empResume'].value"
-                                        [url]="f['empResumeUrl'].value"
-                                        [label]="'Resume'"
-                                        [(file)]="empResumeFile"
-                                    ></app-file-upload>
-                                </div>
-                                <div class="col-md-6">
-                                    <app-file-upload
-                                        [fileName]="f['empPanCard'].value"
-                                        [url]="f['empPanCardUrl'].value"
-                                        [label]="'Pan Card'"
-                                        [(file)]="empPanCardFile"
-                                    ></app-file-upload>
-                                </div>
-                            </div>
-                            <div class="row mb-4">
-                                <div class="col-md-6">
-                                    <app-file-upload
-                                        [fileName]="f['empExpCertificate'].value"
-                                        [url]="f['empExpCertificateUrl'].value"
-                                        [label]="'Experience Certificate'"
-                                        [(file)]="empExpCertificateFile"
-                                    ></app-file-upload>
-                                </div>
-                                <div class="col-md-6">
-                                    <app-file-upload
-                                        [fileName]="f['empRelievingLetter'].value"
-                                        [url]="f['empRelievingLetterUrl'].value"
-                                        [label]="'Releaving Certificate'"
-                                        [(file)]="empRelievingLetterFile"
-                                    ></app-file-upload>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="d-flex justify-content-center mt-5">
-                            <div class="d-grid col-md-auto me-5">
-                                <button type="button" class="btn back-arrow" (click)="nav.select(active - 1)"></button>
-                            </div>
-                            <div class="d-grid col-md-auto me-5">
-                                <button type="button" class="btn next-arrow" (click)="nav.select(active + 1)"></button>
-                            </div>
-                        </div>
-                    </ng-template>
-                </li>
-                <li [ngbNavItem]="6" class="col d-grid px-2">
-                    <a ngbNavLink>Bank Details </a>
-                    <ng-template ngbNavContent>
-                        <div id="bankdetails">
-                            <div class="row mb-4">
-                                <div class="col-md-4">
-                                    <label class="form-label"> Beneficiary Name </label>
-                                    <input class="form-control" type="text" formControlName="empBefName" />
-                                </div>
-                                <div class="col-md-4">
-                                    <label class="form-label"> Bank Name </label>
-                                    <input class="form-control" type="text" formControlName="empBankName" />
-                                </div>
-                                <div class="col-md-4">
-                                    <label class="form-label"> Branch </label>
-                                    <div>
-                                        <input class="form-control" type="text" formControlName="empBankBranch" />
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="row mb-4">
-                                <div class="col-md-4">
-                                    <label class="form-label"> Account Type </label>
-
-                                    <select class="form-select" formControlName="empAccType">
-                                        <option [value]="null" selected disabled>Select</option>
-                                        <option [value]="'Current'">Current</option>
-                                        <option [value]="'Saving'">Saving</option>
-                                    </select>
-                                </div>
-                                <div class="col-md-4">
-                                    <label class="form-label"> Account No. </label>
-                                    <input class="form-control" type="number" formControlName="empAccountNumber" />
-                                </div>
-                                <div class="col-md-4">
-                                    <label class="form-label"> IFS Code </label>
-                                    <input class="form-control" type="text" formControlName="empBankIFSCCode" />
-                                </div>
-                            </div>
-                            <div class="d-flex justify-content-center mt-5">
-                                <div class="d-grid col-md-auto me-5">
-                                    <button
-                                        type="button"
-                                        class="btn back-arrow"
-                                        (click)="nav.select(active - 1)"
-                                    ></button>
-                                </div>
-                                <div class="d-grid col-md-auto me-5">
-                                    <button
-                                        type="button"
-                                        class="btn next-arrow"
-                                        (click)="nav.select(active + 1)"
-                                    ></button>
-                                </div>
-                            </div>
-                        </div>
-                    </ng-template>
-                </li>
-                <li [ngbNavItem]="7" class="col d-grid ps-2">
-                    <a ngbNavLink>Status </a>
-                    <ng-template ngbNavContent>
-                        <div id="empstatus">
-                            <div class="row mb-4 justify-content-center">
-                                <div class="col-md-3">
-                                    <label class="form-label"> Employee Status </label>
-
-                                    <div class="d-flex">
-                                        <select class="statusSelectBorder form-select" formControlName="empStatus">
-                                            <option [value]="null" selected disabled>Select Status</option>
-                                            <option [value]="'A'">Active</option>
-                                            <option [value]="'I'">Inactive</option>
-                                        </select>
-                                        <span class="input-group-text statusSpanHeight">
-                                            <div *ngIf="form.value['empStatus'] == 'A'" class="statusActive"></div>
-                                            <div *ngIf="form.value['empStatus'] == 'I'" class="statusInActive"></div>
-                                        </span>
-                                    </div>
-                                </div>
-
-                                <div *ngIf="f['empStatus'].value == 'I'" class="row my-4">
-                                    <div class="col-md-4">
-                                        <label class="form-label"> Exit Date </label>
-                                        <input
-                                            class="form-control"
-                                            type="date"
-                                            formControlName="empDateOfResignation"
-                                        />
-                                    </div>
-                                    <div class="col-md-8">
-                                        <label class="form-label"> Reason Of Leaving </label>
-                                        <input class="form-control" type="text" formControlName="reasonOfLeaving" />
-                                    </div>
-                                </div>
-                                <div class="w-100"></div>
-                            </div>
-                            <div class="d-flex justify-content-center mt-4">
-                                <div *ngIf="action !== 'view'" class="d-grid col-1 mx-auto mb-4 pt-4">
-                                    <button
-                                        class="btn btn-primary px-3"
-                                        type="button"
-                                        (click)="submit()"
-                                        [ngClass]="{'d-none': action == 'View'}"
-                                    >
-                                        Save
-                                    </button>
-                                </div>
-                            </div>
-                            <div class="d-flex justify-content-center mt-4">
-                                <div class="d-grid col-md-auto me-5">
-                                    <button
-                                        type="button"
-                                        class="btn back-arrow"
-                                        (click)="nav.select(active - 1)"
-                                    ></button>
-                                </div>
-                                <div class="d-grid col-md-auto me-5">
-                                    <button
-                                        type="button"
-                                        class="btn next-arrow"
-                                        (click)="nav.select(active - 6)"
-                                    ></button>
-                                </div>
-                            </div>
-                        </div>
-                    </ng-template>
-                </li>
-            </ul>
-
-            <div [ngbNavOutlet]="nav" class="mt-2"></div>
+        <div class="row mb-4">
+            <div class="col-6">
+                <button class="plusIconSvg btn btn-primary me-1"></button>
+                <button class="btn btn-primary me-5 px-4" type="button" (click)="openAdditionalInfoModal()">
+                    Additional Info
+                </button>
+                <!-- </div> -->
+                <!-- <div class="col-3"> -->
+                <button class="plusIconSvg btn btn-primary me-1"></button>
+                <button class="btn btn-primary me-5 px-4" type="button" (click)="openJoiningDetailsInfoModal()">
+                    Joining Details
+                </button>
+            </div>
+            <div *ngIf="!['view'].includes(action)" class="col-6 text-end">
+                <button class="btn btn-primary px-5 me-3" type="button" (click)="reset()">Reset</button>
+                <button
+                    class="btn btn-primary px-5"
+                    type="button"
+                    (click)="submit()"
+                    [ngClass]="{'d-none': action == 'View'}"
+                >
+                    Save
+                </button>
+            </div>
         </div>
     </div>
 </form>

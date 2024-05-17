@@ -36,6 +36,7 @@ const {filteredSalesProductMasterList} = require("../../../../models/sales/repos
 const {getAllModuleMaster} = require("../../settings/module-master/module-master");
 const CompanyRepository = require("../../../../models/settings/repository/companyRepository");
 const {getHSNByCode} = require("../../purchase/HSN/HSN");
+const validationJson = require("../../../../mocks/excelUploadColumn/validation.json");
 const ObjectId = mongoose.Types.ObjectId;
 
 exports.getAll = asyncHandler(async (req, res) => {
@@ -221,7 +222,7 @@ exports.update = asyncHandler(async (req, res) => {
 // @desc    deleteById SKU Record
 exports.deleteById = asyncHandler(async (req, res) => {
     try {
-        const deleteItem = await SKUMasterRepository.deleteDoc(req.params.id);
+        const deleteItem = await SKUMasterRepository.deleteDoc({_id:req.params.id});
         if (deleteItem) {
             return res.success({
                 message: MESSAGES.apiSuccessStrings.DELETED("SKU")
@@ -261,7 +262,7 @@ exports.getAllMasterData = asyncHandler(async (req, res) => {
             getAllAttributesConfiguration("SKU"),
             getAllCheckedItemCategoriesList({
                 categoryStatus: OPTIONS.defaultStatus.ACTIVE,
-                BOM: true
+                stockPreparation: true
             }),
             CompanyRepository.getDocById(req.user.company, {companyType: 1}),
             getAllMapCategoryHSN(
@@ -740,7 +741,20 @@ exports.getAllInkDetailsForBOM = async (company, SKUId) => {
                     }
                 }
             },
-            {$project: {mergedDetails: {$concatArrays: ["$inkDetails", "$materialInfo"]}}},
+            {
+                $project: {
+                    mergedDetails: {
+                        $concatArrays: [
+                            {
+                                $sortArray: {input: "$materialInfo", sortBy: {itemCode: 1}}
+                            },
+                            {
+                                $sortArray: {input: "$inkDetails", sortBy: {colSeq: 1}}
+                            }
+                        ]
+                    }
+                }
+            },
             {
                 $unwind: "$mergedDetails"
             },
@@ -853,8 +867,7 @@ exports.getAllInkDetailsForBOM = async (company, SKUId) => {
                         ]
                     }
                 }
-            },
-            {$sort: {itemCode: 1}}
+            }
         ]);
         return rows;
     } catch (e) {
@@ -1160,7 +1173,7 @@ exports.checkSKUValidation = async (SKUData, column, company) => {
                     )
                 ) {
                     x.isValid = false;
-                    x.message = `${ele} is already exists`;
+                    x.message = `${x["SKUName"]} is already exists`;
                     break;
                 }
             }
@@ -1196,6 +1209,7 @@ exports.bulkInsertSKUByCSV = async (jsonData, {company, createdBy, updatedBy}) =
             for (const customer of customersOptions) {
                 if (ele.customerName.trim() == customer.label) {
                     ele.customer = customer.value.valueOf();
+                    ele.customerCurrency = customer.currency;
                 }
             }
             if (!ele.customerName || !ele.customer) {
@@ -1217,11 +1231,12 @@ exports.bulkInsertSKUByCSV = async (jsonData, {company, createdBy, updatedBy}) =
                 customerName,
                 customerPartNo,
                 customerPartDescription,
-                primaryUnit: rest.primaryUnit,
+                primaryUnit: rest?.primaryUnit,
+                secondaryUnit: rest?.secondaryUnit,
                 customerCurrency,
                 standardSellingRate
             };
-            rest.customerDetails = [details];
+            rest.customerInfo = [details];
             rest.company = company;
             rest.createdBy = createdBy;
             rest.updatedBy = updatedBy;

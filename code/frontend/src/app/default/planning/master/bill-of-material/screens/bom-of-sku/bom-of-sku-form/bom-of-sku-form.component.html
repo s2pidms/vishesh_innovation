@@ -47,9 +47,9 @@
                     <label class="form-label mb-2"> {{ "SKU Description" | labelTranslate }}</label>
                     <input type="text" class="form-control" formControlName="SKUDescription" readonly />
                 </div>
-                <div class="col-3 ps-4">
+                <div class="col-3 ps-3">
                     <div class="row">
-                        <div class="col-5 pe-4">
+                        <div class="col-5 ps-5 pe-2">
                             <label class="form-label mb-2"> UoM</label>
                             <input
                                 type="text"
@@ -59,14 +59,15 @@
                             />
                         </div>
                         <div class="col-7 ps-4">
-                            <label class="form-label mb-2"> Part Count <span class="text-danger">*</span></label>
+                            <label class="form-label mb-2"> Part Count (PC) <span class="text-danger">*</span></label>
                             <input
                                 type="number"
-                                class="form-control"
+                                class="form-control bg-white-smoke"
                                 formControlName="partCount"
                                 (input)="setPartCount()"
                                 min="0"
                                 oninput="this.value = !!this.value && Math.abs(this.value) >= 0 ? Math.abs(this.value) : 1"
+                                readonly
                             />
                         </div>
                     </div>
@@ -84,9 +85,9 @@
                         <th class="text-start" sortable="itemName" (sort)="onSort($event)">Item Name</th>
                         <th class="text-start" sortable="itemDescription" (sort)="onSort($event)">Item Description</th>
                         <th sortable="UOM" (sort)="onSort($event)">UoM</th>
-                        <th sortable="qtyPerSKUUnit" (sort)="onSort($event)">Qty/SKU Unit</th>
+                        <th sortable="qtyPerSKUUnit" (sort)="onSort($event)">Qty/Part Count</th>
                         <th sortable="wastePercentage" (sort)="onSort($event)">Waste %</th>
-                        <th sortable="partCount" (sort)="onSort($event)">Qty/Part Count</th>
+                        <th sortable="partCount" (sort)="onSort($event)">Total Qty/PC</th>
                         <th sortable="unitCost" (sort)="onSort($event)">Unit Cost</th>
                         <th sortable="itemCost" (sort)="onSort($event)">Item Cost</th>
                     </tr>
@@ -147,7 +148,7 @@
                                 />
                             </div>
                         </td>
-                        <td>{{ g.partCount | number : "1.5-5" }}</td>
+                        <td>{{ g.partCount | number : "1.3-3" }}</td>
                         <td>{{ g.unitCost }}</td>
                         <td>{{ g.itemCost | number : "1.2-2" }}</td>
                     </tr>
@@ -165,9 +166,9 @@
                             {{ "Item Description" | labelTranslate }}
                         </th>
                         <th sortable="UOM" (sort)="onSort($event)">UoM</th>
-                        <th sortable="qtyPerSKUUnit" (sort)="onSort($event)">Qty/SKU Unit</th>
+                        <th sortable="qtyPerSKUUnit" (sort)="onSort($event)">Qty/Part Count</th>
                         <th sortable="wastePercentage" (sort)="onSort($event)">Waste %</th>
-                        <th sortable="partCount" (sort)="onSort($event)">Qty/Part Count</th>
+                        <th sortable="partCount" (sort)="onSort($event)">Total Qty/PC</th>
                         <th sortable="unitCost" (sort)="onSort($event)">Unit Cost</th>
                         <th sortable="itemCost" (sort)="onSort($event)">{{ "Item Cost" | labelTranslate }}</th>
                     </tr>
@@ -203,7 +204,7 @@
                         <td>
                             <span>
                                 <div class="d-flex justify-content-between align-items-center px-2">
-                                    {{ g?.UOM | UOMUnitsMaster }}
+                                    {{ g.UOM | UOMUnitsMaster }}
 
                                     <span class="pointer d-flex align-items-center">
                                         <div (click)="setUnit(g)" *ngIf="g.secondaryUnit" class="unit-switch-rev"></div>
@@ -238,83 +239,158 @@
                                 />
                             </div>
                         </td>
-                        <td>{{ g.partCount | number : "1.5-5" }}</td>
+                        <td>{{ g.partCount | number : "1.3-3" }}</td>
                         <td>
                             {{ g.inkCostPerKg ? g.inkCostPerKg : (g.unitCost | number : "1.3-3") }}
                         </td>
-                        <td>{{ g.itemCost | number : "1.4-4" }}</td>
+                        <td>{{ g.itemCost | number : "1.3-3" }}</td>
                     </tr>
                 </tbody>
             </table>
         </div>
         <hr class="row line-border" />
         <div class="row">
-            <div class="col-4">
-                <div class="d-flex align-items-center">
-                    <div class="col-form-label text-nowrap">
-                        Total Material Cost
-                        <i class="fa fa-caret-right fs-4 mx-1"></i>
-                    </div>
-                    <div class="d-flex">
-                        <span class="input-group-text text-secondary combine-INR">
-                            {{ "INR" | companyCurrency }}
-                            <div class="vr ms-3"></div>
+            <div class="col-5 pe-0">
+                <div class="row mb-0">
+                    <div class="col-6 separate-row pe-0">
+                        <div class="d-flex align-items-center">
+                            <div class="col-form-label text-nowrap">Cost for PC</div>
+                            <div class="col-3 ps-3 pe-2">
+                                <input
+                                    class="form-control bg-white-smoke text-center"
+                                    type="number"
+                                    [(ngModel)]="materialCostForPC"
+                                    [ngModelOptions]="{standalone: true}"
+                                    readonly
+                                />
+                            </div>
+                            <div class="">
+                                <i class="fa fa-caret-right text-secondary fs-4 ms-1 me-2"></i>
+                            </div>
+                            <div class="d-flex">
+                                <span class="input-group-text text-secondary combine-INR bg-white-smoke">
+                                    {{ "INR" | companyCurrency }}
+                                    <div class="vr ms-3"></div>
+                                </span>
+                                <input
+                                    class="form-control border-start-0 bg-white-smoke ps-0"
+                                    type="number"
+                                    formControlName="totalMaterialCost"
+                                    readonly
+                                />
+                            </div>
+                        </div>
+                        <span *ngIf="+this.form.controls['partCount'].value > 1" class="set-position">
+                            <img src="./assets/new_icons/redstroke.svg" alt="" height="27" width="8" />
                         </span>
-                        <input
-                            class="form-control border-start-0"
-                            type="number"
-                            formControlName="totalMaterialCost"
-                            readonly
-                        />
+                    </div>
+                    <div class="col-6 ps-5 pe-0">
+                        <div *ngIf="+this.form.controls['partCount'].value > 1" class="d-flex align-items-center">
+                            <div class="col-form-label text-nowrap">Cost for PC</div>
+                            <div class="col-3 ps-3 pe-2">
+                                <input
+                                    class="form-control bg-white-smoke text-center"
+                                    type="number"
+                                    [value]="1"
+                                    readonly
+                                />
+                            </div>
+                            <div class="">
+                                <i class="fa fa-caret-right text-secondary fs-4 ms-1 me-2"></i>
+                            </div>
+                            <div class="d-flex">
+                                <span class="input-group-text text-secondary combine-INR bg-white-smoke">
+                                    {{ "INR" | companyCurrency }}
+                                    <div class="vr ms-3"></div>
+                                </span>
+                                <input
+                                    class="form-control border-start-0 bg-white-smoke ps-0"
+                                    type="number"
+                                    formControlName="materialCostForOnePC"
+                                    readonly
+                                />
+                            </div>
+                        </div>
+                        <div *ngIf="+this.form.controls['partCount'].value == 1" class="d-flex align-items-center">
+                            <span class="set-flex-status px-2"> Status </span>
+
+                            <select class="form-select statusSelectBorder" formControlName="status">
+                                <option [value]="'null'" selected disabled>Select Status</option>
+                                <option [value]="'Active'">Active</option>
+                                <option [value]="'Inactive'">Inactive</option>
+                            </select>
+                            <span class="input-group-text statusSpanHeight">
+                                <div
+                                    class="statusActive"
+                                    *ngIf="form.value['status'] == 'Active'"
+                                    class="statusActive"
+                                ></div>
+                                <div class="statusInActive" *ngIf="form.value['status'] == 'Inactive'"></div>
+                            </span>
+                        </div>
                     </div>
                 </div>
             </div>
-            <div class="col-3">
-                <div class="d-flex align-items-center">
-                    <div class="col-md-auto text-nowrap">
-                        <button type="button" class="btn btn-primary px-3">Status</button>
+
+            <div class="col-7 ps-5">
+                <div class="row mb-0">
+                    <div class="col-4 ps-5 pe-0">
+                        <div *ngIf="+this.form.controls['partCount'].value > 1" class="d-flex align-items-center">
+                            <span class="set-flex-status px-2"> Status </span>
+
+                            <select class="form-select statusSelectBorder" formControlName="status">
+                                <option [value]="'null'" selected disabled>Select Status</option>
+                                <option [value]="'Active'">Active</option>
+                                <option [value]="'Inactive'">Inactive</option>
+                            </select>
+                            <span class="input-group-text statusSpanHeight">
+                                <div
+                                    class="statusActive"
+                                    *ngIf="form.value['status'] == 'Active'"
+                                    class="statusActive"
+                                ></div>
+                                <div class="statusInActive" *ngIf="form.value['status'] == 'Inactive'"></div>
+                            </span>
+                        </div>
                     </div>
 
-                    <select class="form-select statusSelectBorder" formControlName="status">
-                        <option [value]="'null'" selected disabled>Select Status</option>
-                        <option [value]="'Active'">Active</option>
-                        <option [value]="'Inactive'">Inactive</option>
-                    </select>
-                    <span class="input-group-text statusSpanHeight">
-                        <div class="statusActive" *ngIf="form.value['status'] == 'Active'" class="statusActive"></div>
-                        <div class="statusInActive" *ngIf="form.value['status'] == 'Inactive'"></div>
-                    </span>
-                </div>
-            </div>
-
-            <div class="col-md-auto ms-auto">
-                <div *ngIf="['create', 'edit', 'copy'].includes(action)" class="d-grid gap-2 d-md-block">
-                    <button type="button" class="btn btn-primary px-5 me-3" (click)="reset()">Reset</button>
-                    <button
-                        type="button"
-                        class="btn btn-primary px-4 me-1"
-                        [disabled]="!isESCPreview"
-                        (click)="ESCPreview()"
-                    >
-                        Esc
-                    </button>
-                    <button
-                        type="button"
-                        class="btn btn-primary px-4 me-3"
-                        [disabled]="isConditionPreview"
-                        (click)="preview()"
-                    >
-                        Preview
-                    </button>
-                    <button class="btn btn-primary px-5" type="button" [disabled]="!isPreview" (click)="submit()">
-                        Save
-                    </button>
-                </div>
-                <div *ngIf="['view'].includes(action)">
-                    <button class="btn btn-primary px-5" type="button" (click)="navigateTo()">Back</button>
-                </div>
-                <div *ngIf="['View BOM'].includes(action)">
-                    <button class="btn btn-primary px-5" type="button" (click)="backToRoutingMaster()">Back</button>
+                    <div class="col-8 text-end">
+                        <div *ngIf="['create', 'edit', 'copy'].includes(action)" class="d-grid gap-2 d-md-block">
+                            <button type="button" class="btn btn-primary px-5 me-3" (click)="reset()">Reset</button>
+                            <button
+                                type="button"
+                                class="btn btn-primary px-4 me-1"
+                                [disabled]="!isESCPreview"
+                                (click)="ESCPreview()"
+                            >
+                                Esc
+                            </button>
+                            <button
+                                type="button"
+                                class="btn btn-primary px-4 me-3"
+                                [disabled]="isConditionPreview"
+                                (click)="preview()"
+                            >
+                                Preview
+                            </button>
+                            <button
+                                class="btn btn-primary px-5"
+                                type="button"
+                                [disabled]="!isPreview"
+                                (click)="submit()"
+                            >
+                                Save
+                            </button>
+                        </div>
+                        <div *ngIf="['view'].includes(action)">
+                            <button class="btn btn-primary px-5" type="button" (click)="navigateTo()">Back</button>
+                        </div>
+                        <div *ngIf="['View BOM'].includes(action)">
+                            <button class="btn btn-primary px-5" type="button" (click)="backToRoutingMaster()">
+                                Back
+                            </button>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>

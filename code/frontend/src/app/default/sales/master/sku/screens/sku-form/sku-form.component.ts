@@ -464,27 +464,27 @@ export class SKUFormComponent implements OnInit, CanComponentDeactivate {
         });
     }
 
-    openCustomerDetailsModel() {
-        const modalRef = this.modalService.open(AddMultipleCustomerSkuComponent, {
-            centered: true,
-            size: "xl",
-            backdrop: "static",
-            keyboard: false,
-            windowClass: "modelPage"
-        });
-        modalRef.componentInstance.action = this.action;
-        modalRef.componentInstance.customerInfoArray = this.customerInfoArray;
-        modalRef.componentInstance.cusInfo = this.masterData?.customersOptions;
-        modalRef.result.then(
-            (success: any) => {
-                if (["create", "edit", "copy"].includes(this.action)) {
-                    this.customerInfoArray = success;
-                    this.unsavedChanges = true;
-                }
-            },
-            (reason: any) => {}
-        );
-    }
+    // openCustomerDetailsModel() {
+    //     const modalRef = this.modalService.open(AddMultipleCustomerSkuComponent, {
+    //         centered: true,
+    //         size: "xl",
+    //         backdrop: "static",
+    //         keyboard: false,
+    //         windowClass: "modelPage"
+    //     });
+    //     modalRef.componentInstance.action = this.action;
+    //     modalRef.componentInstance.customerInfoArray = this.customerInfoArray;
+    //     modalRef.componentInstance.cusInfo = this.masterData?.customersOptions;
+    //     modalRef.result.then(
+    //         (success: any) => {
+    //             if (["create", "edit", "copy"].includes(this.action)) {
+    //                 this.customerInfoArray = success;
+    //                 this.unsavedChanges = true;
+    //             }
+    //         },
+    //         (reason: any) => {}
+    //     );
+    // }
     openInjectionMoldingCustomerDetailsModel() {
         const modalRef = this.modalService.open(SKUCustomerInjectionMoldingComponent, {
             centered: true,
@@ -540,7 +540,7 @@ export class SKUFormComponent implements OnInit, CanComponentDeactivate {
         let data = this.dimensionsDetailsData.value;
         const modalRef = this.modalService.open(SkuAttributesComponent, {
             centered: true,
-            size: "xl",
+            // size: "xl",
             backdrop: "static",
             keyboard: false,
             windowClass: "modelPage"

@@ -1,5 +1,4 @@
 const mongoose = require("mongoose");
-const {findAppParameterValue} = require("../../../controllers/v1/settings/appParameter/appParameter");
 const Audit = require("../../../controllers/v1/settings/audit/audit");
 const {OPTIONS} = require("../../../helpers/global.options");
 const {BOM_OF_SKU: SCHEMA_CONST} = require("../../../mocks/schemasConstant/planningConstant");
@@ -183,12 +182,12 @@ const BoMOfSKUSchema = mongoose.Schema(
                 },
                 unitCost: {
                     type: Number,
-                    set: value => setTwoDecimal(value, 4),
+                    set: value => setTwoDecimal(value, 3),
                     required: false
                 },
                 itemCost: {
                     type: Number,
-                    set: value => setTwoDecimal(value),
+                    set: value => setTwoDecimal(value, 3),
                     required: false
                 },
                 BOM: {
@@ -198,6 +197,11 @@ const BoMOfSKUSchema = mongoose.Schema(
             }
         ],
         totalMaterialCost: {
+            type: Number,
+            set: value => setTwoDecimal(value),
+            required: false
+        },
+        materialCostForOnePC: {
             type: Number,
             set: value => setTwoDecimal(value),
             required: false

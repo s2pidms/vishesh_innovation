@@ -411,6 +411,8 @@ export class CompanyComponent implements OnInit {
             backdrop: "static",
             keyboard: false
         });
+        modalRef.componentInstance.logoFile = this.logoFile;
+        //  Make For other 7 images
 
         modalRef.componentInstance.templatesDetails = {
             logo: this.form.value.logo,

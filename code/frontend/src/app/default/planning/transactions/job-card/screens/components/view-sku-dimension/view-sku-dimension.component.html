@@ -1,0 +1,261 @@
+<div class="modelPage">
+    <div class="modal-header">
+        <div class="heading">SKU Dimensions {{ action | titlecase }}</div>
+        <div>
+            <button type="button" class="btn btn-cross btn-sm" aria-label="Close" (click)="this.activeModal.close()">
+                <i class="fa fa-times-circle" aria-hidden="true"></i>
+            </button>
+        </div>
+    </div>
+    <form [formGroup]="form">
+        <div class="container-fluid">
+            <div style="min-height: 30.8rem" class="row justify-content-center mt-5">
+                <div class="col-12 px-5">
+                    <div class="row mt-4" formGroupName="actualDimensions">
+                        <div class="col-2 pe-0 setDimensionsBtnMargin">
+                            <span class="bg-primary text-white pt-1 pb-2 px-4 fs-4">Actual Dimensions</span>
+                        </div>
+                        <div class="col-auto ps-0">
+                            <i class="fa fa-caret-right text-secondary"></i>
+                        </div>
+                        <div class="col-1 ps-0 setAclDmnsMargin">
+                            <label class="form-label">Unit<span class="text-danger">*</span></label>
+                            <select (change)="setActualUnits($event)" class="form-select" formControlName="unit">
+                                <option [value]="null" disabled>Select Unit</option>
+                                <option [value]="item" *ngFor="let item of DimensionsUnits">
+                                    {{ item }}
+                                </option>
+                            </select>
+                        </div>
+                        <div class="col-4">
+                            <div class="row">
+                                <div class="col-5 ps-2">
+                                    <div class="px-0 setAclDmnsMargin">
+                                        <label class="form-label">Width<span class="text-danger">*</span></label>
+
+                                        <div class="d-flex">
+                                            <input
+                                                type="number"
+                                                class="form-control border-end-0 ps-2 pe-0"
+                                                formControlName="width"
+                                                (input)="setActualArea()"
+                                            />
+                                            <span
+                                                class="input-group-text text-secondary combine-INR border border-1 border-start-0"
+                                            >
+                                                <div class="vr me-3"></div>
+                                                {{ actualUnits }}
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-5 ps-2">
+                                    <div class="pe-0 setAclDmnsMargin">
+                                        <label class="form-label">Length<span class="text-danger">*</span></label>
+
+                                        <div class="d-flex">
+                                            <input
+                                                type="number"
+                                                class="form-control border-end-0 ps-2 pe-0"
+                                                formControlName="length"
+                                                (input)="setActualArea()"
+                                            />
+                                            <span
+                                                class="input-group-text text-secondary combine-INR border border-1 border-start-0"
+                                            >
+                                                <div class="vr me-3"></div>
+                                                {{ actualUnits }}
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-2 px-0 setAclDmnsMargin">
+                                    <label class="form-label">Ups<span class="text-danger">*</span></label>
+                                    <input type="number" class="form-control ps-2 pe-0" formControlName="ups" />
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-4">
+                            <div class="row">
+                                <div class="col-6 separate-row">
+                                    <div class="px-0 setAclDmnsMargin">
+                                        <label class="form-label">Area<span class="text-danger"></span></label>
+
+                                        <div class="d-flex">
+                                            <input
+                                                type="number"
+                                                class="form-control border-end-0 ps-2 pe-0"
+                                                formControlName="area"
+                                                readonly
+                                            />
+                                            <span
+                                                class="input-group-text text-secondary combine-INR border border-1 border-start-0"
+                                            >
+                                                <div class="vr me-3"></div>
+                                                {{ actualUnits }}²
+                                            </span>
+                                        </div>
+                                    </div>
+                                    <div class="set-position fs-3">=</div>
+                                </div>
+                                <div class="col-6 pe-5">
+                                    <div class="px-0 setAclDmnsMargin">
+                                        <label class="form-label">Area<span class="text-danger"></span></label>
+
+                                        <div class="d-flex">
+                                            <input
+                                                type="number"
+                                                class="form-control border-end-0 ps-2 pe-0"
+                                                formControlName="mSqArea"
+                                                readonly
+                                            />
+                                            <span
+                                                class="input-group-text text-secondary combine-INR border border-1 border-start-0"
+                                            >
+                                                <div class="vr me-3"></div>
+                                                m²
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row setLayoutMargin" formGroupName="layoutDimensions">
+                        <div class="col-2 pe-0 setDimensionsBtnMargin">
+                            <span class="bg-primary text-white pt-1 pb-2 ps-3 pe-4 fs-4">Layout Dimensions</span>
+                        </div>
+                        <div class="col-auto ps-0">
+                            <i class="fa fa-caret-right text-secondary"></i>
+                        </div>
+                        <div class="col-1 ps-0 setAclDmnsMargin">
+                            <label class="form-label">Unit<span class="text-danger">*</span></label>
+                            <select (change)="setLayoutUnits($event)" class="form-select" formControlName="unit">
+                                <option [value]="null" disabled>Select Unit</option>
+                                <option [value]="item" *ngFor="let item of DimensionsUnits">
+                                    {{ item }}
+                                </option>
+                            </select>
+                        </div>
+                        <div class="col-4">
+                            <div class="row">
+                                <div class="col-5 ps-2">
+                                    <div class="px-0 setAclDmnsMargin">
+                                        <label class="form-label">Width<span class="text-danger">*</span></label>
+
+                                        <div class="d-flex">
+                                            <input
+                                                type="number"
+                                                class="form-control border-end-0 ps-2 pe-0"
+                                                formControlName="width"
+                                                (input)="setLayoutArea()"
+                                            />
+                                            <span
+                                                class="input-group-text text-secondary combine-INR border border-1 border-start-0"
+                                            >
+                                                <div class="vr me-3"></div>
+                                                {{ layoutUnits }}
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-5 ps-2">
+                                    <div class="pe-0 setAclDmnsMargin">
+                                        <label class="form-label">Length<span class="text-danger">*</span></label>
+
+                                        <div class="d-flex">
+                                            <input
+                                                type="number"
+                                                class="form-control border-end-0 ps-2 pe-0"
+                                                formControlName="length"
+                                                (input)="setLayoutArea()"
+                                            />
+                                            <span
+                                                class="input-group-text text-secondary combine-INR border border-1 border-start-0"
+                                            >
+                                                <div class="vr me-3"></div>
+                                                {{ layoutUnits }}
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-2 px-0 setAclDmnsMargin">
+                                    <label class="form-label">Ups<span class="text-danger">*</span></label>
+                                    <input
+                                        type="number"
+                                        class="form-control ps-2 pe-0"
+                                        formControlName="ups"
+                                        (input)="setLayoutArea()"
+                                    />
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-4">
+                            <div class="row seperate-waste">
+                                <div class="col-6 separate-row">
+                                    <div class="px-0 setAclDmnsMargin">
+                                        <label class="form-label">Area<span class="text-danger"></span></label>
+
+                                        <div class="d-flex">
+                                            <input
+                                                type="number"
+                                                class="form-control border-end-0 ps-2 pe-0"
+                                                formControlName="area"
+                                                readonly
+                                            />
+                                            <span
+                                                class="input-group-text text-secondary combine-INR border border-1 border-start-0"
+                                            >
+                                                <div class="vr me-3"></div>
+                                                {{ layoutUnits }}²
+                                            </span>
+                                        </div>
+                                    </div>
+                                    <div class="set-position fs-3">=</div>
+                                </div>
+                                <div class="col-6 pe-5">
+                                    <div class="px-0 setAclDmnsMargin">
+                                        <label class="form-label">Area<span class="text-danger"></span></label>
+
+                                        <div class="d-flex">
+                                            <input
+                                                type="number"
+                                                class="form-control border-end-0 ps-2 pe-0"
+                                                formControlName="mSqArea"
+                                                readonly
+                                            />
+                                            <span
+                                                class="input-group-text text-secondary combine-INR border border-1 border-start-0"
+                                            >
+                                                <div class="vr me-3"></div>
+                                                m²
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="set-waste col-3 pe-3">
+                                    <label class="form-label">Waste %</label>
+                                    <input
+                                        type="number"
+                                        class="form-control ps-2 pe-0"
+                                        formControlName="wastePercentage"
+                                        readonly
+                                    />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- <div class="row">
+                <div class="col px-0">
+                    <hr *ngIf="!['view', 'Converted to SKU'].includes(action)" class="line-border mt-5 mb-4" />
+                </div>
+            </div>
+            <div *ngIf="!['view', 'Converted to SKU'].includes(action)" class="text-center">
+                <button (click)="reset()" class="btn bg-primary px-5 mb-2 me-3" type="button">Reset</button>
+                <button class="btn bg-primary px-5 mb-2" type="button" (click)="dismissModel()">Save</button>
+            </div> -->
+        </div>
+    </form>
+</div>

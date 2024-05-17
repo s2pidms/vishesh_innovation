@@ -4,7 +4,7 @@ import {Subscription} from "rxjs";
 import {MenuService} from "@services/settings";
 import {NgbdSortableHeader, SortEvent} from "@directives/sortable.directive";
 import {LIST_DEFAULT_PERMISSION_ACTIONS} from "@mocks/constant";
-import {SpinnerService} from "@core/services";
+import {SpinnerService, ToastService} from "@core/services";
 import {MenuItem} from "@mocks/models/settings/masters";
 
 @Component({
@@ -28,6 +28,7 @@ export class MenuListComponent implements OnInit, OnDestroy {
         private menuService: MenuService,
         private activatedRoute: ActivatedRoute,
         private router: Router,
+        private toastService: ToastService,
         private spinner: SpinnerService
     ) {}
 
@@ -70,6 +71,14 @@ export class MenuListComponent implements OnInit, OnDestroy {
         });
     }
 
+    update(u: any) {
+        this.spinner.show();
+        u.isMenuActive = u.isMenuActive == true ? false : true;
+        this.menuService.update(u._id, {isMenuActive: u.isMenuActive}).subscribe(success => {
+            this.spinner.hide();
+            this.toastService.success(success.message);
+        });
+    }
     ngOnDestroy(): void {
         if (this.subscription) this.subscription.unsubscribe();
     }

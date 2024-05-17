@@ -21,7 +21,7 @@ export class GenerateExportEInvoiceFormComponent implements OnInit {
     salesInvoiceArr: any = [];
     shipmentNameOptions: any = [];
     itemDetailsArr: any = [];
-    supplierTypeArr: any = GENERATE_EXPORT_E_iNVOICE_SUP_TYPE;
+    supplyTypeArr: any = GENERATE_EXPORT_E_iNVOICE_SUP_TYPE;
     submitted = false;
     rolePermissionActions: any = LIST_DEFAULT_PERMISSION_ACTIONS;
     form: any = new UntypedFormGroup({

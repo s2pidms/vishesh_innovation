@@ -12,7 +12,7 @@ const {dateToAnyFormat} = require("../../../../helpers/dateTime");
 const {GROUP_PART_PRODUCTION} = require("../../../../mocks/schemasConstant/productionConstant");
 const {getAndSetAutoIncrementNo} = require("../../settings/autoIncrement/autoIncrement");
 const {getAllModuleMaster} = require("../../settings/module-master/module-master");
-const {filteredChildItemList} = require("../../../../models/planning/repository/childItemRepository");
+const ChildItemRepository = require("../../../../models/planning/repository/childItemRepository");
 const {
     getAllGroupPartProdAggregate
 } = require("../../../../models/production/repository/groupPartProductionRepository");
@@ -121,7 +121,7 @@ exports.update = asyncHandler(async (req, res) => {
 
 exports.getAllMasterData = asyncHandler(async (req, res) => {
     try {
-        let GrChildItemListOptions = await filteredChildItemList([
+        let GrChildItemListOptions = await ChildItemRepository.filteredChildItemList([
             {
                 $match: {
                     company: ObjectId(req.user.company),

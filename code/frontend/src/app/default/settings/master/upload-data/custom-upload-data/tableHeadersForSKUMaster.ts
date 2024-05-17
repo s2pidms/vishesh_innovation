@@ -1,13 +1,13 @@
 export default [
     {
-        value: "customerName",
-        label: "Customer Name",
+        value: "SKUName",
+        label: "SKU Name",
         class: "text-start"
     },
     {
-        value: "GSTIN",
-        label: "GSTIN",
-        class: ""
+        value: "customerName",
+        label: "Customer Name",
+        class: "text-start"
     },
     {
         value: "message",

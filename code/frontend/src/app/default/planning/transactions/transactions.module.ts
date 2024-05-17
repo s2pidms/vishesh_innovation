@@ -52,6 +52,20 @@ const routes: Routes = [
                 path: "gt_response",
                 loadChildren: () =>
                     import("./../../stores/transactions/gt-response/gt-response.module").then(m => m.GTResponseModule)
+            },
+            {
+                path: "material_requirement_planning",
+                loadChildren: () =>
+                    import("./material-requirement-planning/material-requirement-planning.module").then(
+                        m => m.MaterialRequirementPlanningModule
+                    )
+            },
+            {
+                path: "sps_inventory_reconciliation",
+                loadChildren: () =>
+                    import("./sps-inventory-reconciliation/sps-inventory-reconciliation.module").then(
+                        m => m.SpsInventoryReconciliationModule
+                    )
             }
         ]
     }

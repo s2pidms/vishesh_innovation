@@ -1,0 +1,81 @@
+<div class="modelPage">
+    <div class="container-fluid">
+        <div class="row mt-4">
+            <form [formGroup]="form">
+                <div class="form-body">
+                    <div style="min-height: 31.8rem">
+                        <div class="row mb-4 px-4">
+                            <div class="col-md-4">
+                                <label class="form-label"> Father's Full Name </label>
+                                <input class="form-control" type="text" formControlName="empFatherFullName" />
+                            </div>
+                            <div class="col-md-4">
+                                <label class="form-label"> Father's Date of Birth </label>
+                                <input class="form-control" type="date" formControlName="empFatherDOB" />
+                            </div>
+                            <div class="col-md-4">
+                                <label class="form-label"> Father's Occupation </label>
+                                <input class="form-control" type="text" formControlName="empFatherOccupation" />
+                            </div>
+                        </div>
+                        <div class="row mb-4 px-4">
+                            <div class="col-md-4">
+                                <label class="form-label"> Mother's Full Name </label>
+                                <input class="form-control" type="text" formControlName="empMotherFullName" />
+                            </div>
+                            <div class="col-md-4">
+                                <label class="form-label"> Mother's Date of Birth </label>
+                                <input class="form-control" type="date" formControlName="empMotherDOB" />
+                            </div>
+                            <div class="col-md-4">
+                                <label class="form-label"> Mother's Occupation </label>
+                                <input class="form-control" type="text" formControlName="empMotherOccupation" />
+                            </div>
+                        </div>
+                        <div class="row mb-4 px-4">
+                            <div class="col-md-4">
+                                <label class="form-label"> Spouse's Full Name </label>
+                                <input class="form-control" type="text" formControlName="empSpouseFullName" />
+                            </div>
+                            <div class="col-md-4">
+                                <label class="form-label"> Spouse's Date of Birth </label>
+                                <input class="form-control" type="date" formControlName="empSpouseDOB" />
+                            </div>
+                            <div class="col-md-4">
+                                <label class="form-label"> Spouse's Occupation </label>
+                                <input class="form-control" type="text" formControlName="empSpouseOccupation" />
+                            </div>
+                        </div>
+                        <div class="row mb-4 px-4">
+                            <div class="col-md-4">
+                                <label class="form-label"> No. of Dependent Children </label>
+                                <input class="form-control" type="number" formControlName="noOfDependentChildren" />
+                            </div>
+                            <div class="col-md-4">
+                                <label class="form-label ls-tight text-nowrap">
+                                    Full name of dependent child [1]
+                                </label>
+                                <input class="form-control" type="text" formControlName="fullNameOfDependentChild1" />
+                            </div>
+                            <div class="col-md-4">
+                                <label class="form-label ls-tight text-nowrap">
+                                    Full name of dependent child [2]
+                                </label>
+                                <input class="form-control" type="text" formControlName="fullNameOfDependentChild2" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+
+            <hr *ngIf="!['view'].includes(action)" class="line-border mt-5 px-5" />
+
+            <div class="text-center">
+                <div *ngIf="!['view'].includes(action)" class="text-center mt-2">
+                    <button (click)="reset()" class="btn bg-primary px-5 me-3" type="button">Reset</button>
+                    <button class="btn bg-primary px-5" type="button" (click)="dismissModel()">Save</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

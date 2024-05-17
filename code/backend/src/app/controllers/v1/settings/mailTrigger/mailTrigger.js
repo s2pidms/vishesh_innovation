@@ -65,15 +65,20 @@ exports.mailTriggerCycle = async () => {
         const mailTriggerList = await MailTriggerRepository.filteredMailTriggerList([
             {
                 $match: {isSent: false}
+            },
+            {
+                $limit: 10
             }
         ]);
-        await Promise.all(
-            mailTriggerList.map(async ele => {
+        for await (const ele of mailTriggerList) {
+            await MailTriggerRepository.findAndUpdateDoc({_id: ele._id}, {isSent: true});
+            if (ele.emailTo) {
                 let mailData = await mailTriggerFunctions[ele.collectionName](ele);
-                mailer.sendMail(mailData);
-                await MailTriggerRepository.findAndUpdateDoc({_id: ele._id}, {isSent: true});
-            })
-        );
+                if (!mailData.toEmailValue.includes(null)) {
+                    mailer.sendMail(mailData);
+                }
+            }
+        }
     } catch (error) {
         console.error("mailTriggerCycle", error);
     }

@@ -21,12 +21,11 @@ const BOMOfSKURepository = require("../../../../models/planning/repository/BOMRe
 const BOMOfDSKURepository = require("../../../../models/businessLeads/repository/BOMOfDSKURepository");
 const {filteredCustomerList} = require("../../../../models/sales/repository/customerRepository");
 const {filteredProspectList} = require("../../../../models/businessLeads/repository/prospectMasterRepository");
-const {
-    filteredGoodsIssuePPICToProductionList
-} = require("../../../../models/planning/repository/goodsIssuePPICToProductionRepository");
 const {getEndDateTime} = require("../../../../helpers/dateTime");
 const {getCompanyById} = require("../../settings/company/company");
 const {getAllSRbyCustomerIdForJobCard, updateSRQtyOnJCC} = require("../../businessLeads/sampleRequest/sampleRequest");
+const {filteredStockPreparationList} = require("../../../../models/planning/repository/stockPreparationRepository");
+const SKUMasterRepository = require("../../../../models/sales/repository/SKUMasterRepository");
 const ObjectId = mongoose.Types.ObjectId;
 
 exports.getAll = asyncHandler(async (req, res) => {
@@ -311,6 +310,19 @@ exports.getById = asyncHandler(async (req, res) => {
     }
 });
 
+exports.getDimBySKU = asyncHandler(async (req, res) => {
+    try {
+        let result = await SKUMasterRepository.getDocById(req.params.id, {
+            dimensionsDetails: 1
+        });
+        return res.success(result);
+    } catch (error) {
+        console.error("getDimBySKU Job Card", error);
+        const errors = MESSAGES.apiErrorStrings.SERVER_ERROR;
+        return res.serverError(errors);
+    }
+});
+
 exports.getByIdForPDF = asyncHandler(async (req, res) => {
     try {
         let rows = await JobCardRepository.filteredJobCardList([
@@ -504,7 +516,7 @@ exports.getByIdForPDF = asyncHandler(async (req, res) => {
             x.partCount = (+x.partCount * +jobCard.totalBatchQuantity).toFixed(2);
             return x;
         });
-        const PPICToProdGoodsList = await filteredGoodsIssuePPICToProductionList([
+        const PPICToProdGoodsList = await filteredStockPreparationList([
             {
                 $match: {
                     jobCard: ObjectId(req.params.id),
@@ -512,27 +524,21 @@ exports.getByIdForPDF = asyncHandler(async (req, res) => {
                 }
             },
             {
-                $addFields: {
-                    MRNDetails: {
-                        $map: {
-                            input: "$MRNDetails",
-                            as: "details",
-                            in: {
-                                MRNNumber: "$$details.MRNNumber",
-                                itemCode: "$$details.itemCode",
-                                itemName: "$$details.itemName",
-                                itemDescription: "$$details.itemDescription",
-                                UOM: "$$details.UOM",
-                                issueQty: "$$details.issueQty"
-                            }
-                        }
-                    }
+                $unwind: {
+                    path: "$stockPreparationDetails",
+                    preserveNullAndEmptyArrays: true
                 }
             },
             {
-                $unwind: {path: "$MRNDetails", preserveNullAndEmptyArrays: true}
-            },
-            {$replaceRoot: {newRoot: "$MRNDetails"}}
+                $project: {
+                    _id: 0,
+                    itemCode: "$stockPreparationDetails.itemCode",
+                    itemName: "$stockPreparationDetails.itemName",
+                    itemDescription: "$stockPreparationDetails.itemDescription",
+                    UOM: "$stockPreparationDetails.UOM",
+                    issueQty: "$stockPreparationDetails.GTQty"
+                }
+            }
         ]);
         return res.success({jobCard, MRPData, PPICToProdGoodsList});
     } catch (e) {

@@ -213,7 +213,7 @@
             <td colspan="12">
                 <div class="row justify-content-between">
                     <div class="col-8 h-100 p-0 pe-4">
-                        <h4 class="my-2">General Terms & Conditions</h4>
+                        <h4 class="">General Terms & Conditions</h4>
                         <table class="table">
                             <tr>
                                 <td>Payment Terms</td>
@@ -264,7 +264,7 @@
                         </table>
                     </div>
                     <div class="col-4 h-100 p-0">
-                        <h4 class="my-2">Tax Invoice Summary | Currency {{ tableData?.currency }}</h4>
+                        <h4 class="">Tax Invoice Summary | Currency {{ tableData?.currency }}</h4>
                         <table class="table">
                             <tr>
                                 <th>Total Amount</th>
@@ -321,44 +321,44 @@
                                 <th colspan="8">Bank Details</th>
                             </tr>
                             <tr>
-                                <td colspan="3">Beneficiary Name</td>
-                                <td colspan="5">
+                                <td class="padding-bank-details" colspan="3">Beneficiary Name</td>
+                                <td class="padding-bank-details" colspan="5">
                                     <p>{{ tableData?.company?.companyBefName }}</p>
                                 </td>
                             </tr>
                             <tr>
-                                <td colspan="3">Bank Name & Branch</td>
-                                <td colspan="5">
+                                <td class="padding-bank-details" colspan="3">Bank Name & Branch</td>
+                                <td class="padding-bank-details" colspan="5">
                                     {{ tableData?.company?.companyBankName }}
                                 </td>
                             </tr>
                             <tr>
-                                <td colspan="3">
+                                <td class="padding-bank-details" colspan="3">
                                     <p>Account No.</p>
                                 </td>
-                                <td colspan="5">
+                                <td class="padding-bank-details" colspan="5">
                                     {{ tableData?.company?.companyAccountNumber }}
                                 </td>
                             </tr>
                             <tr>
-                                <td colspan="3">
+                                <td class="padding-bank-details" colspan="3">
                                     <p>SWIFT Code</p>
                                 </td>
-                                <td colspan="5">{{ tableData?.company?.swiftCode }}</td>
+                                <td class="padding-bank-details" colspan="5">{{ tableData?.company?.swiftCode }}</td>
                             </tr>
                             <tr>
-                                <td colspan="3">
+                                <td class="padding-bank-details" colspan="3">
                                     <p>Intermediary Bank</p>
                                 </td>
-                                <td colspan="5">
+                                <td class="padding-bank-details" colspan="5">
                                     {{ tableData?.company?.intermediaryBank }}
                                 </td>
                             </tr>
                             <tr>
-                                <td colspan="3">
+                                <td class="padding-bank-details" colspan="3">
                                     <P>Intermediary Bank SWIFT Code</P>
                                 </td>
-                                <td colspan="5">
+                                <td class="padding-bank-details" colspan="5">
                                     {{ tableData?.company?.intermediaryBankSwiftCode }}
                                 </td>
                             </tr>

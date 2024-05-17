@@ -4,10 +4,7 @@ const {default: mongoose} = require("mongoose");
 const MenuItem = require("../menuItem/menuItem");
 const User = require("../user/user");
 const {getAllRoles} = require("../role/role");
-const {
-    getAllSubModuleManagementAttributes,
-    getAllFilteredCardsManagementAttributes
-} = require("../../../../models/settings/helpers/subModuleManagementHelper");
+const {getAllSubModuleManagementAttributes} = require("../../../../models/settings/helpers/subModuleManagementHelper");
 const ObjectId = mongoose.Types.ObjectId;
 const subModuleJson = require("../../../../utilities/module");
 const SubModuleRepository = require("../../../../models/settings/repository/subModuleRepository");
@@ -232,6 +229,7 @@ exports.getAllSubModuleList = async menuID => {
         console.error("getAllSubModuleList", e);
     }
 };
+
 exports.getAllSubModule = async module => {
     try {
         let rows = await SubModuleRepository.filteredSubModuleManagementList([
@@ -254,24 +252,90 @@ exports.getAllSubModule = async module => {
     }
 };
 
-// exports.getAllFilteredCardsManagement = asyncHandler(async (req, res) => {
-//     try {
-//         const {module = null, type = null} = req.query;
-//         let project = getAllFilteredCardsManagementAttributes();
-//         let pipeline = [
-//             {
-//                 $match: {
-//                     company: ObjectId(req.user.company),
-//                     ...(!!module && {module: ObjectId(module)}),
-//                     ...(!!type && {type: ObjectId(type)})
-//                 }
-//             }
-//         ];
-//         let rows = await SubModuleRepository.getAllPaginate({pipeline, project, queryParams: req.query});
-//         return res.success(rows);
-//     } catch (e) {
-//         console.error("getAll", e);
-//         const errors = MESSAGES.apiErrorStrings.SERVER_ERROR;
-//         return res.serverError(errors);
-//     }
-// });
+exports.getAllFilteredCardsManagement = asyncHandler(async (req, res) => {
+    try {
+        const {menuID = null, type = null} = req.query;
+        let project = {
+            order: 1,
+            isDisplay: 1,
+            title: 1,
+            displayName: 1,
+            disabled: 1,
+            items: 1
+        };
+        let pipeline = [
+            {
+                $match: {
+                    ...(!!menuID && {
+                        menuItemId: ObjectId(menuID)
+                    }),
+                    ...(!!type && {type: type})
+                }
+            }
+        ];
+        let rows = await SubModuleRepository.getAllPaginate({pipeline, project, queryParams: req.query});
+        return res.success(rows);
+    } catch (e) {
+        console.error("getAllFilteredCardsManagement", e);
+        const errors = MESSAGES.apiErrorStrings.SERVER_ERROR;
+        return res.serverError(errors);
+    }
+});
+
+exports.updateById = asyncHandler(async (req, res) => {
+    try {
+        let itemDetails = await SubModuleRepository.getDocById(req.params.id);
+        if (!itemDetails) {
+            const errors = MESSAGES.apiErrorStrings.INVALID_REQUEST;
+            return res.preconditionFailed(errors);
+        }
+        itemDetails.updatedBy = req.user.sub;
+        await SubModuleRepository.updateDoc(itemDetails, req.body);
+        return res.success({
+            message: MESSAGES.apiSuccessStrings.UPDATE("Sub Module")
+        });
+    } catch (e) {
+        const errors = MESSAGES.apiErrorStrings.SERVER_ERROR;
+        res.serverError(errors);
+        console.error(e);
+    }
+});
+
+exports.getCountsMenuItemWise = asyncHandler(async (req, res) => {
+    try {
+        const {menuID = null, type = null} = req.query;
+        let groupCounts = await SubModuleRepository.filteredSubModuleManagementList([
+            {
+                $match: {
+                    ...(!!menuID && {
+                        menuItemId: ObjectId(menuID)
+                    }),
+                    ...(!!type && {type: type})
+                }
+            },
+            {
+                $group: {
+                    _id: {
+                        menuItemId: "$menuItemId",
+                        type: "$type"
+                    },
+                    module: {$first: "$module"},
+                    uniqueTitle: {$addToSet: "$title"}
+                }
+            },
+            {
+                $project: {
+                    _id: 0,
+                    module: 1,
+                    type: "$_id.type",
+                    counts: {$size: "$uniqueTitle"}
+                }
+            }
+        ]);
+        return res.success(groupCounts);
+    } catch (e) {
+        const errors = MESSAGES.apiErrorStrings.SERVER_ERROR;
+        res.serverError(errors);
+        console.error(e);
+    }
+});

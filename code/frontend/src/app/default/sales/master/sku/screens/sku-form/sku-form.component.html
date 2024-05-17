@@ -170,19 +170,19 @@
                     class="btn btn-primary me-5 px-4"
                     type="button"
                 >
-                    Attributes
+                    More Info
                 </button>
                 <button class="plusIconSvg btn btn-primary me-1"></button>
-                <button
+                <!-- <button
                     *ngIf="masterData.companyType != companyTypeInjectionMolding"
                     (click)="openCustomerDetailsModel()"
                     class="btn btn-primary me-4 px-4"
                     type="button"
                 >
                     Customers
-                </button>
+                </button> -->
+                <!-- *ngIf="masterData.companyType == companyTypeInjectionMolding" -->
                 <button
-                    *ngIf="masterData.companyType == companyTypeInjectionMolding"
                     (click)="openInjectionMoldingCustomerDetailsModel()"
                     class="btn btn-primary me-4 px-4"
                     type="button"

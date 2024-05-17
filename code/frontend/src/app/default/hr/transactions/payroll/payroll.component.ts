@@ -7,6 +7,8 @@ import {PayrollService} from "@services/hr";
 import {Payroll} from "@interfaces/payroll";
 import {ExportExcelService, MenuTitleService, SpinnerService} from "@core/services";
 import {LIST_DEFAULT_PERMISSION_ACTIONS} from "@mocks/constant";
+import {NgbModal} from "@ng-bootstrap/ng-bootstrap";
+import {PayrollEditModelComponent} from "./components/payroll-edit-model/payroll-edit-model.component";
 @Component({
     selector: "app-payroll",
     templateUrl: "./payroll.component.html",
@@ -27,12 +29,13 @@ export class PayrollComponent implements OnInit {
     column: string = "createdAt";
     direction: number = -1;
     search: string = "";
-    tableData: Payroll[] = [];
+    tableData: Payroll[] | any = [];
     originTableData: Payroll[] = [];
     user: any = {};
     fromDate: string = "";
     toDate: string = "";
     payrollForMonthYear: any = null;
+    salaryPayrollOfMonth: any = null;
     submitted = false;
     date = new Date();
     flag: number = -1;
@@ -59,7 +62,8 @@ export class PayrollComponent implements OnInit {
         private spinner: SpinnerService,
         private toastService: ToastService,
         private payrollService: PayrollService,
-        private exportExcelService: ExportExcelService
+        private exportExcelService: ExportExcelService,
+        private modalService: NgbModal
     ) {}
 
     ngOnInit(): void {
@@ -82,7 +86,7 @@ export class PayrollComponent implements OnInit {
     }
     create(status: any) {
         this.spinner.show();
-        this.tableData = this.tableData.map(x => {
+        this.tableData = this.tableData.map((x: any) => {
             x.status = status;
             return x;
         });
@@ -129,6 +133,50 @@ export class PayrollComponent implements OnInit {
             this.collection = success.salaryPayrollOfMonth.length;
             this.btnFlag = this.tableData.every((x: any) => x.status == "Approved");
         });
+    }
+    openSalaryPayrollModal(item: any) {
+        // console.log("item", item);
+        if (item?.status == "Draft") {
+            let index = this.tableData.map((x: any) => x.employeeId).indexOf(item.employeeId);
+            // console.log("index", index);
+            const modalRef = this.modalService.open(PayrollEditModelComponent, {
+                centered: true,
+                size: "lg",
+                backdrop: "static",
+                keyboard: false
+            });
+
+            modalRef.componentInstance.payrollData = {
+                basic: item.basic,
+                HRA: item.HRA,
+                CCA: item.CCA,
+                gross: item.gross,
+                PF: item.PF,
+                ESIC: item.ESIC,
+                TDS: item.TDS,
+                advSalary: item.advSalary,
+                PT: item.PT,
+                netPayable: item.netPayable
+            };
+            modalRef.result.then(
+                (success: any) => {
+                    if (success) {
+                        // console.log("success", success);
+                        this.tableData[index].basic = success.basic;
+                        this.tableData[index].HRA = success.HRA;
+                        this.tableData[index].CCA = success.CCA;
+                        this.tableData[index].gross = success.gross;
+                        this.tableData[index].PF = success.PF;
+                        this.tableData[index].ESIC = success.ESIC;
+                        this.tableData[index].TDS = success.TDS;
+                        this.tableData[index].advSalary = success.advSalary;
+                        this.tableData[index].PT = success.PT;
+                        this.tableData[index].netPayable = success.netPayable;
+                    }
+                },
+                (reason: any) => {}
+            );
+        }
     }
     onSort({column, direction}: SortEvent) {
         this.headers.forEach((header: any) => {

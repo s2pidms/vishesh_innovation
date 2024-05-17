@@ -36,6 +36,10 @@ const routes: Routes = [
     {
         path: "mail_trigger",
         loadChildren: () => import("./mail-trigger/mail-trigger.module").then(m => m.MailTriggerModule)
+    },
+    {
+        path: "card_managements",
+        loadChildren: () => import("./card-managements/card-managements.module").then(m => m.CardManagementsModule)
     }
 ];
 

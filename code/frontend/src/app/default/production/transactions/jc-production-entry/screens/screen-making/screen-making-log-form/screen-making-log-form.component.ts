@@ -13,6 +13,7 @@ import {ScreenMakingLogEntryComponent} from "../screen-making-log-entry/screen-m
 })
 export class ScreenMakingLogFormComponent implements OnInit {
     @Input() selectedDetails: any = {};
+    @Input() sourceOfManufacturing: any = "";
     action: string = "Awaiting Approval";
     page: number = 1;
     pageSize: number = 5;
@@ -64,6 +65,14 @@ export class ScreenMakingLogFormComponent implements OnInit {
         this.spinner.show();
         this.screenMakingLogService.getAllMasterData(this.selectedDetails).subscribe(result => {
             this.screenMakingLog = result.screenMakingLog;
+            if (
+                result?.screenMakingLog?.screenMakingLogDetails?.length == 0 ||
+                !result?.screenMakingLog?.screenMakingLogDetails
+            ) {
+                this.toastService.warning(
+                    `Please define SKU Ink Master & BOM Of SKUNo -  ${this.screenMakingLog.SKUNo}`
+                );
+            }
             this.shiftOptions = result.shiftOptions;
             this.collection = this.screenMakingLog?.screenMakingLogDetails?.length;
             this.spinner.hide();
@@ -95,6 +104,7 @@ export class ScreenMakingLogFormComponent implements OnInit {
         });
 
         modalRef.componentInstance.logDetails = g.logDetails;
+        modalRef.componentInstance.sourceOfManufacturing = this.sourceOfManufacturing;
         modalRef.componentInstance.shiftOptions = this.shiftOptions;
         modalRef.result.then(
             (success: any) => {

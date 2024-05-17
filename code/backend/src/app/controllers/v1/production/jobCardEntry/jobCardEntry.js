@@ -17,6 +17,7 @@ const SKUMasterRepository = require("../../../../models/sales/repository/SKUMast
 const {getExpiryDate} = require("../../../../helpers/dateTime");
 const FGINRepository = require("../../../../models/stores/repository/FGINRepository");
 const {filteredSKUProcessFlowList} = require("../../../../models/businessLeads/repository/SKUProcessFlowRepository");
+const {filteredStockPreparationList} = require("../../../../models/planning/repository/stockPreparationRepository");
 
 exports.getAll = asyncHandler(async (req, res) => {
     try {
@@ -476,6 +477,7 @@ exports.getJCEntryDataByJobCardId = asyncHandler(async (req, res) => {
                         referenceModel: 1,
                         customerName: 1,
                         customer: 1,
+                        stockPrep: 1,
                         generateReport: {
                             batchInputQty: {$literal: 0},
                             batchOutputQty: {$literal: 0},
@@ -489,6 +491,38 @@ exports.getJCEntryDataByJobCardId = asyncHandler(async (req, res) => {
                     $sort: {jobCardNo: 1}
                 }
             ]);
+        }
+        const stockPrepData = await filteredStockPreparationList([
+            {
+                $match: {
+                    jobCard: ObjectId(req.query.jobCard)
+                }
+            },
+            {
+                $unwind: "$stockPreparationDetails"
+            },
+            {
+                $match: {
+                    "stockPreparationDetails.itemCode": {
+                        $regex: "^M10"
+                    }
+                }
+            },
+            {
+                $lookup: {
+                    from: "SKUMaster",
+                    localField: "SKU",
+                    foreignField: "_id",
+                    pipeline: [{$project: {ups: "$dimensionsDetails.layoutDimensions.ups"}}],
+                    as: "SKU"
+                }
+            },
+            {$unwind: "$SKU"},
+            {$project: {batchInputQty: {$round: [{$multiply: ["$stockPreparationDetails.GTQty", "$SKU.ups"]}, 2]}}}
+        ]);
+        let batchInputQty = 0;
+        if (stockPrepData.length) {
+            batchInputQty = stockPrepData[0].batchInputQty;
         }
         const SKUProcessList = await filteredSKUProcessFlowList([
             {
@@ -510,7 +544,7 @@ exports.getJCEntryDataByJobCardId = asyncHandler(async (req, res) => {
                                 status: OPTIONS.defaultStatus.ACTIVE
                             }
                         },
-                        {$project: {processOriginalName: 1}}
+                        {$project: {processOriginalName: 1, sourceOfManufacturing: 1}}
                     ],
                     as: "processMaster"
                 }
@@ -522,6 +556,7 @@ exports.getJCEntryDataByJobCardId = asyncHandler(async (req, res) => {
                     process: "$PFDetails.process",
                     processName: "$PFDetails.processName",
                     processOriginalName: "$processMaster.processOriginalName",
+                    sourceOfManufacturing: "$processMaster.sourceOfManufacturing",
                     IPQALog: {
                         adherenceToProcessStd: {$literal: false},
                         inProcessInfo: [
@@ -539,7 +574,11 @@ exports.getJCEntryDataByJobCardId = asyncHandler(async (req, res) => {
             }
         ]);
 
-        return res.success({jobCardEntryData: jobCardEntryData.length ? jobCardEntryData[0] : {}, SKUProcessList});
+        return res.success({
+            jobCardEntryData: jobCardEntryData.length ? jobCardEntryData[0] : {},
+            SKUProcessList,
+            batchInputQty
+        });
     } catch (error) {
         console.error("getProcessFromDirectCostBySKUId Job Card Entry", error);
         const errors = MESSAGES.apiErrorStrings.SERVER_ERROR;

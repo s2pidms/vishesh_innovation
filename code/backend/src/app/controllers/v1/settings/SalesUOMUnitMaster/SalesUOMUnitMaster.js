@@ -3,6 +3,7 @@ const asyncHandler = require("express-async-handler");
 const MESSAGES = require("../../../../helpers/messages.options");
 const {getAllSalesUOMUnitMasterAttributes} = require("../../../../models/settings/helpers/SalesUOMUnitMasterHelper");
 const SalesUOMUnitMasterRepository = require("../../../../models/settings/repository/SalesUOMUnitMasterRepository");
+const {OPTIONS} = require("../../../../helpers/global.options");
 
 exports.getAll = asyncHandler(async (req, res) => {
     try {
@@ -105,3 +106,26 @@ exports.getAllMasterData = asyncHandler(async (req, res) => {
         return res.serverError(errors);
     }
 });
+
+exports.salesUOMPipe = async (value, company) => {
+    const UOMUintMasterOptions = await SalesUOMUnitMasterRepository.filteredSalesUOMUnitMasterList([
+        {
+            $match: {
+                company: ObjectId(company),
+                status: OPTIONS.defaultStatus.ACTIVE
+            }
+        },
+        {
+            $sort: {order: 1}
+        },
+        {
+            $project: {
+                label: 1,
+                value: 1,
+                _id: 0
+            }
+        }
+    ]);
+    let neValue = UOMUintMasterOptions.find(ele => ele.value == value)?.label;
+    return neValue;
+};

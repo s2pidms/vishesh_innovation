@@ -298,7 +298,7 @@ exports.getMonthlyPayrollData = async company => {
     const result = await Model.aggregate([
         {
             $addFields: {
-                matchDate: {$dateToString: {format: "%Y-%m-%d", date: "$payrollForMonthYear"}}
+                matchDate: {$dateToString: {format: "%Y-%m-%d", date: new Date("$payrollForMonthYear")}}
             }
         },
         {
@@ -312,7 +312,7 @@ exports.getMonthlyPayrollData = async company => {
         },
         {
             $group: {
-                _id: {year_month: {$substrCP: ["$payrollForMonthYear", 0, 7]}},
+                _id: {year_month: {$substrCP: [new Date("$payrollForMonthYear"), 0, 7]}},
                 count: {$sum: "$netPayable"}
             }
         },
@@ -370,7 +370,7 @@ exports.getMonthPayrolls = async company => {
     const result = await Model.aggregate([
         {
             $addFields: {
-                matchDate: {$dateToString: {format: "%Y-%m-%d", date: "$payrollForMonthYear"}}
+                matchDate: {$dateToString: {format: "%Y-%m-%d", date: new Date("$payrollForMonthYear")}}
             }
         },
         {

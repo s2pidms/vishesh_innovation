@@ -213,7 +213,13 @@ exports.getAllPPVReports = asyncHandler(async (req, res) => {
         const {supplier = null, fromDate = null, toDate = null, itemCategory = null} = req.query;
         let query = {
             company: ObjectId(req.user.company),
-            POStatus: {$nin: [OPTIONS.defaultStatus.AWAITING_APPROVAL, OPTIONS.defaultStatus.REJECTED]},
+            POStatus: {
+                $nin: [
+                    OPTIONS.defaultStatus.AWAITING_APPROVAL,
+                    OPTIONS.defaultStatus.REJECTED,
+                    OPTIONS.defaultStatus.CANCELLED
+                ]
+            },
             ...(!!supplier && {
                 supplier: ObjectId(supplier)
             }),

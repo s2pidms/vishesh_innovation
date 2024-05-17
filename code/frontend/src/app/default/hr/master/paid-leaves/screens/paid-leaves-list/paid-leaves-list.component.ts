@@ -2,11 +2,13 @@ import {Component, OnDestroy, OnInit, QueryList, ViewChildren} from "@angular/co
 import {ActivatedRoute, Router} from "@angular/router";
 import {PaidLeavesService} from "@services/hr";
 import {Subscription} from "rxjs";
-import {ExportExcelService, ExportToPDFService, SpinnerService} from "@core/services";
+import {ExportExcelService, ExportToPDFService, SpinnerService, StorageService, ToastService} from "@core/services";
 import {NgbdSortableHeader, SortEvent} from "@directives/sortable.directive";
-import {LIST_DEFAULT_PERMISSION_ACTIONS} from "@mocks/constant";
+import {LIST_DEFAULT_PERMISSION_ACTIONS, superAdminId} from "@mocks/constant";
 import {PAID_LEAVES_REPORT_DATA, PAID_LEAVES_PDF_DATA} from "@mocks/export-data/hr/master";
 import {PaidLeaves} from "@mocks/models/hr&Admin/master";
+import {ConfirmDeleteComponent} from "@shared/modals";
+import {NgbModal} from "@ng-bootstrap/ng-bootstrap";
 @Component({
     selector: "app-paid-leaves-list",
     templateUrl: "./paid-leaves-list.component.html"
@@ -21,6 +23,8 @@ export class PaidLeavesListComponent implements OnInit, OnDestroy {
     direction: number = -1;
     search: string = "";
     tableData: PaidLeaves[] = [];
+    superAdminId: any = superAdminId;
+    user: any = "";
     rolePermissionActions: any = LIST_DEFAULT_PERMISSION_ACTIONS;
     subscription!: Subscription;
     constructor(
@@ -29,15 +33,19 @@ export class PaidLeavesListComponent implements OnInit, OnDestroy {
         private exportExcelService: ExportExcelService,
         private activatedRoute: ActivatedRoute,
         private spinner: SpinnerService,
-        private exportToPDFService: ExportToPDFService
+        private exportToPDFService: ExportToPDFService,
+        private storageService: StorageService,
+        private toastService: ToastService,
+        private modalService: NgbModal
     ) {}
 
     ngOnInit(): void {
+        this.user = this.storageService.get("IDMSAUser")?.roles?.find((x: any) => x == this.superAdminId);
         this.page = Number(this.activatedRoute.snapshot.queryParamMap.get("page") ?? 1);
         this.getAll();
     }
     navigateTo(path: string, id: any, action: string) {
-        this.router.navigate([path], {queryParams: {id, action}});
+        this.router.navigate([path], {relativeTo: this.activatedRoute, queryParams: {id, action}});
     }
     trackByFn(index: number, item: any) {
         return item?._id;
@@ -85,7 +93,33 @@ export class PaidLeavesListComponent implements OnInit, OnDestroy {
             this.spinner.hide();
         });
     }
+    delete(id: any) {
+        this.spinner.show();
+        this.paidLeavesService.delete(id).subscribe(success => {
+            this.spinner.hide();
+            this.toastService.success(success.message);
+            this.getAll();
+        });
+    }
+    openConfirmModal(id: any, code: any) {
+        const modalRef = this.modalService.open(ConfirmDeleteComponent, {
+            centered: true,
+            size: "md",
+            backdrop: "static",
+            keyboard: false
+        });
 
+        modalRef.componentInstance.heading = "Confirm Deletion";
+        modalRef.componentInstance.confirmText = `Confirm Deletion of Calendar Year ${code} ?`;
+        modalRef.result.then(
+            (success: any) => {
+                if (success.title == "Yes") {
+                    this.delete(id);
+                }
+            },
+            (reason: any) => {}
+        );
+    }
     ngOnDestroy(): void {
         if (this.subscription) this.subscription.unsubscribe();
     }

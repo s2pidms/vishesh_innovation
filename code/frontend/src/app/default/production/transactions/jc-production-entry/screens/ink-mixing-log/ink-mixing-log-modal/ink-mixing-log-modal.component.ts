@@ -22,7 +22,6 @@ export class InkMixingLogModalComponent {
     search: string = "";
     selectedJobCardDetails: any = {};
 
-
     constructor(
         private inkMixingLogService: InkMixingLogService,
         private spinner: SpinnerService,
@@ -64,6 +63,9 @@ export class InkMixingLogModalComponent {
         this.spinner.show();
         this.inkMixingLogService.getAllMasterData(this.selectedDetails).subscribe(result => {
             this.inkMixingLog = result.inkMixingLog;
+            if (result?.inkMixingLog?.inkMixingLogDetails?.length == 0 || !result?.inkMixingLog?.inkMixingLogDetails) {
+                this.toastService.warning(`Please define SKU Ink Master Of SKU No -  ${this.inkMixingLog.SKUNo}`);
+            }
             this.shiftOptions = result.shiftOptions;
             this.collection = this.inkMixingLog?.inkMixingLogDetails?.length;
             this.spinner.hide();

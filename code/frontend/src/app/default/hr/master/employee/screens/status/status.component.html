@@ -1,0 +1,49 @@
+<div class="modelPage">
+    <div class="">
+        <div class="container-fluid">
+            <div class="row mt-4">
+                <form [formGroup]="form">
+                    <div style="min-height: 31.8rem">
+                        <div class="row mb-4 justify-content-center px-0">
+                            <div class="col-md-3">
+                                <label class="form-label"> Employee Status </label>
+                                <div class="d-flex">
+                                    <select class="statusSelectBorder form-select" formControlName="empStatus">
+                                        <option [value]="null" selected disabled>Select Status</option>
+                                        <option [value]="'A'">Active</option>
+                                        <option [value]="'I'">Inactive</option>
+                                    </select>
+                                    <span class="input-group-text statusSpanHeight">
+                                        <div *ngIf="form.value['empStatus'] == 'A'" class="statusActive"></div>
+                                        <div *ngIf="form.value['empStatus'] == 'I'" class="statusInActive"></div>
+                                    </span>
+                                </div>
+                            </div>
+                            <hr *ngIf="f['empStatus'].value == 'I'" class="line-border w-100 mt-4 px-0" />
+                            <div *ngIf="f['empStatus'].value == 'I'" class="row my-4">
+                                <div class="col-md-4">
+                                    <label class="form-label"> Exit Date </label>
+                                    <input class="form-control" type="date" formControlName="empDateOfResignation" />
+                                </div>
+                                <div class="col-md-8">
+                                    <label class="form-label"> Reason Of Leaving </label>
+                                    <input class="form-control" type="text" formControlName="reasonOfLeaving" />
+                                </div>
+                            </div>
+                            <!-- <div class="w-100"></div> -->
+                        </div>
+                    </div>
+                </form>
+
+                <hr *ngIf="!['view'].includes(action)" class="line-border mt-5 px-5" />
+
+                <div class="text-center">
+                    <div *ngIf="!['view'].includes(action)" class="text-center mt-2">
+                        <button (click)="reset()" class="btn bg-primary px-5 me-3" type="button">Reset</button>
+                        <button class="btn bg-primary px-5" type="button" (click)="dismissModel()">Save</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

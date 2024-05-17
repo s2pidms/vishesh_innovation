@@ -2,7 +2,6 @@ const mongoose = require("mongoose");
 const Audit = require("../../controllers/v1/settings/audit/audit");
 const {SKU_PROCESS_FLOW: SCHEMA_CONSTANT} = require("../../mocks/schemasConstant/businessLeadsConstant");
 const {paginatePlugin} = require("../plugins/paginatePlugin");
-const {OPTIONS} = require("../../helpers/global.options");
 const SKUProcessFlowSchema = mongoose.Schema(
     {
         company: {

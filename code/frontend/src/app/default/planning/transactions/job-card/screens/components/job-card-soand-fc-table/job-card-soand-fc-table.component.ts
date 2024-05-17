@@ -2,10 +2,13 @@ import {Component, EventEmitter, Input, OnInit, Output, QueryList, ViewChildren}
 import {NgbActiveModal, NgbModal} from "@ng-bootstrap/ng-bootstrap";
 import {ContactMatrix} from "@interfaces/contactMatrix";
 import {NgbdSortableHeader, SortEvent} from "@directives/sortable.directive";
-import {ToastService, UtilityService} from "@core/services";
+import {SpinnerService, ToastService, UtilityService} from "@core/services";
 import {FgInventoryModalComponent} from "../fg-inventory-modal/fg-inventory-modal.component";
 import {ISKUDetailsOfJC} from "@mocks/models/planning/transactions";
 import {JobCardDispModalComponent} from "../job-card-disp-modal/job-card-disp-modal.component";
+import {ActivatedRoute, Router} from "@angular/router";
+import {ViewSkuDimensionComponent} from "../view-sku-dimension/view-sku-dimension.component";
+import {JobCardCreationService} from "@services/planning";
 
 @Component({
     selector: "app-job-card-sku-details-table",
@@ -38,6 +41,7 @@ export class JobCardSOAndFCTableComponent implements OnInit {
     column: string = "createdAt";
     direction: number = -1;
     selectedData: any = {};
+    dimensionsDetails: any = {};
     SODetailsArray: any = [];
     selectDSKU: any = null;
     @Output() saveData = new EventEmitter<any>();
@@ -46,6 +50,10 @@ export class JobCardSOAndFCTableComponent implements OnInit {
         public activeModal: NgbActiveModal,
         private toastService: ToastService,
         private modalService: NgbModal,
+        private jobCardCreationService: JobCardCreationService,
+        private spinner: SpinnerService,
+        private router: Router,
+        private activatedRoute: ActivatedRoute,
         private utilityService: UtilityService
     ) {}
 
@@ -216,5 +224,35 @@ export class JobCardSOAndFCTableComponent implements OnInit {
                 return direction === "asc" ? res : -res;
             });
         }
+    }
+
+    getSKUDimensionData(item: any) {
+        this.spinner.show();
+        this.jobCardCreationService.getDimBySKU(item.SKU).subscribe(success => {
+            this.dimensionsDetails = success?.dimensionsDetails;
+            this.spinner.hide();
+            this.openViewDimModal();
+        });
+    }
+
+    openViewDimModal() {
+        const modalRef = this.modalService.open(ViewSkuDimensionComponent, {
+            centered: true,
+            // size: "xl",
+            backdrop: "static",
+            keyboard: false,
+            windowClass: "modelPage"
+        });
+
+        modalRef.componentInstance.action = "view";
+        modalRef.componentInstance.dimensionsDetails = this.dimensionsDetails ?? {};
+        modalRef.result.then(
+            (success: any) => {
+                // if (success && ["create", "edit"].includes(this.action)) {
+                //     this.batchInfo.patchValue(success);
+                // }
+            },
+            (reason: any) => {}
+        );
     }
 }

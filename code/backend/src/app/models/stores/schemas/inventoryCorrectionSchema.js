@@ -1,5 +1,5 @@
 const {default: mongoose} = require("mongoose");
-const {GOODS_TRANSFER_REQUEST_DEPT} = require("../../../mocks/constantData");
+const {GOODS_TRANSFER_REQUEST_DEPT, INV_FORM_TYPE} = require("../../../mocks/constantData");
 const {setTwoDecimal} = require("../../../helpers/utility");
 exports.SCHEMA = {
     company: {
@@ -131,22 +131,22 @@ exports.SCHEMA = {
     },
     standardRate: {
         type: Number,
-        set: value => setTwoDecimal(value),
+        set: value => setTwoDecimal(value, 3),
         required: false
     },
     purchaseRate: {
         type: Number,
-        set: value => setTwoDecimal(value),
+        set: value => setTwoDecimal(value, 3),
         required: false
     },
     purchaseRateUSD: {
         type: Number,
-        set: value => setTwoDecimal(value),
+        set: value => setTwoDecimal(value, 3),
         required: false
     },
     purchaseRatINR: {
         type: Number,
-        set: value => setTwoDecimal(value),
+        set: value => setTwoDecimal(value, 3),
         required: false
     },
     lineValueINR: {
@@ -297,5 +297,11 @@ exports.SCHEMA = {
             type: Date,
             required: false
         }
+    },
+    formType: {
+        type: String,
+        required: false,
+        enum: [INV_FORM_TYPE.PARENT, INV_FORM_TYPE.CHILD],
+        default: INV_FORM_TYPE.PARENT
     }
 };

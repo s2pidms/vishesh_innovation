@@ -166,5 +166,33 @@
         "disabled": false,
         "url": "/default/planning/reports/inventory_report",
         "items": []
+    },
+    {
+        "_id": "663881443c8dcd4bb5914375",
+        "menuItemId": "64a6c1e33339d4dc9d8141a4",
+        "module": "Planning",
+        "roles": [],
+        "type": "REPORT",
+        "order": 12,
+        "isDisplay": false,
+        "title": "SPS Inventory",
+        "displayName": "SPS Inventory",
+        "disabled": false,
+        "url": "/default/planning/reports/sps_inventory",
+        "items": []
+    },
+    {
+        "_id": "663b4a598a5b56289252752b",
+        "menuItemId": "64a6c1e33339d4dc9d8141a4",
+        "module": "Planning",
+        "roles": [],
+        "type": "REPORT",
+        "order": 13,
+        "isDisplay": false,
+        "title": "Sales Order Status",
+        "displayName": "Sales Order Status",
+        "disabled": false,
+        "url": "/default/planning/reports/sales_order_status_report",
+        "items": []
     }
 ]

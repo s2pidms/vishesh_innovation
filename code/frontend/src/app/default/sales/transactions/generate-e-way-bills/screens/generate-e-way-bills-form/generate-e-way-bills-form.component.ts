@@ -23,7 +23,8 @@ export class GenerateEWayBillsFormComponent implements OnInit {
     salesInvoiceArr: any = [];
     shipmentNameOptions: any = [];
     itemDetailsArr: any = [];
-    customerBillingAddressObj: any = {};
+    // customerBillingAddressObj: any = {};
+    customerShippingAddressObj: any = {};
     // transactionTypeOptions: any = [
     //     {key: "Regular", value: 1},
     //     {key: "BillTo-ShipTo", value: 2}
@@ -181,7 +182,8 @@ export class GenerateEWayBillsFormComponent implements OnInit {
                 transporterName: success?.transporter,
                 transporterId: success?.transporterId
             };
-            this.customerBillingAddressObj = success.customerBillingAddress;
+            this.customerShippingAddressObj = success.customerShippingAddress;
+            // this.customerBillingAddressObj = success.customerBillingAddress;
             // if (success.customerBillingAddress && success.customerShippingAddress) {
             //     obj.transactionType = this.matchAddresses(
             //         success.customerBillingAddress,
@@ -222,10 +224,10 @@ export class GenerateEWayBillsFormComponent implements OnInit {
     }
     matchAddresses(formData: any) {
         if (
-            formData.toAddr1 != `${this.customerBillingAddressObj?.line1} ${this.customerBillingAddressObj?.line2}` ||
-            formData.toAddr2 != this.customerBillingAddressObj?.line3 ||
-            formData.toPlace != this.customerBillingAddressObj?.city ||
-            formData.toPincode != this.customerBillingAddressObj?.pinCode
+            formData.toAddr1 != `${this.customerShippingAddressObj?.line1} ${this.customerShippingAddressObj?.line2}` ||
+            formData.toAddr2 != this.customerShippingAddressObj?.line3 ||
+            formData.toPlace != this.customerShippingAddressObj?.city ||
+            formData.toPincode != this.customerShippingAddressObj?.pinCode
         ) {
             return 2;
         } else {

@@ -1,11 +1,12 @@
 import {Component, OnInit} from "@angular/core";
 import {UntypedFormArray, UntypedFormBuilder, UntypedFormControl, UntypedFormGroup, Validators} from "@angular/forms";
-import {Router, ActivatedRoute} from "@angular/router";
+import {Location} from "@angular/common";
+import {ActivatedRoute} from "@angular/router";
 import {SalaryMasterService} from "@services/hr";
 import {mergeMap, of} from "rxjs";
 import {ValidationService} from "@core/components";
 import {SALARY_MASTER_MS_FORM_ERRORS} from "@mocks/validations/hr";
-import {ToastService, MenuTitleService, SpinnerService, UtilityService} from "@core/services";
+import {ToastService, SpinnerService, UtilityService} from "@core/services";
 import {ISalaryManagementMasterData} from "@mocks/models/hr&Admin/master";
 
 @Component({
@@ -26,13 +27,12 @@ export class SalaryMasterMSFormComponent implements OnInit {
     constructor(
         private formBuilder: UntypedFormBuilder,
         private salaryMasterService: SalaryMasterService,
-        private router: Router,
         private toastService: ToastService,
-        private menuTitleService: MenuTitleService,
         private activatedRoute: ActivatedRoute,
         private spinner: SpinnerService,
         private validationService: ValidationService,
-        private utilityService: UtilityService
+        private utilityService: UtilityService,
+        private location: Location
     ) {}
 
     form: any = this.formBuilder.group({
@@ -82,9 +82,6 @@ export class SalaryMasterMSFormComponent implements OnInit {
         this.getInitialData();
     }
 
-    navigateTo(path: string, id: any, action: string) {
-        this.router.navigate([path], {queryParams: {id, action}});
-    }
     PFWagesDisable(event: any) {
         let PFMonth = this.form.controls["employerPFContributionPerMonth"].value;
         let CTCMonth = this.form.controls["costTOCompanyCTCPerMonth"].value;
@@ -220,7 +217,7 @@ export class SalaryMasterMSFormComponent implements OnInit {
             this.spinner.hide();
             this.submitted = false;
             this.toastService.success(success.message);
-            this.router.navigate(["/default/HR/master/salary_master_MS/SMMS-list"]);
+            this.location.back();
         });
     }
     reset() {
@@ -249,7 +246,7 @@ export class SalaryMasterMSFormComponent implements OnInit {
             this.submitted = false;
             this.spinner.hide();
             this.toastService.success(success.message);
-            this.router.navigate(["/default/HR/master/salary_master_MS/SMMS-list"]);
+            this.location.back();
         });
     }
     getInitialData() {

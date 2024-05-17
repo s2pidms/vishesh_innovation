@@ -35,6 +35,7 @@ const {filteredSalesServiceMasterList} = require("../../../../models/sales/repos
 const SIRepository = require("../../../../models/sales/repository/serviceInvoiceRepository");
 const MailTriggerRepository = require("../../../../models/settings/repository/mailTriggerRepository");
 const {SALES_MAIL_CONST} = require("../../../../mocks/mailTriggerConstants");
+const {SALES_CATEGORY} = require("../../../../mocks/constantData");
 const ObjectId = mongoose.Types.ObjectId;
 // @route   GET /sales/credit Note/getAll
 exports.getAll = asyncHandler(async (req, res) => {
@@ -398,7 +399,7 @@ exports.getAllNetServices = async company => {
                     },
                     {
                         $match: {
-                            "customer.customerCategory": {$in: ["Domestic – OEM", "Domestic – Dealer"]}
+                            "customer.customerCategory": {$regex: SALES_CATEGORY.DOMESTIC_REGEX}
                         }
                     },
                     {
@@ -438,7 +439,7 @@ exports.getAllNetServices = async company => {
                     },
                     {
                         $match: {
-                            "customer.customerCategory": {$in: ["Domestic – OEM", "Domestic – Dealer"]}
+                            "customer.customerCategory": {$regex: SALES_CATEGORY.DOMESTIC_REGEX}
                         }
                     },
                     {
@@ -496,7 +497,7 @@ exports.getAvgMonthlyNetService = async company => {
         },
         {
             $match: {
-                "customer.customerCategory": {$in: ["Domestic – OEM", "Domestic – Dealer"]}
+                "customer.customerCategory": {$regex: SALES_CATEGORY.DOMESTIC_REGEX}
             }
         },
         {

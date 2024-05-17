@@ -1,15 +1,17 @@
 import {Component, OnDestroy, OnInit, QueryList, ViewChildren} from "@angular/core";
 import {ActivatedRoute, Router} from "@angular/router";
 import {Subscription} from "rxjs";
-import {ExportExcelService, ExportToPDFService, SpinnerService} from "@core/services";
+import {ExportExcelService, ExportToPDFService, SpinnerService, StorageService, ToastService} from "@core/services";
 import {NgbdSortableHeader, SortEvent} from "@directives/sortable.directive";
-import {LIST_DEFAULT_PERMISSION_ACTIONS} from "@mocks/constant";
+import {LIST_DEFAULT_PERMISSION_ACTIONS, superAdminId} from "@mocks/constant";
 import {
     PRODUCT_CATEGORY_SPECIFICATIONS_PDF_DATA,
     PRODUCT_CATEGORY_SPECIFICATIONS_REPORT_DATA
 } from "@mocks/export-data/quality/master/productCategorySpecifications";
 import {ProductCategorySpecificationsService} from "@services/quality";
 import {ProductCategorySpecification} from "@mocks/models/quality/master/productCategorySpecification";
+import {ConfirmDeleteComponent} from "@shared/modals";
+import {NgbModal} from "@ng-bootstrap/ng-bootstrap";
 @Component({
     selector: "app-product-category-specifications-list",
     templateUrl: "./product-category-specifications-list.component.html"
@@ -24,6 +26,8 @@ export class ProductCategorySpecificationsListComponent implements OnInit, OnDes
     direction: number = -1;
     search: string = "";
     tableData: ProductCategorySpecification[] = [];
+    superAdminId: any = superAdminId;
+    user: any = "";
     rolePermissionActions: any = LIST_DEFAULT_PERMISSION_ACTIONS;
     subscription!: Subscription;
     constructor(
@@ -32,10 +36,14 @@ export class ProductCategorySpecificationsListComponent implements OnInit, OnDes
         private spinner: SpinnerService,
         private activatedRoute: ActivatedRoute,
         private productCategorySpecificationsService: ProductCategorySpecificationsService,
-        private exportToPDFService: ExportToPDFService
+        private exportToPDFService: ExportToPDFService,
+        private storageService: StorageService,
+        private toastService: ToastService,
+        private modalService: NgbModal
     ) {}
 
     ngOnInit(): void {
+        this.user = this.storageService.get("IDMSAUser")?.roles?.find((x: any) => x == this.superAdminId);
         this.page = Number(this.activatedRoute.snapshot.queryParamMap.get("page") ?? 1);
         this.getAll();
     }
@@ -62,6 +70,33 @@ export class ProductCategorySpecificationsListComponent implements OnInit, OnDes
             }
             this.spinner.hide();
         });
+    }
+    delete(id: any) {
+        this.spinner.show();
+        this.productCategorySpecificationsService.delete(id).subscribe(success => {
+            this.spinner.hide();
+            this.toastService.success(success.message);
+            this.getAll();
+        });
+    }
+    openConfirmModal(id: any, code: any) {
+        const modalRef = this.modalService.open(ConfirmDeleteComponent, {
+            centered: true,
+            size: "md",
+            backdrop: "static",
+            keyboard: false
+        });
+
+        modalRef.componentInstance.heading = "Confirm Deletion";
+        modalRef.componentInstance.confirmText = `Confirm Deletion of ProductNumber ${code} ?`;
+        modalRef.result.then(
+            (success: any) => {
+                if (success.title == "Yes") {
+                    this.delete(id);
+                }
+            },
+            (reason: any) => {}
+        );
     }
     ngOnDestroy(): void {
         if (this.subscription) this.subscription.unsubscribe();

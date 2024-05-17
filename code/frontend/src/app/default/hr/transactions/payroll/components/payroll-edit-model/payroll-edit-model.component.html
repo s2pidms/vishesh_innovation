@@ -1,0 +1,78 @@
+<div class="modelPage">
+    <div class="modal-header">
+        <div class="heading">Update Payroll Management Staff</div>
+        <div>
+            <button type="button" class="btn btn-cross btn-sm" aria-label="Close" (click)="this.activeModal.close()">
+                <i class="fa fa-times-circle" aria-hidden="true"></i>
+            </button>
+        </div>
+    </div>
+    <div class="">
+        <ng-container>
+            <div class="row my-4 px-5">
+                <div class="col-4">
+                    <label class="form-label mb-1"> Basic <span class="text-danger"></span> </label>
+                    <input type="number" class="form-control" [(ngModel)]="payrollData.basic" (input)="setGross()" />
+                </div>
+                <div class="col-4">
+                    <label class="form-label mb-1"> HRA <span class="text-danger"></span> </label>
+                    <input type="number" class="form-control" [(ngModel)]="payrollData.HRA" (input)="setGross()" />
+                </div>
+                <div class="col-4">
+                    <label class="form-label mb-1"> CCA <span class="text-danger"></span> </label>
+                    <input type="number" class="form-control" [(ngModel)]="payrollData.CCA" (input)="setGross()" />
+                </div>
+            </div>
+            <div class="row my-4 px-5">
+                <div class="col-3">
+                    <label class="form-label mb-1"> Gross <span class="text-danger"></span> </label>
+                    <input type="number" class="form-control" [(ngModel)]="payrollData.gross" readonly />
+                </div>
+                <div class="col-3">
+                    <label class="form-label mb-1"> PF <span class="text-danger"></span> </label>
+                    <input type="number" class="form-control" [(ngModel)]="payrollData.PF" (input)="setNetPayable()" />
+                </div>
+                <div class="col-3">
+                    <label class="form-label mb-1"> ESIC <span class="text-danger"></span> </label>
+                    <input
+                        type="number"
+                        class="form-control"
+                        [(ngModel)]="payrollData.ESIC"
+                        (input)="setNetPayable()"
+                    />
+                </div>
+                <div class="col-3">
+                    <label class="form-label mb-1"> TDS <span class="text-danger"></span> </label>
+                    <input type="number" class="form-control" [(ngModel)]="payrollData.TDS" (input)="setNetPayable()" />
+                </div>
+            </div>
+            <div class="row my-4 px-5">
+                <div class="col-4">
+                    <label class="form-label mb-1"> PT <span class="text-danger"></span> </label>
+                    <input type="number" class="form-control" [(ngModel)]="payrollData.PT" (input)="setNetPayable()" />
+                </div>
+                <div class="col-4">
+                    <label class="form-label mb-1"> Adv. Salary <span class="text-danger"></span> </label>
+                    <input
+                        type="number"
+                        class="form-control"
+                        [(ngModel)]="payrollData.advSalary"
+                        (input)="setNetPayable()"
+                    />
+                </div>
+                <div class="col-4">
+                    <label class="form-label mb-1"> Net Payable <span class="text-danger"></span> </label>
+                    <input type="number" class="form-control" [(ngModel)]="payrollData.netPayable" readonly />
+                </div>
+            </div>
+        </ng-container>
+        <hr class="line-border my-4" />
+        <div class="row px-5">
+            <div class="ps-0 d-flex justify-content-center">
+                <div class="mb-4">
+                    <button type="button" class="btn bg-primary px-2" (click)="dismissModel()">Save & Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

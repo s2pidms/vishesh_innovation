@@ -2,7 +2,7 @@ const asyncHandler = require("express-async-handler");
 const Model = require("../../../../models/stores/inventoryCorrectionModel");
 const MESSAGES = require("../../../../helpers/messages.options");
 const {outputData, getAllAggregationFooter} = require("../../../../helpers/utility");
-const {getMatchData} = require("../../../../helpers/global.options");
+const {getMatchData, OPTIONS} = require("../../../../helpers/global.options");
 const {getAllSuppliers} = require("../../purchase/suppliers/suppliers");
 const {getAllItems} = require("../../purchase/items/items");
 const {default: mongoose} = require("mongoose");
@@ -11,7 +11,9 @@ const {getCompanyLocations} = require("../../settings/company/company");
 const InventoryCorrectionHelper = require("../../../../models/stores/helpers/inventoryCorrectionHelper");
 const InventoryCorrectionRepo = require("../../../../models/stores/repository/inventoryCorrectionRepository");
 const {filteredItemList} = require("../../../../models/purchase/repository/itemRepository");
-const {GOODS_TRANSFER_REQUEST_DEPT} = require("../../../../mocks/constantData");
+const {GOODS_TRANSFER_REQUEST_DEPT, STOCK_PREP_UOM} = require("../../../../mocks/constantData");
+const {findAppParameterValue} = require("../../settings/appParameter/appParameter");
+const {getAllCheckedItemCategoriesList} = require("../../purchase/itemCategoryMaster/itemCategoryMaster");
 const ObjectId = mongoose.Types.ObjectId;
 exports.getAllReports = asyncHandler(async (req, res) => {
     try {
@@ -384,6 +386,7 @@ exports.getStockAgingReports = asyncHandler(async (req, res) => {
             }
         }
         // await insertManyInventory();
+        // await updateManyDualUnitOfInventory();
         return res.success({
             items,
             ...output
@@ -475,6 +478,67 @@ const insertManyInventory = async () => {
         // First Take Backup Then only remove return
         await InventoryCorrectionRepo.deleteManyDoc({});
         return InventoryCorrectionRepo.insertManyDoc(invList);
+    } catch (error) {
+        console.error(error);
+    }
+};
+const updateManyDualUnitOfInventory = async () => {
+    try {
+        let inventoryList = await InventoryCorrectionRepo.filteredInventoryCorrectionList([
+            {
+                $lookup: {
+                    from: "Items",
+                    localField: "item",
+                    foreignField: "_id",
+                    pipeline: [
+                        {
+                            $project: {
+                                _id: 1,
+                                primaryUnit: 1,
+                                secondaryUnit: 1,
+                                primaryToSecondaryConversion: 1,
+                                secondaryToPrimaryConversion: 1
+                            }
+                        }
+                    ],
+                    as: "item"
+                }
+            },
+            {$unwind: "$item"},
+            {
+                $project: {
+                    inventoryId: "$_id",
+                    itemId: "$item._id",
+                    itemCode: 1,
+                    primaryUnit: "$item.primaryUnit",
+                    secondaryUnit: "$item.secondaryUnit",
+                    primaryToSecondaryConversion: "$item.primaryToSecondaryConversion",
+                    secondaryToPrimaryConversion: "$item.secondaryToPrimaryConversion"
+                }
+            }
+        ]);
+        return;
+        let dualUnitNotDefined = [];
+        for await (const ele of inventoryList) {
+            if (ele.primaryToSecondaryConversion || ele.secondaryToPrimaryConversion) {
+                await InventoryCorrectionRepo.findAndUpdateDoc(
+                    {_id: ele.inventoryId},
+                    {
+                        primaryUnit: ele.primaryUnit,
+                        secondaryUnit: ele.secondaryUnit,
+                        primaryToSecondaryConversion: ele.primaryToSecondaryConversion,
+                        secondaryToPrimaryConversion: ele.secondaryToPrimaryConversion
+                    }
+                );
+            } else {
+                dualUnitNotDefined.push({
+                    inventoryId: ele.inventoryId,
+                    itemId: ele.itemId,
+                    itemCode: ele.itemCode
+                });
+            }
+        }
+        console.log("dualUnitNotDefined", dualUnitNotDefined);
     } catch (error) {
         console.error(error);
     }
@@ -576,7 +640,22 @@ exports.getAllLocationSupplierItemWiseReports = asyncHandler(async (req, res) =>
                     from: "Items",
                     localField: "item",
                     foreignField: "_id",
-                    pipeline: [{$project: {itemCode: 1, itemName: 1, itemDescription: 1, shelfLife: 1}}],
+                    pipeline: [
+                        {
+                            $project: {
+                                itemCode: 1,
+                                itemName: 1,
+                                itemDescription: 1,
+                                shelfLife: 1,
+                                primaryUnit: 1,
+                                secondaryUnit: 1,
+                                conversionOfUnits: 1,
+                                primaryToSecondaryConversion: 1,
+                                secondaryToPrimaryConversion: 1,
+                                supplierDetails: 1
+                            }
+                        }
+                    ],
                     as: "item"
                 }
             },
@@ -708,3 +787,156 @@ exports.getAllLocationSupplierItemWiseReports = asyncHandler(async (req, res) =>
 //     ]);
 //     return rows.length > 0 ? rows[0] : [];
 // };
+
+exports.getStockPreparationShopReports = asyncHandler(async (req, res) => {
+    try {
+        let itemCategoriesList = await getAllCheckedItemCategoriesList({
+            categoryStatus: OPTIONS.defaultStatus.ACTIVE,
+            stockPreparation: true
+        });
+        itemCategoriesList = itemCategoriesList.map(x => x.category);
+        let project = InventoryCorrectionHelper.getStockPreparationShopReportsAttributes();
+        let pipeline = [
+            {
+                $match: {
+                    company: ObjectId(req.user.company),
+                    closedIRQty: {$gt: 0},
+                    department: {$in: [GOODS_TRANSFER_REQUEST_DEPT.PLANNING, GOODS_TRANSFER_REQUEST_DEPT.PRODUCTION]}
+                }
+            },
+            {
+                $lookup: {
+                    from: "Items",
+                    localField: "item",
+                    foreignField: "_id",
+                    pipeline: [
+                        {
+                            $project: {
+                                itemType: 1
+                            }
+                        }
+                    ],
+                    as: "item"
+                }
+            },
+            {
+                $match: {
+                    ...(itemCategoriesList.length > 0 && {"item.itemType": {$in: itemCategoriesList}})
+                }
+            },
+            {
+                $addFields: {
+                    convertedClosedIRQty: {
+                        $cond: [
+                            {$eq: [STOCK_PREP_UOM.SQM, "$UOM"]},
+                            "$closedIRQty",
+                            {
+                                $cond: [
+                                    {$ne: ["$primaryToSecondaryConversion", null]},
+                                    {
+                                        $multiply: ["$closedIRQty", "$primaryToSecondaryConversion"]
+                                    },
+                                    {
+                                        $divide: ["$closedIRQty", "$secondaryToPrimaryConversion"]
+                                    }
+                                ]
+                            }
+                        ]
+                    }
+                }
+            }
+        ];
+        let rows = await InventoryCorrectionRepo.getAllPaginate({
+            pipeline,
+            project,
+            queryParams: req.query
+        });
+
+        let WXLDimensionsUnit = await findAppParameterValue("WXL_DIMENSIONS_UNIT", req.user.company);
+
+        return res.success({
+            ...rows,
+            WXLDimensionsUnit: WXLDimensionsUnit.split(",").map(x => x)
+        });
+    } catch (e) {
+        console.error("getStockPreparationShopReports", e);
+        const errors = MESSAGES.apiErrorStrings.SERVER_ERROR;
+        return res.serverError(errors);
+    }
+});
+
+exports.getAllStockPreparationShop = asyncHandler(async (req, res) => {
+    try {
+        let itemCategoriesList = await getAllCheckedItemCategoriesList({
+            categoryStatus: OPTIONS.defaultStatus.ACTIVE,
+            stockPreparation: true
+        });
+        itemCategoriesList = itemCategoriesList.map(x => x.category);
+        let project = InventoryCorrectionHelper.getAllStockPreparationShopAttributes();
+        let pipeline = [
+            {
+                $match: {
+                    company: ObjectId(req.user.company),
+                    closedIRQty: {$gt: 0},
+                    department: {$in: [GOODS_TRANSFER_REQUEST_DEPT.PLANNING, GOODS_TRANSFER_REQUEST_DEPT.PRODUCTION]}
+                }
+            },
+            {
+                $lookup: {
+                    from: "Items",
+                    localField: "item",
+                    foreignField: "_id",
+                    pipeline: [
+                        {
+                            $project: {
+                                itemType: 1
+                            }
+                        }
+                    ],
+                    as: "item"
+                }
+            },
+            {
+                $match: {
+                    ...(itemCategoriesList.length > 0 && {"item.itemType": {$in: itemCategoriesList}})
+                }
+            },
+            {
+                $addFields: {
+                    convertedClosedIRQty: {
+                        $cond: [
+                            {$eq: [STOCK_PREP_UOM.SQM, "$UOM"]},
+                            "$closedIRQty",
+                            {
+                                $cond: [
+                                    {$ne: ["$primaryToSecondaryConversion", null]},
+                                    {
+                                        $multiply: ["$closedIRQty", "$primaryToSecondaryConversion"]
+                                    },
+                                    {
+                                        $divide: ["$closedIRQty", "$secondaryToPrimaryConversion"]
+                                    }
+                                ]
+                            }
+                        ]
+                    }
+                }
+            },
+            {
+                $project: project
+            }
+        ];
+        let rows = await InventoryCorrectionRepo.filteredInventoryCorrectionList(pipeline);
+
+        let WXLDimensionsUnit = await findAppParameterValue("WXL_DIMENSIONS_UNIT", req.user.company);
+
+        return res.success({
+            rows,
+            WXLDimensionsUnit: WXLDimensionsUnit.split(",").map(x => x)
+        });
+    } catch (e) {
+        console.error("getAllStockPreparationShop", e);
+        const errors = MESSAGES.apiErrorStrings.SERVER_ERROR;
+        return res.serverError(errors);
+    }
+});

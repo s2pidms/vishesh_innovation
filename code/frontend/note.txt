@@ -49,7 +49,7 @@ ng g c default/purchase/transactions/purchase-indent/screens/PI-delivery-schedul
 
 
 ng g c default/purchase/transactions/generate-purchase-order/screens/PO-list
-ng g c default/purchase/transactions/generate-purchase-order/screens/PO-form
+ng g c default/purchase/transactions/generate-purchase-order/screens/PO-add-service-charges
 
 
 ng g c default/purchase/transactions/generate-purchase-order/screens/amend-po
@@ -120,7 +120,9 @@ ng g m default/settings/master/planning --route planning --module=master.module
 ng g m default/settings/master/upload-data --route upload_data --module=master.module
 
 
-ng g c default/settings/master/security-master/sub-module-management/screens/add-sub-module-roll
+ng g m default/settings/master/security-master/card-managements --route card_managements --module=security-master.module
+ng g c default/settings/master/security-master/card-managements/screens/card-managements-list
+ng g c default/settings/master/security-master/card-managements/screens/card-managements-counts
 
 
 ng g c default/settings/master/department-master/screens/department-form
@@ -145,7 +147,7 @@ ng g c default/hr/transactions/salary-adv-summary/screens/salary-adv-summary-for
 ng g m default/hr/transactions/salary-adv-summary --route salary_adv_summary --module=transactions.module
 ng g m default/hr/transactions/attendance-review --route attendance_review --module=transactions.module
 ng g m default/hr/transactions/payroll --route payroll --module=transactions.module
-
+ng g c default/hr/transactions/payroll/components/payroll-edit-model
 ng g m default/hr/reports/leave-applicationR --route leave_applicationR --module=reports.module
 ng g m default/hr/reports/employee-attendanceR --route employee_attendanceR --module=reports.module
 ng g m default/hr/reports/payrollR --route payrollR --module=reports.module
@@ -227,6 +229,9 @@ ng g c default/production/transactions/jc-production-entry/screens/components/ge
 ng g c default/production/transactions/jc-production-entry/screens/components/ink-mixing-log-modal
 ng g c default/production/transactions/jc-production-entry/screens/components/screen-making-log-model
 ng g c default/production/transactions/jc-production-entry/screens/components/ipqa-log-model
+
+ng g c default/production/transactions/jc-production-entry/screens/stock-preparation/stock-preparation-log-model
+ng g c default/production/transactions/jc-production-entry/screens/stock-preparation/jc-stock-preparation-entry
 
 ng g c default/production/master/map-process-and-machine/screens/define-sub-processes-modal
 
@@ -364,6 +369,7 @@ ng g m default/business-leads/master/direct-cost-dsku --route direct_cost_dsku -
 ng g c default/business-leads/master/direct-cost-dsku/screens/direct-cost-dsku-list
 ng g c default/business-leads/master/direct-cost-dsku/screens/direct-cost-dsku-form
 
+ng g m default/business-leads/master/SKU-attributes --route sku_attributes --module=master.module 
 
 ng g m default/business-leads/reports/lead-conversion --route lead_conversion --module=reports.module
 ng g m default/business-leads/reports/opportunity-pipeline --route opportunity_pipeline --module=reports.module
@@ -433,15 +439,20 @@ ng g m print-screen/sample-jc-creation-print  --route sample_jc_creation_print -
 ng g c print-screen/job-card-print/screen/PI-schedule-print-screen
 
 
-ng g m default/planning/master/SAC-master --route sac_master --module=master.module 
+ng g m default/planning/master/SKU-attributes --route sku_attributes --module=master.module 
 ng g m default/planning/master/HSN-master/screens/bom-of-product --route bom_of_product --module=bill-of-material.module
 
 ng g c default/planning/master/bill-of-material/screens/bom-of-product/bom-of-product-list
 ng g c default/planning/master/bill-of-material/screens/bom-of-product/bom-of-product-form
 ng g c default/planning/master/routing-master/screens/resource-management
 
-ng g m default/production/transactions/stock-cutting --route stock_cutting --module=transactions.module 
-ng g c default/production/transactions/stock-cutting/stock-cutting-form
+ng g m default/production/transactions/production-processes --route production_processes --module=transactions.module 
+
+ng g m default/production/transactions/production-processes/screens/screen-making-log --route screen_making_log --module=production-processes.module 
+ng g c default/production/transactions/production-processes/screens/stock-preparation/stock-preparation-form
+
+ng g c default/production/transactions/production-processes/screens/pp-ink-mixing/pp-ink-mixing-form
+ng g c default/production/transactions/production-processes/screens/pp-ink-mixing/pp-ink-mixing-batch
 ng g c default/production/transactions/stock-cutting/stock-cutting-process
 ng g c default/planning/transactions/stock-cutting/stock-cutting-ppic-process
 ng g c default/planning/transactions/stock-cutting/log-entry-modal
@@ -472,9 +483,13 @@ ng g m default/stores/reports/ir-report-name-wise --route ir_report_name_wise --
 
 
 
-ng g m default/planning/transactions/job-card-tracking --route job_card_tracking_list --module=transactions.module
-ng g c default/planning/transactions/job-card-tracking/screens/job-card-tracking-list
-ng g c default/planning/transactions/job-card-tracking/screens/view-jc-status
+ng g m default/planning/transactions/material-requirement-planning --route material_requirement_planning --module=transactions.module
+ng g c default/planning/transactions/material-requirement-planning/screens/material-requirement-planning-form
+
+
+ng g m default/planning/transactions/sps-inventory-reconciliation --route sps_inventory_reconciliation --module=transactions.module
+ng g c default/planning/transactions/sps-inventory-reconciliation/screens/sps-inventory-reconciliation-list
+ng g c default/planning/transactions/sps-inventory-reconciliation/screens/sps-duc-modal
 ng g c default/planning/transactions/GI-PPIC-to-production/screens/GI-PPIC-to-production-remarks
 
 ng g c default/planning/master/direct-cost/screens/components/labour-cost-modal
@@ -575,6 +590,7 @@ ng g c default/planning/transactions/job-card/screens/job-card-list
 ng g c default/planning/transactions/job-card/screens/job-card-form
 ng g c default/planning/transactions/job-card/screens/components/job-card-NPD-table
 ng g c default/planning/transactions/gi-ppic-to-production/screens/job-card-details-Modal
+ng g c default/planning/transactions/job-card/screens/components/view-sku-dimension
 
 ng g m default/settings/master/hr/employee-grade --route employee_grade --module=hr.module
 ng g c default/settings/master/hr/employee-grade/screens/employee_grade-list
@@ -650,7 +666,7 @@ ng g c default/settings/master/finance-master/cost-head/screens/cost-head-form
 
 ng g m default/settings/master/support --route support --module=master.module
 
-ng g m default/planning/reports/cost-sheet --route cost_sheet --module=reports.module
+ng g m default/planning/reports/sps-inventory --route sps_inventory --module=reports.module
 
 
 ng g c print-screen/quotations/termsOfCondOfSupply
@@ -756,4 +772,50 @@ ng g m default/settings/master/sales/sales-uom-unit-master --route sales_uom_uni
 ng g c default/settings/master/sales/sales-uom-unit-master/screens/sales_uom_unit_master_form
 ng g c default/settings/master/sales/sales-uom-unit-master/screens/sales_uom_unit_master_list
 
+
+ng g m default/planning/master/sku-dimension-master --route sku_dimension_master --module=master.module
+ng g c default/planning/master/sku-dimension-master/screens/sku-dimension-master-list
+ng g c default/planning/master/sku-dimension-master/screens/sku-dimension-master-form
+ng g c default/planning/master/sku-dimension-master/screens/components/copy-dimension-master-modal
+ng g c default/planning/master/sku-dimension-master/screens/components/status-summary-modal
+
+ng g m default/planning/master/sku-material-master --route sku_material_master --module=master.module
+ng g c default/planning/master/sku-material-master/screens/sku-material-master-list
+ng g c default/planning/master/sku-material-master/screens/sku-material-master-form
+ng g c default/planning/master/sku-material-master/screens/components/copy-material-master-modal
+ng g c default/planning/master/sku-material-master/screens/components/status-summary-modal
+
+ng g m default/planning/master/sku-ink-master --route sku_ink_master --module=master.module
+ng g c default/planning/master/sku-ink-master/screens/sku-ink-master-list
+ng g c default/planning/master/sku-ink-master/screens/sku-ink-master-form
+ng g c default/planning/master/sku-ink-master/screens/components/copy-ink-ink-info-modal
+ng g c default/planning/master/sku-ink-master/screens/components/status-summary-modal
+
+ng g m default/planning/master/sku-attribute-tracking --route sku_attribute_tracking --module=master.module
+ng g c default/planning/master/sku-attribute-tracking/screens/sku-attribute-tracking-list
+ng g c default/planning/master/sku-attribute-tracking/screens/components/status-summary-modal
+
+ng g c default/production/transactions/production-processes/screens/components/add-on-GTQty-modal
+
+ng g c default/production/transactions/jc-production-entry/screens/lamination-log-entry-model
+ng g c default/production/transactions/jc-production-entry/screens/weeding-log-entry-model
+ng g c default/production/transactions/jc-production-entry/screens/punching-log-entry-model
+ng g c default/production/transactions/jc-production-entry/screens/packing-log-entry-model
+
+
+
+ng g m default/settings/master/purchase/service-charges --route service_charges --module=purchase.module
+ng g c default/settings/master/purchase/service-charges/screens/service-charges-list
+ng g c default/settings/master/purchase/service-charges/screens/service-charges-form
+
+
+
+
+ng g c default/hr/master/employee/screens/employee-additional-info
+ng g c default/hr/master/employee/screens/family-info
+ng g c default/hr/master/employee/screens/address-info
+ng g c default/hr/master/employee/screens/joining-details
+ng g c default/hr/master/employee/screens/credentials-info
+ng g c default/hr/master/employee/screens/bank-details
+ng g c default/hr/master/employee/screens/status
 

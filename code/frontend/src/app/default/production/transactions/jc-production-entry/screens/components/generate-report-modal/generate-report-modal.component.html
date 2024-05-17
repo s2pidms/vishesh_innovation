@@ -18,7 +18,12 @@
                         <span class="ms-1 me-2 text-secondary">&#9654;</span>
                     </div>
                     <div class="col-6 ps-0 setInputMargin">
-                        <input type="number" class="form-control" [(ngModel)]="generateReport.batchInputQty" />
+                        <input
+                            type="number"
+                            class="form-control"
+                            [(ngModel)]="generateReport.batchInputQty"
+                            (input)="setRejectQty()"
+                        />
                     </div>
                 </div>
                 <div class="row mt-4">
@@ -29,7 +34,12 @@
                         <span class="ms-1 me-2 text-secondary">&#9654;</span>
                     </div>
                     <div class="col-6 ps-0 setInputMargin">
-                        <input type="number" class="form-control" [(ngModel)]="generateReport.batchOutputQty" />
+                        <input
+                            type="number"
+                            class="form-control"
+                            [(ngModel)]="generateReport.batchOutputQty"
+                            (input)="setRejectQty()"
+                        />
                     </div>
                 </div>
                 <div class="row mt-4">

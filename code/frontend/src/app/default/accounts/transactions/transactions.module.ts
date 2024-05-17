@@ -2,6 +2,7 @@ import {NgModule} from "@angular/core";
 import {CommonModule} from "@angular/common";
 import {RouterModule, Routes} from "@angular/router";
 import {TransactionsComponent} from "./transactions.component";
+import {TaxInvoiceComponent} from "../../dispatch/transactions/tax-invoice/tax-invoice.component";
 const routes: Routes = [
     {
         path: "",
@@ -22,7 +23,8 @@ const routes: Routes = [
                     import("./purchase-register-entry/purchase-register-entry.module").then(
                         m => m.PurchaseRegisterEntryModule
                     )
-            }
+            },
+            {path: "tax_invoice", component: TaxInvoiceComponent}
         ]
     }
 ];

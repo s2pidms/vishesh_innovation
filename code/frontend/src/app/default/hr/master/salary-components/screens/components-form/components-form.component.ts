@@ -1,6 +1,7 @@
 import {Component, OnInit} from "@angular/core";
 import {UntypedFormControl, UntypedFormGroup, Validators} from "@angular/forms";
-import {Router, ActivatedRoute} from "@angular/router";
+import {ActivatedRoute} from "@angular/router";
+import {Location} from "@angular/common";
 import {mergeMap, of} from "rxjs";
 import {ToastService, SpinnerService, UtilityService} from "@core/services";
 import {SalaryComponentService} from "@services/hr";
@@ -41,20 +42,16 @@ export class ComponentsFormComponent implements OnInit {
 
     constructor(
         private salaryComponentService: SalaryComponentService,
-        private router: Router,
         private activatedRoute: ActivatedRoute,
         private spinner: SpinnerService,
         private toastService: ToastService,
         private validationService: ValidationService,
-        private utilityService: UtilityService
+        private utilityService: UtilityService,
+        private location: Location
     ) {}
 
     ngOnInit(): void {
         this.getInitialData();
-    }
-
-    navigateTo(path: string, id: any, action: string) {
-        this.router.navigate([path], {queryParams: {id, action}});
     }
 
     submit() {
@@ -77,7 +74,7 @@ export class ComponentsFormComponent implements OnInit {
             this.spinner.hide();
             this.submitted = false;
             this.toastService.success(success.message);
-            this.router.navigate(["/default/HR/master/salary_components/sc-list"]);
+            this.location.back();
         });
     }
 
@@ -87,7 +84,7 @@ export class ComponentsFormComponent implements OnInit {
             this.submitted = false;
             this.spinner.hide();
             this.toastService.success(success.message);
-            this.router.navigate(["/default/HR/master/salary_components/sc-list"]);
+            this.location.back();
         });
     }
 

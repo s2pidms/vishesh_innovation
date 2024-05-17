@@ -15,3 +15,4 @@ export * from "./details-of-customers-list/details-of-customers-list.component";
 export * from "./custom-search-details-modal/custom-search-details-modal.component";
 export * from "./add-item-channel-partner/add-item-channel-partner.component";
 export * from "./details-of-channel-partner/details-of-channel-partner.component";
+export * from "./confirm-delete/confirm-delete.component";

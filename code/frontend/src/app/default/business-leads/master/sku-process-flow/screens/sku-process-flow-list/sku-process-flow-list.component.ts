@@ -21,7 +21,7 @@ export class SkuProcessFlowListComponent implements OnInit, OnDestroy {
     page: number = 1;
     pageSize: number = 8;
     collection: number = 0;
-    column: string = "createdAt";
+    column: string = "SKUNo";
     direction: number = -1;
     search: string = "";
     tableData: ISKUProcessFlow[] = [];

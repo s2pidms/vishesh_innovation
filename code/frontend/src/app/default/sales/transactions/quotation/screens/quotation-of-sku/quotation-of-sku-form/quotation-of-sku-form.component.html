@@ -209,7 +209,7 @@
             </div>
             <div class="col-4 mt-1">
                 <div
-                    *ngIf="['Exports – OEM', 'Exports – Dealer'].includes(form.controls['customerCategory'].value)"
+                    *ngIf="form.controls['customerCategory']?.value?.includes('Exports')"
                     class="d-flex justify-content-center"
                 >
                     <div class="col-form-label text-nowrap pe-1 pt-0">

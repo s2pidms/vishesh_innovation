@@ -27,6 +27,7 @@ export class POScheduleModalComponent implements OnInit {
     @Input() action: string = "edit";
     @Input() bookSalesOrder: any = "";
     @Input() SOType: any = "";
+    @Input() POType: any = "";
     @Input() POQty: any = null;
     @Input() deliveryCount: any = null;
     @Input() UOM: any = null;
@@ -47,6 +48,11 @@ export class POScheduleModalComponent implements OnInit {
                 return x;
             });
         }
+
+        if (this.POType == "Standard PO") {
+            this.deliveryCount = 1;
+        }
+
         if (this.bookSalesOrder == "Book Sales Order" && this.SOType == "Regular") {
             this.deliveryScheduleArr = [];
             this.deliveryCount = 1;

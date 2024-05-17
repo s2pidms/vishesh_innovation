@@ -1,0 +1,143 @@
+<div class="modelPage">
+    <div class="modal-header">
+        <div class="heading">Add Service Charges</div>
+        <div>
+            <button type="button" class="btn btn-cross btn-sm" aria-label="Close" (click)="this.activeModal.close()">
+                <i class="fa fa-times-circle" aria-hidden="true"></i>
+            </button>
+        </div>
+    </div>
+    <div class="container-fluid">
+        <div class="row px-2 mt-5">
+            <div class="col-6 pe-0">
+                <div class="row">
+                    <div class="col-8 pe-1">
+                        <label class="form-label"> Description of Services </label>
+                    </div>
+                    <div class="col-4 ps-2">
+                        <label class="form-label">SAC Code </label>
+                    </div>
+                </div>
+            </div>
+            <div class="col-6">
+                <div class="row">
+                    <div class="col-4 ps-2 pe-0">
+                        <label class="form-label">GST Rate % </label>
+                    </div>
+                    <div class="col-3 px-2">
+                        <label class="form-label">Currency </label>
+                    </div>
+                    <div class="col-5 ps-0">
+                        <label class="form-label">Service Charges </label>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div *ngFor="let item of serviceChargesList" class="row px-2 mb-3">
+            <div class="col-6 pe-0">
+                <div class="row">
+                    <div class="col-8 pe-1">
+                        <input
+                            value="Freight Forwarding"
+                            class="form-control bg-white-smoke"
+                            type="text"
+                            (input)="updateTotalAmount()"
+                            [(ngModel)]="item.description"
+                            readonly
+                        />
+                    </div>
+                    <div class="col-4 ps-2">
+                        <input
+                            class="form-control bg-white-smoke"
+                            type="number"
+                            [(ngModel)]="item.SACCode"
+                            (input)="updateTotalAmount()"
+                            readonly
+                        />
+                    </div>
+                </div>
+            </div>
+            <div class="col-6">
+                <div class="row">
+                    <div class="col-4 ps-2 pe-0">
+                        <input
+                            class="form-control bg-white-smoke"
+                            type="number"
+                            [(ngModel)]="item.GSTRate"
+                            (input)="updateTotalAmount()"
+                            readonly
+                        />
+                    </div>
+                    <div class="col-3 px-2">
+                        <input
+                            class="form-control bg-white-smoke"
+                            type="text"
+                            [(ngModel)]="item.currency"
+                            (input)="updateTotalAmount()"
+                            readonly
+                        />
+                    </div>
+                    <div class="col-5 ps-0">
+                        <input
+                            class="form-control"
+                            type="number"
+                            [(ngModel)]="item.serviceCharges"
+                            (input)="updateTotalAmount()"
+                            [readonly]="!['create', 'edit', 'amend'].includes(action)"
+                        />
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-12 px-0 mt-1">
+                <hr class="line-border" />
+            </div>
+        </div>
+
+        <div class="row mb-4 mt-2 px-2">
+            <div class="col-6">
+                <div class="d-flex align-items-center">
+                    <div class="col-form-label text-nowrap">
+                        Total Service Charges
+                        <span class="ms-1 me-2">&#9654;</span>
+                    </div>
+                    <div class="d-flex">
+                        <span class="input-group-text text-secondary combine-INR">
+                            {{ "INR" | companyCurrency }}
+                            <div class="vr ms-3"></div>
+                        </span>
+                        <input
+                            [(ngModel)]="totalServiceCharges"
+                            class="form-control ps-1 border-start-0"
+                            type="number"
+                            readonly
+                            [disabled]="['view', 'approve'].includes(action)"
+                        />
+                    </div>
+                </div>
+            </div>
+            <div *ngIf="['create', 'edit', 'amend'].includes(action)" class="col-6 d-flex justify-content-end">
+                <button type="button" class="btn btn-primary px-4" (click)="disMissModal()">Save & Close</button>
+            </div>
+        </div>
+        <!-- <div
+            class="modal-footer"
+            *ngIf="
+                action === 'edit' || action === 'create' || action === 'amend'
+            "
+        >
+            <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                <div class="col-6"></div>
+                <div class="col-6">
+                    <button type="button" class="btn btn-primary px-5" (click)="resetValues()">Reset</button>
+                    <button type="button" class="btn btn-primary px-5" (click)="activeModal.close(otherCharges)">
+                        Save
+                    </button>
+                </div>
+            </div>
+        </div> -->
+    </div>
+</div>

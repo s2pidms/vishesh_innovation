@@ -47,6 +47,7 @@ export class JobCardFormComponent implements OnInit {
         return item?._id;
     }
     itemDetailsList: any = [];
+    dimensionsDetails: any = {};
     masterData: IJobCardMasterData = {
         autoIncrementNo: "",
         companyType: "",
@@ -377,6 +378,7 @@ export class JobCardFormComponent implements OnInit {
             this.spinner.hide();
         });
     }
+
 
     preview() {
         this.search = "";

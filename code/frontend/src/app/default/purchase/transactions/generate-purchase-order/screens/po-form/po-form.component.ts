@@ -16,6 +16,7 @@ import {POChangePTComponent} from "../po-change-pt/po-change-pt.component";
 import {PURCHASE_ORDER_TYPE} from "@mocks/constant";
 import {POScheduleModalComponent} from "../po-schedule-modal/po-schedule-modal.component";
 import {IGeneratePOMasterData} from "@mocks/models/purchase/transactions";
+import {POAddServiceChargesComponent} from "../po-add-service-charges/po-add-service-charges.component";
 
 @Component({
     selector: "app-po-form",
@@ -42,7 +43,7 @@ export class PoFormComponent implements OnInit {
     purchaseCategoryValues: any = {};
     selectedSupplierDetails: any = {};
     minDate: Date = new Date();
-    filterItems: PODetails[] = [];
+    filterItems: PODetails[] | any = [];
     ESCPreviewArr: any = [];
     isESCPreview = false;
     statusArr: any = {
@@ -52,22 +53,24 @@ export class PoFormComponent implements OnInit {
         reject: "Rejected",
         cancel: "Cancelled"
     };
-    otherCharges = {
-        action: "create",
-        packagingAndForwarding: 0,
-        freight: 0,
-        insurance: 0,
-        loadingAndUnloading: 0,
-        miscellaneous: 0,
-        totalAmount: 0
-    };
+    // otherCharges = {
+    //     action: "create",
+    //     packagingAndForwarding: 0,
+    //     freight: 0,
+    //     insurance: 0,
+    //     loadingAndUnloading: 0,
+    //     miscellaneous: 0,
+    //     totalAmount: 0
+    // };
     masterData: IGeneratePOMasterData = {
         purchaseCategoryOptions: [],
         paymentTermsOptions: [],
         freightTermsOptions: [],
         transporterOptions: [],
-        locationOptions: []
+        locationOptions: [],
+        serviceChargesList: []
     };
+    totalServiceCharges: any = 0;
     form = new UntypedFormGroup({
         _id: new UntypedFormControl(null),
         purchaseCategory: new UntypedFormControl(null, [Validators.required]),
@@ -90,6 +93,8 @@ export class PoFormComponent implements OnInit {
         netPOValue: new UntypedFormControl(0),
         totalPPV: new UntypedFormControl(0),
         cancellationReason: new UntypedFormControl(""),
+        serviceChargesInfo: new UntypedFormControl([]),
+        totalServiceCharges: new UntypedFormControl(0),
         POStatus: new UntypedFormControl("Awaiting Approval")
     });
     get f() {
@@ -130,7 +135,8 @@ export class PoFormComponent implements OnInit {
         }
         let formData: any = this.form.value;
 
-        formData.otherCharges = this.otherCharges;
+        // formData.otherCharges = this.otherCharges;
+        formData.serviceChargesInfo = this.masterData?.serviceChargesList;
         formData.PODetails = this.filterItems.filter((x: any) => x.POQty > 0);
         if (formData.PODetails.length == 0) {
             this.toastService.warning("POQty can not be zero");
@@ -217,12 +223,18 @@ export class PoFormComponent implements OnInit {
             this.purchaseCategoryValues = result?.autoIncValues;
             this.f["PODate"].setValue(this.utilityService.getTodayDate("YYYY-MM-DD"));
             this.f["deliveryDate"].setValue(this.utilityService.getTodayDate("YYYY-MM-DD"));
-            this.form.controls["freightTerms"].patchValue("FOR - Free On Road");
-            this.form.controls["POType"].patchValue(this.POTypeObj.STANDARD_PO);
+            this.form.controls["freightTerms"].setValue("FOR - Free On Road");
+            this.form.controls["POType"].setValue(this.POTypeObj.STANDARD_PO);
             this.setPOValidity();
             this.form.controls["POStatus"].patchValue("Awaiting Approval");
             this.form.controls["POStatus"].setValue(this.statusArr[this.action]);
-            this.form.controls["currency"].patchValue("INR");
+            this.form.controls["currency"].setValue("INR");
+
+            this.masterData.serviceChargesList = this.masterData?.serviceChargesList?.map((x: any) => {
+                x.currency = "INR";
+                return x;
+            });
+
             this.activatedRoute.queryParams
                 .pipe(
                     mergeMap((params: any) => {
@@ -281,10 +293,12 @@ export class PoFormComponent implements OnInit {
                             }
                         }
                         ele.POLineNumber = idx + 1;
+                        ele.netRate = ele.netRate ?? ele.purchaseRate;
+                        ele.discount = ele.discount ?? 0;
                         return ele;
                     });
                     if (this.action != "edit") {
-                        this.filterItems = this.filterItems.filter(x => x.POQty != 0);
+                        this.filterItems = this.filterItems.filter((x: any) => x.POQty != 0);
                     }
                     this.f["totalLineValue"].setValue(
                         this.filterItems
@@ -298,8 +312,13 @@ export class PoFormComponent implements OnInit {
                     } else {
                         success.POStatus = this.statusArr[this.action];
                     }
-                    this.otherCharges = success.otherCharges;
+                    // this.otherCharges = success.otherCharges;
+                    if (success.serviceChargesInfo) {
+                        this.masterData.serviceChargesList = success.serviceChargesInfo;
+                    }
                     this.form.patchValue(success);
+
+                    this.totalServiceCharges = success?.totalServiceCharges ?? 0;
                     this.f["purchaseCategory"].disable();
                     this.f["supplier"].disable();
                     this.f["POType"].disable();
@@ -345,6 +364,25 @@ export class PoFormComponent implements OnInit {
                 ele.deliveryDate = ele.leadDeliveryDate;
                 return ele;
             });
+        }
+
+        if ([this.POTypeObj.STANDARD_PO, this.POTypeObj.PLANNED_PO].includes(this.f["POType"].value)) {
+            for (const ele of this.filterItems) {
+                if (ele.deliverySchedule) {
+                    let scheduleNo = 1;
+                    for (let index = 0; index < scheduleNo; index++) {
+                        let obj: any = {
+                            scheduleNo: index + 1,
+                            quantity: ele.POQty,
+                            UOM: ele.UOM,
+                            deliveryDate: ele.deliveryDate
+                        };
+
+                        ele.deliverySchedule = [obj];
+                        ele.scheduleNo = 1;
+                    }
+                }
+            }
         }
     }
 
@@ -413,6 +451,8 @@ export class PoFormComponent implements OnInit {
         this.purchaseService.getAllItemsForSupplier({supplierId: ev.value}).subscribe(success => {
             this.filterItems = success.map((ele: any, index: any) => {
                 ele.POLineNumber = index + 1;
+                ele.netRate = ele.purchaseRate;
+                ele.discount = 0;
                 if (!!!ele.unitConversion) {
                     if (ele.primaryToSecondaryConversion) {
                         ele.unitConversion = `1 ${ele.primaryUnit ?? "Unit"} = ${
@@ -435,17 +475,26 @@ export class PoFormComponent implements OnInit {
         this.f["transporter"].setValue(ev?.lastTransporter);
         this.f["changedPaymentTerms"].setValue(ev?.supplierPaymentTerms);
         this.f["deliveryDate"].setValue(this.utilityService.getTodayDate("YYYY-MM-DD"));
+
+        this.masterData.serviceChargesList = this.masterData?.serviceChargesList?.map((x: any) => {
+            x.currency = ev?.supplierCurrency ?? "INR";
+            return x;
+        });
+
         this.collection = this.filterItems.length;
     }
 
     lineValueRate(POLineNumber: number, element: any) {
         let index = this.filterItems.map((x: any) => x.POLineNumber).indexOf(POLineNumber);
-        this.filterItems[index].lineValue = Number((+element.POQty * +element.purchaseRate).toFixed(2));
+        // this.filterItems[index].lineValue = Number((+element.POQty * +element.purchaseRate).toFixed(2));
 
         this.filterItems[index].balancedQty = element.POQty;
 
+        this.filterItems[index].netRate = +element.purchaseRate - +element.purchaseRate * (+element.discount / 100);
+        this.filterItems[index].lineValue = Number((+element.POQty * +element.netRate).toFixed(2));
+
         this.filterItems[index].linePPV = Number(
-            (+element.POQty * +element.standardRate - +element.POQty * +element.purchaseRate).toFixed(2)
+            (+element.POQty * +element.standardRate - +element.POQty * +element.netRate).toFixed(2)
         );
         this.f["totalLineValue"].setValue(
             this.filterItems
@@ -453,14 +502,72 @@ export class PoFormComponent implements OnInit {
                 .reduce((acc: number, cur: number) => acc + cur, 0)
                 .toFixed(2)
         );
-        this.f["netPOValue"].setValue((+this.f["totalLineValue"].value + +this.otherCharges.totalAmount).toFixed(2));
+        this.f["netPOValue"].setValue((+this.f["totalLineValue"].value + +this.totalServiceCharges).toFixed(2));
+        // this.f["netPOValue"].setValue((+this.f["totalLineValue"].value + +this.otherCharges.totalAmount).toFixed(2));
         this.f["totalPPV"].setValue(
             this.filterItems
                 .map((x: any) => x.linePPV)
                 .reduce((acc: number, cur: number) => acc + cur, 0)
                 .toFixed(2)
         );
+
+        if (this.POTypeObj.STANDARD_PO == this.f["POType"].value) {
+            if (!element.deliverySchedule || element.deliverySchedule.length == 0) {
+                let scheduleNo = 1;
+                for (let index = 0; index < scheduleNo; index++) {
+                    let obj: any = {
+                        scheduleNo: index + 1,
+                        quantity: element.POQty,
+                        UOM: element.UOM,
+                        deliveryDate: element.deliveryDate
+                    };
+
+                    element.deliverySchedule = [obj];
+                    element.scheduleNo = 1;
+                }
+            }
+        }
+
+        if (element.deliverySchedule) {
+            let dividedCount = Math.floor(element.POQty / element.deliveryCount);
+            let remainder = element.POQty % element.deliveryCount;
+            for (let i = 0; i < element.deliveryCount; i++) {
+                const scheduleElement = this.filterItems[index].deliverySchedule[i];
+                let quantity = dividedCount;
+                if (i === element.deliveryCount - 1) {
+                    quantity += remainder;
+                }
+                scheduleElement.quantity = quantity;
+            }
+        }
     }
+
+    setNetRate(ele: any) {
+        let index = this.filterItems.map((x: any) => x.POLineNumber).indexOf(ele?.POLineNumber);
+
+        this.filterItems[index].netRate = +ele.purchaseRate - +ele.purchaseRate * (+ele.discount / 100);
+        this.filterItems[index].lineValue = +ele.POQty * +ele.netRate;
+        // this.filterItems[index].SPVLine = +ele.POQty * +ele.standardRate - +ele.POQty * +ele.netRate;
+        this.filterItems[index].linePPV = Number(
+            (+ele.POQty * +ele.standardRate - +ele.POQty * +ele.netRate).toFixed(2)
+        );
+        this.f["totalLineValue"].setValue(
+            this.filterItems
+                .map((x: any) => +x.lineValue)
+                .reduce((acc: number, cur: number) => +acc + +cur, 0)
+                .toFixed(2)
+        );
+        this.f["netPOValue"].setValue((+this.f["totalLineValue"].value + +this.totalServiceCharges).toFixed(2));
+        // this.f["netPOValue"].setValue((+this.f["totalLineValue"].value + +this.otherCharges.totalAmount).toFixed(2));
+
+        this.f["totalPPV"].setValue(
+            this.filterItems
+                .map((x: any) => +x.linePPV)
+                .reduce((acc: number, cur: number) => +acc + +cur, 0)
+                .toFixed(2)
+        );
+    }
+
     setConversionOfUnit(item: any) {
         if (["edit", "create"].includes(this.action)) {
             let index = this.filterItems.map((x: any) => x.POLineNumber).indexOf(item.POLineNumber);
@@ -486,26 +593,60 @@ export class PoFormComponent implements OnInit {
     }
 
     openOtherChargesModal() {
-        const modalRef = this.modalService.open(POOtherChargesComponent, {
+        if (this.masterData?.serviceChargesList?.length == 0) {
+            this.toastService.warning("Pls Define Service Charges");
+            return;
+        }
+        const modalRef = this.modalService.open(POAddServiceChargesComponent, {
             centered: true,
-            size: "md",
+            size: "lg",
+            // windowClass: "custom-modal",
             backdrop: "static",
             keyboard: false
         });
-        this.otherCharges.action = this.action;
-        modalRef.componentInstance.otherCharges = this.otherCharges;
+        modalRef.componentInstance.action = this.action;
+        modalRef.componentInstance.totalServiceCharges = this.f["totalServiceCharges"].value;
+        modalRef.componentInstance.serviceChargesList = this.masterData?.serviceChargesList;
         modalRef.result.then(
             (success: any) => {
-                if (["create", "edit", "amend"].includes(this.action)) {
-                    this.otherCharges = success;
+                if (success && ["create", "edit", "amend"].includes(this.action)) {
+                    console.log("success", success);
+                    this.masterData.serviceChargesList = success?.serviceChargesList;
+                    this.totalServiceCharges = success?.totalServiceCharges ?? 0;
+                    this.f["totalServiceCharges"].setValue(success?.totalServiceCharges ?? 0);
                     this.f["netPOValue"].setValue(
-                        (+this.f["totalLineValue"].value + +this.otherCharges.totalAmount).toFixed(2)
+                        (+this.f["totalLineValue"].value + +this.totalServiceCharges).toFixed(2)
                     );
+                    // this.f["netPOValue"].setValue(
+                    //     (+this.f["totalLineValue"].value + +this.otherCharges.totalAmount).toFixed(2)
+                    // );
                 }
             },
             (reason: any) => {}
         );
     }
+
+    // openOtherChargesModal() {
+    //     const modalRef = this.modalService.open(POOtherChargesComponent, {
+    //         centered: true,
+    //         size: "md",
+    //         backdrop: "static",
+    //         keyboard: false
+    //     });
+    //     this.otherCharges.action = this.action;
+    //     modalRef.componentInstance.otherCharges = this.otherCharges;
+    //     modalRef.result.then(
+    //         (success: any) => {
+    //             if (["create", "edit", "amend"].includes(this.action)) {
+    //                 this.otherCharges = success;
+    //                 this.f["netPOValue"].setValue(
+    //                     (+this.f["totalLineValue"].value + +this.otherCharges.totalAmount).toFixed(2)
+    //                 );
+    //             }
+    //         },
+    //         (reason: any) => {}
+    //     );
+    // }
 
     openPOTermsModal() {
         const modalRef = this.modalService.open(POChangePTComponent, {
@@ -536,6 +677,11 @@ export class PoFormComponent implements OnInit {
         );
     }
     openPOScheduleModal(item: any) {
+        if (!item.POQty) {
+            this.toastService.warning("Pls enter PO Qty !!");
+            return;
+        }
+
         const modalRef = this.modalService.open(POScheduleModalComponent, {
             centered: true,
             size: "md",
@@ -543,6 +689,7 @@ export class PoFormComponent implements OnInit {
             keyboard: false
         });
         modalRef.componentInstance.action = this.action;
+        modalRef.componentInstance.POType = this.f["POType"].value;
         modalRef.componentInstance.POQty = item.POQty;
         modalRef.componentInstance.deliveryCount = item.deliveryCount;
         modalRef.componentInstance.UOM = item.UOM;
@@ -559,6 +706,10 @@ export class PoFormComponent implements OnInit {
                     let index = this.filterItems.map((x: any) => x.POLineNumber).indexOf(item.POLineNumber);
                     this.filterItems[index].deliveryCount = success.deliveryCount;
                     this.filterItems[index].deliverySchedule = success.deliverySchedule;
+
+                    if (this.POTypeObj.STANDARD_PO == this.f["POType"].value) {
+                        this.filterItems[index].deliveryDate = success?.deliverySchedule[0]?.deliveryDate;
+                    }
                 }
             },
             (reason: any) => {}
@@ -600,7 +751,6 @@ export class PoFormComponent implements OnInit {
         modalRef.result.then(
             (success: any) => {
                 if (success) {
-                    console.log("success", success);
                     this.selectedSupplierDetails = success?.selectedSupplierDetails;
                     this.form.controls["supplier"].setValue(success?.selectedSupplierDetails?._id);
                     this.supplierValueChange(this.selectedSupplierDetails);

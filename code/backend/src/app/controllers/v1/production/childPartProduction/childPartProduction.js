@@ -8,11 +8,11 @@ const {getAllMapProcessMachine} = require("../map-process-machine/map-process-ma
 const {
     getAllChildPartProductionAttributes
 } = require("../../../../models/production/helpers/childPartProductionHelper");
-const {getEndDateTime, getStartDateTime, dateToAnyFormat} = require("../../../../helpers/dateTime");
+const {dateToAnyFormat} = require("../../../../helpers/dateTime");
 const {CHILD_PART_PRODUCTION} = require("../../../../mocks/schemasConstant/productionConstant");
 const {getAndSetAutoIncrementNo} = require("../../settings/autoIncrement/autoIncrement");
 const {getAllModuleMaster} = require("../../settings/module-master/module-master");
-const {filteredChildItemList} = require("../../../../models/planning/repository/childItemRepository");
+const ChildItemRepository = require("../../../../models/planning/repository/childItemRepository");
 const {
     getAllChildPartProdAggregate
 } = require("../../../../models/production/repository/childPartProductionRepository");
@@ -121,7 +121,7 @@ exports.update = asyncHandler(async (req, res) => {
 
 exports.getAllMasterData = asyncHandler(async (req, res) => {
     try {
-        let childItemListOptions = await filteredChildItemList([
+        let childItemListOptions = await ChildItemRepository.filteredChildItemList([
             {
                 $match: {
                     company: ObjectId(req.user.company),

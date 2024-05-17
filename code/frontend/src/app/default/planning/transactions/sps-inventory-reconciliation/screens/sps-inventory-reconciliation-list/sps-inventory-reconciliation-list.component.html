@@ -1,0 +1,215 @@
+<div class="px-2" class="formCard card">
+    <div class="set-remaining-margin">
+        <div class="row form-header">
+            <div class="col heading">
+                <label>SPS Inventory Reconciliation </label>
+            </div>
+        </div>
+        <!-- <hr class="row line-border" /> -->
+
+        <div class="table-responsive mb-0" style="min-height: 35.2rem">
+            <app-setting-header
+                [data]="{page,pageSize,collection,search}"
+                (dataChange)="eventHeader($event)"
+            ></app-setting-header>
+            <table class="table table-bordered table-sticky">
+                <thead class="bg-primary">
+                    <tr class="text-white">
+                        <th sortable="department" (sort)="onSort($event)">R+/I-</th>
+                        <th sortable="itemCode" (sort)="onSort($event)">Item Code</th>
+                        <th class="text-start" sortable="itemName" (sort)="onSort($event)">Item Name</th>
+                        <th class="text-start" sortable="itemDescription" (sort)="onSort($event)">Item Description</th>
+                        <th>DUC</th>
+                        <th sortable="UOM" (sort)="onSort($event)">UoM</th>
+                        <th sortable="closedIRQty" (sort)="onSort($event)">Quantity</th>
+                        <th sortable="MRNNumber" (sort)="onSort($event)">MRN No.</th>
+                        <th sortable="aging" (sort)="onSort($event)">Aging</th>
+                        <th sortable="formType" (sort)="onSort($event)">Stage</th>
+                        <th *ngIf="checkStockRecoFlag">Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr
+                        *ngFor="
+                            let u of tableData | slice : (page - 1) * pageSize : (page - 1) * pageSize + pageSize;
+                            let i = index;
+                            trackBy: trackByFn
+                        "
+                    >
+                        <td>
+                            <span class="d-flex justify-content-center">
+                                <div *ngIf="u?.department == 'Planning'" class="text-secondary fs-4">+</div>
+                                <div *ngIf="u?.department == 'Production'" class="text-primary fs-4">-</div>
+                            </span>
+                        </td>
+                        <td>{{ u?.itemCode }}</td>
+                        <td class="text-start" [style.width]="itemName.clientWidth" #itemName>
+                            <span class="pointer" [ngbTooltip]="u.itemName" [positionTarget]="itemName">
+                                {{ u?.itemName }}
+                            </span>
+                        </td>
+                        <td class="text-start" [style.width]="itemDescription.clientWidth" #itemDescription>
+                            <span class="pointer" [ngbTooltip]="u.itemDescription" [positionTarget]="itemDescription">
+                                {{ u?.itemDescription }}
+                            </span>
+                        </td>
+
+                        <td class="py-0">
+                            <span class="d-flex justify-content-center">
+                                <div (click)="openUOMDetailsModal(u)" class="sps-DUC pointer"></div>
+                            </span>
+                        </td>
+                        <td class="py-0">
+                            <span>
+                                <div class="d-flex justify-content-between align-items-center px-2">
+                                    {{ u?.UOM | UOMUnitsMaster }}
+
+                                    <span class="pointer d-flex align-items-center">
+                                        <div (click)="setUnit(u)" *ngIf="u.secondaryUnit" class="unit-switch-rev"></div>
+                                        <div *ngIf="!u.secondaryUnit" class="unit-switch-gray"></div>
+                                    </span>
+                                </div>
+                            </span>
+                        </td>
+                        <td>{{ u?.closedIRQty ? (u?.closedIRQty | number : "1.2-2") : null }}</td>
+
+                        <td>{{ u.MRNNumber }}</td>
+                        <td class="py-0">
+                            <span class="d-flex justify-content-center">
+                                <div *ngIf="u?.aging == 'green'" class="flaggreen"></div>
+                                <div *ngIf="u?.aging == 'red'" class="flagred"></div>
+                                <div *ngIf="u?.aging == 'orange'" class="flagYellow"></div>
+                            </span>
+                        </td>
+                        <td class="py-0">
+                            <span class="d-flex justify-content-center">
+                                <div *ngIf="u.formType != 'Child'" class="sps-parent"></div>
+                                <div *ngIf="u.formType == 'Child'" class="sps-child"></div>
+                            </span>
+                        </td>
+                        <td *ngIf="checkStockRecoFlag">
+                            <div class="dropdown">
+                                <button class="dropbtn"></button>
+                                <div class="dropdown-content">
+                                    <a
+                                        appAccessControl
+                                        [accessType]="rolePermissionActions.editAction"
+                                        href="javascript:void(0)"
+                                        (click)="editInventoryDetails(u)"
+                                    >
+                                        <i class="fa fa-pencil-square-o fa-lg me-2 text-primary" aria-hidden="true"></i>
+                                        Edit
+                                    </a>
+                                    <a
+                                        appAccessControl
+                                        [accessType]="rolePermissionActions.editAction"
+                                        href="javascript:void(0)"
+                                        (click)="deleteInventoryDetails(u)"
+                                    >
+                                        <i class="fa fa-trash me-2 text-primary" aria-hidden="true"></i>
+                                        Delete
+                                    </a>
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <div *ngIf="(planningValue || productionValue) && !checkStockRecoFlag">
+            <hr class="row line-border" />
+            <div class="row align-items-center justify-content-end mt-3">
+                <div class="col-3 d-flex justify-content-end pe-0">
+                    <div class="d-flex justify-content-center">
+                        <div class="col-form-label text-nowrap pe-1 pt-1">Closing Qty</div>
+                        <span class="ms-1 me-2 text-secondary d-flex align-items-center">&#9654;</span>
+                        <div class="me-1">
+                            <input
+                                [value]="closingInventory"
+                                class="form-control bg-honey-dew-color"
+                                type="text"
+                                readonly
+                            />
+                        </div>
+                        <div class="col-2">
+                            <input [value]="'sqm'" class="form-control bg-honey-dew-color" type="text" readonly />
+                        </div>
+                    </div>
+                </div>
+                <div class="col-9 d-flex justify-content-end">
+                    <button class="btn btn-primary me-1"><i class="fa fa-check" aria-hidden="true"></i></button>
+                    <button class="btn btn-primary px-4" type="button" (click)="checkStockReco()">Stock Reco</button>
+                </div>
+            </div>
+        </div>
+        <div *ngIf="checkStockRecoFlag">
+            <hr class="row line-border" />
+            <div class="row align-items-center justify-content-end mt-3">
+                <div class="col-3 d-flex justify-content-end separate-row pe-0">
+                    <div class="d-flex justify-content-center">
+                        <div class="col-form-label text-nowrap pe-1 pt-1">Closing Qty</div>
+                        <span class="ms-1 me-2 text-secondary d-flex align-items-center">&#9654;</span>
+                        <!-- <div class="">
+                            <i class="fa fa-caret-right fs-4 mx-2 mt-2 text-secondary"></i>
+                        </div> -->
+                        <div class="me-1">
+                            <input
+                                [value]="closingInventory"
+                                class="form-control bg-honey-dew-color"
+                                type="text"
+                                readonly
+                            />
+                        </div>
+                        <div class="col-2">
+                            <input [value]="'sqm'" class="form-control bg-honey-dew-color" type="text" readonly />
+                        </div>
+                    </div>
+                    <span class="set-position">
+                        <img src="./assets/new_icons/redstroke.svg" alt="" height="27" width="8" />
+                    </span>
+                </div>
+                <div class="col-3 d-flex justify-content-end separate-row ps-5 pe-0">
+                    <div class="d-flex justify-content-center">
+                        <div class="col-form-label text-nowrap pe-1 pt-1">Reco Qty</div>
+                        <span class="ms-1 me-2 text-secondary d-flex align-items-center">&#9654;</span>
+                        <!-- <div class="">
+                          <i class="fa fa-caret-right fs-4 mx-2 mt-2 text-secondary"></i>
+                      </div> -->
+                        <div class="me-1">
+                            <input [value]="recoQty" class="form-control bg-yellow-color" type="text" readonly />
+                        </div>
+                        <div class="col-2">
+                            <input [value]="'sqm'" class="form-control bg-yellow-color" type="text" readonly />
+                        </div>
+                    </div>
+                    <span class="set-position">
+                        <img src="./assets/new_icons/redstroke.svg" alt="" height="27" width="8" />
+                    </span>
+                </div>
+                <div class="col-3 d-flex justify-content-end ps-5 pe-0">
+                    <div class="d-flex justify-content-center">
+                        <div class="col-form-label text-nowrap pe-1 pt-1">Waste Qty</div>
+                        <span class="ms-1 me-2 text-secondary d-flex align-items-center">&#9654;</span>
+                        <!-- <div class="">
+                        <i class="fa fa-caret-right fs-4 mx-2 mt-2 text-secondary"></i>
+                    </div> -->
+                        <div class="me-1">
+                            <input [value]="wasteQty" class="form-control bg-pink-color" type="text" readonly />
+                        </div>
+                        <div class="col-2">
+                            <input [value]="'sqm'" class="form-control bg-pink-color" type="text" readonly />
+                        </div>
+                    </div>
+                </div>
+                <div class="col-3 d-flex justify-content-end">
+                    <button [disabled]="isReset" class="btn btn-primary px-5 me-3" type="button" (click)="reset()">
+                        Reset
+                    </button>
+                    <button [disabled]="isSaved" class="btn btn-primary px-5" type="button" (click)="update()">
+                        Save
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

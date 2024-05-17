@@ -16,6 +16,8 @@ import TABLE_HEADERS_FOR_EMPLOYEE from "./tableHeadersForEmployee";
 import TABLE_HEADERS_FOR_SKU_MASTER from "./tableHeadersForSKUMaster";
 import TABLE_HEADERS_FOR_FGIN from "./tableHeadersForFGIN";
 import TABLE_HEADERS_FOR_ASSET from "./tableHeadersForAsset";
+import TABLE_HEADERS_FOR_SKU_DIMENSIONS from "./tableHeadersForSKUDimensions";
+import TABLE_HEADERS_FOR_SKU_MATERIAL from "./tableHeadersForSKUMaterial";
 
 @Component({
     selector: "app-custom-upload-data",
@@ -58,6 +60,10 @@ export class CustomUploadDataComponent implements OnInit {
             this.tableHead = TABLE_HEADERS_FOR_FGIN;
         } else if (this.type == "Asset") {
             this.tableHead = TABLE_HEADERS_FOR_ASSET;
+        } else if (this.type == "SKUDimensions") {
+            this.tableHead = TABLE_HEADERS_FOR_SKU_DIMENSIONS;
+        } else if (this.type == "SKUMaterial") {
+            this.tableHead = TABLE_HEADERS_FOR_SKU_MATERIAL;
         }
     }
 
@@ -117,24 +123,54 @@ export class CustomUploadDataComponent implements OnInit {
 
     downloadCSVFormat() {
         let text = "";
+        let filename = "";
         if (this.type == "Supplier") {
             text = "./assets/upload-data-excel-csv/supplier.csv";
+            filename = "Upload Suppliers";
         } else if (this.type == "Items") {
             text = "./assets/upload-data-excel-csv/item.csv";
+            filename = "Upload Items";
         } else if (this.type == "Customer") {
             text = "./assets/upload-data-excel-csv/customer.csv";
+            filename = "Upload Customer";
         } else if (this.type == "InventoryCorrection") {
             text = "./assets/upload-data-excel-csv/inventory.csv";
+            filename = "Validate Inventory";
         } else if (this.type == "Employee") {
             text = "./assets/upload-data-excel-csv/employee.csv";
+            filename = "Upload Employee";
         } else if (this.type == "SKUMaster") {
             text = "./assets/upload-data-excel-csv/SKU.csv";
+            filename = "Upload SKU Master";
         } else if (this.type == "FGIN") {
             text = "./assets/upload-data-excel-csv/FGIN.csv";
+            filename = "Upload FGIN";
         } else if (this.type == "Asset") {
             text = "./assets/upload-data-excel-csv/asset.csv";
+            filename = "Upload Asset";
+        } else if (this.type == "SKUDimensions") {
+            text = "./assets/upload-data-excel-csv/SKUDimension.csv";
+            filename = "Upload SKU Dimensions";
+        } else if (this.type == "SKUMaterial") {
+            text = "./assets/upload-data-excel-csv/SKUMaterial.csv";
+            filename = "Upload SKU Material";
         }
-        fs.saveAs(text);
+        // const downloadPath = `${text.substring(0, text.lastIndexOf("/") + 1)}${filename}.csv`;
+        // fs.saveAs(downloadPath);
+
+        // Create a link element
+        const link = document.createElement("a");
+        link.href = text;
+        link.download = `${filename}.csv`;
+
+        // Append the link to the body
+        document.body.appendChild(link);
+
+        // Trigger the download
+        link.click();
+
+        // Clean up
+        document.body.removeChild(link);
     }
 
     openInvalidSupplierRecordsModal() {

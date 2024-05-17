@@ -95,5 +95,18 @@
         "disabled": false,
         "url": "/default/accounts/reports/MRN_report",
         "items": []
+    },
+    {
+        "_id": "66473d4105bef14312c68c4c",
+        "menuItemId": "64a6c1e33339d4dc9d8141ac",
+        "module": "Accounts",
+        "type": "REPORT",
+        "order": 8,
+        "isDisplay": false,
+        "title": "Sales Register With Line Details",
+        "displayName": "Sales Register With Line Details",
+        "disabled": false,
+        "url": "/default/accounts/reports/sales-register-with-details",
+        "items": []
     }
 ]

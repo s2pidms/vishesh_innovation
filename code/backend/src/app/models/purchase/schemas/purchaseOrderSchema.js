@@ -1,4 +1,5 @@
 const {default: mongoose} = require("mongoose");
+const {setTwoDecimal} = require("../../../helpers/utility");
 
 exports.SCHEMA = {
     company: {
@@ -74,11 +75,6 @@ exports.SCHEMA = {
             // sr no
             POLineNumber: {
                 type: Number,
-                set: value => {
-                    if (![undefined, null, "NaN"].includes(value) && typeof +value == "number") {
-                        return parseFloat(value).toFixed(2);
-                    }
-                },
                 required: false
             },
             item: {
@@ -124,51 +120,41 @@ exports.SCHEMA = {
             // enter
             POQty: {
                 type: Number,
-                set: value => {
-                    if (![undefined, null, "NaN"].includes(value) && typeof +value == "number") {
-                        return parseFloat(value).toFixed(2);
-                    }
-                },
+                set: value => setTwoDecimal(value),
                 required: false
             },
             // from item
             standardRate: {
                 type: Number,
-                set: value => {
-                    if (![undefined, null, "NaN"].includes(value) && typeof +value == "number") {
-                        return parseFloat(value).toFixed(2);
-                    }
-                },
+                set: value => setTwoDecimal(value, 3),
                 required: false
             },
             // from item but editable
             purchaseRate: {
                 type: Number,
-                set: value => {
-                    if (![undefined, null, "NaN"].includes(value) && typeof +value == "number") {
-                        return parseFloat(value).toFixed(2);
-                    }
-                },
+                set: value => setTwoDecimal(value, 3),
                 required: false
             },
             // POQty *  purchaseRate
             lineValue: {
                 type: Number,
-                set: value => {
-                    if (![undefined, null, "NaN"].includes(value) && typeof +value == "number") {
-                        return parseFloat(value).toFixed(2);
-                    }
-                },
+                set: value => setTwoDecimal(value),
                 required: false
             },
             // (POQty *  standardRate) - (POQty *  purchaseRate)
             linePPV: {
                 type: Number,
-                set: value => {
-                    if (![undefined, null, "NaN"].includes(value) && typeof +value == "number") {
-                        return parseFloat(value).toFixed(2);
-                    }
-                },
+                set: value => setTwoDecimal(value),
+                required: false
+            },
+            netRate: {
+                type: Number,
+                set: value => setTwoDecimal(value),
+                required: false
+            },
+            discount: {
+                type: Number,
+                set: value => setTwoDecimal(value),
                 required: false
             },
             // enter
@@ -178,41 +164,25 @@ exports.SCHEMA = {
             },
             gst: {
                 type: Number,
-                set: value => {
-                    if (![undefined, null, "NaN"].includes(value) && typeof +value == "number") {
-                        return parseFloat(value).toFixed(2);
-                    }
-                },
+                set: value => setTwoDecimal(value),
                 required: false,
                 default: 0
             },
             igst: {
                 type: Number,
-                set: value => {
-                    if (![undefined, null, "NaN"].includes(value) && typeof +value == "number") {
-                        return parseFloat(value).toFixed(2);
-                    }
-                },
+                set: value => setTwoDecimal(value),
                 required: false,
                 default: 0
             },
             cgst: {
                 type: Number,
-                set: value => {
-                    if (![undefined, null, "NaN"].includes(value) && typeof +value == "number") {
-                        return parseFloat(value).toFixed(2);
-                    }
-                },
+                set: value => setTwoDecimal(value),
                 required: false,
                 default: 0
             },
             sgst: {
                 type: Number,
-                set: value => {
-                    if (![undefined, null, "NaN"].includes(value) && typeof +value == "number") {
-                        return parseFloat(value).toFixed(2);
-                    }
-                },
+                set: value => setTwoDecimal(value),
                 required: false,
                 default: 0
             },
@@ -222,50 +192,30 @@ exports.SCHEMA = {
             },
             receivedQty: {
                 type: Number,
-                set: value => {
-                    if (![undefined, null, "NaN"].includes(value) && typeof +value == "number") {
-                        return parseFloat(value).toFixed(2);
-                    }
-                },
+                set: value => setTwoDecimal(value),
                 required: false
             },
             invoicedQty: {
                 type: Number,
-                set: value => {
-                    if (![undefined, null, "NaN"].includes(value) && typeof +value == "number") {
-                        return parseFloat(value).toFixed(2);
-                    }
-                },
+                set: value => setTwoDecimal(value),
                 required: false,
                 default: 0
             },
             balancedQty: {
                 type: Number,
-                set: value => {
-                    if (![undefined, null, "NaN"].includes(value) && typeof +value == "number") {
-                        return parseFloat(value).toFixed(2);
-                    }
-                },
+                set: value => setTwoDecimal(value),
                 required: false,
                 default: 0
             },
             previousGRNQty: {
                 type: Number,
-                set: value => {
-                    if (![undefined, null, "NaN"].includes(value) && typeof +value == "number") {
-                        return parseFloat(value).toFixed(2);
-                    }
-                },
+                set: value => setTwoDecimal(value),
                 required: false,
                 default: 0
             },
             canceledQty: {
                 type: Number,
-                set: value => {
-                    if (![undefined, null, "NaN"].includes(value) && typeof +value == "number") {
-                        return parseFloat(value).toFixed(2);
-                    }
-                },
+                set: value => setTwoDecimal(value),
                 required: false,
                 default: 0
             },
@@ -294,11 +244,7 @@ exports.SCHEMA = {
                     },
                     quantity: {
                         type: Number,
-                        set: value => {
-                            if (![undefined, null, "NaN"].includes(value) && typeof value == "number") {
-                                return parseFloat(value).toFixed(2);
-                            }
-                        },
+                        set: value => setTwoDecimal(value),
                         required: false
                     },
                     deliveryDate: {
@@ -324,22 +270,14 @@ exports.SCHEMA = {
     // sum of line value
     netPOValue: {
         type: Number,
-        set: value => {
-            if (![undefined, null, "NaN"].includes(value) && typeof +value == "number") {
-                return parseFloat(value).toFixed(2);
-            }
-        },
+        set: value => setTwoDecimal(value),
         required: false,
         default: 0
     },
     // sum of line PPv
     totalPPV: {
         type: Number,
-        set: value => {
-            if (![undefined, null, "NaN"].includes(value) && typeof +value == "number") {
-                return parseFloat(value).toFixed(2);
-            }
-        },
+        set: value => setTwoDecimal(value),
         required: false,
         default: 0
     },
@@ -350,64 +288,95 @@ exports.SCHEMA = {
     otherCharges: {
         packagingAndForwarding: {
             type: Number,
-            set: value => {
-                if (![undefined, null, "NaN"].includes(value) && typeof +value == "number") {
-                    return parseFloat(value).toFixed(2);
-                }
-            },
+            set: value => setTwoDecimal(value),
             required: false,
             default: 0
         },
         freight: {
             type: Number,
-            set: value => {
-                if (![undefined, null, "NaN"].includes(value) && typeof +value == "number") {
-                    return parseFloat(value).toFixed(2);
-                }
-            },
+            set: value => setTwoDecimal(value),
             required: false,
             default: 0
         },
         insurance: {
             type: Number,
-            set: value => {
-                if (![undefined, null, "NaN"].includes(value) && typeof +value == "number") {
-                    return parseFloat(value).toFixed(2);
-                }
-            },
+            set: value => setTwoDecimal(value),
             required: false,
             default: 0
         },
         loadingAndUnloading: {
             type: Number,
-            set: value => {
-                if (![undefined, null, "NaN"].includes(value) && typeof +value == "number") {
-                    return parseFloat(value).toFixed(2);
-                }
-            },
+            set: value => setTwoDecimal(value),
             required: false,
             default: 0
         },
         miscellaneous: {
             type: Number,
-            set: value => {
-                if (![undefined, null, "NaN"].includes(value) && typeof +value == "number") {
-                    return parseFloat(value).toFixed(2);
-                }
-            },
+            set: value => setTwoDecimal(value),
             required: false,
             default: 0
         },
         totalAmount: {
             type: Number,
-            set: value => {
-                if (![undefined, null, "NaN"].includes(value) && typeof +value == "number") {
-                    return parseFloat(value).toFixed(2);
-                }
-            },
+            set: value => setTwoDecimal(value),
             required: false,
             default: 0
         }
+    },
+    serviceChargesInfo: [
+        {
+            order: {
+                type: Number,
+                required: false
+            },
+            description: {
+                type: String,
+                required: false
+            },
+            SACCode: {
+                type: String,
+                required: false
+            },
+            SAC: {
+                type: mongoose.Schema.Types.ObjectId,
+                required: false,
+                ref: "SAC"
+            },
+            GSTRate: {
+                type: Number,
+                required: false
+            },
+            IGSTRate: {
+                type: Number,
+                required: false
+            },
+            SGSTRate: {
+                type: Number,
+                required: false
+            },
+            CGSTRate: {
+                type: Number,
+                required: false
+            },
+            UGSTRate: {
+                type: Number,
+                required: false
+            },
+            currency: {
+                type: String,
+                required: false
+            },
+            serviceCharges: {
+                type: Number,
+                set: value => setTwoDecimal(value),
+                required: false
+            }
+        }
+    ],
+    totalServiceCharges: {
+        type: Number,
+        set: value => setTwoDecimal(value),
+        required: false
     },
     POValidity: {
         type: Date,

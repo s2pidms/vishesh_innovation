@@ -65,11 +65,11 @@ export class POPrintScreenComponent implements OnInit {
             this.tableData.company.companyContactPersonNumber = contactDetails.companyContactPersonNumber;
             this.tableData.company.companyContactPersonEmail = contactDetails.companyContactPersonEmail;
             let supplierGST = this.tableData?.supplier?.supplierGST;
-            let condition = supplierGST.substring(0, 2) == this.tableData?.company?.GSTIN.substring(0, 2);
+            let condition = supplierGST?.substring(0, 2) == this.tableData?.company?.GSTIN?.substring(0, 2);
             if (this.tableData?.company?.companyAddress?.GSTINForAdditionalPlace != undefined) {
                 condition =
-                    supplierGST.substring(0, 2) ==
-                    this.tableData?.company?.companyAddress?.GSTINForAdditionalPlace.substring(0, 2);
+                    supplierGST?.substring(0, 2) ==
+                    this.tableData?.company?.companyAddress?.GSTINForAdditionalPlace?.substring(0, 2);
             }
             this.tableData.totalAmount = 0;
             this.tableData.PODetails.forEach((x: any) => {
@@ -92,7 +92,7 @@ export class POPrintScreenComponent implements OnInit {
                 this.tableData.totalAmount += this.tableData.TLVForOther;
             }
             this.tableData.totalAmount = Math.round(+this.tableData.totalAmount);
-            this.tableData.supplierGST = this.tableData?.supplier?.supplierGST.slice(0, 2);
+            this.tableData.supplierGST = this.tableData?.supplier?.supplierGST?.slice(0, 2);
             this.tableData.summaryRowRepeat = [];
             if (this.tableData.GSTDetails.length > 0) {
                 this.tableData.GSTDetails = this.tableData.GSTDetails.filter((item: any) => {
@@ -110,6 +110,21 @@ export class POPrintScreenComponent implements OnInit {
             this.tableData.rowRepeat = [];
             for (var i = 1; i <= 6 - +this.tableData.PODetails.length; i++) {
                 this.tableData.rowRepeat.push(i);
+            }
+
+            if (this.tableData.serviceChargesInfo) {
+                this.tableData.serviceChargesInfo = this.tableData.serviceChargesInfo?.map((x: any) => {
+                    if (this.tableData?.supplierGST != this.tableData?.company?.GSTIN?.substring(0, 2)) {
+                        x.IGSTRateValue = +((x.serviceCharges * x.IGSTRate) / 100).toFixed(2);
+                        x.totalAmountWithGST = x.IGSTRateValue + x.serviceCharges;
+                    }
+                    if (this.tableData?.supplierGST == this.tableData?.company?.GSTIN?.substring(0, 2)) {
+                        x.CGSTRateValue = +((x.serviceCharges * x.CGSTRate) / 100).toFixed(2);
+                        x.SGSTRateValue = +((x.serviceCharges * x.SGSTRate) / 100).toFixed(2);
+                        x.totalAmountWithGST = x.CGSTRateValue + x.SGSTRateValue + x.serviceCharges;
+                    }
+                    return x;
+                });
             }
         });
     }

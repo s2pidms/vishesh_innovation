@@ -43,7 +43,7 @@ let headers: any = [
         ...EXCEL_STYLE
     },
     {
-        header: "Product Category",
+        header: "Product",
         key: "productCategory",
         ...EXCEL_STYLE
     },
@@ -73,13 +73,13 @@ let headers: any = [
         ...EXCEL_STYLE
     },
     {
-        header: "Status",
-        key: "isActive",
+        header: "Shelf Life [Months]",
+        key: "shelfLife",
         ...EXCEL_STYLE
     },
     {
-        header: "Drawing/Artwork No.",
-        key: "artWorkNo",
+        header: "Status",
+        key: "isActive",
         ...EXCEL_STYLE
     },
     //   {
@@ -158,8 +158,33 @@ let headers: any = [
         ...EXCEL_STYLE
     },
     {
-        header: "Shelf Life [Months]",
-        key: "shelfLife",
+        header: "Customer Name",
+        key: "customerName",
+        ...EXCEL_STYLE
+    },
+    {
+        header: "Customer Part Description",
+        key: "customerPartDescription",
+        ...EXCEL_STYLE
+    },
+    {
+        header: "Customer Part No.",
+        key: "customerPartNo",
+        ...EXCEL_STYLE
+    },
+    {
+        header: "Currency",
+        key: "customerCurrency",
+        ...EXCEL_STYLE
+    },
+    {
+        header: "Rate/U1",
+        key: "standardSellingRate",
+        ...EXCEL_STYLE
+    },
+    {
+        header: "Drawing/Artwork No.",
+        key: "artWorkNo",
         ...EXCEL_STYLE
     },
     {
@@ -176,22 +201,12 @@ let headers: any = [
         header: "Special Storage Instruction",
         key: "specialStorageInstruction",
         ...EXCEL_STYLE
-    },
-    {
-        header: "Customer Name",
-        key: "customerName",
-        ...EXCEL_STYLE
     }
     // {
-    //     header: "Customer PartNo",
-    //     key: "customerPartNo",
+    //     header: "Rate/U1",
+    //     key: "standardSellingRate",
     //     ...EXCEL_STYLE
-    // },
-    // {
-    //     header: "Currency",
-    //     key: "customerCurrency",
-    //     ...EXCEL_STYLE
-    // },
+    // }
     // {
     //     header: "Selling Price [Exclusive of GST]",
     //     key: "standardSellingRate",

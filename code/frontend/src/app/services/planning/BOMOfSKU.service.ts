@@ -10,6 +10,7 @@ export class BOMOfSKUService {
     createPath: '/planning/billOfMaterial/BoMOfSKU/create',
     getAllPath: '/planning/billOfMaterial/BoMOfSKU/getAll',
     getAllInkPath: '/planning/billOfMaterial/BoMOfSKU/getAllInkListBySKUId',
+    getBOMBySKUIdForMRPPath: '/planning/billOfMaterial/BoMOfSKU/getBOMBySKUIdForMRP',
     getAllMasterDataPath: '/planning/billOfMaterial/BoMOfSKU/getAllMasterData',
     updatePath: (id: string) =>
       `/planning/billOfMaterial/BoMOfSKU/update/${id}`,
@@ -28,6 +29,11 @@ export class BOMOfSKUService {
   getAll(params: any) {
     return this.http
       .get(this.routes.getAllPath, params)
+      .pipe(map((res: any) => res));
+  }
+  getBOMBySKUIdForMRP(params: any) {
+    return this.http
+      .get(this.routes.getBOMBySKUIdForMRPPath, params)
       .pipe(map((res: any) => res));
   }
   getAllInkListBySKUId(params: any) {

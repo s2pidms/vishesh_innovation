@@ -14,6 +14,17 @@ const {
     updateSKUByFile,
     getMouldDataBySKUId
 } = require("./SKU");
+const {
+    getAllForAttributes,
+    getByIdForSKUDimAttributes,
+    getByIdForSKUMaterialAttributes,
+    createCopyForSKUDimAttributes,
+    getAllForCopyAttributes,
+    createCopyForSKUMaterialsAttributes,
+    getByIdForSKUInkAttributes,
+    createCopyForSKUInkAttributes,
+    getAllSKUDimExcel
+} = require("./SKUAttributes");
 
 app.post(
     "/create",
@@ -55,4 +66,17 @@ app.get("/getAllSKUByProductCategory", getAllSKUByProductCategory);
 app.post("/updateSKUByFile", upload.single("uploadFile"), updateSKUByFile);
 app.get("/getMouldDataBySKUId", getMouldDataBySKUId);
 
+// Attributes API
+app.get("/getAllForAttributes", getAllForAttributes);
+app.get("/getAllForCopyAttributes", getAllForCopyAttributes);
+// SKU Dimension Attributes
+app.get("/getByIdForSKUDimAttributes/:id", validate("checkParamId"), getByIdForSKUDimAttributes);
+app.post("/createCopyForSKUDimAttributes", createCopyForSKUDimAttributes);
+app.get("/getAllSKUDimExcel", getAllSKUDimExcel);
+// SKU Material Attributes
+app.get("/getByIdForSKUMaterialAttributes/:id", validate("checkParamId"), getByIdForSKUMaterialAttributes);
+app.post("/createCopyForSKUMaterialsAttributes", createCopyForSKUMaterialsAttributes);
+// SKU Ink Attributes
+app.get("/getByIdForSKUInkAttributes/:id", validate("checkParamId"), getByIdForSKUInkAttributes);
+app.post("/createCopyForSKUInkAttributes", createCopyForSKUInkAttributes);
 module.exports = app;

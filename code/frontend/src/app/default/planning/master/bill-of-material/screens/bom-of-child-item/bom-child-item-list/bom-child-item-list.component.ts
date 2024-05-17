@@ -2,11 +2,13 @@ import {Component, OnDestroy, OnInit, QueryList, ViewChildren} from "@angular/co
 import {ActivatedRoute, Router} from "@angular/router";
 import {Subscription} from "rxjs";
 import {NgbdSortableHeader, SortEvent} from "@directives/sortable.directive";
-import {ExportExcelService, ExportToPDFService, SpinnerService} from "@core/services";
+import {ExportExcelService, ExportToPDFService, SpinnerService,StorageService, ToastService} from "@core/services";
 import {BOMChildPartService} from "@services/planning";
-import {LIST_DEFAULT_PERMISSION_ACTIONS} from "@mocks/constant";
+import {LIST_DEFAULT_PERMISSION_ACTIONS,superAdminId} from "@mocks/constant";
 import {BOM_OF_CHILD_REPORT_DATA, BOM_OF_CHILD_PDF_DATA} from "@mocks/export-data/planning/master";
 import {BOMOfChildPart} from "@mocks/models/planning/masters";
+import {ConfirmDeleteComponent} from "@shared/modals";
+import {NgbModal} from "@ng-bootstrap/ng-bootstrap";
 
 @Component({
     selector: "app-bom-child-item-list",
@@ -22,6 +24,8 @@ export class BomChildItemListComponent implements OnInit, OnDestroy {
     direction: number = 1;
     search: string = "";
     tableData: BOMOfChildPart[] = [];
+    superAdminId: any = superAdminId;
+    user: any = "";
     rolePermissionActions: any = LIST_DEFAULT_PERMISSION_ACTIONS;
     subscription!: Subscription;
     constructor(
@@ -30,10 +34,14 @@ export class BomChildItemListComponent implements OnInit, OnDestroy {
         private activatedRoute: ActivatedRoute,
         private router: Router,
         private spinner: SpinnerService,
-        private exportToPDFService: ExportToPDFService
+        private exportToPDFService: ExportToPDFService,
+        private storageService: StorageService,
+        private toastService: ToastService,
+        private modalService: NgbModal
     ) {}
 
     ngOnInit(): void {
+        this.user = this.storageService.get("IDMSAUser")?.roles?.find((x: any) => x == this.superAdminId);
         this.page = Number(this.activatedRoute.snapshot.queryParamMap.get("page") ?? 1);
         this.getAll();
     }
@@ -111,5 +119,32 @@ export class BomChildItemListComponent implements OnInit, OnDestroy {
         this.column = column;
         this.direction = direction == "asc" ? 1 : -1;
         this.getAll();
+    }
+    delete(id: any) {
+        this.spinner.show();
+        this.bomChildPartService.delete(id).subscribe(success => {
+            this.spinner.hide();
+            this.toastService.success(success.message);
+            this.getAll();
+        });
+    }
+    openConfirmModal(id: any, code: any) {
+        const modalRef = this.modalService.open(ConfirmDeleteComponent, {
+            centered: true,
+            size: "md",
+            backdrop: "static",
+            keyboard: false
+        });
+
+        modalRef.componentInstance.heading = "Confirm Deletion";
+        modalRef.componentInstance.confirmText = `Confirm Deletion of BOM No. ${code} ?`;
+        modalRef.result.then(
+            (success: any) => {
+                if (success.title == "Yes") {
+                    this.delete(id);
+                }
+            },
+            (reason: any) => {}
+        );
     }
 }

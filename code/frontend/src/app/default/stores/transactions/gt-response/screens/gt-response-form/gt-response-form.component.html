@@ -105,13 +105,32 @@
                             </span>
                         </td>
                         <td>
-                            <span
+                            <!-- <span
                                 [ngbTooltip]="g.conversionOfUnits"
                                 placement="top"
                                 [ngClass]="g.UOM == g.secondaryUnit ? 'text-primary pointer' : 'text-secondary pointer'"
                             >
                                 {{ g?.UOM | UOMUnitsMaster }}
-                            </span>
+                            </span> -->
+                            <div class="d-flex justify-content-between px-2">
+                                <span
+                                    [ngbTooltip]="g.conversionOfUnits"
+                                    placement="top"
+                                    [ngClass]="
+                                        g.UOM == g.secondaryUnit ? 'text-primary pointer' : 'text-secondary pointer'
+                                    "
+                                >
+                                    {{ g?.UOM | UOMUnitsMaster }}
+                                </span>
+                                <span class="pointer d-flex align-items-center">
+                                    <div
+                                        *ngIf="g.secondaryUnit"
+                                        class="unit-switch-rev"
+                                        (click)="setConversionOfUnit(g)"
+                                    ></div>
+                                    <div *ngIf="!g.secondaryUnit" class="unit-switch-gray"></div>
+                                </span>
+                            </div>
                         </td>
                         <td>
                             {{ g.IRQty | number : "1.2-2" }}

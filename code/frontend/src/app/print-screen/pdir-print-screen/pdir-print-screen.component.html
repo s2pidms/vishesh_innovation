@@ -1,143 +1,125 @@
 <div class="container-fluid printScreen">
-  <div class="row">
-    <div colspan="12" class="text-center">
-      <button
-        class="btn btn-primary"
-        type="button"
-        (click)="windowPrint()"
-        *ngIf="pdfAction != 'pdf'"
-      >
-        <img
-          src="./assets/images/print.png"
-          width="20px"
-          height="14px"
-          class="mb-2"
-        />&nbsp;&nbsp; Print
-      </button>
-      <div class="page py-3">
-        <div
-          class="row justify-content-center printScreen mb-5 m-0"
-          *ngFor="let p of tableData.preDispatchDetails; let last = last"
-        >
-          <div class="table-responsive shadow">
-            <table class="table">
-              <tr>
-                <td colspan="12">
-                  <div class="text-end">
-                    <img
-                      src="{{ tableData?.company?.logoUrl }}"
-                      width="200px"
-                    />
-                  </div>
-                </td>
-              </tr>
+    <div class="row">
+        <div colspan="12" class="text-center">
+            <button class="btn btn-primary" type="button" (click)="windowPrint()" *ngIf="pdfAction != 'pdf'">
+                <img src="./assets/images/print.png" width="20px" height="14px" class="mb-2" />&nbsp;&nbsp; Print
+            </button>
+            <div class="page py-3">
+                <div
+                    class="row justify-content-center printScreen mb-5 m-0"
+                    *ngFor="let p of tableData.preDispatchDetails; let last = last"
+                >
+                    <div class="table-responsive shadow">
+                        <table class="table">
+                            <tr>
+                                <td colspan="12">
+                                    <div class="text-end">
+                                        <img src="{{ tableData?.company?.logoUrl }}" width="200px" />
+                                    </div>
+                                </td>
+                            </tr>
 
-              <tr>
-                <th colspan="12" class="text-center">
-                  <h1 class="fs-1">PRE-DISPATCH INSPECTION REPORT</h1>
-                </th>
-              </tr>
-              <tr class="border-btm">
-                <td colspan="12">
-                  <div class="row justify-content-between">
-                    <div class="col-12 h-100 p-0 mt-4">
-                      <table class="table">
-                        <tr>
-                          <td colspan="12">
-                            CUSTOMER:
-                            {{ tableData?.customer?.customerName }}
-                          </td>
-                        </tr>
-                        <tr>
-                          <th class="col-6">
-                            PDIR Date:
-                            {{ tableData?.PDIRDate | date : "dd-MM-yyyy" }}
-                          </th>
-                          <th class="col-6">
-                            Invoice No.:
-                            {{ tableData?.salesInvoice?.salesInvoiceNumber }}
-                            | Invoice Date:
-                            {{
-                              tableData?.salesInvoiceDate | date : "dd-MM-yyyy"
-                            }}
-                          </th>
-                        </tr>
-                        <tr>
-                          <td>
-                            Part Name:
-                            {{ p?.SKUName }}
-                          </td>
-                          <td>
-                            Part No.:
-                            {{ p?.partNumber }}
-                          </td>
-                        </tr>
-                        <tr>
-                          <th>
-                            Batch Date:
-                            {{ p?.batchDate | date : "dd-MM-yyyy" }}
-                          </th>
-                          <th>
-                            Invoice Quantity:
-                            {{ p?.invoicedQty }}
-                          </th>
-                        </tr>
-                      </table>
-                      <div class="py-4"></div>
-                      <table class="table">
-                        <tr>
-                          <th class="col-1 text-center">#</th>
-                          <th class="col-5">Inspection Parameter</th>
-                          <th class="col-2 text-center">Method</th>
-                          <th class="col-2 text-center">STD Requirement</th>
-                          <th class="col-2 text-center">Observations</th>
-                        </tr>
-                        <tr
-                          class="text-wrap"
-                          *ngFor="let s of p?.PDIEntryDetails; let i = index"
-                        >
-                          <td class="col-1 text-center">{{ i + 1 }}</td>
-                          <td class="col-5">{{ s?.inspectionParameter }}</td>
-                          <td class="col-2 text-center">
-                            {{ s?.inspectionMethod }}
-                          </td>
-                          <td class="col-2 text-center">
-                            {{ s?.inspectionStandard }}
-                          </td>
-                          <td class="col-2 text-center">
-                            {{ s?.inspectionObservations }}
-                          </td>
-                        </tr>
-                      </table>
+                            <tr>
+                                <th colspan="12" class="text-center">
+                                    <h1 class="fs-1">PRE-DISPATCH INSPECTION REPORT</h1>
+                                </th>
+                            </tr>
+                            <tr class="border-btm">
+                                <td colspan="12">
+                                    <div class="row justify-content-between">
+                                        <div class="col-12 h-100 p-0 mt-4">
+                                            <table class="table">
+                                                <tr>
+                                                    <td colspan="12">
+                                                        CUSTOMER:
+                                                        {{ tableData?.customer?.customerName }}
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <th class="col-6">
+                                                        PDIR Date:
+                                                        {{ tableData?.PDIRDate | date : "dd-MM-yyyy" }}
+                                                    </th>
+                                                    <th class="col-6">
+                                                        Invoice No.:
+                                                        {{ tableData?.salesInvoice?.salesInvoiceNumber }}
+                                                        | Invoice Date:
+                                                        {{ tableData?.salesInvoiceDate | date : "dd-MM-yyyy" }}
+                                                    </th>
+                                                </tr>
+                                                <tr>
+                                                    <td>
+                                                        Part Name:
+                                                        {{ p?.SKUName }}
+                                                    </td>
+                                                    <td>
+                                                        Part No.:
+                                                        {{ p?.partNumber }}
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <th>
+                                                        Batch Date:
+                                                        {{ p?.batchDate | date : "dd-MM-yyyy" }}
+                                                    </th>
+                                                    <th>
+                                                        Invoice Quantity:
+                                                        {{ p?.invoicedQty }}
+                                                    </th>
+                                                </tr>
+                                            </table>
+                                            <div class="py-4"></div>
+                                            <table class="table">
+                                                <tr>
+                                                    <th class="col-1 text-center">#</th>
+                                                    <th class="col-5">Inspection Parameter</th>
+                                                    <th class="col-2 text-center">Method</th>
+                                                    <th class="col-2 text-center">STD Requirement</th>
+                                                    <th class="col-2 text-center">Observations</th>
+                                                </tr>
+                                                <tr
+                                                    class="text-wrap"
+                                                    *ngFor="let s of p?.PDIEntryDetails; let i = index"
+                                                >
+                                                    <td class="col-1 text-center">{{ i + 1 }}</td>
+                                                    <td class="col-5">{{ s?.inspectionParameter }}</td>
+                                                    <td class="col-2 text-center">
+                                                        {{ s?.inspectionMethod }}
+                                                    </td>
+                                                    <td class="col-2 text-center">
+                                                        {{ s?.inspectionStandard }}
+                                                    </td>
+                                                    <td class="col-2 text-center">
+                                                        {{ s?.inspectionObservations }}
+                                                    </td>
+                                                </tr>
+                                            </table>
+                                        </div>
+                                        <div class="py-4"></div>
+                                        <table class="table">
+                                            <tr>
+                                                <td class="col-4 text-center py-4">
+                                                    Disposition:
+                                                    {{ p?.disposition }}
+                                                </td>
+                                                <td style="background-color: #92d050" class="col-4 text-center">
+                                                    APPROVED {{ "" }}
+                                                </td>
+                                                <td class="col-4 text-center">
+                                                    Approved By:
+                                                    {{ p?.approvedBy }}
+                                                </td>
+                                            </tr>
+                                            <div class="py-3"></div>
+                                        </table>
+                                    </div>
+                                </td>
+                            </tr>
+                        </table>
                     </div>
-                    <div class="py-4"></div>
-                    <table class="table">
-                      <tr>
-                        <td class="col-4 text-center py-4">
-                          Disposition:
-                          {{ p?.disposition }}
-                        </td>
-                        <td
-                          style="background-color: #92d050"
-                          class="col-4 text-center"
-                        >
-                          APPROVED {{ "" }}
-                        </td>
-                        <td class="col-4 text-center">
-                          Approved By:
-                          {{ p?.approvedBy }}
-                        </td>
-                      </tr>
-                      <div class="py-3"></div>
-                    </table>
-                  </div>
-                </td>
-              </tr>
-            </table>
-          </div>
-          <div *ngIf="!last" class="page-break"></div>
+                    <div *ngIf="!last" class="page-break"></div>
+                </div>
+            </div>
         </div>
-      </div>
     </div>
-  </div>
 </div>

@@ -107,6 +107,10 @@ const routes: Routes = [
                 path: "transporter",
                 loadChildren: () =>
                     import("./../../sales/master/transporter/transporter.module").then(m => m.TransporterModule)
+            },
+            {
+                path: "sku_attributes",
+                loadChildren: () => import("./sku-attributes/sku-attributes.module").then(m => m.SKUAttributesModule)
             }
         ]
     }

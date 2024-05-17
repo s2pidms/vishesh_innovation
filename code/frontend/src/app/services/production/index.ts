@@ -11,3 +11,5 @@ export * from "./jobCardEntry.service";
 export * from "./JCEntry.service";
 export * from "./GTRequest.service";
 export * from "./screenMakingLog.service";
+export * from "./screenPrintingLog.service";
+export * from "./stockPreparation.service";

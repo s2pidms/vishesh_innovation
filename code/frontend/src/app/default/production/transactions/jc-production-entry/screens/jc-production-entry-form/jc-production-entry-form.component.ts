@@ -1,5 +1,5 @@
 import {Component, OnInit, QueryList, ViewChildren} from "@angular/core";
-import {UntypedFormControl, UntypedFormGroup, Validators} from "@angular/forms";
+import {FormGroup, UntypedFormControl, UntypedFormGroup, Validators} from "@angular/forms";
 import {Location} from "@angular/common";
 import {mergeMap, of} from "rxjs";
 import {ActivatedRoute, Router} from "@angular/router";
@@ -20,6 +20,12 @@ import {
 } from "../components";
 import {StockCuttingFormComponent} from "../stock-cutting/stock-cutting-form/stock-cutting-form.component";
 import {CancelPoComponent} from "@shared/modals";
+import {ScreenPrintingLogModelComponent} from "../screen-printing/screen-printing-log-model/screen-printing-log-model.component";
+import {JcStockPreparationEntryComponent} from "../stock-preparation/jc-stock-preparation-entry/jc-stock-preparation-entry.component";
+import {LaminationLogEntryModelComponent} from "../lamination-log-entry-model/lamination-log-entry-model.component";
+import {WeedingLogEntryModelComponent} from "../weeding-log-entry-model/weeding-log-entry-model.component";
+import {PunchingLogEntryModelComponent} from "../punching-log-entry-model/punching-log-entry-model.component";
+import {PackingLogEntryModelComponent} from "../packing-log-entry-model/packing-log-entry-model.component";
 
 @Component({
     selector: "app-jc-production-entry-form",
@@ -45,6 +51,7 @@ export class JcProductionEntryFormComponent implements OnInit {
     direction: number = -1;
     search: string = "";
     selectedJobCardDetails: any = {};
+    batchInputQty: any = 0;
     processDetailsList: IJCEntryDetails[] = [];
     ESCPreviewArr: any = [];
     masterData: IJobCardEntryMasterData = {
@@ -64,16 +71,30 @@ export class JcProductionEntryFormComponent implements OnInit {
     ];
     IPQAInfoList: any = {};
     componentModal: any = {
-        "Stock Preparation": StockCuttingFormComponent,
+        // "Stock Preparation": StockCuttingFormComponent,
+        "Stock Preparation": JcStockPreparationEntryComponent,
         "Ink Mixing": InkMixingLogModalComponent,
         "Screen Making": ScreenMakingLogFormComponent,
-        "Printing on CPI": null,
+        "Printing on CPI": ScreenPrintingLogModelComponent,
         "Kiss-cutting": null,
-        Weeding: null,
-        Lamination: null,
-        "Through Punching": null,
-        Packing: null
+        Weeding: WeedingLogEntryModelComponent,
+        Lamination: LaminationLogEntryModelComponent,
+        "Through Punching": PunchingLogEntryModelComponent,
+        Packing: PackingLogEntryModelComponent
     };
+    componentModalSize: any = {
+        "Stock Preparation": "xl",
+        // "Stock Preparation": 'xl',
+        "Ink Mixing": "xl",
+        "Screen Making": "xl",
+        "Printing on CPI": "xl",
+        "Kiss-cutting": null,
+        Weeding: "md",
+        Lamination: "md",
+        "Through Punching": "md",
+        Packing: "md"
+    };
+
     showSKUFlow: boolean = false;
     constructor(
         private jobCardEntryService: JobCardEntryService,
@@ -104,7 +125,14 @@ export class JcProductionEntryFormComponent implements OnInit {
         location: new UntypedFormControl(null),
         batchOutputQty: new UntypedFormControl(null),
         batchNumber: new UntypedFormControl(null),
-        generateReport: new UntypedFormControl({}),
+        generateReport: new UntypedFormGroup({
+            batchInputQty: new UntypedFormControl(null),
+            batchOutputQty: new UntypedFormControl(null),
+            batchRejQty: new UntypedFormControl(null),
+            jobCardClosureDate: new UntypedFormControl(null),
+            location: new UntypedFormControl(null),
+            checkoutStatus: new UntypedFormControl(null)
+        }),
         status: new UntypedFormControl("In-Process"),
         productionEntry: new UntypedFormControl([])
     });
@@ -112,7 +140,9 @@ export class JcProductionEntryFormComponent implements OnInit {
     get f() {
         return this.form.controls;
     }
-
+    get generateReportData() {
+        return this.form.get("generateReport") as FormGroup;
+    }
     ngOnInit(): void {
         this.getInitialData();
     }
@@ -162,7 +192,8 @@ export class JcProductionEntryFormComponent implements OnInit {
             this.submitted = false;
             this.spinner.hide();
             this.toastService.success(success.message);
-            this.location.back();
+            this.reset();
+            // this.location.back();
         });
     }
     reset() {
@@ -261,15 +292,20 @@ export class JcProductionEntryFormComponent implements OnInit {
             this.JCEntryDetailsList = success?.jobCardEntryData?.productionEntry
                 ? success?.jobCardEntryData?.productionEntry
                 : success?.SKUProcessList;
-            this.f["generateReport"].setValue(success?.jobCardEntryData?.generateReport);
+            this.f["generateReport"].patchValue(success?.jobCardEntryData?.generateReport);
             this.spinner.hide();
+            this.batchInputQty = success?.batchInputQty;
+            if (!this.generateReportData.controls["batchInputQty"].value) {
+                this.generateReportData.controls["batchInputQty"].setValue(this.batchInputQty);
+            }
             if (this.JCEntryDetailsList.length == 0) {
                 this.showSKUFlow = true;
-                this.toastService.warning(`SKU has no defined processes. Please set them up in SKU Process Flow.`);
+                this.toastService.warning(`SKU has no define processes. Please set them up in SKU Process Flow.`);
             } else {
                 this.showSKUFlow = false;
             }
             this.collection = this.JCEntryDetailsList.length;
+            console.log("this.JCEntryDetailsList ", this.JCEntryDetailsList);
         });
     }
 
@@ -277,25 +313,6 @@ export class JcProductionEntryFormComponent implements OnInit {
         this.router.navigate(["default/planning/master/sku_process_flow/form"], {
             queryParams: {id: this.f["SKU"].value, action: "processFlow"}
         });
-    }
-
-    preview() {
-        this.search = "";
-        this.isESCPreview = true;
-        this.ESCPreviewArr = this.JCEntryDetailsList;
-        this.JCEntryDetailsList = this.JCEntryDetailsList.filter((x: any) => x.seq > 0);
-        if (this.JCEntryDetailsList.length == 0) {
-            this.toastService.warning(`At least One Row is Required!`);
-        } else {
-            this.isPreview = true;
-        }
-        this.collection = this.JCEntryDetailsList.length;
-    }
-    ESCPreview() {
-        this.search = "";
-        this.isPreview = false;
-        this.JCEntryDetailsList = this.ESCPreviewArr;
-        this.collection = this.JCEntryDetailsList.length;
     }
 
     openJobCardDetailsModal() {
@@ -325,15 +342,27 @@ export class JcProductionEntryFormComponent implements OnInit {
         if (this.componentModal[item.processOriginalName]) {
             const modalRef = this.modalService.open(this.componentModal[item.processOriginalName], {
                 centered: true,
-                size: "xl",
+                // size: 'xl',
+                size: this.componentModalSize[item.processOriginalName],
                 backdrop: "static",
                 keyboard: false
             });
+            modalRef.componentInstance.sourceOfManufacturing = item?.sourceOfManufacturing;
             modalRef.componentInstance.selectedDetails = {
                 jobCard: this.selectedJobCardDetails?._id,
                 jobCardNo: this.selectedJobCardDetails?.jobCardNo,
                 SKU: this.selectedJobCardDetails?.SKU,
                 batchQty: this.selectedJobCardDetails?.batchQty
+            };
+            modalRef.componentInstance.jobCardDetails = {
+                jobCard: this.selectedJobCardDetails?._id,
+                jobCardNo: this.selectedJobCardDetails?.jobCardNo,
+                SKUNo: this.selectedJobCardDetails?.SKUNo,
+                SKU: this.selectedJobCardDetails?.SKU,
+                SKUName: this.selectedJobCardDetails?.SKUName,
+                SKUDescription: this.selectedJobCardDetails?.SKUDescription,
+                UOM: this.selectedJobCardDetails?.UOM,
+                SKUBatchQty: this.selectedJobCardDetails?.batchQty
             };
             // modalRef.result.then(
             //     (success: any) => {},

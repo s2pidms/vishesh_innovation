@@ -10,9 +10,10 @@ import {NgbActiveModal} from "@ng-bootstrap/ng-bootstrap";
 export class ScreenMakingLogEntryComponent implements OnInit {
     @Input() logDetails: any = {};
     @Input() action: any = "";
+    @Input() sourceOfManufacturing: any = "";
     @Input() shiftOptions: any = [];
     form: any = new UntypedFormGroup({
-        prodSource: new UntypedFormControl("Inhouse"),
+        prodSource: new UntypedFormControl(null),
         prodShift: new UntypedFormControl(null),
         prodDate: new UntypedFormControl(null),
         operatingStaff: new UntypedFormControl(null),
@@ -26,12 +27,16 @@ export class ScreenMakingLogEntryComponent implements OnInit {
     constructor(public activeModal: NgbActiveModal, private utilityService: UtilityService) {}
 
     ngOnInit(): void {
-        if (this.logDetails.prodDate) {
+        if (this.logDetails?.prodDate) {
             this.logDetails.prodDate = this.utilityService.getFormatDate(this.logDetails?.prodDate, "YYYY-MM-DD");
         }
         this.form.patchValue(this.logDetails);
         if (["view", "approve", "reject"].includes(this.action)) {
             this.form.disable();
+        }
+
+        if (!this.f["prodSource"].value) {
+            this.f["prodSource"].setValue(this.sourceOfManufacturing ?? "Inhouse");
         }
     }
     dismissModel() {

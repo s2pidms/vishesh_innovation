@@ -6,43 +6,54 @@
             </div>
         </div>
         <div class="form-body">
-            <div formGroupName="DocDtls" class="row">
-                <div class="col-4">
-                    <label class="form-label mb-0"> Sales Invoice <span class="text-danger"></span> </label>
-                    <ng-select
-                        [(ngModel)]="salesInvoiceId"
-                        [ngModelOptions]="{standalone: true}"
-                        [items]="salesInvoiceArr"
-                        bindLabel="salesInvoiceNumber"
-                        bindValue="_id"
-                        [clearable]="false"
-                        (change)="setSalesInvoice($event)"
-                    >
-                    </ng-select>
-                </div>
+            <div class="row">
+                <ng-container formGroupName="DocDtls">
+                    <div class="col-3">
+                        <label class="form-label mb-0"> Sales Invoice <span class="text-danger"></span> </label>
+                        <ng-select
+                            [(ngModel)]="salesInvoiceId"
+                            [ngModelOptions]="{standalone: true}"
+                            [items]="salesInvoiceArr"
+                            bindLabel="salesInvoiceNumber"
+                            bindValue="_id"
+                            [clearable]="false"
+                            (change)="setSalesInvoice($event)"
+                        >
+                        </ng-select>
+                    </div>
 
-                <div class="col-4">
-                    <label class="form-label mb-0"> Document No. <span class="text-danger"></span> </label>
-                    <input
-                        class="form-control"
-                        type="text"
-                        [ngClass]="{
-                            'is-invalid': docDtlsForm['controls']['No'].invalid && submitted
-                        }"
-                        formControlName="No"
-                    />
-                </div>
+                    <div class="col-3">
+                        <label class="form-label mb-0"> Document No. <span class="text-danger"></span> </label>
+                        <input
+                            class="form-control"
+                            type="text"
+                            [ngClass]="{
+                                'is-invalid': docDtlsForm['controls']['No'].invalid && submitted
+                            }"
+                            formControlName="No"
+                        />
+                    </div>
 
-                <div class="col-4">
-                    <label class="form-label mb-0"> Document Date<span class="text-danger"></span> </label>
-                    <input
-                        class="form-control"
-                        type="text"
-                        [ngClass]="{
-                            'is-invalid': docDtlsForm['controls']['Dt'].invalid && submitted
-                        }"
-                        formControlName="Dt"
-                    />
+                    <div class="col-3">
+                        <label class="form-label mb-0"> Document Date<span class="text-danger"></span> </label>
+                        <input
+                            class="form-control"
+                            type="text"
+                            [ngClass]="{
+                                'is-invalid': docDtlsForm['controls']['Dt'].invalid && submitted
+                            }"
+                            formControlName="Dt"
+                        />
+                    </div>
+                </ng-container>
+                <div formGroupName="TranDtls" class="col-3">
+                    <label class="form-label mb-0"> Supply Type <span class="text-danger">*</span> </label>
+                    <select class="form-select" formControlName="SupTyp">
+                        <option [value]="null" selected disabled>Select</option>
+                        <option [value]="item.value" *ngFor="let item of supplyTypeArr">
+                            {{ item.label }}
+                        </option>
+                    </select>
                 </div>
             </div>
         </div>

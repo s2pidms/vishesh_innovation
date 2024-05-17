@@ -65,7 +65,10 @@
                                     <div class="col-4 me-1">
                                         <label class="form-label">Unit 1 <span class="text-danger">*</span></label>
                                         <input
-                                            *ngIf="secondaryUnit"
+                                            *ngIf="
+                                                secondaryUnit &&
+                                                (primaryToSecondaryConversion || secondaryToPrimaryConversion)
+                                            "
                                             type="text"
                                             class="form-control ps-2 pe-0 pointer"
                                             readonly
@@ -74,9 +77,12 @@
                                             value="{{ form.controls['uom1'].value | UOMUnitsMaster }}"
                                         />
                                         <input
-                                            *ngIf="!secondaryUnit"
+                                            *ngIf="
+                                                !secondaryUnit ||
+                                                (!primaryToSecondaryConversion && !secondaryToPrimaryConversion)
+                                            "
                                             type="text"
-                                            class="form-control ps-2 pe-0 pointer"
+                                            class="form-control ps-2 pe-0"
                                             value="{{ form.controls['uom1'].value | UOMUnitsMaster }}"
                                             readonly
                                         />
@@ -110,7 +116,10 @@
                                     <div class="col-4 me-1">
                                         <label class="form-label">Unit 2</label>
                                         <input
-                                            *ngIf="secondaryUnit"
+                                            *ngIf="
+                                                secondaryUnit &&
+                                                (primaryToSecondaryConversion || secondaryToPrimaryConversion)
+                                            "
                                             type="text"
                                             class="form-control ps-2 pe-0 pointer"
                                             value="{{ form.controls['uom2'].value | UOMUnitsMaster }}"
@@ -119,9 +128,12 @@
                                             placement="bottom"
                                         />
                                         <input
-                                            *ngIf="!secondaryUnit"
+                                            *ngIf="
+                                                !secondaryUnit ||
+                                                (!primaryToSecondaryConversion && !secondaryToPrimaryConversion)
+                                            "
                                             type="text"
-                                            class="form-control ps-2 pe-0 pointer"
+                                            class="form-control ps-2 pe-0"
                                             value="{{ form.controls['uom2'].value | UOMUnitsMaster }}"
                                             readonly
                                         />

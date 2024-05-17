@@ -3,13 +3,15 @@ import {ActivatedRoute, Router} from "@angular/router";
 import {NgbdSortableHeader, SortEvent} from "@directives/sortable.directive";
 import {CalibrationStandardService} from "@services/maintenance";
 import {Subscription} from "rxjs";
-import {LIST_DEFAULT_PERMISSION_ACTIONS} from "@mocks/constant";
-import {ExportExcelService, ExportToPDFService, SpinnerService} from "@core/services";
+import {LIST_DEFAULT_PERMISSION_ACTIONS, superAdminId} from "@mocks/constant";
+import {ExportExcelService, ExportToPDFService, SpinnerService, StorageService, ToastService} from "@core/services";
 import {
     CALIBRATION_STANDARD_MASTER_REPORT_DATA,
     CALIBRATION_STANDARD_MASTER_PDF_DATA
 } from "@mocks/export-data/maintenance/master";
 import {CalibrationStandard} from "@mocks/models/maintenance/masters";
+import {NgbModal} from "@ng-bootstrap/ng-bootstrap";
+import {ConfirmDeleteComponent} from "@shared/modals";
 
 @Component({
     selector: "app-calibration-standard-list",
@@ -26,6 +28,8 @@ export class CalibrationStandardListComponent implements OnInit, OnDestroy {
     search: string = "";
     tableData: CalibrationStandard[] = [];
     dataForExcel: any = [];
+    superAdminId: any = superAdminId;
+    user: any = "";
     rolePermissionActions: any = LIST_DEFAULT_PERMISSION_ACTIONS;
     subscription!: Subscription;
     constructor(
@@ -34,10 +38,14 @@ export class CalibrationStandardListComponent implements OnInit, OnDestroy {
         private router: Router,
         private spinner: SpinnerService,
         private activatedRoute: ActivatedRoute,
-        private exportToPDFService: ExportToPDFService
+        private exportToPDFService: ExportToPDFService,
+        private storageService: StorageService,
+        private toastService: ToastService,
+        private modalService: NgbModal
     ) {}
 
     ngOnInit(): void {
+        this.user = this.storageService.get("IDMSAUser")?.roles?.find((x: any) => x == this.superAdminId);
         this.page = Number(this.activatedRoute.snapshot.queryParamMap.get("page") ?? 1);
         this.getAll();
     }
@@ -94,7 +102,33 @@ export class CalibrationStandardListComponent implements OnInit, OnDestroy {
             this.spinner.hide();
         });
     }
+    delete(id: any) {
+        this.spinner.show();
+        this.calibrationStandardService.delete(id).subscribe(success => {
+            this.spinner.hide();
+            this.toastService.success(success.message);
+            this.getAll();
+        });
+    }
+    openConfirmModal(id: any, code: any) {
+        const modalRef = this.modalService.open(ConfirmDeleteComponent, {
+            centered: true,
+            size: "md",
+            backdrop: "static",
+            keyboard: false
+        });
 
+        modalRef.componentInstance.heading = "Confirm Deletion";
+        modalRef.componentInstance.confirmText = `Confirm Deletion of Standard Code ${code} ?`;
+        modalRef.result.then(
+            (success: any) => {
+                if (success.title == "Yes") {
+                    this.delete(id);
+                }
+            },
+            (reason: any) => {}
+        );
+    }
     ngOnDestroy(): void {
         if (this.subscription) this.subscription.unsubscribe();
     }

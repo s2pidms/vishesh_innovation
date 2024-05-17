@@ -331,3 +331,19 @@ exports.SALES_UOM_UNIT_MASTER = {
         };
     }
 }
+exports.SERVICE_CHARGES = {
+    COLLECTION_NAME: "ServiceCharges",
+    ADDED_ACTION: "Service Charges created",
+    UPDATED_ACTION: "Service Charges updated",
+    MODULE_NAME: "Service Charges",
+    MODULE: "ServiceCharges",
+    MODULE_PREFIX: "null",
+    AUTO_INCREMENT_DATA: function () {
+        return {
+            moduleName: this.MODULE_NAME,
+            module: this.MODULE,
+            company: null,
+            modulePrefix: this.MODULE_PREFIX
+        };
+    }
+}

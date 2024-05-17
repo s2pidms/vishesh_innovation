@@ -1,12 +1,14 @@
 import {Component, OnDestroy, OnInit, QueryList, ViewChildren} from "@angular/core";
 import {Subscription} from "rxjs";
 import {NgbdSortableHeader, SortEvent} from "@directives/sortable.directive";
-import {ExportExcelService, ExportToPDFService, SpinnerService} from "@core/services";
-import {LIST_DEFAULT_PERMISSION_ACTIONS} from "@mocks/constant";
+import {ExportExcelService, ExportToPDFService, SpinnerService, StorageService, ToastService} from "@core/services";
+import {LIST_DEFAULT_PERMISSION_ACTIONS, superAdminId} from "@mocks/constant";
 import {PaymentTermsService} from "@services/sales";
 import {ActivatedRoute, Router} from "@angular/router";
 import {PAYMENT_TERMS_PDF_DATA, PAYMENT_TERMS_REPORT_DATA} from "@mocks/export-data/purchase/master";
 import {PurchasePaymentTerms} from "@mocks/models/purchase/masters";
+import {ConfirmDeleteComponent} from "@shared/modals";
+import {NgbModal} from "@ng-bootstrap/ng-bootstrap";
 @Component({
     selector: "app-purchase-payment-terms-list",
     templateUrl: "./purchase-payment-terms-list.component.html"
@@ -21,6 +23,8 @@ export class PurchasePaymentTermsListComponent implements OnInit, OnDestroy {
     direction: number = +1;
     search: string = "";
     tableData: PurchasePaymentTerms[] = [];
+    superAdminId: any = superAdminId;
+    user: any = "";
     rolePermissionActions: any = LIST_DEFAULT_PERMISSION_ACTIONS;
     subscription!: Subscription;
     constructor(
@@ -29,10 +33,14 @@ export class PurchasePaymentTermsListComponent implements OnInit, OnDestroy {
         private router: Router,
         private spinner: SpinnerService,
         private activatedRoute: ActivatedRoute,
-        private exportToPDFService: ExportToPDFService
+        private exportToPDFService: ExportToPDFService,
+        private storageService: StorageService,
+        private toastService: ToastService,
+        private modalService: NgbModal
     ) {}
 
     ngOnInit(): void {
+        this.user = this.storageService.get("IDMSAUser")?.roles?.find((x: any) => x == this.superAdminId);
         this.page = Number(this.activatedRoute.snapshot.queryParamMap.get("page") ?? 1);
         this.getAll();
     }
@@ -87,6 +95,34 @@ export class PurchasePaymentTermsListComponent implements OnInit, OnDestroy {
             this.spinner.hide();
         });
     }
+    delete(id: any) {
+        this.spinner.show();
+        this.paymentTermsService.delete(id).subscribe(success => {
+            this.spinner.hide();
+            this.toastService.success(success.message);
+            this.getAll();
+        });
+    }
+    openConfirmModal(id: any, code: any) {
+        const modalRef = this.modalService.open(ConfirmDeleteComponent, {
+            centered: true,
+            size: "md",
+            backdrop: "static",
+            keyboard: false
+        });
+
+        modalRef.componentInstance.heading = "Confirm Deletion";
+        modalRef.componentInstance.confirmText = `Confirm Deletion of Payment Term Code ${code} ?`;
+        modalRef.result.then(
+            (success: any) => {
+                if (success.title == "Yes") {
+                    this.delete(id);
+                }
+            },
+            (reason: any) => {}
+        );
+    }
+
     ngOnDestroy(): void {
         if (this.subscription) this.subscription.unsubscribe();
     }

@@ -1,0 +1,67 @@
+<div class="modelPage">
+    <div class="modal-header">
+        <div class="heading">Integration Status Summary</div>
+        <div>
+            <button type="button" class="btn btn-cross btn-sm" aria-label="Close" (click)="this.activeModal.close()">
+                <i class="fa fa-times-circle" aria-hidden="true"></i>
+            </button>
+        </div>
+    </div>
+    <div class="container-fluid px-0 mt-4">
+        <div class="row justify-content-center px-5 mt-4">
+            <div class="col-12">
+                <div class="row mt-4">
+                    <div class="col-6 pe-0">
+                        <label class="form-label text-nowrap"> Active SKU Count </label>
+                    </div>
+                    <div class="col-1 px-2 d-flex align-items-center justify-content-end">
+                        <span class="ms-1 me-2 text-secondary">&#9654;</span>
+                    </div>
+                    <div class="col-5 ps-0 setInputMargin">
+                        <input type="number" class="form-control" [(ngModel)]="totalAmounts.activeSKUCount" readonly />
+                    </div>
+                </div>
+                <div class="row mt-4">
+                    <div class="col-6 pe-0">
+                        <label class="form-label"> SKU-Ink Integrated Count </label>
+                    </div>
+                    <div class="col-1 px-2 d-flex align-items-center justify-content-end">
+                        <span class="ms-1 me-2 text-secondary">&#9654;</span>
+                    </div>
+                    <div class="col-5 ps-0 setInputMargin">
+                        <input
+                            type="number"
+                            class="form-control"
+                            [(ngModel)]="totalAmounts.SKUDimIntegratedCount"
+                            readonly
+                        />
+                    </div>
+                </div>
+                <div class="row mt-4">
+                    <div class="col-6 pe-0">
+                        <label class="form-label text-nowrap"> SKU-Ink Unintegrated Count </label>
+                    </div>
+                    <div class="col-1 px-2 d-flex align-items-center justify-content-end">
+                        <span class="ms-1 me-2 text-secondary">&#9654;</span>
+                    </div>
+                    <div class="col-5 ps-0 setInputMargin">
+                        <input
+                            type="text"
+                            class="form-control"
+                            [(ngModel)]="totalAmounts.SKUDimUnIntegratedCount"
+                            readonly
+                        />
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <hr class="line-border my-4" />
+
+        <div class="row">
+            <div class="col text-center mb-4">
+                <button class="btn bg-primary px-5" type="button" (click)="dismissModel()">Close</button>
+            </div>
+        </div>
+    </div>
+</div>

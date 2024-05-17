@@ -172,7 +172,10 @@
         <div class="row d-flex justify-content-center">
             <div [ngClass]="['cancel', 'rejection'].includes(action) ? 'col-3' : 'col-5'">
                 <button
-                    *ngIf="['Domestic – OEM', 'Domestic – Dealer', null].includes(form.controls['salesCategory'].value)"
+                    *ngIf="
+                        !form.controls['salesCategory'].value ||
+                        this.form.controls['salesCategory']?.value?.includes('Domestic')
+                    "
                     type="button"
                     class="btn btn-primary"
                     (click)="openDRNReviewTermsModal()"
@@ -180,7 +183,7 @@
                     Review Terms
                 </button>
                 <button
-                    *ngIf="['Exports – OEM', 'Exports – Dealer'].includes(form.controls['salesCategory'].value)"
+                    *ngIf="form.controls['salesCategory']?.value?.includes('Exports')"
                     class="btn btn-primary px-3"
                     type="button"
                     (click)="openExportDetailsModal()"

@@ -1,11 +1,12 @@
 import {Component, OnInit} from "@angular/core";
 import {UntypedFormControl, UntypedFormGroup, Validators} from "@angular/forms";
-import {Router, ActivatedRoute} from "@angular/router";
+import {ActivatedRoute} from "@angular/router";
+import {Location} from "@angular/common";
 import {mergeMap, of} from "rxjs";
 import {PaidHolidayService} from "@services/hr";
 import {ValidationService} from "@core/components";
 import {HOLIDAYS_FORM_ERRORS} from "@mocks/validations/hr";
-import {MenuTitleService, SpinnerService, UtilityService, ToastService} from "@core/services";
+import {SpinnerService, UtilityService, ToastService} from "@core/services";
 
 @Component({
     selector: "app-paid-holidays-form",
@@ -28,13 +29,12 @@ export class PaidHolidaysFormComponent implements OnInit {
     }
     constructor(
         private paidHolidayService: PaidHolidayService,
-        private router: Router,
         private activatedRoute: ActivatedRoute,
         private spinner: SpinnerService,
-        private menuTitleService: MenuTitleService,
         private toastService: ToastService,
         private validationService: ValidationService,
-        private utilityService: UtilityService
+        private utilityService: UtilityService,
+        private location: Location
     ) {}
 
     ngOnInit(): void {
@@ -68,7 +68,7 @@ export class PaidHolidaysFormComponent implements OnInit {
             this.submitted = false;
             this.spinner.hide();
             this.toastService.success(success.message);
-            this.router.navigate(["default/HR/master/paid_holidays/ph-list"]);
+            this.location.back();
         });
     }
 
@@ -78,7 +78,7 @@ export class PaidHolidaysFormComponent implements OnInit {
             this.spinner.hide();
             this.submitted = false;
             this.toastService.success(success.message);
-            this.router.navigate(["default/HR/master/paid_holidays/ph-list"]);
+            this.location.back();
         });
     }
 

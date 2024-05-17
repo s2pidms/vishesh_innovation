@@ -8,6 +8,7 @@ import {EInvoiceValueDetailsComponent} from "../e-invoice-value-details/e-invoic
 import {EInvoiceItemDetailsComponent} from "../e-invoice-item-details/e-invoice-item-details.component";
 import {EInvoiceDispatchShipDetailsComponent} from "../e-invoice-dispatch-ship-details/e-invoice-dispatch-ship-details.component";
 import {LIST_DEFAULT_PERMISSION_ACTIONS} from "@mocks/constant";
+import {GENERATE_E_iNVOICE_SUP_TYPE} from "@mocks/options.constant";
 
 @Component({
     selector: "app-generate-e-invoice-form",
@@ -21,6 +22,7 @@ export class GenerateEInvoiceFormComponent implements OnInit {
     shipmentNameOptions: any = [];
     itemDetailsArr: any = [];
     submitted = false;
+    supplyTypeArr: any = GENERATE_E_iNVOICE_SUP_TYPE;
     rolePermissionActions: any = LIST_DEFAULT_PERMISSION_ACTIONS;
     form: any = new UntypedFormGroup({
         DocDtls: new UntypedFormGroup({
@@ -235,6 +237,13 @@ export class GenerateEInvoiceFormComponent implements OnInit {
                 Validators.maxLength(2),
                 Validators.pattern("^(?!0+$)([0-9]{1,2})$")
             ])
+        }),
+        TranDtls: new UntypedFormGroup({
+            TaxSch: new UntypedFormControl("GST"),
+            SupTyp: new UntypedFormControl("B2B"),
+            RegRev: new UntypedFormControl("N"),
+            EcmGstin: new UntypedFormControl(null),
+            IgstOnIntra: new UntypedFormControl("N")
         })
     });
 
@@ -260,6 +269,9 @@ export class GenerateEInvoiceFormComponent implements OnInit {
     get valDtlsForm() {
         return this.form.get("ValDtls") as UntypedFormGroup;
     }
+    get tranDetails() {
+        return this.form.get("TranDtls") as UntypedFormGroup;
+    }
 
     constructor(
         private salesInvoiceService: SalesInvoiceService,
@@ -282,14 +294,14 @@ export class GenerateEInvoiceFormComponent implements OnInit {
             salesInvoiceId: this.salesInvoiceId,
 
             ...{
-                Version: "1.1",
-                TranDtls: {
-                    TaxSch: "GST",
-                    SupTyp: "B2B",
-                    RegRev: "N",
-                    EcmGstin: null,
-                    IgstOnIntra: "N"
-                }
+                Version: "1.1"
+                // TranDtls: {
+                //     TaxSch: "GST",
+                //     SupTyp: "B2B", // SEZWOP
+                //     RegRev: "N",
+                //     EcmGstin: null,
+                //     IgstOnIntra: "N"
+                // }
             }
         };
         this.create(formData);
@@ -451,6 +463,9 @@ export class GenerateEInvoiceFormComponent implements OnInit {
                 }
             };
             this.form.patchValue(obj);
+            if (success?.customer?.GSTClassification == "SEZ") {
+                this.tranDetails.controls["SupTyp"].setValue("SEZWOP");
+            }
         });
         this.spinner.hide();
     }
@@ -459,6 +474,14 @@ export class GenerateEInvoiceFormComponent implements OnInit {
         this.salesInvoiceId = "";
         this.itemDetailsArr = [];
         this.form.reset();
+        let obj = {
+            TaxSch: "GST",
+            SupTyp: "B2B",
+            RegRev: "N",
+            EcmGstin: null,
+            IgstOnIntra: "N"
+        };
+        this.tranDetails.patchValue(obj);
         this.getInitialData();
     }
 

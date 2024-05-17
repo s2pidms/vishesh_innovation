@@ -188,3 +188,84 @@ exports.STOCK_CUTTING = {
     //     };
     // }
 };
+
+exports.SCREEN_PRINTING_LOG = {
+    COLLECTION_NAME: "ScreenPrintingLog",
+    ADDED_ACTION: "Screen Printing Log created",
+    UPDATED_ACTION: "Screen Printing Log updated"
+    // MODULE_NAME: "Screen Printing Log",
+    // MODULE: "ScreenPrintingLog",
+    // MODULE_PREFIX: "null",
+    // AUTO_INCREMENT_DATA: function () {
+    //     return {
+    //         moduleName: this.MODULE_NAME,
+    //         module: this.MODULE,
+    //         company: null,
+    //         modulePrefix: this.MODULE_PREFIX
+    //     };
+    // }
+};
+exports.LAMINATION = {
+    COLLECTION_NAME: "Lamination",
+    ADDED_ACTION: "Lamination created",
+    UPDATED_ACTION: "Lamination updated",
+    MODULE_NAME: "Lamination",
+    MODULE: "Lamination",
+    MODULE_PREFIX: "null",
+    AUTO_INCREMENT_DATA: function () {
+        return {
+            moduleName: this.MODULE_NAME,
+            module: this.MODULE,
+            company: null,
+            modulePrefix: this.MODULE_PREFIX
+        };
+    }
+};
+exports.WEEDING = {
+    COLLECTION_NAME: "Weeding",
+    ADDED_ACTION: "Weeding created",
+    UPDATED_ACTION: "Weeding updated",
+    MODULE_NAME: "Weeding",
+    MODULE: "Weeding",
+    MODULE_PREFIX: "null",
+    AUTO_INCREMENT_DATA: function () {
+        return {
+            moduleName: this.MODULE_NAME,
+            module: this.MODULE,
+            company: null,
+            modulePrefix: this.MODULE_PREFIX
+        };
+    }
+};
+exports.PACKING = {
+    COLLECTION_NAME: "Packing",
+    ADDED_ACTION: "Packing created",
+    UPDATED_ACTION: "Packing updated",
+    MODULE_NAME: "Packing",
+    MODULE: "Packing",
+    MODULE_PREFIX: "null",
+    AUTO_INCREMENT_DATA: function () {
+        return {
+            moduleName: this.MODULE_NAME,
+            module: this.MODULE,
+            company: null,
+            modulePrefix: this.MODULE_PREFIX
+        };
+    }
+};
+exports.THROUGH_PUNCHING = {
+    COLLECTION_NAME: "ThroughPunching",
+    ADDED_ACTION: "ThroughPunching created",
+    UPDATED_ACTION: "ThroughPunching updated",
+    MODULE_NAME: "ThroughPunching",
+    MODULE: "ThroughPunching",
+    MODULE_PREFIX: "null",
+    AUTO_INCREMENT_DATA: function () {
+        return {
+            moduleName: this.MODULE_NAME,
+            module: this.MODULE,
+            company: null,
+            modulePrefix: this.MODULE_PREFIX
+        };
+    }
+};

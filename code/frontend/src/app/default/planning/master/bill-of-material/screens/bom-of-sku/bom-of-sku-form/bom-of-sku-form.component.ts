@@ -21,6 +21,14 @@ import {BOMOfSKUMasterData} from "@mocks/models/planning/masters";
             .blueColor {
                 color: #0000ff;
             }
+            .separate-row {
+                position: relative;
+                .set-position {
+                    position: absolute;
+                    top: 0.3rem;
+                    right: -2rem;
+                }
+            }
         `
     ]
 })
@@ -58,6 +66,8 @@ export class BomOfSkuFormComponent implements OnInit {
         SKUOptions: []
     };
 
+    materialCostForPC: any = 1;
+
     constructor(
         private exportExcelService: ExportExcelService,
         private bomOfSKUService: BOMOfSKUService,
@@ -82,6 +92,7 @@ export class BomOfSkuFormComponent implements OnInit {
         BOMOfSKUDetails: new UntypedFormControl([]),
         totalMaterialCost: new UntypedFormControl(null),
         isColorInfo: new UntypedFormControl(false),
+        materialCostForOnePC: new UntypedFormControl(null),
         status: new UntypedFormControl("Active"),
         documentDetails: new UntypedFormControl([])
     });
@@ -275,6 +286,8 @@ export class BomOfSkuFormComponent implements OnInit {
                         this.oldDocumentDetails = [...this.documentDetails];
                     }
                     this.collection = this.BoMOfSKUDetailsArr.length;
+
+                    this.materialCostForPC = success?.partCount;
                     this.form.patchValue(success);
                     if (this.action != "create") {
                         this.isESCPreview = true;
@@ -283,7 +296,7 @@ export class BomOfSkuFormComponent implements OnInit {
                         this.form.disable();
                         if (this.action == "edit") {
                             this.form.controls["status"].enable();
-                            this.form.controls["partCount"].enable();
+                            // this.form.controls["partCount"].enable();
                         }
                     }
 
@@ -301,14 +314,35 @@ export class BomOfSkuFormComponent implements OnInit {
         this.form.controls["SKUName"].setValue(event.SKUName);
         this.form.controls["SKUCode"].setValue(event.SKUNo);
         this.form.controls["UOM"].setValue(event.primaryUnit);
+        this.form.controls["partCount"].setValue(event.ups ?? 1);
+        this.materialCostForPC = event.ups ?? 1;
+        let partCount = +this.form.controls["partCount"].value;
+
         if (this.action != "copy") {
             this.form.controls["totalMaterialCost"].setValue(null);
+            this.form.controls["materialCostForOnePC"].setValue(null);
             this.spinner.show();
             this.bomOfSKUService.getAllInkListBySKUId({SKUId: event._id, action: "create"}).subscribe(success => {
                 if (success.rows.length > 0 && success.listType == "Ink") {
                     this.BoMOfSKUDetailsArr = [];
                     this.inkList = success?.rows.map((x: any) => {
                         x.wastePercentage = 0;
+                        // x.partCount = (+x.qtyPerSKUUnit + (+x.qtyPerSKUUnit * +x.wastePercentage) / 100) * +partCount;
+
+                        if (x.inkCostPerKg) {
+                            x.unitCost = +x.inkCostPerKg;
+                            x.itemCost = +x.partCount * +x.inkCostPerKg;
+                        } else {
+                            x.itemCost = +x.partCount * +x.unitCost;
+                        }
+                        if (x.type == "InkInfo") {
+                            x.partCount = +(
+                                (+x.qtyPerSKUUnit + (+x.qtyPerSKUUnit * +x.wastePercentage) / 100) *
+                                +partCount
+                            ).toFixed(4);
+                            x.qtyPerSKUUnit = +(x.qtyPerSKUUnit * +partCount).toFixed(4);
+                            x.itemCost = +x.partCount * +x.unitCost;
+                        }
                         return x;
                     });
                     this.collection = this.inkList.length;
@@ -318,9 +352,45 @@ export class BomOfSkuFormComponent implements OnInit {
                     this.BoMOfSKUDetailsArr = success?.rows.map((x: any) => {
                         x.qtyPerSKUUnit = 0;
                         x.wastePercentage = 0;
+                        // x.partCount = (+x.qtyPerSKUUnit + (+x.qtyPerSKUUnit * +x.wastePercentage) / 100) * +partCount;
+                        // x.itemCost = +x.partCount * +x.inkCostPerKg;
+                        if (x.inkCostPerKg) {
+                            x.unitCost = +x.inkCostPerKg;
+                            x.itemCost = +x.partCount * +x.inkCostPerKg;
+                        } else {
+                            x.itemCost = +x.partCount * +x.unitCost;
+                        }
+                        if (x.type == "InkInfo") {
+                            x.partCount = +(
+                                (+x.qtyPerSKUUnit + (+x.qtyPerSKUUnit * +x.wastePercentage) / 100) *
+                                +partCount
+                            ).toFixed(4);
+                            x.qtyPerSKUUnit = +(x.qtyPerSKUUnit * +partCount).toFixed(4);
+                            x.itemCost = +x.partCount * +x.unitCost;
+                        }
                         return x;
                     });
                     this.collection = this.BoMOfSKUDetailsArr.length;
+                }
+
+                if (this.inkList?.length > 0) {
+                    let totalMaterialCost = this.inkList
+                        ?.map((x: any) => x.itemCost)
+                        .reduce((a: any, c: any) => +a + +c);
+
+                    this.form.controls["totalMaterialCost"].setValue(+totalMaterialCost.toFixed(2));
+                    this.form.controls["materialCostForOnePC"].setValue(
+                        +(+totalMaterialCost / +this.materialCostForPC).toFixed(2)
+                    );
+                } else {
+                    let totalMaterialCost = this.BoMOfSKUDetailsArr.map((x: any) => x.itemCost).reduce(
+                        (a: any, c: any) => +a + +c
+                    );
+
+                    this.form.controls["totalMaterialCost"].setValue(+totalMaterialCost.toFixed(2));
+                    this.form.controls["materialCostForOnePC"].setValue(
+                        +(+totalMaterialCost / +this.materialCostForPC).toFixed(2)
+                    );
                 }
 
                 this.spinner.hide();
@@ -328,7 +398,8 @@ export class BomOfSkuFormComponent implements OnInit {
         }
     }
     setPartCount() {
-        let partCount = +this.form.controls["partCount"].value;
+        // let partCount = +this.form.controls["partCount"].value;
+        let partCount = 1;
         if (this.inkList.length > 0) {
             this.inkList = this.inkList.map((ele: any) => {
                 ele.inkCostPerKg = +ele.inkCostPerKg || 0;
@@ -352,6 +423,9 @@ export class BomOfSkuFormComponent implements OnInit {
             let totalMaterialCost = this.inkList.map((x: any) => x.itemCost).reduce((a: any, c: any) => +a + +c);
 
             this.form.controls["totalMaterialCost"].setValue(+totalMaterialCost.toFixed(2));
+            this.form.controls["materialCostForOnePC"].setValue(
+                +(+totalMaterialCost / +this.materialCostForPC).toFixed(2)
+            );
         }
         if (this.BoMOfSKUDetailsArr.length > 0) {
             this.BoMOfSKUDetailsArr = this.BoMOfSKUDetailsArr.map((ele: any) => {
@@ -372,17 +446,29 @@ export class BomOfSkuFormComponent implements OnInit {
             );
 
             this.form.controls["totalMaterialCost"].setValue(+totalMaterialCost.toFixed(2));
+            this.form.controls["materialCostForOnePC"].setValue(
+                +(+totalMaterialCost / +this.materialCostForPC).toFixed(2)
+            );
         }
     }
     setInkDetails(ele: any) {
         let index = this.inkList.map((x: any) => x.reference).indexOf(ele.reference);
-        let partCount = this.form.controls["partCount"].value;
+        let partCountValue = +this.form.controls["partCount"].value;
+        let partCount = 1;
         if (ele.qtyPerSKUUnit && ele.wastePercentage) {
             this.inkList[index].partCount =
                 (+ele.qtyPerSKUUnit + (+ele.qtyPerSKUUnit * +ele.wastePercentage) / 100) * +partCount;
+            // if (ele.type == "InkInfo") {
+            //     this.inkList[index].partCount =
+            //         (+ele.qtyPerSKUUnit + (+ele.qtyPerSKUUnit * +ele.wastePercentage) / 100) * +partCountValue;
+            // }
         } else {
             this.inkList[index].partCount =
                 (+ele.qtyPerSKUUnit + (+ele.qtyPerSKUUnit * +ele.wastePercentage) / 100) * +partCount;
+            // if (ele.type == "InkInfo") {
+            //     this.inkList[index].partCount =
+            //         (+ele.qtyPerSKUUnit + (+ele.qtyPerSKUUnit * +ele.wastePercentage) / 100) * +partCountValue;
+            // }
         }
 
         if (ele.inkCostPerKg) {
@@ -394,17 +480,27 @@ export class BomOfSkuFormComponent implements OnInit {
         let totalMaterialCost = this.inkList.map((x: any) => x.itemCost).reduce((a: any, c: any) => +a + +c);
 
         this.form.controls["totalMaterialCost"].setValue(+totalMaterialCost.toFixed(2));
+        this.form.controls["materialCostForOnePC"].setValue(+(+totalMaterialCost / +this.materialCostForPC).toFixed(2));
     }
     setUnit(item: any) {
         let index = this.inkList.map((x: any) => x.reference).indexOf(item.reference);
+
+        // if (this.inkList[index].UOM == item.secondaryUnit) {
+        //     this.inkList[index].UOM = item.primaryUnit;
+        //     this.inkList[index].qtyPerSKUUnit = 1;
+        // } else {
+        //     this.inkList[index].UOM = item.secondaryUnit;
+        //     this.inkList[index].qtyPerSKUUnit = +item.primaryToSecondaryConversion.toFixed(4);
+        // }
+
         if (this.inkList[index].UOM == item.secondaryUnit) {
             this.inkList[index].UOM = item.primaryUnit;
             if (["SHT"].includes(item.primaryUnit)) {
-                this.inkList[index].qtyPerSKUUnit = +(1 / item.ups).toFixed(4);
+                this.inkList[index].qtyPerSKUUnit = 1;
                 let SKUUnitCost = +((item?.width / 1000) * (item?.length / 1000) * item?.unitCost).toFixed(4);
                 this.inkList[index].unitCost = +SKUUnitCost;
             } else if (["RL"].includes(item.primaryUnit)) {
-                this.inkList[index].qtyPerSKUUnit = +(1 / item.ups).toFixed(4);
+                this.inkList[index].qtyPerSKUUnit = 1;
                 let SKUUnitCost = 0;
                 if (item.lengthUnit == "mm") {
                     SKUUnitCost = +((item?.width / 1000) * (item?.length / 1000) * item?.unitCost).toFixed(4);
@@ -413,15 +509,13 @@ export class BomOfSkuFormComponent implements OnInit {
                 }
                 this.inkList[index].unitCost = +SKUUnitCost;
             } else {
-                this.inkList[index].qtyPerSKUUnit = +(item.qtyPerSKUUnit * item.primaryToSecondaryConversion).toFixed(
-                    4
-                );
+                this.inkList[index].qtyPerSKUUnit = item.primaryToSecondaryConversion;
             }
         } else {
             this.inkList[index].UOM = item.secondaryUnit;
 
             if (["SHT"].includes(item.primaryUnit)) {
-                let SKUUnit = +(((item?.width / 1000) * (item?.length / 1000)) / item?.ups).toFixed(4);
+                let SKUUnit = +((item?.width / 1000) * (item?.length / 1000)).toFixed(4);
                 let SKUUnitCost = +(item?.unitCost / ((item?.width / 1000) * (item?.length / 1000))).toFixed(4);
                 this.inkList[index].qtyPerSKUUnit = +SKUUnit;
                 this.inkList[index].unitCost = +SKUUnitCost;
@@ -429,30 +523,34 @@ export class BomOfSkuFormComponent implements OnInit {
                 let SKUUnit = 0;
                 let SKUUnitCost = 0;
                 if (item.lengthUnit == "mm") {
-                    SKUUnit = +(((item?.width / 1000) * (item?.length / 1000)) / item?.ups).toFixed(4);
+                    SKUUnit = +((item?.width / 1000) * (item?.length / 1000)).toFixed(4);
                     SKUUnitCost = +(item?.unitCost / ((item?.width / 1000) * (item?.length / 1000))).toFixed(4);
                 } else {
-                    SKUUnit = +(((item?.width / 1000) * item?.length) / item?.ups).toFixed(4);
+                    SKUUnit = +((item?.width / 1000) * item?.length).toFixed(4);
                     SKUUnitCost = +(item?.unitCost / ((item?.width / 1000) * item?.length)).toFixed(4);
                 }
                 this.inkList[index].qtyPerSKUUnit = +SKUUnit;
                 this.inkList[index].unitCost = +SKUUnitCost;
             } else {
-                this.inkList[index].qtyPerSKUUnit = +(item.qtyPerSKUUnit / item.primaryToSecondaryConversion).toFixed(
-                    4
-                );
+                this.inkList[index].qtyPerSKUUnit = item.primaryToSecondaryConversion;
             }
         }
         this.setInkDetails(this.inkList[index]);
     }
     setItemCostDetails(ele: any) {
-        let partCount = +this.form.controls["partCount"].value;
+        let partCountValue = +this.form.controls["partCount"].value;
+        let partCount = 1;
         let index = this.BoMOfSKUDetailsArr.map((x: any) => x.itemCode).indexOf(ele.itemCode);
         this.BoMOfSKUDetailsArr[index].partCount =
             (+ele.qtyPerSKUUnit + (+ele.qtyPerSKUUnit * +ele.wastePercentage) / 100) * +partCount;
+        if (ele.type == "InkInfo") {
+            this.inkList[index].partCount =
+                (+ele.qtyPerSKUUnit + (+ele.qtyPerSKUUnit * +ele.wastePercentage) / 100) * +partCountValue;
+        }
         this.BoMOfSKUDetailsArr[index].itemCost = +ele.partCount * +ele.unitCost;
         let totalMaterialCost = this.BoMOfSKUDetailsArr.reduce((a: any, c: any) => +a + +c.itemCost, 0);
         this.form.controls["totalMaterialCost"].setValue(+totalMaterialCost.toFixed(2));
+        this.form.controls["materialCostForOnePC"].setValue(+(+totalMaterialCost / +this.materialCostForPC).toFixed(2));
     }
     openBOMDocumentDetailsModal() {
         const modalRef = this.modalService.open(BomDocumentDetailsComponent, {

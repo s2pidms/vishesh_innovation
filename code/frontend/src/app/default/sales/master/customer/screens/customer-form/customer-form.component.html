@@ -133,9 +133,7 @@
                 <div class="col">
                     <label class="form-label"> Country <span class="text-danger">*</span> </label>
                     <select
-                        *ngIf="
-                            ['Exports – OEM', 'Exports – Dealer'].includes(this.form.controls['customerCategory'].value)
-                        "
+                        *ngIf="this.form?.controls['customerCategory']?.value?.includes('Exports')"
                         class="form-select"
                         formControlName="country"
                     >
@@ -147,9 +145,7 @@
                     <input
                         *ngIf="
                             !this.form.controls['customerCategory'].value ||
-                            ['Domestic – OEM', 'Domestic – Dealer'].includes(
-                                this.form.controls['customerCategory'].value
-                            )
+                            this.form?.controls['customerCategory']?.value?.includes('Domestic')
                         "
                         type="text"
                         class="form-control"
@@ -161,9 +157,7 @@
                     <select
                         *ngIf="
                             !this.form.controls['customerCategory'].value ||
-                            ['Domestic – OEM', 'Domestic – Dealer'].includes(
-                                this.form.controls['customerCategory'].value
-                            )
+                            this.form?.controls['customerCategory']?.value?.includes('Domestic')
                         "
                         class="form-select"
                         formControlName="state"
@@ -174,9 +168,7 @@
                         </option>
                     </select>
                     <input
-                        *ngIf="
-                            ['Exports – OEM', 'Exports – Dealer'].includes(this.form.controls['customerCategory'].value)
-                        "
+                        *ngIf="this.form?.controls['customerCategory']?.value?.includes('Exports')"
                         type="text"
                         class="form-control"
                         formControlName="state"
@@ -211,7 +203,7 @@
                     <input type="text" class="form-control" formControlName="line3" />
                 </div>
                 <div class="col">
-                    <label class="form-label">Address Line 4 <span class="text-danger">*</span></label>
+                    <label class="form-label">Address Line 4 <span class="text-danger"></span></label>
                     <input type="text" class="form-control" formControlName="line4" readonly />
                 </div>
             </div>

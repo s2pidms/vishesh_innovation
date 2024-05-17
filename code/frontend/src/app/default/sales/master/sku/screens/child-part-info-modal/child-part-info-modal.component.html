@@ -72,13 +72,18 @@
                                                 />
                                             </div>
                                             <div class="col-5">
-                                                <select class="form-select" formControlName="widthUnit">
+                                                <select
+                                                    class="form-select"
+                                                    (change)="setWidthData($event)"
+                                                    formControlName="widthUnit"
+                                                >
                                                     <!-- <option [value]="null" disabled>Select</option> -->
-                                                    <option [value]="'mm'">mm</option>
-                                                    <option *ngIf="f['primaryUnit'].value == 'RL'" [value]="'m'">
-                                                        m
-                                                    </option>
-                                                    <!-- <option [value]="item" *ngFor="let item of DimensionsUnits">
+                                                    <option value="mm">mm</option>
+                                                    <option *ngIf="f['primaryUnit'].value == 'RL'" value="m">m</option>
+                                                    <!-- <option 
+                                                        [value]="item"
+                                                        *ngFor="let item of lengthUnitArr"
+                                                    >
                                                         {{ item }}
                                                     </option> -->
                                                 </select>
@@ -106,14 +111,14 @@
                                                 <select
                                                     class="form-select"
                                                     formControlName="lengthUnit"
-                                                    (change)="setDescription()"
+                                                    (change)="setLengthData()"
                                                 >
                                                     <!-- <option [value]="null" disabled>Select</option> -->
                                                     <option [value]="'mm'">mm</option>
                                                     <option *ngIf="f['primaryUnit'].value == 'RL'" [value]="'m'">
                                                         m
                                                     </option>
-                                                    <!-- <option [value]="item" *ngFor="let item of DimensionsUnits">
+                                                    <!-- <option [value]="item" *ngFor="let item of lengthUnitArr">
                                                         {{ item }}
                                                     </option> -->
                                                 </select>

@@ -29,3 +29,4 @@ export * from "./costSheetComponentsMasterData";
 export * from "./productCategory";
 export * from "./mouldMaster";
 export * from "./mouldMasterData";
+export * from "./servicesChargesMasterData";

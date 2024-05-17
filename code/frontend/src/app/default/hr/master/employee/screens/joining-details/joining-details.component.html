@@ -1,0 +1,130 @@
+<div class="modelPage">
+    <div class="modal-header">
+        <div class="heading">Joining Details</div>
+        <div>
+            <button
+                type="button"
+                class="btn btn-cross btn-sm"
+                aria-label="Close"
+                (click)="this.activeModal.close(joiningDetailsInfo)"
+            >
+                <i class="fa fa-times-circle" aria-hidden="true"></i>
+            </button>
+        </div>
+    </div>
+    <div class="container-fluid">
+        <div class="row mt-4">
+            <form [formGroup]="form">
+                <div class="form-body">
+                    <div style="min-height: 31.8rem">
+                        <div class="row mb-4 px-4">
+                            <div class="col-md-4">
+                                <label class="form-label"> Joining Date </label>
+                                <input class="form-control" type="date" formControlName="empJoiningDate" />
+                            </div>
+                            <div class="col-md-4">
+                                <label class="form-label"> Joining Location </label>
+
+                                <select class="form-select" type="text" formControlName="empJoiningLocation">
+                                    <option [value]="null" selected disabled>Select Location</option>
+                                    <option [value]="j.value" *ngFor="let j of masterData.joiningLocationOptions">
+                                        {{ j.label }}
+                                    </option>
+                                </select>
+                            </div>
+                            <div class="col-md-4">
+                                <label class="form-label"> Cadre </label>
+
+                                <select class="form-select" formControlName="empCadre">
+                                    <option [value]="null" selected disabled>Select Cadre</option>
+                                    <option
+                                        [value]="item.parameterName"
+                                        *ngFor="let item of masterData.empCadresOptions"
+                                    >
+                                        {{ item.parameterLabel }}
+                                    </option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="row mb-4 px-4">
+                            <div class="col-md-4">
+                                <label class="form-label"> Designation </label>
+                                <select class="form-select" formControlName="empDesignation">
+                                    <option [value]="null" selected disabled>Select Designation</option>
+                                    <option
+                                        [value]="item.parameterName"
+                                        *ngFor="let item of masterData.empDesignationsOptions"
+                                    >
+                                        {{ item.parameterLabel }}
+                                    </option>
+                                </select>
+                            </div>
+                            <div class="col-md-4">
+                                <label class="form-label"> Department </label>
+                                <select class="form-select" formControlName="empDepartment">
+                                    <option [value]="null" selected disabled>Select Department</option>
+                                    <option
+                                        [value]="item.departmentName"
+                                        *ngFor="let item of masterData.empDepartmentsOptions"
+                                    >
+                                        {{ item.departmentName }}
+                                    </option>
+                                </select>
+                            </div>
+                            <div class="col-md-4">
+                                <label class="form-label"> Reporting Officer [RO] </label>
+                                <ng-select
+                                    [items]="masterData.employeesOptions"
+                                    bindLabel="label"
+                                    bindValue="value"
+                                    formControlName="empReportTo"
+                                >
+                                </ng-select>
+                            </div>
+                        </div>
+                        <div class="row mb-4 px-4">
+                            <div class="col-md-4">
+                                <label class="form-label"> Employment Type </label>
+                                <select class="form-select" formControlName="empType">
+                                    <option [value]="null" selected disabled>Select Employment Type</option>
+                                    <option [value]="d.parameterName" *ngFor="let d of masterData.empTypesOptions">
+                                        {{ d.parameterLabel }}
+                                    </option>
+                                </select>
+                            </div>
+                            <div class="col-md-4">
+                                <label class="form-label"> Grade </label>
+                                <select class="form-select" formControlName="empGrade">
+                                    <option [value]="null" selected disabled>Select Grade</option>
+                                    <option
+                                        [value]="item.parameterName"
+                                        *ngFor="let item of masterData.empGradesOptions"
+                                    >
+                                        {{ item.parameterLabel }}
+                                    </option>
+                                </select>
+                            </div>
+                            <div class="col-md-4">
+                                <label class="form-label"> OT Applicability </label>
+                                <select class="form-select" formControlName="empOTApplicability">
+                                    <option [value]="null" disabled>Select OT</option>
+                                    <option value="Yes">Yes</option>
+                                    <option value="No">No</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+
+            <hr *ngIf="!['view'].includes(action)" class="line-border mt-5 px-5" />
+
+            <div class="text-center">
+                <div *ngIf="!['view'].includes(action)" class="text-center mb-3">
+                    <button (click)="reset()" class="btn bg-primary px-5 me-3" type="button">Reset</button>
+                    <button class="btn bg-primary px-5" type="button" (click)="dismissModel()">Save</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

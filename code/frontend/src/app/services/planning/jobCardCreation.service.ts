@@ -16,6 +16,7 @@ export class JobCardCreationService {
         getBOMBySKUOrDSKUPath: "/planning/jobCard/getBOMBySKUOrDSKU",
         updatePath: (id: string) => `/planning/jobCard/update/${id}`,
         getByIdPath: (id: string) => `/planning/jobCard/getById/${id}`,
+        getDimBySKUPath: (id: string) => `/planning/jobCard/getDimBySKU/${id}`,
         getByIdForPDFPath: (id: string) => `/planning/jobCard/getByIdForPDF/${id}`,
         deletePath: (id: string) => `/planning/jobCard/delete/${id}`
     };
@@ -50,6 +51,9 @@ export class JobCardCreationService {
     }
     getById(id: string) {
         return this.http.get(this.routes.getByIdPath(id)).pipe(map((res: any) => res));
+    }
+    getDimBySKU(id: string) {
+        return this.http.get(this.routes.getDimBySKUPath(id)).pipe(map((res: any) => res));
     }
     getByIdForPDF(id: string) {
         return this.http.get(this.routes.getByIdForPDFPath(id)).pipe(map((res: any) => res));

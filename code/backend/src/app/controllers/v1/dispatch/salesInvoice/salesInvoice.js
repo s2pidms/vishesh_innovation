@@ -2,7 +2,12 @@ const asyncHandler = require("express-async-handler");
 const Model = require("../../../../models/dispatch/salesInvoiceModel");
 const AutoIncrement = require("../../../../models/settings/autoIncrementModel");
 const MESSAGES = require("../../../../helpers/messages.options");
-const {getAutoIncrementNumber, outputData, getAllAggregationFooter} = require("../../../../helpers/utility");
+const {
+    getAutoIncrementNumber,
+    outputData,
+    getAllAggregationFooter,
+    checkDomesticCustomer
+} = require("../../../../helpers/utility");
 const {getMatchData, OPTIONS} = require("../../../../helpers/global.options");
 const {default: mongoose} = require("mongoose");
 const {CONSTANTS} = require("../../../../../config/config");
@@ -30,6 +35,7 @@ const MailTriggerRepository = require("../../../../models/settings/repository/ma
 const {DISPATCH_MAIL_CONST} = require("../../../../mocks/mailTriggerConstants");
 const AutoIncrementRepository = require("../../../../models/settings/repository/autoIncrementRepository");
 const TransporterRepository = require("../../../../models/sales/repository/transporterMasterRepository");
+const {salesUOMPipe} = require("../../settings/SalesUOMUnitMaster/SalesUOMUnitMaster");
 
 exports.getAll = asyncHandler(async (req, res) => {
     try {
@@ -182,6 +188,17 @@ exports.getById = asyncHandler(async (req, res) => {
                     existing.company.companyBillingAddress = e;
                 }
             }
+        }
+        if (existing.customer.GSTClassification == "SEZ") {
+            existing.salesInvoiceDetails = existing.salesInvoiceDetails.map(x => {
+                x.igst = 0;
+                x.cgst = 0;
+                x.sgst = 0;
+                x.ugst = 0;
+                x.SgstAmt = 0;
+                x.CgstAmt = 0;
+                return x;
+            });
         }
         return res.success(existing);
     } catch (e) {
@@ -655,8 +672,7 @@ async function getDataPDF(req) {
             salesInvoiceTotalAmountWithTax: 0
         };
         let customerCategoryCondition =
-            SALES_CATEGORY.getAllDomesticSalesCategory().includes(customer.customerCategory) &&
-            customer.GSTClassification != "SEZ";
+            (await checkDomesticCustomer(customer.customerCategory)) && customer.GSTClassification != "SEZ";
         let condition = false;
         if (customer && customer.company && customer.company.placesOfBusiness.length > 0 && customerCategoryCondition) {
             for (const ele of customer.company.placesOfBusiness) {
@@ -915,13 +931,11 @@ exports.getAllEwayBillList = asyncHandler(async (req, res) => {
             },
             company: req.user.company,
             ...(!!category && category == "Exports"
-                ? {
-                      customerCategory: {$in: SALES_CATEGORY.getAllExportsSalesCategory()}
-                  }
+                ? {customerCategory: {$regex: SALES_CATEGORY.EXPORTS_REGEX}}
                 : {
                       $or: [
                           {customerCategory: {$exists: false}},
-                          {customerCategory: {$in: SALES_CATEGORY.getAllDomesticSalesCategory()}}
+                          {customerCategory: {$regex: SALES_CATEGORY.DOMESTIC_REGEX}}
                       ]
                   }),
 
@@ -1118,9 +1132,9 @@ exports.getSalesInvoiceByIdForPDF = asyncHandler(async (req, res) => {
             existing.salesInvoiceDetails = existing.salesInvoiceDetails.map(ele => {
                 ele.QRCode = [
                     ele?.SOId?.PONumber ?? " ",
-                    "1",
+                    "10",
                     ele?.dispatchQty ?? " ",
-                    existing?.company?.GSTIN ?? " ",
+                    existing?.salesInvoiceNumber ?? " ",
                     dateToAnyFormat(new Date(existing?.salesInvoiceDate), "DD.MM.YYYY") ?? " ",
                     ele?.purchaseRate?.toFixed(2) ?? "0.00",
                     ele?.salesInvoiceUnitRate?.toFixed(2) ?? "0.00",
@@ -1167,6 +1181,7 @@ exports.getSalesInvoiceByIdForPDF = asyncHandler(async (req, res) => {
         if (existing.salesInvoiceDetails.length) {
             let arr = [];
             for await (const x of existing?.salesInvoiceDetails) {
+                x.unit = await salesUOMPipe(x.unit, existing.company._id);
                 let HSN = await getSalesHSNByCode(x.SKU.hsn);
                 x.SKU.HSNCode = HSN?.hsnCode;
                 x.SKU.HSN = HSN?._id;
@@ -1179,7 +1194,7 @@ exports.getSalesInvoiceByIdForPDF = asyncHandler(async (req, res) => {
             existing.salesInvoiceDetails = arr;
         }
         let customerCategoryCondition =
-            SALES_CATEGORY.getAllDomesticSalesCategory().includes(existing.customer.customerCategory) &&
+            (await checkDomesticCustomer(existing.customer.customerCategory)) &&
             existing.customer.GSTClassification != "SEZ";
         let condition = false;
         if (

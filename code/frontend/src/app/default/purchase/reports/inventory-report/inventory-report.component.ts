@@ -23,12 +23,12 @@ export class InventoryReportComponent implements OnInit, OnDestroy {
     @ViewChildren(NgbdSortableHeader) headers: QueryList<NgbdSortableHeader> | any;
     [x: string]: any;
     page: number = 1;
-    pageSize: number = 12;
+    pageSize: number = 11;
     collection: number = 0;
-    column: string = "createdAt";
-    direction: number = -1;
+    column: string = "itemCode";
+    direction: number = 1;
     search: string = "";
-    tableData: InventoryReport[] = [];
+    tableData: InventoryReport[] | any = [];
     suppliersArr: any = [];
     locationArr: any = [];
     itemsListArr: any = [];
@@ -83,6 +83,7 @@ export class InventoryReportComponent implements OnInit, OnDestroy {
         return item?._id;
     }
     reset() {
+        this.search = "";
         this.getFiscalDate();
         this.reportName = this.reportNameObj.aodInventory;
         this.supplierId = "";
@@ -103,6 +104,29 @@ export class InventoryReportComponent implements OnInit, OnDestroy {
             this.location = "";
             this.supplierId = "";
         }
+    }
+
+    setConversionOfUnit(item: any) {
+        let index = this.tableData.map((x: any) => x.itemLineNumber).indexOf(item.itemLineNumber);
+        if (this.tableData[index].UOM == item.secondaryUnit) {
+            this.tableData[index].UOM = item.primaryUnit;
+            this.tableData[index].purchaseRatINR = item.stdCostUom1;
+        } else {
+            this.tableData[index].UOM = item.secondaryUnit;
+            this.tableData[index].purchaseRatINR = item.stdCostUom2;
+        }
+
+        let closedIRQtyQuantity =
+            this.utilityService.setConversion({
+                UOM: this.tableData[index].UOM,
+                quantity: item.closedIRQty,
+                primaryUnit: item.primaryUnit,
+                secondaryUnit: item.secondaryUnit,
+                primaryToSecondaryConversion: item.primaryToSecondaryConversion,
+                secondaryToPrimaryConversion: item.secondaryToPrimaryConversion
+            }) || 0;
+
+        this.tableData[index].closedIRQty = +closedIRQtyQuantity;
     }
     eventHeader(event: any) {
         switch (event.key) {
@@ -150,7 +174,10 @@ export class InventoryReportComponent implements OnInit, OnDestroy {
                 } else if (flag == "PDF") {
                     this.pdfDownload(success.rows);
                 } else {
-                    this.tableData = success.rows;
+                    this.tableData = success?.rows?.map((x: any, index: number) => {
+                        x.itemLineNumber = index + 1;
+                        return x;
+                    });
                     this.suppliersArr = success.suppliersList;
                     this.itemsListArr = success.itemsList;
                     this.locationArr = success.locations;

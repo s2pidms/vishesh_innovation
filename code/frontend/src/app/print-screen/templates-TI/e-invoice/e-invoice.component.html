@@ -178,7 +178,9 @@
                             </td>
                             <td colspan="3">
                                 <p>{{ s?.SKU?.SKUName }}</p>
-                                <p *ngIf="tableData?.customer?.showSKUDescription != 'No'">{{ s?.SKU?.SKUDescription }} | {{ s?.SKU?.SKUNo }}</p>
+                                <p *ngIf="tableData?.customer?.showSKUDescription != 'No'">
+                                    {{ s?.SKU?.SKUDescription }} | {{ s?.SKU?.SKUNo }}
+                                </p>
                                 <p>
                                     Part No.
                                     {{
@@ -192,7 +194,12 @@
                             </td>
 
                             <td colspan="1" class="text-center">
-                                {{ s?.SOId?.PONumber }}
+                                <p>
+                                    {{ s?.SOId?.PONumber }}
+                                </p>
+                                <p>
+                                    {{ s?.SOId?.PODate | date : "dd-MMM-yy" }}
+                                </p>
                             </td>
                             <td colspan="1" class="text-center">
                                 {{ s?.SKU?.hsn }}
@@ -493,7 +500,7 @@
                             </td>
                             <td colspan="2">
                                 <div class="text-center">
-                                    <img src="{{ tableData?.company?.TISignatureUrl  }}" class="img-sign" />
+                                    <img src="{{ tableData?.company?.TISignatureUrl }}" class="img-sign" />
                                 </div>
                             </td>
                         </tr>

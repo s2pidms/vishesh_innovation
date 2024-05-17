@@ -8,12 +8,12 @@ import {StockCuttingService} from "@services/production/stockCutting.service";
 
 @Component({
     selector: "app-stock-cutting-form",
-    templateUrl: "./stock-cutting-form.component.html",
-    styleUrls: ["./stock-cutting-form.component.scss"]
+    templateUrl: "./stock-cutting-form.component.html"
 })
 export class StockCuttingFormComponent implements OnInit {
     @ViewChildren(NgbdSortableHeader) headers: QueryList<NgbdSortableHeader> | any;
     @Input() selectedDetails: any = {};
+    @Input() jobCardDetails: any = {};
     stockCutting: any = {};
     processNames: any = [];
     shiftOptions: any = [];
@@ -102,6 +102,10 @@ export class StockCuttingFormComponent implements OnInit {
         this.spinner.show();
         this.stockCuttingService.getAllMasterData(this.selectedDetails).subscribe(result => {
             this.stockCutting = result.stockCutting;
+            if (result?.stockCutting?.stockCuttingDetails?.length == 0 || !result?.stockCutting?.stockCuttingDetails) {
+                this.toastService.warning(`Please define the Bill of Material of the SKU`);
+                this.stockCutting = this.jobCardDetails;
+            }
             this.stockCutting.stockCuttingDetails = this.stockCutting?.stockCuttingDetails?.map((x: any) => {
                 x.select = false;
                 return x;
@@ -110,6 +114,7 @@ export class StockCuttingFormComponent implements OnInit {
             this.processNames = result.processNames;
             this.shiftOptions = result.shiftOptions;
             this.collection = this.stockCutting?.stockCuttingDetails?.length;
+
             this.spinner.hide();
         });
     }

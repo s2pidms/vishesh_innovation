@@ -9,8 +9,6 @@ const ProcessMasterRepository = require("../../../../models/planning/repository/
 const SKUMasterRepository = require("../../../../models/sales/repository/SKUMasterRepository");
 const {getAllSKUCategory} = require("../../settings/SKUCategoryMaster/SKUCategoryMaster");
 const {filteredProductCategoryMasterList} = require("../../../../models/settings/repository/productCategoryRepository");
-const {insertMany} = require("../../../../models/settings/autoIncrementModel");
-const Model = require("../../../../models/businessLeads/SKUProcessFlowModel");
 
 exports.getAll = asyncHandler(async (req, res) => {
     try {

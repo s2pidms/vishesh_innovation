@@ -1,0 +1,185 @@
+<div class="modelPage">
+    <div class="modal-header">
+        <div class="heading">Apply Copied Material</div>
+        <div>
+            <button type="button" class="btn btn-cross btn-sm" aria-label="Close" (click)="this.activeModal.close()">
+                <i class="fa fa-times-circle" aria-hidden="true"></i>
+            </button>
+        </div>
+    </div>
+    <!-- <div class="row my-4 px-5">
+        <div class="col-3 ps-4 separate-row pe-4">
+            <label class="form-label mb-1"> Filter By</label>
+            <ng-select
+                [items]="productCategories"
+                bindLabel="label"
+                bindValue="value"
+                [(ngModel)]="productCategoriesFilterBy"
+                [clearable]="false"
+                (change)="filterData()"
+            >
+            </ng-select>
+        </div>
+        <div class="col-4 align-self-end separate-image ps-3">
+            <span class="image-position">
+                <img src="./assets/new_icons/redstroke.svg" alt="" height="27" width="8" />
+            </span>
+            <button type="button" class="btn btn-primary px-4 me-3" [disabled]="productCategoriesFilterBy">
+                Apply Filter
+            </button>
+            <button
+                type="button"
+                class="btn btn-primary px-4"
+                (click)="reset()"
+                [disabled]="!productCategoriesFilterBy"
+            >
+                Reset Filter
+            </button>
+        </div>
+    </div> -->
+
+    <!-- <div class="row"> -->
+    <!-- <div class="col px-0">
+            <hr class="line-border" />
+        </div>
+    </div> -->
+
+    <div class="container-fluid pb-3">
+        <div class="row">
+            <div class="col-12 mt-4 px-5">
+                <div class="row justify-content-between">
+                    <div class="col-4 mb-4" *ngIf="!productCategoriesFilterBy">
+                        <div class="d-flex">
+                            <div class="set-input-group-text input-group-text bg-primary" id="basic-addon1">
+                                <i class="fa fa-search text-white" aria-hidden="true"></i>
+                            </div>
+                            <div>
+                                <input
+                                    type="text"
+                                    class="form-control"
+                                    [(ngModel)]="search"
+                                    [ngModelOptions]="{standalone: true}"
+                                />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-4" *ngIf="productCategoriesFilterBy">
+                        <div class="">
+                            <label class="form-label mb-1 me-2">Select All</label>
+                            <input
+                                (change)="setAssetData($event)"
+                                class="form-check-input"
+                                type="checkbox"
+                                [disabled]="['view'].includes(action)"
+                            />
+                        </div>
+                    </div>
+                    <div class="col-4 d-flex justify-content-center">
+                        <ngb-pagination
+                            *ngIf="tableData.length > 0"
+                            [collectionSize]="tableData.length"
+                            [(page)]="page"
+                            [pageSize]="pageSize"
+                            [boundaryLinks]="false"
+                        >
+                            <ng-template ngbPaginationPrevious>
+                                <img src="./assets/new_icons/pagination_prev.svg" width="20rem" />
+                            </ng-template>
+                            <ng-template ngbPaginationNext>
+                                <img src="./assets/new_icons/pagination_next.svg" width="20rem" />
+                            </ng-template>
+                            <ng-template ngbPaginationPages let-page let-pages="pages">
+                                <li class="ngb-custom-pages-item align-self-center" *ngIf="pages.length > 0">
+                                    <span class="page-label me-2 ms-1">
+                                        Page {{ page }} of {{ pages[pages.length - 1] }}
+                                    </span>
+                                </li>
+                            </ng-template>
+                        </ngb-pagination>
+                    </div>
+                    <div class="col-4"></div>
+                </div>
+                <div class="table-responsive" style="min-height: 23rem">
+                    <table class="table table-bordered table-sticky mt-1">
+                        <thead class="bg-primary">
+                            <tr class="text-white">
+                                <th sortable="select" (sort)="onSort($event)">Select</th>
+                                <th sortable="SKUNo" (sort)="onSort($event)">SKU No.</th>
+                                <th class="text-start" sortable="SKUName" (sort)="onSort($event)">SKU Name</th>
+                                <th class="text-start" sortable="SKUDescription" (sort)="onSort($event)">
+                                    SKU Description
+                                </th>
+                                <th sortable="primaryUnit" (sort)="onSort($event)">UoM</th>
+                                <th class="text-start" sortable="productCategory" (sort)="onSort($event)">
+                                    Product Category
+                                </th>
+                                <th sortable="primaryUnit" (sort)="onSort($event)">SKU Stage</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr
+                                *ngFor="
+                                    let g of tableData
+                                        | searchFi1ter : search
+                                        | slice : (page - 1) * pageSize : (page - 1) * pageSize + pageSize;
+                                    trackBy: trackByFn
+                                "
+                            >
+                                <td>
+                                    <div class="d-flex justify-content-center">
+                                        <input
+                                            class="form-check-input"
+                                            type="checkbox"
+                                            [(ngModel)]="g.select"
+                                            [disabled]="['view'].includes(action)"
+                                        />
+                                    </div>
+                                </td>
+                                <td>{{ g.SKUNo }}</td>
+                                <td class="text-start" [style.width]="SKUName.clientWidth" #SKUName>
+                                    <span class="pointer" [ngbTooltip]="g.SKUName" [positionTarget]="SKUName">
+                                        {{ g.SKUName }}
+                                    </span>
+                                </td>
+                                <td class="text-start" [style.width]="SKUDescription.clientWidth" #SKUDescription>
+                                    <span
+                                        class="pointer"
+                                        [ngbTooltip]="g.SKUDescription"
+                                        [positionTarget]="SKUDescription"
+                                    >
+                                        {{ g.SKUDescription }}
+                                    </span>
+                                </td>
+                                <td>{{ g.primaryUnit | UOMUnitsMaster }}</td>
+                                <!-- <td>{{ g.productCategory }}</td> -->
+                                <td class="text-start" [style.width]="productCategory.clientWidth" #productCategory>
+                                    <span
+                                        class="pointer"
+                                        [ngbTooltip]="g.productCategory"
+                                        [positionTarget]="productCategory"
+                                    >
+                                        {{ g.productCategory }}
+                                    </span>
+                                </td>
+                                <td>{{ g.primaryUnit | UOMUnitsMaster }}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col px-0 mt-4">
+                <hr class="line-border" />
+            </div>
+        </div>
+        <div class="row px-4 py-3">
+            <div class="col d-flex justify-content-center">
+                <button type="button" class="btn btn-primary px-4" (click)="dismissModel()">
+                    Apply Copied Dimension
+                </button>
+            </div>
+        </div>
+    </div>
+</div>

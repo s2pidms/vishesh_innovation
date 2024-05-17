@@ -51,12 +51,37 @@ let headers: any = [
         ...EXCEL_STYLE
     },
     {
-        header: "UoM",
-        key: "orderInfoUOM",
+        header: "U1",
+        key: "primaryUnit",
         ...EXCEL_STYLE
     },
     {
-        header: "Unit Conversion",
+        header: "U2",
+        key: "secondaryUnit",
+        ...EXCEL_STYLE
+    },
+    {
+        header: "Dim/Width",
+        key: "dimWidth",
+        ...EXCEL_STYLE
+    },
+    {
+        header: "Width UoM",
+        key: "widthUnitUOM",
+        ...EXCEL_STYLE
+    },
+    {
+        header: "Dim/Length",
+        key: "dimLength",
+        ...EXCEL_STYLE
+    },
+    {
+        header: "Length UoM",
+        key: "lengthUnitUOM",
+        ...EXCEL_STYLE
+    },
+    {
+        header: "DUC",
         key: "conversionOfUnits",
         ...EXCEL_STYLE
     },
@@ -66,47 +91,12 @@ let headers: any = [
         ...EXCEL_STYLE
     },
     {
-        header: "RO Level",
-        key: "itemROL",
-        ...EXCEL_STYLE
-    },
-    {
-        header: "RO Qty",
-        key: "itemAMU",
-        ...EXCEL_STYLE
-    },
-    {
-        header: "Technical Data Sheet",
-        key: "tdsFileUrl",
-        ...EXCEL_STYLE
-    },
-    {
-        header: "Material Safety Data Sheet",
-        key: "msdsFileUrl",
-        ...EXCEL_STYLE
-    },
-    {
         header: "Shelf Life [Months]",
         key: "shelfLife",
         ...EXCEL_STYLE
     },
     {
-        header: "Storage Temperature [°C]",
-        key: "storageTemp",
-        ...EXCEL_STYLE
-    },
-    {
-        header: "Storage Humidity [RH]",
-        key: "storageHumidity",
-        ...EXCEL_STYLE
-    },
-    {
-        header: "Special Storage Instruction",
-        key: "specialStorageInstruction",
-        ...EXCEL_STYLE
-    },
-    {
-        header: "QC Level",
+        header: "QC Level ",
         key: "QCLevels",
         ...EXCEL_STYLE
     },
@@ -116,23 +106,38 @@ let headers: any = [
         ...EXCEL_STYLE
     },
     {
-        header: "Supplier Item Description",
-        key: "supplierDescription",
-        ...EXCEL_STYLE
-    },
-    {
         header: "Supplier Item Code",
         key: "spin",
         ...EXCEL_STYLE
     },
     {
-        header: "Currency",
+        header: "Supplier Item Description",
+        key: "supplierDescription",
+        ...EXCEL_STYLE
+    },
+    {
+        header: "Ccy",
         key: "supplierCurrency",
         ...EXCEL_STYLE
     },
     {
-        header: "Purchase Cost [Exclusive of GST] ",
+        header: "U1",
+        key: "uom1",
+        ...EXCEL_STYLE
+    },
+    {
+        header: "U1 P/Cost",
         key: "stdCostUom1",
+        ...EXCEL_STYLE
+    },
+    {
+        header: "U2",
+        key: "uom2",
+        ...EXCEL_STYLE
+    },
+    {
+        header: "U2 P/Cost",
+        key: "stdCostUom2",
         ...EXCEL_STYLE
     },
     {
@@ -140,6 +145,79 @@ let headers: any = [
         key: "isActive",
         ...EXCEL_STYLE
     }
+
+    // {
+    //     header: "UoM",
+    //     key: "orderInfoUOM",
+    //     ...EXCEL_STYLE
+    // },
+    // {
+    //     header: "RO Level",
+    //     key: "itemROL",
+    //     ...EXCEL_STYLE
+    // },
+    // {
+    //     header: "RO Qty",
+    //     key: "itemAMU",
+    //     ...EXCEL_STYLE
+    // },
+
+    // {
+    //     header: "Technical Data Sheet",
+    //     key: "tdsFileUrl",
+    //     ...EXCEL_STYLE
+    // },
+    // {
+    //     header: "Material Safety Data Sheet",
+    //     key: "msdsFileUrl",
+    //     ...EXCEL_STYLE
+    // },
+    // {
+    //     header: "Storage Temperature [°C]",
+    //     key: "storageTemp",
+    //     ...EXCEL_STYLE
+    // },
+    // {
+    //     header: "Storage Humidity [RH]",
+    //     key: "storageHumidity",
+    //     ...EXCEL_STYLE
+    // },
+    // {
+    //     header: "Special Storage Instruction",
+    //     key: "specialStorageInstruction",
+    //     ...EXCEL_STYLE
+    // },
+
+    // {
+    //     header: "Unit1",
+    //     key: "uom1",
+    //     ...EXCEL_STYLE
+    // },
+    // {
+    //     header: "PurchaseCost",
+    //     key: "stdCostUom1",
+    //     ...EXCEL_STYLE
+    // },
+    // {
+    //     header: "Unit2",
+    //     key: "uom2",
+    //     ...EXCEL_STYLE
+    // },
+    // {
+    //     header: "PurchaseCost",
+    //     key: "stdCostUom2",
+    //     ...EXCEL_STYLE
+    // }
+    // {
+    //     header: "Currency",
+    //     key: "supplierCurrency",
+    //     ...EXCEL_STYLE
+    // },
+    // {
+    //     header: "Purchase Cost [Exclusive of GST] ",
+    //     key: "stdCostUom1",
+    //     ...EXCEL_STYLE
+    // },
 ];
 export const ITEM_MASTER_REPORT_DATA = (data: any) => {
     return {

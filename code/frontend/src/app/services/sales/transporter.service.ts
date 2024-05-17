@@ -12,7 +12,7 @@ export class TransporterService {
         getAllMasterDataPath: "/sales/transporter/getAllMasterData",
         updatePath: (id: string) => `/sales/transporter/update/${id}`,
         getByIdPath: (id: string) => `/sales/transporter/getById/${id}`,
-        deletePath: (id: string) => `/sales/transporter/delete//${id}`
+        deletePath: (id: string) => `/sales/transporter/delete/${id}`
     };
     constructor(private http: ApiService) {}
 

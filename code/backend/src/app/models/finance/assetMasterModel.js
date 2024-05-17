@@ -4,6 +4,7 @@ const {OPTIONS} = require("../../helpers/global.options");
 const {setAssetsClassNextAutoIncrementNo} = require("../../controllers/v1/settings/assetClass/assetClass");
 const {ASSET: SCHEMA_CONST} = require("../../mocks/schemasConstant/financeConstant");
 const {paginatePlugin} = require("../plugins/paginatePlugin");
+const {setTwoDecimal} = require("../../helpers/utility");
 const assetSchema = mongoose.Schema(
     {
         company: {
@@ -94,11 +95,7 @@ const assetSchema = mongoose.Schema(
             },
             totalAssetClass: {
                 type: Number,
-                set: value => {
-                    if (![undefined, null, "NaN"].includes(value) && typeof +value == "number") {
-                        return parseFloat(value).toFixed(2);
-                    }
-                },
+                set: value => setTwoDecimal(value),
                 required: false
             },
             // estimatedResidual: {
@@ -112,6 +109,11 @@ const assetSchema = mongoose.Schema(
             // },
             estimatedUsefulLifeInYear: {
                 type: Number,
+                required: false
+            },
+            depreciatedAssetCostPerYear: {
+                type: Number,
+                set: value => setTwoDecimal(value),
                 required: false
             },
             // depreciationStartDate: {
@@ -133,11 +135,7 @@ const assetSchema = mongoose.Schema(
             // },
             noOfOperationalDaysPerYear: {
                 type: Number,
-                set: value => {
-                    if (![undefined, null, "NaN"].includes(value) && typeof +value == "number") {
-                        return parseFloat(value).toFixed(2);
-                    }
-                },
+                set: value => setTwoDecimal(value),
                 required: false
             },
             // noOfOperationalDaysPerMonth: {
@@ -151,20 +149,12 @@ const assetSchema = mongoose.Schema(
             // },
             noOfShiftsRunPerDays: {
                 type: Number,
-                set: value => {
-                    if (![undefined, null, "NaN"].includes(value) && typeof +value == "number") {
-                        return parseFloat(value).toFixed(2);
-                    }
-                },
+                set: value => setTwoDecimal(value),
                 required: false
             },
             machineEfficiencyPercentage: {
                 type: Number,
-                set: value => {
-                    if (![undefined, null, "NaN"].includes(value) && typeof +value == "number") {
-                        return parseFloat(value).toFixed(2);
-                    }
-                },
+                set: value => setTwoDecimal(value),
                 required: false
             }
             // assetCostDepreciationPerHr: {
@@ -205,29 +195,17 @@ const assetSchema = mongoose.Schema(
         },
         totalAssetCostPerHr: {
             type: Number,
-            set: value => {
-                if (![undefined, null, "NaN"].includes(value) && typeof +value == "number") {
-                    return parseFloat(value).toFixed(2);
-                }
-            },
+            set: value => setTwoDecimal(value),
             required: false
         },
         totalAssetCostPerShift: {
             type: Number,
-            set: value => {
-                if (![undefined, null, "NaN"].includes(value) && typeof +value == "number") {
-                    return parseFloat(value).toFixed(2);
-                }
-            },
+            set: value => setTwoDecimal(value),
             required: false
         },
         assetPurchaseCost: {
             type: Number,
-            set: value => {
-                if (![undefined, null, "NaN"].includes(value) && typeof +value == "number") {
-                    return parseFloat(value).toFixed(2);
-                }
-            },
+            set: value => setTwoDecimal(value),
             required: false
         },
         // depreciationMethod: {

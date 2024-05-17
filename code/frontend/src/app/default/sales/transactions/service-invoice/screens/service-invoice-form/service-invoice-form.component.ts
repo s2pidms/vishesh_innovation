@@ -329,7 +329,7 @@ export class ServiceInvoiceFormComponent implements OnInit {
     }
     getGSTDetails() {
         const condition =
-            this.selectedCustomer.GSTIN.substring(0, 2) !== this.selectedCustomer?.company.GSTIN.substring(0, 2);
+            this.selectedCustomer?.GSTIN?.substring(0, 2) !== this.selectedCustomer?.company?.GSTIN?.substring(0, 2);
 
         const serviceData = this.SIDetailsArray.filter((x: any) => x.qty > 0);
         const sacArr = [...new Set(serviceData.map((x: any) => x.SACCode))];

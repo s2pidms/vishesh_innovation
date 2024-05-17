@@ -135,20 +135,6 @@
         "roles": []
     },
     {
-        "_id": "65d72da6d8773c64bc22e4a3",
-        "menuItemId": "64a6c1e33339d4dc9d8141a8",
-        "module": "Production",
-        "type": "TRANSACTION",
-        "order": 9,
-        "isDisplay": false,
-        "title": "Ink Mixing",
-        "displayName": "Ink Mixing",
-        "disabled": false,
-        "url": "/default/production/transactions/ink_mixing/list",
-        "items": [],
-        "roles": []
-    },
-    {
         "_id": "65f53c203970aaf8bdfdf7f3",
         "menuItemId": "64a6c1e33339d4dc9d8141a8",
         "module": "Production",
@@ -202,6 +188,69 @@
         "disabled": false,
         "url": "/default/production/transactions/jc_production_entry/form",
         "items": [],
+        "roles": []
+    },
+    {
+        "_id": "6630c171d3c9e3d6c299f645",
+        "menuItemId": "64a6c1e33339d4dc9d8141a8",
+        "module": "Production",
+        "type": "TRANSACTION",
+        "order": 15,
+        "isDisplay": false,
+        "title": "Production Processes",
+        "displayName": "Production Processes",
+        "disabled": false,
+        "url": "/default/production/transactions/production_processes/tab_list",
+        "items": [
+            {
+                "menuItemId": "64a6c1e33339d4dc9d8141a8",
+                "module": "Production",
+                "type": "TRANSACTION",
+                "order": 1,
+                "isDisplay": false,
+                "title": "Screen Making",
+                "displayName": "Screen Making",
+                "disabled": false,
+                "url": "/default/production/transactions/production_processes/screen_making_form",
+                "_id": "6630c17bd3c9e3d6c299f646"
+            },
+            {
+                "menuItemId": "64a6c1e33339d4dc9d8141a8",
+                "module": "Production",
+                "type": "TRANSACTION",
+                "order": 2,
+                "isDisplay": false,
+                "title": "Ink Mixing",
+                "displayName": "Ink Mixing",
+                "disabled": false,
+                "url": "/default/production/transactions/production_processes/pp_ink_mixing_form",
+                "_id": "6630c185d3c9e3d6c299f647"
+            },
+            {
+                "menuItemId": "64a6c1e33339d4dc9d8141a8",
+                "module": "Production",
+                "type": "TRANSACTION",
+                "order": 3,
+                "isDisplay": false,
+                "title": "Screen Printing",
+                "displayName": "Screen Printing",
+                "disabled": false,
+                "url": "/default/production/transactions/production_processes/screen_printing_form",
+                "_id": "6630c18cd3c9e3d6c299f648"
+            },
+            {
+                "menuItemId": "64a6c1e33339d4dc9d8141a8",
+                "module": "Production",
+                "type": "TRANSACTION",
+                "order": 4,
+                "isDisplay": false,
+                "title": "Stock Preparation",
+                "displayName": "Stock Preparation",
+                "disabled": false,
+                "url": "/default/production/transactions/production_processes/stock_preparation_form",
+                "_id": "6634818408d71d94a46184f9"
+            }
+        ],
         "roles": []
     }
 ]

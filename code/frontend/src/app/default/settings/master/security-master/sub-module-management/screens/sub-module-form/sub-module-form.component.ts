@@ -64,6 +64,14 @@ export class SubModuleFormComponent implements OnInit {
     }
 
     getFilterData() {
+        if (!this.module) {
+            this.toastService.warning("Module Name is Required !");
+            return;
+        }
+        if (!this.type) {
+            this.toastService.warning("Types is Required !");
+            return;
+        }
         this.spinner.show();
         let payload = {
             menuID: this.module,

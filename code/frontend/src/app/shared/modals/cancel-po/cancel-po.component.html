@@ -7,6 +7,7 @@
             <div class="row">
                 <div class="col px-0">
                     <h4>{{ cancelText }}</h4>
+                    <h4 *ngIf="HSNFlag">{{ cancelTextTwo }}</h4>
                 </div>
             </div>
             <div *ngIf="forNPDReview == 'NPD Review for Feasibility'" class="row mt-2">

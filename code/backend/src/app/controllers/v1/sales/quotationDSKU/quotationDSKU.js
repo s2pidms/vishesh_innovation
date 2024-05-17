@@ -18,6 +18,7 @@ const {getAndSetAutoIncrementNo} = require("../../settings/autoIncrement/autoInc
 const QuotationDSKURepository = require("../../../../models/sales/repository/quotationDSKURepository");
 const {filteredProspectList} = require("../../../../models/businessLeads/repository/prospectMasterRepository");
 const {filteredCustomerList} = require("../../../../models/sales/repository/customerRepository");
+const {checkDomesticCustomer, checkExportsCustomer} = require("../../../../helpers/utility");
 const ObjectId = mongoose.Types.ObjectId;
 
 exports.getAll = asyncHandler(async (req, res) => {
@@ -381,7 +382,7 @@ exports.getByIdForPDF = asyncHandler(async (req, res) => {
         ]);
         const display = await getQMSMappingByModuleAndTitle(req.user.company, "Sales", "Quotation Of D-SKU");
         let termsAndCondOfQuotation = [];
-        if (SALES_CATEGORY.getAllExportsSalesCategory().includes(quotationData[0].customerCategory)) {
+        if (await checkExportsCustomer(quotationData[0].customerCategory)) {
             termsAndCondOfQuotation = await getAllModuleMaster(req.user.company, "EXPORTS_TCS_OF_QUOTATION");
         } else {
             termsAndCondOfQuotation = await getAllModuleMaster(req.user.company, "TCS_OF_QUOTATION");

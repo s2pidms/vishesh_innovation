@@ -59,6 +59,7 @@ import {
 
 import {CancelSoLineDetailsComponent} from "./modals/cancel-so-line-details/cancel-so-line-details.component";
 import {QRCodeModule} from "angularx-qrcode";
+import {ConfirmDeleteComponent} from "./modals/confirm-delete/confirm-delete.component";
 
 const COMPONENTS: any = [
     AlertComponent,
@@ -85,7 +86,8 @@ const COMPONENTS: any = [
     DetailsOfCustomersListComponent,
     CustomSearchDetailsModalComponent,
     DetailsOfChannelPartnerComponent,
-    AddItemChannelPartnerComponent
+    AddItemChannelPartnerComponent,
+    ConfirmDeleteComponent
 ];
 const PIPES: any = [
     SearchFilterPipe,

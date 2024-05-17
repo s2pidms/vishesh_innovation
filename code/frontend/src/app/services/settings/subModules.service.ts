@@ -12,8 +12,11 @@ export class SubModulesService {
         getAllMasterDataPath: "/settings/subModuleManagement/getAllMasterData",
         getAllFilterDataPath: "/settings/subModuleManagement/getAllFilterData",
         updatePath: `/settings/subModuleManagement/update`,
+        getAllFilteredCardsManagementPath: "/settings/subModuleManagement/getAllFilteredCardsManagement",
+        getCountsMenuItemWisePath: "/settings/subModuleManagement/getCountsMenuItemWise",
         getByIdPath: (id: string) => `/settings/subModuleManagement/getById/${id}`,
-        deletePath: (id: string) => `/settings/subModuleManagement/delete/${id}`
+        deletePath: (id: string) => `/settings/subModuleManagement/delete/${id}`,
+        updateByIdPath: (id: string) => `/settings/subModuleManagement/updateById/${id}`
     };
     $titleChange: any;
     constructor(private http: ApiService) {}
@@ -38,5 +41,14 @@ export class SubModulesService {
     }
     getAllFilterData(params: any) {
         return this.http.get(this.routes.getAllFilterDataPath, params).pipe(map((res: any) => res));
+    }
+    getAllFilteredCardsManagement(params: any) {
+        return this.http.get(this.routes.getAllFilteredCardsManagementPath, params).pipe(map((res: any) => res));
+    }
+    getCountsMenuItemWise(params: any) {
+        return this.http.get(this.routes.getCountsMenuItemWisePath, params).pipe(map((res: any) => res));
+    }
+    updateById(id: string, payload: any) {
+        return this.http.put(this.routes.updateByIdPath(id), payload).pipe(map((res: any) => res));
     }
 }

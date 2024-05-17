@@ -229,6 +229,85 @@ export class GTResponseFormComponent implements OnInit {
         });
     }
 
+    setConversionOfUnit(item: any) {
+        if (["create", "edit"].includes(this.action)) {
+            let index = this.GTResponseDetailsArray.map((x: any) => x?.GTLineNumber).indexOf(item?.GTLineNumber);
+            if (this.GTResponseDetailsArray[index].UOM == item.secondaryUnit) {
+                this.GTResponseDetailsArray[index].UOM = item.primaryUnit;
+            } else {
+                this.GTResponseDetailsArray[index].UOM = item.secondaryUnit;
+            }
+
+            let IRQuantity =
+                this.utilityService.setConversion({
+                    UOM: this.GTResponseDetailsArray[index].UOM,
+                    quantity: item.IRQty,
+                    primaryUnit: item.primaryUnit,
+                    secondaryUnit: item.secondaryUnit,
+                    primaryToSecondaryConversion: item.primaryToSecondaryConversion,
+                    secondaryToPrimaryConversion: item.secondaryToPrimaryConversion
+                }) || 0;
+            let GTRQuantity =
+                this.utilityService.setConversion({
+                    UOM: this.GTResponseDetailsArray[index].UOM,
+                    quantity: item.GTRQty,
+                    primaryUnit: item.primaryUnit,
+                    secondaryUnit: item.secondaryUnit,
+                    primaryToSecondaryConversion: item.primaryToSecondaryConversion,
+                    secondaryToPrimaryConversion: item.secondaryToPrimaryConversion
+                }) || 0;
+            console.log("GTRQuantity", GTRQuantity);
+
+            this.GTResponseDetailsArray[index].IRQty = +IRQuantity.toFixed(2);
+            this.GTResponseDetailsArray[index].GTRQty = +GTRQuantity.toFixed(2);
+
+            this.GTResponseDetailsArray[index].FIFO = this.GTResponseDetailsArray[index].FIFO?.map((x: any) => {
+                let IRTotalQuantity =
+                    this.utilityService.setConversion({
+                        UOM: this.GTResponseDetailsArray[index].UOM,
+                        quantity: x?.IRQty,
+                        primaryUnit: item.primaryUnit,
+                        secondaryUnit: item.secondaryUnit,
+                        primaryToSecondaryConversion: item.primaryToSecondaryConversion,
+                        secondaryToPrimaryConversion: item.secondaryToPrimaryConversion
+                    }) || 0;
+                console.log("IRTotalQuantity", IRTotalQuantity);
+
+                x.IRQty = +IRTotalQuantity.toFixed(2);
+
+                let GTQtyTotalQty =
+                    this.utilityService.setConversion({
+                        UOM: this.GTResponseDetailsArray[index].UOM,
+                        quantity: x.GTQty,
+                        primaryUnit: item.primaryUnit,
+                        secondaryUnit: item.secondaryUnit,
+                        primaryToSecondaryConversion: item.primaryToSecondaryConversion,
+                        secondaryToPrimaryConversion: item.secondaryToPrimaryConversion
+                    }) || 0;
+                console.log("this.GTResponseDetailsArray[index].", GTQtyTotalQty);
+
+                x.GTQty = +GTQtyTotalQty.toFixed(2);
+
+                return x;
+            });
+
+            let GTQtyTotalQuantity =
+                this.utilityService.setConversion({
+                    UOM: this.GTResponseDetailsArray[index].UOM,
+                    quantity: item?.GTQty,
+                    primaryUnit: item.primaryUnit,
+                    secondaryUnit: item.secondaryUnit,
+                    primaryToSecondaryConversion: item.primaryToSecondaryConversion,
+                    secondaryToPrimaryConversion: item.secondaryToPrimaryConversion
+                }) || 0;
+            console.log("this.GTResponseDetailsArray[index].", GTQtyTotalQuantity);
+
+            this.GTResponseDetailsArray[index].GTQty = +GTQtyTotalQuantity.toFixed(2);
+
+            this.isPreview = false;
+        }
+    }
+
     preview() {
         this.search = "";
         this.ESCPreviewArr = this.GTResponseDetailsArray;

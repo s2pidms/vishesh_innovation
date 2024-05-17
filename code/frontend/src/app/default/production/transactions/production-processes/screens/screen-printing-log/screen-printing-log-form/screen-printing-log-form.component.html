@@ -1,0 +1,203 @@
+<div class="px-2" class="formCard card">
+    <div class="set-remaining-margin">
+        <div class="row form-header">
+            <div class="col heading">
+                <label class="">Screen Printing Log</label>
+            </div>
+        </div>
+        <div class="form-body">
+            <div class="row">
+                <div class="col-5 pe-0">
+                    <div class="row">
+                        <div class="col-6 pe-4">
+                            <label class="form-label">Job Card No. <span class="text-danger">*</span></label>
+                            <div class="d-flex align-items-center">
+                                <div class="col-11">
+                                    <ng-select
+                                        [items]="masterData.JCOptions"
+                                        bindLabel="jobCardNo"
+                                        bindValue="jobCardNo"
+                                        [clearable]="false"
+                                        [(ngModel)]="screenPrintingLog.jobCardNo"
+                                        (change)="setJobCardId($event)"
+                                        [disabled]="['view', 'edit'].includes(action)"
+                                    >
+                                    </ng-select>
+                                </div>
+                                <div
+                                    style="height: 2.9rem"
+                                    class="set-input-group-text input-group-text bg-primary pointer col-auto"
+                                    id="basic-addon1"
+                                    (click)="openJobCardDetailsModal()"
+                                >
+                                    <i class="fa fa-search text-white fs-4" aria-hidden="true"></i>
+                                </div>
+                            </div>
+                            <!-- <label for="" class="form-label">Job Card No. </label>
+                          <input
+                              type="text"
+                              class="form-control"
+                              [(ngModel)]="screenPrintingLog.jobCardNo"
+                              readonly
+                          /> -->
+                        </div>
+                        <div class="col-6">
+                            <label for="" class="form-label">SKU No. <span class="text-danger"> </span></label>
+                            <input type="text" class="form-control" [(ngModel)]="screenPrintingLog.SKUNo" readonly />
+                        </div>
+                    </div>
+                </div>
+                <div class="col-7 ps-5">
+                    <div class="row">
+                        <div class="col-6 ps-4 pe-2">
+                            <label for="" class="form-label">SKU Name <span class="text-danger"> </span></label>
+                            <input type="text" class="form-control" [(ngModel)]="screenPrintingLog.SKUName" readonly />
+                        </div>
+                        <div class="col-6">
+                            <label for="" class="form-label">
+                                SKU Description
+                                <span class="text-danger"> </span>
+                            </label>
+                            <input
+                                type="text"
+                                class="form-control"
+                                [(ngModel)]="screenPrintingLog.SKUDescription"
+                                readonly
+                            />
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <hr class="row line-border" />
+
+        <app-setting-header
+            [data]="{page,pageSize,collection,search, excelDisplay : 'none'}"
+            (dataChange)="eventHeader($event)"
+        >
+        </app-setting-header>
+        <div class="table-responsive" style="min-height: 20rem">
+            <table class="table table-bordered table-sticky">
+                <thead class="bg-primary">
+                    <tr class="text-white">
+                        <th>SN</th>
+                        <th>Colour Code</th>
+                        <th class="text-start">Colour Name</th>
+                        <!-- <th class="text-start">Colour Description</th> -->
+                        <th>Mesh</th>
+                        <th>M/c</th>
+                        <th>Ptg Pass</th>
+                        <th>SQG/SH</th>
+                        <th>△ E</th>
+                        <th>Log Details</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr
+                        *ngFor="
+                            let g of screenPrintingLog.screenPrintingLogDetails
+                                | searchFi1ter : search
+                                | slice : (page - 1) * pageSize : (page - 1) * pageSize + pageSize;
+                            let i = index;
+                            trackBy: trackByFn
+                        "
+                    >
+                        <td>{{ g.SN }}</td>
+                        <td>{{ g.colourCode }}</td>
+                        <td class="text-start" [style.width]="colourName.clientWidth" #colourName>
+                            <span class="pointer" [ngbTooltip]="g.colourName" [positionTarget]="colourName">
+                                {{ g.colourName }}
+                            </span>
+                        </td>
+                        <!-- <td class="text-start" [style.width]="colourDescription.clientWidth" #colourDescription>
+                          <span
+                              class="pointer"
+                              [ngbTooltip]="g.colourDescription"
+                              [positionTarget]="colourDescription"
+                          >
+                              {{ g.colourDescription }}
+                          </span>
+                      </td> -->
+                        <td>{{ g.mesh }}</td>
+                        <td>
+                            <div class="d-flex justify-content-center">
+                                <input
+                                    class="form-control form-control-size-lg w-25 bg-yellow-color text-center"
+                                    type="text"
+                                    [(ngModel)]="g.machine"
+                                    [ngModelOptions]="{standalone: true}"
+                                />
+                            </div>
+                        </td>
+                        <td>
+                            <div class="d-flex justify-content-center">
+                                <input
+                                    class="form-control form-control-size-lg w-25 bg-yellow-color text-center"
+                                    type="number"
+                                    [(ngModel)]="g.ptgPass"
+                                    [ngModelOptions]="{standalone: true}"
+                                />
+                            </div>
+                        </td>
+                        <td>
+                            <div class="d-flex justify-content-center">
+                                <input
+                                    class="form-control form-control-size-lg w-25 bg-yellow-color text-center"
+                                    type="number"
+                                    [(ngModel)]="g.SQGPerSH"
+                                    [ngModelOptions]="{standalone: true}"
+                                />
+                            </div>
+                        </td>
+                        <td>
+                            <div class="d-flex justify-content-center">
+                                <input
+                                    class="form-control form-control-size-lg w-25 bg-yellow-color text-center"
+                                    type="number"
+                                    [(ngModel)]="g.deltaE"
+                                    [ngModelOptions]="{standalone: true}"
+                                />
+                            </div>
+                        </td>
+
+                        <td>
+                            <div class="d-flex justify-content-center align-items-center">
+                                <button class="plusIconSvg btn btn-primary me-1 py-0 px-0"></button>
+                                <button
+                                    type="button"
+                                    class="btn btn-primary form-btn-sm py-0"
+                                    (click)="openLogEntryModal(g)"
+                                >
+                                    Log Entry
+                                </button>
+                            </div>
+                        </td>
+                        <td>
+                            <input
+                                class="form-check-input pointer"
+                                type="checkbox"
+                                [(ngModel)]="g.status"
+                                [ngModelOptions]="{standalone: true}"
+                                [disabled]="['view', 'approve'].includes(action)"
+                            />
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <hr class="row line-border mt-4" />
+        <div class="row">
+            <div class="col-12 d-flex justify-content-center">
+                <button
+                    *ngIf="!['reject', 'Acknowledged', 'approve', 'view'].includes(action)"
+                    type="button"
+                    class="btn bg-primary px-5"
+                    (click)="submit()"
+                >
+                    Save
+                </button>
+            </div>
+        </div>
+    </div>
+</div>

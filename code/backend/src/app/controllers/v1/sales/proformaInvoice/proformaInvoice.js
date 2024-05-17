@@ -28,6 +28,7 @@ const {getAllTransporter} = require("../transporter/transporter");
 const ObjectId = mongoose.Types.ObjectId;
 const MailTriggerRepository = require("../../../../models/settings/repository/mailTriggerRepository");
 const {SALES_MAIL_CONST} = require("../../../../mocks/mailTriggerConstants");
+const {checkDomesticCustomer} = require("../../../../helpers/utility");
 
 exports.getAll = asyncHandler(async (req, res) => {
     try {
@@ -291,9 +292,7 @@ exports.getProInvDetailsById = asyncHandler(async (req, res) => {
             }
             existing.PIDetails = arr;
         }
-        let customerCategoryCondition = SALES_CATEGORY.getAllDomesticSalesCategory().includes(
-            existing.customer.customerCategory
-        );
+        let customerCategoryCondition = await checkDomesticCustomer(existing.customer.customerCategory);
         let condition = false;
         if (
             existing &&

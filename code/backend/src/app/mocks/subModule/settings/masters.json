@@ -169,6 +169,18 @@
                 "disabled": false,
                 "url": "/default/settings/master/security_master/mail_trigger/list",
                 "_id": "65b1db0ac4235b45d90be719"
+            },
+            {
+                "menuItemId": "64a6c1e33339d4dc9d8141ae",
+                "module": "Settings",
+                "type": "MASTER",
+                "order": 8,
+                "isDisplay": false,
+                "title": "Card Management",
+                "displayName": "Card Management",
+                "disabled": false,
+                "url": "/default/settings/master/security_master/card_managements/list",
+                "_id": "662b460dcb22b5dbb6b279f3"
             }
         ],
         "roles": []
@@ -367,6 +379,18 @@
                 "disabled": false,
                 "url": "/default/settings/master/uom_units_master/list/UOM_UNITS",
                 "_id": "6524cfeb304d9acaa41e5b57"
+            },
+            {
+                "menuItemId": "64a6c1e33339d4dc9d8141ae",
+                "module": "Settings",
+                "type": "MASTER",
+                "order": 10,
+                "isDisplay": false,
+                "title": "Services Charges",
+                "displayName": "Services Charges",
+                "disabled": false,
+                "url": "/default/settings/master/purchase/service_charges/list",
+                "_id": "663f030821fb1b8a558a9079"
             }
         ],
         "roles": []
@@ -553,18 +577,6 @@
                 "disabled": false,
                 "url": "/default/settings/master/module_master/list/STOCK_MACHINE_NAME",
                 "_id": "6533ae3e16a2b371dec60b87"
-            },
-            {
-                "menuItemId": "64a6c1e33339d4dc9d8141ae",
-                "module": "Settings",
-                "type": "MASTER",
-                "order": 5,
-                "isDisplay": false,
-                "title": "Mould Master",
-                "displayName": "Mould Master",
-                "disabled": false,
-                "url": "/default/settings/master/production/mould_master/list",
-                "_id": "661648a9fbecc291a35312f8"
             },
             {
                 "menuItemId": "64a6c1e33339d4dc9d8141ae",
@@ -1191,6 +1203,30 @@
                 "disabled": false,
                 "url": "/default/settings/master/upload_data/form/Asset",
                 "_id": "6629f0ecd4af732529f196b4"
+            },
+            {
+                "menuItemId": "64a6c1e33339d4dc9d8141ae",
+                "module": "Settings",
+                "type": "MASTER",
+                "order": 9,
+                "isDisplay": false,
+                "title": "Upload SKU Dimension Master",
+                "displayName": "Upload SKU Dimension Master",
+                "disabled": false,
+                "url": "/default/settings/master/upload_data/form/SKUDimensions",
+                "_id": "6641e30f20c5fc7cd05869c0"
+            },
+            {
+                "menuItemId": "64a6c1e33339d4dc9d8141ae",
+                "module": "Settings",
+                "type": "MASTER",
+                "order": 10,
+                "isDisplay": false,
+                "title": "Upload SKU Material Master",
+                "displayName": "Upload SKU Material Master",
+                "disabled": false,
+                "url": "/default/settings/master/upload_data/form/SKUMaterial",
+                "_id": "6641e31820c5fc7cd05869c1"
             }
         ],
         "roles": []

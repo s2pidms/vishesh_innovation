@@ -1,0 +1,23 @@
+<div class="modelPage">
+    <div class="modal-header">
+        <div class="heading">{{ heading }}</div>
+    </div>
+    <div class="modal-body">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col px-0">
+                    <h4>{{ confirmText }}</h4>
+                </div>
+            </div>
+
+            <div class="row justify-content-center my-4">
+                <div class="col-6 text-start ps-0">
+                    <button type="button" class="btn btn-primary px-5" (click)="dismissModal('Yes')">Yes</button>
+                </div>
+                <div class="col-6 text-end pe-0">
+                    <button type="button" class="btn btn-primary px-5" (click)="dismissModal('No')">No</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

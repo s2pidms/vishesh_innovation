@@ -5,7 +5,7 @@ const {mailConfigHelper} = require("../../../../helpers/mailConfigHelper");
 const MESSAGES = require("../../../../helpers/messages.options");
 const {generatePdfPuppeteer} = require("../../../../helpers/pupeeteerGeneratePdf");
 const {getContactStr} = require("../../../../helpers/utility");
-const {PURCHASE_MAIL_CONST} = require("../../../../mocks/mailTriggerConstants");
+const {PURCHASE_MAIL_CONST, DEFAULT_MAIL_RECEIVER} = require("../../../../mocks/mailTriggerConstants");
 const Model = require("../../../../models/purchase/purchaseOrderModel");
 
 exports.getPOMailConfig = async ({POId, action, company, mailAction}) => {
@@ -180,7 +180,7 @@ exports.sendPOMail = async ({
             templateUrl: PURCHASE_MAIL_CONST.GENERATE_PO.CREATE_TEMPLATE,
             subject: message,
             replacement: replacement,
-            toEmailValue: emailTo ? emailTo : ["dev@idmsinfotech.com"],
+            toEmailValue: emailTo ? emailTo : [DEFAULT_MAIL_RECEIVER],
             cc: emailCC ? emailCC : [],
             bcc: emailBCC ? emailBCC : [],
             attachments: null,
@@ -238,6 +238,8 @@ function getPOtableRows(PODetails) {
         <td>${element.UOM}</td>
         <td>${element.POQty}</td>
         <td>${element.purchaseRate}</td>
+        <td>${element.discount}</td>
+        <td>${element.netRate}</td>
         <td>${element.lineValue}</td>
     </tr>\n`;
     }

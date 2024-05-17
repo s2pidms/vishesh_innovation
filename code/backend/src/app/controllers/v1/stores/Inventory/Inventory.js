@@ -102,7 +102,6 @@ exports.update = asyncHandler(async (req, res) => {
             let itemDetails = await Model.findById(element._id);
             itemDetails.updatedBy = req.user.sub;
             itemDetails = await generateCreateData(itemDetails, element);
-
             await itemDetails.save();
         }
         return res.success({
@@ -593,3 +592,23 @@ exports.bulkInsertInventoryByCSV = async jsonData => {
         console.error(error);
     }
 };
+
+exports.updateSPSInventory = asyncHandler(async (req, res) => {
+    try {
+        for await (const element of req.body) {
+            if (element.isUpdated) {
+                let itemDetails = await Model.findById(element._id);
+                itemDetails.updatedBy = req.user.sub;
+                itemDetails = await generateCreateData(itemDetails, element);
+                await itemDetails.save();
+            }
+        }
+        return res.success({
+            message: MESSAGES.apiSuccessStrings.UPDATE("InventoryCorrection has been")
+        });
+    } catch (e) {
+        console.error("update   InventoryCorrection", e);
+        const errors = MESSAGES.apiErrorStrings.SERVER_ERROR;
+        return res.serverError(errors);
+    }
+});

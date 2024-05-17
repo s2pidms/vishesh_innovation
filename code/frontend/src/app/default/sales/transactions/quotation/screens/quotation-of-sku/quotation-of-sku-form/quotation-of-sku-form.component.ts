@@ -266,7 +266,7 @@ export class QuotationOfSkuFormComponent implements OnInit {
         this.customerOptions = [];
         this.quotationDetailsArray = [];
         this.domesticAndExportsTermsList = [];
-        if (["Exports – OEM", "Exports – Dealer"].includes(this.form.controls["customerCategory"].value)) {
+        if (this.form.controls["customerCategory"]?.value?.includes("Exports")) {
             this.domesticAndExportsTermsList = this.masterData?.exportsTermsAndCond;
         } else {
             this.domesticAndExportsTermsList = this.masterData?.domesticTermsAndCond;

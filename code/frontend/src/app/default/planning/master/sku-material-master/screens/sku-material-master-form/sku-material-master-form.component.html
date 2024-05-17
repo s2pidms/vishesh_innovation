@@ -1,0 +1,149 @@
+<div class="listCard card">
+    <div class="table-header text-start">
+        <label class="heading">SKU Material</label>
+    </div>
+
+    <div class="table-responsive" style="min-height: 35rem">
+        <app-setting-header
+            [data]="{page,pageSize,collection,search ,excelDisplay : 'none'}"
+            (dataChange)="eventHeader($event)"
+        >
+        </app-setting-header>
+        <table class="table table-bordered table-sticky">
+            <thead class="bg-primary">
+                <tr class="text-white">
+                    <th sortable="isSelect" (sort)="onSort($event)">Select</th>
+
+                    <th sortable="itemCode" (sort)="onSort($event)">Item Code</th>
+                    <th sortable="itemName" (sort)="onSort($event)" class="text-start">Item Name</th>
+                    <th sortable="itemDescription" (sort)="onSort($event)" class="text-start">Item Description</th>
+                    <th sortable="itemCode" (sort)="onSort($event)">Set Size</th>
+                    <th sortable="UOM" (sort)="onSort($event)">UoM</th>
+                    <th sortable="qtyPerSKUUnit" (sort)="onSort($event)">Qty/Layout (Ups)</th>
+                    <th sortable="ups" (sort)="onSort($event)">Ups</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr
+                    *ngFor="
+                        let u of materialInfoArr
+                            | searchFi1ter : search
+                            | slice : (page - 1) * pageSize : (page - 1) * pageSize + pageSize;
+                        let i = index
+                    "
+                >
+                    <td>
+                        <input
+                            (change)="setSKUPerUnit(u, $event)"
+                            type="checkbox"
+                            class="form-check-input"
+                            [disabled]="['view', 'Converted to SKU'].includes(action)"
+                            [(ngModel)]="u.isSelect"
+                            [ngModelOptions]="{standalone: true}"
+                        />
+                    </td>
+                    <td>{{ u?.itemCode }}</td>
+                    <td class="text-start" #itemName>
+                        <span class="pointer" [positionTarget]="itemName" [ngbTooltip]="u.itemName">
+                            {{ u?.itemName }}
+                        </span>
+                    </td>
+                    <td class="text-start" #itemDescription>
+                        <span class="pointer" [positionTarget]="itemDescription" [ngbTooltip]="u.itemDescription">
+                            {{ u?.itemDescription }}
+                        </span>
+                    </td>
+                    <td>
+                        <span class="d-flex justify-content-center pointer">
+                            <div
+                                *ngIf="!u?.primaryToSecondaryConversion"
+                                (click)="openUOMDetailsModal(u)"
+                                class="child-item-red"
+                            ></div>
+                            <div
+                                *ngIf="u?.primaryToSecondaryConversion"
+                                (click)="openUOMDetailsModal(u)"
+                                class="child-item-grey"
+                            ></div>
+                        </span>
+                    </td>
+                    <td>
+                        <span>
+                            <div class="d-flex justify-content-between align-items-center px-2">
+                                {{ u?.UoM | UOMUnitsMaster }}
+
+                                <span class="pointer d-flex align-items-center">
+                                    <div (click)="setUnit(u)" *ngIf="u.secondaryUnit" class="unit-switch-rev"></div>
+                                    <div *ngIf="!u.secondaryUnit" class="unit-switch-gray"></div>
+                                </span>
+                            </div>
+                        </span>
+                    </td>
+                    <td>
+                        <div class="d-flex justify-content-center">
+                            <span *ngIf="['view', 'Converted to SKU'].includes(action)">
+                                {{ u?.qtyPerSKUUnit | number : "1.4-4" }}
+                            </span>
+                            <input
+                                type="number"
+                                class="form-control form-control-ink w-25 bg-yellow-color"
+                                *ngIf="!['view', 'Converted to SKU'].includes(action)"
+                                [(ngModel)]="u.qtyPerSKUUnit"
+                                [ngModelOptions]="{standalone: true}"
+                            />
+                        </div>
+                    </td>
+                    <td>
+                        <div class="d-flex justify-content-center">
+                            <span *ngIf="['view', 'Converted to SKU'].includes(action)">
+                                {{ u?.ups | number : "1.4-4" }}
+                            </span>
+                            <input
+                                type="number"
+                                class="form-control form-control-ink w-25 bg-yellow-color"
+                                *ngIf="!['view', 'Converted to SKU'].includes(action)"
+                                [(ngModel)]="u.ups"
+                                [ngModelOptions]="{standalone: true}"
+                            />
+                        </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <div class="row">
+        <div class="col-12">
+            <hr *ngIf="!['view', 'Converted to SKU'].includes(action)" class="line-border mb-4" />
+        </div>
+    </div>
+
+    <div class="row px-5">
+        <div class="col-3 ps-3">
+            <div class="d-flex align-items-center">
+                <span class="set-flex-status px-4"> Status </span>
+                <select
+                    [disabled]="action == 'view'"
+                    class="form-select statusSelectBorder"
+                    [(ngModel)]="SKUMaterialStatus"
+                >
+                    <option [value]="'null'" selected disabled>Select Status</option>
+                    <option [value]="'Active'">Active</option>
+                    <option [value]="'Inactive'">Inactive</option>
+                </select>
+                <span class="input-group-text statusSpanHeight">
+                    <div class="statusActive" *ngIf="SKUMaterialStatus == 'Active'" class="statusActive"></div>
+                    <div class="statusInActive" *ngIf="SKUMaterialStatus == 'Inactive'"></div>
+                </span>
+            </div>
+        </div>
+        <div class="col-9 pe-3">
+            <div *ngIf="!['view', 'Converted to SKU'].includes(action)" class="text-end mb-2">
+                <button class="btn btn-primary px-5 me-3" (click)="reset()">Reset</button>
+                <button class="btn btn-primary px-4 me-1" (click)="ESCPreview()" [disabled]="!isESCPreview">Esc</button>
+
+                <button class="btn btn-primary px-4 me-3" (click)="preview()">Preview</button>
+                <button (click)="submit()" class="btn btn-primary px-5" [disabled]="!isPreview">Save</button>
+            </div>
+        </div>
+    </div>
+</div>

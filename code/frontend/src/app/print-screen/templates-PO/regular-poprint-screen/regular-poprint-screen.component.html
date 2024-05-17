@@ -113,14 +113,16 @@
         </tr>
         <tr class="head-row text-center">
             <th colspan="1" class="text-center">#</th>
-            <th colspan="3">Item Details</th>
+            <th colspan="2">Item Details</th>
             <th colspan="1" class="text-center">UoM</th>
             <th colspan="1" class="text-center">Quantity</th>
             <th colspan="1" class="text-center">
                 Rate
                 {{ this.tableData?.supplier?.supplierCurrency == "INR" ? "₹" : "$" }}
             </th>
-            <th colspan="3">
+            <th colspan="1" class="text-center">Disc %</th>
+            <th colspan="1" class="text-center">Net Rate</th>
+            <th colspan="2">
                 Pricing Structure [{{ this.tableData?.supplier?.supplierCurrency == "INR" ? "INR" : "USD" }}]
             </th>
             <th colspan="2" class="text-center">Delivery Date</th>
@@ -129,7 +131,7 @@
             <td colspan="1" class="text-center">
                 <label>{{ i + 1 }}</label>
             </td>
-            <td colspan="3">
+            <td colspan="2">
                 <p>Item Code: {{ p?.item?.itemCode }}</p>
                 <p>{{ p?.item?.itemName }}</p>
                 <p>Item Description: {{ p?.item?.itemDescription }}</p>
@@ -144,7 +146,13 @@
             <td colspan="1" class="text-center">
                 {{ p?.purchaseRate | number : ".2-2" }}
             </td>
-            <td colspan="3">
+            <td colspan="1" class="text-center">
+                {{ p?.discount ?? 0 }}
+            </td>
+            <td colspan="1" class="text-center">
+                {{ p?.netRate ? p?.netRate : (p.purchaseRate | number : ".2-2") }}
+            </td>
+            <td colspan="2">
                 <p>Taxable Value: {{ p?.lineValue | number : ".2-2" }}</p>
 
                 <p *ngIf="tableData?.supplierGST != tableData?.company?.GSTIN.substring(0, 2)">
@@ -170,11 +178,11 @@
             <td *ngIf="tableData?.POType == POTypeObj.PLANNED_PO" colspan="2" class="text-center">Refer Schedule</td>
             <td *ngIf="tableData?.POType == POTypeObj.BLANKET_PO" colspan="2" class="text-center">As per Schedule</td>
         </tr>
-        <tr *ngIf="tableData?.otherCharges?.totalAmount > 0">
+        <tr *ngIf="tableData?.serviceChargesInfo?.length == 0">
             <td colspan="1" class="text-center">
                 <span>{{ tableData.PODetails.length + 1 }}</span>
             </td>
-            <td colspan="3">
+            <td colspan="2">
                 <p>
                     Packaging And Forwarding:
                     {{ tableData?.otherCharges?.packagingAndForwarding }}
@@ -186,10 +194,12 @@
             </td>
             <td colspan="1" class="text-center">-</td>
             <td colspan="1" class="text-center">1</td>
+            <td colspan="1" class="text-center">{{ tableData?.otherCharges?.totalAmount | number : ".2-2" }}</td>
+            <td colspan="1" class="text-center">0</td>
             <td colspan="1" class="text-center">
                 {{ tableData?.otherCharges?.totalAmount | number : ".2-2" }}
             </td>
-            <td colspan="3">
+            <td colspan="2">
                 <p>Taxable Value:{{ tableData?.otherCharges?.totalAmount | number : ".2-2" }}</p>
                 <p *ngIf="tableData?.supplierGST != tableData?.company?.GSTIN.substring(0, 2)">
                     I-GST [{{ 18 }}%]:
@@ -207,6 +217,46 @@
             </td>
             <td colspan="2" class="text-center">-</td>
         </tr>
+        <ng-container *ngIf="tableData?.serviceChargesInfo?.length > 0">
+            <tr *ngFor="let service of tableData.serviceChargesInfo">
+                <td colspan="1" class="text-center">
+                    <span>{{ tableData.PODetails.length + 1 }}</span>
+                </td>
+                <td colspan="2">
+                    <p>
+                        {{ service?.description }}
+                    </p>
+                    <!-- <p>Loading And Unloading:{{ tableData?.otherCharges?.loadingAndUnloading }}</p>
+                    <p>Freight: {{ tableData?.otherCharges?.freight }}</p>
+                    <p>Insurance: {{ tableData?.otherCharges?.insurance }}</p>
+                    <p>Miscellaneous: {{ tableData?.otherCharges?.miscellaneous }}</p> -->
+                </td>
+                <td colspan="1" class="text-center">-</td>
+                <td colspan="1" class="text-center">1</td>
+                <td colspan="1" class="text-center">{{ service.serviceCharges }}</td>
+                <td colspan="1" class="text-center">0</td>
+                <td colspan="1" class="text-center">
+                    {{ service.serviceCharges | number : ".2-2" }}
+                </td>
+                <td colspan="2">
+                    <p>Taxable Value:{{ service.serviceCharges | number : ".2-2" }}</p>
+                    <p *ngIf="this.tableData?.supplierGST != this.tableData?.company?.GSTIN.substring(0, 2)">
+                        I-GST [{{ service.IGSTRate }}%]:
+                        {{ service.IGSTRateValue | number : ".2-2" }}
+                    </p>
+                    <p *ngIf="this.tableData?.supplierGST == this.tableData?.company?.GSTIN.substring(0, 2)">
+                        S-GST [{{ service.SGSTRate }}%]:
+                        {{ service.SGSTRateValue | number : ".2-2" }}
+                    </p>
+                    <p *ngIf="this.tableData?.supplierGST == this.tableData?.company?.GSTIN.substring(0, 2)">
+                        C-GST [{{ service.CGSTRate }}%]:
+                        {{ service.CGSTRateValue | number : ".2-2" }}
+                    </p>
+                    <p>Total Line Value:{{ service.totalAmountWithGST | number : ".2-2" }}</p>
+                </td>
+                <td colspan="2" class="text-center">-</td>
+            </tr>
+        </ng-container>
 
         <tr>
             <td colspan="12" style="height: 5rem"></td>
@@ -224,9 +274,13 @@
                     {{ tableData?.supplier?.supplierPaymentTerms }}
                 </p>
             </td>
-            <td colspan="4" class="text-center">
+            <td *ngIf="tableData?.serviceChargesInfo?.length == 0" colspan="4" class="text-center">
                 <span>Total Purchase Order Value</span><br />
                 {{ tableData?.totalAmount }}.00
+            </td>
+            <td *ngIf="tableData?.serviceChargesInfo?.length > 0" colspan="4" class="text-center">
+                <span>Total Purchase Order Value</span><br />
+                {{ tableData?.totalAmountWithTax }}.00
             </td>
             <td *ngIf="tableData?.company?.companySignatureUrl" colspan="4" class="text-center">
                 <img src="{{ tableData?.company?.companySignatureUrl }}" class="img-sign" />

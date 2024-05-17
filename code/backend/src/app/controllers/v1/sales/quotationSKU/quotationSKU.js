@@ -5,7 +5,6 @@ const {OPTIONS, generateCreateData} = require("../../../../helpers/global.option
 const {getAllCustomers} = require("../customerMaster/customerMaster");
 const {findAppParameterValue} = require("../../settings/appParameter/appParameter");
 const {getAllQuotationSKUtAttributes} = require("../../../../models/sales/helpers/quotationSKUHelper");
-const {getAllSKUListByCustomerId} = require("../SKU/SKU");
 const {default: mongoose} = require("mongoose");
 const {getEndDateTime, getStartDateTime} = require("../../../../helpers/dateTime");
 const {CONSTANTS} = require("../../../../../config/config");
@@ -372,14 +371,18 @@ exports.getByIdForPDF = asyncHandler(async (req, res) => {
                 }
             }
         ]);
-        // let termsAndCondOfQuotation = [];
-        // if (SALES_CATEGORY.getAllExportsSalesCategory().includes(quotationData[0].customerCategory)) {
-        //     termsAndCondOfQuotation = await getAllModuleMaster(req.user.company, "EXPORTS_TCS_OF_QUOTATION");
-        // } else {
-        //     termsAndCondOfQuotation = await getAllModuleMaster(req.user.company, "TCS_OF_QUOTATION");
-        // }
+        let termsAndCondOfQuotation = [];
+        if (SALES_CATEGORY.getAllExportsSalesCategory().includes(quotationData[0].customerCategory)) {
+            termsAndCondOfQuotation = await getAllModuleMaster(req.user.company, "EXPORTS_TCS_OF_QUOTATION");
+        } else {
+            termsAndCondOfQuotation = await getAllModuleMaster(req.user.company, "TCS_OF_QUOTATION");
+        }
         const display = await getQMSMappingByModuleAndTitle(req.user.company, "Sales", "Quotation Of SKU");
-        return res.success({quotation: quotationData[0] ? quotationData[0] : {}, display});
+        return res.success({
+            quotation: quotationData[0] ? quotationData[0] : {},
+            display,
+            termsAndCondOfQuotation: termsAndCondOfQuotation
+        });
     } catch (e) {
         console.error("getByIdForPDF Quotation SKU", e);
         const errors = MESSAGES.apiErrorStrings.SERVER_ERROR;

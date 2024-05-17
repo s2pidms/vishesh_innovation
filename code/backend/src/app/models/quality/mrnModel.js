@@ -3,6 +3,7 @@ const Audit = require("../../controllers/v1/settings/audit/audit");
 const {MATERIAL_RECEIPT_NOTE: SCHEMA_CONST} = require("../../mocks/schemasConstant/qualityConstant");
 const {getAndSetAutoIncrementNo} = require("../../controllers/v1/settings/autoIncrement/autoIncrement");
 const {paginatePlugin} = require("../plugins/paginatePlugin");
+const {setTwoDecimal} = require("../../helpers/utility");
 const MRNSchema = mongoose.Schema(
     {
         company: {
@@ -58,20 +59,10 @@ const MRNSchema = mongoose.Schema(
             {
                 MRNLineNumber: {
                     type: Number,
-                    set: value => {
-                        if (![undefined, null, "NaN"].includes(value) && typeof +value == "number") {
-                            return parseFloat(value).toFixed(2);
-                        }
-                    },
                     required: false
                 },
                 GRNLineNumber: {
                     type: Number,
-                    set: value => {
-                        if (![undefined, null, "NaN"].includes(value) && typeof +value == "number") {
-                            return parseFloat(value).toFixed(2);
-                        }
-                    },
                     required: false
                 },
                 item: {
@@ -105,47 +96,27 @@ const MRNSchema = mongoose.Schema(
                 },
                 standardRate: {
                     type: Number,
-                    set: value => {
-                        if (![undefined, null, "NaN"].includes(value) && typeof +value == "number") {
-                            return parseFloat(value).toFixed(2);
-                        }
-                    },
+                    set: value => setTwoDecimal(value, 3),
                     required: false
                 },
                 purchaseRate: {
                     type: Number,
-                    set: value => {
-                        if (![undefined, null, "NaN"].includes(value) && typeof +value == "number") {
-                            return parseFloat(value).toFixed(2);
-                        }
-                    },
+                    set: value => setTwoDecimal(value, 3),
                     required: false
                 },
                 GRNQty: {
                     type: Number,
-                    set: value => {
-                        if (![undefined, null, "NaN"].includes(value) && typeof +value == "number") {
-                            return parseFloat(value).toFixed(2);
-                        }
-                    },
+                    set: value => setTwoDecimal(value),
                     required: false
                 },
                 releasedQty: {
                     type: Number,
-                    set: value => {
-                        if (![undefined, null, "NaN"].includes(value) && typeof +value == "number") {
-                            return parseFloat(value).toFixed(2);
-                        }
-                    },
+                    set: value => setTwoDecimal(value),
                     required: false
                 },
                 rejectedQty: {
                     type: Number,
-                    set: value => {
-                        if (![undefined, null, "NaN"].includes(value) && typeof +value == "number") {
-                            return parseFloat(value).toFixed(2);
-                        }
-                    },
+                    set: value => setTwoDecimal(value),
                     required: false
                 },
                 // balanceRejectedQty: {

@@ -127,7 +127,8 @@ export class PurchaseRegisterReportComponent implements OnInit, OnDestroy {
             excel: excel,
             supplier: this.supplier,
             SKUId: this.SKUId,
-            toDate: this.toDate
+            toDate: this.toDate,
+            fromDate: this.fromDate
         };
         if (this.subscription) this.subscription.unsubscribe();
         this.subscription = this.purchaseRegisterService.getAllReports(payload).subscribe(success => {

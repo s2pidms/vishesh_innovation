@@ -30,6 +30,20 @@ export class GenerateReportModalComponent implements OnInit {
         }
     }
 
+    setRejectQty() {
+        if (this.generateReport.batchInputQty && this.generateReport.batchOutputQty) {
+            this.generateReport.batchRejQty = this.generateReport.batchInputQty - this.generateReport.batchOutputQty;
+        } else {
+            this.generateReport.batchRejQty = 0;
+        }
+
+        // if (this.generateReport.batchOutputQty > this.generateReport.batchInputQty) {
+        //     this.toastService.warning("Batch Output Quantity should be less than and equal to Batch Input Quantity !!");
+        //     this.generateReport.batchOutputQty = 0;
+        //     this.generateReport.batchRejQty = 0;
+        // }
+    }
+
     dismissModel() {
         // if (!this.generateReport.batchInputQty) {
         //     this.toastService.warning("Batch Input Quantity is Required");

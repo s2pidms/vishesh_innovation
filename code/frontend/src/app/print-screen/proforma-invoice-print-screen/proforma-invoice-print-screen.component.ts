@@ -36,11 +36,7 @@ export class ProformaInvoicePrintScreenComponent implements OnInit {
     getDetailsById(id: any) {
         this.spinner.show();
         this.proformaInvoiceService.getProInvDetailsById(id).subscribe(success => {
-            if (
-                (success.customer.customerCategory == "Domestic – OEM" ||
-                    success.customer.customerCategory == "Domestic – Dealer") &&
-                success.customer.GSTClassification != "SEZ"
-            ) {
+            if (success?.customer?.customerCategory?.includes("Domestic") && success.customer.GSTClassification != "SEZ") {
                 this.template = success?.company?.PIDomesticTemplates ?? "PI Domestic";
             } else {
                 this.template = success?.company?.PIExportsTemplates ?? "PI Exports";

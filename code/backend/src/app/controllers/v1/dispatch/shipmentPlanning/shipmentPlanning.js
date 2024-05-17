@@ -24,6 +24,7 @@ const {SHIPMENT_PLANNING} = require("../../../../mocks/schemasConstant/dispatchC
 const ShipmentPlanningRepository = require("../../../../models/dispatch/repository/shipmentPlanningRepository");
 const {getAllModuleMaster} = require("../../settings/module-master/module-master");
 const {getAllTransporter} = require("../../sales/transporter/transporter");
+const {SALES_CATEGORY} = require("../../../../mocks/constantData");
 const ObjectId = mongoose.Types.ObjectId;
 
 exports.getAll = async (req, res) => {
@@ -33,7 +34,7 @@ exports.getAll = async (req, res) => {
             {
                 $match: {
                     company: ObjectId(req.user.company),
-                    SPStatus: {$nin: ["Closed"]}
+                    SPStatus: {$nin: ["Closed", OPTIONS.defaultStatus.REJECTED]}
                 }
             },
             {
@@ -341,7 +342,7 @@ exports.getAllShipmentsValue = async company => {
             },
             {
                 $match: {
-                    "customer.customerCategory": {$in: ["Domestic – OEM", "Domestic – Dealer"]}
+                    "customer.customerCategory": {$regex: SALES_CATEGORY.DOMESTIC_REGEX}
                 }
             },
             {
@@ -399,7 +400,7 @@ exports.getMonthlyShipmentCountTrend = async company => {
             },
             {
                 $match: {
-                    "customer.customerCategory": {$in: ["Domestic – OEM", "Domestic – Dealer"]}
+                    "customer.customerCategory": {$regex: SALES_CATEGORY.DOMESTIC_REGEX}
                 }
             },
             {
@@ -488,7 +489,7 @@ exports.getMonthlyShipmentCountTrend = async company => {
             },
             {
                 $match: {
-                    "customer.customerCategory": {$in: ["Exports – OEM", "Exports – Dealer"]}
+                    "customer.customerCategory": {$regex: SALES_CATEGORY.EXPORTS_REGEX}
                 }
             },
             {
@@ -589,7 +590,7 @@ exports.getTopFiveShipmentCities = async company => {
             },
             {
                 $match: {
-                    "customer.customerCategory": {$in: ["Domestic – OEM", "Domestic – Dealer"]}
+                    "customer.customerCategory": {$regex: SALES_CATEGORY.DOMESTIC_REGEX}
                 }
             },
             {
@@ -656,7 +657,7 @@ exports.getTopFiveShipmentCities = async company => {
             },
             {
                 $match: {
-                    "customer.customerCategory": {$in: ["Exports – OEM", "Exports – Dealer"]}
+                    "customer.customerCategory": {$regex: SALES_CATEGORY.EXPORTS_REGEX}
                 }
             },
             {

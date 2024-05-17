@@ -15,8 +15,7 @@ import {InkMixingLogBatchComponent} from "../../../jc-production-entry/screens/i
 
 @Component({
     selector: "app-ink-mixing-log-form",
-    templateUrl: "./ink-mixing-log-form.component.html",
-    styleUrls: ["./ink-mixing-log-form.component.scss"]
+    templateUrl: "./ink-mixing-log-form.component.html"
 })
 export class InkMixingLogFormComponent implements OnInit {
     itemCodes: any = [];

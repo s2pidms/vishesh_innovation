@@ -1,4 +1,5 @@
 const {default: mongoose} = require("mongoose");
+const {setTwoDecimal} = require("../../../helpers/utility");
 exports.SCHEMA = {
     company: {
         type: mongoose.Schema.Types.ObjectId,
@@ -69,20 +70,10 @@ exports.SCHEMA = {
         {
             GINLineNumber: {
                 type: Number,
-                set: value => {
-                    if (![undefined, null, "NaN"].includes(value) && typeof +value == "number") {
-                        return parseFloat(value).toFixed(2);
-                    }
-                },
                 required: false
             },
             MRNLineNumber: {
                 type: Number,
-                set: value => {
-                    if (![undefined, null, "NaN"].includes(value) && typeof +value == "number") {
-                        return parseFloat(value).toFixed(2);
-                    }
-                },
                 required: false
             },
             primaryToSecondaryConversion: {
@@ -125,74 +116,42 @@ exports.SCHEMA = {
             },
             GINQty: {
                 type: Number,
-                set: value => {
-                    if (![undefined, null, "NaN"].includes(value) && typeof +value == "number") {
-                        return parseFloat(value).toFixed(2);
-                    }
-                },
+                set: value => setTwoDecimal(value),
                 required: false
             },
             standardRate: {
                 type: Number,
-                set: value => {
-                    if (![undefined, null, "NaN"].includes(value) && typeof +value == "number") {
-                        return parseFloat(value).toFixed(2);
-                    }
-                },
+                set: value => setTwoDecimal(value, 3),
                 required: false
             },
             purchaseRate: {
                 type: Number,
-                set: value => {
-                    if (![undefined, null, "NaN"].includes(value) && typeof +value == "number") {
-                        return parseFloat(value).toFixed(2);
-                    }
-                },
+                set: value => setTwoDecimal(value, 3),
                 required: false
             },
             purchaseRateUSD: {
                 type: Number,
-                set: value => {
-                    if (![undefined, null, "NaN"].includes(value) && typeof +value == "number") {
-                        return parseFloat(value).toFixed(2);
-                    }
-                },
+                set: value => setTwoDecimal(value, 3),
                 required: false
             },
             purchaseRatINR: {
                 type: Number,
-                set: value => {
-                    if (![undefined, null, "NaN"].includes(value) && typeof +value == "number") {
-                        return parseFloat(value).toFixed(2);
-                    }
-                },
+                set: value => setTwoDecimal(value, 3),
                 required: false
             },
             lineValueINR: {
                 type: Number,
-                set: value => {
-                    if (![undefined, null, "NaN"].includes(value) && typeof +value == "number") {
-                        return parseFloat(value).toFixed(2);
-                    }
-                },
+                set: value => setTwoDecimal(value),
                 required: false
             },
             releasedQty: {
                 type: Number,
-                set: value => {
-                    if (![undefined, null, "NaN"].includes(value) && typeof +value == "number") {
-                        return parseFloat(value).toFixed(2);
-                    }
-                },
+                set: value => setTwoDecimal(value),
                 required: false
             },
             rejectedQty: {
                 type: Number,
-                set: value => {
-                    if (![undefined, null, "NaN"].includes(value) && typeof +value == "number") {
-                        return parseFloat(value).toFixed(2);
-                    }
-                },
+                set: value => setTwoDecimal(value),
                 required: false
             },
             batchDate: {

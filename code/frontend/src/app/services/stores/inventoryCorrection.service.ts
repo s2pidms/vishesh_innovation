@@ -12,8 +12,11 @@ export class InventoryCorrectionService {
         uploadInventoryFilePath: "/stores/inventory/uploadInventoryFile",
         getAllReportPath: "/stores/inventory/getAllReports",
         getAllMasterDataPath: "/stores/inventory/getAllMasterData",
+        getStockPreparationShopReportsPath: "/stores/inventory/getStockPreparationShopReports",
         getAllFilterDataPath: "/stores/inventory/getAllFilterData",
         updatePath: "/stores/inventory/update",
+        updateSPSInventoryPath: "/stores/inventory/updateSPSInventory",
+        getAllStockPreparationShopPath: "/stores/inventory/getAllStockPreparationShop",
         getAllLocationSupplierItemWiseReportsPath: "/stores/inventory/getAllLocationSupplierItemWiseReports",
         getByIdPath: (id: string) => `/stores/inventory/getById/${id}`,
         deletePath: (id: string) => `/stores/inventory/delete/${id}`
@@ -29,6 +32,9 @@ export class InventoryCorrectionService {
     getAll(params: any) {
         return this.http.get(this.routes.getAllPath, params).pipe(map((res: any) => res));
     }
+    getAllStockPreparationShop(params: any) {
+        return this.http.get(this.routes.getAllStockPreparationShopPath, params).pipe(map((res: any) => res));
+    }
     getAllLocationSupplierItemWiseReports(params: any) {
         return this.http
             .get(this.routes.getAllLocationSupplierItemWiseReportsPath, params)
@@ -43,8 +49,14 @@ export class InventoryCorrectionService {
     getAllMasterData(params: any) {
         return this.http.get(this.routes.getAllMasterDataPath, params).pipe(map((res: any) => res));
     }
+    getStockPreparationShopReports(params: any) {
+        return this.http.get(this.routes.getStockPreparationShopReportsPath, params).pipe(map((res: any) => res));
+    }
     update(payload: any) {
         return this.http.put(this.routes.updatePath, payload).pipe(map((res: any) => res));
+    }
+    updateSPSInventory(payload: any) {
+        return this.http.put(this.routes.updateSPSInventoryPath, payload).pipe(map((res: any) => res));
     }
     getById(id: string) {
         return this.http.get(this.routes.getByIdPath(id)).pipe(map((res: any) => res));

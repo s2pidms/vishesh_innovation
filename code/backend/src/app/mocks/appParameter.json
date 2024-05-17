@@ -463,5 +463,10 @@
         "appParameterAppCode": "QUOTATION_OF_SKU_FILTER",
         "appParameterName": "Filter For SKU By Order Type",
         "appParameterValue": "All"
+    },
+    {
+        "appParameterAppCode": "PAID_LEAVE_DATE_VALIDATION",
+        "appParameterName": "Paid Leave Date Validation",
+        "appParameterValue": "10"
     }
 ]

@@ -6,8 +6,8 @@ module.exports = {
     findOneDoc: async (match, project = {}) => {
         return await Model.findOne(match, project);
     },
-    findAndUpdateDoc: async (match, update) => {
-        return await Model.updateOne(match, update);
+    findAndUpdateDoc: async (match, update, options) => {
+        return await Model.updateOne(match, update, options);
     },
     updateManyDoc: async (match, update, options) => {
         return await Model.updateMany(match, update, options);

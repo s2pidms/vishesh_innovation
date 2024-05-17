@@ -218,7 +218,7 @@
             <td colspan="12">
                 <div class="row justify-content-between py-3">
                     <div class="col-8 h-100 p-0 pe-4">
-                        <p class="my-2">General Terms & Conditions</p>
+                        <p class="">General Terms & Conditions</p>
                         <table class="table">
                             <tr>
                                 <td>Payment Terms</td>
@@ -269,7 +269,7 @@
                         </table>
                     </div>
                     <div class="col-4 h-100 p-0">
-                        <p class="my-2">Tax Invoice Summary | Currency {{ tableData?.currency }}</p>
+                        <p class="">Tax Invoice Summary | Currency {{ tableData?.currency }}</p>
                         <table class="table">
                             <tr>
                                 <th>Total Taxable Amount</th>
@@ -343,38 +343,38 @@
                                 <th colspan="8">Bank Details</th>
                             </tr>
                             <tr>
-                                <td colspan="3">Beneficiary Name</td>
-                                <td colspan="5">
+                                <td class="padding-bank-details" colspan="3">Beneficiary Name</td>
+                                <td class="padding-bank-details" colspan="5">
                                     {{ tableData?.company?.companyBefName }}
                                 </td>
                             </tr>
                             <tr>
-                                <td colspan="3"><p>Bank Name</p></td>
-                                <td colspan="5">
+                                <td class="padding-bank-details" colspan="3"><p>Bank Name</p></td>
+                                <td class="padding-bank-details" colspan="5">
                                     {{ tableData?.company?.companyBankName }}
                                 </td>
                             </tr>
                             <tr>
-                                <td colspan="3"><p>Account No.</p></td>
-                                <td colspan="5">
+                                <td class="padding-bank-details" colspan="3"><p>Account No.</p></td>
+                                <td class="padding-bank-details" colspan="5">
                                     {{ tableData?.company?.companyAccountNumber }}
                                 </td>
                             </tr>
                             <tr>
-                                <td colspan="3"><p>MICR Code</p></td>
-                                <td colspan="5">
+                                <td class="padding-bank-details" colspan="3"><p>MICR Code</p></td>
+                                <td class="padding-bank-details" colspan="5">
                                     {{ tableData?.company?.companyBankMICRCode }}
                                 </td>
                             </tr>
                             <tr>
-                                <td colspan="3"><p>IFS Code (NEFT/RTGS)</p></td>
-                                <td colspan="5">
+                                <td class="padding-bank-details" colspan="3"><p>IFS Code (NEFT/RTGS)</p></td>
+                                <td class="padding-bank-details" colspan="5">
                                     {{ tableData?.company?.companyBankIFSCCode }}
                                 </td>
                             </tr>
                             <tr>
-                                <td colspan="3"><p>Bank/Branch Address</p></td>
-                                <td colspan="5">
+                                <td class="padding-bank-details" colspan="3"><p>Bank/Branch Address</p></td>
+                                <td class="padding-bank-details" colspan="5">
                                     {{ tableData?.company?.companyBankBranch }}
                                 </td>
                             </tr>

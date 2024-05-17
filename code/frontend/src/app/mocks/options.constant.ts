@@ -73,3 +73,8 @@ export const ITEM_MASTER_QC_LEVELS = [
     {label: "L2", value: "L2"},
     {label: "L3", value: "L3"}
 ];
+
+export const GENERATE_E_iNVOICE_SUP_TYPE = [
+    {label: "Regular", value: "B2B"},
+    {label: "SEZ without payment", value: "SEZWOP"}
+];

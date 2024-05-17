@@ -1,0 +1,126 @@
+<div class="listCard card">
+    <div class="table-header text-center">
+        <label class="heading">SKU Material Master</label>
+    </div>
+    <hr class="line-border mt-1" />
+    <div class="table-responsive" style="min-height: 37rem">
+        <app-setting-header [data]="{page,pageSize,collection,search,type: 'list'}" (dataChange)="eventHeader($event)">
+        </app-setting-header>
+        <table class="table table-bordered">
+            <thead class="bg-primary">
+                <tr class="text-white">
+                    <th sortable="SKUNo" (sort)="onSort($event)">SKU No.</th>
+                    <th class="text-start" sortable="SKUName" (sort)="onSort($event)">
+                        {{ "SKU Name" | labelTranslate }}
+                    </th>
+                    <th class="text-start" sortable="SKUDescription" (sort)="onSort($event)">
+                        {{ "SKU Description" | labelTranslate }}
+                    </th>
+                    <th sortable="primaryUnit" (sort)="onSort($event)">UoM</th>
+                    <th class="text-start" sortable="productCategory" (sort)="onSort($event)">Product Category</th>
+                    <th sortable="SKUAttributesStatus" (sort)="onSort($event)">SKU Stage</th>
+                    <th sortable="SKUAttributesStatus" (sort)="onSort($event)">View Dim</th>
+                    <th sortable="SKUAttributesStatus" (sort)="onSort($event)">Status</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let u of tableData; trackBy: trackByFn">
+                    <td>{{ u?.SKUNo }}</td>
+                    <td class="text-start" [style.width]="SKUName.clientWidth" #SKUName>
+                        <span class="pointer" [ngbTooltip]="u.SKUName" [positionTarget]="SKUName">
+                            {{ u?.SKUName }}
+                        </span>
+                    </td>
+                    <td class="text-start" [style.width]="SKUDescription.clientWidth" #SKUDescription>
+                        <span class="pointer" [ngbTooltip]="u.SKUDescription" [positionTarget]="SKUDescription">
+                            {{ u?.SKUDescription }}
+                        </span>
+                    </td>
+                    <td>{{ u?.primaryUnit | SalesUOMUnitMaster }}</td>
+                    <td class="text-start" [style.width]="productCategory.clientWidth" #productCategory>
+                        <span class="pointer" [ngbTooltip]="u.productCategory" [positionTarget]="productCategory">
+                            {{ u?.productCategory }}
+                        </span>
+                    </td>
+                    <td>{{ u?.SKUStage }}</td>
+                    <td>
+                        <i
+                            (click)="
+                                navigateToDim(
+                                    'default/planning/master/sku_attributes/sku_dimension_master/form',
+                                    u,
+                                    'view'
+                                )
+                            "
+                            class="fa fa-eye fa-lg me-2 text-primary pointer"
+                            aria-hidden="true"
+                        ></i>
+                    </td>
+                    <td>
+                        <span class="d-flex justify-content-center">
+                            <div *ngIf="u.SKUAttributesStatus == 'Active'" class="statusActive"></div>
+                            <div *ngIf="u.SKUAttributesStatus == 'Inactive'" class="statusInActive"></div>
+                        </span>
+                    </td>
+                    <td>
+                        <div class="dropdown">
+                            <button class="dropbtn"></button>
+                            <div class="dropdown-content">
+                                <a
+                                    [class.disable]="u.SKUAttributesStatus === 'Active'"
+                                    appAccessControl
+                                    [accessType]="rolePermissionActions.editAction"
+                                    href="javascript:void(0)"
+                                    (click)="navigateTo('../form', u, 'material')"
+                                >
+                                    <i class="fa fa-pencil-square-o fa-lg me-2 text-primary" aria-hidden="true"></i>
+                                    + Material
+                                </a>
+                                <a
+                                    [class.disable]="u.SKUAttributesStatus === 'Inactive'"
+                                    appAccessControl
+                                    [accessType]="rolePermissionActions.viewAction"
+                                    href="javascript:void(0)"
+                                    (click)="navigateTo('../form', u, 'view')"
+                                >
+                                    <i class="fa fa-eye fa-lg me-2 text-primary" aria-hidden="true"></i>
+                                    View
+                                </a>
+                                <a
+                                    [class.disable]="u.SKUAttributesStatus === 'Inactive'"
+                                    appAccessControl
+                                    [accessType]="rolePermissionActions.editAction"
+                                    href="javascript:void(0)"
+                                    (click)="navigateTo('../form', u, 'edit')"
+                                >
+                                    <i class="fa fa-pencil-square-o fa-lg me-2 text-primary" aria-hidden="true"></i>
+                                    Edit
+                                </a>
+                                <a
+                                    [class.disable]="u.SKUAttributesStatus === 'Inactive'"
+                                    appAccessControl
+                                    [accessType]="rolePermissionActions.editAction"
+                                    href="javascript:void(0)"
+                                    (click)="openCopyMaterialMasterModal(u)"
+                                >
+                                    <img src="./assets/images/new.svg" width="14" class="me-3" />
+                                    <!-- <i class="fa fa-clone fa-lg me-2 text-primary" aria-hidden="true"></i> -->
+                                    Copy Material
+                                </a>
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <hr class="line-border" />
+    <div class="row mt-3 ms-1">
+        <div class="col-12">
+            <button class="btn btn-primary px-4" type="button" (click)="openStatusSummaryModal()">
+                Status Summary
+            </button>
+        </div>
+    </div>
+</div>

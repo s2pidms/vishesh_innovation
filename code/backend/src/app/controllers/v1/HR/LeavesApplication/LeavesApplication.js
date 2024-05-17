@@ -31,6 +31,7 @@ const {filteredPaidHolidayList} = require("../../../../models/HR/repository/paid
 const LeaveApplicationRepository = require("../../../../models/HR/repository/leaveApplicationRepository");
 const {HR_ADMIN_MAIL_CONST} = require("../../../../mocks/mailTriggerConstants");
 const MailTriggerRepository = require("../../../../models/settings/repository/mailTriggerRepository");
+const {findAppParameterValue} = require("../../settings/appParameter/appParameter");
 const ObjectId = mongoose.Types.ObjectId;
 
 // @route   GET /settings/LeavesApplication/getAll
@@ -333,7 +334,13 @@ exports.getAllMasterData = async (req, res) => {
                 }
             }
         ]);
-        return res.success({autoIncrementNo, employeesOptions, allHolidaysOptions});
+        const paidLeavesValidation = await findAppParameterValue("PAID_LEAVE_DATE_VALIDATION", req.user.company);
+        return res.success({
+            autoIncrementNo,
+            employeesOptions,
+            allHolidaysOptions,
+            paidLeavesValidation: +paidLeavesValidation
+        });
     } catch (error) {
         console.error("getAllMasterData LeavesApplication", error);
         const errors = MESSAGES.apiErrorStrings.SERVER_ERROR;

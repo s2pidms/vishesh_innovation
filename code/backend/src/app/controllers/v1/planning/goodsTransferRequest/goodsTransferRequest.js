@@ -232,6 +232,9 @@ exports.getAllItemsByLocationAndDept = asyncHandler(async (req, res) => {
                     balancedQty: {$literal: 0},
                     previousGTRequestQty: {$literal: 0}
                 }
+            },
+            {
+                $sort: {itemCode: 1}
             }
         ]);
         return res.success(itemsList);

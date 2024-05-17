@@ -4,6 +4,7 @@ import {POOtherChargesComponent} from "@modals/index";
 import {NgbActiveModal, NgbModal} from "@ng-bootstrap/ng-bootstrap";
 import {ToastService} from "@core/services";
 import {ValidationService} from "@core/components";
+import {SO_TERMS_FORM_ERRORS} from "@mocks/validations/sales";
 
 @Component({
     selector: "app-so-terms",
@@ -38,7 +39,7 @@ export class SoTermsComponent implements OnInit {
     showSelect = false;
     form: any = new UntypedFormGroup({
         paymentTerms: new UntypedFormControl(null),
-        frightTerms: new UntypedFormControl("FOR - Free On Road"),
+        frightTerms: new UntypedFormControl("FOR - Free On Road", [Validators.required]),
         transporter: new UntypedFormControl(null, [Validators.required]),
         destination: new UntypedFormControl("", [Validators.required]),
         modeOfTransport: new UntypedFormControl(null, [Validators.required]),
@@ -74,6 +75,10 @@ export class SoTermsComponent implements OnInit {
         }
     }
     dismissModel() {
+        if (this.validationService.checkErrors(this.form, SO_TERMS_FORM_ERRORS)) {
+            return;
+        }
+
         let obj = this.form.value;
         obj.otherCharges = this.otherCharges;
         this.saveData.emit({data: obj, key: "SOTerms"});

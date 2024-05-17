@@ -18,7 +18,7 @@ const {
 } = require("../../planning/goodsTransferRequest/goodsTransferRequest");
 const {getAllCheckedItemCategoriesList} = require("../../purchase/itemCategoryMaster/itemCategoryMaster");
 const {setConversion} = require("../../../../helpers/utility");
-const {STOCK_PREP_UOM, GOODS_TRANSFER_REQUEST_DEPT} = require("../../../../mocks/constantData");
+const {GOODS_TRANSFER_REQUEST_DEPT} = require("../../../../mocks/constantData");
 exports.getAll = asyncHandler(async (req, res) => {
     try {
         let project = getAllGoodsTransferResponseAttributes();
@@ -469,7 +469,7 @@ exports.getItemByGTRequestId = asyncHandler(async (req, res) => {
                             $lookup: {
                                 from: "Items",
                                 let: {date: "$GINDate"},
-                                localField: "reference",
+                                localField: "item",
                                 foreignField: "_id",
                                 pipeline: [
                                     {$sort: {itemCode: 1}},
@@ -498,7 +498,7 @@ exports.getItemByGTRequestId = asyncHandler(async (req, res) => {
                             $lookup: {
                                 from: "ChildItem",
                                 let: {date: "$GINDate"},
-                                localField: "reference",
+                                localField: "item",
                                 foreignField: "_id",
                                 pipeline: [
                                     {$sort: {itemCode: 1}},

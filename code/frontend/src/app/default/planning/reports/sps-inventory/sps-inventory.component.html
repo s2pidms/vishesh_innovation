@@ -1,0 +1,122 @@
+<div class="reportTablePage">
+    <div class="col-md-12 pb-0 table-body shadow-none">
+        <div class="row table-header">
+            <div class="col">
+                <label class="heading">Stock Preparation Shop Inventory</label>
+            </div>
+        </div>
+        <hr class="row line-border" />
+        <div class="table-responsive mb-0">
+            <app-setting-header
+                [data]="{page,pageSize,collection,search,type: 'list',pdfDisplay : true}"
+                (dataChange)="eventHeader($event)"
+            ></app-setting-header>
+            <table class="table table-bordered table-sticky">
+                <thead class="bg-primary">
+                    <tr class="text-white">
+                        <th sortable="department" (sort)="onSort($event)">R+/I-</th>
+                        <th sortable="itemCode" (sort)="onSort($event)">Item Code</th>
+                        <th class="text-start" sortable="itemName" (sort)="onSort($event)">Item Name</th>
+                        <th class="text-start" sortable="itemDescription" (sort)="onSort($event)">Item Description</th>
+                        <th>DUC</th>
+                        <th sortable="UOM" (sort)="onSort($event)">UoM</th>
+                        <th sortable="closedIRQty" (sort)="onSort($event)">Quantity</th>
+                        <th sortable="MRNNumber" (sort)="onSort($event)">MRN No.</th>
+                        <th sortable="aging" (sort)="onSort($event)">Aging</th>
+                        <th sortable="formType" (sort)="onSort($event)">Stage</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let u of tableData; trackBy: trackByFn">
+                        <td>
+                            <span class="d-flex justify-content-center">
+                                <div *ngIf="u?.department == 'Planning'" class="text-secondary fs-4">+</div>
+                                <div *ngIf="u?.department == 'Production'" class="text-primary fs-4">-</div>
+                            </span>
+                        </td>
+                        <td>{{ u?.itemCode }}</td>
+                        <td class="text-start" [style.width]="itemName.clientWidth" #itemName>
+                            <span class="pointer" [ngbTooltip]="u.itemName" [positionTarget]="itemName">
+                                {{ u?.itemName }}
+                            </span>
+                        </td>
+                        <td class="text-start" [style.width]="itemDescription.clientWidth" #itemDescription>
+                            <span class="pointer" [ngbTooltip]="u.itemDescription" [positionTarget]="itemDescription">
+                                {{ u?.itemDescription }}
+                            </span>
+                        </td>
+
+                        <td class="py-0">
+                            <span class="d-flex justify-content-center">
+                                <div (click)="openUOMDetailsModal(u)" class="sps-DUC pointer"></div>
+                            </span>
+                        </td>
+                        <td class="py-0">
+                            <span>
+                                <div class="d-flex justify-content-between align-items-center px-2">
+                                    {{ u?.UOM | UOMUnitsMaster }}
+
+                                    <span class="pointer d-flex align-items-center">
+                                        <div (click)="setUnit(u)" *ngIf="u.secondaryUnit" class="unit-switch-rev"></div>
+                                        <div *ngIf="!u.secondaryUnit" class="unit-switch-gray"></div>
+                                    </span>
+                                </div>
+                            </span>
+                        </td>
+                        <td>{{ u?.closedIRQty ? (u?.closedIRQty | number : "1.2-2") : null }}</td>
+
+                        <td>{{ u.MRNNumber }}</td>
+                        <td class="py-0">
+                            <span class="d-flex justify-content-center">
+                                <div *ngIf="u?.aging == 'green'" class="flaggreen"></div>
+                                <div *ngIf="u?.aging == 'red'" class="flagred"></div>
+                                <div *ngIf="u?.aging == 'orange'" class="flagYellow"></div>
+                            </span>
+                        </td>
+                        <td class="py-0">
+                            <span class="d-flex justify-content-center">
+                                <div *ngIf="u.formType != 'Child'" class="sps-parent"></div>
+                                <div *ngIf="u.formType == 'Child'" class="sps-child"></div>
+                            </span>
+                        </td>
+                        <!-- <td [class.text-primary]="u.ppv < 0" [class.text-success]="u.ppv > 0">
+                            {{ u?.ppv | number : ".2-2" }}
+                        </td> -->
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="table-footer" *ngIf="planningValue || productionValue">
+            <hr class="row line-border" />
+            <div class="row align-items-center justify-content-end mt-3">
+                <div class="col-3 d-flex justify-content-end">
+                    <div class="d-flex justify-content-center">
+                        <div class="col-form-label text-nowrap pe-1 pt-1 ms-3">Closing Inventory</div>
+                        <div class="">
+                            <i class="fa fa-caret-right fs-4 mx-2 mt-2 text-secondary"></i>
+                        </div>
+                        <div class="me-1">
+                            <input [value]="closingInventory" class="form-control" type="text" readonly />
+                        </div>
+                        <div class="col-2">
+                            <input [value]="'sqm'" class="form-control" type="text" readonly />
+                        </div>
+                    </div>
+                </div>
+                <div class="col-9 d-flex justify-content-end">
+                    <!-- <div class="d-flex justify-content-center">
+                        <div class="col-form-label text-nowrap pe-1 pt-0 ms-3">
+                            Total PPV Value <i class="fa fa-caret-right fs-4 mx-2"></i>
+                            <button type="button" class="btn btn-info py-1 ms-2">{{ "INR" | companyCurrency }}</button>
+                        </div>
+                        <input [value]="closingInventory | currency : 'INR'" class="form-control" type="text" readonly />
+                    </div> -->
+                    <!-- <button type="button" class="btn btn-primary me-1" disabled>Esc</button> -->
+                    <!-- <button class="plusIconSvg btn btn-primary me-1"></button> -->
+                    <button class="btn btn-primary me-1"><i class="fa fa-check" aria-hidden="true"></i></button>
+                    <button class="btn btn-primary px-4 me-4" type="button ">Stock Reco</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

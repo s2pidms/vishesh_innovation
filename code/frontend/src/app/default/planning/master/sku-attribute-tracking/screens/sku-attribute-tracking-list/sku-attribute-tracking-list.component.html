@@ -1,0 +1,261 @@
+<div class="listCard card">
+    <div class="table-header">
+        <label class="heading">SKU Attributes Status Summary</label>
+    </div>
+    <hr class="line-border mt-1" />
+    <div class="table-responsive" style="min-height: 37rem">
+        <app-setting-header [data]="{page,pageSize,collection,search,type: 'list'}" (dataChange)="eventHeader($event)">
+        </app-setting-header>
+        <table class="table table-bordered">
+            <thead class="bg-primary">
+                <tr class="text-white">
+                    <th sortable="SKUNo" (sort)="onSort($event)">SKU No.</th>
+                    <th class="text-start" sortable="SKUName" (sort)="onSort($event)">
+                        {{ "SKU Name" | labelTranslate }}
+                    </th>
+                    <th class="text-start" sortable="SKUDescription" (sort)="onSort($event)">
+                        {{ "SKU Description" | labelTranslate }}
+                    </th>
+                    <th sortable="primaryUnit" (sort)="onSort($event)">UoM</th>
+                    <th class="text-start" sortable="productCategory" (sort)="onSort($event)">Product Category</th>
+                    <th sortable="SKUStage" (sort)="onSort($event)">SKU Stage</th>
+                    <th sortable="SKUDimStatus" (sort)="onSort($event)">D</th>
+                    <th sortable="SKUMaterialStatus" (sort)="onSort($event)">M</th>
+                    <th sortable="SKUInkStatus" (sort)="onSort($event)">S</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let u of tableData; trackBy: trackByFn">
+                    <td>{{ u?.SKUNo }}</td>
+                    <td class="text-start" [style.width]="SKUName.clientWidth" #SKUName>
+                        <span class="pointer" [ngbTooltip]="u.SKUName" [positionTarget]="SKUName">
+                            {{ u?.SKUName }}
+                        </span>
+                    </td>
+                    <td class="text-start" [style.width]="SKUDescription.clientWidth" #SKUDescription>
+                        <span class="pointer" [ngbTooltip]="u.SKUDescription" [positionTarget]="SKUDescription">
+                            {{ u?.SKUDescription }}
+                        </span>
+                    </td>
+                    <td>{{ u?.primaryUnit | SalesUOMUnitMaster }}</td>
+                    <td class="text-start" [style.width]="productCategory.clientWidth" #productCategory>
+                        <span class="pointer" [ngbTooltip]="u.productCategory" [positionTarget]="productCategory">
+                            {{ u?.productCategory }}
+                        </span>
+                    </td>
+                    <td>{{ u?.SKUStage }}</td>
+                    <td>
+                        <span *ngIf="u.showAttributesData == 'status'" class="d-flex justify-content-center">
+                            <div *ngIf="u.SKUDimStatus == 'Active'" class="statusActive"></div>
+                            <div *ngIf="u.SKUDimStatus == 'Inactive'" class="statusInActive"></div>
+                        </span>
+                        <span *ngIf="u.showAttributesData == 'add'" class="d-flex justify-content-center">
+                            <div *ngIf="u.SKUDimStatus == 'Active'" class="add-grey"></div>
+                            <div
+                                (click)="
+                                    navigateTo(
+                                        'default/planning/master/sku_attributes/sku_dimension_master/form',
+                                        u,
+                                        'dimension'
+                                    )
+                                "
+                                *ngIf="u.SKUDimStatus == 'Inactive'"
+                                class="add-red pointer"
+                            ></div>
+                        </span>
+                        <span *ngIf="u.showAttributesData == 'edit'" class="d-flex justify-content-center">
+                            <div
+                                (click)="
+                                    navigateTo(
+                                        'default/planning/master/sku_attributes/sku_dimension_master/form',
+                                        u,
+                                        'edit'
+                                    )
+                                "
+                                *ngIf="u.SKUDimStatus == 'Active'"
+                                class="add-red-one pointer"
+                            ></div>
+                            <div *ngIf="u.SKUDimStatus == 'Inactive'" class="edit-grey"></div>
+                        </span>
+                        <span *ngIf="u.showAttributesData == 'view'" class="d-flex justify-content-center">
+                            <div *ngIf="u.SKUDimStatus == 'Active'">
+                                <i
+                                    (click)="
+                                        navigateTo(
+                                            'default/planning/master/sku_attributes/sku_dimension_master/form',
+                                            u,
+                                            'view'
+                                        )
+                                    "
+                                    style="margin-right: 0rem !important"
+                                    class="fa fa-eye fa-lg me-2 text-primary pointer"
+                                    aria-hidden="true"
+                                ></i>
+                            </div>
+                            <div *ngIf="u.SKUDimStatus == 'Inactive'">
+                                <i
+                                    style="margin-right: 0rem !important"
+                                    class="fa fa-eye fa-lg me-2"
+                                    aria-hidden="true"
+                                ></i>
+                            </div>
+                        </span>
+                    </td>
+                    <td>
+                        <span *ngIf="u.showAttributesData == 'status'" class="d-flex justify-content-center">
+                            <div *ngIf="u.SKUMaterialStatus == 'Active'" class="statusActive"></div>
+                            <div *ngIf="u.SKUMaterialStatus == 'Inactive'" class="statusInActive"></div>
+                        </span>
+                        <span *ngIf="u.showAttributesData == 'add'" class="d-flex justify-content-center">
+                            <div *ngIf="u.SKUMaterialStatus == 'Active'" class="add-grey"></div>
+                            <div
+                                (click)="
+                                    navigateTo(
+                                        'default/planning/master/sku_attributes/sku_material_master/form',
+                                        u,
+                                        'material'
+                                    )
+                                "
+                                *ngIf="u.SKUMaterialStatus == 'Inactive'"
+                                class="add-red pointer"
+                            ></div>
+                        </span>
+                        <span *ngIf="u.showAttributesData == 'edit'" class="d-flex justify-content-center">
+                            <div
+                                (click)="
+                                    navigateTo(
+                                        'default/planning/master/sku_attributes/sku_material_master/form',
+                                        u,
+                                        'edit'
+                                    )
+                                "
+                                *ngIf="u.SKUMaterialStatus == 'Active'"
+                                class="add-red-one pointer"
+                            ></div>
+                            <div *ngIf="u.SKUMaterialStatus == 'Inactive'" class="edit-grey"></div>
+                        </span>
+                        <span *ngIf="u.showAttributesData == 'view'" class="d-flex justify-content-center">
+                            <div *ngIf="u.SKUMaterialStatus == 'Active'">
+                                <i
+                                    (click)="
+                                        navigateTo(
+                                            'default/planning/master/sku_attributes/sku_material_master/form',
+                                            u,
+                                            'view'
+                                        )
+                                    "
+                                    style="margin-right: 0rem !important"
+                                    class="fa fa-eye fa-lg me-2 text-primary pointer"
+                                    aria-hidden="true"
+                                ></i>
+                            </div>
+                            <div *ngIf="u.SKUMaterialStatus == 'Inactive'">
+                                <i
+                                    style="margin-right: 0rem !important"
+                                    class="fa fa-eye fa-lg me-2"
+                                    aria-hidden="true"
+                                ></i>
+                            </div>
+                        </span>
+                    </td>
+                    <td>
+                        <span *ngIf="u.showAttributesData == 'status'" class="d-flex justify-content-center">
+                            <div *ngIf="u.SKUInkStatus == 'Active'" class="statusActive"></div>
+                            <div *ngIf="u.SKUInkStatus == 'Inactive'" class="statusInActive"></div>
+                        </span>
+                        <span *ngIf="u.showAttributesData == 'add'" class="d-flex justify-content-center">
+                            <div *ngIf="u.SKUInkStatus == 'Active'" class="add-grey"></div>
+                            <div
+                                (click)="
+                                    navigateTo('default/planning/master/sku_attributes/sku_ink_master/form', u, 'ink')
+                                "
+                                *ngIf="u.SKUInkStatus == 'Inactive'"
+                                class="add-red pointer"
+                            ></div>
+                        </span>
+                        <span *ngIf="u.showAttributesData == 'edit'" class="d-flex justify-content-center">
+                            <div
+                                (click)="
+                                    navigateTo('default/planning/master/sku_attributes/sku_ink_master/form', u, 'edit')
+                                "
+                                *ngIf="u.SKUInkStatus == 'Active'"
+                                class="add-red-one pointer"
+                            ></div>
+                            <div *ngIf="u.SKUInkStatus == 'Inactive'" class="edit-grey"></div>
+                        </span>
+                        <span *ngIf="u.showAttributesData == 'view'" class="d-flex justify-content-center">
+                            <div *ngIf="u.SKUInkStatus == 'Active'">
+                                <i
+                                    (click)="
+                                        navigateTo(
+                                            'default/planning/master/sku_attributes/sku_ink_master/form',
+                                            u,
+                                            'view'
+                                        )
+                                    "
+                                    style="margin-right: 0rem !important"
+                                    class="fa fa-eye fa-lg me-2 text-primary pointer"
+                                    aria-hidden="true"
+                                ></i>
+                            </div>
+                            <div *ngIf="u.SKUInkStatus == 'Inactive'">
+                                <i
+                                    style="margin-right: 0rem !important"
+                                    class="fa fa-eye fa-lg me-2"
+                                    aria-hidden="true"
+                                ></i>
+                            </div>
+                        </span>
+                    </td>
+                    <td>
+                        <div class="dropdown">
+                            <button class="dropbtn"></button>
+                            <div class="dropdown-content">
+                                <a href="javascript:void(0)" (click)="SKUAttributesTracking('status', u)">
+                                    <i class="fa fa-check fa-lg text-success" aria-hidden="true"></i>
+                                    Status
+                                </a>
+                                <a
+                                    appAccessControl
+                                    [accessType]="rolePermissionActions.createAction"
+                                    href="javascript:void(0)"
+                                    (click)="SKUAttributesTracking('add', u)"
+                                >
+                                    <i class="fa fa-plus-square-o fa-lg me-3 text-primary" aria-hidden="true"></i>
+                                    Add
+                                </a>
+                                <a
+                                    appAccessControl
+                                    [accessType]="rolePermissionActions.viewAction"
+                                    href="javascript:void(0)"
+                                    (click)="SKUAttributesTracking('view', u)"
+                                >
+                                    <i class="fa fa-eye fa-lg me-2 text-primary" aria-hidden="true"></i>
+                                    View
+                                </a>
+                                <a
+                                    appAccessControl
+                                    [accessType]="rolePermissionActions.editAction"
+                                    href="javascript:void(0)"
+                                    (click)="SKUAttributesTracking('edit', u)"
+                                >
+                                    <i class="fa fa-pencil-square-o fa-lg me-2 text-primary" aria-hidden="true"></i>
+                                    Edit
+                                </a>
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <hr class="line-border" />
+    <div class="row mt-3 ms-1">
+        <div class="col-12">
+            <button class="btn btn-primary px-4" type="button" (click)="openStatusSummaryModal()">
+                Status Summary
+            </button>
+        </div>
+    </div>
+</div>

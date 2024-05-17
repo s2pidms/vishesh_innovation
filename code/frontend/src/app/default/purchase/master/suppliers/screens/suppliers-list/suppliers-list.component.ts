@@ -3,9 +3,9 @@ import {Subscription} from "rxjs";
 import {NgbdSortableHeader, SortEvent} from "@directives/sortable.directive";
 import {SuppliersService} from "@services/purchase";
 import {NgbModal} from "@ng-bootstrap/ng-bootstrap";
-import {ExportExcelService, ExportToPDFService, SpinnerService} from "@core/services";
-import {ViewAddressComponent} from "@shared/modals";
-import {LIST_DEFAULT_PERMISSION_ACTIONS} from "@mocks/constant";
+import {ExportExcelService, ExportToPDFService, SpinnerService, StorageService, ToastService} from "@core/services";
+import {ConfirmDeleteComponent, ViewAddressComponent} from "@shared/modals";
+import {LIST_DEFAULT_PERMISSION_ACTIONS, superAdminId} from "@mocks/constant";
 import {ActivatedRoute, Router} from "@angular/router";
 import {SUPPLIER_MASTER_REPORT_DATA, SUPPLIER_MASTER_PDF_DATA} from "@mocks/export-data/purchase/master";
 import {Suppliers} from "@mocks/models/purchase/masters";
@@ -24,6 +24,8 @@ export class SuppliersListComponent implements OnInit, OnDestroy {
     search: string = "";
     tableData: Suppliers[] = [];
     tableDataObject: any = {};
+    superAdminId: any = superAdminId;
+    user: any = "";
     rolePermissionActions: any = LIST_DEFAULT_PERMISSION_ACTIONS;
     subscription!: Subscription;
     constructor(
@@ -33,10 +35,13 @@ export class SuppliersListComponent implements OnInit, OnDestroy {
         private modalService: NgbModal,
         private exportExcelService: ExportExcelService,
         private activatedRoute: ActivatedRoute,
-        private exportToPDFService: ExportToPDFService
+        private exportToPDFService: ExportToPDFService,
+        private storageService: StorageService,
+        private toastService: ToastService
     ) {}
 
     ngOnInit(): void {
+        this.user = this.storageService.get("IDMSAUser")?.roles?.find((x: any) => x == this.superAdminId);
         this.page = Number(this.activatedRoute.snapshot.queryParamMap.get("page") ?? 1);
         this.getAll();
     }
@@ -114,6 +119,34 @@ export class SuppliersListComponent implements OnInit, OnDestroy {
             this.spinner.hide();
         });
     }
+    delete(id: any) {
+        this.spinner.show();
+        this.supplierMasterService.delete(id).subscribe(success => {
+            this.spinner.hide();
+            this.toastService.success(success.message);
+            this.getAll();
+        });
+    }
+    openConfirmModal(id: any, code: any) {
+        const modalRef = this.modalService.open(ConfirmDeleteComponent, {
+            centered: true,
+            size: "md",
+            backdrop: "static",
+            keyboard: false
+        });
+
+        modalRef.componentInstance.heading = "Confirm Deletion";
+        modalRef.componentInstance.confirmText = `Confirm Deletion of Supplier Code ${code} ?`;
+        modalRef.result.then(
+            (success: any) => {
+                if (success.title == "Yes") {
+                    this.delete(id);
+                }
+            },
+            (reason: any) => {}
+        );
+    }
+
     ngOnDestroy(): void {
         if (this.subscription) this.subscription.unsubscribe();
     }

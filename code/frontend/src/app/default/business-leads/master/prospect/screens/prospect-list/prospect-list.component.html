@@ -67,6 +67,14 @@
                                     <i class="fa fa-check fa-lg me-2 text-success" aria-hidden="true"></i>
                                     Convert to Customer
                                 </a>
+                                <a
+                                    *ngIf="this.user == superAdminId"
+                                    href="javascript:void(0)"
+                                    (click)="openConfirmModal(u?._id, u?.prospectRegistrationCode)"
+                                >
+                                    <i class="fa fa-trash text-primary" aria-hidden="true"></i>
+                                    Delete
+                                </a>
                             </div>
                         </div>
                     </td>

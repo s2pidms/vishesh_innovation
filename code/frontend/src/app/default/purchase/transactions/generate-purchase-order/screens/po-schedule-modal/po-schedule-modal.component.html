@@ -1,6 +1,6 @@
 <div class="modelPage">
     <div class="modal-header">
-        <div *ngIf="bookSalesOrder != 'Book Sales Order'" class="heading">Delivery Schedule (For PO)</div>
+        <div *ngIf="bookSalesOrder != 'Book Sales Order'" class="heading">Delivery Schedule</div>
         <div *ngIf="bookSalesOrder == 'Book Sales Order'" class="heading">Dispatch Schedule</div>
         <div>
             <button type="button" class="btn btn-cross btn-sm" aria-label="Close" (click)="dismissModel()">
@@ -51,7 +51,7 @@
                         name="deliveryCount"
                         min="1"
                         max="5"
-                        [readOnly]="SOType == 'Regular'"
+                        [readOnly]="SOType == 'Regular' || POType == 'Standard PO'"
                     />
                 </div>
             </div>

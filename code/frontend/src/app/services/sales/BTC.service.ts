@@ -12,7 +12,7 @@ export class BTCService {
         getAllMasterDataPath: "/sales/B2c/getAllMasterData",
         updatePath: (id: string) => `/sales/B2c/update/${id}`,
         getByIdPath: (id: string) => `/sales/B2c/getById/${id}`,
-        deletePath: (id: string) => `/sales/B2c/delete//${id}`
+        deletePath: (id: string) => `/sales/B2c/delete/${id}`
     };
     constructor(private http: ApiService) {}
 

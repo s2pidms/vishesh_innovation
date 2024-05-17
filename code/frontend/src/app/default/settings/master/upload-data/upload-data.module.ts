@@ -8,12 +8,12 @@ import {CustomUploadDataComponent} from "./custom-upload-data/custom-upload-data
 
 const routes: Routes = [
     {path: "tab_list", component: UploadDataComponent},
-    {path: "form/:uploadParameter", component: CustomUploadDataComponent},
-    {
-        path: "supplier_upload_data",
-        loadChildren: () =>
-            import("./supplier-upload-data/supplier-upload-data.module").then(m => m.SupplierUploadDataModule)
-    }
+    {path: "form/:uploadParameter", component: CustomUploadDataComponent}
+    // {
+    //     path: "supplier_upload_data",
+    //     loadChildren: () =>
+    //         import("./supplier-upload-data/supplier-upload-data.module").then(m => m.SupplierUploadDataModule)
+    // }
 ];
 
 @NgModule({

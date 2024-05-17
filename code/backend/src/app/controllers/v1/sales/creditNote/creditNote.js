@@ -417,7 +417,7 @@ async function getDataPDF(existing) {
         }
         let hsnArr = [...new Set(existing?.CNDetails?.map(x => x.hsn))];
         existing.GSTDetails = [];
-        let condition = existing.customer?.GSTIN.substring(0, 2) != existing.company.GSTIN.substring(0, 2);
+        let condition = existing.customer?.GSTIN?.substring(0, 2) != existing.company?.GSTIN?.substring(0, 2);
         for (let i = 0; i < hsnArr.length; i++) {
             const element = hsnArr[i];
             let arr = existing?.CNDetails?.filter(m => m.hsn == element);

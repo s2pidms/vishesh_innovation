@@ -42,6 +42,8 @@
                 <th class="text-start" sortable="SKUDescription" (sort)="onSort($event)">
                     {{ "SKU Description" | labelTranslate }}
                 </th>
+                <!-- *ngIf="['All', 'SO'].includes(orderType)" -->
+                <th>View Dim</th>
                 <th>DWG</th>
                 <th sortable="UOM" (sort)="onSort($event)">UoM</th>
                 <th sortable="balQty" (sort)="onSort($event)">
@@ -93,6 +95,13 @@
                     <span class="pointer" [ngbTooltip]="u.SKUDescription" [positionTarget]="SKUDescription">
                         {{ u?.SKUDescription }}
                     </span>
+                </td>
+                <td>
+                    <i
+                        (click)="getSKUDimensionData(u)"
+                        class="fa fa-eye fa-lg me-2 text-primary pointer"
+                        aria-hidden="true"
+                    ></i>
                 </td>
                 <td #internalPartNo>
                     <span

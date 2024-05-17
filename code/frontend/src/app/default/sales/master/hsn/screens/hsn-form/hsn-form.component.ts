@@ -9,6 +9,8 @@ import {SalesHSNService} from "@services/sales";
 import {HSN_FORM_ERRORS} from "@mocks/validations/sales/hsn.validation";
 import {ISalesHSNMasterData} from "@mocks/models/sales/master";
 import {Location} from "@angular/common";
+import {CancelPoComponent} from "@shared/modals";
+import {NgbModal} from "@ng-bootstrap/ng-bootstrap";
 
 @Component({
     selector: "app-hsn-form",
@@ -50,7 +52,8 @@ export class HSNFormComponent implements OnInit {
         private toastService: ToastService,
         private validationService: ValidationService,
         private utilityService: UtilityService,
-        private location: Location
+        private location: Location,
+        private modalService: NgbModal
     ) {}
 
     ngOnInit(): void {
@@ -136,5 +139,36 @@ export class HSNFormComponent implements OnInit {
                     }
                 });
         });
+    }
+
+    openCancelModal() {
+        const modalRef = this.modalService.open(CancelPoComponent, {
+            centered: true,
+            size: "md",
+            backdrop: "static",
+            keyboard: false
+        });
+
+        modalRef.componentInstance.action = this.action;
+        modalRef.componentInstance.HSNFlag = true;
+        modalRef.componentInstance.heading = "HSN Master";
+        modalRef.componentInstance.cancelText = `changes to the HSN master won't automatically reflect in existing purchase orders.`;
+        modalRef.componentInstance.cancelTextTwo = `Please cancel old purchase orders and create new ones with updated HSN values if necessary.`;
+        modalRef.result.then(
+            (success: any) => {
+                if (success == "Yes") {
+                    this.submit();
+                }
+            },
+            (reason: any) => {}
+        );
+    }
+
+    HSNCodeCond() {
+        if (this.action == "edit") {
+            this.openCancelModal();
+        } else {
+            this.submit();
+        }
     }
 }

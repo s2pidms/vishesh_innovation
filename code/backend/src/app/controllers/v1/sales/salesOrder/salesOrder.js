@@ -1,7 +1,7 @@
 const asyncHandler = require("express-async-handler");
 const Model = require("../../../../models/sales/salesOrderModel");
 const MESSAGES = require("../../../../helpers/messages.options");
-const {outputData} = require("../../../../helpers/utility");
+const {outputData, checkDomesticCustomer} = require("../../../../helpers/utility");
 const {generateCreateData, getMatchData, OPTIONS} = require("../../../../helpers/global.options");
 const {
     getAllSKUListByCustomerId,
@@ -518,9 +518,7 @@ async function getDataPDF(existing) {
         }
         let hsnArr = [...new Set(existing?.SODetails?.map(x => x.SKU.hsn))];
         existing.GSTDetails = [];
-        let customerCategoryCondition = SALES_CATEGORY.getAllDomesticSalesCategory().includes(
-            existing.customer.customerCategory
-        );
+        let customerCategoryCondition = await checkDomesticCustomer(existing.customer.customerCategory);
         let condition = false;
         if (existing.company && existing.company.placesOfBusiness.length > 0 && customerCategoryCondition) {
             for (const ele of existing.company.placesOfBusiness) {

@@ -1,0 +1,56 @@
+<div class="modelPage">
+    <div class="container-fluid">
+        <div class="row mt-4">
+            <form [formGroup]="form">
+                <div class="form-body">
+                    <div style="min-height: 31.8rem">
+                        <div class="row mb-4 px-4">
+                            <div class="col-md-4">
+                                <label class="form-label"> Beneficiary Name </label>
+                                <input class="form-control" type="text" formControlName="empBefName" />
+                            </div>
+                            <div class="col-md-4">
+                                <label class="form-label"> Bank Name </label>
+                                <input class="form-control" type="text" formControlName="empBankName" />
+                            </div>
+                            <div class="col-md-4">
+                                <label class="form-label"> Branch </label>
+                                <div>
+                                    <input class="form-control" type="text" formControlName="empBankBranch" />
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row mb-4 px-4">
+                            <div class="col-md-4">
+                                <label class="form-label"> Account Type </label>
+
+                                <select class="form-select" formControlName="empAccType">
+                                    <option [value]="null" selected disabled>Select</option>
+                                    <option [value]="'Current'">Current</option>
+                                    <option [value]="'Saving'">Saving</option>
+                                </select>
+                            </div>
+                            <div class="col-md-4">
+                                <label class="form-label"> Account No. </label>
+                                <input class="form-control" type="number" formControlName="empAccountNumber" />
+                            </div>
+                            <div class="col-md-4">
+                                <label class="form-label"> IFS Code </label>
+                                <input class="form-control" type="text" formControlName="empBankIFSCCode" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+
+            <hr *ngIf="!['view'].includes(action)" class="line-border mt-5 px-5" />
+
+            <div class="text-center">
+                <div *ngIf="!['view'].includes(action)" class="text-center mt-2">
+                    <button (click)="reset()" class="btn bg-primary px-5 me-3" type="button">Reset</button>
+                    <button class="btn bg-primary px-5" type="button" (click)="dismissModel()">Save</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

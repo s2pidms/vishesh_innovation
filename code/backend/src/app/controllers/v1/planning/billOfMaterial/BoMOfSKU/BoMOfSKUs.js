@@ -14,6 +14,8 @@ const {
 const {BOM_OF_SKU} = require("../../../../../mocks/schemasConstant/planningConstant");
 const {getAndSetAutoIncrementNo} = require("../../../settings/autoIncrement/autoIncrement");
 const BOMOfSKURepository = require("../../../../../models/planning/repository/BOMRepository/BoMOfSKURepository");
+const {INK_MIXING_UOM, COMPANY_TYPE} = require("../../../../../mocks/constantData");
+const {getCompanyById} = require("../../../settings/company/company");
 const ObjectId = mongoose.Types.ObjectId;
 
 exports.create = asyncHandler(async (req, res) => {
@@ -132,7 +134,8 @@ exports.getAllMasterData = asyncHandler(async (req, res) => {
             SKUNo: 1,
             SKUName: 1,
             SKUDescription: 1,
-            primaryUnit: 1
+            primaryUnit: 1,
+            ups: "$dimensionsDetails.layoutDimensions.ups"
         });
         const autoIncrementNo = await getAndSetAutoIncrementNo({...BOM_OF_SKU.AUTO_INCREMENT_DATA()}, req.user.company);
         return res.success({
@@ -198,7 +201,18 @@ exports.getAllInkListBySKUId = asyncHandler(async (req, res) => {
             const inkList = await getAllInkListForBOM(req.user.company);
             const childItems = await ChildItemMaster.getAllChildItemsListForBOM(req.user.company, null, "SKU");
             const itemsList = await getAllItemsForBOM(req.user.company, itemCategoriesList);
-            rows = [...itemsList, ...childItems, ...inkList];
+            rows = [...itemsList, ...childItems];
+            let companyData = await getCompanyById(req.user.company, {
+                companyType: 1
+            });
+            rows = rows.map(x => {
+                if (companyData.companyType == COMPANY_TYPE.PRINTING_INDUSTRY) {
+                    x.unitCost = x.UOM == INK_MIXING_UOM.KG ? x.unitCost / 1000 : x.unitCost;
+                    x.UOM = x.UOM == INK_MIXING_UOM.KG ? INK_MIXING_UOM.GRAM : x.UOM;
+                }
+                return x;
+            });
+            rows = [...rows, ...inkList];
         }
         return res.success({rows, listType});
     } catch (e) {
@@ -244,3 +258,27 @@ exports.getMaterialCostBySKUId = async (company, SKUId) => {
         console.error("getBOMBySKUId", e);
     }
 };
+
+exports.getBOMBySKUIdForMRP = asyncHandler(async (req, res) => {
+    try {
+        let result = await BOMOfSKURepository.filteredBoMOfSKUList([
+            {
+                $match: {
+                    company: ObjectId(req.user.company),
+                    SKU: ObjectId(req.query.SKUId)
+                }
+            },
+            {
+                $project: {
+                    BOMOfSKUDetails: 1,
+                    BOMNo: 1
+                }
+            }
+        ]);
+        return res.success(result.length ? result[0] : []);
+    } catch (error) {
+        console.error("getBOMBySKUIdForMRP  ", error);
+        const errors = MESSAGES.apiErrorStrings.SERVER_ERROR;
+        return res.serverError(errors);
+    }
+});

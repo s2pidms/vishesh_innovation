@@ -92,11 +92,11 @@
                         />
                     </td>
                     <td>
-                        <span *ngIf="u.status && !(u.status == 'Draft' && u._id == flag) && !u.showFields">{{
+                        <span *ngIf="u.status && !(u.status == 'Draft' && u._id == flag)">{{
                             u.TDS | number : "1.2-2"
                         }}</span>
                         <input
-                            *ngIf="!u.status || (u.status == 'Draft' && u._id == flag) || u.showFields"
+                            *ngIf="!u.status || (u.status == 'Draft' && u._id == flag)"
                             class="form-control form-control-xs w-25"
                             type="number"
                             [(ngModel)]="u.TDS"
@@ -143,13 +143,24 @@
                                     <i class="fa fa-pencil-square-o fa-lg me-2 text-primary" aria-hidden="true"></i>
                                     Edit
                                 </a>
-                                <a
+                                <!-- <a
                                     [class.disable]="u.status == 'Approved'"
                                     *ngIf="user == superAdminId"
                                     appAccessControl
                                     [accessType]="rolePermissionActions.editAction"
                                     href="javascript:void(0)"
                                     (click)="update(u)"
+                                >
+                                    <i class="fa fa-pencil-square-o fa-lg me-2 text-primary" aria-hidden="true"></i>
+                                    Update
+                                </a> -->
+                                <a
+                                    [class.disable]="u.status == 'Approved'"
+                                    *ngIf="user == superAdminId"
+                                    appAccessControl
+                                    [accessType]="rolePermissionActions.editAction"
+                                    href="javascript:void(0)"
+                                    (click)="openSalaryPayrollModal(u)"
                                 >
                                     <i class="fa fa-pencil-square-o fa-lg me-2 text-primary" aria-hidden="true"></i>
                                     Update

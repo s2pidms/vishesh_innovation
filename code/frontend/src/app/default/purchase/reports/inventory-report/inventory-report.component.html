@@ -114,7 +114,48 @@
                                 {{ u?.itemDescription }}
                             </span>
                         </td>
-                        <td>{{ u?.UOM | UOMUnitsMaster }}</td>
+                        <td>
+                            <span
+                                *ngIf="
+                                    this.menuItemId == this.planningMenuItemId ||
+                                    this.menuItemId == this.productionMenuItemId
+                                "
+                            >
+                                {{ u?.UOM | UOMUnitsMaster }}
+                            </span>
+
+                            <ng-container
+                                *ngIf="
+                                    this.menuItemId == this.purchaseMenuItemId ||
+                                    this.menuItemId == this.storesMenuItemId
+                                "
+                            >
+                                <div class="d-flex justify-content-between px-2">
+                                    <span
+                                        [ngbTooltip]="u.conversionOfUnits"
+                                        placement="top"
+                                        [ngClass]="
+                                            u.UOM == u.secondaryUnit ? 'text-primary pointer' : 'text-secondary pointer'
+                                        "
+                                        >{{ u?.UOM | UOMUnitsMaster }}
+                                    </span>
+
+                                    <span class="pointer d-flex align-items-center">
+                                        <div
+                                            (click)="setConversionOfUnit(u)"
+                                            *ngIf="u.stdCostUom2 && u.stdCostUom1 && u.primaryUnit && u.secondaryUnit"
+                                            class="unit-switch-rev"
+                                        ></div>
+                                        <div
+                                            *ngIf="
+                                                !(u.stdCostUom2 && u.stdCostUom1 && u.primaryUnit && u.secondaryUnit)
+                                            "
+                                            class="unit-switch-gray"
+                                        ></div>
+                                    </span>
+                                </div>
+                            </ng-container>
+                        </td>
                         <td>{{ u?.closedIRQty | number : "1.2-2" }}</td>
                         <td>{{ u?.purchaseRatINR | number : "1.2-2" }}</td>
                         <td>{{ u?.lineValue | number : "1.2-2" }}</td>

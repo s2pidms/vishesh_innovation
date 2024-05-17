@@ -38,6 +38,10 @@ export class MailTriggerListComponent implements OnInit, OnDestroy {
     }
 
     update(item: any) {
+        if (!item?.emailTo) {
+            this.toastService.warning("Please Define Email To in Mail Configuration");
+            return;
+        }
         if (item.isSent) {
             this.spinner.show();
             this.mailTriggerService.update(item._id, {isSent: false}).subscribe(success => {

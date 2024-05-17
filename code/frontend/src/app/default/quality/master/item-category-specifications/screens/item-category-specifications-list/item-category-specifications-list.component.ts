@@ -2,14 +2,16 @@ import {Component, OnDestroy, OnInit, QueryList, ViewChildren} from "@angular/co
 import {ActivatedRoute, Router} from "@angular/router";
 import {Subscription} from "rxjs";
 import {NgbdSortableHeader, SortEvent} from "@directives/sortable.directive";
-import {LIST_DEFAULT_PERMISSION_ACTIONS} from "@mocks/constant";
-import {ExportExcelService, ExportToPDFService, SpinnerService} from "@core/services";
+import {LIST_DEFAULT_PERMISSION_ACTIONS, superAdminId} from "@mocks/constant";
+import {ExportExcelService, ExportToPDFService, SpinnerService, StorageService, ToastService} from "@core/services";
 import {ItemCategorySpecificationService} from "@services/quality/itemCategorySpecification.service";
 import {ItemCategorySpecification} from "@mocks/models/quality/master/itemCategorySpecification";
 import {
     ITEM_CATEGORY_SPECIFICATIONS_PDF_DATA,
     ITEM_CATEGORY_SPECIFICATIONS_REPORT_DATA
 } from "@mocks/export-data/quality/master/itemCategorySpecifications";
+import {ConfirmDeleteComponent} from "@shared/modals";
+import {NgbModal} from "@ng-bootstrap/ng-bootstrap";
 
 @Component({
     selector: "app-item-category-specifications-list",
@@ -25,6 +27,8 @@ export class ItemCategorySpecificationsListComponent implements OnInit, OnDestro
     direction: number = -1;
     search: string = "";
     tableData: ItemCategorySpecification[] = [];
+    superAdminId: any = superAdminId;
+    user: any = "";
     rolePermissionActions: any = LIST_DEFAULT_PERMISSION_ACTIONS;
     subscription!: Subscription;
     constructor(
@@ -33,10 +37,14 @@ export class ItemCategorySpecificationsListComponent implements OnInit, OnDestro
         private router: Router,
         private spinner: SpinnerService,
         private activatedRoute: ActivatedRoute,
-        private exportToPDFService: ExportToPDFService
+        private exportToPDFService: ExportToPDFService,
+        private storageService: StorageService,
+        private toastService: ToastService,
+        private modalService: NgbModal
     ) {}
 
     ngOnInit(): void {
+        this.user = this.storageService.get("IDMSAUser")?.roles?.find((x: any) => x == this.superAdminId);
         this.page = Number(this.activatedRoute.snapshot.queryParamMap.get("page") ?? 1);
         this.getAll();
     }
@@ -92,7 +100,33 @@ export class ItemCategorySpecificationsListComponent implements OnInit, OnDestro
             this.spinner.hide();
         });
     }
+    delete(id: any) {
+        this.spinner.show();
+        this.itemCategorySpecificationService.delete(id).subscribe(success => {
+            this.spinner.hide();
+            this.toastService.success(success.message);
+            this.getAll();
+        });
+    }
+    openConfirmModal(id: any, code: any) {
+        const modalRef = this.modalService.open(ConfirmDeleteComponent, {
+            centered: true,
+            size: "md",
+            backdrop: "static",
+            keyboard: false
+        });
 
+        modalRef.componentInstance.heading = "Confirm Deletion";
+        modalRef.componentInstance.confirmText = `Confirm Deletion of ItemCategory ${code} ?`;
+        modalRef.result.then(
+            (success: any) => {
+                if (success.title == "Yes") {
+                    this.delete(id);
+                }
+            },
+            (reason: any) => {}
+        );
+    }
     ngOnDestroy(): void {
         if (this.subscription) this.subscription.unsubscribe();
     }

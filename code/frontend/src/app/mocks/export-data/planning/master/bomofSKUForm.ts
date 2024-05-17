@@ -24,7 +24,7 @@ let headers: any = [
         ...EXCEL_STYLE
     },
     {
-        header: "Qty/SKU Unit",
+        header: "Qty/Part Count",
         key: "qtyPerSKUUnit",
         ...EXCEL_STYLE
     },
@@ -34,7 +34,7 @@ let headers: any = [
         ...EXCEL_STYLE
     },
     {
-        header: "Qty/Part Count",
+        header: "Total Qty/PC",
         key: "partCount",
         ...EXCEL_STYLE
     },

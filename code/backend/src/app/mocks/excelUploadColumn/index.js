@@ -6,6 +6,9 @@ const SKUColumns = require("./skuKeys.json");
 const FGINColumns = require("./FGINKeys.json");
 const employeeColumns = require("./employeeKeys.json");
 const assetColumns = require("./assetKeys.json");
+const SKUDimColumns = require("./SKUDimensionKeys.json");
+const SKUMaterialColumns = require("./SKUMaterialKeys.json");
+const SKUInkColumns = require("./SKUInkKeys.json");
 
 module.exports = {
     Supplier: supplierColumns,
@@ -15,5 +18,8 @@ module.exports = {
     SKUMaster: SKUColumns,
     FGIN: FGINColumns,
     Employee: employeeColumns,
-    Asset: assetColumns
+    Asset: assetColumns,
+    SKUDimensions: SKUDimColumns,
+    SKUMaterial: SKUMaterialColumns,
+    SKUInk: SKUInkColumns
 };

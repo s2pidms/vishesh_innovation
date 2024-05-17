@@ -31,6 +31,12 @@
                     <td>{{ u?.menuOrder }}</td>
                     <td>{{ u?.title }}</td>
                     <td>{{ u?.isMenuActive ? "Enable" : "Disable" }}</td>
+                    <!-- <td>
+                        <span class="d-flex justify-content-center">
+                            <div *ngIf="u?.isMenuActive == true" class="statusActive"></div>
+                            <div *ngIf="u?.isMenuActive == false" class="statusInActive"></div>
+                        </span>
+                    </td> -->
                     <td>
                         <div class="dropdown">
                             <button class="dropbtn"></button>
@@ -64,6 +70,10 @@
                                 >
                                     <i class="fa fa-pencil-square-o fa-lg me-2 text-primary" aria-hidden="true"></i>
                                     Edit
+                                </a>
+                                <a href="javascript:void(0)" (click)="update(u)">
+                                    <i class="fa fa-check fa-lg text-success" aria-hidden="true"></i>
+                                    Status
                                 </a>
                             </div>
                         </div>

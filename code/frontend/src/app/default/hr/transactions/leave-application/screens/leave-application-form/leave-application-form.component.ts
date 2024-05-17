@@ -10,6 +10,7 @@ import {ValidationService} from "@core/components";
 import {UtilityService, SpinnerService, ToastService} from "@core/services";
 import {CancelPoComponent} from "@shared/modals";
 import {ILeaveApplicationMasterData} from "@mocks/models/hr&Admin/transactions";
+import * as moment from "moment";
 @Component({
     selector: "app-leave-application-form",
     templateUrl: "./leave-application-form.component.html"
@@ -31,6 +32,7 @@ export class LeaveApplicationFormComponent implements OnInit {
     };
     masterData: ILeaveApplicationMasterData = {
         autoIncrementNo: "",
+        paidLeavesValidation: 0,
         employeesOptions: [],
         allHolidaysOptions: []
     };
@@ -251,6 +253,12 @@ export class LeaveApplicationFormComponent implements OnInit {
         this.form.controls["fromSession"].setValue("First");
         let fromDate = this.form.controls["fromDate"].value;
         let toDate = this.form.controls["toDate"].value;
+        const previousDate = moment().subtract(+this.masterData?.paidLeavesValidation, "days").format("YYYY-MM-DD");
+        if (fromDate < previousDate) {
+            this.toastService.warning("You can not apply leave in IDMS as 10 days passed after taking leave !!");
+            this.form.controls["fromDate"].setValue(moment().format("YYYY-MM-DD"));
+            return;
+        }
         if (toDate) {
             if (fromDate > toDate) {
                 this.toastService.warning("ToDate should be greater than fromDate !!");

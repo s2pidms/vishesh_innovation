@@ -57,7 +57,13 @@
                             <div class="row">
                                 <div class="col-5 pe-0">
                                     <label class="form-label mb-0"> UoM<span class="text-danger"></span> </label>
-                                    <input type="text" class="form-control" [(ngModel)]="stockCutting.UOM" readonly />
+                                    <!-- [(ngModel)]="stockCutting.UOM" -->
+                                    <input
+                                        type="text"
+                                        class="form-control"
+                                        value="{{ stockCutting.UOM | SalesUOMUnitMaster }}"
+                                        readonly
+                                    />
                                 </div>
                                 <div class="col-7">
                                     <label class="form-label mb-0"> Batch Qty.<span class="text-danger"></span> </label>

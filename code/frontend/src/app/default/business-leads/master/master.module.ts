@@ -63,6 +63,10 @@ const routes: Routes = [
                     import("./../../sales/master/map-category-hsn/map-category-hsn.module").then(
                         m => m.MapCategoryHsnModule
                     )
+            },
+            {
+                path: "sku_attributes",
+                loadChildren: () => import("./sku-attributes/sku-attributes.module").then(m => m.SKUAttributesModule)
             }
         ]
     }

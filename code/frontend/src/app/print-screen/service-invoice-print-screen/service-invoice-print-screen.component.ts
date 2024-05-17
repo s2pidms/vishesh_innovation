@@ -40,10 +40,7 @@ export class ServiceInvoicePrintScreenComponent implements OnInit {
         this.serviceInvoiceService.getSIDetailsById(id).subscribe(success => {
             this.spinner.hide();
 
-            if (
-                success.customer.customerCategory == "Domestic – OEM" ||
-                success.customer.customerCategory == "Domestic – Dealer"
-            ) {
+            if (success?.customer?.customerCategory?.includes("Domestic")) {
                 this.template = success?.company?.TIDomesticTemplates ?? "Turnover less than 5 CR";
             } else {
                 this.template = success?.company?.TIExportsTemplates ?? "Turnover less than 5 CR";

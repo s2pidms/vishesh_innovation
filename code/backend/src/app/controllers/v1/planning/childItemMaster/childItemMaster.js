@@ -1,13 +1,12 @@
 const asyncHandler = require("express-async-handler");
-const Model = require("../../../../models/planning/childItemMasterModel");
 const MESSAGES = require("../../../../helpers/messages.options");
 const {getIncrementNumWithPrefix} = require("../../../../helpers/utility");
-const {generateCreateData, getMatchData, OPTIONS} = require("../../../../helpers/global.options");
+const {OPTIONS} = require("../../../../helpers/global.options");
 const {default: mongoose} = require("mongoose");
 const {getAllChildItemCategory} = require("../../settings/childItemCategory/childItemCategory");
 const {findAppParameterValue} = require("../../settings/appParameter/appParameter");
 const {getGrandByBOMIdForChildItem} = require("../billOfMaterial/BoMOfGrandChildItem/BoMOfGrandChildItem");
-const {CHILD_ITEM_CATEGORY_NAME} = require("../../../../mocks/constantData");
+const {CHILD_ITEM_CATEGORY_NAME, INK_MIXING_UOM} = require("../../../../mocks/constantData");
 const {getChildByBOMIdForChildItem} = require("../billOfMaterial/BoMOfChildPart/BoMOfChildPart");
 const {
     getAllChildItemMasterAttributes,
@@ -15,8 +14,7 @@ const {
 } = require("../../../../models/planning/helpers/childItemMasterHelper");
 const {filteredHSNList} = require("../../../../models/purchase/repository/hsnRepository");
 const {filteredSupplierList} = require("../../../../models/purchase/repository/supplierRepository");
-const {getAllChildItemAggregate} = require("../../../../models/planning/repository/childItemRepository");
-const {getAllModuleMaster} = require("../../settings/module-master/module-master");
+const ChildItemRepository = require("../../../../models/planning/repository/childItemRepository");
 const ObjectId = mongoose.Types.ObjectId;
 
 exports.create = asyncHandler(async (req, res) => {
@@ -27,8 +25,7 @@ exports.create = asyncHandler(async (req, res) => {
             updatedBy: req.user.sub,
             ...req.body
         };
-        const saveObj = new Model(createdObj);
-        const itemDetails = await saveObj.save();
+        const itemDetails = await ChildItemRepository.createDoc(createdObj);
         if (itemDetails) {
             return res.success({
                 message: MESSAGES.apiSuccessStrings.ADDED("Child Item")
@@ -72,7 +69,7 @@ exports.getAll = asyncHandler(async (req, res) => {
             // },
         ];
 
-        let rows = await getAllChildItemAggregate({pipeline, project, queryParams: req.query});
+        let rows = await ChildItemRepository.getAllPaginate({pipeline, project, queryParams: req.query});
         return res.success(rows);
     } catch (e) {
         console.error("getAll", e);
@@ -83,7 +80,7 @@ exports.getAll = asyncHandler(async (req, res) => {
 
 exports.getById = asyncHandler(async (req, res) => {
     try {
-        let existing = await Model.findById(req.params.id);
+        let existing = await ChildItemRepository.getDocById(req.params.id);
         if (!existing) {
             let errors = MESSAGES.apiSuccessStrings.DATA_NOT_EXISTS("Child Item");
             return res.unprocessableEntity(errors);
@@ -98,9 +95,8 @@ exports.getById = asyncHandler(async (req, res) => {
 
 exports.deleteById = asyncHandler(async (req, res) => {
     try {
-        const deleteItem = await Model.findById(req.params.id);
+        const deleteItem = await ChildItemRepository.deleteDoc({_id: req.params.id});
         if (deleteItem) {
-            await deleteItem.remove();
             return res.success({
                 message: MESSAGES.apiSuccessStrings.DELETED("Child Item")
             });
@@ -116,18 +112,13 @@ exports.deleteById = asyncHandler(async (req, res) => {
 });
 exports.update = asyncHandler(async (req, res) => {
     try {
-        let itemDetails = await Model.findById(req.params.id);
+        let itemDetails = await ChildItemRepository.getDocById(req.params.id);
         if (!itemDetails) {
             const errors = MESSAGES.apiErrorStrings.INVALID_REQUEST;
             return res.preconditionFailed(errors);
         }
         itemDetails.updatedBy = req.user.sub;
-        itemDetails = await generateCreateData(itemDetails, req.body);
-        if (req.body.supplierDetails) {
-            itemDetails.supplierDetails = req.body.supplierDetails;
-        }
-        itemDetails = await itemDetails.save();
-
+        itemDetails = await ChildItemRepository.updateDoc(itemDetails, req.body);
         return res.success({
             message: MESSAGES.apiSuccessStrings.UPDATE("Child Item has been")
         });
@@ -225,14 +216,18 @@ exports.viewByBOMId = asyncHandler(async (req, res) => {
 });
 exports.getAllChildItemsList = async (company, category, options = {}) => {
     try {
-        const rows = await Model.find(
+        const rows = await ChildItemRepository.filteredChildItemList([
             {
-                status: OPTIONS.defaultStatus.ACTIVE,
-                childItemCategory: category,
-                company: company
+                $match: {
+                    status: OPTIONS.defaultStatus.ACTIVE,
+                    childItemCategory: category,
+                    company: ObjectId(company)
+                }
             },
-            options
-        );
+            {
+                $project: options
+            }
+        ]);
         return rows;
     } catch (error) {
         console.error("getAllChildItemsList", error);
@@ -342,7 +337,7 @@ exports.getAllChildItemsListForBOM = async (company, category = null, title, pro
         if (project) {
             projectObj = project;
         }
-        const rows = await Model.aggregate([
+        const rows = await ChildItemRepository.filteredChildItemList([
             {
                 $match: {
                     status: OPTIONS.defaultStatus.ACTIVE,
@@ -362,7 +357,7 @@ exports.getAllChildItemsListForBOM = async (company, category = null, title, pro
 };
 exports.getAllChildItemMasterCountByCategoryAndSOM = async company => {
     try {
-        const result = await Model.aggregate([
+        const result = await ChildItemRepository.filteredChildItemList([
             {
                 $match: {
                     company: ObjectId(company)

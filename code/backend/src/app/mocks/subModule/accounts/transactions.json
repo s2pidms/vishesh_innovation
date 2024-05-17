@@ -40,5 +40,19 @@
         "url": "/default/accounts/transactions/purchase_register_entry/list",
         "roles": [],
         "items": []
+    },
+    {
+        "_id": "663c918b2864691e1980e080",
+        "menuItemId": "64a6c1e33339d4dc9d8141ac",
+        "module": "Accounts",
+        "type": "TRANSACTION",
+        "order": 4,
+        "isDisplay": false,
+        "title": "Tax Invoice",
+        "displayName": "Tax Invoice",
+        "disabled": false,
+        "url": "/default/accounts/transactions/tax_invoice",
+        "items": [],
+        "roles": []
     }
 ]

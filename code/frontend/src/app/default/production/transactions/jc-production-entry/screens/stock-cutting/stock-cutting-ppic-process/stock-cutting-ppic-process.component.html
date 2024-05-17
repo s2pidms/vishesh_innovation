@@ -106,11 +106,7 @@
             <div class="mt-5 line-border-with-title">
                 <span class="px-4"> PPIC Closing Stock </span>
                 <div class="d-flex align-items-center">
-                    <i
-                        [ngbTooltip]="'Actual'"
-                        class="fa fa-star fa-lg ms-2 pointer green-color"
-                        aria-hidden="true"
-                    ></i>
+                    <i [ngbTooltip]="'Actual'" class="fa fa-star fa-lg ms-2 pointer green-color" aria-hidden="true"></i>
                 </div>
             </div>
         </div>
@@ -330,13 +326,13 @@
                 <label class="form-label text-nowrap"> Rejection Qty <span class="ms-1 me-2">&#9654;</span> </label>
                 <div class="d-flex">
                     <div class="col-7 d-flex pe-1">
-                        <span class="input-group-text combine-INR text-secondary bg-magenta-black">
+                        <span class="input-group-text combine-INR text-secondary bg-white-smoke">
                             <span class="text-black">sqm</span>
                             <div class="vr ms-3"></div>
                         </span>
                         <input
                             type="number"
-                            class="form-control ps-2 pe-0 border-start-0 bg-magenta-black"
+                            class="form-control ps-2 pe-0 border-start-0 bg-white-smoke"
                             [(ngModel)]="selectedStockCuttingData.stockCuttingDetails[0].rejectionQty"
                             readonly
                         />
@@ -344,12 +340,12 @@
                     <div class="col-5 d-flex">
                         <input
                             type="text"
-                            class="form-control ps-2 pe-0 bg-magenta-black border-end-0"
+                            class="form-control ps-2 pe-0 bg-white-smoke border-end-0"
                             [value]="selectedStockCuttingData.stockCuttingDetails[0].rejectionPercent"
                             readonly
                         />
                         <span
-                            class="input-group-text combine-INR text-secondary bg-magenta-black border border-1 border-start-0"
+                            class="input-group-text combine-INR text-secondary bg-white-smoke border border-1 border-start-0"
                         >
                             <div class="vr me-3"></div>
                             <span class="text-black">%</span>

@@ -11,12 +11,11 @@ const {
 const {SFG_STOCK} = require("../../../../mocks/schemasConstant/planningConstant");
 const {getAndSetAutoIncrementNo} = require("../../settings/autoIncrement/autoIncrement");
 const {getAllModuleMaster} = require("../../settings/module-master/module-master");
-const {filteredChildItemList} = require("../../../../models/planning/repository/childItemRepository");
+const ChildItemRepository = require("../../../../models/planning/repository/childItemRepository");
 const SFGStockRepository = require("../../../../models/planning/repository/SFGStockRepository");
 const InventoryCorrectionRepository = require("../../../../models/stores/repository/inventoryCorrectionRepository");
 const {GOODS_TRANSFER_REQUEST_DEPT, STOCK_PREP_UOM} = require("../../../../mocks/constantData");
 const {getAllCheckedItemCategoriesList} = require("../../purchase/itemCategoryMaster/itemCategoryMaster");
-const {setConversion} = require("../../../../helpers/utility");
 const ObjectId = mongoose.Types.ObjectId;
 
 exports.create = asyncHandler(async (req, res) => {
@@ -377,7 +376,7 @@ exports.getStockPreparationByIdAndType = asyncHandler(async (req, res) => {
         let childItemList = [];
         let output = await getAllSFGOfSplit(req.user.company, stage, _id);
         if (stage == "Roll To Sheet" || stage == "Sheet To Sheet") {
-            childItemList = await filteredChildItemList([
+            childItemList = await ChildItemRepository.filteredChildItemList([
                 {$match: {company: ObjectId(req.user.company), status: OPTIONS.defaultStatus.ACTIVE}},
                 {
                     $project: {

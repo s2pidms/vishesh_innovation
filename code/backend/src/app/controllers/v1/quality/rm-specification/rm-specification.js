@@ -105,7 +105,9 @@ exports.update = asyncHandler(async (req, res) => {
 // @route   PUT /quality/inspectionParameter/delete/:id
 exports.deleteById = asyncHandler(async (req, res) => {
     try {
-        const deleteItem = await RMSpecificationRepository.getDocById(req.params.id);
+        const deleteItem = await RMSpecificationRepository.deleteDoc({
+            _id: req.params.id
+        });
         if (deleteItem) {
             return res.success({
                 message: MESSAGES.apiSuccessStrings.DELETED("RM Specification")

@@ -1,0 +1,266 @@
+<div class="modelPage">
+    <div class="modal-header">
+        <div class="heading">Edit Item Info</div>
+        <div>
+            <button type="button" class="btn btn-cross btn-sm" aria-label="Close" (click)="this.activeModal.close()">
+                <i class="fa fa-times-circle" aria-hidden="true"></i>
+            </button>
+        </div>
+    </div>
+    <div class="">
+        <div class="container-fluid">
+            <div class="row">
+                <form [formGroup]="form">
+                    <div class="row p-0 mt-4">
+                        <!-- <div class="col-1"></div> -->
+                        <div class="col-6 ps-5">
+                            <label class="form-label mb-1">
+                                Primary Unit (U1) <span class="text-danger">*</span>
+                            </label>
+                            <select class="form-select" formControlName="primaryUnit" (change)="setUnitsDimensions()">
+                                <option [value]="null" selected disabled>Select Unit</option>
+                                <!-- <option [value]="'Unit'">Unit</option> -->
+                                <option *ngFor="let u of primaryUnit" [value]="u">
+                                    {{ u }}
+                                </option>
+                            </select>
+                        </div>
+
+                        <div class="col-6 pe-5">
+                            <label class="form-label mb-1">
+                                Secondary Unit (U2) <span class="text-danger">*</span>
+                            </label>
+                            <select class="form-select" formControlName="secondaryUnit" (change)="setUnitsDimensions()">
+                                <!-- <option [value]="null" selected disabled>Select Secondary Unit</option> -->
+                                <option [value]="'sqm'" selected disabled>sqm</option>
+                                <!-- <option *ngFor="let u of ModalUOMsUnit" [value]="u.value">
+                                  {{ u?.label }}
+                              </option> -->
+                            </select>
+                        </div>
+                        <!-- <div class="col-1"></div> -->
+
+                        <ng-container class="mt-3">
+                            <hr class="line-border mt-4 px-5" />
+
+                            <div class="col-1"></div>
+                            <div class="col-10 px-5">
+                                <div class="row">
+                                    <div class="col-3 d-flex align-items-center mt-4">
+                                        <label class="form-label text-nowrap mt-1">
+                                            <!-- {{
+                                            f["secondaryUnit"].value == "Sheet"
+                                                ? "Sheet Dimensions"
+                                                : f["primaryUnit"].value == "Sheet"
+                                                ? "Sheet Dimensions"
+                                                : "Roll Dimensions"
+                                        }} -->
+                                            U1 Dimensions
+                                            <span class="ms-1">&#9654;</span>
+                                        </label>
+                                    </div>
+                                    <div class="col-4 pe-0">
+                                        <label class="form-label">Width</label>
+
+                                        <div class="d-flex">
+                                            <div class="col-7">
+                                                <input
+                                                    type="number"
+                                                    class="form-control ps-2 pe-0"
+                                                    formControlName="width"
+                                                    (input)="setDescription()"
+                                                />
+                                            </div>
+                                            <div class="col-5">
+                                                <select
+                                                    class="form-select"
+                                                    (change)="setWidthData($event)"
+                                                    formControlName="widthUnit"
+                                                >
+                                                    <!-- <option [value]="null" disabled>Select</option> -->
+                                                    <option value="mm">mm</option>
+                                                    <option *ngIf="f['primaryUnit'].value == 'RL'" value="m">m</option>
+                                                    <!-- <option 
+                                                      [value]="item"
+                                                      *ngFor="let item of lengthUnitArr"
+                                                  >
+                                                      {{ item }}
+                                                  </option> -->
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-1 d-flex align-items-center justify-content-center px-0">
+                                        <span class="d-flex justify-content-center mt-1">
+                                            <div class="drawingIcon mt-4"></div>
+                                        </span>
+                                    </div>
+                                    <div class="col-4 ps-0">
+                                        <label class="form-label">Length </label>
+
+                                        <div class="d-flex">
+                                            <div class="col-7">
+                                                <input
+                                                    type="number"
+                                                    class="form-control ps-2 pe-0"
+                                                    formControlName="length"
+                                                    (input)="setDescription()"
+                                                />
+                                            </div>
+                                            <div class="col-5">
+                                                <select
+                                                    class="form-select"
+                                                    formControlName="lengthUnit"
+                                                    (change)="setLengthData()"
+                                                >
+                                                    <!-- <option [value]="null" disabled>Select</option> -->
+                                                    <option [value]="'mm'">mm</option>
+                                                    <option *ngIf="f['primaryUnit'].value == 'RL'" [value]="'m'">
+                                                        m
+                                                    </option>
+                                                    <!-- <option [value]="item" *ngFor="let item of lengthUnitArr">
+                                                      {{ item }}
+                                                  </option> -->
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-1"></div>
+                        </ng-container>
+
+                        <hr class="line-border mt-4 px-5" />
+                        <div class="col-1"></div>
+                        <div class="col-md-10 text-end">
+                            <h4 class="text-center text-primary">Dual Unit Conversion</h4>
+                            <div class="row justify-content-center align-items-center my-4">
+                                <div class="col-md-auto">
+                                    <input
+                                        class="form-check-input form-check-input-lg"
+                                        type="radio"
+                                        [value]="1"
+                                        formControlName="unitConversionFlag"
+                                    />
+                                </div>
+
+                                <div class="col-md-3 pe-0 d-flex inputGroup">
+                                    <input
+                                        type="number"
+                                        formControlName="primaryConversion"
+                                        class="form-control"
+                                        value="1"
+                                        readOnly
+                                    />
+                                    <div class="input-group-text bg-secondary text-white px-4 ms-1">
+                                        {{ form.value.primaryUnit ? form.value.primaryUnit : "Unit" }}
+                                    </div>
+                                </div>
+
+                                <div class="col-md-1 text-center">
+                                    <h3>=</h3>
+                                </div>
+
+                                <div class="col-md-3 ps-0 d-flex inputGroup">
+                                    <input
+                                        type="number"
+                                        class="form-control"
+                                        formControlName="primaryToSecondaryConversion"
+                                    />
+                                    <div class="input-group-text bg-secondary text-white px-4 ms-1">
+                                        {{ form.value.secondaryUnit ? form.value.secondaryUnit : "sqm" }}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-1"></div>
+
+                        <hr class="line-border mt-4 px-5" />
+
+                        <div class="col-1"></div>
+                        <div class="col-md-10 text-end">
+                            <h4 class="text-center text-primary">U1 & U2 Quantities</h4>
+                            <div class="row justify-content-center align-items-center my-4">
+                                <div class="col-md-auto ms-2 me-3" >
+                                    <!-- <input
+                                        class="form-check-input form-check-input-lg"
+                                        type="radio"
+                                        [value]="1"
+                                        formControlName="unitConversionFlag"
+                                    />   -->
+                                </div>
+
+                                <div class="col-md-3 pe-0">
+                                    <label class="form-label d-flex justify-content-start">U1 Qty</label>
+                                    <div class="d-flex inputGroup">
+                                        <input
+                                            type="number"
+                                            formControlName="U1Qty"
+                                            class="form-control"
+                                            (input)="setU2Qty()"
+                                        />
+                                        <div class="input-group-text bg-secondary text-white px-4 ms-1">
+                                            {{ form.value.primaryUnit ? form.value.primaryUnit : "Unit" }}
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-1 mt-4 text-center">
+                                    <h3 class="mt-2">=</h3>
+                                </div>
+
+                                <div class="col-md-3 ps-0">
+                                    <label class="form-label d-flex justify-content-start">U2 Qty</label>
+                                    <div class="d-flex inputGroup">
+                                        <input
+                                            type="number"
+                                            class="form-control"
+                                            formControlName="U2Qty"
+                                            (input)="setU1Qty()"
+                                        />
+                                        <div class="input-group-text bg-secondary text-white px-4 ms-1">
+                                            {{ form.value.secondaryUnit ? form.value.secondaryUnit : "sqm" }}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-1"></div>
+
+                        <!-- <div class="col-12 d-flex justify-content-center"></div> -->
+                    </div>
+                </form>
+
+                <hr class="line-border mb-5 mt-4 px-05" />
+
+                <div class="text-center row mb-5 ps-5">
+                    <div class="col-7" [formGroup]="form">
+                        <div class="d-flex align-items-center">
+                            <div class="col-form-label text-nowrap">
+                                Item Description<span class="text-danger">*</span>
+                                <i class="fa fa-caret-right fs-3 mx-2"></i>
+                            </div>
+                            <div class="d-flex">
+                                <input
+                                    class="form-control total-bg-color bg-yellow-color"
+                                    type="text"
+                                    formControlName="itemDescription"
+                                />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-5 text-end pe-0">
+                        <button
+                            type="button"
+                            class="btn bg-primary px-5"
+                            (click)="dismissModel()"
+                            [disabled]="isDisabled"
+                        >
+                            Save & Close
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

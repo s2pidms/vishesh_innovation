@@ -1,7 +1,5 @@
 const asyncHandler = require("express-async-handler");
-const Model = require("../../../../models/purchase/hsnModel");
 const MESSAGES = require("../../../../helpers/messages.options");
-const {generateCreateData, getMatchData} = require("../../../../helpers/global.options");
 const {getAllHSNAttributes, getAllHSNExcelAttributes} = require("../../../../models/purchase/helpers/hsnHelper");
 const {default: mongoose} = require("mongoose");
 const {getAndSetAutoIncrementNo} = require("../../settings/autoIncrement/autoIncrement");
@@ -52,8 +50,7 @@ exports.create = asyncHandler(async (req, res) => {
             updatedBy: req.user.sub,
             ...req.body
         };
-        const saveObj = new Model(createdObj);
-        const itemDetails = await saveObj.save();
+        const itemDetails = await HSNRepository.createDoc(createdObj);
         if (itemDetails) {
             return res.success({
                 message: MESSAGES.apiSuccessStrings.ADDED("HSN")
@@ -71,14 +68,13 @@ exports.create = asyncHandler(async (req, res) => {
 
 exports.update = asyncHandler(async (req, res) => {
     try {
-        let itemDetails = await Model.findById(req.params.id);
+        let itemDetails = await HSNRepository.getDocById(req.params.id);
         if (!itemDetails) {
             const errors = MESSAGES.apiErrorStrings.INVALID_REQUEST;
             return res.preconditionFailed(errors);
         }
         itemDetails.updatedBy = req.user.sub;
-        itemDetails = await generateCreateData(itemDetails, req.body);
-        itemDetails = await itemDetails.save();
+        itemDetails = await HSNRepository.updateDoc(itemDetails, req.body);
         return res.success({
             message: MESSAGES.apiSuccessStrings.UPDATE("HSN has been")
         });
@@ -91,9 +87,8 @@ exports.update = asyncHandler(async (req, res) => {
 
 exports.deleteById = asyncHandler(async (req, res) => {
     try {
-        const deleteItem = await Model.findById(req.params.id);
+        const deleteItem = await HSNRepository.deleteDoc({_id: req.params.id});
         if (deleteItem) {
-            await deleteItem.remove();
             return res.success({
                 message: MESSAGES.apiSuccessStrings.DELETED("HSN")
             });
@@ -110,7 +105,7 @@ exports.deleteById = asyncHandler(async (req, res) => {
 
 exports.getById = asyncHandler(async (req, res) => {
     try {
-        let existing = await Model.findById(req.params.id);
+        let existing = await HSNRepository.getDocById(req.params.id);
         if (!existing) {
             let errors = MESSAGES.apiSuccessStrings.DATA_NOT_EXISTS("HSN");
             return res.unprocessableEntity(errors);
@@ -137,23 +132,11 @@ exports.getAllMasterData = asyncHandler(async (req, res) => {
         return res.serverError(errors);
     }
 });
-
-exports.getAllHSNs = asyncHandler(async company => {
-    try {
-        let rows = await Model.find({
-            isActive: "Y",
-            company: company
-        }).sort({createdAt: -1});
-        return rows;
-    } catch (e) {
-        console.error("getAllHSNs", e);
-    }
-});
 exports.getHSNByCode = async hsnCode => {
     try {
-        let existing = await Model.findOne({hsnCode: hsnCode});
+        let existing = await HSNRepository.findOneDoc({hsnCode: hsnCode});
         return existing;
     } catch (e) {
-        console.error("getById HSN", e);
+        console.error("getHSNByCode HSN", e);
     }
 };

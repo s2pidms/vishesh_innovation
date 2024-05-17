@@ -69,4 +69,5 @@ exports.SETTINGS_MAIL_CONST = {
 exports.SUPPORT_MAIL_CONST = {
     RAISE_TICKET: {MODULE: "Support", SUB_MODULE: "Raise Ticket"}
 };
-exports.DEFAULT_MAIL_RECEIVER = "dev@idmsinfotech.com";
+exports.DEFAULT_MAIL_RECEIVER = "support@idmsinfotech.com";
+exports.DEFAULT_MAIL_RECEIVER = null;

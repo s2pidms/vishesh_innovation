@@ -14,6 +14,14 @@ const excelJson = require("../../../../mocks/excelUploadColumn/index");
 const {checkSupplierValidation, bulkInsertSupplierByCSV} = require("../../purchase/suppliers/suppliers");
 const {bulkInsertItemsByCSV, checkItemsValidation} = require("../../purchase/items/items");
 const {bulkInsertCustomersByCSV, checkCustomersValidation} = require("../../sales/customerMaster/customerMaster");
+const {
+    checkSKUDimensionValidation,
+    bulkInsertSKUDimByCSV,
+    checkSKUMaterialValidation,
+    bulkInsertSKUMaterialByCSV,
+    checkSKUInkValidation,
+    bulkInsertSKUInkByCSV
+} = require("../../sales/SKU/SKUAttributes");
 const {bulkInsertInventoryByCSV, checkInventoryValidation} = require("../../stores/Inventory/Inventory");
 const {checkSKUValidation, bulkInsertSKUByCSV} = require("../../sales/SKU/SKU");
 const {
@@ -562,6 +570,10 @@ exports.getCompanyId = async () => {
 exports.uploadAndCheckCSVFile = async (req, res) => {
     try {
         let fname = req.file.filename;
+        let fileType = req.file.filename.split(".").pop();
+        if (fileType != "csv") {
+            return res.serverError("Please upload a CSV file only.");
+        }
         let rows = [];
         let jsonData = await fileHandler.readExcelIntoJson(fname, excelJson[req.body.collectionName]);
         if (req.body.collectionName == "Supplier") {
@@ -587,6 +599,15 @@ exports.uploadAndCheckCSVFile = async (req, res) => {
         }
         if (req.body.collectionName == "Asset") {
             rows = await checkAssetValidation(jsonData, excelJson[req.body.collectionName], req.user.company);
+        }
+        if (req.body.collectionName == "SKUDimensions") {
+            rows = await checkSKUDimensionValidation(jsonData, excelJson[req.body.collectionName], req.user.company);
+        }
+        if (req.body.collectionName == "SKUMaterial") {
+            rows = await checkSKUMaterialValidation(jsonData, excelJson[req.body.collectionName], req.user.company);
+        }
+        if (req.body.collectionName == "SKUInk") {
+            rows = await checkSKUInkValidation(jsonData, excelJson[req.body.collectionName], req.user.company);
         }
         return res.success(rows);
     } catch (e) {
@@ -646,6 +667,27 @@ exports.bulkInsertByCSVFile = async (req, res) => {
         }
         if (req.body.collectionName == "Asset") {
             rows = await bulkInsertAssetByCSV(req.body.validRecords, {
+                company: req.user.company,
+                createdBy: req.user.sub,
+                updatedBy: req.user.sub
+            });
+        }
+        if (req.body.collectionName == "SKUDimensions") {
+            rows = await bulkInsertSKUDimByCSV(req.body.validRecords, {
+                company: req.user.company,
+                createdBy: req.user.sub,
+                updatedBy: req.user.sub
+            });
+        }
+        if (req.body.collectionName == "SKUMaterial") {
+            rows = await bulkInsertSKUMaterialByCSV(req.body.validRecords, {
+                company: req.user.company,
+                createdBy: req.user.sub,
+                updatedBy: req.user.sub
+            });
+        }
+        if (req.body.collectionName == "SKUInk") {
+            rows = await bulkInsertSKUInkByCSV(req.body.validRecords, {
                 company: req.user.company,
                 createdBy: req.user.sub,
                 updatedBy: req.user.sub

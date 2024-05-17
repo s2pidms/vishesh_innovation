@@ -229,3 +229,19 @@ exports.GOODS_TRANSFER_REQUEST = {
         };
     }
 }
+exports.STOCK_PREPARATION = {
+    COLLECTION_NAME: "StockPreparation",
+    ADDED_ACTION: "Stock Preparation created",
+    UPDATED_ACTION: "Stock Preparation updated",
+    // MODULE_NAME: "Stock Preparation",
+    // MODULE: "StockPreparation",
+    // MODULE_PREFIX: "null",
+    // AUTO_INCREMENT_DATA: function () {
+    //     return {
+    //         moduleName: this.MODULE_NAME,
+    //         module: this.MODULE,
+    //         company: null,
+    //         modulePrefix: this.MODULE_PREFIX
+    //     };
+    // }
+}

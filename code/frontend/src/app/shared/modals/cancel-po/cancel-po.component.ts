@@ -12,8 +12,10 @@ export class CancelPoComponent implements OnInit {
     @Input() action: string = "";
     @Input() heading: string = "";
     @Input() cancelText: string = "";
+    @Input() cancelTextTwo: string = "";
     @Input() forNPDReview: any = null;
     @Input() labelText: any = "";
+    @Input() HSNFlag: any = false;
     reasonToConvert: any = "";
 
     btnDisable = false;

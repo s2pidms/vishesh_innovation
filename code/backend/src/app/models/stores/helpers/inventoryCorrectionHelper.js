@@ -1,3 +1,5 @@
+const {STOCK_PREP_UOM} = require("../../../mocks/constantData");
+
 exports.getAllInventoryCorrectionReportsAttributes = () => {
     return {
         GINDateS: 1,
@@ -82,6 +84,44 @@ exports.getAllInventoryLocationWiseReportsAttributes = () => {
         otherId: "$storageLocationMapping.otherId"
     };
 };
+exports.getStockPreparationShopReportsAttributes = () => {
+    return {
+        itemCode: 1,
+        itemName: 1,
+        itemDescription: 1,
+        UOM: STOCK_PREP_UOM.SQM,
+        closedIRQty: {$round: ["$convertedClosedIRQty", 2]},
+        primaryToSecondaryConversion: 1,
+        secondaryToPrimaryConversion: 1,
+        primaryUnit: 1,
+        secondaryUnit: 1,
+        width: 1,
+        length: 1,
+        department: 1,
+        MRNNumber: 1,
+        formType: 1,
+        aging: {
+            $cond: {
+                if: {
+                    $or: [
+                        {$eq: ["$expiryDate", null]},
+                        {$gte: ["$expiryDate", {$add: [new Date(), 30 * 24 * 60 * 60 * 1000]}]}
+                    ]
+                },
+                then: "green",
+                else: {
+                    $cond: {
+                        if: {
+                            $gt: ["$expiryDate", new Date()]
+                        },
+                        then: "yellow",
+                        else: "red"
+                    }
+                }
+            }
+        }
+    };
+};
 exports.getAllLocationSupplierItemWiseReportsAttributes = () => {
     return {
         MRNNumber: "$MRN.MRNNumber",
@@ -89,6 +129,13 @@ exports.getAllLocationSupplierItemWiseReportsAttributes = () => {
         itemCode: "$item.itemCode",
         itemName: "$item.itemName",
         itemDescription: "$item.itemDescription",
+        primaryUnit: "$item.primaryUnit",
+        secondaryUnit: "$item.secondaryUnit",
+        conversionOfUnits: "$item.conversionOfUnits",
+        primaryToSecondaryConversion: "$item.primaryToSecondaryConversion",
+        secondaryToPrimaryConversion: "$item.secondaryToPrimaryConversion",
+        stdCostUom1: "$item.supplierDetails.stdCostUom1",
+        stdCostUom2: "$item.supplierDetails.stdCostUom2",
         UOM: 1,
         closedIRQty: 1,
         lineValue: {$round: [{$multiply: ["$closedIRQty", "$purchaseRatINR"]}, 2]},
@@ -107,5 +154,44 @@ exports.getAllLocationSupplierItemWiseReportsAttributes = () => {
         createdAt: 1,
         expiryDate: 1,
         deliveryLocation: "$GIN.deliveryLocation"
+    };
+};
+
+exports.getAllStockPreparationShopAttributes = () => {
+    return {
+        itemCode: 1,
+        itemName: 1,
+        itemDescription: 1,
+        UOM: STOCK_PREP_UOM.SQM,
+        closedIRQty: {$round: ["$convertedClosedIRQty", 2]},
+        primaryToSecondaryConversion: 1,
+        secondaryToPrimaryConversion: 1,
+        primaryUnit: 1,
+        secondaryUnit: 1,
+        width: 1,
+        length: 1,
+        department: 1,
+        MRNNumber: 1,
+        formType: 1,
+        aging: {
+            $cond: {
+                if: {
+                    $or: [
+                        {$eq: ["$expiryDate", null]},
+                        {$gte: ["$expiryDate", {$add: [new Date(), 30 * 24 * 60 * 60 * 1000]}]}
+                    ]
+                },
+                then: "green",
+                else: {
+                    $cond: {
+                        if: {
+                            $gt: ["$expiryDate", new Date()]
+                        },
+                        then: "yellow",
+                        else: "red"
+                    }
+                }
+            }
+        }
     };
 };

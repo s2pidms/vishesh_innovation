@@ -50,11 +50,11 @@ const auditSchema = mongoose.Schema(
         collection: SCHEMA_CONST.COLLECTION_NAME
     }
 );
-auditSchema.plugin(paginatePlugin); 
+auditSchema.plugin(paginatePlugin);
 auditSchema.pre("save", async function (next) {
     next();
 });
-
+auditSchema.index({createdAt: 1}, {expireAfterSeconds: 604800});
 const Audit = mongoose.model(SCHEMA_CONST.COLLECTION_NAME, auditSchema);
 
 module.exports = Audit;

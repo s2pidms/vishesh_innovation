@@ -1,5 +1,6 @@
 export interface ILeaveApplicationMasterData {
     autoIncrementNo: string;
+    paidLeavesValidation: number;
     employeesOptions: IEmployeesOptions[];
     allHolidaysOptions: IAllHolidaysOptions[];
 }

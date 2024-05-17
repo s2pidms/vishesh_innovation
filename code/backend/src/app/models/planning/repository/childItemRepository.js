@@ -1,24 +1,26 @@
 const Model = require("../childItemMasterModel");
 
 module.exports = {
-    createChildItem: async obj => {
+    createDoc: async obj => {
         return await Model.create(obj);
     },
-    findOneChildItem: async (match, project = {}) => {
+    findOneDoc: async (match, project = {}) => {
         return await Model.findOne(match, project);
     },
-    findOneAndUpdateChildItem: async (match, update) => {
-        return await Model.findOneAndUpdate(match, update);
+    findAndUpdateDoc: async (match, update) => {
+        return await Model.updateOne(match, update);
     },
-    getAllChildItemAggregate: async ({pipeline, project, queryParams}) => {
-        const rows = await Model.paginate({pipeline, project, queryParams});
-        return rows;
+    getDocById: async (_id, project = {}) => {
+        return await Model.findById(_id, project);
     },
-    updateChildItem: async (existing, updateBody) => {
+    getAllPaginate: async ({pipeline, project, queryParams}) => {
+        return await Model.paginate({pipeline, project, queryParams});
+    },
+    updateDoc: async (existing, updateBody) => {
         Object.assign(existing, updateBody);
         return existing.save();
     },
-    deleteChildItem: async match => {
+    deleteDoc: async match => {
         return await Model.deleteOne(match);
     },
     filteredChildItemList: async pipeline => {

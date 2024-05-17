@@ -50,7 +50,7 @@
                 <div class="col">
                     <label class="form-label"> State/Province <span class="text-danger">*</span> </label>
                     <select
-                        *ngIf="!customerCategory || ['Domestic – OEM', 'Domestic – Dealer'].includes(customerCategory)"
+                        *ngIf="!customerCategory || customerCategory?.includes('Domestic')"
                         class="form-select"
                         formControlName="state"
                     >
@@ -60,7 +60,7 @@
                         </option>
                     </select>
                     <input
-                        *ngIf="['Exports – OEM', 'Exports – Dealer'].includes(customerCategory)"
+                        *ngIf="customerCategory?.includes('Exports')"
                         type="text"
                         class="form-control"
                         formControlName="state"
@@ -71,7 +71,7 @@
                         <div class="col-7">
                             <label class="form-label">Country <span class="text-danger">*</span> </label>
                             <select
-                                *ngIf="['Exports – OEM', 'Exports – Dealer'].includes(customerCategory)"
+                                *ngIf="customerCategory?.includes('Exports')"
                                 class="form-select"
                                 formControlName="country"
                             >
@@ -81,10 +81,7 @@
                                 </option>
                             </select>
                             <input
-                                *ngIf="
-                                    !customerCategory ||
-                                    ['Domestic – OEM', 'Domestic – Dealer'].includes(customerCategory)
-                                "
+                                *ngIf="!customerCategory || customerCategory?.includes('Domestic')"
                                 class="form-control"
                                 type="text"
                                 formControlName="country"

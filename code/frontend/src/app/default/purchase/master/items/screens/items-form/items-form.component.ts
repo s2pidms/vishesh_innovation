@@ -526,6 +526,7 @@ export class ItemsFormComponent implements OnInit {
             keyboard: false
         });
 
+        modalRef.componentInstance.action = this.action;
         modalRef.componentInstance.ModalUOMsUnit = this.UOMUintMasterOptions;
         modalRef.componentInstance.flag = true;
         modalRef.componentInstance.dimensionData = this.dimensionData.value;

@@ -1,10 +1,7 @@
-import { Component } from '@angular/core';
+import {Component} from "@angular/core";
 
 @Component({
-  selector: 'app-screen-making-log-list',
-  templateUrl: './screen-making-log-list.component.html',
-  styleUrls: ['./screen-making-log-list.component.scss']
+    selector: "app-screen-making-log-list",
+    templateUrl: "./screen-making-log-list.component.html"
 })
-export class ScreenMakingLogListComponent {
-
-}
+export class ScreenMakingLogListComponent {}

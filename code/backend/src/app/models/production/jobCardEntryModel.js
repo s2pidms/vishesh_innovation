@@ -91,6 +91,10 @@ const jobCardEntrySchema = mongoose.Schema(
                     type: String,
                     required: false
                 },
+                processOriginalName: {
+                    type: String,
+                    required: false
+                },
                 IPQALog: {
                     adherenceToProcessStd: {
                         type: Boolean,

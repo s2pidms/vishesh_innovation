@@ -24,8 +24,8 @@ exports.triggers = async () => {
     await Promise.all([
         triggerLeaveApplicationStatusToAvailed(),
         triggerDashboard(),
-        executeMailTrigger(),
-        emptyAudit()
+        executeMailTrigger()
+        // emptyAudit()
     ]);
 };
 

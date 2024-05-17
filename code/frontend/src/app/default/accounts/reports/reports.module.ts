@@ -44,6 +44,13 @@ const routes: Routes = [
             {
                 path: "MRN_report",
                 loadChildren: () => import("./../../quality/reports/mrn/mrn.module").then(m => m.MRNModule)
+            },
+            {
+                path: "sales-register-with-details",
+                loadChildren: () =>
+                    import("./../../sales/reports/sales-register-with-details/sales-register-with-details.module").then(
+                        m => m.SalesRegisterWithDetailsModule
+                    )
             }
         ]
     }

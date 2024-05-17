@@ -75,13 +75,16 @@ exports.auditModule = async auditData => {
 
 exports.getAllApiStack = asyncHandler(async (req, res) => {
     try {
-        let apiStackObj = memoryCacheHandler.cache.requestCount.value;
-        const apiArray = Object.entries(apiStackObj)
-            .map(([endpoint, count]) => ({endpoint, count}))
-            .sort((a, b) => b.count - a.count);
+        let apiStackObj = memoryCacheHandler?.cache?.requestCount?.value;
+        let apiArray = [];
         let totalCount = 0;
-        for (const api of apiArray) {
-            totalCount += api.count;
+        if (apiStackObj) {
+            apiArray = Object.entries(apiStackObj)
+                .map(([endpoint, count]) => ({endpoint, count}))
+                .sort((a, b) => b.count - a.count);
+            for (const api of apiArray) {
+                totalCount += api.count;
+            }
         }
         return res.success({apiArray, totalCount});
     } catch (e) {

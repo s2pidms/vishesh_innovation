@@ -27,6 +27,7 @@ export class LeaveAdjustmentFormComponent implements OnInit {
     };
     masterData: ILeaveApplicationMasterData = {
         autoIncrementNo: "",
+        paidLeavesValidation: 0,
         employeesOptions: [],
         allHolidaysOptions: []
     };

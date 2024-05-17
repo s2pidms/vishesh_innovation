@@ -12,6 +12,7 @@ import {ToastService} from "@core/services";
 })
 export class AddItemUOMComponent implements OnInit {
     @Input() action: any = "";
+    @Input() PSPInventory: boolean = false;
     @Input() flag: boolean = false;
     @Input() ModalUOMsUnit: any = [];
     @Input() WXLDimensionsUnit: any = [];
@@ -56,7 +57,7 @@ export class AddItemUOMComponent implements OnInit {
 
     ngOnInit(): void {
         console.log("WXLDimensionsUnit", this.WXLDimensionsUnit);
-
+        this.setSecondaryValue();
         this.form.patchValue(this.dualUnits);
         if (this.dimensionData) {
             this.form.controls["dualUnitsDimensionsDetails"].patchValue(this.dimensionData);
@@ -81,8 +82,60 @@ export class AddItemUOMComponent implements OnInit {
         if (this.flag) {
             this.flag = true;
         }
-        if (this.form.controls["primaryUnit"].value) {
+
+        let primaryUnit = this.form.controls["primaryUnit"].value;
+        if (primaryUnit) {
             this.setUnitsDimensions();
+        }
+    }
+
+    setSecondaryValue() {
+        let primaryUnit = this.form.controls["primaryUnit"].value;
+        let secondaryUnit = this.form.controls["secondaryUnit"].value;
+        console.log("secondaryUnit", secondaryUnit);
+
+        if (["RL", "SHT"].includes(primaryUnit)) {
+            this.form.controls["secondaryUnit"].setValue("sqm");
+        }
+    }
+
+    setWidthDetails() {
+        let primaryUnit = this.form.controls["primaryUnit"].value;
+        let secondaryUnit = this.form.controls["secondaryUnit"].value;
+        console.log("secondaryUnit", secondaryUnit);
+        if (["SHT"].includes(primaryUnit)) {
+            !this.dualUnitsDimensionsData.controls["widthUnit"].value &&
+                this.dualUnitsDimensionsData.controls["widthUnit"].setValue("mm");
+            !this.dualUnitsDimensionsData.controls["lengthUnit"].value &&
+                this.dualUnitsDimensionsData.controls["lengthUnit"].setValue("mm");
+        }
+        if (["RL"].includes(primaryUnit)) {
+            !this.dualUnitsDimensionsData.controls["widthUnit"].value &&
+                this.dualUnitsDimensionsData.controls["widthUnit"].setValue("mm");
+            !this.dualUnitsDimensionsData.controls["lengthUnit"].value &&
+                this.dualUnitsDimensionsData.controls["lengthUnit"].setValue("m");
+        }
+
+        if (["RL"].includes(primaryUnit) && ["SHT"].includes(secondaryUnit)) {
+            !this.dualUnitsDimensionsData.controls["widthUnit"].value &&
+                this.dualUnitsDimensionsData.controls["widthUnit"].setValue("mm");
+            !this.dualUnitsDimensionsData.controls["lengthUnit"].value &&
+                this.dualUnitsDimensionsData.controls["lengthUnit"].setValue("mm");
+        }
+    }
+
+    setPrimaryToSecondaryValue() {
+        if (
+            this.dualUnitsDimensionsData.controls["widthUnit"].value &&
+            this.dualUnitsDimensionsData.controls["lengthUnit"].value
+        ) {
+            this.unitConversionForWidthAndLength();
+            this.f["primaryToSecondaryConversion"].setValue(
+                +(+this.dualUnitsDimensionsData.controls["sqmPerRoll"].value)?.toFixed(3)
+            );
+            console.log('this.dualUnitsDimensionsData.controls["sqmPerRoll"].');
+        } else {
+            this.f["primaryToSecondaryConversion"].setValue(null);
         }
     }
 
@@ -150,7 +203,7 @@ export class AddItemUOMComponent implements OnInit {
         if (this.validationService.checkErrors(this.form, ITEM_DUAL_UNITS_FORM_ERRORS)) {
             return;
         }
-        if ((this.flag = true && this.WXLDimensionsUnit.includes(this.DDetailsFlag))) {
+        if (this.flag == true && this.WXLDimensionsUnit.includes(this.DDetailsFlag)) {
             if (!this.dualUnitsDimensionsData.value.width) {
                 this.toastService.warning("Width is required !");
                 return;
@@ -179,7 +232,7 @@ export class AddItemUOMComponent implements OnInit {
         this.activeModal.close(this.form.value);
     }
 
-    setUnitsDimensions() {
+    setUnitsDimensions(flag = "") {
         let primaryUnit = this.form.controls["primaryUnit"].value;
         let secondaryUnit = this.form.controls["secondaryUnit"].value;
 
@@ -204,5 +257,36 @@ export class AddItemUOMComponent implements OnInit {
             this.dualUnitsDimensionsData.controls["widthUnit"].setValue(null);
             this.dualUnitsDimensionsData.controls["lengthUnit"].setValue(null);
         }
+
+        if (flag == "primaryUnit") {
+            this.setSecondaryValue();
+        }
+        this.setWidthDetails();
+        if (flag == "primaryUnit" || flag == "secondaryUnit") {
+            this.setDualUnitsWidthDetails();
+        }
+    }
+
+    setDualUnitsWidthDetails() {
+        let primaryUnit = this.form.controls["primaryUnit"].value;
+        let secondaryUnit = this.form.controls["secondaryUnit"].value;
+        console.log("secondaryUnit", secondaryUnit);
+        if (["SHT"].includes(primaryUnit)) {
+            this.dualUnitsDimensionsData.controls["widthUnit"].setValue("mm");
+
+            this.dualUnitsDimensionsData.controls["lengthUnit"].setValue("mm");
+        }
+        if (["RL"].includes(primaryUnit)) {
+            this.dualUnitsDimensionsData.controls["widthUnit"].setValue("mm");
+
+            this.dualUnitsDimensionsData.controls["lengthUnit"].setValue("m");
+        }
+
+        if (["RL"].includes(primaryUnit) && ["SHT"].includes(secondaryUnit)) {
+            this.dualUnitsDimensionsData.controls["widthUnit"].setValue("mm");
+            this.dualUnitsDimensionsData.controls["lengthUnit"].setValue("mm");
+        }
+
+        this.setPrimaryToSecondaryValue();
     }
 }

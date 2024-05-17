@@ -37,7 +37,7 @@ export class UploadDataComponent implements OnInit {
         this.subModulesService.getAll(payload).subscribe(success => {
             this.cards = success?.rows.find((x: any) => x.title == "Uploads Master");
             this.cardsData = this.cards.items.sort((a: any, b: any) => a.order - b.order);
-            let dummyCount = 3 - this.cards.items.length;
+            let dummyCount = 4 - this.cards.items.length;
             if (dummyCount > 0) {
                 for (var i = 0; i < dummyCount; i++) {
                     this.cards.items.push({

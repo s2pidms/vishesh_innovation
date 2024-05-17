@@ -87,11 +87,11 @@ const SKUMasterSchema = mongoose.Schema(
             required: false
         },
         primaryToSecondaryConversion: {
-            type: String,
+            type: Number,
             required: false
         },
         secondaryToPrimaryConversion: {
-            type: String,
+            type: Number,
             required: false
         },
         customerInfo: [
@@ -211,11 +211,6 @@ const SKUMasterSchema = mongoose.Schema(
                 },
                 colSeq: {
                     type: Number,
-                    set: value => {
-                        if (![undefined, null, "NaN"].includes(value) && typeof value == "number") {
-                            return parseFloat(value).toFixed(2);
-                        }
-                    },
                     required: false
                 },
                 itemCode: {
@@ -364,6 +359,7 @@ const SKUMasterSchema = mongoose.Schema(
                 },
                 ups: {
                     type: Number,
+                    set: value => setTwoDecimal(value),
                     required: false
                 },
                 primaryUnit: {
@@ -443,6 +439,7 @@ const SKUMasterSchema = mongoose.Schema(
                 },
                 ups: {
                     type: Number,
+                    set: value => setTwoDecimal(value),
                     required: false
                 },
                 area: {
@@ -489,6 +486,7 @@ const SKUMasterSchema = mongoose.Schema(
                 },
                 ups: {
                     type: Number,
+                    set: value => setTwoDecimal(value),
                     required: false
                 },
                 area: {
@@ -810,6 +808,18 @@ const SKUMasterSchema = mongoose.Schema(
                 set: value => setTwoDecimal(value),
                 required: false
             }
+        },
+        SKUDimStatus: {
+            type: String,
+            required: false
+        },
+        SKUMaterialStatus: {
+            type: String,
+            required: false
+        },
+        SKUInkStatus: {
+            type: String,
+            required: false
         }
     },
     {

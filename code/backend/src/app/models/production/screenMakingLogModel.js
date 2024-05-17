@@ -2,6 +2,7 @@ const mongoose = require("mongoose");
 const Audit = require("../../controllers/v1/settings/audit/audit");
 const {SCREEN_MAKING_LOG: SCHEMA_CONSTANT} = require("../../mocks/schemasConstant/productionConstant");
 const {paginatePlugin} = require("../plugins/paginatePlugin");
+const {setTwoDecimal} = require("../../helpers/utility");
 const screenMakingLogSchema = mongoose.Schema(
     {
         company: {

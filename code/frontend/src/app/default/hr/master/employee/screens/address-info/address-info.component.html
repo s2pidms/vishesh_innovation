@@ -1,0 +1,132 @@
+<div class="modelPage">
+    <div class="container-fluid">
+        <div class="row mt-4">
+            <form [formGroup]="form">
+                <div class="form-body">
+                    <div style="min-height: 31.8rem">
+                        <div class="row px-4">
+                            <div class="col-md-6">
+                                <h4 class="text-primary">Permanent Address</h4>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="row px-4">
+                                    <div class="col-md-12 d-flex justify-content-between">
+                                        <h4 class="text-primary">Present Address</h4>
+                                        <h4 class="text-primary pointer" (click)="copyAddress()">Copy Address ▼</h4>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row mx-1">
+                            <div class="col-md-6 ps-0" formGroupName="empPermanentAddress">
+                                <div class="row mb-4 px-4">
+                                    <div class="col-md-12">
+                                        <label class="form-label"> Address Line 1 </label>
+                                        <input class="form-control" formControlName="line1" />
+                                    </div>
+                                </div>
+                                <div class="row mb-4 px-4">
+                                    <div class="col-md-12">
+                                        <label class="form-label"> Address Line 2 </label>
+                                        <input class="form-control" type="text" formControlName="line2" />
+                                    </div>
+                                </div>
+                                <div class="row mb-4 px-4">
+                                    <div class="col-md-12">
+                                        <label class="form-label"> Address Line 3 </label>
+                                        <input class="form-control" type="text" formControlName="line3" />
+                                    </div>
+                                </div>
+                                <div class="row mb-4 px-4">
+                                    <div class="col-md-6">
+                                        <label class="form-label"> City/District </label>
+                                        <input class="form-control" type="text" formControlName="city" />
+                                    </div>
+
+                                    <div class="col-md-6">
+                                        <label class="form-label"> Pincode </label>
+                                        <input class="form-control" type="number" formControlName="pinCode" />
+                                    </div>
+                                </div>
+                                <div class="row mb-4 px-4">
+                                    <div class="col-md-6">
+                                        <label class="form-label">
+                                            State/Province <span class="text-danger">*</span>
+                                        </label>
+                                        <select class="form-select" formControlName="state">
+                                            <option value="" selected disabled>Select State</option>
+                                            <option *ngFor="let s of statesOfIndia" [value]="s">
+                                                {{ s }}
+                                            </option>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label class="form-label"> Country </label>
+                                        <input class="form-control" type="text" formControlName="country" />
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6 pe-0" formGroupName="empPresentAddress">
+                                <div class="row mb-4 px-4">
+                                    <div class="col-md-12">
+                                        <label class="form-label"> Address Line 1 </label>
+                                        <input class="form-control" type="text" formControlName="line1" />
+                                    </div>
+                                </div>
+                                <div class="row mb-4 px-4">
+                                    <div class="col-md-12">
+                                        <label class="form-label"> Address Line 2 </label>
+                                        <input class="form-control" type="text" formControlName="line2" />
+                                    </div>
+                                </div>
+                                <div class="row mb-4 px-4">
+                                    <div class="col-md-12">
+                                        <label class="form-label"> Address Line 3 </label>
+                                        <input class="form-control" type="text" formControlName="line3" />
+                                    </div>
+                                </div>
+                                <div class="row mb-4 px-4">
+                                    <div class="col-md-6">
+                                        <label class="form-label"> City/District </label>
+                                        <input class="form-control" type="text" formControlName="city" />
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label class="form-label"> Pincode </label>
+                                        <input class="form-control" type="number" formControlName="pinCode" />
+                                    </div>
+                                </div>
+                                <div class="row mb-4 px-4">
+                                    <div class="col-md-6">
+                                        <label class="form-label">
+                                            State/Province <span class="text-danger">*</span>
+                                        </label>
+                                        <select class="form-select" formControlName="state">
+                                            <option value="" selected disabled>Select State</option>
+                                            <option *ngFor="let s of statesOfIndia" [value]="s">
+                                                {{ s }}
+                                            </option>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label class="form-label"> Country </label>
+                                        <input class="form-control" type="text" formControlName="country" />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+
+            <hr *ngIf="!['view'].includes(action)" class="line-border mt-2 px-5" />
+
+            <div class="text-center">
+                <div *ngIf="!['view'].includes(action)" class="text-center mt-2">
+                    <button (click)="reset()" class="btn bg-primary px-5 me-3" type="button">Reset</button>
+                    <button class="btn bg-primary px-5" type="button" (click)="dismissModel()">Save</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

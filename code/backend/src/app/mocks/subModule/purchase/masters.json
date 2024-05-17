@@ -70,20 +70,6 @@
         "roles": []
     },
     {
-        "_id": "655c3c2d3613e949b4d61edc",
-        "menuItemId": "64a6c1e33339d4dc9d8141a5",
-        "module": "Purchase",
-        "type": "MASTER",
-        "order": 6,
-        "isDisplay": false,
-        "title": "Capital Goods Master",
-        "displayName": "Capital Goods Master",
-        "disabled": false,
-        "url": "/default/purchase/master/capital-goods/list",
-        "items": [],
-        "roles": []
-    },
-    {
         "_id": "655c3c2d3613e949b4d61ee1",
         "menuItemId": "64a6c1e33339d4dc9d8141a5",
         "module": "Purchase",

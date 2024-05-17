@@ -1,0 +1,195 @@
+<div class="formCard card mb-4">
+    <div class="set-remaining-margin">
+        <div class="row form-header">
+            <div class="col heading">
+                <label>Card Management </label>
+            </div>
+        </div>
+        <div class="form-body">
+            <div class="row">
+                <div class="col">
+                    <label class="form-label">
+                        Module Name
+                        <span class="text-danger">*</span>
+                    </label>
+                    <select [(ngModel)]="module" class="form-select">
+                        <option value="null" selected disabled>Select Module Name</option>
+                        <option *ngFor="let m of moduleNames" [value]="m._id">
+                            {{ m?.title }}
+                        </option>
+                    </select>
+                </div>
+                <div class="col">
+                    <label class="form-label">
+                        Types
+                        <span class="text-danger">*</span>
+                    </label>
+
+                    <select [(ngModel)]="type" class="form-select">
+                        <option value="null" selected disabled>Select Type</option>
+                        <option value="MASTER">Master</option>
+                        <option value="TRANSACTION">Transaction</option>
+                        <option value="REPORT">Reports</option>
+                    </select>
+                </div>
+                <div class="col-auto align-self-end ps-3 pe-0">
+                    <button type="button" class="btn btn-primary" (click)="getFilterData()">Apply Filter</button>
+                </div>
+                <div class="col-auto align-self-end ps-3">
+                    <button (click)="reset()" type="button" class="btn btn-primary">Reset Filter</button>
+                </div>
+            </div>
+        </div>
+
+        <hr *ngIf="subModuleData.length > 0" class="row line-border" />
+
+        <div *ngIf="subModuleData.length > 0" class="row justify-content-between mt-3">
+            <div class="col-4">
+                <div class="d-flex">
+                    <div class="set-input-group-text input-group-text bg-primary" id="basic-addon1">
+                        <i class="fa fa-search text-white" aria-hidden="true"></i>
+                    </div>
+                    <div>
+                        <input
+                            type="text"
+                            class="form-control"
+                            [(ngModel)]="search"
+                            [ngModelOptions]="{standalone: true}"
+                        />
+                    </div>
+                </div>
+            </div>
+            <div class="col-4 d-flex justify-content-center">
+                <ngb-pagination
+                    *ngIf="subModuleData.length > 0"
+                    [collectionSize]="subModuleData.length"
+                    [(page)]="page"
+                    [pageSize]="pageSize"
+                    [boundaryLinks]="false"
+                >
+                    <ng-template ngbPaginationPrevious>
+                        <img src="./assets/new_icons/pagination_prev.svg" width="20rem" />
+                    </ng-template>
+                    <ng-template ngbPaginationNext>
+                        <img src="./assets/new_icons/pagination_next.svg" width="20rem" />
+                    </ng-template>
+                    <ng-template ngbPaginationPages let-page let-pages="pages">
+                        <li class="ngb-custom-pages-item align-self-center" *ngIf="pages.length > 0">
+                            <span class="page-label me-2 ms-1"> Page {{ page }} of {{ pages[pages.length - 1] }} </span>
+                        </li>
+                    </ng-template>
+                </ngb-pagination>
+            </div>
+            <div class="col-4"></div>
+        </div>
+
+        <div *ngIf="subModuleData.length > 0" class="table-responsive" style="min-height: 29rem">
+            <table class="table table-bordered mt-4">
+                <thead class="bg-primary">
+                    <tr class="text-white">
+                        <th>Order</th>
+                        <th>Title</th>
+                        <th>Display Name</th>
+                        <th>Disabled</th>
+                        <th>Is Display</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <ng-container
+                        *ngFor="
+                            let item of subModuleData
+                                | searchFi1ter : search
+                                | slice : (page - 1) * pageSize : (page - 1) * pageSize + pageSize;
+                            let i = index
+                        "
+                    >
+                        <tr>
+                            <td>
+                                {{ item?.order }}
+                            </td>
+                            <td>
+                                {{ item?.title }}
+                            </td>
+                            <td>
+                                {{ item?.displayName }}
+                            </td>
+
+                            <td>
+                                <input [(ngModel)]="item.disabled" class="form-check-input pointer" type="checkbox" />
+                            </td>
+                            <td>
+                                <input [(ngModel)]="item.isDisplay" class="form-check-input pointer" type="checkbox" />
+                            </td>
+                            <!-- <td>
+                                <div class="d-flex justify-content-center">
+                                    <button class="btn btn-primary py-0" (click)="openRollsModal(item)">
+                                        Add Role
+                                    </button>
+                                </div>
+                            </td> -->
+                            <td>
+                                <div class="">
+                                    <i
+                                        class="fa fa-pencil-square-o fa-lg text-primary ms-3 fs-4 pointer"
+                                        aria-hidden="true"
+                                        (click)="submit(item)"
+                                    ></i>
+                                    <!-- <span (click)="deleteModule(item._id)" class="pointer   fs-4"
+                                        >Update</span
+                                    > -->
+                                </div>
+                                <!-- <div class="dropdown">
+                                    <button class="dropbtn"></button>
+                                    <div class="dropdown-content">
+                                        <a href="javascript:void(0)" (click)="deleteModule(item._id)">
+                                            <i class="fa fa-trash me-2 text-primary" aria-hidden="true"></i>
+                                            Delete
+                                        </a>
+                                    </div>
+                                </div> -->
+                            </td>
+                        </tr>
+                        <ng-container *ngIf="item.items?.length > 0" class="table-responsive">
+                            <tr>
+                                <td colspan="6">
+                                    <div class="card sub-menu-card">
+                                        <table class="table align-middle">
+                                            <tr class="" *ngFor="let subItem of item?.items">
+                                                <td>
+                                                    {{ subItem?.order }}
+                                                </td>
+
+                                                <td>
+                                                    {{ subItem?.title }}
+                                                </td>
+                                                <td>
+                                                    {{ subItem?.displayName }}
+                                                </td>
+
+                                                <td>
+                                                    <input
+                                                        [(ngModel)]="subItem.disabled"
+                                                        class="form-check-input"
+                                                        type="checkbox"
+                                                    />
+                                                </td>
+                                                <td>
+                                                    <input
+                                                        [(ngModel)]="subItem.isDisplay"
+                                                        class="form-check-input"
+                                                        type="checkbox"
+                                                    />
+                                                </td>
+                                            </tr>
+                                        </table>
+                                    </div>
+                                </td>
+                            </tr>
+                        </ng-container>
+                    </ng-container>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

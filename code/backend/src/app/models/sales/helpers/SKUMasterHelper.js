@@ -1,4 +1,5 @@
 const {CONSTANTS} = require("../../../../config/config");
+const {OPTIONS} = require("../../../helpers/global.options");
 
 exports.getAllSKUMasterAttributes = () => {
     return {
@@ -15,8 +16,8 @@ exports.getAllSKUMasterAttributes = () => {
         // drawingArtWorkFile: 1,
         // productionLayoutFile: 1,
         createdAt: 1,
-        isActive: 1, 
-        status: 1,
+        isActive: 1,
+        status: 1
         // drawingArtWorkFileUrl: {$concat: [CONSTANTS.domainUrl, "Sku/", "$drawingArtWorkFile"]},
         // productionLayoutFileUrl: {$concat: [CONSTANTS.domainUrl, "Sku/", "$productionLayoutFile"]}
     };
@@ -45,8 +46,9 @@ exports.getAllSKUMasterExcelAttributes = () => {
         primaryUnit: 1,
         artWorkNo: 1,
         status: 1,
-        shelfLife: 1,
+        isActive: 1,
         customerName: "$customerInfo.customerName",
+        customerPartDescription: "$customerInfo.customerPartDescription",
         customerPartNo: "$customerInfo.customerPartNo",
         customerCurrency: "$customerInfo.customerCurrency",
         standardSellingRate: "$customerInfo.standardSellingRate",
@@ -70,12 +72,28 @@ exports.getAllSKUMasterExcelAttributes = () => {
         ups: "$dimensionsDetails.layoutDimensions.ups",
         area: "$dimensionsDetails.layoutDimensions.area",
         mSqArea: "$dimensionsDetails.layoutDimensions.mSqArea",
-        wastePercentage: "$dimensionsDetails.layoutDimensions.wastePercentage",
+        wastePercentage: "$dimensionsDetails.layoutDimensions.wastePercentage"
         // drawingArtWorkFileUrl: {
         //     $cond: [{$not: ["$drawingArtWorkFile"]}, "No", "Yes"]
         // },
         // productionLayoutFileUrl: {
         //     $cond: [{$not: ["$productionLayoutFile"]}, "No", "Yes"]
         // }
+    };
+};
+
+exports.getAllSKUAttributes = () => {
+    return {
+        SKUNo: 1,
+        SKUName: 1,
+        SKUDescription: 1,
+        primaryUnit: 1,
+        productCategory: 1,
+        SKUStage: 1,
+        SKUDimStatus: {$ifNull: ["$SKUDimStatus", OPTIONS.defaultStatus.INACTIVE]},
+        SKUMaterialStatus: {$ifNull: ["$SKUMaterialStatus", OPTIONS.defaultStatus.INACTIVE]},
+        SKUInkStatus: {$ifNull: ["$SKUInkStatus", OPTIONS.defaultStatus.INACTIVE]},
+        SKUAttributesStatus: {$ifNull: ["$SKUAttributesStatus", OPTIONS.defaultStatus.INACTIVE]},
+        dimensionsDetails: 1
     };
 };

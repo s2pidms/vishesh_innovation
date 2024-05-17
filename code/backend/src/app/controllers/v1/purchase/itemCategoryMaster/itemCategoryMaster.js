@@ -111,7 +111,7 @@ exports.getAllItemCategory = async (company, project = {}) => {
                 categoryStatus: OPTIONS.defaultStatus.ACTIVE
             },
             project
-        );
+        ).sort({category: 1});
         return rows;
     } catch (e) {
         console.error("getAllItemCategory", e);

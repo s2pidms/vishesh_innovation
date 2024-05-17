@@ -57,6 +57,10 @@ const transporterSchema = mongoose.Schema(
             type: String,
             required: false
         },
+        email: {
+            type: String,
+            required: false
+        },
         contactPerson: {
             type: String,
             required: false

@@ -1,5 +1,6 @@
 const fs = require("fs");
 const {getDateDiff, getExpiryDate, dateToAnyFormat} = require("./dateTime");
+const {SALES_CATEGORY} = require("../mocks/constantData");
 
 exports.randomNumber = function (length) {
     var text = "";
@@ -168,4 +169,13 @@ exports.setConversion = item => {
     }
 
     return +item.quantity.toFixed(4);
+};
+
+exports.checkDomesticCustomer = async category => {
+    const regex = SALES_CATEGORY.DOMESTIC_REGEX;
+    return regex.test(category);
+};
+exports.checkExportsCustomer = async category => {
+    const regex = SALES_CATEGORY.EXPORTS_REGEX;
+    return regex.test(category);
 };

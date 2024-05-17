@@ -26,7 +26,12 @@ exports.getAll = asyncHandler(async (req, res) => {
     try {
         let project = getAllDispatchRequestNoteAttributes();
         let pipeline = [
-            {$match: {company: ObjectId(req.user.company), DRNStatus: {$nin: ["Closed", "Cancelled"]}}},
+            {
+                $match: {
+                    company: ObjectId(req.user.company),
+                    DRNStatus: {$nin: ["Closed", "Cancelled", OPTIONS.defaultStatus.REJECTED]}
+                }
+            },
             {
                 $addFields: {
                     DRNDateS: {$dateToString: {format: "%d-%m-%Y", date: "$DRNDate"}}
@@ -177,7 +182,7 @@ const rejectShipmentPlanningByDRNId = async DRNId => {
 // @route   PUT /sales/DRN/delete/:id
 exports.deleteById = asyncHandler(async (req, res) => {
     try {
-        const deleteItem = await DRNRepository.deleteDoc(req.params.id);
+        const deleteItem = await DRNRepository.deleteDoc({_id:req.params.id});
         if (deleteItem) {
             return res.success({
                 message: MESSAGES.apiSuccessStrings.DELETED("DRN")

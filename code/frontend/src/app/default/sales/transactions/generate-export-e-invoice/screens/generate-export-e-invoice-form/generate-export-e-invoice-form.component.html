@@ -47,10 +47,10 @@
                     </div>
                 </ng-container>
                 <div formGroupName="TranDtls" class="col-3">
-                    <label class="form-label mb-0"> Supplier Type <span class="text-danger">*</span> </label>
+                    <label class="form-label mb-0"> Supply Type <span class="text-danger">*</span> </label>
                     <select class="form-select" formControlName="SupTyp">
                         <option [value]="null" selected disabled>Select</option>
-                        <option [value]="item.value" *ngFor="let item of supplierTypeArr">
+                        <option [value]="item.value" *ngFor="let item of supplyTypeArr">
                             {{ item.label }}
                         </option>
                     </select>

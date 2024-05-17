@@ -153,8 +153,11 @@
                         <th sortable="standardRate" (sort)="onSort($event)" *ngIf="['view'].includes(action)">
                             Standard Rate
                         </th>
-                        <th sortable="purchaseRate" (sort)="onSort($event)">P/Rate</th>
+                        <!-- <th sortable="purchaseRate" (sort)="onSort($event)">P/Rate</th> -->
                         <th sortable="POQty" (sort)="onSort($event)">PO Qty</th>
+                        <th sortable="purchaseRate" (sort)="onSort($event)">Rate/Unit</th>
+                        <th sortable="purchaseRate" (sort)="onSort($event)">Disc %</th>
+                        <th sortable="lineValue" (sort)="onSort($event)">Net Rate</th>
                         <th sortable="lineValue" (sort)="onSort($event)">Line Value</th>
                         <th
                             sortable="linePPV"
@@ -163,8 +166,8 @@
                         >
                             Line PPV
                         </th>
-                        <th sortable="deliveryDate" (sort)="onSort($event)">Delivery Dt.</th>
-                        <th sortable="deliveryDate" (sort)="onSort($event)">Sch.</th>
+                        <!-- <th sortable="deliveryDate" (sort)="onSort($event)">Delivery Dt.</th> -->
+                        <th>Sch.</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -215,21 +218,7 @@
                         <td *ngIf="['view'].includes(action)">
                             {{ u.standardRate }}
                         </td>
-                        <td>
-                            <div class="d-flex justify-content-center">
-                                <span *ngIf="['approve', 'reject', 'view', 'generate', 'cancel'].includes(action)">
-                                    {{ u.purchaseRate | number : "1.2-2" }}
-                                </span>
-                                <input
-                                    *ngIf="!['approve', 'reject', 'view', 'generate', 'cancel'].includes(action)"
-                                    class="form-control form-control-sm w-25"
-                                    type="number"
-                                    [(ngModel)]="u.purchaseRate"
-                                    [ngModelOptions]="{standalone: true}"
-                                    (input)="lineValueRate(u.POLineNumber, u)"
-                                />
-                            </div>
-                        </td>
+
                         <td>
                             <div class="d-flex justify-content-center">
                                 <span *ngIf="['approve', 'reject', 'view', 'generate', 'cancel'].includes(action)">
@@ -246,11 +235,44 @@
                                 />
                             </div>
                         </td>
+                        <td>
+                            <div class="d-flex justify-content-center">
+                                <span *ngIf="['approve', 'reject', 'view', 'generate', 'cancel'].includes(action)">
+                                    {{ u.purchaseRate | number : "1.3-3" }}
+                                </span>
+                                <input
+                                    *ngIf="!['approve', 'reject', 'view', 'generate', 'cancel'].includes(action)"
+                                    class="form-control form-control-sm w-25"
+                                    type="number"
+                                    [(ngModel)]="u.purchaseRate"
+                                    [ngModelOptions]="{standalone: true}"
+                                    (input)="lineValueRate(u.POLineNumber, u)"
+                                />
+                            </div>
+                        </td>
+                        <td>
+                            <div class="d-flex justify-content-center">
+                                <span *ngIf="['approve', 'reject', 'view', 'generate', 'cancel'].includes(action)">
+                                    {{ u?.discount | number : ".2-2" }}
+                                </span>
+                                <input
+                                    type="number"
+                                    class="form-control form-control-xs w-25"
+                                    *ngIf="!['approve', 'reject', 'view', 'generate', 'cancel'].includes(action)"
+                                    [(ngModel)]="u.discount"
+                                    [ngModelOptions]="{standalone: true}"
+                                    (input)="setNetRate(u)"
+                                />
+                            </div>
+                        </td>
+                        <td>
+                            {{ u?.netRate | number : "1.2-2" }}
+                        </td>
                         <td>{{ u?.lineValue | number : "1.2-2" }}</td>
                         <td *ngIf="['approve', 'reject', 'view'].includes(action)">
                             {{ u?.linePPV | number : "1.2-2" }}
                         </td>
-                        <td>
+                        <!-- <td>
                             <div class="d-flex justify-content-center">
                                 <span *ngIf="['approve', 'reject', 'view', 'generate', 'cancel'].includes(action)">
                                     {{ u.deliveryDate }}
@@ -264,10 +286,13 @@
                                     [ngModelOptions]="{standalone: true}"
                                 />
                             </div>
-                        </td>
+                        </td> -->
                         <td>
                             <span
-                                *ngIf="this.form.controls['POType'].value == POTypeObj.PLANNED_PO"
+                                *ngIf="
+                                    this.form.controls['POType'].value == POTypeObj.PLANNED_PO ||
+                                    this.form.controls['POType'].value == POTypeObj.STANDARD_PO
+                                "
                                 class="d-flex justify-content-center pointer"
                                 (click)="openPOScheduleModal(u)"
                             >
@@ -276,8 +301,7 @@
                             <span
                                 *ngIf="
                                     !this.form.controls['POType'].value ||
-                                    this.form.controls['POType'].value == POTypeObj.BLANKET_PO ||
-                                    this.form.controls['POType'].value == POTypeObj.STANDARD_PO
+                                    this.form.controls['POType'].value == POTypeObj.BLANKET_PO
                                 "
                                 class="d-flex justify-content-center setPOType"
                             >
@@ -317,11 +341,12 @@
                     </div>
                     <div class="text-nowrap">
                         <button
+                            [disabled]="f['purchaseCategory'].value?.includes('Imports')"
                             type="button "
                             class="btn btn-sm btn-primary me-2 d-flex align-items-center mb-2"
                             (click)="openOtherChargesModal()"
                         >
-                            <span>Add Other Charges</span>
+                            <span>Add Service Charges</span>
                         </button>
                     </div>
 
@@ -340,7 +365,7 @@
                                 type="text"
                                 class="form-control mt-0 w-25 border-start-0 ps-0"
                                 readOnly
-                                [(ngModel)]="otherCharges.totalAmount"
+                                [(ngModel)]="totalServiceCharges"
                                 [ngModelOptions]="{standalone: true}"
                             />
                         </div>

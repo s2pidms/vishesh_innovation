@@ -40,7 +40,7 @@ export class CreditNotePrintScreenComponent implements OnInit {
             this.spinner.hide();
             this.tableData = success;
 
-            this.isDomestic = ["Domestic – Dealer", "Domestic – OEM"].includes(success.salesCategory);
+            this.isDomestic = success.salesCategory?.includes("Domestic")
             this.tableData.summaryRowRepeat = [];
             for (var i = 1; i <= 4 - +this.tableData.GSTDetails.length; i++) {
                 this.tableData.summaryRowRepeat.push(i);

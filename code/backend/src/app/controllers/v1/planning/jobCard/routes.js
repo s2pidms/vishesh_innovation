@@ -12,12 +12,14 @@ const {
     getAllJobTrackingMasterData,
     getAllReports,
     getBOMBySKUOrDSKU,
-    getByIdForPDF
+    getByIdForPDF,
+    getDimBySKU
 } = require("./jobCard");
 
 app.post("/create", create);
 app.get("/getAll", getAll);
 app.get("/getById/:id", validate("checkParamId"), getById);
+app.get("/getDimBySKU/:id", validate("checkParamId"), getDimBySKU);
 app.get("/getByIdForPDF/:id", validate("checkParamId"), getByIdForPDF);
 app.put("/update/:id", validate("checkParamId"), update);
 app.delete("/delete/:id", validate("checkParamId"), deleteById);

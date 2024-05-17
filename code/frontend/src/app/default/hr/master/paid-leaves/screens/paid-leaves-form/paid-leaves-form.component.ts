@@ -1,11 +1,12 @@
 import {Component, OnInit} from "@angular/core";
 import {UntypedFormControl, UntypedFormGroup, Validators} from "@angular/forms";
-import {PaidLeavesService} from "@services/hr";
-import {Router, ActivatedRoute} from "@angular/router";
+import {Location} from "@angular/common";
+import {ActivatedRoute} from "@angular/router";
 import {mergeMap, of} from "rxjs";
 import {ValidationService} from "@core/components";
+import {PaidLeavesService} from "@services/hr";
 import {PAID_LEAVES_FORM_ERRORS} from "@mocks/validations/hr";
-import {MenuTitleService, SpinnerService, UtilityService, ToastService} from "@core/services";
+import {SpinnerService, UtilityService, ToastService} from "@core/services";
 import {IPaidLeavesMasterData} from "@mocks/models/hr&Admin/master/paidLeavesMasterData";
 @Component({
     selector: "app-paid-leaves-form",
@@ -45,13 +46,12 @@ export class PaidLeavesFormComponent implements OnInit {
 
     constructor(
         private paidLeaveService: PaidLeavesService,
-        private router: Router,
         private activatedRoute: ActivatedRoute,
         private spinner: SpinnerService,
-        private menuTitleService: MenuTitleService,
         private toastService: ToastService,
         private validationService: ValidationService,
-        private utilityService: UtilityService
+        private utilityService: UtilityService,
+        private location: Location
     ) {}
 
     ngOnInit(): void {
@@ -85,7 +85,7 @@ export class PaidLeavesFormComponent implements OnInit {
             this.submitted = false;
             this.spinner.hide();
             this.toastService.success(success.message);
-            this.router.navigate(["default/HR/master/paid_leaves/pl-list"]);
+            this.location.back();
         });
     }
 
@@ -95,13 +95,13 @@ export class PaidLeavesFormComponent implements OnInit {
             this.spinner.hide();
             this.submitted = false;
             this.toastService.success(success.message);
-            this.router.navigate(["default/HR/master/paid_leaves/pl-list"]);
+            this.location.back();
         });
     }
     getInitialData() {
         this.spinner.show();
         this.paidLeaveService.getAllMasterData({}).subscribe(result => {
-            this.masterData = result; 
+            this.masterData = result;
             this.form.controls["paidLeavesNumber"].setValue(this.masterData.autoIncrementNo);
             this.form.controls["privilegeLeavePL"].disable();
             this.form.controls["calendarYear"].setValue(new Date().getFullYear());

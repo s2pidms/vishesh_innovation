@@ -29,6 +29,8 @@ const SALES_CATEGORY = {
     EXPORTS_DEALER: "Exports – Dealer",
     EXPORTS_OEM: "Exports – OEM",
     DOMESTIC: "Domestic",
+    DOMESTIC_REGEX: /domestic/i,
+    EXPORTS_REGEX: /exports/i,
     getAllDomesticSalesCategory: function () {
         return [SALES_CATEGORY.DOMESTIC_OEM, SALES_CATEGORY.DOMESTIC_DEALER];
     },
@@ -178,6 +180,10 @@ const INK_MIXING_UOM = {
         return [this.LTR, this.KG, this.GRAM];
     }
 };
+const INV_FORM_TYPE = {
+    PARENT: "Parent",
+    CHILD: "Child"
+};
 const SKU_COST_SHEET_DETAILS = [
     {
         srNo: 1,
@@ -252,6 +258,26 @@ const PROCESS = [
     {
         label: "Screen Making",
         value: "Screen Making"
+    },
+    {
+        label: "Printing on CPI",
+        value: "Printing on CPI"
+    },
+    {
+        label: "Weeding",
+        value: "Weeding"
+    },
+    {
+        label: "Lamination",
+        value: "Lamination"
+    },
+    {
+        label: "Through Punching",
+        value: "Through Punching"
+    },
+    {
+        label: "Packing",
+        value: "Packing"
     }
 ];
 const EMP_GENDER = [
@@ -320,6 +346,16 @@ const INDIAN_STATES = [
     "Uttar Pradesh",
     "West Bengal"
 ];
+const SKU_MASTER_DIMENSIONS_UNITS = {
+    mm: "mm",
+    cm: "cm",
+    m: "m",
+    ft: "ft",
+    inch: "inch",
+    getAllSKUMasterDimensionsUnit: function () {
+        return [this.mm, this.cm, this.m, this.ft, this.inch];
+    }
+};
 module.exports = {
     SALES_CATEGORY,
     CHILD_ITEM_CATEGORY_NAME,
@@ -349,5 +385,7 @@ module.exports = {
     EMP_GENDER,
     EMP_MARITAL_STATUS,
     INDIAN_STATES,
-    EMP_ACCOUNT_TYPE
+    EMP_ACCOUNT_TYPE,
+    INV_FORM_TYPE,
+    SKU_MASTER_DIMENSIONS_UNITS
 };

@@ -366,6 +366,7 @@ exports.bulkInsertAssetByCSV = async (jsonData, {company, createdBy, updatedBy})
                 noOfOperationalDaysPerYear,
                 noOfShiftsRunPerDays,
                 machineEfficiencyPercentage,
+                depreciatedAssetCostPerYear,
                 ...rest
             } = x;
             let details = {
@@ -375,7 +376,8 @@ exports.bulkInsertAssetByCSV = async (jsonData, {company, createdBy, updatedBy})
                 estimatedUsefulLifeInYear,
                 noOfOperationalDaysPerYear,
                 noOfShiftsRunPerDays,
-                machineEfficiencyPercentage
+                machineEfficiencyPercentage,
+                depreciatedAssetCostPerYear
             };
             rest.costingInput = details;
             rest.company = company;

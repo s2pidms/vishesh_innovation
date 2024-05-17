@@ -11,6 +11,7 @@ import {ScreenMakingLogEntryComponent} from "../../screen-making/screen-making-l
 })
 export class InkMixingLogBatchComponent implements OnInit {
     @ViewChildren(NgbdSortableHeader) headers: QueryList<NgbdSortableHeader> | any;
+    @Input() sourceOfManufacturing: any = "";
     @Input() inkLogNewBatch: any = {};
     @Input() shiftOptions: any = [];
     resetData: any = [];
@@ -22,6 +23,7 @@ export class InkMixingLogBatchComponent implements OnInit {
     search: string = "";
     active: number = 1;
     batchDateNo: any = "";
+    totalQty: any = 0;
     constructor(
         public activeModal: NgbActiveModal,
         private spinner: SpinnerService,
@@ -39,14 +41,30 @@ export class InkMixingLogBatchComponent implements OnInit {
         //     this.inkLogNewBatch = this.inkLogNewBatch.newBatch;
         //     this.collection = this.inkLogNewBatch.length;
         // }
+
+        if (this.inkLogNewBatch?.newBatch?.length == 0 || !this.inkLogNewBatch?.newBatch) {
+            this.toastService.warning(`Please define the Bill of Material of the SKU`);
+        }
+
+        this.totalQty = this.inkLogNewBatch?.newBatch?.reduce((a: any, c: any) => +a + +c.quantity1, 0);
+        // this.inkLogNewBatch.BOMQty = +this.totalQty.toFixed(3);
+
+        // this.inkLogNewBatch.inkBatchQty = +this.inkLogNewBatch?.BOMQty * +this.inkLogNewBatch?.MF;
+        this.inkLogNewBatch.inkBatchQty = +this.totalQty * +this.inkLogNewBatch?.MF;
     }
 
     changeTotalBatchQty() {
-        this.inkLogNewBatch.inkBatchQty = +(this.inkLogNewBatch.BOMQty * this.inkLogNewBatch.MF).toFixed(5);
+        this.inkLogNewBatch.inkBatchQty = +(+this.totalQty * +this.inkLogNewBatch?.MF).toFixed(3);
+        // this.inkLogNewBatch.inkBatchQty = +(+this.inkLogNewBatch?.BOMQty * +this.inkLogNewBatch?.MF).toFixed(3);
+        this.inkLogNewBatch.newBatch = this.inkLogNewBatch?.newBatch?.map((x: any) => {
+            x.MF = +this.inkLogNewBatch?.MF;
+            x.quantity2 = +(x.quantity1 * x.MF).toFixed(3);
+            return x;
+        });
     }
     changeBatchQty(ele: any) {
         let index = this.inkLogNewBatch.newBatch.map((x: any) => x.item).indexOf(ele?.item);
-        this.inkLogNewBatch.newBatch[index].quantity2 = +(ele.quantity1 * ele.MF).toFixed(5);
+        this.inkLogNewBatch.newBatch[index].quantity2 = +(ele.quantity1 * ele.MF).toFixed(3);
     }
     reset() {
         this.inkLogNewBatch = JSON.parse(JSON.stringify(this.resetData));
@@ -83,6 +101,7 @@ export class InkMixingLogBatchComponent implements OnInit {
 
         modalRef.componentInstance.logDetails = this.inkLogNewBatch.logDetails;
         modalRef.componentInstance.shiftOptions = this.shiftOptions;
+        modalRef.componentInstance.sourceOfManufacturing = this.sourceOfManufacturing;
         modalRef.result.then(
             (success: any) => {
                 if (success) {

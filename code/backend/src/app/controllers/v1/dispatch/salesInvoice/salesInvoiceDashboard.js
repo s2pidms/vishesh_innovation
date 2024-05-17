@@ -55,7 +55,7 @@ exports.getAllNetSalesInvoice = async company => {
                     },
                     {
                         $match: {
-                            "customer.customerCategory": {$in: SALES_CATEGORY.getAllDomesticSalesCategory()}
+                            "customer.customerCategory": {$regex: SALES_CATEGORY.DOMESTIC_REGEX}
                         }
                     },
                     {
@@ -94,7 +94,7 @@ exports.getAllNetSalesInvoice = async company => {
                     },
                     {
                         $match: {
-                            "customer.customerCategory": {$in: SALES_CATEGORY.getAllDomesticSalesCategory()}
+                            "customer.customerCategory": {$regex: SALES_CATEGORY.DOMESTIC_REGEX}
                         }
                     },
                     {
@@ -152,7 +152,7 @@ exports.getAvgMonthlyNetSales = async company => {
         },
         {
             $match: {
-                "customer.customerCategory": {$in: SALES_CATEGORY.getAllDomesticSalesCategory()}
+                "customer.customerCategory": {$regex: SALES_CATEGORY.DOMESTIC_REGEX}
             }
         },
         {
@@ -210,7 +210,7 @@ exports.getMonthlyTaxInvoiceTrend = async company => {
             },
             {
                 $match: {
-                    "customer.customerCategory": {$in: SALES_CATEGORY.getAllDomesticSalesCategory()}
+                    "customer.customerCategory": {$regex: SALES_CATEGORY.DOMESTIC_REGEX}
                 }
             },
             {
@@ -299,7 +299,7 @@ exports.getMonthlyTaxInvoiceTrend = async company => {
             },
             {
                 $match: {
-                    "customer.customerCategory": {$in: ["Exports – OEM", "Exports – Dealer"]}
+                    "customer.customerCategory": {$regex: SALES_CATEGORY.EXPORTS_REGEX}
                 }
             },
             {
@@ -392,7 +392,7 @@ exports.getTotalTaxableValue = async company => {
             },
             {
                 $match: {
-                    "customer.customerCategory": {$in: SALES_CATEGORY.getAllDomesticSalesCategory()}
+                    "customer.customerCategory": {$regex: SALES_CATEGORY.DOMESTIC_REGEX}
                 }
             },
             {
@@ -442,7 +442,7 @@ exports.getTotalTaxValue = async company => {
             },
             {
                 $match: {
-                    "customer.customerCategory": {$in: SALES_CATEGORY.getAllDomesticSalesCategory()}
+                    "customer.customerCategory": {$regex: SALES_CATEGORY.DOMESTIC_REGEX}
                 }
             },
             {
@@ -547,7 +547,7 @@ exports.getMonthlyTaxInvoiceCountTrend = async company => {
             },
             {
                 $match: {
-                    "customer.customerCategory": {$in: SALES_CATEGORY.getAllDomesticSalesCategory()}
+                    "customer.customerCategory": {$regex: SALES_CATEGORY.DOMESTIC_REGEX}
                 }
             },
             {
@@ -636,7 +636,7 @@ exports.getMonthlyTaxInvoiceCountTrend = async company => {
             },
             {
                 $match: {
-                    "customer.customerCategory": {$in: ["Exports – OEM", "Exports – Dealer"]}
+                    "customer.customerCategory": {$regex: SALES_CATEGORY.EXPORTS_REGEX}
                 }
             },
             {
@@ -733,7 +733,7 @@ exports.getTopFiveCustomersByValue = async company => {
             },
             {
                 $match: {
-                    "customer.customerCategory": {$in: SALES_CATEGORY.getAllDomesticSalesCategory()}
+                    "customer.customerCategory": {$regex: SALES_CATEGORY.EXPORTS_REGEX}
                 }
             },
             {
@@ -797,7 +797,7 @@ exports.getTopFiveCustomersByValue = async company => {
             },
             {
                 $match: {
-                    "customer.customerCategory": {$in: ["Exports – OEM", "Exports – Dealer"]}
+                    "customer.customerCategory": {$regex: SALES_CATEGORY.EXPORTS_REGEX}
                 }
             },
             {

@@ -126,19 +126,21 @@
         </tr>
         <tr class="head-row text-center w-100 text-nowrap">
             <th colspan="1" class="text-center">#</th>
-            <th colspan="3" class="text-start">Item Description</th>
+            <th colspan="2" class="text-start">Item Description</th>
             <th colspan="1" class="text-center">Delivery Date</th>
-            <th colspan="2" class="text-center">HSN Code</th>
+            <th colspan="1" class="text-center">HSN Code</th>
             <th colspan="1" class="text-center">UoM</th>
             <th colspan="1" class="text-center">Quantity</th>
             <th colspan="1" class="text-center">Rate/Unit</th>
+            <th colspan="1" class="text-center">Disc %</th>
+            <th colspan="1" class="text-center">Net Rate</th>
             <th colspan="2" class="text-center">Amount</th>
         </tr>
         <tr class="text-wrap" *ngFor="let p of tableData.PODetails; let i = index">
             <td colspan="1" class="text-center">
                 <label>{{ i + 1 }}</label>
             </td>
-            <td colspan="3">
+            <td colspan="2">
                 <p>
                     Item Code:
                     {{ p?.item?.itemCode }} | Supplier Part No.:
@@ -156,7 +158,7 @@
             </td>
             <td *ngIf="tableData?.POType == POTypeObj.PLANNED_PO" colspan="1" class="text-center">Refer Schedule</td>
             <td *ngIf="tableData?.POType == POTypeObj.BLANKET_PO" colspan="1" class="text-center">As per Schedule</td>
-            <td colspan="2" class="text-center">
+            <td colspan="1" class="text-center">
                 {{ p?.item?.hsn }}
             </td>
             <td colspan="1" class="text-center">
@@ -168,6 +170,12 @@
             <td colspan="1" class="text-center">
                 {{ p?.purchaseRate | number : ".2-2" }}
             </td>
+            <td colspan="1" class="text-center">
+                {{ p?.discount ?? 0 }}
+            </td>
+            <td colspan="1" class="text-center">
+                {{ p?.netRate ? p?.netRate : (p.purchaseRate | number : ".2-2") }}
+            </td>
             <td colspan="2" class="text-center">
                 {{ p?.lineValue | number : ".2-2" }}
             </td>
@@ -178,25 +186,45 @@
                     {{ tableData.PODetails.length + j + 1 }}
                 </p>
             </td>
-            <td colspan="3" class="text-center"><p></p></td>
-            <td colspan="1" class="text-center"><p></p></td>
             <td colspan="2" class="text-center"><p></p></td>
+            <td colspan="1" class="text-center"><p></p></td>
+            <td colspan="1" class="text-center"><p></p></td>
+            <td colspan="1" class="text-center"><p></p></td>
+            <td colspan="1" class="text-center"><p></p></td>
             <td colspan="1" class="text-center"><p></p></td>
             <td colspan="1" class="text-center"><p></p></td>
             <td colspan="1" class="text-center"><p></p></td>
             <td colspan="2" class="text-center"><p></p></td>
         </tr>
-        <tr>
-            <td colspan="11 " class="text-end">
-                <p class="sub-text">
-                    SAC 996511 -
-                    {{ tableData.SACDescription ? tableData.SACDescription : "Add Freight & Forwarding Charges" }}
-                </p>
-            </td>
-            <td colspan="1" class="text-center sub-text">
-                {{ tableData?.otherCharges?.totalAmount | number : ".2-2" }}
-            </td>
-        </tr>
+        <ng-container *ngIf="!tableData?.serviceChargesInfo || tableData?.serviceChargesInfo?.length == 0">
+            <tr>
+                <td colspan="11" class="text-end">
+                    <p class="sub-text">
+                        SAC 996511 -
+                        {{ tableData.SACDescription ? tableData.SACDescription : "Add Freight & Forwarding Charges" }}
+                    </p>
+                </td>
+                <td colspan="1" class="text-center sub-text">
+                    {{ tableData?.otherCharges?.totalAmount | number : ".2-2" }}
+                </td>
+            </tr>
+        </ng-container>
+        <ng-container *ngIf="tableData?.serviceChargesInfo?.length > 0">
+            <tr *ngFor="let service of tableData.serviceChargesInfo">
+                <td colspan="11" class="text-end">
+                    <p class="sub-text">
+                        SAC {{ service?.SACCode }}
+                        {{ service?.description }}
+                        <!--  996511 -
+                        {{ tableData.SACDescription ? tableData.SACDescription : "Add Freight & Forwarding Charges" }} -->
+                    </p>
+                </td>
+                <td colspan="1" class="text-center sub-text">
+                    {{ service?.serviceCharges | number : ".2-2" }}
+                    <!-- {{ tableData?.otherCharges?.totalAmount | number : ".2-2" }} -->
+                </td>
+            </tr>
+        </ng-container>
         <tr class="border-btm">
             <th colspan="11" class="text-end">
                 <p>Total Taxable Amount</p>

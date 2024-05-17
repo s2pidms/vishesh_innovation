@@ -94,8 +94,8 @@
     border: 0;
     // padding: 1.7rem 1.9rem;
     color: white;
-    height: 2rem;
-    width: 2rem;
+    height: 1.6rem;
+    width: 1.6rem;
 }
 .flagYellow {
     background-color: transparent;
@@ -104,8 +104,8 @@
     border: 0;
     // padding: 1.7rem 1.9rem;
     color: white;
-    height: 2rem;
-    width: 2rem;
+    height: 1.6rem;
+    width: 1.6rem;
 }
 
 .flagred {
@@ -115,8 +115,8 @@
     border: 0;
     // padding: 1.7rem 1.9rem;
     color: white;
-    height: 2rem;
-    width: 2rem;
+    height: 1.6rem;
+    width: 1.6rem;
 }
 .drawingIcon {
     background-color: transparent;
@@ -186,6 +186,77 @@
     background-image: url("./../assets/new_icons/unit_switch_rev.svg");
     background-size: 100% 100%;
     border: 0;
+    color: white;
+    height: 1.6rem;
+    width: 1.6rem;
+}
+.edit-grey {
+    background-color: transparent;
+    background-image: url("./../assets/new_icons/edit_grey.svg");
+    background-size: 100% 100%;
+    border: 0;
+    // padding: 1.7rem 1.9rem;
+    color: white;
+    height: 2rem;
+    width: 2rem;
+}
+.add-grey {
+    background-color: transparent;
+    background-image: url("./../assets/new_icons/add_grey.svg");
+    background-size: 100% 100%;
+    border: 0;
+    // padding: 1.7rem 1.9rem;
+    color: white;
+    height: 1.6rem;
+    width: 1.6rem;
+}
+.add-red {
+    background-color: transparent;
+    background-image: url("./../assets/new_icons/add_red.svg");
+    background-size: 100% 100%;
+    border: 0;
+    // padding: 1.7rem 1.9rem;
+    color: white;
+    height: 1.6rem;
+    width: 1.6rem;
+}
+.add-red-one {
+    background-color: transparent;
+    background-image: url("./../assets/new_icons/add_red_1.svg");
+    background-size: 100% 100%;
+    border: 0;
+    // padding: 1.7rem 1.9rem;
+    color: white;
+    height: 2rem;
+    width: 2rem;
+}
+
+.sps-child {
+    background-color: transparent;
+    background-image: url("./../assets/new_icons/child.svg");
+    background-size: 100% 100%;
+    border: 0;
+    // padding: 1.7rem 1.9rem;
+    color: white;
+    height: 3rem;
+    width: 3rem;
+}
+.sps-parent {
+    background-color: transparent;
+    background-image: url("./../assets/new_icons/Parent.svg");
+    background-size: 100% 100%;
+    border: 0;
+    // padding: 1.7rem 1.9rem;
+    color: white;
+    height: 1.4rem;
+    width: 1.4rem;
+}
+.sps-DUC {
+    background-color: transparent;
+    background-image: url("./../assets/new_icons/Asset_DUC.svg");
+    background-size: 100% 100%;
+    border: 0;
+    // padding: 1.7rem 1.9rem;
     color: white;
     height: 1.6rem;
     width: 1.6rem;

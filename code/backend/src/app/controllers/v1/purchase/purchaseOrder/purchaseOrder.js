@@ -2,7 +2,12 @@ const asyncHandler = require("express-async-handler");
 const Model = require("../../../../models/purchase/purchaseOrderModel");
 const GRN = require("../../../../models/stores/GRNModel");
 const MESSAGES = require("../../../../helpers/messages.options");
-const {outputData, getAllAggregationFooter, getAutoIncrementNumber} = require("../../../../helpers/utility");
+const {
+    outputData,
+    getAllAggregationFooter,
+    getAutoIncrementNumber,
+    checkDomesticCustomer
+} = require("../../../../helpers/utility");
 const {generateCreateData, getMatchData, OPTIONS} = require("../../../../helpers/global.options");
 const {findAppParameterValue} = require("../../settings/appParameter/appParameter");
 const {getAllItemsBySupplierId} = require("../items/items");
@@ -24,6 +29,8 @@ const {getAllTransporter} = require("../../sales/transporter/transporter");
 const MailTriggerRepository = require("../../../../models/settings/repository/mailTriggerRepository");
 const {PURCHASE_MAIL_CONST} = require("../../../../mocks/mailTriggerConstants");
 const {filteredCompanyList} = require("../../../../models/settings/repository/companyRepository");
+const {filteredServiceChargesList} = require("../../../../models/settings/repository/serviceChargesRepository");
+const {purchaseUOMPipe} = require("../../settings/UOMUnitMaster/UOMUnitMaster");
 const ObjectId = mongoose.Types.ObjectId;
 
 exports.getAll = asyncHandler(async (req, res) => {
@@ -220,6 +227,8 @@ exports.getById = asyncHandler(async (req, res) => {
                     standardRate: ele.standardRate,
                     purchaseRate: ele.purchaseRate,
                     lineValue: ele.lineValue,
+                    netRate: ele.netRate,
+                    discount: ele.discount,
                     linePPV: ele.linePPV,
                     stdCostUom1: ele.stdCostUom1,
                     stdCostUom2: ele.stdCostUom2,
@@ -285,12 +294,11 @@ exports.getPODetailsById = asyncHandler(async (req, res) => {
         if (existing.changedPaymentTerms) {
             existing.supplier.supplierPaymentTerms = existing.changedPaymentTerms;
         }
-        existing.PODetails = existing.PODetails.map(x => {
+        for await (const x of existing.PODetails) {
             x.item.supplierPartNo =
                 x.item.supplierDetails.find(y => String(y.supplierId) == String(existing.supplier._id))?.spin ?? "";
-
-            return x;
-        });
+            x.UOM = await purchaseUOMPipe(x.UOM, existing.company._id);
+        }
         if (!existing) {
             let errors = MESSAGES.apiSuccessStrings.DATA_NOT_EXISTS("PurchaseOrder");
             return res.unprocessableEntity(errors);
@@ -377,6 +385,33 @@ exports.getAllMasterData = asyncHandler(async (req, res) => {
             },
             {label: "$name", value: "$name", _id: 0}
         );
+        const serviceChargesList = await filteredServiceChargesList([
+            {
+                $match: {
+                    company: ObjectId(req.user.company),
+                    status: OPTIONS.defaultStatus.ACTIVE
+                }
+            },
+            {
+                $sort: {
+                    order: 1
+                }
+            },
+            {
+                $project: {
+                    order: 1,
+                    description: 1,
+                    SACCode: 1,
+                    GSTRate: 1,
+                    IGSTRate: 1,
+                    SGSTRate: 1,
+                    CGSTRate: 1,
+                    UGSTRate: 1,
+                    currency: 1,
+                    serviceCharges: 1
+                }
+            }
+        ]);
         return res.success({
             // suppliersOptions,
             autoIncValues,
@@ -389,7 +424,8 @@ exports.getAllMasterData = asyncHandler(async (req, res) => {
             }),
             freightTermsOptions,
             transporterOptions: transporter,
-            locationOptions: locationOptions
+            locationOptions: locationOptions,
+            serviceChargesList
         });
     } catch (error) {
         console.error("getAllMasterData Purchase Order", error);
@@ -553,6 +589,9 @@ exports.updatePOStatusOnGRN = asyncHandler(async (poId, grnId) => {
 
 async function getDataPDF(existing) {
     try {
+        if (existing.serviceChargesInfo && existing.serviceChargesInfo.length) {
+            existing.serviceChargesInfo = existing.serviceChargesInfo.filter(x => x.serviceCharges > 0);
+        }
         if (existing.supplier.supplierContactMatrix.length) {
             existing.supplier.supplierContactMatrix = existing.supplier.supplierContactMatrix[0];
         }
@@ -609,38 +648,80 @@ async function getDataPDF(existing) {
                 totalTaxableValue: Number(+lineValue + +cgstAmount + +igstAmount + +sgstAmount + +ugstAmount).toFixed(2)
             });
         }
-        if (existing.otherCharges.totalAmount) {
-            let lineValue = +existing?.otherCharges?.totalAmount;
-            let igstRate = 0;
-            let igstAmount = 0;
-            let cgstRate = 0;
-            let cgstAmount = 0;
-            let sgstRate = 0;
-            let sgstAmount = 0;
-            let ugstRate = 0;
-            let ugstAmount = 0;
-            if (condition) {
-                igstRate = SACObj.igstRate ?? 18;
-                igstAmount = (+igstRate * +lineValue) / 100;
-            } else {
-                cgstRate = SACObj.cgstRate ?? 9;
-                sgstRate = SACObj.sgstRate ?? 9;
-                cgstAmount = (+cgstRate * +lineValue) / 100;
-                sgstAmount = (+sgstRate * +lineValue) / 100;
+        if (await checkDomesticCustomer(existing.supplier.supplierPurchaseType)) {
+            if (existing.serviceChargesInfo && existing.serviceChargesInfo.length) {
+                let igstRate = 0;
+                let igstAmount = 0;
+                let cgstRate = 0;
+                let cgstAmount = 0;
+                let sgstRate = 0;
+                let sgstAmount = 0;
+                let ugstRate = 0;
+                let ugstAmount = 0;
+                for (const ele of existing.serviceChargesInfo) {
+                    if (condition) {
+                        igstRate = ele?.IGSTRate ?? 18;
+                        // igstRate = 18;
+                        igstAmount = (+igstRate * +ele?.serviceCharges) / 100;
+                    } else {
+                        cgstRate = ele?.CGSTRate ?? 9;
+                        sgstRate = ele?.SGSTRate ?? 9;
+                        // cgstRate = 9;
+                        // sgstRate = 9;
+                        cgstAmount = (+cgstRate * +ele?.serviceCharges) / 100;
+                        sgstAmount = (+sgstRate * +ele?.serviceCharges) / 100;
+                    }
+                    existing.GSTDetails.push({
+                        hsn: ele?.SACCode,
+                        taxableValue: +ele?.serviceCharges,
+                        igstRate: igstRate,
+                        igstAmount: igstAmount,
+                        cgstRate: cgstRate,
+                        cgstAmount: cgstAmount,
+                        sgstRate: sgstRate,
+                        sgstAmount: sgstAmount,
+                        ugstRate: ugstRate,
+                        ugstAmount: ugstAmount,
+                        totalTaxableValue: Number(
+                            +ele?.serviceCharges + +cgstAmount + +igstAmount + +sgstAmount + +ugstAmount
+                        ).toFixed(2)
+                    });
+                }
+            } else if (existing.otherCharges.totalAmount) {
+                let lineValue = +existing?.otherCharges?.totalAmount;
+                let igstRate = 0;
+                let igstAmount = 0;
+                let cgstRate = 0;
+                let cgstAmount = 0;
+                let sgstRate = 0;
+                let sgstAmount = 0;
+                let ugstRate = 0;
+                let ugstAmount = 0;
+                if (condition) {
+                    igstRate = SACObj.igstRate ?? 18;
+                    igstAmount = (+igstRate * +lineValue) / 100;
+                } else {
+                    cgstRate = SACObj.cgstRate ?? 9;
+                    sgstRate = SACObj.sgstRate ?? 9;
+                    cgstAmount = (+cgstRate * +lineValue) / 100;
+                    sgstAmount = (+sgstRate * +lineValue) / 100;
+                }
+                existing.GSTDetails.push({
+                    hsn: SACObj.sacCode ?? OTHER_CHARGES_SAC_CODE,
+                    taxableValue: +lineValue,
+                    igstRate: igstRate,
+                    igstAmount: igstAmount,
+                    cgstRate: cgstRate,
+                    cgstAmount: cgstAmount,
+                    sgstRate: sgstRate,
+                    sgstAmount: sgstAmount,
+                    ugstRate: ugstRate,
+                    ugstAmount: ugstAmount,
+                    totalTaxableValue: Number(
+                        +lineValue + +cgstAmount + +igstAmount + +sgstAmount + +ugstAmount
+                    ).toFixed(2)
+                });
             }
-            existing.GSTDetails.push({
-                hsn: SACObj.sacCode ?? OTHER_CHARGES_SAC_CODE,
-                taxableValue: +lineValue,
-                igstRate: igstRate,
-                igstAmount: igstAmount,
-                cgstRate: cgstRate,
-                cgstAmount: cgstAmount,
-                sgstRate: sgstRate,
-                sgstAmount: sgstAmount,
-                ugstRate: ugstRate,
-                ugstAmount: ugstAmount,
-                totalTaxableValue: Number(+lineValue + +cgstAmount + +igstAmount + +sgstAmount + +ugstAmount).toFixed(2)
-            });
         }
         existing.totalCGSTAmount = existing?.GSTDetails.map(y => +y.cgstAmount).reduce((a, c) => a + c, 0);
         existing.totalSGSTAmount = existing?.GSTDetails.map(y => +y.sgstAmount).reduce((a, c) => a + c, 0);

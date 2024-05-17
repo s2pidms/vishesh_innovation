@@ -153,16 +153,30 @@
         "roles": []
     },
     {
-        "_id": "660b9273cf09a7d9248cf294",
+        "_id": "66309450d3c9e3d6c299f644",
         "menuItemId": "64a6c1e33339d4dc9d8141a4",
         "module": "Planning",
         "type": "TRANSACTION",
-        "order": 11,
+        "order": 12,
         "isDisplay": false,
-        "title": "Stock Cutting",
-        "displayName": "Stock Cutting",
+        "title": "Material Requirement Planning (MRP)",
+        "displayName": "Material Requirement Planning (MRP)",
         "disabled": false,
-        "url": "/default/planning/transactions/stock_cutting/form",
+        "url": "/default/planning/transactions/material_requirement_planning/form",
+        "items": [],
+        "roles": []
+    },
+    {
+        "_id": "663ca741e8aac1fbbe1d72e9",
+        "menuItemId": "64a6c1e33339d4dc9d8141a4",
+        "module": "Planning",
+        "type": "TRANSACTION",
+        "order": 13,
+        "isDisplay": false,
+        "title": "SPS Inventory Reconciliation",
+        "displayName": "SPS Inventory Reconciliation",
+        "disabled": false,
+        "url": "/default/planning/transactions/sps_inventory_reconciliation/list",
         "items": [],
         "roles": []
     }

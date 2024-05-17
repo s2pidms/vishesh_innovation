@@ -15,6 +15,13 @@ import {LogEntryModalComponent} from "./screens/stock-cutting/log-entry-modal/lo
 import {StockCuttingFormComponent} from "./screens/stock-cutting/stock-cutting-form/stock-cutting-form.component";
 import {StockCuttingPPICProcessComponent} from "./screens/stock-cutting/stock-cutting-ppic-process/stock-cutting-ppic-process.component";
 import {StockCuttingProcessComponent} from "./screens/stock-cutting/stock-cutting-process/stock-cutting-process.component";
+import {ScreenPrintingLogModelComponent} from "./screens/screen-printing/screen-printing-log-model/screen-printing-log-model.component";
+import {ScreenPrintingLogEntryComponent} from "./screens/screen-printing/screen-printing-log-entry/screen-printing-log-entry.component";
+import {JcStockPreparationEntryComponent} from "./screens/stock-preparation/jc-stock-preparation-entry/jc-stock-preparation-entry.component";
+import { LaminationLogEntryModelComponent } from './screens/lamination-log-entry-model/lamination-log-entry-model.component';
+import { WeedingLogEntryModelComponent } from './screens/weeding-log-entry-model/weeding-log-entry-model.component';
+import { PunchingLogEntryModelComponent } from './screens/punching-log-entry-model/punching-log-entry-model.component';
+import { PackingLogEntryModelComponent } from './screens/packing-log-entry-model/packing-log-entry-model.component';
 
 const routes: Routes = [
     {path: "", redirectTo: "form", pathMatch: "full"},
@@ -33,7 +40,14 @@ const routes: Routes = [
         StockCuttingFormComponent,
         StockCuttingProcessComponent,
         StockCuttingPPICProcessComponent,
-        LogEntryModalComponent
+        LogEntryModalComponent,
+        ScreenPrintingLogModelComponent,
+        ScreenPrintingLogEntryComponent,
+        JcStockPreparationEntryComponent,
+        LaminationLogEntryModelComponent,
+        WeedingLogEntryModelComponent,
+        PunchingLogEntryModelComponent,
+        PackingLogEntryModelComponent
     ],
     imports: [CommonModule, RouterModule.forChild(routes), SharedModule]
 })
