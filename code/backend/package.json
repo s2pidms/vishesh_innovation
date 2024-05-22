@@ -25,6 +25,7 @@
         "express-async-handler": "^1.1.4",
         "express-device": "^0.4.2",
         "express-jwt": "^6.1.0",
+        "express-rate-limit": "^7.2.0",
         "express-validator": "^6.2.0",
         "fiscal": "^1.0.0",
         "handlebars": "^4.7.7",

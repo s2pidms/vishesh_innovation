@@ -20,3 +20,5 @@ export * from "./salesPaymentTermsMasterData";
 export * from "./costEstimateMasterData";
 export * from "./salesProductMasterData";
 export * from "./salesProductMaster";
+export * from "./discountManagementMasterData";
+export * from "./discountManagement";

@@ -40,7 +40,7 @@ const MESSAGES = {
         USER_EXISTS: data => `User already exists with this same ${data}`,
         FIRM_EXISTS: data => `Firm already exists with this same ${data}`,
         ADDITIONAL_ASSETS: data => `${data} is already exists.`,
-        Data_EXISTS: data => `${data} is already exists.`,
+        Data_EXISTS: data => `${data} already exists.`,
         CANNOT_DELETE: data => `${data} can't be deleted `,
         USER_DOES_NOT_EXIST: "The user does not exist!",
         PASSWORD_DOES_NOT_MATCH: "The password does not match.",

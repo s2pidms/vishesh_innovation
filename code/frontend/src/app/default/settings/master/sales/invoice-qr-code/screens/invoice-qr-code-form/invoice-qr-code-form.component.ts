@@ -23,7 +23,9 @@ export class InvoiceQRCodeFormComponent implements OnInit {
         printDSOnInvoice: new UntypedFormControl("No"),
         venderCode: new UntypedFormControl(null),
         customerNickName: new UntypedFormControl(null),
-        showSKUDescription: new UntypedFormControl("Yes")
+        showSKUDescription: new UntypedFormControl("Yes"),
+        showPANNo: new UntypedFormControl("No"),
+        showEximCode: new UntypedFormControl("No")
     });
 
     printCodeOptions: any = AUTO_RENEWAL;

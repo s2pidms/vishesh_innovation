@@ -47,7 +47,7 @@
             </div>
 
             <div class="row">
-                <div class="col-3">
+                <div class="col-4">
                     <label class="form-label">
                         Print QR Code on Invoice
                         <span class="text-danger">*</span>
@@ -61,7 +61,7 @@
                     >
                     </ng-select>
                 </div>
-                <div class="col-3">
+                <div class="col-4">
                     <label class="form-label">
                         Print DS on Invoice
                         <span class="text-danger">*</span>
@@ -75,14 +75,16 @@
                     >
                     </ng-select>
                 </div>
-                <div class="col-3">
+                <div class="col-4">
                     <label class="form-label">
                         Vender Code
                         <span class="text-danger">*</span>
                     </label>
                     <input type="text" class="form-control" formControlName="venderCode" />
                 </div>
-                <div class="col-3">
+            </div>
+            <div class="row">
+                <div class="col-4">
                     <label class="form-label">
                         Show SKU Description
                         <span class="text-danger">*</span>
@@ -92,6 +94,34 @@
                         bindValue="value"
                         bindLabel="label"
                         formControlName="showSKUDescription"
+                        [clearable]="false"
+                    >
+                    </ng-select>
+                </div>
+                <div class="col-4">
+                    <label class="form-label">
+                        PAN No.
+                        <span class="text-danger">*</span>
+                    </label>
+                    <ng-select
+                        [items]="printCodeOptions"
+                        bindValue="value"
+                        bindLabel="label"
+                        formControlName="showPANNo"
+                        [clearable]="false"
+                    >
+                    </ng-select>
+                </div>
+                <div class="col-4">
+                    <label class="form-label">
+                        Exim Code
+                        <span class="text-danger">*</span>
+                    </label>
+                    <ng-select
+                        [items]="printCodeOptions"
+                        bindValue="value"
+                        bindLabel="label"
+                        formControlName="showEximCode"
                         [clearable]="false"
                     >
                     </ng-select>

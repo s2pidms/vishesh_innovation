@@ -18,9 +18,11 @@
                 <tr class="text-white">
                     <th sortable="customerCode" (sort)="onSort($event)">Customer Code</th>
                     <th class="text-start" sortable="customerName" (sort)="onSort($event)">Customer Name</th>
-                    <th sortable="printQRCodeOnInvoice" (sort)="onSort($event)">QR Code on Invoice</th>
-                    <th sortable="printDSOnInvoice" (sort)="onSort($event)">DS on Invoice</th>
+                    <th sortable="printQRCodeOnInvoice" (sort)="onSort($event)">QR Code</th>
+                    <th sortable="printDSOnInvoice" (sort)="onSort($event)">DS</th>
                     <th sortable="venderCode" (sort)="onSort($event)">Vender Code</th>
+                    <th sortable="showPANNo" (sort)="onSort($event)">PAN</th>
+                    <th sortable="showEximCode" (sort)="onSort($event)">Exim Code</th>
                     <th sortable="GSTIN" (sort)="onSort($event)">GSTIN</th>
                     <th sortable="isActive" (sort)="onSort($event)">View Address</th>
                     <th>Action</th>
@@ -38,6 +40,8 @@
                     <td>{{ u?.printQRCodeOnInvoice }}</td>
                     <td>{{ u?.printDSOnInvoice }}</td>
                     <td>{{ u?.venderCode }}</td>
+                    <td>{{ u.showPANNo }}</td>
+                    <td>{{ u.showEximCode }}</td>
                     <td>{{ u?.GSTIN }}</td>
                     <td>
                         <a href="javascript:void(0)" (click)="open(u)">

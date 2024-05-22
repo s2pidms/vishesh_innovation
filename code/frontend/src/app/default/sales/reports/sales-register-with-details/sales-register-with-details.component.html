@@ -53,6 +53,7 @@
                         <th sortable="salesInvoiceNumber" (sort)="onSort($event)">Invoice No</th>
                         <th sortable="salesInvoiceDateS" (sort)="onSort($event)">Invoice Date</th>
                         <th class="text-start" sortable="customerName" (sort)="onSort($event)">Customer Name</th>
+                        <th sortable="customerName" (sort)="onSort($event)">Region</th>
                         <th class="text-start" sortable="SKUName" (sort)="onSort($event)">
                             {{ "SKU Name" | labelTranslate }}
                         </th>
@@ -78,6 +79,7 @@
                                 {{ u.customerName }}
                             </span>
                         </td>
+                        <td>{{ u.region  }}</td>
                         <td class="text-start" [style.width]="SKUName.clientWidth" #SKUName>
                             <span class="pointer" [positionTarget]="SKUName" [ngbTooltip]="u.SKUName">
                                 {{ u.SKUName }}

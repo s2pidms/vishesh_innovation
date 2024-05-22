@@ -13,6 +13,10 @@ module.exports = {
         const rows = await Model.paginate({pipeline, project, queryParams});
         return rows;
     },
+    getAllReportsPaginate: async reportAggregateObj => {
+        const rows = await Model.reportPaginate(reportAggregateObj);
+        return rows;
+    },
     updateDoc: async (existing, updateBody) => {
         Object.assign(existing, updateBody);
         return existing.save();

@@ -107,6 +107,7 @@
                                     type="text"
                                     [(ngModel)]="g.machine"
                                     [ngModelOptions]="{standalone: true}"
+                                    [readonly]="action === 'view'"
                                 />
                             </div>
                         </td>
@@ -117,6 +118,7 @@
                                     type="number"
                                     [(ngModel)]="g.ptgPass"
                                     [ngModelOptions]="{standalone: true}"
+                                    [readonly]="action === 'view'"
                                 />
                             </div>
                         </td>
@@ -127,6 +129,7 @@
                                     type="number"
                                     [(ngModel)]="g.SQGPerSH"
                                     [ngModelOptions]="{standalone: true}"
+                                    [readonly]="action === 'view'"
                                 />
                             </div>
                         </td>
@@ -137,6 +140,7 @@
                                     type="number"
                                     [(ngModel)]="g.deltaE"
                                     [ngModelOptions]="{standalone: true}"
+                                    [readonly]="action === 'view'"
                                 />
                             </div>
                         </td>
@@ -159,6 +163,7 @@
                                 type="checkbox"
                                 [(ngModel)]="g.status"
                                 [ngModelOptions]="{standalone: true}"
+                                [readonly]="action === 'view'"
                                 [disabled]="['view', 'approve'].includes(action)"
                             />
                         </td>
@@ -166,7 +171,7 @@
                 </tbody>
             </table>
         </div>
-        <hr class="row line-border mt-4" />
+        <hr *ngIf="!['view'].includes(action)" class="row line-border mt-4" />
         <div class="row">
             <div class="col-12 d-flex justify-content-center mb-3">
                 <button

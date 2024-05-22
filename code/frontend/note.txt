@@ -23,7 +23,7 @@ ng g c default/purchase/master/items/screens/item-tech-specs
 ng g c default/purchase/master/items/screens/item-remarks
 ng g c default/purchase/master/items/screens/QC-level
 
-ng g c default/sales/master/items/screens/QC-level
+ng g c default/sales/master/customer/screens/exports-details--modal
 
 ng g c default/purchase/master/external-service-provider/screens/provider-contact-details
 ng g c default/purchase/master/HSN/screens/HSN-form
@@ -285,7 +285,7 @@ ng g c default/quality/master/IP/screens/IP-form
 ng g c default/quality/master/IR/screens/IR-list
 ng g c default/quality/master/IR/screens/IR-form
 ng g c default/quality/master/PDIR-T/screens/PDIR-T-list
-ng g c default/quality/master/PDIR-T/screens/PDIR-T-form
+ng g c default/quality/master/rm-specifications/screens/specifications-status-summary
 
 ng g m default/quality/transactions/resolve-discrepancy --route resolve_discrepancy --module=transactions.module
 
@@ -818,4 +818,9 @@ ng g c default/hr/master/employee/screens/joining-details
 ng g c default/hr/master/employee/screens/credentials-info
 ng g c default/hr/master/employee/screens/bank-details
 ng g c default/hr/master/employee/screens/status
+
+ng g m default/sales/master/discount-management --route discount_management --module=master.module
+ng g c default/sales/master/discount-management/screens/discount-management-form
+ng g c default/sales/master/discount-management/screens/discount-management-list
+ng g c default/sales/master/discount-management/screens/apply-discount
 

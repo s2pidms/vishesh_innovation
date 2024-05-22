@@ -202,24 +202,43 @@ export class RmSpecificationsFormComponent implements OnInit {
                         return;
                     }
 
-                    success.specificationInfo = success.specificationInfo;
-                    let specificationListData = this.masterData?.specificationList;
-                    this.masterData.specificationList = success.specificationInfo;
+                    if (!success?.specificationInfo || success?.specificationInfo?.length == 0) {
+                        this.masterData.specificationList = this.masterData.specificationList;
+                    } else {
+                        success.specificationInfo = success?.specificationInfo;
+                        let specificationListData = this.masterData?.specificationList;
+                        this.masterData.specificationList = success?.specificationInfo;
 
-                    for (const ele of success.specificationInfo) {
-                        specificationListData = specificationListData.filter(
-                            (x: any) => x.specificationCode != ele.specificationCode
-                        );
-                        this.ESCPreviewArr = [...success.specificationInfo, ...specificationListData];
+                        for (const ele of success?.specificationInfo) {
+                            specificationListData = specificationListData.filter(
+                                (x: any) => x.specificationCode != ele.specificationCode
+                            );
+                            this.masterData.specificationList = [
+                                ...success.specificationInfo,
+                                ...specificationListData
+                            ];
+                            // this.ESCPreviewArr = [...success.specificationInfo, ...specificationListData];
+                        }
                     }
-                    this.collection = this.masterData?.specificationList.length;
+
+                    console.log("success?.specificationInfo", success.specificationInfo);
+
+                    if (
+                        this.action == "view" &&
+                        (success?.specificationInfo?.length > 0 ||
+                            !success?.specificationInfo ||
+                            success?.specificationInfo?.length == 0)
+                    ) {
+                        this.masterData.specificationList = success?.specificationInfo;
+                    }
+                    this.collection = this.masterData?.specificationList?.length;
                     this.filterItemList = this.masterData?.itemsListOptions;
                     this.filterItemList = this.filterItemList.filter((x: any) => x.itemType == success?.itemCategory);
                     this.form.patchValue(success);
                     if (this.action != "create") {
-                        this.isESCPreview = true;
-                        this.isConditionPreview = true;
-                        this.isPreview = true;
+                        // this.isESCPreview = true;
+                        // this.isConditionPreview = true;
+                        this.isPreview = false;
                         this.form.disable();
                     }
                     if (this.action == "copy") {
@@ -246,7 +265,7 @@ export class RmSpecificationsFormComponent implements OnInit {
     ESCPreview() {
         this.search = "";
         this.isPreview = false;
-        this.isConditionPreview = false;
+        // this.isConditionPreview = false;
         this.masterData.specificationList = this.ESCPreviewArr;
         this.collection = this.masterData?.specificationList.length;
     }

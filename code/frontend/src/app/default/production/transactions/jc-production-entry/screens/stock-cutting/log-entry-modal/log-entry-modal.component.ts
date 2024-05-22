@@ -13,7 +13,7 @@ export class LogEntryModalComponent implements OnInit {
     @ViewChildren(NgbdSortableHeader) headers: QueryList<NgbdSortableHeader> | any;
     @Input() action: string = "create";
     @Input() logEntry: any = {};
-    @Input() shiftOptions: any = []; 
+    @Input() shiftOptions: any = [];
     sourceOfMfg: any = CHILD_ITEM_SOURCE_OF_MFG;
 
     constructor(public activeModal: NgbActiveModal, private utilityService: UtilityService) {}

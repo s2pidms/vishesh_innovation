@@ -8,4 +8,5 @@ export * from './transporterMaster';
 export * from './mapCategoryHSN';
 export * from './paymentTerms';
 export * from './salesProductMaster';
+export * from './discountManagement';
 

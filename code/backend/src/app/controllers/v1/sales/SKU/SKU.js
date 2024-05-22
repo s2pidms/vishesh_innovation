@@ -28,9 +28,6 @@ const {filteredSaleHSNList} = require("../../../../models/sales/repository/sales
 const SKUMasterRepository = require("../../../../models/sales/repository/SKUMasterRepository");
 const {filteredProductCategoryMasterList} = require("../../../../models/settings/repository/productCategoryRepository");
 const {findAppParameterValue} = require("../../settings/appParameter/appParameter");
-const {
-    filteredAttributesConfigList
-} = require("../../../../models/settings/repository/attributeConfigurationRepository");
 const {COMPANY_TYPE, STOCK_PREP_UOM} = require("../../../../mocks/constantData");
 const {filteredSalesProductMasterList} = require("../../../../models/sales/repository/salesProductMasterRepository");
 const {getAllModuleMaster} = require("../../settings/module-master/module-master");
@@ -222,7 +219,7 @@ exports.update = asyncHandler(async (req, res) => {
 // @desc    deleteById SKU Record
 exports.deleteById = asyncHandler(async (req, res) => {
     try {
-        const deleteItem = await SKUMasterRepository.deleteDoc({_id:req.params.id});
+        const deleteItem = await SKUMasterRepository.deleteDoc({_id: req.params.id});
         if (deleteItem) {
             return res.success({
                 message: MESSAGES.apiSuccessStrings.DELETED("SKU")

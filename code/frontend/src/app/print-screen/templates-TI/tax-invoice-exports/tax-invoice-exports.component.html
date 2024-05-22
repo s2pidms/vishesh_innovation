@@ -83,6 +83,22 @@
                                 <p>
                                     {{ tableData?.customerBillingAddress?.country }}
                                 </p>
+                                <p>
+                                    <span *ngIf="tableData?.customer?.showPANNo == 'Yes'">
+                                        PAN No.: {{ tableData?.customer?.customerPAN }}</span
+                                    >
+                                    <span
+                                        *ngIf="
+                                            tableData?.customer?.showPANNo == 'Yes' &&
+                                            tableData?.customer?.showEximCode == 'Yes'
+                                        "
+                                    >
+                                        |
+                                    </span>
+                                    <span *ngIf="tableData?.customer?.showEximCode == 'Yes'">
+                                        EXIM Code: {{ tableData?.customer?.eximCode }}</span
+                                    >
+                                </p>
                             </td>
                             <td colspan="4">
                                 <p class="fw-bold">
@@ -182,7 +198,9 @@
                             <td colspan="3">
                                 <p>{{ s?.SKU?.SKUNo }}</p>
                                 <p>{{ s?.SKU?.SKUName }}</p>
-                                <p *ngIf="tableData?.customer?.showSKUDescription != 'No'">{{ s?.SKU?.SKUDescription }}</p>
+                                <p *ngIf="tableData?.customer?.showSKUDescription != 'No'">
+                                    {{ s?.SKU?.SKUDescription }}
+                                </p>
                                 <!-- <p>
                                     Part No.
                                     {{

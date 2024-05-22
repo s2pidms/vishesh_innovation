@@ -8,8 +8,8 @@ const {default: mongoose} = require("mongoose");
 const {RM_SPECIFICATION} = require("../../../../mocks/schemasConstant/qualityConstant");
 const {getAndSetAutoIncrementNo} = require("../../settings/autoIncrement/autoIncrement");
 const {filteredSpecificationList} = require("../../../../models/quality/repository/specificationRepository");
-const {filteredItemList} = require("../../../../models/purchase/repository/itemRepository");
 const RMSpecificationRepository = require("../../../../models/quality/repository/rmSpecificationRepository");
+const ItemRepository = require("../../../../models/purchase/repository/itemRepository");
 const ObjectId = mongoose.Types.ObjectId;
 
 exports.getAll = asyncHandler(async (req, res) => {
@@ -23,26 +23,66 @@ exports.getAll = asyncHandler(async (req, res) => {
             },
             {
                 $lookup: {
-                    from: "Items",
-                    localField: "item",
-                    foreignField: "_id",
+                    from: "RMSpecification",
+                    localField: "_id",
+                    foreignField: "item",
                     pipeline: [
                         {
                             $project: {
-                                itemCode: 1,
-                                itemName: 1,
-                                itemDescription: 1,
-                                UOM: "$orderInfoUOM"
+                                status: 1
                             }
                         }
                     ],
-                    as: "item"
+                    as: "RMSpecification"
                 }
             },
-            {$unwind: "$item"}
+            {
+                $unwind: {
+                    path: "$RMSpecification",
+                    preserveNullAndEmptyArrays: true
+                }
+            }
         ];
-        let rows = await RMSpecificationRepository.getAllPaginate({pipeline, project, queryParams: req.query});
-        return res.success(rows);
+        let rows = await ItemRepository.getAllPaginate({pipeline, project, queryParams: req.query});
+        let totalAmounts = await ItemRepository.filteredItemList([
+            {$match: {company: ObjectId(req.user.company), isActive: "A"}},
+            {
+                $group: {
+                    _id: null,
+                    itemId: {$first: "$_id"},
+                    activeItemCount: {$sum: 1}
+                }
+            },
+            {
+                $lookup: {
+                    from: "RMSpecification",
+                    pipeline: [
+                        {
+                            $group: {
+                                _id: null,
+                                createdCount: {$sum: {$cond: [{$eq: ["$status", OPTIONS.defaultStatus.ACTIVE]}, 1, 0]}}
+                            }
+                        }
+                    ],
+                    as: "RMSpecification"
+                }
+            },
+            {
+                $unwind: {
+                    path: "$RMSpecification",
+                    preserveNullAndEmptyArrays: true
+                }
+            },
+            {
+                $project: {
+                    _id: 0,
+                    totalActiveItems: "$activeItemCount",
+                    totalCreatedItems: "$RMSpecification.createdCount",
+                    totalPendingItems: {$subtract: ["$activeItemCount", "$RMSpecification.createdCount"]}
+                }
+            }
+        ]);
+        return res.success({...rows, totalAmounts});
     } catch (e) {
         console.error("getAll", e);
         const errors = MESSAGES.apiErrorStrings.SERVER_ERROR;
@@ -129,7 +169,7 @@ exports.getById = asyncHandler(async (req, res) => {
         let existing = await RMSpecificationRepository.filteredRMSpecificationList([
             {
                 $match: {
-                    _id: ObjectId(req.params.id)
+                    item: ObjectId(req.params.id)
                 }
             },
             {
@@ -164,10 +204,26 @@ exports.getById = asyncHandler(async (req, res) => {
             }
         ]);
         if (!existing.length) {
-            let errors = MESSAGES.apiSuccessStrings.DATA_NOT_EXISTS("RM Specification");
-            return res.unprocessableEntity(errors);
+            existing = await ItemRepository.filteredItemList([
+                {
+                    $match: {
+                        _id: ObjectId(req.params.id)
+                    }
+                },
+                {
+                    $project: {
+                        item: "$_id",
+                        itemCode: 1,
+                        itemName: 1,
+                        itemDescription: 1,
+                        UOM: "$orderInfoUOM",
+                        itemCategory: "$itemType",
+                        _id: 0
+                    }
+                }
+            ]);
         }
-        return res.success(existing[0]);
+        return res.success(existing.length ? existing[0] : {});
     } catch (e) {
         console.error("getById RM Specification", e);
         const errors = MESSAGES.apiErrorStrings.SERVER_ERROR;
@@ -179,7 +235,7 @@ exports.getById = asyncHandler(async (req, res) => {
 exports.getAllMasterData = asyncHandler(async (req, res) => {
     try {
         const specificationList = await filteredSpecificationList([
-            {$match: {company: ObjectId(req.user.company)}},
+            {$match: {company: ObjectId(req.user.company), status: OPTIONS.defaultStatus.ACTIVE}},
             {$sort: {createdAt: -1}},
             {
                 $project: {
@@ -196,8 +252,7 @@ exports.getAllMasterData = asyncHandler(async (req, res) => {
                 }
             }
         ]);
-        const itemCategoryListOptions = await getAllItemCategory(req.user.company, {category: 1});
-        const itemsListOptions = await filteredItemList([
+        const itemsListOptions = await ItemRepository.filteredItemList([
             {$match: {company: ObjectId(req.user.company), isActive: "A"}},
             {$sort: {itemCode: -1}},
             {
@@ -211,6 +266,7 @@ exports.getAllMasterData = asyncHandler(async (req, res) => {
                 }
             }
         ]);
+        const itemCategoryListOptions = await getAllItemCategory(req.user.company, {category: 1});
         let autoIncrementNo = await getAndSetAutoIncrementNo(RM_SPECIFICATION.AUTO_INCREMENT_DATA(), req.user.company);
         return res.success({autoIncrementNo, specificationList, itemCategoryListOptions, itemsListOptions});
     } catch (error) {

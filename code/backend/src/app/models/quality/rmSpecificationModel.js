@@ -3,7 +3,7 @@ const Audit = require("../../controllers/v1/settings/audit/audit");
 const {OPTIONS} = require("../../helpers/global.options");
 const {RM_SPECIFICATION: SCHEMA_CONST} = require("../../mocks/schemasConstant/qualityConstant");
 const {getAndSetAutoIncrementNo} = require("../../controllers/v1/settings/autoIncrement/autoIncrement");
-const {paginatePlugin} = require("../plugins/paginatePlugin");
+const {paginatePlugin, reportPaginatePlugin} = require("../plugins/paginatePlugin");
 const rmSpecificationSchema = mongoose.Schema(
     {
         company: {
@@ -105,6 +105,7 @@ rmSpecificationSchema.pre("save", async function (next) {
 
 rmSpecificationSchema.index({status: -1});
 rmSpecificationSchema.plugin(paginatePlugin);
+rmSpecificationSchema.plugin(reportPaginatePlugin);
 
 const RMSpecification = mongoose.model(SCHEMA_CONST.COLLECTION_NAME, rmSpecificationSchema);
 

@@ -6,7 +6,6 @@ const {JOB_CARD_ENTRY} = require("../../../../mocks/schemasConstant/productionCo
 const JobCardEntryRepository = require("../../../../models/production/repository/jobCardEntryRepository");
 const {OPTIONS} = require("../../../../helpers/global.options");
 const {filteredJobCardList} = require("../../../../models/planning/repository/jobCardRepository");
-const {filteredProcessMasterList} = require("../../../../models/planning/repository/processMasterRepository");
 const {filteredDirectCostList} = require("../../../../models/planning/repository/directCostRepository");
 const {JOB_ORDER_TYPE} = require("../../../../mocks/constantData");
 const {filteredDirectCostDSKUList} = require("../../../../models/businessLeads/repository/directCostDSKURepository");
@@ -581,6 +580,20 @@ exports.getJCEntryDataByJobCardId = asyncHandler(async (req, res) => {
         });
     } catch (error) {
         console.error("getProcessFromDirectCostBySKUId Job Card Entry", error);
+        const errors = MESSAGES.apiErrorStrings.SERVER_ERROR;
+        return res.serverError(errors);
+    }
+});
+exports.getById = asyncHandler(async (req, res) => {
+    try {
+        let existing = await JobCardEntryRepository.findOneDoc({jobCard: req.params.id});
+        if (!existing) {
+            let errors = MESSAGES.apiSuccessStrings.DATA_NOT_EXISTS("Job Card Entry");
+            return res.unprocessableEntity(errors);
+        }
+        return res.success(existing);
+    } catch (e) {
+        console.error("getById Job Card Entry", e);
         const errors = MESSAGES.apiErrorStrings.SERVER_ERROR;
         return res.serverError(errors);
     }

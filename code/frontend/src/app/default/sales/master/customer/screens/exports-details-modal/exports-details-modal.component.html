@@ -1,0 +1,28 @@
+<div class="modelPage">
+    <div class="modal-header">
+        <div class="heading">Export Details</div>
+        <div>
+            <button type="button" class="btn btn-cross btn-sm" aria-label="Close" (click)="this.activeModal.close()">
+                <i class="fa fa-times-circle" aria-hidden="true"></i>
+            </button>
+        </div>
+    </div>
+    <div class="container-fluid px-0 mt-4">
+        <div class="row justify-content-center px-5 mt-4">
+            <div class="col-12">
+                <label class="form-label">
+                    Exim Code
+                    <span class="text-danger"></span>
+                </label>
+                <input type="text" class="form-control" [(ngModel)]="eximCode" />
+            </div>
+        </div>
+
+        <hr class="line-border my-4" />
+        <div class="row">
+            <div class="col text-center mb-4">
+                <button class="btn bg-primary px-4" type="button" (click)="dismissModel()">Save & Close</button>
+            </div>
+        </div>
+    </div>
+</div>

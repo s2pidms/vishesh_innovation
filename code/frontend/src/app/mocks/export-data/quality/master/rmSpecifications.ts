@@ -1,6 +1,6 @@
 import {EXCEL_STYLE} from "../../excelStyle";
 import {GET_PDF_EXPORT_DATA} from "../../exportPdfData";
-let widths = ["*", "*", "*", "*", "*", "*", "*"];
+let widths = ["*", "*", "*", "*", "*", "*"];
 let title = "RM Specifications Master";
 let headers: any = [
     {
@@ -26,11 +26,6 @@ let headers: any = [
     {
         header: "UoM",
         key: "UOM",
-        ...EXCEL_STYLE
-    },
-    {
-        header: "Status",
-        key: "status",
         ...EXCEL_STYLE
     }
 ];

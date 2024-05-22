@@ -266,11 +266,25 @@ const customerSchema = mongoose.Schema(
             type: String,
             required: false
         },
+        showPANNo: {
+            type: String,
+            required: false
+        },
+        showEximCode: {
+            type: String,
+            required: false,
+            enum: ["Yes", "No"],
+            default: "No"
+        },
         showSKUDescription: {
             type: String,
             required: false,
             enum: ["Yes", "No"],
             default: "Yes"
+        },
+        eximCode: {
+            type: String,
+            required: false
         },
         customerBankDetails: [
             {

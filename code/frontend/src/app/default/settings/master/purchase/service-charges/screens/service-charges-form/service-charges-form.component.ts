@@ -97,6 +97,15 @@ export class ServiceChargesFormComponent implements OnInit {
         });
     }
 
+    setSAC(event: any) {
+        this.f["SAC"].setValue(event.SAC);
+        this.f["GSTRate"].setValue(event.gstRate ?? 0);
+        this.f["CGSTRate"].setValue(event.cgstRate ?? 0);
+        this.f["IGSTRate"].setValue(event.igstRate ?? 0);
+        this.f["SGSTRate"].setValue(event.sgstRate ?? 0);
+        this.f["UGSTRate"].setValue(event.ugstRate ?? 0);
+    }
+
     getInitialData() {
         this.spinner.show();
         this.servicesChargesService.getAllMasterData({}).subscribe(result => {
@@ -126,14 +135,5 @@ export class ServiceChargesFormComponent implements OnInit {
                     }
                 });
         });
-    }
-
-    setSAC(event: any) {
-        this.f["SAC"].setValue(event.SAC);
-        this.f["GSTRate"].setValue(event.gstRate ?? 0);
-        this.f["IGSTRate"].setValue(event.gstRate ?? 0);
-        this.f["SGSTRate"].setValue(event.gstRate ?? 0);
-        this.f["CGSTRate"].setValue(event.gstRate ?? 0);
-        this.f["UGSTRate"].setValue(event.gstRate ?? 0);
     }
 }

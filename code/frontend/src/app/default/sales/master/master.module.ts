@@ -1,12 +1,12 @@
-import {NgModule} from "@angular/core";
-import {RouterModule, Routes} from "@angular/router";
-import {MasterComponent} from "./master.component";
+import { NgModule } from "@angular/core";
+import { RouterModule, Routes } from "@angular/router";
+import { MasterComponent } from "./master.component";
 const routes: Routes = [
     {
         path: "",
         component: MasterComponent,
         children: [
-            {path: "", redirectTo: "hsn", pathMatch: "full"},
+            { path: "", redirectTo: "hsn", pathMatch: "full" },
             {
                 path: "sac",
                 loadChildren: () => import("./sac/sac.module").then(m => m.SACModule)
@@ -57,12 +57,14 @@ const routes: Routes = [
                 path: "sales_product_master",
                 loadChildren: () =>
                     import("./sales-product-master/sales-product-master.module").then(m => m.SalesProductMasterModule)
-            }
+            },
+            { path: 'discount_management', loadChildren: () => import('./discount-management/discount-management.module').then(m => m.DiscountManagementModule) }
+
         ]
-    }
+    },
 ];
 @NgModule({
     declarations: [MasterComponent],
     imports: [RouterModule.forChild(routes)]
 })
-export class MasterModule {}
+export class MasterModule { }

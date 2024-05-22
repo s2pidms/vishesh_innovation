@@ -19,6 +19,7 @@ const salesDebitNote = require("./salesDebitNote/routes");
 const quotationSKU = require("./quotationSKU/routes");
 const quotationDSKU = require("./quotationDSKU/routes");
 const salesProductMaster = require("./salesProductMaster/routes");
+const customerDiscountManagement = require("./customerDiscountManagement/routes");
 
 router.use("/SKU", SKU);
 router.use("/directTaxInvoice", directTaxInvoice);
@@ -40,5 +41,6 @@ router.use("/salesDebitNote", salesDebitNote);
 router.use("/quotationSKU", quotationSKU);
 router.use("/quotationDSKU", quotationDSKU);
 router.use("/salesProductMaster", salesProductMaster);
+router.use("/customerDiscountManagement", customerDiscountManagement);
 
 module.exports = router;

@@ -136,6 +136,7 @@
                                             [(ngModel)]="g.MF"
                                             (ngModelChange)="changeBatchQty(g)"
                                             [ngModelOptions]="{standalone: true}"
+                                            [readonly]="action === 'view'"
                                         />
                                     </div>
                                 </td>
@@ -158,7 +159,7 @@
                 <button class="plusIconSvg btn btn-primary me-1"></button>
                 <button class="btn btn-primary px-3 me-4" type="button" (click)="openLogEntryModal()">Log Entry</button>
             </div>
-            <div class="col-8 d-flex justify-content-end">
+            <div *ngIf="!['view'].includes(action)" class="col-8 d-flex justify-content-end">
                 <button type="button" class="btn btn-primary px-5 me-4" (click)="reset()">Reset</button>
                 <button type="button" class="btn btn-primary px-4" (click)="dismissModel()">Save & close</button>
             </div>

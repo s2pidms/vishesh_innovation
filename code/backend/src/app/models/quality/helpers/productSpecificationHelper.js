@@ -1,10 +1,10 @@
 exports.getAllProductSpecificationAttributes = () => {
     return {
-        productCategory: 1,
+        productCategory: "$productCategory",
         SKUNo: 1,
         SKUName: 1,
         SKUDescription: 1,
-        UOM: 1,
-        status: 1
+        UOM: "$primaryUnit",
+        status: {$ifNull: ["$productSpecification.status", "Red"]}
     };
 };

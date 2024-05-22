@@ -182,7 +182,7 @@ const rejectShipmentPlanningByDRNId = async DRNId => {
 // @route   PUT /sales/DRN/delete/:id
 exports.deleteById = asyncHandler(async (req, res) => {
     try {
-        const deleteItem = await DRNRepository.deleteDoc({_id:req.params.id});
+        const deleteItem = await DRNRepository.deleteDoc({_id: req.params.id});
         if (deleteItem) {
             return res.success({
                 message: MESSAGES.apiSuccessStrings.DELETED("DRN")
@@ -460,19 +460,20 @@ exports.getAllReports = asyncHandler(async (req, res) => {
         return res.serverError(errors);
     }
 });
-exports.getAllDRNs = asyncHandler(async company => {
+exports.getAllDRNs = async company => {
     try {
         let rows = await Model.find({
             DRNStatus: OPTIONS.defaultStatus.APPROVED,
             company: company
         })
             .sort({createdAt: -1})
-            .populate("customer", "customerName customerShippingAddress customerCurrency");
+            .populate("customer", "customerName customerShippingAddress customerCurrency")
+            .lean();
         return rows;
     } catch (e) {
         console.error("getAllDrn", e);
     }
-});
+};
 
 exports.updateDRNStatusOnSHIP = asyncHandler(async drnId => {
     try {

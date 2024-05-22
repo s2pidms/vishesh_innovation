@@ -28,6 +28,9 @@ const {getAllTransporter} = require("../transporter/transporter");
 const MailTriggerRepository = require("../../../../models/settings/repository/mailTriggerRepository");
 const {SALES_MAIL_CONST} = require("../../../../mocks/mailTriggerConstants");
 const {filteredSKUMasterList} = require("../../../../models/sales/repository/SKUMasterRepository");
+const {
+    filteredCustomerDiscountManagementList
+} = require("../../../../models/sales/repository/customerDiscountManagementRepository");
 
 const ObjectId = mongoose.Types.ObjectId;
 
@@ -750,7 +753,7 @@ exports.updateSODetailsLineStatusById = asyncHandler(async (req, res) => {
 
 exports.getAllSalesSKUList = asyncHandler(async (req, res) => {
     try {
-        const SKUList = await filteredSKUMasterList([
+        let SKUList = await filteredSKUMasterList([
             {
                 $match: {
                     isActive: "A",
@@ -759,17 +762,6 @@ exports.getAllSalesSKUList = asyncHandler(async (req, res) => {
             },
             {$unwind: {path: "$customerInfo", preserveNullAndEmptyArrays: true}},
             {$match: {"customerInfo.customer": ObjectId(req.query.customerId)}},
-            {
-                $addFields: {
-                    discount: 0,
-                    orderedQty: 0,
-                    invoicedQty: 0,
-                    canceledQty: 0,
-                    balancedQty: 0,
-                    lineValue: 0,
-                    returnQty: 0
-                }
-            },
             {
                 $project: {
                     SKU: "$_id",
@@ -781,20 +773,21 @@ exports.getAllSalesSKUList = asyncHandler(async (req, res) => {
                     customerPartNo: "$customerInfo.customerPartNo",
                     productCategory: 1,
                     SOLineTargetDate: dateToAnyFormat(new Date(), "YYYY-MM-DD"),
-                    discount: 1,
+                    discount: {$literal: 0},
                     netRate: "$customerInfo.standardSellingRate",
-                    orderedQty: 1,
-                    invoicedQty: 1,
-                    canceledQty: 1,
-                    balancedQty: 1,
+                    orderedQty: {$literal: 0},
+                    invoicedQty: {$literal: 0},
+                    canceledQty: {$literal: 0},
+                    balancedQty: {$literal: 0},
                     productCode: 1,
-                    lineValue: 1,
+                    lineValue: {$literal: 0},
                     standardRate: "$customerInfo.standardSellingRate",
                     customer: "$customerInfo.customer",
                     customerName: "$customerInfo.customerName"
                 }
             }
         ]);
+        SKUList = await this.getCustomerDiscount(SKUList, req.user.company);
         let PODetails = await getAllUniquePODetailsByCustomerId(req.query.customerId);
         return res.success({
             SKUList,
@@ -806,6 +799,48 @@ exports.getAllSalesSKUList = asyncHandler(async (req, res) => {
         return res.serverError(errors);
     }
 });
+exports.getCustomerDiscount = async (SKUList, company) => {
+    try {
+        let customerDiscountList = await filteredCustomerDiscountManagementList([
+            {
+                $match: {company: ObjectId(company)}
+            },
+            {
+                $project: {
+                    customer: 1,
+                    globalDiscount: 1,
+                    customerDiscountInfo: 1,
+                    _id: 0
+                }
+            }
+        ]);
+        SKUList = SKUList.map(x => {
+            for (const ele of customerDiscountList) {
+                if (ele.customer?.valueOf() == x.customer?.valueOf()) {
+                    if (ele.globalDiscount) {
+                        x.discount = ele?.globalDiscount;
+                        x.netRate = +(x.standardRate - (x.standardRate * ele?.globalDiscount) / 100).toFixed(2);
+                    } else {
+                        let customerDiscountInfo = ele.customerDiscountInfo.find(
+                            y => y.SKU?.valueOf() == x.SKU?.valueOf()
+                        );
+                        if (customerDiscountInfo.discountInfo.discountValue) {
+                            x.discount = customerDiscountInfo.discountInfo.discountValue;
+                            x.netRate = +(
+                                x.standardRate -
+                                (x.standardRate * customerDiscountInfo.discountInfo.discountValue) / 100
+                            ).toFixed(2);
+                        }
+                    }
+                }
+            }
+            return x;
+        });
+        return SKUList;
+    } catch (error) {
+        console.error(error);
+    }
+};
 exports.getAllSalesSKUListOnOpenPO = asyncHandler(async (req, res) => {
     try {
         let SKUList = await getAllSKUListOnOpenPOByCustomerId(req.query);

@@ -212,9 +212,17 @@ export class ProformaInvoiceFormComponent implements OnInit {
                         success.PIDate = this.utilityService.getFormatDate(success?.PIDate, "YYYY-MM-DD");
                     }
                     success.customer = success.customer._id;
-                    this.customerOptions = this.masterData?.customersOptions.filter(
-                        (x: any) => x.salesCategory == success.customerCategory
-                    );
+
+                    this.proformaInvoiceService
+                        .getCustomerByCategory({customerCategory: success.salesCategory})
+                        .subscribe(resultSKU => {
+                            this.customerOptions = resultSKU;
+                            this.selectedCustomer = resultSKU?.find((x: any) => x._id == success.customer);
+                        });
+
+                    // this.customerOptions = this.masterData?.customersOptions.filter(
+                    //     (x: any) => x.salesCategory == success.customerCategory
+                    // );
                     if (success.PODate) {
                         success.PODate = this.utilityService.getFormatDate(success?.PODate, "YYYY-MM-DD");
                     }
@@ -227,9 +235,7 @@ export class ProformaInvoiceFormComponent implements OnInit {
                     if (success.SOTargetDate) {
                         success.SOTargetDate = this.utilityService.getFormatDate(success?.SOTargetDate, "YYYY-MM-DD");
                     }
-                    this.selectedCustomer = this.masterData?.customersOptions.find(
-                        (x: any) => x._id == success.customer
-                    );
+
                     this.PIDetailsArray = success?.PIDetails.map((ele: any, idx: any) => {
                         return {
                             PILineNumber: ele.PILineNumber,
@@ -315,36 +321,45 @@ export class ProformaInvoiceFormComponent implements OnInit {
         this.f["currency"].setValue(item?.customerCurrency);
         this.f["paymentTerms"].setValue(item.customerPaymentTerms);
         this.selectedCustomer = item;
-
-        this.PIDetailsArray = this.SKU.filter((x: any) =>
-            x.customerInfo.some((y: any) => y.customer == this.f["customer"].value)
-        ).map((ele: any, idx: any) => {
-            return {
-                SKU: ele._id,
-                PILineNumber: idx + 1,
-                SKUNo: ele.SKUNo,
-                SKUName: ele.SKUName,
-                UOM: ele.primaryUnit,
-                SKUDescription: ele.SKUDescription,
-                customerPartNo: ele.customerInfo.find((customer: any) => this.f["customer"].value === customer.customer)
-                    ?.customerPartNo,
-                SOLineTargetDate: this.utilityService.getTodayDate("YYYY-MM-DD"),
-                discount: 0,
-                netRate:
-                    ele.customerInfo.find((customer: any) => this.f["customer"].value === customer.customer)
-                        ?.standardSellingRate ?? 0,
-                orderedQty: 0,
-                invoicedQty: 0,
-                canceledQty: 0,
-                balancedQty: 0,
-                canceledReason: ele,
-                standardRate:
-                    ele.customerInfo.find((customer: any) => this.f["customer"].value === customer.customer)
-                        ?.standardSellingRate ?? 0,
-                lineValue: 0
-            };
+        this.spinner.show();
+        this.proformaInvoiceService.getSKUListByCustomer({customer: item?._id}).subscribe(success => {
+            this.PIDetailsArray = success?.map((x: any, idx: any) => {
+                x.PILineNumber = idx + 1;
+                return x;
+            });
+            this.collection = this.PIDetailsArray?.length;
+            this.spinner.hide();
         });
-        this.collection = this.PIDetailsArray.length;
+
+        // this.PIDetailsArray = this.SKU.filter((x: any) =>
+        //     x.customerInfo.some((y: any) => y.customer == this.f["customer"].value)
+        // ).map((ele: any, idx: any) => {
+        //     return {
+        //         SKU: ele._id,
+        //         PILineNumber: idx + 1,
+        //         SKUNo: ele.SKUNo,
+        //         SKUName: ele.SKUName,
+        //         UOM: ele.primaryUnit,
+        //         SKUDescription: ele.SKUDescription,
+        //         customerPartNo: ele.customerInfo.find((customer: any) => this.f["customer"].value === customer.customer)
+        //             ?.customerPartNo,
+        //         SOLineTargetDate: this.utilityService.getTodayDate("YYYY-MM-DD"),
+        //         discount: 0,
+        //         netRate:
+        //             ele.customerInfo.find((customer: any) => this.f["customer"].value === customer.customer)
+        //                 ?.standardSellingRate ?? 0,
+        //         orderedQty: 0,
+        //         invoicedQty: 0,
+        //         canceledQty: 0,
+        //         balancedQty: 0,
+        //         canceledReason: ele,
+        //         standardRate:
+        //             ele.customerInfo.find((customer: any) => this.f["customer"].value === customer.customer)
+        //                 ?.standardSellingRate ?? 0,
+        //         lineValue: 0
+        //     };
+        // });
+        // this.collection = this.PIDetailsArray.length;
     }
 
     setBillFromAddress(ele: any) {
@@ -367,9 +382,17 @@ export class ProformaInvoiceFormComponent implements OnInit {
         this.f["customer"].setValue(null);
         this.selectedCustomerDetails = {};
         this.PIDetailsArray = [];
-        this.customerOptions = this.masterData?.customersOptions.filter(
-            (x: any) => x.customerCategory == this.f["salesCategory"].value
-        );
+        this.spinner.show();
+        this.proformaInvoiceService
+            .getCustomerByCategory({customerCategory: this.f["salesCategory"].value})
+            .subscribe(success => {
+                this.customerOptions = success;
+                this.spinner.hide();
+            });
+
+        // this.customerOptions = this.masterData?.customersOptions.filter(
+        //     (x: any) => x.customerCategory == this.f["salesCategory"].value
+        // );
     }
 
     setLineValue(PILineNumber: number, ele: any) {

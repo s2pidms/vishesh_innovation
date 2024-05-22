@@ -103,7 +103,6 @@ export class PaidLeavesFormComponent implements OnInit {
         this.paidLeaveService.getAllMasterData({}).subscribe(result => {
             this.masterData = result;
             this.form.controls["paidLeavesNumber"].setValue(this.masterData.autoIncrementNo);
-            this.form.controls["privilegeLeavePL"].disable();
             this.form.controls["calendarYear"].setValue(new Date().getFullYear());
             this.form.controls["casualLeaveCL"].setValue("0");
             this.form.controls["sickLeaveSL"].setValue("0");

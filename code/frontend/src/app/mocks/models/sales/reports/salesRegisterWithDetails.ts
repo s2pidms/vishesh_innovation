@@ -35,4 +35,5 @@ export interface salesRegisterWithDetails {
     IGSTAmountWithTD: number;
     SGST_CGSTAmountWithTD: number;
     lineValueWithTax: number;
+    region?: string;
 }

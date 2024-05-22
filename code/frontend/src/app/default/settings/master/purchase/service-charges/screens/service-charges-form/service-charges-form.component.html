@@ -7,15 +7,15 @@
         </div>
         <div class="form-body">
             <div class="row">
-                <div class="col-md-2">
+                <div class="col-3">
                     <label class="form-label"> Order <span class="text-danger"></span> </label>
                     <input class="form-control" type="number" formControlName="order" />
                 </div>
-                <div class="col-md-3">
+                <div class="col-3">
                     <label class="form-label"> Description of Services <span class="text-danger"></span> </label>
                     <input class="form-control" type="text" formControlName="description" />
                 </div>
-                <div class="col-md-2">
+                <div class="col-3">
                     <label class="form-label"> SAC Code <span class="text-danger">*</span> </label>
                     <ng-select
                         [items]="masterData.SACOptions"
@@ -27,11 +27,26 @@
                     >
                     </ng-select>
                 </div>
-                <div class="col-md-2">
+                <div class="col-3">
                     <label class="form-label"> GST Rate % <span class="text-danger"></span> </label>
                     <input class="form-control" type="number" formControlName="GSTRate" />
                 </div>
-                <div class="col">
+            </div>
+            <div class="row mt-4">
+                <div class="col-3">
+                    <label class="form-label"> IGST Rate % <span class="text-danger"></span> </label>
+                    <input class="form-control" type="number" formControlName="IGSTRate" />
+                </div>
+                <div class="col-3">
+                    <label class="form-label"> CGST Rate % <span class="text-danger"></span> </label>
+                    <input class="form-control" type="number" formControlName="CGSTRate" />
+                </div>
+                <div class="col-3">
+                    <label class="form-label"> SGST Rate % <span class="text-danger"></span> </label>
+                    <input class="form-control" type="number" formControlName="SGSTRate" />
+                </div>
+
+                <div class="col-3">
                     <label class="form-label">
                         Status
                         <span class="text-danger"></span>

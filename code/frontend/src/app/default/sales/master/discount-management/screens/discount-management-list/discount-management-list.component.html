@@ -1,0 +1,78 @@
+<div class="listCard card">
+    <div class="table-header">
+        <label class="heading"> Discount Management</label>
+    </div>
+
+    <div appAccessControl [accessType]="rolePermissionActions.createAction" class="text-center">
+        <button class="btn btn-primary btn-add" type="button" (click)="navigateTo('../form', null, 'create')">
+            <i class="fa fa-plus-square fa-lg me-2" aria-hidden="true"></i>
+            Discount Management
+        </button>
+    </div>
+
+    <hr class="line-border" />
+    <div class="table-responsive">
+        <app-setting-header [data]="{page,pageSize,collection,search,type: 'list'}" (dataChange)="eventHeader($event)">
+        </app-setting-header>
+        <table class="table table-bordered">
+            <thead class="bg-primary">
+                <tr class="text-white">
+                    <th sortable="discountNo" (sort)="onSort($event)">Discount ID</th>
+                    <th sortable="discountDescription" (sort)="onSort($event)">Discount Description</th>
+                    <th sortable="customerCategory" (sort)="onSort($event)">Customer Category</th>
+                    <th class="text-start" sortable="customerName" (sort)="onSort($event)">Select Customer</th>
+                    <th sortable="globalDiscount" (sort)="onSort($event)">Global Discount %</th>
+                    <th sortable="status" (sort)="onSort($event)">Action</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                <tr *ngFor="let u of tableData; trackBy: trackByFn">
+                    <td>{{ u?.discountNo }}</td>
+                    <td>{{ u?.discountDescription }}</td>
+                    <td>{{ u?.customerCategory }}</td>
+                    <td class="text-start" [style.width]="customerName.clientWidth" #customerName>
+                        <span class="pointer" [positionTarget]="customerName" [ngbTooltip]="u.customerName">
+                            {{ u.customerName }}
+                        </span>
+                    </td>
+                    <td>{{ u?.globalDiscount }}</td>
+
+                    <td>
+                        <div class="dropdown">
+                            <button class="dropbtn"></button>
+                            <div class="dropdown-content">
+                                <a
+                                    appAccessControl
+                                    [accessType]="rolePermissionActions.viewAction"
+                                    href="javascript:void(0)"
+                                    (click)="navigateTo('../form', u?._id, 'view')"
+                                >
+                                    <i class="fa fa-eye fa-lg me-2 text-primary" aria-hidden="true"></i>
+                                    View
+                                </a>
+                                <a
+                                    appAccessControl
+                                    [accessType]="rolePermissionActions.editAction"
+                                    href="javascript:void(0)"
+                                    (click)="navigateTo('../form', u?._id, 'edit')"
+                                >
+                                    <i class="fa fa-pencil-square-o fa-lg me-2 text-primary" aria-hidden="true"></i>
+                                    Edit
+                                </a>
+                                <a
+                                    *ngIf="this.user == superAdminId"
+                                    href="javascript:void(0)"
+                                    (click)="openConfirmModal(u?._id, u?.discountNo)"
+                                >
+                                    <i class="fa fa-trash text-primary" aria-hidden="true"></i>
+                                    Delete
+                                </a>
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>

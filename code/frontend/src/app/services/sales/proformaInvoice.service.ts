@@ -11,6 +11,8 @@ export class ProformaInvoiceService {
         getAllPath: "/sales/proformaInvoice/getAll",
         getAllReportPath: "/sales/proformaInvoice/getAllReports",
         getAllMasterDataPath: "/sales/proformaInvoice/getAllMasterData",
+        getCustomerByCategoryPath: "/sales/proformaInvoice/getCustomerByCategory",
+        getSKUListByCustomerPath: "/sales/proformaInvoice/getSKUListByCustomer",
         getAllCancelProformaInvoice: "/sales/proformaInvoice/getAllCancelProformaInvoice",
         updatePath: (id: string) => `/sales/proformaInvoice/update/${id}`,
         getByIdPath: (id: string) => `/sales/proformaInvoice/getById/${id}`,
@@ -30,6 +32,12 @@ export class ProformaInvoiceService {
     }
     getAllMasterData(params: any) {
         return this.http.get(this.routes.getAllMasterDataPath, params).pipe(map((res: any) => res));
+    }
+    getCustomerByCategory(params: any) {
+        return this.http.get(this.routes.getCustomerByCategoryPath, params).pipe(map((res: any) => res));
+    }
+    getSKUListByCustomer(params: any) {
+        return this.http.get(this.routes.getSKUListByCustomerPath, params).pipe(map((res: any) => res));
     }
     update(id: string, payload: any) {
         return this.http.put(this.routes.updatePath(id), payload).pipe(map((res: any) => res));

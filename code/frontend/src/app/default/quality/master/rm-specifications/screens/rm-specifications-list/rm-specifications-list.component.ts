@@ -9,6 +9,7 @@ import {RM_SPECIFICATIONS_REPORT_DATA, RM_SPECIFICATIONS_PDF_DATA} from "@mocks/
 import {RMSpecificationMaster} from "@mocks/models/quality/master";
 import {NgbModal} from "@ng-bootstrap/ng-bootstrap";
 import {ConfirmDeleteComponent} from "@shared/modals";
+import {SpecificationsStatusSummaryComponent} from "../specifications-status-summary/specifications-status-summary.component";
 
 @Component({
     selector: "app-rm-specifications-list",
@@ -20,12 +21,13 @@ export class RmSpecificationsListComponent implements OnInit, OnDestroy {
     page: number = 1;
     pageSize: number = 8;
     collection: number = 0;
-    column: string = "itemCode";
-    direction: number = -1;
+    column: string = "status";
+    direction: number = 1;
     search: string = "";
     tableData: RMSpecificationMaster[] = [];
     superAdminId: any = superAdminId;
     user: any = "";
+    totalAmounts: any = {};
     rolePermissionActions: any = LIST_DEFAULT_PERMISSION_ACTIONS;
     subscription!: Subscription;
     constructor(
@@ -49,7 +51,7 @@ export class RmSpecificationsListComponent implements OnInit, OnDestroy {
     //     this.router.navigate([path], {queryParams: {id, action}});
     // }
     navigateTo(path: string, u: any, action: string) {
-        if (u.status == "Inactive" && action == "copy") {
+        if (["Red", "Inactive"].includes(u.status) && action == "copy") {
             return null;
         } else {
             this.router.navigate([path], {relativeTo: this.activatedRoute, queryParams: {id: u?._id, action}});
@@ -100,6 +102,9 @@ export class RmSpecificationsListComponent implements OnInit, OnDestroy {
             } else {
                 this.tableData = success.rows;
                 this.collection = success.count;
+                if (success?.totalAmounts?.length > 0) {
+                    this.totalAmounts = success.totalAmounts[0];
+                }
             }
             this.spinner.hide();
         });
@@ -141,6 +146,30 @@ export class RmSpecificationsListComponent implements OnInit, OnDestroy {
     pdfDownload(data: any) {
         let output = RM_SPECIFICATIONS_PDF_DATA(data);
         this.exportToPDFService.generatePdf(output.tableData, output.title);
+    }
+
+    openStatusSummaryModal() {
+        const modalRef = this.modalService.open(SpecificationsStatusSummaryComponent, {
+            centered: true,
+            size: "lg",
+            backdrop: "static",
+            keyboard: false
+        });
+
+        modalRef.componentInstance.heading = "RM Specification Status Summary";
+        modalRef.componentInstance.activeCount = "Active Items Count";
+        modalRef.componentInstance.specificationCreatedForCount = "RM Specification created for Items Count";
+        modalRef.componentInstance.specificationPendingForCount = "RM Specification pending for Items Count";
+        modalRef.componentInstance.totalActive = this.totalAmounts?.totalActiveItems;
+        modalRef.componentInstance.totalCreated = this.totalAmounts?.totalCreatedItems;
+        modalRef.componentInstance.totalPending = this.totalAmounts?.totalPendingItems;
+        modalRef.result.then(
+            (success: any) => {
+                if (success) {
+                }
+            },
+            (reason: any) => {}
+        );
     }
 
     onSort({column, direction}: SortEvent) {

@@ -2,7 +2,7 @@ import {Component, OnInit, QueryList, ViewChildren} from "@angular/core";
 import {ActivatedRoute, Router} from "@angular/router";
 import {NgbdSortableHeader} from "@directives/sortable.directive";
 import {LIST_DEFAULT_PERMISSION_ACTIONS} from "@mocks/constant";
-import {MenuTitleService, SpinnerService} from "@core/services";
+import {MenuTitleService, SpinnerService, UtilityService} from "@core/services";
 import {JobCardOutputService} from "@services/production";
 import {IJobCardTrackingMasterData} from "@mocks/models/planning/transactions/jobCardTrackingMasterData";
 import {ViewJcStatusComponent} from "../view-jc-status/view-jc-status.component";
@@ -31,6 +31,7 @@ export class JobCardTrackingListComponent implements OnInit {
         private activatedRoute: ActivatedRoute,
         private jobCardOutputService: JobCardOutputService,
         private menuTitleService: MenuTitleService,
+        private utilityService: UtilityService,
         private modalService: NgbModal
     ) {}
 
@@ -59,14 +60,17 @@ export class JobCardTrackingListComponent implements OnInit {
         // });
     }
 
-    navigateTo(path: string, action: string, title: string, arrayDetails: any) {
-        if (arrayDetails.length > 0) {
-            this.menuTitleService.set({
-                title: title
+    navigateTo(path: string, action: string, item: any) {
+        // if (arrayDetails.length > 0) {
+        //     this.menuTitleService.set({
+        //         title: title
+        //     });
+        if (item?.jobCardEntry?.length > 0) {
+            this.router.navigate([path], {
+                queryParams: {id: item?.jobCardId, action}
             });
-            this.router.navigate([path], {queryParams: {id: arrayDetails[0]?._id, action}});
-            return;
         }
+        return;
     }
 
     setPagination() {

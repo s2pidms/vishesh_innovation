@@ -38,23 +38,47 @@
         </div>
 
         <hr class="row line-border mt-4" />
+        <div class="row py-3">
+            <div class="col-3">
+                <div class="d-flex align-items-center">
+                    <span class="set-flex-status px-4"> Status </span>
+                    <select class="form-select statusSelectBorder" formControlName="status">
+                        <option [value]="'null'" selected disabled>Select Status</option>
+                        <option [value]="'Active'">Active</option>
+                        <option [value]="'Inactive'">Inactive</option>
+                    </select>
+                    <span class="input-group-text statusSpanHeight">
+                        <div class="statusActive" *ngIf="form.value['status'] == 'Active'" class="statusActive"></div>
+                        <div class="statusInActive" *ngIf="form.value['status'] == 'Inactive'"></div>
+                    </span>
+                </div>
+            </div>
 
-        <div *ngIf="action != 'view'" class="d-flex justify-content-center mb-3">
-            <div class="d-grid col-md-1 me-5" *ngIf="['! edit', 'create'].includes(action)">
-                <button class="btn btn-primary btn-lg" type="button" (click)="reset()">Reset</button>
+            <div *ngIf="action != 'view'" class="col-9 text-end">
+                <button class="btn btn-primary px-5 me-5" type="button" (click)="reset()">Reset</button>
+                <button class="btn btn-primary px-5" type="button" (click)="submit()">Save</button>
             </div>
-            <div class="d-grid col-md-1">
-                <button class="btn btn-primary btn-lg" type="button" (click)="submit()">Save</button>
+            <div *ngIf="action == 'view'" class="col-9 text-end">
+                <button
+                    *ngIf="['view'].includes(action)"
+                    class="btn btn-primary px-5"
+                    type="button"
+                    (click)="navigateTo()"
+                >
+                    Back
+                </button>
             </div>
-        </div>
-        <div class="d-flex justify-content-center" *ngIf="['view'].includes(action)">
-            <button
-                class="btn btn-primary px-5 text"
-                type="button"
-                (click)="navigateTo('/default/quality/master/specification_master/list', {}, '')"
-            >
-                Back
-            </button>
+            <!-- <div *ngIf="action != 'view'" class="d-flex justify-content-center mb-3">
+                    <div class="d-grid col-md-1 me-5" *ngIf="['! edit', 'create'].includes(action)">
+                        <button class="btn btn-primary btn-lg" type="button" (click)="reset()">Reset</button>
+                    </div>
+                    <div class="d-grid col-md-1">
+                        <button class="btn btn-primary btn-lg" type="button" (click)="submit()">Save</button>
+                    </div>
+                </div>
+                <div class="d-flex justify-content-center" *ngIf="['view'].includes(action)">
+                    <button class="btn btn-primary px-5 text" type="button" (click)="navigateTo()">Back</button>
+                </div> -->
         </div>
     </div>
 </form>

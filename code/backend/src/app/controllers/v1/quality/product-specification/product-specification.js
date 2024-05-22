@@ -1,16 +1,15 @@
 const asyncHandler = require("express-async-handler");
-const Model = require("../../../../models/quality/productSpecificationModel");
 const MESSAGES = require("../../../../helpers/messages.options");
-const {generateCreateData, OPTIONS} = require("../../../../helpers/global.options");
+const {OPTIONS} = require("../../../../helpers/global.options");
 const {getAllSKUCategory} = require("../../settings/SKUCategoryMaster/SKUCategoryMaster");
 const {getAllProductSpecificationAttributes} = require("../../../../models/quality/helpers/productSpecificationHelper");
 const {default: mongoose} = require("mongoose");
 const {getAndSetAutoIncrementNo} = require("../../settings/autoIncrement/autoIncrement");
 const {PRODUCT_SPECIFICATION} = require("../../../../mocks/schemasConstant/qualityConstant");
-const {filteredSKUMasterList} = require("../../../../models/sales/repository/SKUMasterRepository");
 const {filteredSpecificationList} = require("../../../../models/quality/repository/specificationRepository");
 const ProductSpecificationRepository = require("../../../../models/quality/repository/productSpecificationRepository");
 const {filteredProductCategoryMasterList} = require("../../../../models/settings/repository/productCategoryRepository");
+const SKUMasterRepository = require("../../../../models/sales/repository/SKUMasterRepository");
 const ObjectId = mongoose.Types.ObjectId;
 
 exports.getAll = asyncHandler(async (req, res) => {
@@ -21,11 +20,70 @@ exports.getAll = asyncHandler(async (req, res) => {
                 $match: {
                     company: ObjectId(req.user.company)
                 }
+            },
+            {
+                $lookup: {
+                    from: "ProductSpecification",
+                    localField: "_id",
+                    foreignField: "SKU",
+                    pipeline: [
+                        {
+                            $project: {
+                                status: 1
+                            }
+                        }
+                    ],
+                    as: "productSpecification"
+                }
+            },
+            {
+                $unwind: {
+                    path: "$productSpecification",
+                    preserveNullAndEmptyArrays: true
+                }
             }
         ];
 
-        let rows = await ProductSpecificationRepository.getAllPaginate({pipeline, project, queryParams: req.query});
-        return res.success(rows);
+        let rows = await SKUMasterRepository.getAllPaginate({pipeline, project, queryParams: req.query});
+        let totalAmounts = await SKUMasterRepository.filteredSKUMasterList([
+            {$match: {company: ObjectId(req.user.company), isActive: "A"}},
+            {
+                $group: {
+                    _id: null,
+                    itemId: {$first: "$_id"},
+                    activeSKUCount: {$sum: 1}
+                }
+            },
+            {
+                $lookup: {
+                    from: "ProductSpecification",
+                    pipeline: [
+                        {
+                            $group: {
+                                _id: null,
+                                createdCount: {$sum: {$cond: [{$eq: ["$status", OPTIONS.defaultStatus.ACTIVE]}, 1, 0]}}
+                            }
+                        }
+                    ],
+                    as: "productSpecification"
+                }
+            },
+            {
+                $unwind: {
+                    path: "$productSpecification",
+                    preserveNullAndEmptyArrays: true
+                }
+            },
+            {
+                $project: {
+                    _id: 0,
+                    totalActiveSKU: "$activeSKUCount",
+                    totalCreatedSKU: "$productSpecification.createdCount",
+                    totalPendingSKU: {$subtract: ["$activeSKUCount", "$productSpecification.createdCount"]}
+                }
+            }
+        ]);
+        return res.success({...rows, totalAmounts});
     } catch (e) {
         console.error("getAll", e);
         const errors = MESSAGES.apiErrorStrings.SERVER_ERROR;
@@ -37,7 +95,7 @@ exports.getAll = asyncHandler(async (req, res) => {
 // @route   POST /quality/inspectionParameter/create
 exports.create = asyncHandler(async (req, res) => {
     try {
-        let existingUser = await Model.findOne({
+        let existingUser = await ProductSpecificationRepository.findOneDoc({
             SKUNo: req.body.SKUNo
         });
         if (existingUser) {
@@ -50,9 +108,7 @@ exports.create = asyncHandler(async (req, res) => {
             updatedBy: req.user.sub,
             ...req.body
         };
-        const saveObj = new Model(createdObj);
-
-        const itemDetails = await saveObj.save();
+        const itemDetails = await ProductSpecificationRepository.createDoc(createdObj);
         if (itemDetails) {
             return res.success({
                 message: MESSAGES.apiSuccessStrings.ADDED("Product Specification")
@@ -72,17 +128,13 @@ exports.create = asyncHandler(async (req, res) => {
 // @route   PUT /quality/inspectionParameter/update/:id
 exports.update = asyncHandler(async (req, res) => {
     try {
-        let itemDetails = await Model.findById(req.params.id);
+        let itemDetails = await ProductSpecificationRepository.getDocById(req.params.id);
         if (!itemDetails) {
             const errors = MESSAGES.apiErrorStrings.INVALID_REQUEST;
             return res.preconditionFailed(errors);
         }
         itemDetails.updatedBy = req.user.sub;
-        itemDetails = await generateCreateData(itemDetails, req.body);
-        if (req.body.specificationInfo) {
-            itemDetails.specificationInfo = req.body.specificationInfo;
-        }
-        itemDetails = await itemDetails.save();
+        itemDetails = await ProductSpecificationRepository.updateDoc(itemDetails, req.body);
         return res.success({
             message: MESSAGES.apiSuccessStrings.UPDATE("Product Specification has been")
         });
@@ -97,9 +149,8 @@ exports.update = asyncHandler(async (req, res) => {
 // @route   PUT /quality/inspectionParameter/delete/:id
 exports.deleteById = asyncHandler(async (req, res) => {
     try {
-        const deleteItem = await Model.findById(req.params.id);
+        const deleteItem = await ProductSpecificationRepository.deleteDoc({_id: req.params.id});
         if (deleteItem) {
-            await deleteItem.remove();
             return res.success({
                 message: MESSAGES.apiSuccessStrings.DELETED("Product Specification")
             });
@@ -118,12 +169,47 @@ exports.deleteById = asyncHandler(async (req, res) => {
 // @route   GET /quality/inspectionParameter/getById/:id
 exports.getById = asyncHandler(async (req, res) => {
     try {
-        let existing = await Model.findById(req.params.id);
-        if (!existing) {
-            let errors = MESSAGES.apiSuccessStrings.DATA_NOT_EXISTS("Product Specification");
-            return res.unprocessableEntity(errors);
+        let existing = await ProductSpecificationRepository.filteredProductSpecificationList([
+            {
+                $match: {
+                    SKU: ObjectId(req.params.id)
+                }
+            },
+            {
+                $project: {
+                    productSpecificationCode: 1,
+                    productCategory: 1,
+                    SKU: 1,
+                    SKUNo: 1,
+                    SKUName: 1,
+                    SKUDescription: 1,
+                    UOM: 1,
+                    specificationInfo: 1,
+                    status: 1
+                }
+            }
+        ]);
+        if (!existing.length) {
+            existing = await SKUMasterRepository.filteredSKUMasterList([
+                {
+                    $match: {
+                        _id: ObjectId(req.params.id)
+                    }
+                },
+                {
+                    $project: {
+                        SKU: "$_id",
+                        SKUNo: 1,
+                        SKUName: 1,
+                        SKUDescription: 1,
+                        UOM: "$primaryUnit",
+                        productCategory: "$productCategory",
+                        _id: 0
+                    }
+                }
+            ]);
         }
-        return res.success(existing);
+        return res.success(existing.length ? existing[0] : {});
     } catch (e) {
         console.error("getById Product Specification", e);
         const errors = MESSAGES.apiErrorStrings.SERVER_ERROR;
@@ -136,7 +222,7 @@ exports.getById = asyncHandler(async (req, res) => {
 exports.getAllMasterData = asyncHandler(async (req, res) => {
     try {
         const specificationList = await filteredSpecificationList([
-            {$match: {company: ObjectId(req.user.company)}},
+            {$match: {company: ObjectId(req.user.company), status: OPTIONS.defaultStatus.ACTIVE}},
             {$sort: {createdAt: -1}},
             {
                 $project: {
@@ -192,7 +278,7 @@ exports.getAllMasterData = asyncHandler(async (req, res) => {
                 };
             });
         }
-        const SKUOptions = await filteredSKUMasterList([
+        const SKUOptions = await SKUMasterRepository.filteredSKUMasterList([
             {$match: {isActive: "A", company: ObjectId(req.user.company)}},
             {$sort: {createdAt: -1}},
             {$project: {SKUNo: 1, SKUName: 1, SKUDescription: 1, productCategory: 1, primaryUnit: 1, _id: 1}}
@@ -209,28 +295,16 @@ exports.getAllMasterData = asyncHandler(async (req, res) => {
     }
 });
 
-// @desc    getAllInspectionParameters Product Specification Record
-exports.getAllProductSpecification = async company => {
-    try {
-        let rows = await Model.find({
-            status: OPTIONS.defaultStatus.ACTIVE,
-            company: company
-        }).sort({createdAt: -1});
-        return rows;
-    } catch (e) {
-        console.error("getAllRM Specification", e);
-    }
-};
 exports.getBySKUId = async (company, SKUId) => {
     try {
-        let rows = await Model.findOne(
+        let rows = await ProductSpecificationRepository.findOneDoc(
             {
                 status: OPTIONS.defaultStatus.ACTIVE,
                 company: company,
                 SKU: SKUId
             },
             {specificationInfo: 1}
-        ).sort({createdAt: -1});
+        );
         return rows;
     } catch (e) {
         console.error("getAllRM Specification", e);

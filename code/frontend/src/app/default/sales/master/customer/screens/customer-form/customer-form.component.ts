@@ -15,6 +15,7 @@ import {SpinnerService} from "@core/services";
 import {Address} from "@shared/interfaces";
 import {Location} from "@angular/common";
 import {B2BCustomerMasterData} from "@mocks/models/sales/master";
+import {ExportsDetailsModalComponent} from "../exports-details-modal/exports-details-modal.component";
 
 @Component({
     selector: "app-customer-form",
@@ -107,7 +108,8 @@ export class CustomerFormComponent implements OnInit {
             bankIFSCCode: new UntypedFormControl(""),
             bankSwiftCode: new UntypedFormControl("")
         }),
-        customerLeadTimeInDays: new UntypedFormControl("")
+        customerLeadTimeInDays: new UntypedFormControl(""),
+        eximCode: new UntypedFormControl(null)
     });
 
     get ShippingAddress() {
@@ -189,33 +191,33 @@ export class CustomerFormComponent implements OnInit {
         let customerCategory = this.form.controls["customerCategory"].value;
         if (customerCategory.includes("Domestic")) {
             this.form.controls["region"].enable();
-            this.form.controls["customerPAN"].enable();
+            // this.form.controls["customerPAN"].enable();
             this.form.controls["GSTClassification"].enable();
             this.form.controls["GSTIN"].enable();
             this.BillingAddress.controls["country"].setValue("India");
-            this.form.get("customerPAN").setValidators([Validators.required]);
+            // this.form.get("customerPAN").setValidators([Validators.required]);
             this.form.get("GSTClassification").setValidators([Validators.required]);
             this.form.get("GSTIN").setValidators([Validators.required]);
 
-            this.form.get("customerPAN").updateValueAndValidity();
+            // this.form.get("customerPAN").updateValueAndValidity();
             this.form.get("GSTIN").updateValueAndValidity();
             this.form.get("GSTClassification").updateValueAndValidity();
         } else if (customerCategory.includes("Exports")) {
             this.form.controls["region"].setValue(null);
-            this.form.controls["customerPAN"].setValue(null);
+            // this.form.controls["customerPAN"].setValue(null);
             this.form.controls["GSTClassification"].setValue(null);
             this.form.controls["GSTIN"].setValue(null);
 
-            this.form.get("customerPAN").clearValidators();
+            // this.form.get("customerPAN").clearValidators();
             this.form.get("GSTIN").clearValidators();
             this.form.get("GSTClassification").clearValidators();
 
-            this.form.get("customerPAN").updateValueAndValidity();
+            // this.form.get("customerPAN").updateValueAndValidity();
             this.form.get("GSTIN").updateValueAndValidity();
             this.form.get("GSTClassification").updateValueAndValidity();
 
             this.form.controls["region"].disable();
-            this.form.controls["customerPAN"].disable();
+            // this.form.controls["customerPAN"].disable();
             this.form.controls["GSTClassification"].disable();
             this.form.controls["GSTIN"].disable();
         }
@@ -262,6 +264,26 @@ export class CustomerFormComponent implements OnInit {
             (reason: any) => {}
         );
     }
+    openExportDetailsModal() {
+        const modalRef = this.modalService.open(ExportsDetailsModalComponent, {
+            centered: true,
+            size: "sm",
+            backdrop: "static",
+            keyboard: false
+        });
+
+        modalRef.componentInstance.action = this.action;
+        modalRef.componentInstance.eximCode = this.form.controls["eximCode"].value;
+        modalRef.result.then(
+            (success: any) => {
+                if (["create", "edit"].includes(this.action) && success) {
+                    this.form.controls["eximCode"].setValue(success);
+                }
+            },
+            (reason: any) => {}
+        );
+    }
+
     getInitialData() {
         this.spinner.show();
         this.customerService.getAllMasterData({}).subscribe(result => {

@@ -220,7 +220,7 @@ export class JcProductionEntryFormComponent implements OnInit {
             this.activatedRoute.queryParams
                 .pipe(
                     mergeMap((params: any) => {
-                        // this.action = params.action;
+                        this.action = params.action;
                         if (params["id"]) {
                             // get patch data
                             return this.jobCardEntryService.getById(params["id"]);
@@ -230,6 +230,7 @@ export class JcProductionEntryFormComponent implements OnInit {
                     })
                 )
                 .subscribe((success: any) => {
+                    this.selectedJobCardDetails = success;
                     this.spinner.hide();
                     if (Object.keys(success).length == 0) {
                         return;
@@ -348,6 +349,7 @@ export class JcProductionEntryFormComponent implements OnInit {
                 keyboard: false
             });
             modalRef.componentInstance.sourceOfManufacturing = item?.sourceOfManufacturing;
+            modalRef.componentInstance.action = this.action;
             modalRef.componentInstance.selectedDetails = {
                 jobCard: this.selectedJobCardDetails?._id,
                 jobCardNo: this.selectedJobCardDetails?.jobCardNo,
@@ -384,9 +386,6 @@ export class JcProductionEntryFormComponent implements OnInit {
         modalRef.result.then(
             (success: any) => {
                 if (success) {
-                    console.log("success", success);
-                    console.log("JCEntryDetailsList", this.JCEntryDetailsList);
-
                     let index = this.JCEntryDetailsList.findIndex((x: any) => x.process == item?.process);
                     this.IPQAInfoList = success?.IPQAInfoList;
                     this.JCEntryDetailsList[index].releaseQty = success?.IPQA?.cumulativeCount;

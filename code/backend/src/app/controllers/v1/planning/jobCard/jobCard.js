@@ -858,7 +858,9 @@ exports.getAllJobTrackingMasterData = asyncHandler(async (req, res) => {
             },
             {
                 $project: {
+                    _id: 0,
                     jobCardNo: 1,
+                    jobCardId: "$jobCard",
                     jobCardDate: {$dateToString: {format: "%d-%m-%Y", date: "$jobCardDate"}},
                     customerName: {
                         $cond: [
@@ -867,6 +869,8 @@ exports.getAllJobTrackingMasterData = asyncHandler(async (req, res) => {
                             "$customers.customerName"
                         ]
                     },
+
+                    SKUId: "$SKU._id",
                     SKUNo: "$SKU.SKUNo",
                     SKUName: "$SKU.SKUName",
                     UOM: 1,

@@ -81,6 +81,7 @@ exports.getAllSILineDetailsAttributes = () => {
         },
         salesInvoiceDateS: 1,
         customerName: "$customer.customerName",
+        region: "$customer.region",
         GSTIN: "$customer.GSTIN",
         customer: "$customer._id",
         shipToGSTIN: "$customer.GSTIN",

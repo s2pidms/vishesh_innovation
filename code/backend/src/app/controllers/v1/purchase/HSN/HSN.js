@@ -44,6 +44,18 @@ exports.getAll = asyncHandler(async (req, res) => {
 
 exports.create = asyncHandler(async (req, res) => {
     try {
+        let exists = await HSNRepository.findOneDoc(
+            {
+                hsnCode: req.body.hsnCode
+            },
+            {
+                _id: 1
+            }
+        );
+        if (exists) {
+            let errors = MESSAGES.apiErrorStrings.Data_EXISTS("HSN Code");
+            return res.preconditionFailed(errors);
+        }
         let createdObj = {
             company: req.user.company,
             createdBy: req.user.sub,

@@ -35,6 +35,11 @@ let headers: any = [
         ...EXCEL_STYLE
     },
     {
+        header: "Region",
+        key: "region",
+        ...EXCEL_STYLE
+    },
+    {
         header: "SKU No.",
         key: "SKUCode",
         ...EXCEL_STYLE

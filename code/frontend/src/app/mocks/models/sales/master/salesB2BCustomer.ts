@@ -28,4 +28,6 @@ export interface salesB2BCustomer {
     printQRCodeOnInvoice?: string;
     printDSOnInvoice?: string;
     venderCode?: string;
+    showPANNo?: string;
+    showEximCode?: string;
 }

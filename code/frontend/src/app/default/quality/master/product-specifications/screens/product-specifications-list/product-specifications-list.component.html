@@ -3,13 +3,13 @@
         <label class="heading">Specification Summary</label>
     </div>
 
-    <div appAccessControl [accessType]="rolePermissionActions.createAction" class="text-center">
+    <!-- <div appAccessControl [accessType]="rolePermissionActions.createAction" class="text-center">
         <button class="plusIconSvg btn btn-primary me-1"></button>
         <button class="btn btn-primary btn-add" type="button" (click)="navigateTo('../form', {}, 'create')">
             Prod. Specification
         </button>
-    </div>
-    <hr class="line-border" />
+    </div> -->
+    <hr class="line-border mt-1" />
     <div class="table-responsive">
         <app-setting-header [data]="{page,pageSize,collection,search,type: 'list'}" (dataChange)="eventHeader($event)">
         </app-setting-header>
@@ -40,6 +40,7 @@
                         <span class="d-flex justify-content-center">
                             <div *ngIf="u?.status == 'Active'" class="statusActive"></div>
                             <div *ngIf="u?.status == 'Inactive'" class="statusYellow"></div>
+                            <div *ngIf="u?.status == 'Red'" class="statusInActive"></div>
                         </span>
                     </td>
 
@@ -68,26 +69,34 @@
                                 <a
                                     appAccessControl
                                     [accessType]="rolePermissionActions.editAction"
-                                    [class.disable]="u.status == 'Inactive'"
+                                    [class.disable]="['Red', 'Inactive'].includes(u.status)"
                                     href="javascript:void(0)"
                                     (click)="navigateTo('../form', u, 'copy')"
                                 >
                                     <i class="fa fa-clone fa-lg me-2 text-primary" aria-hidden="true"></i>
                                     Copy
                                 </a>
-                                <a
+                                <!-- <a
                                     *ngIf="this.user == superAdminId"
                                     href="javascript:void(0)"
                                     (click)="openConfirmModal(u?._id, u?.SKUNo)"
                                 >
                                     <i class="fa fa-trash text-primary" aria-hidden="true"></i>
                                     Delete
-                                </a>
+                                </a> -->
                             </div>
                         </div>
                     </td>
                 </tr>
             </tbody>
         </table>
+    </div>
+    <hr class="line-border" />
+    <div class="row mt-3 ms-1">
+        <div class="col-12">
+            <button class="btn btn-primary px-4" type="button" (click)="openStatusSummaryModal()">
+                Status Summary
+            </button>
+        </div>
     </div>
 </div>

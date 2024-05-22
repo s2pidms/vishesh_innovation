@@ -141,7 +141,7 @@
                         <td>
                             <div class="d-flex justify-content-center">
                                 <span *ngIf="['view', 'Converted to SKU'].includes(action)">
-                                    {{ item?.specValue | number : "1.2-2" }}
+                                    {{ item?.specValue }}
                                 </span>
                                 <input
                                     *ngIf="!['view', 'Converted to SKU'].includes(action)"
@@ -199,14 +199,7 @@
                     >
                         Esc
                     </button>
-                    <button
-                        type="button"
-                        class="btn btn-primary px-4 me-3"
-                        [disabled]="isConditionPreview"
-                        (click)="preview()"
-                    >
-                        Preview
-                    </button>
+                    <button type="button" class="btn btn-primary px-4 me-3" (click)="preview()">Preview</button>
                     <button class="btn btn-primary px-5" type="button" [disabled]="!isPreview" (click)="submit()">
                         Save
                     </button>

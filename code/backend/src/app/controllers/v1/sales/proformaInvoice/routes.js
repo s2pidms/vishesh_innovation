@@ -8,7 +8,9 @@ const {
     deleteById,
     getAllMasterData,
     getAllReports,
-    getProInvDetailsById
+    getProInvDetailsById,
+    getCustomerByCategory,
+    getSKUListByCustomer
 } = require("./proformaInvoice");
 app.post("/create", create);
 app.get("/getAll", getAll);
@@ -18,4 +20,6 @@ app.put("/update/:id", validate("checkParamId"), update);
 app.delete("/delete/:id", validate("checkParamId"), deleteById);
 app.get("/getAllMasterData", getAllMasterData);
 app.get("/getAllReports", getAllReports);
+app.get("/getCustomerByCategory", getCustomerByCategory);
+app.get("/getSKUListByCustomer", getSKUListByCustomer);
 module.exports = app;

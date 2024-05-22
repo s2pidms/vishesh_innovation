@@ -14,7 +14,7 @@ import {ScreenMakingLogEntryComponent} from "../screen-making-log-entry/screen-m
 export class ScreenMakingLogFormComponent implements OnInit {
     @Input() selectedDetails: any = {};
     @Input() sourceOfManufacturing: any = "";
-    action: string = "Awaiting Approval";
+    @Input() action: string = "Awaiting Approval";
     page: number = 1;
     pageSize: number = 5;
     collection: number = 0;
@@ -102,7 +102,7 @@ export class ScreenMakingLogFormComponent implements OnInit {
             backdrop: "static",
             keyboard: false
         });
-
+        modalRef.componentInstance.action = this.action;
         modalRef.componentInstance.logDetails = g.logDetails;
         modalRef.componentInstance.sourceOfManufacturing = this.sourceOfManufacturing;
         modalRef.componentInstance.shiftOptions = this.shiftOptions;

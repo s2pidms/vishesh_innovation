@@ -12,6 +12,7 @@ import {InkMixingLogService} from "@services/production/inkMixingLog.service";
 })
 export class InkMixingLogModalComponent {
     @Input() selectedDetails: any = {};
+    @Input() action: string = "";
     inkMixingLog: any = {};
     shiftOptions: any = [];
     page: number = 1;
@@ -120,6 +121,7 @@ export class InkMixingLogModalComponent {
             backdrop: "static",
             keyboard: false
         });
+        modalRef.componentInstance.action = this.action;
         modalRef.componentInstance.inkLogNewBatch = g;
         modalRef.componentInstance.shiftOptions = this.shiftOptions;
         modalRef.result.then(

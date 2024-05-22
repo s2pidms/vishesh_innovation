@@ -19,7 +19,7 @@ export class EmployeeListComponent implements OnInit, OnDestroy {
     page: number = 1;
     pageSize: number = 8;
     collection: number = 0;
-    column: string = "createdAt";
+    column: string = "empCode";
     direction: number = 1;
     search: string = "";
     tableData: Employee[] = [];

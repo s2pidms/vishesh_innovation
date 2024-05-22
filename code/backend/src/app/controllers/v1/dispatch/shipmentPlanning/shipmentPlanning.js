@@ -25,6 +25,7 @@ const ShipmentPlanningRepository = require("../../../../models/dispatch/reposito
 const {getAllModuleMaster} = require("../../settings/module-master/module-master");
 const {getAllTransporter} = require("../../sales/transporter/transporter");
 const {SALES_CATEGORY} = require("../../../../mocks/constantData");
+const {getCustomerDiscount} = require("../../sales/salesOrder/salesOrder");
 const ObjectId = mongoose.Types.ObjectId;
 
 exports.getAll = async (req, res) => {
@@ -190,6 +191,13 @@ exports.getAllMasterData = async (req, res) => {
             req.user.company
         );
         let DRNList = await getAllDRNs(req.user.company);
+        for await (const ele of DRNList) {
+            ele.DRNDetails = ele.DRNDetails.map(x => {
+                x.customer = ele?.customer?._id;
+                return x;
+            });
+            ele.DRNDetails = await getCustomerDiscount(ele.DRNDetails, req.user.company);
+        }
         let companyData = await getCompanyById(req.user.company, {placesOfBusiness: 1});
         const paymentTermsOptions = await getAllPaymentTerms(req.user.company);
         return res.success({

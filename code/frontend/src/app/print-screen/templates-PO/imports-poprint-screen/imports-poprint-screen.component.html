@@ -197,16 +197,36 @@
             <td colspan="2" class="text-center"><p></p></td>
         </tr>
 
-        <tr>
-            <td colspan="11 " class="py-4"></td>
-            <td colspan="1" class="text-center"></td>
-        </tr>
+        <ng-container *ngIf="tableData?.serviceChargesInfo?.length > 0">
+            <tr *ngFor="let service of tableData.serviceChargesInfo">
+                <td colspan="11" class="text-end">
+                    <p class="sub-text">
+                        SAC {{ service?.SACCode }}
+                        {{ service?.description }}
+                    </p>
+                </td>
+                <td colspan="1" class="text-center sub-text">
+                    {{ service?.serviceCharges | number : ".2-2" }}
+                </td>
+            </tr>
+        </ng-container>
+        <ng-container *ngIf="!tableData?.serviceChargesInfo || tableData?.serviceChargesInfo?.length == 0">
+            <tr>
+                <td colspan="11 " class="py-4"></td>
+                <td colspan="1" class="text-center"></td>
+            </tr>
+        </ng-container>
         <tr class="border-btm">
             <th colspan="11" class="text-end">
                 <p>Total Amount</p>
             </th>
             <th colspan="1" class="text-center">
-                {{ tableData?.totalTaxAmount - tableData?.otherCharges?.totalAmount | number : ".2-2" }}
+                <span *ngIf="tableData?.serviceChargesInfo?.length > 0">
+                    {{ tableData?.totalTaxAmount + tableData?.totalServiceCharges | number : ".2-2" }}
+                </span>
+                <span *ngIf="!tableData?.serviceChargesInfo || tableData?.serviceChargesInfo?.length == 0">
+                    {{ tableData?.totalTaxAmount - tableData?.otherCharges?.totalAmount | number : ".2-2" }}
+                </span>
             </th>
         </tr>
 
@@ -277,10 +297,21 @@
                             <tr>
                                 <th>Total Amount</th>
                                 <th class="text-center">
-                                    {{
-                                        tableData?.totalTaxAmount - tableData?.otherCharges?.totalAmount
-                                            | number : ".2-2"
-                                    }}
+                                    <span *ngIf="tableData?.serviceChargesInfo?.length > 0">
+                                        {{
+                                            tableData?.totalTaxAmount + tableData?.totalServiceCharges | number : ".2-2"
+                                        }}
+                                    </span>
+                                    <span
+                                        *ngIf="
+                                            !tableData?.serviceChargesInfo || tableData?.serviceChargesInfo?.length == 0
+                                        "
+                                    >
+                                        {{
+                                            tableData?.totalTaxAmount - tableData?.otherCharges?.totalAmount
+                                                | number : ".2-2"
+                                        }}
+                                    </span>
                                 </th>
                             </tr>
                             <tr>
@@ -303,10 +334,21 @@
                             <tr>
                                 <th>Total PO Amount</th>
                                 <th class="text-center">
-                                    {{
-                                        tableData?.totalTaxAmount - tableData?.otherCharges?.totalAmount
-                                            | number : ".2-2"
-                                    }}
+                                    <span *ngIf="tableData?.serviceChargesInfo?.length > 0">
+                                        {{
+                                            tableData?.totalTaxAmount + tableData?.totalServiceCharges | number : ".2-2"
+                                        }}
+                                    </span>
+                                    <span
+                                        *ngIf="
+                                            !tableData?.serviceChargesInfo || tableData?.serviceChargesInfo?.length == 0
+                                        "
+                                    >
+                                        {{
+                                            tableData?.totalTaxAmount - tableData?.otherCharges?.totalAmount
+                                                | number : ".2-2"
+                                        }}
+                                    </span>
                                 </th>
                             </tr>
                         </table>

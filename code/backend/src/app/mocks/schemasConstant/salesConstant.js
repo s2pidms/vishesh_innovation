@@ -223,4 +223,20 @@ exports.SALES_PRODUCT_MASTER = {
             modulePrefix: this.MODULE_PREFIX
         };
     }
-}
+};
+exports.CUSTOMER_DISCOUNT_MANAGEMENT = {
+    COLLECTION_NAME: "CustomerDiscountManagement",
+    ADDED_ACTION: "Customer Discount Management created",
+    UPDATED_ACTION: "Customer Discount Management updated",
+    MODULE_NAME: "Customer Discount Management",
+    MODULE: "CustomerDiscountManagement",
+    MODULE_PREFIX: "DM",
+    AUTO_INCREMENT_DATA: function () {
+        return {
+            moduleName: this.MODULE_NAME,
+            module: this.MODULE,
+            company: null,
+            modulePrefix: this.MODULE_PREFIX
+        };
+    }
+};

@@ -54,7 +54,9 @@ export class LaminationLogEntryModelComponent implements OnInit {
     ngOnInit(): void {
         this.form.patchValue(this.jobCardDetails);
         this.getInitialData();
-
+        if (["view"].includes(this.action)) {
+            this.form.disable();
+        }
         if (!this.logEntry.controls["prodSource"].value) {
             this.logEntry.controls["prodSource"].setValue(this.sourceOfManufacturing ?? "Inhouse");
         }

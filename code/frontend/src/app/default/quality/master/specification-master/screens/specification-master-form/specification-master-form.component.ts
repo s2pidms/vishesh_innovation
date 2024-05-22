@@ -1,5 +1,6 @@
 import {Component, OnInit} from "@angular/core";
 import {UntypedFormControl, UntypedFormGroup, Validators} from "@angular/forms";
+import {Location} from "@angular/common";
 import {ActivatedRoute, Router} from "@angular/router";
 import {mergeMap, of} from "rxjs";
 import {SpecificationMasterService} from "@services/quality";
@@ -27,7 +28,8 @@ export class SpecificationMasterFormComponent implements OnInit {
         private spinner: SpinnerService,
         private toastService: ToastService,
         private validationService: ValidationService,
-        private utilityService: UtilityService
+        private utilityService: UtilityService,
+        private location: Location
     ) {}
 
     form = new UntypedFormGroup({
@@ -36,7 +38,8 @@ export class SpecificationMasterFormComponent implements OnInit {
         characteristic: new UntypedFormControl(null, [Validators.required]),
         UOM: new UntypedFormControl(null, [Validators.required]),
         testStandard: new UntypedFormControl(null, [Validators.required]),
-        measuringInstrument: new UntypedFormControl(null, [Validators.required])
+        measuringInstrument: new UntypedFormControl(null, [Validators.required]),
+        status: new UntypedFormControl("Active")
     });
 
     get f() {
@@ -46,8 +49,8 @@ export class SpecificationMasterFormComponent implements OnInit {
         this.getInitialData();
     }
 
-    navigateTo(path: string, id: any, action: string) {
-        this.router.navigate([path], {queryParams: {id, action}});
+    navigateTo() {
+        this.location.back();
     }
     reset() {
         this.form.reset();
@@ -93,6 +96,7 @@ export class SpecificationMasterFormComponent implements OnInit {
         this.specificationMasterService.getAllMasterData({}).subscribe(result => {
             this.masterData = result;
             this.form.controls["specificationCode"].setValue(this.masterData?.autoIncrementNo);
+            this.form.controls["status"].setValue("Active");
             this.activatedRoute.queryParams
                 .pipe(
                     mergeMap((params: any) => {

@@ -19,6 +19,9 @@
                     <th class="text-start" sortable="description" (sort)="onSort($event)">Description Of Services</th>
                     <th sortable="SACCode" (sort)="onSort($event)">SAC Code</th>
                     <th sortable="GSTRate" (sort)="onSort($event)">GST Rate %</th>
+                    <th sortable="IGSTRate" (sort)="onSort($event)">IGST Rate %</th>
+                    <th sortable="CGSTRate" (sort)="onSort($event)">CGST Rate %</th>
+                    <th sortable="SGSTRate" (sort)="onSort($event)">SGST Rate %</th>
                     <th sortable="status" (sort)="onSort($event)">Status</th>
                     <th>Action</th>
                 </tr>
@@ -29,6 +32,9 @@
                     <td class="text-start">{{ u?.description }}</td>
                     <td>{{ u?.SACCode }}</td>
                     <td>{{ u?.GSTRate }}</td>
+                    <td>{{ u?.IGSTRate }}</td>
+                    <td>{{ u?.CGSTRate }}</td>
+                    <td>{{ u?.SGSTRate }}</td>
                     <td>
                         <span class="d-flex justify-content-center">
                             <div *ngIf="u.status == 'Active'" class="statusActive"></div>

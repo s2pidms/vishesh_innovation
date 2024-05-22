@@ -160,6 +160,16 @@ let headers: any = [
         ...EXCEL_STYLE
     },
     {
+        header: "PAN No.",
+        key: "showPANNo",
+        ...EXCEL_STYLE
+    },
+    {
+        header: "Exim Code",
+        key: "showEximCode",
+        ...EXCEL_STYLE
+    },
+    {
         header: "Status",
         key: "isCustomerActive",
         ...EXCEL_STYLE

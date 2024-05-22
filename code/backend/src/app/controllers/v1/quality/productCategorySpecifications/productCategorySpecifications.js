@@ -118,7 +118,7 @@ exports.getAllMasterData = asyncHandler(async (req, res) => {
             }
         ]);
         const specificationList = await filteredSpecificationList([
-            {$match: {company: ObjectId(req.user.company)}},
+            {$match: {company: ObjectId(req.user.company), status: OPTIONS.defaultStatus.ACTIVE}},
             {$sort: {createdAt: -1}},
             {
                 $project: {

@@ -47,6 +47,16 @@ exports.getAll = asyncHandler(async (req, res) => {
 // @route   POST /purchase/SAC/create
 exports.create = asyncHandler(async (req, res) => {
     try {
+        let existing = await Model.findOne(
+            {
+                sacCode: req.body.sacCode
+            },
+            {_id: 1}
+        );
+        if (existing) {
+            let errors = MESSAGES.apiErrorStrings.Data_EXISTS("SAC Code");
+            return res.preconditionFailed(errors);
+        }
         let createdObj = {
             company: req.user.company,
             createdBy: req.user.sub,

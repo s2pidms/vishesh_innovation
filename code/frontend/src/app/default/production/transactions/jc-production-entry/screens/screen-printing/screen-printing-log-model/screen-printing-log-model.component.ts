@@ -13,7 +13,8 @@ import {ScreenPrintingLogEntryComponent} from "../screen-printing-log-entry/scre
 export class ScreenPrintingLogModelComponent implements OnInit {
     @Input() selectedDetails: any = {};
     @Input() sourceOfManufacturing: any = "";
-    action: string = "Awaiting Approval";
+    @Input() action: string = "Awaiting Approval";
+    // action: string = "Awaiting Approval";
     page: number = 1;
     pageSize: number = 5;
     collection: number = 0;
@@ -101,7 +102,7 @@ export class ScreenPrintingLogModelComponent implements OnInit {
             backdrop: "static",
             keyboard: false
         });
-
+        modalRef.componentInstance.action = this.action;
         modalRef.componentInstance.logDetails = g.logDetails;
         modalRef.componentInstance.sourceOfManufacturing = this.sourceOfManufacturing;
         modalRef.componentInstance.shiftOptions = this.shiftOptions;

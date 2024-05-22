@@ -27,6 +27,7 @@ export class ScreenMakingLogEntryComponent implements OnInit {
     constructor(public activeModal: NgbActiveModal, private utilityService: UtilityService) {}
 
     ngOnInit(): void {
+
         if (this.logDetails?.prodDate) {
             this.logDetails.prodDate = this.utilityService.getFormatDate(this.logDetails?.prodDate, "YYYY-MM-DD");
         }

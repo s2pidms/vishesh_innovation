@@ -2,11 +2,10 @@ const asyncHandler = require("express-async-handler");
 const Model = require("../../../../models/sales/proformaInvoiceModel");
 const MESSAGES = require("../../../../helpers/messages.options");
 const {generateCreateData, OPTIONS} = require("../../../../helpers/global.options");
-const {getAllSKUs} = require("../SKU/SKU");
 const {default: mongoose} = require("mongoose");
 const {getAllCustomers} = require("../customerMaster/customerMaster");
 const {findAppParameterValue} = require("../../settings/appParameter/appParameter");
-const {createSO} = require("../salesOrder/salesOrder");
+const {createSO, getCustomerDiscount} = require("../salesOrder/salesOrder");
 const {getFirstDayOfFiscalYear, getLastDayOfFiscalYear} = require("../../../../utilities/utility");
 const {getSalesHSNByCode} = require("../salesHSN/salesHSN");
 const {CONSTANTS} = require("../../../../../config/config");
@@ -29,6 +28,7 @@ const ObjectId = mongoose.Types.ObjectId;
 const MailTriggerRepository = require("../../../../models/settings/repository/mailTriggerRepository");
 const {SALES_MAIL_CONST} = require("../../../../mocks/mailTriggerConstants");
 const {checkDomesticCustomer} = require("../../../../helpers/utility");
+const {filteredSKUMasterList} = require("../../../../models/sales/repository/SKUMasterRepository");
 
 exports.getAll = asyncHandler(async (req, res) => {
     try {
@@ -218,7 +218,7 @@ exports.getProInvDetailsById = asyncHandler(async (req, res) => {
         let existing = await Model.findById(req.params.id)
             .populate(
                 "customer",
-                "customerCurrency customerName customerPaymentTerms customerCategory GSTClassification customerBillingAddress customerShippingAddress customerContactInfo GSTIN"
+                "customerCurrency customerName customerPaymentTerms customerCategory GSTClassification customerBillingAddress customerShippingAddress customerContactInfo GSTIN customerPAN eximCode showEximCode showPANNo"
             )
             .populate({
                 path: "company",
@@ -384,29 +384,6 @@ exports.getAllMasterData = asyncHandler(async (req, res) => {
             {...PROFORMA_INVOICE.AUTO_INCREMENT_DATA()},
             req.user.company
         );
-        let SKUMasters = await getAllSKUs(req.user.company);
-        const customersOptions = await filteredCustomerList([
-            {$match: {company: ObjectId(req.user.company), isCustomerActive: "A"}},
-            {$sort: {customerName: 1}},
-            {
-                $addFields: {
-                    customerBillingAddress: {$arrayElemAt: ["$customerBillingAddress", 0]}
-                }
-            },
-            {
-                $project: {
-                    customerName: 1,
-                    customerCode: 1,
-                    customerBillingState: "$customerBillingAddress.state",
-                    customerBillingCity: "$customerBillingAddress.city",
-                    customerBillingPinCode: "$customerBillingAddress.pinCode",
-                    customerCategory: 1,
-                    customerPaymentTerms: 1,
-                    customerCurrency: 1,
-                    customerShippingAddress: 1
-                }
-            }
-        ]);
         let salesCategoryOptions = await findAppParameterValue("SALES_CATEGORY", req.user.company);
         const transporterOptions = await getAllTransporter(
             {
@@ -420,8 +397,6 @@ exports.getAllMasterData = asyncHandler(async (req, res) => {
         const billFromLocationOptions = await getCompanyLocations(req.user.company);
         return res.success({
             autoIncrementNo,
-            SKUMasters,
-            customersOptions,
             companyData,
             billFromLocationOptions: billFromLocationOptions.split(",").map(x => {
                 return {
@@ -435,7 +410,6 @@ exports.getAllMasterData = asyncHandler(async (req, res) => {
                     value: x
                 };
             }),
-
             transporterOptions: transporterOptions,
             freightTermsOptions,
             modeOfTransportOptions: modeOfTransportOptions.split(",").map(x => {
@@ -580,3 +554,85 @@ exports.getPIConversionRate = async company => {
     ]);
     return rows[0]?.conversionRate || 0;
 };
+
+exports.getCustomerByCategory = asyncHandler(async (req, res) => {
+    try {
+        let customerOptions = await filteredCustomerList([
+            {
+                $match: {
+                    isCustomerActive: "A",
+                    customerCategory: req.query.customerCategory,
+                    company: ObjectId(req.user.company)
+                }
+            },
+            {$sort: {customerName: 1}},
+            {
+                $addFields: {
+                    customerBillingAddress: {$arrayElemAt: ["$customerBillingAddress", 0]}
+                }
+            },
+            {
+                $project: {
+                    customerName: 1,
+                    customerCode: 1,
+                    customerBillingState: "$customerBillingAddress.state",
+                    customerBillingCity: "$customerBillingAddress.city",
+                    customerBillingPinCode: "$customerBillingAddress.pinCode",
+                    customerCategory: 1,
+                    customerPaymentTerms: 1,
+                    customerCurrency: 1,
+                    customerShippingAddress: 1
+                }
+            }
+        ]);
+        return res.success(customerOptions);
+    } catch (e) {
+        console.error("getCustomerById Proforma Inv", e);
+        const errors = MESSAGES.apiErrorStrings.SERVER_ERROR;
+        return res.serverError(errors);
+    }
+});
+exports.getSKUListByCustomer = asyncHandler(async (req, res) => {
+    try {
+        let SKUList = await filteredSKUMasterList([
+            {$match: {company: ObjectId(req.user.company), isActive: "A"}},
+            {
+                $unwind: "$customerInfo"
+            },
+            {
+                $match: {
+                    "customerInfo.customer": ObjectId(req.query.customer)
+                }
+            },
+            {$sort: {createdAt: -1}},
+            {
+                $project: {
+                    SKU: "$_id",
+                    PILineNumber: {$literal: 0},
+                    SKUNo: "$SKUNo",
+                    SKUName: "$SKUName",
+                    UOM: "$primaryUnit",
+                    SKUDescription: "$SKUDescription",
+                    customerPartNo: "$customerInfo.customerPartNo",
+                    SOLineTargetDate: {$literal: null},
+                    discount: {$literal: 0},
+                    netRate: "$customerInfo.standardSellingRate",
+                    orderedQty: {$literal: 0},
+                    invoicedQty: {$literal: 0},
+                    canceledQty: {$literal: 0},
+                    balancedQty: {$literal: 0},
+                    canceledReason: {$literal: null},
+                    standardRate: "$customerInfo.standardSellingRate",
+                    lineValue: {$literal: 0},
+                    customer: "$customerInfo.customer"
+                }
+            }
+        ]);
+        SKUList = await getCustomerDiscount(SKUList, req.user.company);
+        return res.success(SKUList);
+    } catch (e) {
+        console.error("getSKUListByCustomer Proforma Inv", e);
+        const errors = MESSAGES.apiErrorStrings.SERVER_ERROR;
+        return res.serverError(errors);
+    }
+});

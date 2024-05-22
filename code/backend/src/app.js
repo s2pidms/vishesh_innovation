@@ -22,6 +22,7 @@ const jwtHandler = require("./app/utilities/jwtHandler");
 const helmet = require("helmet");
 const {mainDataInsertFn} = require("./app/seeders");
 const WebCacheMiddleware = require("./app/middleware/webCacheMiddleware");
+const RateLimiter = require("./app/utilities/rateLimitHandler");
 //To allow cross-origin requests
 // const corsOptions = {
 //     origin: "http://localhost:4200",
@@ -68,7 +69,8 @@ logger.token("errorMsg", function (req, res) {
     res.json().then(data => console.info(data));
     return res.error;
 });
-
+const rateLimiter = new RateLimiter(5 * 60 * 1000, 250);
+rateLimiter.apply(app);
 mainDataInsertFn();
 app.use(utils.countRequests);
 // JWT token verification Middleware

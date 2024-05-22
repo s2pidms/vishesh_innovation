@@ -3,6 +3,7 @@ const Audit = require("../../controllers/v1/settings/audit/audit");
 const {SPECIFICATION: SCHEMA_CONST} = require("../../mocks/schemasConstant/qualityConstant");
 const {getAndSetAutoIncrementNo} = require("../../controllers/v1/settings/autoIncrement/autoIncrement");
 const {paginatePlugin} = require("../plugins/paginatePlugin");
+const {OPTIONS} = require("../../helpers/global.options");
 const specificationMasterSchema = mongoose.Schema(
     {
         company: {
@@ -39,6 +40,12 @@ const specificationMasterSchema = mongoose.Schema(
         measuringInstrument: {
             type: String,
             required: false
+        },
+        status: {
+            type: String,
+            required: false,
+            enum: OPTIONS.defaultStatus.getCommonStatusAsArray(),
+            default: OPTIONS.defaultStatus.ACTIVE
         }
     },
     {

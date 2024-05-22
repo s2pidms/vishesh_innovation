@@ -26,9 +26,33 @@
                     <input type="text" class="form-control" formControlName="customerNickName" />
                 </div>
                 <div class="col">
-                    <label class="form-label">
+                    <!-- <label class="form-label">
                         Customer Category
                         <span class="text-danger">*</span>
+                    </label> -->
+
+                    <label class="form-label mb-1 d-flex justify-content-between">
+                        Customer Category <span class="text-danger">*</span>
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                        <button
+                            *ngIf="this.form?.controls['customerCategory']?.value?.includes('Exports')"
+                            (click)="openExportDetailsModal()"
+                            type="button"
+                            class="btn btn-primary form-btn-sm py-0"
+                        >
+                            Export Details
+                        </button>
                     </label>
                     <select
                         (change)="customerCategoryForExports()"

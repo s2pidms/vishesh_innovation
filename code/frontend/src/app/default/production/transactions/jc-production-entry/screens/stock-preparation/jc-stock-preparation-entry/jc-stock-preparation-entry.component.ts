@@ -228,7 +228,7 @@ export class JcStockPreparationEntryComponent implements OnInit {
             backdrop: "static",
             keyboard: false
         });
-
+        modalRef.componentInstance.action = this.action;
         modalRef.componentInstance.logDetails = g.logEntry;
         modalRef.componentInstance.sourceOfManufacturing = this.sourceOfManufacturing;
         modalRef.componentInstance.shiftOptions = this.shiftOptions;

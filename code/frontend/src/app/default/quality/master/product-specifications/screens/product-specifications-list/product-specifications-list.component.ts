@@ -8,7 +8,8 @@ import {ExportExcelService, ExportToPDFService, SpinnerService, StorageService, 
 import {PRODUCT_SPECIFICATIONS_REPORT_DATA, PRODUCT_SPECIFICATIONS_PDF_DATA} from "@mocks/export-data/quality/master";
 import {ProductSpecification} from "@mocks/models/quality/master";
 import {NgbModal} from "@ng-bootstrap/ng-bootstrap";
-import { ConfirmDeleteComponent } from "@shared/modals";
+import {ConfirmDeleteComponent} from "@shared/modals";
+import {SpecificationsStatusSummaryComponent} from "../../../rm-specifications/screens/specifications-status-summary/specifications-status-summary.component";
 
 @Component({
     selector: "app-product-specifications-list",
@@ -20,12 +21,13 @@ export class ProductSpecificationsListComponent implements OnInit, OnDestroy {
     page: number = 1;
     pageSize: number = 8;
     collection: number = 0;
-    column: string = "createdAt";
-    direction: number = -1;
+    column: string = "status";
+    direction: number = 1;
     search: string = "";
     tableData: ProductSpecification[] = [];
     superAdminId: any = superAdminId;
     user: any = "";
+    totalAmounts: any = {};
     rolePermissionActions: any = LIST_DEFAULT_PERMISSION_ACTIONS;
     subscription!: Subscription;
     constructor(
@@ -47,7 +49,7 @@ export class ProductSpecificationsListComponent implements OnInit, OnDestroy {
     }
 
     navigateTo(path: string, u: any, action: string) {
-        if (u.status == "Inactive" && action == "copy") {
+        if (["Red", "Inactive"].includes(u.status) && action == "copy") {
             return null;
         } else {
             this.router.navigate([path], {relativeTo: this.activatedRoute, queryParams: {id: u?._id, action}});
@@ -98,6 +100,9 @@ export class ProductSpecificationsListComponent implements OnInit, OnDestroy {
             } else {
                 this.tableData = success.rows;
                 this.collection = success.count;
+                if (success?.totalAmounts?.length > 0) {
+                    this.totalAmounts = success.totalAmounts[0];
+                }
             }
             this.spinner.hide();
         });
@@ -140,7 +145,29 @@ export class ProductSpecificationsListComponent implements OnInit, OnDestroy {
         let output = PRODUCT_SPECIFICATIONS_PDF_DATA(data);
         this.exportToPDFService.generatePdf(output.tableData, output.title);
     }
+    openStatusSummaryModal() {
+        const modalRef = this.modalService.open(SpecificationsStatusSummaryComponent, {
+            centered: true,
+            size: "lg",
+            backdrop: "static",
+            keyboard: false
+        });
 
+        modalRef.componentInstance.heading = "Product Specification Status Summary";
+        modalRef.componentInstance.activeCount = "Active SKU Count";
+        modalRef.componentInstance.specificationCreatedForCount = "Product Specification created for SKU Count";
+        modalRef.componentInstance.specificationPendingForCount = "Product Specification pending for SKU Count";
+        modalRef.componentInstance.totalActive = this.totalAmounts?.totalActiveSKU;
+        modalRef.componentInstance.totalCreated = this.totalAmounts?.totalCreatedSKU;
+        modalRef.componentInstance.totalPending = this.totalAmounts?.totalPendingSKU;
+        modalRef.result.then(
+            (success: any) => {
+                if (success) {
+                }
+            },
+            (reason: any) => {}
+        );
+    }
     onSort({column, direction}: SortEvent) {
         this.headers.forEach((header: any) => {
             if (header.sortable !== column) {

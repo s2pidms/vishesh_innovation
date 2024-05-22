@@ -18,7 +18,7 @@
             <thead class="bg-primary">
                 <tr class="text-white">
                     <th sortable="moduleName" (sort)="onSort($event)">Module Name</th>
-                    <!-- <th sortable="module" (sort)="onSort($event)">Module</th> -->
+                    <th sortable="module" (sort)="onSort($event)">Module</th>
                     <th sortable="modulePrefix" (sort)="onSort($event)">Module Prefix</th>
                     <th sortable="autoIncrementValue" (sort)="onSort($event)">Auto Increment Value</th>
                     <th sortable="digit" (sort)="onSort($event)">Digit</th>
@@ -28,7 +28,7 @@
             <tbody>
                 <tr *ngFor="let u of tableData; trackBy: trackByFn">
                     <td>{{ u?.moduleName }}</td>
-                    <!-- <td>{{ u?.module }}</td> -->
+                    <td>{{ u?.module }}</td>
                     <td>{{ u?.modulePrefix }}</td>
                     <td>{{ u?.autoIncrementValue }}</td>
                     <td>{{ u?.digit }}</td>

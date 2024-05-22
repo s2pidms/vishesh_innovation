@@ -280,7 +280,12 @@
             </td>
             <td *ngIf="tableData?.serviceChargesInfo?.length > 0" colspan="4" class="text-center">
                 <span>Total Purchase Order Value</span><br />
-                {{ tableData?.totalAmountWithTax }}.00
+                <span *ngIf="tableData?.purchaseCategory?.includes('Domestic')">
+                    {{ tableData?.totalAmountWithTax }}.00
+                </span>
+                <span *ngIf="tableData?.purchaseCategory?.includes('Imports')">
+                    {{ tableData?.totalTaxAmount + tableData?.totalServiceCharges | number : ".2-2" }}.00
+                </span>
             </td>
             <td *ngIf="tableData?.company?.companySignatureUrl" colspan="4" class="text-center">
                 <img src="{{ tableData?.company?.companySignatureUrl }}" class="img-sign" />

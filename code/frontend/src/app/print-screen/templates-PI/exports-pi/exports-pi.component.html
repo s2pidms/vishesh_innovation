@@ -45,6 +45,17 @@
                     {{ tableData?.customer?.customerBillingAddress?.pinCode }},
                     {{ tableData?.customer?.customerBillingAddress?.country }}
                 </p>
+                <p>
+                    <span *ngIf="tableData?.customer?.showPANNo == 'Yes'">
+                        PAN No.: {{ tableData?.customer?.customerPAN }}</span
+                    >
+                    <span *ngIf="tableData?.customer?.showPANNo == 'Yes' && tableData?.customer?.showEximCode == 'Yes'">
+                        |
+                    </span>
+                    <span *ngIf="tableData?.customer?.showEximCode == 'Yes'">
+                        EXIM Code: {{ tableData?.customer?.eximCode }}</span
+                    >
+                </p>
                 <p>Tax No.: {{ tableData?.customer?.GSTIN }}</p>
             </td>
             <td colspan="4" rowspan="2">

@@ -471,7 +471,7 @@ exports.getAllSILineDetails = asyncHandler(async (req, res) => {
                     from: "Customer",
                     localField: "customer",
                     foreignField: "_id",
-                    pipeline: [{$project: {GSTIN: 1, customerName: 1, customerCategory: 1}}],
+                    pipeline: [{$project: {GSTIN: 1, customerName: 1, customerCategory: 1, region: 1}}],
                     as: "customer"
                 }
             },

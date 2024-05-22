@@ -185,7 +185,6 @@
                             </div>
                         </div>
                     </div>
-
                     <!-- <div class="sub-text col-2 d-flex">
                         <span class="greenStatus pt-3 pe-2"> Status </span>
                         <span>
@@ -199,7 +198,14 @@
                         </span>
                     </div> -->
                     <div class="col-2 text-center sub-text d-flex mt-4">
-                        <span (click)="openStatusDetailsModal(item)" class="greenStatus pointer">Status</span>
+                        <!-- <span (click)="openStatusDetailsModal(item)" class="greenStatus pointer">Status</span> -->
+                        <span
+                            (click)="
+                                navigateTo('default/production/transactions/jc_production_entry/form', 'view', item)
+                            "
+                            class="greenStatus pointer"
+                            >Status</span
+                        >
 
                         <!-- <div class="dropdown">
                             <button class="dropbtn" style="width: 4rem"></button>

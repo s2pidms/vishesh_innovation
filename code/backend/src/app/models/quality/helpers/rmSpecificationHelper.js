@@ -1,11 +1,10 @@
 exports.getAllRMSpecificationAttributes = () => {
     return {
-        rmSpecificationCode: 1,
-        itemCategory: 1,
-        itemCode: "$item.itemCode",
-        itemName: "$item.itemName",
-        itemDescription: "$item.itemDescription",
-        UOM: "$item.UOM",
-        status: 1
+        itemCategory: "$itemType",
+        status: {$ifNull: ["$RMSpecification.status", "Red"]},
+        itemCode: 1,
+        itemName: 1,
+        itemDescription: 1,
+        UOM: "$orderInfoUOM"
     };
 };

@@ -152,5 +152,19 @@
         "url": "/default/sales/master/sales_product_master/list",
         "items": [],
         "roles": []
+    },
+    {
+        "_id": "664b15610f4f985c76cdadf4",
+        "menuItemId": "64a6c1e33339d4dc9d8141a3",
+        "module": "Sales",
+        "type": "MASTER",
+        "order": 12,
+        "isDisplay": false,
+        "title": "Discount Management",
+        "displayName": "Discount Management",
+        "disabled": false,
+        "url": "/default/sales/master/discount_management/list",
+        "items": [],
+        "roles": []
     }
 ]

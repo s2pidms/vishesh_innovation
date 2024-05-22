@@ -195,17 +195,33 @@ export class ProductSpecificationsFormComponent implements OnInit {
                         return;
                     }
 
-                    success.specificationInfo = success.specificationInfo;
-                    let specificationListData = this.masterData?.specificationList;
-                    this.masterData.specificationList = success.specificationInfo;
-                    for (const ele of success.specificationInfo) {
-                        specificationListData = specificationListData.filter(
-                            (x: any) => x.specificationCode != ele.specificationCode
-                        );
-                        this.ESCPreviewArr = [...success.specificationInfo, ...specificationListData];
+                    if (!success?.specificationInfo || success?.specificationInfo?.length == 0) {
+                        this.masterData.specificationList = this.masterData.specificationList;
+                    } else {
+                        success.specificationInfo = success.specificationInfo;
+                        let specificationListData = this.masterData?.specificationList;
+                        this.masterData.specificationList = success.specificationInfo;
+                        for (const ele of success.specificationInfo) {
+                            specificationListData = specificationListData.filter(
+                                (x: any) => x.specificationCode != ele.specificationCode
+                            );
+                            this.masterData.specificationList = [
+                                ...success.specificationInfo,
+                                ...specificationListData
+                            ];
+                            // this.ESCPreviewArr = [...success.specificationInfo, ...specificationListData];
+                        }
                     }
                     this.collection = this.masterData?.specificationList.length;
 
+                    if (
+                        this.action == "view" &&
+                        (success?.specificationInfo?.length > 0 ||
+                            !success?.specificationInfo ||
+                            success?.specificationInfo?.length == 0)
+                    ) {
+                        this.masterData.specificationList = success?.specificationInfo;
+                    }
                     this.filterSKUList = this.masterData?.SKUOptions;
                     this.filterSKUList = this.filterSKUList.filter(
                         (x: any) => x.productCategory == success?.productCategory
@@ -213,9 +229,9 @@ export class ProductSpecificationsFormComponent implements OnInit {
 
                     this.form.patchValue(success);
                     if (this.action != "create") {
-                        this.isESCPreview = true;
-                        this.isConditionPreview = true;
-                        this.isPreview = true;
+                        // this.isESCPreview = true;
+                        // this.isConditionPreview = true;
+                        this.isPreview = false;
                         this.form.disable();
                     }
 
@@ -242,7 +258,7 @@ export class ProductSpecificationsFormComponent implements OnInit {
     ESCPreview() {
         this.search = "";
         this.isPreview = false;
-        this.isConditionPreview = false;
+        // this.isConditionPreview = false;
         this.masterData.specificationList = this.ESCPreviewArr;
         this.collection = this.masterData.specificationList.length;
     }

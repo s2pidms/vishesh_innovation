@@ -1,0 +1,77 @@
+<div class="modelPage">
+    <div class="modal-header">
+        <div class="heading">Apply Discount</div>
+        <div>
+            <button
+                type="button"
+                class="btn btn-cross btn-sm"
+                aria-label="Close"
+                (click)="this.activeModal.close(discountInfo)"
+            >
+                <i class="fa fa-times-circle" aria-hidden="true"></i>
+            </button>
+        </div>
+    </div>
+    <div class="container-fluid">
+        <div class="row mt-4">
+            <form [formGroup]="form">
+                <div class="form-body">
+                    <div style="min-height: 25.8rem">
+                        <div class="row mb-4 px-4">
+                            <div class="col-md-6">
+                                <label class="form-label"> Discount Type</label>
+                                <select class="form-select" type="text" formControlName="discountType">
+                                    <option [value]="null" selected disabled>Select Discount Type</option>
+                                    <option [value]="j.value" *ngFor="let j of discountTypeOptions">
+                                        {{ j.label }}
+                                    </option>
+                                </select>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label"> Discount Value </label>
+                                <input class="form-control" type="number" formControlName="discountValue" />
+                            </div>
+                        </div>
+                        <div class="row mb-4 px-4">
+                            <div class="col-md-6">
+                                <label class="form-label"> Discount Description </label>
+                                <input class="form-control" type="text" formControlName="discountDescription" />
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label"> Usage Limit </label>
+                                <input class="form-control" type="number" formControlName="usageLimit" />
+                            </div>
+                        </div>
+                        <div class="row mb-4 px-4">
+                            <div class="col-md-6">
+                                <label class="form-label"> Discount Start Date </label>
+                                <input class="form-control" type="date" formControlName="discountStartDate" />
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label"> Discount End Date </label>
+                                <input class="form-control" type="date" formControlName="discountEndDate" />
+                            </div>
+                        </div>
+                        <div class="row mb-4 px-4">
+                            <div class="col-md-6">
+                                <label class="form-label"> Minimum Purchase Qty </label>
+                                <input class="form-control" type="number" formControlName="minPurchaseQty" />
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label"> Minimum Purchase Amt </label>
+                                <input class="form-control" type="number" formControlName="minPurchaseAmt" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+            <hr *ngIf="!['view'].includes(action)" class="line-border mt-5 px-5" />
+            <div class="text-center">
+                <div *ngIf="!['view'].includes(action)" class="text-center mb-3">
+                    <button (click)="reset()" class="btn bg-primary px-5 me-3" type="button">Reset</button>
+                    <button class="btn bg-primary px-5" type="button" (click)="dismissModel()">Save</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

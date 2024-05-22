@@ -16,3 +16,4 @@ export * from './mapCategoryHSN.validation';
 export * from './paymentTerms.validation';
 export * from './salesForecast.validation';
 export * from './quotationOfSKU.validation';
+export * from './discountManagement.validation';

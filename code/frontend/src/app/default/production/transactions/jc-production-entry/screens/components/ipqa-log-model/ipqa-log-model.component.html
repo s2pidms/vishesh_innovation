@@ -16,6 +16,7 @@
                     type="checkbox"
                     [(ngModel)]="IPQAInfoList.adherenceToProcessStd"
                     [ngModelOptions]="{standalone: true}"
+                    [disabled]="['view'].includes(action)"
                 />
             </label>
         </div>
@@ -41,17 +42,32 @@
             <div class="col-3 pe-1">
                 <div class="row">
                     <div class="col pe-4">
-                        <input class="form-control" type="date" [(ngModel)]="item.date" />
+                        <input
+                            class="form-control"
+                            type="date"
+                            [(ngModel)]="item.date"
+                            [disabled]="['view'].includes(action)"
+                        />
                     </div>
                 </div>
             </div>
             <div class="col-9 ps-1">
                 <div class="row">
                     <div class="col-6 pe-1">
-                        <input class="form-control" type="text" [(ngModel)]="item.inProcessNonConformance" />
+                        <input
+                            class="form-control"
+                            type="text"
+                            [(ngModel)]="item.inProcessNonConformance"
+                            [disabled]="['view'].includes(action)"
+                        />
                     </div>
                     <div class="col-6 ps-0">
-                        <input class="form-control" type="text" [(ngModel)]="item.inProcessCorrection" />
+                        <input
+                            class="form-control"
+                            type="text"
+                            [(ngModel)]="item.inProcessCorrection"
+                            [disabled]="['view'].includes(action)"
+                        />
                     </div>
                 </div>
             </div>
@@ -98,6 +114,7 @@
                         placeholder="Note down any critical incident/Deviation/Concerns during production"
                         type="text"
                         [(ngModel)]="IPQAInfoList.remarks"
+                        [disabled]="['view'].includes(action)"
                     />
                 </div>
             </div>
@@ -116,11 +133,23 @@
                         IPQA In-charge
                         <span class="ms-1 me-2">&#9654;</span>
                     </div>
-                    <input class="form-control" type="text" [(ngModel)]="IPQAInfoList.IPQAInCharge" />
+                    <input
+                        class="form-control"
+                        type="text"
+                        [(ngModel)]="IPQAInfoList.IPQAInCharge"
+                        [disabled]="['view'].includes(action)"
+                    />
                 </div>
             </div>
             <div class="col-7 d-flex justify-content-end">
-                <button type="button" class="btn btn-primary px-4" (click)="dismissModel()">Save & Close</button>
+                <button
+                    [disabled]="['view'].includes(action)"
+                    type="button"
+                    class="btn btn-primary px-4"
+                    (click)="dismissModel()"
+                >
+                    Save & Close
+                </button>
             </div>
         </div>
     </div>

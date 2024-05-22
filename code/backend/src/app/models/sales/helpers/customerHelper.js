@@ -10,7 +10,9 @@ exports.getAllCustomerAttributes = () => {
         createdAt: 1,
         printQRCodeOnInvoice: 1,
         printDSOnInvoice: 1,
-        venderCode: 1
+        venderCode: 1,
+        showPANNo: 1,
+        showEximCode: 1,
     };
 };
 exports.getAllCustomerExcelAttributes = () => {
@@ -27,6 +29,8 @@ exports.getAllCustomerExcelAttributes = () => {
         printQRCodeOnInvoice: 1,
         printDSOnInvoice: 1,
         venderCode: 1,
+        showPANNo: 1,
+        showEximCode: 1,
         creditLimit: 1,
         customerPaymentTerms: 1,
         country: "$customerBillingAddress.country",

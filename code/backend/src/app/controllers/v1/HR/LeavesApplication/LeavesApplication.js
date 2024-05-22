@@ -354,7 +354,7 @@ exports.getAllPaidLeaveOfMonth = async (startDate, endDate, company) => {
                 $and: [
                     {company: ObjectId(company)},
                     {status: {$in: ["Approved", "Availed"]}},
-                    {leaveType: {$in: ["Paid Leaves"]}},
+                    {leaveType: {$in: ["Paid Leaves", "Compensatory Off"]}},
                     {
                         $or: [
                             {

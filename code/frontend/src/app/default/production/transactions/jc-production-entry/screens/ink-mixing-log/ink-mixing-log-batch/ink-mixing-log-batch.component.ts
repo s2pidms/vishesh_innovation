@@ -14,6 +14,7 @@ export class InkMixingLogBatchComponent implements OnInit {
     @Input() sourceOfManufacturing: any = "";
     @Input() inkLogNewBatch: any = {};
     @Input() shiftOptions: any = [];
+    @Input() action: any = "";
     resetData: any = [];
     collection: number = 0;
     page: number = 1;
@@ -98,7 +99,7 @@ export class InkMixingLogBatchComponent implements OnInit {
             backdrop: "static",
             keyboard: false
         });
-
+        modalRef.componentInstance.action = this.action;
         modalRef.componentInstance.logDetails = this.inkLogNewBatch.logDetails;
         modalRef.componentInstance.shiftOptions = this.shiftOptions;
         modalRef.componentInstance.sourceOfManufacturing = this.sourceOfManufacturing;

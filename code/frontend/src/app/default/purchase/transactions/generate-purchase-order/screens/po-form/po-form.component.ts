@@ -220,6 +220,19 @@ export class PoFormComponent implements OnInit {
             if (this.masterData.locationOptions.length == 1) {
                 this.form.controls["deliveryLocation"].patchValue(this.masterData.locationOptions[0]?.label);
             }
+
+            if (this.masterData?.serviceChargesList?.length > 0) {
+                this.masterData.serviceChargesList = this.masterData?.serviceChargesList?.map((x: any) => {
+                    x.oldGSTRate = x.GSTRate;
+                    x.oldIGSTRate = x.IGSTRate;
+                    x.oldSGSTRate = x.SGSTRate;
+                    x.oldCGSTRate = x.CGSTRate;
+                    x.oldUGSTRate = x.UGSTRate;
+                    x.serviceCharges = 0;
+                    x.currency = "INR";
+                    return x;
+                });
+            }
             this.purchaseCategoryValues = result?.autoIncValues;
             this.f["PODate"].setValue(this.utilityService.getTodayDate("YYYY-MM-DD"));
             this.f["deliveryDate"].setValue(this.utilityService.getTodayDate("YYYY-MM-DD"));
@@ -229,11 +242,6 @@ export class PoFormComponent implements OnInit {
             this.form.controls["POStatus"].patchValue("Awaiting Approval");
             this.form.controls["POStatus"].setValue(this.statusArr[this.action]);
             this.form.controls["currency"].setValue("INR");
-
-            this.masterData.serviceChargesList = this.masterData?.serviceChargesList?.map((x: any) => {
-                x.currency = "INR";
-                return x;
-            });
 
             this.activatedRoute.queryParams
                 .pipe(
@@ -295,6 +303,12 @@ export class PoFormComponent implements OnInit {
                         ele.POLineNumber = idx + 1;
                         ele.netRate = ele.netRate ?? ele.purchaseRate;
                         ele.discount = ele.discount ?? 0;
+                        if (success?.purchaseCategory?.includes("Imports")) {
+                            ele.gst = 0;
+                            ele.igst = 0;
+                            ele.cgst = 0;
+                            ele.sgst = 0;
+                        }
                         return ele;
                     });
                     if (this.action != "edit") {
@@ -440,6 +454,27 @@ export class PoFormComponent implements OnInit {
             this.spinner.hide();
         });
         this.filterItems = [];
+
+        if (this.f["purchaseCategory"].value?.includes("Imports")) {
+            this.masterData.serviceChargesList = this.masterData?.serviceChargesList?.map((x: any) => {
+                x.GSTRate = 0;
+                x.IGSTRate = 0;
+                x.SGSTRate = 0;
+                x.CGSTRate = 0;
+                x.UGSTRate = 0;
+                return x;
+            });
+        } else {
+            this.masterData.serviceChargesList = this.masterData?.serviceChargesList?.map((x: any) => {
+                x.GSTRate = x.oldGSTRate;
+                x.IGSTRate = x.oldIGSTRate;
+                x.SGSTRate = x.oldSGSTRate;
+                x.CGSTRate = x.oldCGSTRate;
+                x.UGSTRate = x.oldUGSTRate;
+                return x;
+            });
+        }
+
         // this.supplierOptions = this.masterData.suppliersOptions.filter(
         //     (x: any) =>
         //         x.supplierPurchaseType.includes("Domestic", "Imports") ==
@@ -453,6 +488,12 @@ export class PoFormComponent implements OnInit {
                 ele.POLineNumber = index + 1;
                 ele.netRate = ele.purchaseRate;
                 ele.discount = 0;
+                if (this.f["purchaseCategory"].value?.includes("Imports")) {
+                    ele.gst = 0;
+                    ele.igst = 0;
+                    ele.cgst = 0;
+                    ele.sgst = 0;
+                }
                 if (!!!ele.unitConversion) {
                     if (ele.primaryToSecondaryConversion) {
                         ele.unitConversion = `1 ${ele.primaryUnit ?? "Unit"} = ${

@@ -386,3 +386,8 @@ export const COMPANY_TYPE_INJECTION_MOLDING = "Injection Molding";
 export const COMPANY_TYPE_IP_MANUFACTURING = "Industrial Products Manufacturing";
 
 export const superAdminId = "64a687b4e9143bffd820fb3d";
+export const DISCOUNT_TYPE = [
+    {label: "Percentage", value: "Percentage"},
+    {label: "Fixed Amount", value: "Fixed Amount"},
+    {label: "Volume-Based", value: "Volume-Based"}
+];
