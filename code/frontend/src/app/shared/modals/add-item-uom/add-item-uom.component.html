@@ -151,7 +151,9 @@
                                         readOnly
                                     />
                                     <div class="input-group-text bg-secondary text-white ms-1">
-                                        {{ form.value.primaryUnit ? form.value.primaryUnit : "Unit" }}
+                                        {{
+                                            form.value.primaryUnit ? (form.value.primaryUnit | UOMUnitsMaster) : "Unit"
+                                        }}
                                     </div>
                                 </div>
 
@@ -166,7 +168,11 @@
                                         formControlName="primaryToSecondaryConversion"
                                     />
                                     <div class="input-group-text bg-secondary text-white ms-1">
-                                        {{ form.value.secondaryUnit ? form.value.secondaryUnit : "Unit" }}
+                                        {{
+                                            form.value.secondaryUnit
+                                                ? (form.value.secondaryUnit | UOMUnitsMaster)
+                                                : "Unit"
+                                        }}
                                     </div>
                                 </div>
                             </div>

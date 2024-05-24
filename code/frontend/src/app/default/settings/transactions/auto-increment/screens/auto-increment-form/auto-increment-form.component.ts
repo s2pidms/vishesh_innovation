@@ -1,11 +1,10 @@
 import {Location} from "@angular/common";
 import {Component, OnInit} from "@angular/core";
-import {UntypedFormBuilder, UntypedFormControl, UntypedFormGroup, Validators} from "@angular/forms";
+import {UntypedFormControl, UntypedFormGroup, Validators} from "@angular/forms";
 import {AutoIncrementService} from "@services/settings";
-import {Router, ActivatedRoute} from "@angular/router";
-
+import {ActivatedRoute} from "@angular/router";
 import {ToastService, UtilityService} from "@core/services";
-import {map, mergeMap, of} from "rxjs";
+import {mergeMap, of} from "rxjs";
 import {SpinnerService} from "@core/services";
 
 @Component({
@@ -34,12 +33,11 @@ export class AutoIncrementFormComponent implements OnInit {
     constructor(
         private autoIncrementService: AutoIncrementService,
 
-        private router: Router,
         private activatedRoute: ActivatedRoute,
         private spinner: SpinnerService,
-        private formBuilder: UntypedFormBuilder,
         private toastService: ToastService,
-        private utilityService: UtilityService
+        private utilityService: UtilityService,
+        private location: Location
     ) {}
 
     ngOnInit(): void {
@@ -72,7 +70,7 @@ export class AutoIncrementFormComponent implements OnInit {
             this.submitted = false;
             this.spinner.hide();
             this.toastService.success(success.message);
-            this.router.navigate(["/default/settings/transactions/auto_increment/AI-list"]);
+            this.location.back();
         });
     }
 
@@ -82,7 +80,7 @@ export class AutoIncrementFormComponent implements OnInit {
             this.spinner.hide();
             this.submitted = false;
             this.toastService.success(success.message);
-            this.router.navigate(["/default/settings/transactions/auto_increment/AI-list"]);
+            this.location.back();
         });
     }
 

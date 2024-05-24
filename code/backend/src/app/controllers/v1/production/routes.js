@@ -19,6 +19,16 @@ const lamination = require("./productionHouse/lamination/routes");
 const weeding = require("./productionHouse/weeding/routes");
 const throughPunching = require("./productionHouse/throughPunching/routes");
 const packing = require("./productionHouse/packing/routes");
+const stageInspection = require("./productionHouse/stageInspection/routes");
+const stageInspectionIPQA = require("./qualityHouse/stageInspectionIPQA/routes");
+const inkMixingLogIPQA = require("./qualityHouse/inkMixingLogIPQA/routes");
+const screenMakingLogIPQA = require("./qualityHouse/screenMakingLogIPQA/routes");
+const screenPrintingLogIPQA = require("./qualityHouse/screenPrintingLogIPQA/routes");
+const laminationIPQA = require("./qualityHouse/laminationIPQA/routes");
+const packingIPQA = require("./qualityHouse/packingIPQA/routes");
+const stockCuttingIPQA = require("./qualityHouse/stockCuttingIPQA/routes");
+const throughPunchingIPQA = require("./qualityHouse/throughPunchingIPQA/routes");
+const weedingIPQA = require("./qualityHouse/weedingIPQA/routes");
 
 router.use("/goodsRequisition", GR);
 router.use("/FGCorrection", FGCorrection);
@@ -31,6 +41,7 @@ router.use("/jobCardOutput", jobCardOutput);
 router.use("/inkMixing", inkMixing);
 router.use("/jobCardEntry", jobCardEntry);
 router.use("/jcEntry", jcEntry); // for Control Panel production in Continental
+// Production House
 router.use("/screenMakingLog", screenMakingLog);
 router.use("/inkMixingLog", inkMixingLog);
 router.use("/stockCutting", stockCutting);
@@ -39,5 +50,17 @@ router.use("/lamination", lamination);
 router.use("/weeding", weeding);
 router.use("/throughPunching", throughPunching);
 router.use("/packing", packing);
+router.use("/stageInspection", stageInspection);
+
+// Quality House
+router.use("/stageInspectionIPQA", stageInspectionIPQA);
+router.use("/inkMixingLogIPQA", inkMixingLogIPQA);
+router.use("/screenMakingLogIPQA", screenMakingLogIPQA);
+router.use("/screenPrintingLogIPQA", screenPrintingLogIPQA);
+router.use("/laminationIPQA", laminationIPQA);
+router.use("/packingIPQA", packingIPQA);
+router.use("/stockCuttingIPQA", stockCuttingIPQA);
+router.use("/throughPunchingIPQA", throughPunchingIPQA);
+router.use("/weedingIPQA", weedingIPQA);
 
 module.exports = router;

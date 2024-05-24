@@ -269,3 +269,165 @@ exports.THROUGH_PUNCHING = {
         };
     }
 };
+
+exports.STAGE_INSPECTION = {
+    COLLECTION_NAME: "StageInspection",
+    ADDED_ACTION: "Stage Inspection created",
+    UPDATED_ACTION: "Stage Inspection updated"
+    // MODULE_NAME: "Stage Inspection",
+    // MODULE: "StageInspection",
+    // MODULE_PREFIX: "null",
+    // AUTO_INCREMENT_DATA: function () {
+    //     return {
+    //         moduleName: this.MODULE_NAME,
+    //         module: this.MODULE,
+    //         company: null,
+    //         modulePrefix: this.MODULE_PREFIX
+    //     };
+    // }
+};
+
+exports.STAGE_INSPECTION_IPQA = {
+    COLLECTION_NAME: "StageInspectionIPQA",
+    ADDED_ACTION: "Stage Inspection IPQA created",
+    UPDATED_ACTION: "Stage Inspection IPQA updated",
+    // MODULE_NAME: "Stage Inspection IPQA",
+    // MODULE: "StageInspectionIPQA",
+    // MODULE_PREFIX: "null",
+    // AUTO_INCREMENT_DATA: function () {
+    //     return {
+    //         moduleName: this.MODULE_NAME,
+    //         module: this.MODULE,
+    //         company: null,
+    //         modulePrefix: this.MODULE_PREFIX
+    //     };
+    // }
+}
+exports.INK_MIXING_IPQA = {
+    COLLECTION_NAME: "InkMixingLogIPQA",
+    ADDED_ACTION: "Ink Mixing Log IPQA created",
+    UPDATED_ACTION: "Ink Mixing Log IPQA updated",
+    // MODULE_NAME: "Ink Mixing Log IPQA",
+    // MODULE: "InkMixingLogIPQA",
+    // MODULE_PREFIX: "null",
+    // AUTO_INCREMENT_DATA: function () {
+    //     return {
+    //         moduleName: this.MODULE_NAME,
+    //         module: this.MODULE,
+    //         company: null,
+    //         modulePrefix: this.MODULE_PREFIX
+    //     };
+    // }
+}
+exports.SCREEN_MAKING_IPQA = {
+    COLLECTION_NAME: "ScreenMakingLogIPQA",
+    ADDED_ACTION: "Screen Making Log IPQA created",
+    UPDATED_ACTION: "Screen Making Log IPQA updated",
+    // MODULE_NAME: "Screen Making Log IPQA",
+    // MODULE: "ScreenMakingLogIPQA",
+    // MODULE_PREFIX: "null",
+    // AUTO_INCREMENT_DATA: function () {
+    //     return {
+    //         moduleName: this.MODULE_NAME,
+    //         module: this.MODULE,
+    //         company: null,
+    //         modulePrefix: this.MODULE_PREFIX
+    //     };
+    // }
+}
+exports.SCREEN_PRINTING_IPQA = {
+    COLLECTION_NAME: "ScreenPrintingLogIPQA",
+    ADDED_ACTION: "Screen Printing Log IPQA created",
+    UPDATED_ACTION: "Screen Printing Log IPQA updated",
+    // MODULE_NAME: "Screen Printing Log IPQA",
+    // MODULE: "ScreenPrintingLogIPQA",
+    // MODULE_PREFIX: "null",
+    // AUTO_INCREMENT_DATA: function () {
+    //     return {
+    //         moduleName: this.MODULE_NAME,
+    //         module: this.MODULE,
+    //         company: null,
+    //         modulePrefix: this.MODULE_PREFIX
+    //     };
+    // }
+}
+exports.LAMINATION_IPQA = {
+    COLLECTION_NAME: "LaminationIPQA",
+    ADDED_ACTION: "Lamination IPQA created",
+    UPDATED_ACTION: "Lamination IPQA updated",
+    // MODULE_NAME: "Lamination IPQA",
+    // MODULE: "LaminationIPQA",
+    // MODULE_PREFIX: "null",
+    // AUTO_INCREMENT_DATA: function () {
+    //     return {
+    //         moduleName: this.MODULE_NAME,
+    //         module: this.MODULE,
+    //         company: null,
+    //         modulePrefix: this.MODULE_PREFIX
+    //     };
+    // }
+}
+exports.PACKING_IPQA = {
+    COLLECTION_NAME: "PackingIPQA",
+    ADDED_ACTION: "Packing IPQA created",
+    UPDATED_ACTION: "Packing IPQA updated",
+    // MODULE_NAME: "Packing IPQA",
+    // MODULE: "PackingIPQA",
+    // MODULE_PREFIX: "null",
+    // AUTO_INCREMENT_DATA: function () {
+    //     return {
+    //         moduleName: this.MODULE_NAME,
+    //         module: this.MODULE,
+    //         company: null,
+    //         modulePrefix: this.MODULE_PREFIX
+    //     };
+    // }
+}
+exports.STOCK_CUTTING_IPQA = {
+    COLLECTION_NAME: "StockCuttingIPQA",
+    ADDED_ACTION: "StockCutting IPQA created",
+    UPDATED_ACTION: "StockCutting IPQA updated",
+    // MODULE_NAME: "StockCutting IPQA",
+    // MODULE: "StockCuttingIPQA",
+    // MODULE_PREFIX: "null",
+    // AUTO_INCREMENT_DATA: function () {
+    //     return {
+    //         moduleName: this.MODULE_NAME,
+    //         module: this.MODULE,
+    //         company: null,
+    //         modulePrefix: this.MODULE_PREFIX
+    //     };
+    // }
+}
+exports.THROUGH_PUNCHING_IPQA = {
+    COLLECTION_NAME: "ThroughPunchingIPQA",
+    ADDED_ACTION: "Through Punching IPQA created",
+    UPDATED_ACTION: "Through Punching IPQA updated",
+    // MODULE_NAME: "Through Punching IPQA",
+    // MODULE: "ThroughPunchingIPQA",
+    // MODULE_PREFIX: "null",
+    // AUTO_INCREMENT_DATA: function () {
+    //     return {
+    //         moduleName: this.MODULE_NAME,
+    //         module: this.MODULE,
+    //         company: null,
+    //         modulePrefix: this.MODULE_PREFIX
+    //     };
+    // }
+}
+exports.WEEDING_IPQA = {
+    COLLECTION_NAME: "WeedingIPQA",
+    ADDED_ACTION: "WEEDING IPQA created",
+    UPDATED_ACTION: "WEEDING IPQA updated",
+    // MODULE_NAME: "WEEDING IPQA",
+    // MODULE: "WeedingIPQA",
+    // MODULE_PREFIX: "null",
+    // AUTO_INCREMENT_DATA: function () {
+    //     return {
+    //         moduleName: this.MODULE_NAME,
+    //         module: this.MODULE,
+    //         company: null,
+    //         modulePrefix: this.MODULE_PREFIX
+    //     };
+    // }
+}

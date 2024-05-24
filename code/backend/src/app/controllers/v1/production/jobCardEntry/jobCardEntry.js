@@ -543,7 +543,7 @@ exports.getJCEntryDataByJobCardId = asyncHandler(async (req, res) => {
                                 status: OPTIONS.defaultStatus.ACTIVE
                             }
                         },
-                        {$project: {processOriginalName: 1, sourceOfManufacturing: 1}}
+                        {$project: {processOriginalName: 1, sourceOfManufacturing: 1, qualityOriginalName: 1}}
                     ],
                     as: "processMaster"
                 }
@@ -555,6 +555,7 @@ exports.getJCEntryDataByJobCardId = asyncHandler(async (req, res) => {
                     process: "$PFDetails.process",
                     processName: "$PFDetails.processName",
                     processOriginalName: "$processMaster.processOriginalName",
+                    qualityOriginalName: "$processMaster.qualityOriginalName",
                     sourceOfManufacturing: "$processMaster.sourceOfManufacturing",
                     IPQALog: {
                         adherenceToProcessStd: {$literal: false},

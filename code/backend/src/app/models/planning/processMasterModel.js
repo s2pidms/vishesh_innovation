@@ -30,6 +30,10 @@ const processMasterSchema = mongoose.Schema(
             type: String,
             required: false
         },
+        qualityOriginalName: {
+            type: String,
+            required: false
+        },
         processName: {
             type: String,
             required: false

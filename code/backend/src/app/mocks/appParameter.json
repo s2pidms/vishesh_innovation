@@ -468,5 +468,10 @@
         "appParameterAppCode": "PAID_LEAVE_DATE_VALIDATION",
         "appParameterName": "Paid Leave Date Validation",
         "appParameterValue": "10"
+    },
+    {
+        "appParameterAppCode": "STOCK_LEVEL_BUTTON_CHECK",
+        "appParameterName": "Stock Level Button",
+        "appParameterValue": "Yes"
     }
 ]

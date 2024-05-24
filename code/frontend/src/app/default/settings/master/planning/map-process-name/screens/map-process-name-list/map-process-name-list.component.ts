@@ -26,6 +26,7 @@ export class MapProcessNameListComponent implements OnInit, OnDestroy {
     search: string = "";
     tableData: any = [];
     processOptions: any = [];
+    IPQAOptions: any = [];
     rolePermissionActions: any = LIST_DEFAULT_PERMISSION_ACTIONS;
     subscription!: Subscription;
     constructor(
@@ -61,6 +62,7 @@ export class MapProcessNameListComponent implements OnInit, OnDestroy {
                 this.pdfDownload(success.rows);
             } else {
                 this.processOptions = success.processOptions;
+                this.IPQAOptions = success.IPQAOptions;
                 this.tableData = success.rows;
                 this.collection = success.count;
             }

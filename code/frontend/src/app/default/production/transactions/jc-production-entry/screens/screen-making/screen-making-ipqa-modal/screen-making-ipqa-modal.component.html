@@ -1,0 +1,156 @@
+<div class="modelPage">
+    <div class="modal-header">
+        <div class="heading">IPQA Log</div>
+        <div>
+            <button type="button" class="btn btn-cross btn-sm" aria-label="Close" (click)="this.activeModal.close()">
+                <i class="fa fa-times-circle" aria-hidden="true"></i>
+            </button>
+        </div>
+    </div>
+    <div class="container-fluid mt-4 px-0">
+        <div class="row mx-4 px-3">
+            <label class="label"
+                ><h5 class="text-secondary">Adherence to Process Standards (Check the box if "yes")</h5>
+                <input
+                    class="form-check-input pointer label"
+                    type="checkbox"
+                    [(ngModel)]="screenMakingLogIPQA.IPQALog.adherenceToProcessStd"
+                    [ngModelOptions]="{standalone: true}"
+                    [disabled]="['view'].includes(action)"
+                />
+            </label>
+        </div>
+        <hr class="line-border" />
+        <div class="row mx-4 px-3">
+            <div class="col-3">
+                <div class="row">
+                    <div class="col pe-4"><label class="form-label">Date</label></div>
+                </div>
+            </div>
+            <div class="col-9">
+                <div class="row">
+                    <div class="col-6 ps-0">
+                        <label class="form-label" type="text">
+                            In-process Non-conformance <span class="text-primary span">(if any)</span>
+                        </label>
+                    </div>
+                    <div class="col-6 ps-0"><label class="form-label" type="text">In-process Correction </label></div>
+                </div>
+            </div>
+        </div>
+        <div *ngFor="let item of screenMakingLogIPQA?.IPQALog?.inProcessInfo; let i = index" class="row mx-4 px-3 mb-2">
+            <div class="col-3 pe-1">
+                <div class="row">
+                    <div class="col pe-4">
+                        <input
+                            class="form-control"
+                            type="date"
+                            [(ngModel)]="item.date"
+                            [disabled]="['view'].includes(action)"
+                        />
+                    </div>
+                </div>
+            </div>
+            <div class="col-9 ps-1">
+                <div class="row">
+                    <div class="col-6 pe-1">
+                        <input
+                            class="form-control"
+                            type="text"
+                            [(ngModel)]="item.inProcessNonConformance"
+                            [disabled]="['view'].includes(action)"
+                        />
+                    </div>
+                    <div class="col-6 ps-0">
+                        <input
+                            class="form-control"
+                            type="text"
+                            [(ngModel)]="item.inProcessCorrection"
+                            [disabled]="['view'].includes(action)"
+                        />
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row mt-4 mb-2 px-5 mx-1">
+            <div class="col-12 set-image px-0 seperate-row">
+                <div class="add-icon">
+                    <img
+                        data-tip
+                        data-for="infoTip"
+                        (click)="addTableRow()"
+                        class="pointer"
+                        src="./assets/new_icons/add_row.svg"
+                        width="14"
+                        alt=""
+                    />
+                </div>
+                <hr class="line-border" />
+                <!-- <img class="" src="./assets/new_icons/separator_row.svg" alt="" /> -->
+                <div class="minus-icon">
+                    <img
+                        data-tip
+                        data-for="infoTip"
+                        (click)="deleteTableRow()"
+                        class="pointer"
+                        src="./assets/new_icons/delete_row.svg"
+                        width="14"
+                        alt=""
+                    />
+                </div>
+            </div>
+        </div>
+
+        <div class="row mx-4 px-3" style="min-height: 10rem">
+            <div class="col-12">
+                <div class="d-flex align-items-center">
+                    <div class="col-form-label text-nowrap">
+                        Remarks
+                        <span class="ms-1 me-2">&#9654;</span>
+                    </div>
+                    <input
+                        class="form-control"
+                        placeholder="Note down any critical incident/Deviation/Concerns during production"
+                        type="text"
+                        [(ngModel)]="screenMakingLogIPQA.IPQALog.remarks"
+                        [disabled]="['view'].includes(action)"
+                    />
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col mt-1">
+                <hr class="line-border" />
+            </div>
+        </div>
+
+        <div class="row mb-4 mt-2 mx-4 px-3">
+            <div class="col-5 pe-0">
+                <div class="d-flex align-items-center">
+                    <div class="col-form-label text-nowrap">
+                        IPQA In-charge
+                        <span class="ms-1 me-2">&#9654;</span>
+                    </div>
+                    <input
+                        class="form-control"
+                        type="text"
+                        [(ngModel)]="screenMakingLogIPQA.IPQALog.IPQAInCharge"
+                        [disabled]="['view'].includes(action)"
+                    />
+                </div>
+            </div>
+            <div class="col-7 d-flex justify-content-end">
+                <button
+                    [disabled]="['view'].includes(action)"
+                    type="button"
+                    class="btn btn-primary px-4"
+                    (click)="submit()"
+                >
+                    Save & Close
+                </button>
+            </div>
+        </div>
+    </div>
+</div>

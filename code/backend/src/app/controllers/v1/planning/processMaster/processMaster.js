@@ -2,12 +2,11 @@ const asyncHandler = require("express-async-handler");
 const MESSAGES = require("../../../../helpers/messages.options");
 const {OPTIONS} = require("../../../../helpers/global.options");
 const {getAllProcessMasterAttributes} = require("../../../../models/planning/helpers/processMasterHelper");
-const {ASSET_CLASS_NAMES, PROCESS} = require("../../../../mocks/constantData");
+const {ASSET_CLASS_NAMES, PROCESS, IPQA} = require("../../../../mocks/constantData");
 const {getAllLabourRateMasterList} = require("../../finance/labour-rate-master/labour-rate-master");
 const {default: mongoose} = require("mongoose");
 const {PROCESS_MASTER} = require("../../../../mocks/schemasConstant/planningConstant");
 const {getAndSetAutoIncrementNo} = require("../../settings/autoIncrement/autoIncrement");
-const {filteredProcessNameMasterList} = require("../../../../models/settings/repository/processNameRepository");
 const ProcessRepository = require("../../../../models/planning/repository/processMasterRepository");
 const {filteredAssetMasterList} = require("../../../../models/finance/repository/assetMasterRepository");
 const ObjectId = mongoose.Types.ObjectId;
@@ -222,6 +221,7 @@ exports.getAllMapProcessNames = asyncHandler(async (req, res) => {
         let project = {
             _id: 1,
             processOriginalName: {$ifNull: ["$processOriginalName", null]},
+            qualityOriginalName: {$ifNull: ["$qualityOriginalName", null]},
             processName: 1,
             processId: 1
         };
@@ -236,7 +236,8 @@ exports.getAllMapProcessNames = asyncHandler(async (req, res) => {
         let rows = await ProcessRepository.getAllPaginate({pipeline, project, queryParams: req.query});
         return res.success({
             ...rows,
-            processOptions: PROCESS
+            processOptions: PROCESS,
+            IPQAOptions: IPQA
         });
     } catch (error) {
         console.error("getAllMapProcessNames Process Master", error);

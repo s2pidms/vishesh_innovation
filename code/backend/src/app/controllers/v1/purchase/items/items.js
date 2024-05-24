@@ -249,11 +249,13 @@ exports.getAllMasterData = asyncHandler(async (req, res) => {
         }
         options.itemCategories = options.itemCategories.map(x => x.category);
         let WXLDimensionsUnit = await findAppParameterValue("WXL_DIMENSIONS_UNIT", req.user.company);
+        let stockLevelButtonCondition = await findAppParameterValue("STOCK_LEVEL_BUTTON_CHECK", req.user.company);
         const companyData = await CompanyRepository.getDocById(req.user.company, {companyType: 1});
         return res.success({
             autoIncValues,
             companyType: companyData?.companyType,
             WXLDimensionsUnit: WXLDimensionsUnit.split(",").map(x => x),
+            stockLevelButtonCondition,
             ...options
         });
     } catch (error) {

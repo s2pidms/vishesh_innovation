@@ -232,6 +232,8 @@ ng g c default/production/transactions/jc-production-entry/screens/components/ip
 
 ng g c default/production/transactions/jc-production-entry/screens/stock-preparation/stock-preparation-log-model
 ng g c default/production/transactions/jc-production-entry/screens/stock-preparation/jc-stock-preparation-entry
+ng g c default/production/transactions/jc-production-entry/screens/stage-inspection/stage-inspection-prod-entry
+ng g c default/production/transactions/jc-production-entry/screens/stage-inspection/stage-inspection-ipqa-entry
 
 ng g c default/production/master/map-process-and-machine/screens/define-sub-processes-modal
 
@@ -824,3 +826,11 @@ ng g c default/sales/master/discount-management/screens/discount-management-form
 ng g c default/sales/master/discount-management/screens/discount-management-list
 ng g c default/sales/master/discount-management/screens/apply-discount
 
+ng g c default/production/transactions/jc-production-entry/screens/lamination-log-entry-model/lamination-log-entry-IPQA-modal
+ng g c default/production/transactions/jc-production-entry/screens/packing-log-entry-model/packing-log-entry-IPQA-modal
+ng g c default/production/transactions/jc-production-entry/screens/punching-log-entry-model/punching-log-entry-IPQA-modal
+ng g c default/production/transactions/jc-production-entry/screens/screen-making/screen-making-IPQA-modal
+ng g c default/production/transactions/jc-production-entry/screens/screen-printing/screen-printing-IPQA-modal
+ng g c default/production/transactions/jc-production-entry/screens/stock-cutting/stock-cutting-IPQA-modal
+ng g c default/production/transactions/jc-production-entry/screens/weeding-log-entry-model/weeding-log-entry-IPQA-modal
+ng g c default/production/transactions/jc-production-entry/screens/stock-preparation/stock-preparation-IPQA-modal

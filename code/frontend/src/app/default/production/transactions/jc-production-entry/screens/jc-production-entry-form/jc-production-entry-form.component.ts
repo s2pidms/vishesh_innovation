@@ -26,6 +26,16 @@ import {LaminationLogEntryModelComponent} from "../lamination-log-entry-model/la
 import {WeedingLogEntryModelComponent} from "../weeding-log-entry-model/weeding-log-entry-model.component";
 import {PunchingLogEntryModelComponent} from "../punching-log-entry-model/punching-log-entry-model.component";
 import {PackingLogEntryModelComponent} from "../packing-log-entry-model/packing-log-entry-model.component";
+import {StageInspectionProdEntryComponent} from "../stage-inspection/stage-inspection-prod-entry/stage-inspection-prod-entry.component";
+import {StageInspectionIpqaEntryComponent} from "../stage-inspection/stage-inspection-ipqa-entry/stage-inspection-ipqa-entry.component";
+import {InkMixingLogIPQAModalComponent} from "../ink-mixing-log/ink-mixing-log-ipqa-modal/ink-mixing-log-ipqa-modal.component";
+import {StockPreparationIPQAModalComponent} from "../stock-preparation/stock-preparation-ipqa-modal/stock-preparation-ipqa-modal.component";
+import {ScreenMakingIPQAModalComponent} from "../screen-making/screen-making-ipqa-modal/screen-making-ipqa-modal.component";
+import {WeedingLogEntryIPQAModalComponent} from "../weeding-log-entry-model/weeding-log-entry-ipqa-modal/weeding-log-entry-ipqa-modal.component";
+import {LaminationLogEntryIPQAModalComponent} from "../lamination-log-entry-model/lamination-log-entry-ipqa-modal/lamination-log-entry-ipqa-modal.component";
+import {PunchingLogEntryIPQAModalComponent} from "../punching-log-entry-model/punching-log-entry-ipqa-modal/punching-log-entry-ipqa-modal.component";
+import {PackingLogEntryIPQAModalComponent} from "../packing-log-entry-model/packing-log-entry-ipqa-modal/packing-log-entry-ipqa-modal.component";
+import {ScreenPrintingIPQAModalComponent} from "../screen-printing/screen-printing-ipqa-modal/screen-printing-ipqa-modal.component";
 
 @Component({
     selector: "app-jc-production-entry-form",
@@ -80,8 +90,22 @@ export class JcProductionEntryFormComponent implements OnInit {
         Weeding: WeedingLogEntryModelComponent,
         Lamination: LaminationLogEntryModelComponent,
         "Through Punching": PunchingLogEntryModelComponent,
-        Packing: PackingLogEntryModelComponent
+        Packing: PackingLogEntryModelComponent,
+        "Stage Inspection": StageInspectionProdEntryComponent
     };
+    componentModalIPQA: any = {
+        "Stock Preparation IPQA": StockPreparationIPQAModalComponent,
+        "Ink Mixing IPQA": InkMixingLogIPQAModalComponent,
+        "Screen Making IPQA": ScreenMakingIPQAModalComponent,
+        "Printing on CPI IPQA": ScreenPrintingIPQAModalComponent,
+        "Kiss-cutting IPQA": null,
+        "Weeding IPQA": WeedingLogEntryIPQAModalComponent,
+        "Lamination IPQA": LaminationLogEntryIPQAModalComponent,
+        "Through Punching IPQA": PunchingLogEntryIPQAModalComponent,
+        "Packing IPQA": PackingLogEntryIPQAModalComponent,
+        "Stage Inspection IPQA": StageInspectionIpqaEntryComponent
+    };
+
     componentModalSize: any = {
         "Stock Preparation": "xl",
         // "Stock Preparation": 'xl',
@@ -92,7 +116,8 @@ export class JcProductionEntryFormComponent implements OnInit {
         Weeding: "md",
         Lamination: "md",
         "Through Punching": "md",
-        Packing: "md"
+        Packing: "md",
+        "Stage Inspection": "lg"
     };
 
     showSKUFlow: boolean = false;
@@ -306,7 +331,6 @@ export class JcProductionEntryFormComponent implements OnInit {
                 this.showSKUFlow = false;
             }
             this.collection = this.JCEntryDetailsList.length;
-            console.log("this.JCEntryDetailsList ", this.JCEntryDetailsList);
         });
     }
 
@@ -354,7 +378,8 @@ export class JcProductionEntryFormComponent implements OnInit {
                 jobCard: this.selectedJobCardDetails?._id,
                 jobCardNo: this.selectedJobCardDetails?.jobCardNo,
                 SKU: this.selectedJobCardDetails?.SKU,
-                batchQty: this.selectedJobCardDetails?.batchQty
+                batchQty: this.selectedJobCardDetails?.batchQty,
+                UOM: this.selectedJobCardDetails?.UOM
             };
             modalRef.componentInstance.jobCardDetails = {
                 jobCard: this.selectedJobCardDetails?._id,
@@ -373,27 +398,54 @@ export class JcProductionEntryFormComponent implements OnInit {
         }
     }
     openIPQAModal(item: any) {
-        const modalRef = this.modalService.open(IpqaLogModelComponent, {
-            centered: true,
-            size: "lg",
-            backdrop: "static",
-            keyboard: false
-        });
-        modalRef.componentInstance.action = this.action;
-        modalRef.componentInstance.IPQAInfoList = item?.IPQALog;
-        // modalRef.componentInstance.shiftOptions = this.masterData.shiftOptions;
-        // modalRef.componentInstance.IPQADetails = item?.IPQA;
-        modalRef.result.then(
-            (success: any) => {
-                if (success) {
-                    let index = this.JCEntryDetailsList.findIndex((x: any) => x.process == item?.process);
-                    this.IPQAInfoList = success?.IPQAInfoList;
-                    this.JCEntryDetailsList[index].releaseQty = success?.IPQA?.cumulativeCount;
-                    this.JCEntryDetailsList[index].IPQA = success?.IPQA;
-                }
-            },
-            (reason: any) => {}
-        );
+        if (this.componentModalIPQA[item.qualityOriginalName]) {
+            const modalRef = this.modalService.open(this.componentModalIPQA[item.qualityOriginalName], {
+                centered: true,
+                size: "xl",
+                backdrop: "static",
+                keyboard: false
+            });
+            modalRef.componentInstance.action = this.action;
+            modalRef.componentInstance.IPQAInfoList = item?.IPQALog;
+            modalRef.componentInstance.selectedDetails = {
+                jobCard: this.selectedJobCardDetails?._id,
+                jobCardNo: this.selectedJobCardDetails?.jobCardNo,
+                SKU: this.selectedJobCardDetails?.SKU,
+                SKUNo: this.selectedJobCardDetails?.SKUNo,
+                SKUName: this.selectedJobCardDetails?.SKUName,
+                SKUDescription: this.selectedJobCardDetails?.SKUDescription,
+                batchQty: this.selectedJobCardDetails?.batchQty,
+                UOM: this.selectedJobCardDetails?.UOM
+            };
+
+            // modalRef.componentInstance.shiftOptions = this.masterData.shiftOptions;
+            // modalRef.componentInstance.IPQADetails = item?.IPQA;
+
+            modalRef.result.then(
+                (success: any) => {
+                    if (success) {
+                        this.generateReportData.controls["batchOutputQty"].setValue(success?.totalOkQty);
+
+                        if (
+                            this.generateReportData.controls["batchInputQty"].value &&
+                            this.generateReportData.controls["batchOutputQty"].value
+                        ) {
+                            this.generateReportData.controls["batchRejQty"].setValue(
+                                this.generateReportData.controls["batchInputQty"].value -
+                                    this.generateReportData.controls["batchOutputQty"].value
+                            );
+                        } else {
+                            this.generateReportData.controls["batchRejQty"].setValue(0);
+                        }
+                        // let index = this.JCEntryDetailsList.findIndex((x: any) => x.process == item?.process);
+                        // this.IPQAInfoList = success?.IPQAInfoList;
+                        // this.JCEntryDetailsList[index].releaseQty = success?.IPQA?.cumulativeCount;
+                        // this.JCEntryDetailsList[index].IPQA = success?.IPQA;
+                    }
+                },
+                (reason: any) => {}
+            );
+        }
     }
     // openIPQAModal(item: any) {
     //     const modalRef = this.modalService.open(IPQAModalComponent, {
@@ -433,7 +485,6 @@ export class JcProductionEntryFormComponent implements OnInit {
         modalRef.result.then(
             (success: any) => {
                 if (success) {
-                    console.log("success", success);
                     this.form.controls["generateReport"].setValue(success);
                 }
             },

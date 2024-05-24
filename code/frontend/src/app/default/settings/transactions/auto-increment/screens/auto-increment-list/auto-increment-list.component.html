@@ -11,7 +11,7 @@
     </div>
     <hr class="line-border" />
     <div class="table-responsive">
-        <app-setting-header [data]="{page,pageSize,collection,search}" (dataChange)="eventHeader($event)">
+        <app-setting-header [data]="{page,pageSize,collection,search,type: 'list'}" (dataChange)="eventHeader($event)">
         </app-setting-header>
 
         <table class="table table-bordered">
@@ -40,13 +40,7 @@
                                     appAccessControl
                                     [accessType]="rolePermissionActions.viewAction"
                                     href="javascript:void(0)"
-                                    (click)="
-                                        navigateTo(
-                                            '/default/settings/transactions/auto_increment/AI-form',
-                                            u?._id,
-                                            'view'
-                                        )
-                                    "
+                                    (click)="navigateTo('../AI-form', u?._id, 'view')"
                                 >
                                     <i class="fa fa-eye fa-lg me-2 text-primary" aria-hidden="true"></i>
                                     View
@@ -55,13 +49,7 @@
                                     appAccessControl
                                     [accessType]="rolePermissionActions.editAction"
                                     href="javascript:void(0)"
-                                    (click)="
-                                        navigateTo(
-                                            '/default/settings/transactions/auto_increment/AI-form',
-                                            u?._id,
-                                            'edit'
-                                        )
-                                    "
+                                    (click)="navigateTo('../AI-form', u?._id, 'edit')"
                                 >
                                     <i class="fa fa-pencil-square-o fa-lg me-2 text-primary" aria-hidden="true"></i>
                                     Edit

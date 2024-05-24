@@ -278,6 +278,48 @@ const PROCESS = [
     {
         label: "Packing",
         value: "Packing"
+    },
+    {
+        label: "Stage Inspection",
+        value: "Stage Inspection"
+    }
+];
+const IPQA = [
+    {
+        label: "Stock Preparation IPQA",
+        value: "Stock Preparation IPQA"
+    },
+    {
+        label: "Ink Mixing IPQA",
+        value: "Ink Mixing IPQA"
+    },
+    {
+        label: "Screen Making IPQA",
+        value: "Screen Making IPQA"
+    },
+    {
+        label: "Printing on CPI IPQA",
+        value: "Printing on CPI IPQA"
+    },
+    {
+        label: "Weeding IPQA",
+        value: "Weeding IPQA"
+    },
+    {
+        label: "Lamination IPQA",
+        value: "Lamination IPQA"
+    },
+    {
+        label: "Through Punching IPQA",
+        value: "Through Punching IPQA"
+    },
+    {
+        label: "Packing IPQA",
+        value: "Packing IPQA"
+    },
+    {
+        label: "Stage Inspection IPQA",
+        value: "Stage Inspection IPQA"
     }
 ];
 const EMP_GENDER = [
@@ -382,6 +424,7 @@ module.exports = {
     GOODS_TRANSFER_REQUEST_DEPT,
     PPIC_STAGES,
     PROCESS,
+    IPQA,
     EMP_GENDER,
     EMP_MARITAL_STATUS,
     INDIAN_STATES,

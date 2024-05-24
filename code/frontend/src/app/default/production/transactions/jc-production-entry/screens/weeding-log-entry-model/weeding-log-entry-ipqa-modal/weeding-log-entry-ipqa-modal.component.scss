@@ -1,0 +1,32 @@
+.set-image {
+    width: 100%;
+    margin-top: -1rem !important;
+}
+.seperate-row {
+    position: relative;
+    .add-icon {
+        position: absolute;
+        left: -1rem;
+        top: 0.2rem;
+    }
+    .minus-icon {
+        position: absolute;
+        right: -1rem;
+        top: 0.2rem;
+    }
+}
+.row.mx-4.px-3 label {
+    display: flex;
+    align-items: center;
+}
+
+.row.mx-4.px-3 label input[type="checkbox"] {
+    margin-left: 10px;
+}
+.form-label span {
+    margin-left: 2px;
+}
+
+.label input[type="checkbox"] {
+    border-color: #fa0096;
+}

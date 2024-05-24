@@ -1,0 +1,159 @@
+<div class="modelPage">
+    <div class="modal-header">
+        <div class="heading">Punching IPQC - Inprocess Quality Check</div>
+        <div>
+            <button type="button" class="btn btn-cross btn-sm" aria-label="Close" (click)="this.activeModal.close()">
+                <i class="fa fa-times-circle" aria-hidden="true"></i>
+            </button>
+        </div>
+    </div>
+    <div class="container-fluid px-0">
+        <div class="row mx-4 mt-4 px-2">
+            <div class="col-5">
+                <div class="row">
+                    <div class="col-7 pe-0"><label class="form-label">Inspection Type </label></div>
+                    <div class="col-5 px-1"><label class="form-label">Inspection Parameter </label></div>
+                </div>
+            </div>
+            <div class="col-7 ps-1">
+                <div class="row">
+                    <div class="col-6 pe-1"><label class="form-label">Observation </label></div>
+                    <div class="col-3 ps-0 pe-1"><label class="form-label">Inspected by </label></div>
+                    <div class="col-3 ps-0"><label class="form-label">Status</label></div>
+                </div>
+            </div>
+        </div>
+
+        <div *ngFor="let item of throughPunchingIPQC?.IPQCLogInfo; let i = index" class="row mx-4 px-2 mb-2">
+            <div class="col-5">
+                <div class="row">
+                    <div class="col-7 pe-0">
+                        <ng-select
+                            [items]="inspectionTypeOptions"
+                            bindLabel="label"
+                            bindValue="value"
+                            [clearable]="false"
+                            [(ngModel)]="item.inspectionType"
+                            [disabled]="['view', 'approve'].includes(action)"
+                        >
+                        </ng-select>
+                    </div>
+                    <div class="col-5 px-1">
+                        <!-- <input
+                          [(ngModel)]="item.subProcessName"
+                          class="form-control"
+                          type="text"
+                          [disabled]="['view', 'approve'].includes(action)"
+                      /> -->
+                        <ng-select
+                            [items]="inspectionParameterOptions"
+                            bindLabel="label"
+                            bindValue="value"
+                            [clearable]="false"
+                            [(ngModel)]="item.inspectionParameter"
+                            [disabled]="['view', 'approve'].includes(action)"
+                        >
+                        </ng-select>
+                    </div>
+                </div>
+            </div>
+            <div class="col-7 ps-1">
+                <div class="row">
+                    <div class="col-6 pe-1">
+                        <input
+                            [(ngModel)]="item.observation"
+                            class="form-control"
+                            type="text"
+                            [disabled]="['view', 'approve'].includes(action)"
+                        />
+                    </div>
+                    <div class="col-3 ps-0 pe-1">
+                        <input
+                            [(ngModel)]="item.inspectedBy"
+                            class="form-control"
+                            type="text"
+                            [disabled]="['view', 'approve'].includes(action)"
+                        />
+                    </div>
+                    <div class="col-3 ps-0">
+                        <div class="d-flex align-items-center">
+                            <!-- <ng-select
+                                [items]="statusOptions"
+                                bindLabel="label"
+                                bindValue="value"
+                                [clearable]="false"
+                                [(ngModel)]="item.status"
+                                [disabled]="['view', 'approve'].includes(action)"
+                            >
+                            </ng-select> -->
+                            <select class="form-select" [(ngModel)]="item.status">
+                                <option selected disabled value="null">Select Status</option>
+                                <option *ngFor="let item of statusOptions" [value]="item.value">
+                                    {{ item.label }}
+                                </option>
+                            </select>
+                            <span class="input-group-text statusSpanHeight">
+                                <div class="statusActive" *ngIf="item.status == 'Pass'" class="statusActive"></div>
+                                <div class="statusInActive" *ngIf="item.status == 'Fail'"></div>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row mt-4 mb-2 px-5 mx-1">
+            <div class="col-12 set-image px-0 seperate-row">
+                <div class="minus-icon">
+                    <img
+                        data-tip
+                        data-for="infoTip"
+                        (click)="deleteTableRow()"
+                        class="pointer"
+                        src="./assets/new_icons/delete_row.svg"
+                        width="14"
+                        alt=""
+                    />
+                </div>
+
+                <hr class="line-border" />
+                <div class="add-icon">
+                    <img
+                        data-tip
+                        data-for="infoTip"
+                        (click)="addTableRow()"
+                        class="pointer"
+                        src="./assets/new_icons/add_row.svg"
+                        width="14"
+                        alt=""
+                    />
+                </div>
+            </div>
+        </div>
+        <div class="row d-flex justify-content-center mx-4 px-2">
+            <div class="col-12">
+                <div class="d-flex align-items-center">
+                    <div class="col-form-label text-nowrap">
+                        Remarks
+                        <span class="ms-1 me-2">&#9654;</span>
+                    </div>
+                    <input
+                        [(ngModel)]="throughPunchingIPQC.remarks"
+                        class="form-control"
+                        placeholder="Note down any critical incident/Major defects found during inspection stages"
+                        type="text"
+                        [disabled]="['view', 'approve'].includes(action)"
+                    />
+                </div>
+            </div>
+        </div>
+        <hr class="line-border" />
+
+        <div class="row mb-4 mt-2 mx-4 px-2">
+            <!-- *ngIf="['create', 'edit'].includes(action)" -->
+            <div class="col- d-flex justify-content-center">
+                <button type="button" class="btn btn-primary px-4" (click)="submit()">Save & Close</button>
+            </div>
+        </div>
+    </div>
+</div>

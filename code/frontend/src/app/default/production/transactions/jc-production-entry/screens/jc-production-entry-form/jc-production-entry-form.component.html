@@ -225,7 +225,12 @@
                                             class="btn btn-primary form-btn-sm py-0"
                                             (click)="openIPQAModal(item)"
                                         >
-                                            IPQA Log
+                                            {{
+                                                item.processOriginalName === "Printing on CPI" ||
+                                                item.processOriginalName === "Through Punching"
+                                                    ? "IPQC Log"
+                                                    : "IPQA Log"
+                                            }}
                                         </button>
                                     </div>
                                 </td>

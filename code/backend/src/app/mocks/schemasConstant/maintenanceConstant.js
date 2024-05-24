@@ -24,7 +24,7 @@ exports.MAINTENANCE_CHECKLIST = {
     COLLECTION_NAME: "MaintenanceChecklist",
     ADDED_ACTION: "Maintenance Checklist created",
     UPDATED_ACTION: "Maintenance Checklist updated",
-    MODULE_NAME: "Calibration And Verification",
+    MODULE_NAME: "Maintenance Checklist",
     MODULE: "MC",
     MODULE_PREFIX: "MC",
     AUTO_INCREMENT_DATA: function () {

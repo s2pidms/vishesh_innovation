@@ -15,6 +15,9 @@
                     <th class="text-start" sortable="processOriginalName" (sort)="onSort($event)">
                         Map Process Original Name
                     </th>
+                    <th class="text-start" sortable="qualityOriginalName" (sort)="onSort($event)">
+                        Map IPQA Original Name
+                    </th>
                     <th>Action</th>
                 </tr>
             </thead>
@@ -31,12 +34,25 @@
                         </select>
                     </td>
                     <td>
+                        <select class="form-select" [(ngModel)]="u.qualityOriginalName">
+                            <option value="null" selected disabled>Select IPQA Original Name</option>
+                            <option [value]="item.value" *ngFor="let item of IPQAOptions">
+                                {{ item?.label }}
+                            </option>
+                        </select>
+                    </td>
+                    <td>
                         <div class="dropdown">
                             <button class="dropbtn"></button>
                             <div class="dropdown-content">
                                 <a
                                     href="javascript:void(0)"
-                                    (click)="update(u, {processOriginalName: u.processOriginalName})"
+                                    (click)="
+                                        update(u, {
+                                            processOriginalName: u.processOriginalName,
+                                            qualityOriginalName: u.qualityOriginalName
+                                        })
+                                    "
                                 >
                                     <i class="fa fa-pencil-square-o fa-lg me-2 text-primary" aria-hidden="true"></i>
                                     Update

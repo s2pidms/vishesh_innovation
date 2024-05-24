@@ -55,6 +55,7 @@ export class ItemsFormComponent implements OnInit {
     masterData: IItemMasterData = {
         autoIncrementNo: "",
         companyType: "",
+        stockLevelButtonCondition: "",
         itemCategories: [],
         HSNCodesList: [],
         suppliersOptions: [],
@@ -466,6 +467,7 @@ export class ItemsFormComponent implements OnInit {
             size: "xl",
             backdrop: "static",
             keyboard: false
+            // windowClass: "modelPage"
         });
 
         modalRef.componentInstance.action = this.action;

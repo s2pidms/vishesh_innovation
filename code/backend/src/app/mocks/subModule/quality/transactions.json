@@ -79,7 +79,7 @@
         "title": "Job Card Entry",
         "displayName": "Job Card Entry",
         "disabled": false,
-        "url": "/default/quality/transactions/job_card_entry/list",
+        "url": "/default/quality/transactions/jc_production_entry/form",
         "items": [],
         "roles": []
     }

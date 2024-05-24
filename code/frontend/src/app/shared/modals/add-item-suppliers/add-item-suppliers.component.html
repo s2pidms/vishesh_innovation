@@ -38,12 +38,13 @@
                                 </div>
                             </div>
                             <div class="col-3 ps-0">
-                                <label class="form-label"> Supplier Item Code </label>
+                                <label class="form-label"> {{ "Supplier Item Code" | labelTranslate }} </label>
                                 <input class="form-control" type="text" formControlName="spin" />
                             </div>
                             <div class="col-4 px-0">
                                 <label class="form-label">
-                                    Supplier Item Description <span class="text-danger">*</span>
+                                    {{ "Supplier Item Description" | labelTranslate }}
+                                    <span class="text-danger">*</span>
                                 </label>
                                 <input class="form-control" type="text" formControlName="supplierDescription" />
                             </div>

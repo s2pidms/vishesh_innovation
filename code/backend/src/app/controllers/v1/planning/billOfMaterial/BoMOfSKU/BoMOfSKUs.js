@@ -135,7 +135,7 @@ exports.getAllMasterData = asyncHandler(async (req, res) => {
             SKUName: 1,
             SKUDescription: 1,
             primaryUnit: 1,
-            ups: "$dimensionsDetails.layoutDimensions.ups"
+            ups: {$ifNull: ["$packingStdAttribute.primaryPacking", "$dimensionsDetails.layoutDimensions.ups"]}
         });
         const autoIncrementNo = await getAndSetAutoIncrementNo({...BOM_OF_SKU.AUTO_INCREMENT_DATA()}, req.user.company);
         return res.success({

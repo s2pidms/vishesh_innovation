@@ -688,6 +688,42 @@
                 "displayName": "Quality Control Level",
                 "disabled": false,
                 "url": "/default/settings/master/module_master/list/QUALITY_CONTROL_LEVEL"
+            },
+            {
+                "_id": "665036f0885e3b0c4cd6a3a4",
+                "menuItemId": "64a6c1e33339d4dc9d8141ae",
+                "module": "Settings",
+                "type": "MASTER",
+                "order": 7,
+                "isDisplay": false,
+                "title": "Inspection Type",
+                "displayName": "Inspection Type",
+                "disabled": false,
+                "url": "/default/settings/master/module_master/list/INSPECTION_TYPE"
+            },
+            {
+                "_id": "66503706885e3b0c4cd6a3a5",
+                "menuItemId": "64a6c1e33339d4dc9d8141ae",
+                "module": "Settings",
+                "type": "MASTER",
+                "order": 8,
+                "isDisplay": false,
+                "title": "Inspection Parameter",
+                "displayName": "Inspection Parameter",
+                "disabled": false,
+                "url": "/default/settings/master/module_master/list/INSPECTION_PARAMETER"
+            },
+            {
+                "_id": "66503730885e3b0c4cd6a3a6",
+                "menuItemId": "64a6c1e33339d4dc9d8141ae",
+                "module": "Settings",
+                "type": "MASTER",
+                "order": 9,
+                "isDisplay": false,
+                "title": "Status",
+                "displayName": "Status",
+                "disabled": false,
+                "url": "/default/settings/master/module_master/list/STATUS"
             }
         ],
         "roles": []

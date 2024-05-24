@@ -38,6 +38,13 @@ const routes: Routes = [
                     import("./../../production/transactions/job-card-entry/job-card-entry.module").then(
                         m => m.JobCardEntryModule
                     )
+            },
+            {
+                path: "jc_production_entry",
+                loadChildren: () =>
+                    import("./../../production/transactions/jc-production-entry/jc-production-entry.module").then(
+                        m => m.JcProductionEntryModule
+                    )
             }
         ]
     }

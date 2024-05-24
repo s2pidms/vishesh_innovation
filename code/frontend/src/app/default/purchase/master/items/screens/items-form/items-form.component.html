@@ -120,17 +120,18 @@
         </div>
         <hr class="row line-border mb-4" />
         <div class="row mb-4">
-            <div [ngClass]="masterData.companyType == companyTypeIPManufacturing ? 'col-2 pe-0' : 'col-6 pe-0'">
+            <div [ngClass]="masterData.stockLevelButtonCondition == 'Yes' ? 'col-6 pe-0' : 'col-2 pe-0'">
                 <button
-                    *ngIf="masterData.companyType != companyTypeIPManufacturing"
+                    *ngIf="masterData.stockLevelButtonCondition == 'Yes'"
                     [disabled]="!this.f['orderInfoUOM'].value"
                     class="plusIconSvg btn btn-primary me-1"
                 ></button>
                 <!-- <button (click)="openItemAttributesModal()" class="btn btn-primary me-5 px-4" type="button">
                     &nbsp;&nbsp; Attributes &nbsp;&nbsp;
                 </button> -->
+
                 <button
-                    *ngIf="masterData.companyType != companyTypeIPManufacturing"
+                    *ngIf="masterData.stockLevelButtonCondition == 'Yes'"
                     [disabled]="!this.f['orderInfoUOM'].value"
                     type="button"
                     class="btn btn-primary px-4 me-3"
@@ -182,7 +183,7 @@
                 </div>
             </div>
             <div
-                [ngClass]="masterData.companyType == companyTypeIPManufacturing ? 'col-7 text-end' : 'col-3 text-end'"
+                [ngClass]="masterData.stockLevelButtonCondition == 'Yes' ? 'col-3 text-end' : 'col-7 text-end'"
                 *ngIf="action != 'view'"
             >
                 <button class="btn btn-primary px-5 me-5" type="button" (click)="reset()">Reset</button>
