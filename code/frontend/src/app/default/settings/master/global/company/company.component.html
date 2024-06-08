@@ -41,10 +41,6 @@
                 </div>
                 <div class="row">
                     <div class="col-3">
-                        <label class="form-label text-cyan mb-1"> Pan No. <span class="text-danger">*</span> </label>
-                        <input class="form-control" type="text" formControlName="companyPAN" />
-                    </div>
-                    <div class="col-3">
                         <label class="form-label text-cyan mb-1">
                             GST Classification <span class="text-danger">*</span>
                         </label>
@@ -57,7 +53,11 @@
                     </div>
                     <div class="col-3">
                         <label class="form-label text-cyan mb-1"> GSTIN <span class="text-danger">*</span> </label>
-                        <input class="form-control" type="text" formControlName="GSTIN" />
+                        <input class="form-control" type="text" formControlName="GSTIN" (input)="setPANNumber()" />
+                    </div>
+                    <div class="col-3">
+                        <label class="form-label text-cyan mb-1"> Pan No. <span class="text-danger">*</span> </label>
+                        <input class="form-control" type="text" formControlName="companyPAN" />
                     </div>
                     <div class="col-3">
                         <label class="form-label text-cyan mb-1">

@@ -223,6 +223,12 @@ export class CustomerFormComponent implements OnInit {
         }
     }
 
+    setPANNumber() {
+        let GSTIN = this.form.controls["GSTIN"].value;
+        let PANValue = this.utilityService.patchPANNumber(GSTIN);
+        this.form.controls["customerPAN"].setValue(PANValue);
+    }
+
     open() {
         const modalRef = this.modalService.open(AddAddressComponent, {
             centered: true,

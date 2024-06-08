@@ -1,0 +1,121 @@
+<form [formGroup]="form">
+  <div class="modelPage">
+    <div class="modal-header">
+      <div class="heading">Other Info</div>
+      <div>
+        <button
+          type="button"
+          class="btn btn-cross btn-sm"
+          aria-label="Close"
+          (click)="this.activeModal.close(otherInfo)"
+        >
+          <i class="fa fa-times-circle" aria-hidden="true"></i>
+        </button>
+      </div>
+    </div>
+    <div class="">
+      <div class="container-fluid">
+        <div class="row justify-content-center mt-4">
+          <div class="col-12 px-5">
+            <div class="row mt-4">
+              <div class="col-3 pe-0">
+                <label class="form-label">Machine Preference</label>
+              </div>
+              <div class="col-1 px-2">
+                <i class="fa fa-caret-right text-secondary"></i>
+              </div>
+              <div class="col-8 ps-0 setInputMargin">
+                <input
+                  type="text"
+                  class="form-control"
+                  formControlName="machinePreference"
+                />
+              </div>
+            </div>
+            <div class="row mt-4">
+              <div class="col-3 pe-0">
+                <label class="form-label">Positive Remarks</label>
+              </div>
+              <div class="col-1 px-2">
+                <i class="fa fa-caret-right text-secondary"></i>
+              </div>
+              <div class="col-8 ps-0 setInputMargin">
+                <input
+                  type="text"
+                  class="form-control"
+                  formControlName="positiveRemarks"
+                />
+              </div>
+            </div>
+            <div class="row mt-4">
+              <div class="col-3 pe-0">
+                <label class="form-label">Tool Identification</label>
+              </div>
+              <div class="col-1 px-2">
+                <i class="fa fa-caret-right text-secondary"></i>
+              </div>
+              <div class="col-8 ps-0 setInputMargin">
+                <input
+                  type="text"
+                  class="form-control"
+                  formControlName="toolIdentification"
+                />
+              </div>
+            </div>
+            <div class="row mt-4">
+              <div class="col-3 pe-0">
+                <label class="form-label">Artwork Path </label>
+              </div>
+              <div class="col-1 px-2">
+                <i class="fa fa-caret-right text-secondary"></i>
+              </div>
+              <div class="col-8 ps-0 setInputMargin">
+                <input
+                  type="text"
+                  class="form-control"
+                  formControlName="artworkPath"
+                />
+              </div>
+            </div>
+            <div class="row mt-4">
+              <div class="col-3 pe-0">
+                <label class="form-label">Production Remarks</label>
+              </div>
+              <div class="col-1 px-2">
+                <i class="fa fa-caret-right text-secondary"></i>
+              </div>
+              <div class="col-8 ps-0 setInputMargin">
+                <input
+                  type="text"
+                  class="form-control"
+                  formControlName="productionRemarks"
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col px-0">
+            <hr *ngIf="action !== 'view'" class="line-border mt-5 mb-4" />
+          </div>
+        </div>
+        <div *ngIf="action !== 'view'" class="text-center">
+          <button
+            class="btn bg-primary px-5 mb-4 me-4"
+            type="button"
+            (click)="reset()"
+          >
+            Reset
+          </button>
+          <button
+            class="btn bg-primary px-5 mb-4"
+            type="button"
+            (click)="dismissModel()"
+          >
+            Save & Close
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</form>

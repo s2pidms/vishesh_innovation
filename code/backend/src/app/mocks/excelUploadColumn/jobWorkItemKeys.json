@@ -1,0 +1,14 @@
+{
+    "Item Category": "itemCategory",
+    "Job Work Item Name": "jobWorkItemName",
+    "Job Work Item Description": "jobWorkItemDescription",
+    "Unit of Measurement": "orderInfoUOM",
+    "HSN Code": "HSNCode",
+    "Shelf Life (Months)": "shelfLife",
+    "Quality Control Level": "QCLevels",
+    "Job Worker Name": "jobWorkerName",
+    "Part No. (JW)": "partNo",
+    "Part Name (JW)": "partName",
+    "Currency": "currency",
+    "Process Cost": "stdCostUom1"
+}

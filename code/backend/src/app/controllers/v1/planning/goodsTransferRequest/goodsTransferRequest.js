@@ -44,7 +44,7 @@ exports.create = asyncHandler(async (req, res) => {
         let inventoryRecords = await getAllInventoryCorrectionByItems(req.user.company, createdObj.GTRequestDetails);
         let codes = createdObj.GTRequestDetails.filter(x => {
             if (inventoryRecords.length) {
-                return !inventoryRecords.map(y => y.item._id).some(ele => String(ele) == String(x.item));
+                return !inventoryRecords.map(y => y?.item?._id).some(ele => String(ele) == String(x?.item));
             } else {
                 return true;
             }
@@ -171,8 +171,8 @@ exports.getAllItemsByLocationAndDept = asyncHandler(async (req, res) => {
             {
                 $match: {
                     department: req.query.department,
-                    deliveryLocation: req.query.location,
-                    closedIRQty: {$gt: 0}
+                    deliveryLocation: req.query.location
+                    // closedIRQty: {$gt: 0}
                 }
             },
             {

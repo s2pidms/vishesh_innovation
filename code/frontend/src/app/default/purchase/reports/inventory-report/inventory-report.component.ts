@@ -87,6 +87,7 @@ export class InventoryReportComponent implements OnInit, OnDestroy {
         this.getFiscalDate();
         this.reportName = this.reportNameObj.aodInventory;
         this.supplierId = "";
+        this.itemId = "";
         this.location = "";
         this.getAll();
     }

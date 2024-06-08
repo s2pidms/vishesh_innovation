@@ -54,6 +54,8 @@
                         <th sortable="producedQty" (sort)="onSort($event)">Inward Qty.</th>
                         <th sortable="batchNo" (sort)="onSort($event)">Batch No.</th>
                         <th sortable="manufacturingDate" (sort)="onSort($event)">Batch Date</th>
+                        <!-- <th sortable="manufacturingDate" (sort)="onSort($event)">Mfg Date</th> -->
+                        <th sortable="expiryDate" (sort)="onSort($event)">Exp Date</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -76,6 +78,8 @@
                         <td>{{ u?.FGINQuantity }}</td>
                         <td>{{ u?.batchNo }}</td>
                         <td>{{ u?.manufacturingDate }}</td>
+                        <!-- <td>{{ u?.manufacturingDate }}</td> -->
+                        <td>{{ u?.expiryDate }}</td>
                     </tr>
                 </tbody>
             </table>

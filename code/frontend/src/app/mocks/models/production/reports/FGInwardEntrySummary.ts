@@ -10,4 +10,5 @@ export interface FGInwardEntrySummary {
     manufacturingDate: string;
     FGINQuantity: string;
     partNo?: string | number;
+    expiryDate : string;
 }

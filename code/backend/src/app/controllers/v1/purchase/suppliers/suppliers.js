@@ -370,6 +370,16 @@ exports.getAllReports = async (req, res) => {
 
 exports.checkSupplierValidation = async (supplierData, column, company) => {
     try {
+        const suppliersOptions = await SupplierRepository.filteredSupplierList([
+            {$match: {company: ObjectId(company), isSupplierActive: "A"}},
+            {
+                $project: {
+                    _id: 1,
+                    supplierName: 1,
+                    supplierGST: 1
+                }
+            }
+        ]);
         const requiredFields = ["supplierCode", "supplierName", "supplierGST", "supplierPAN", "supplierPurchaseType"];
         const falseArr = OPTIONS.falsyArray;
         const MSME = SUPPLIER_OPTIONS.MSME_CLASSIFICATION;
@@ -459,6 +469,13 @@ exports.checkSupplierValidation = async (supplierData, column, company) => {
                     x.isValid = false;
                     x.message = `${ele} is already exists`;
                     break;
+                }
+                for (const ele of suppliersOptions) {
+                    if (ele.supplierName == x["supplierName"] && ele.supplierGST == x["supplierGST"]) {
+                        x.isValid = false;
+                        x.message = `${x["supplierName"]} already exists`;
+                        break;
+                    }
                 }
             }
         }

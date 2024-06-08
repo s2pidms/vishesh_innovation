@@ -3,12 +3,14 @@ const Model = require("../../../../models/settings/subModulePermissionsModel");
 const MESSAGES = require("../../../../helpers/messages.options");
 const {generateCreateData} = require("../../../../helpers/global.options");
 const {default: mongoose} = require("mongoose");
-const {getAllRoles} = require("../role/role");
 const MenuItem = require("../menuItem/menuItem");
 const {getAllSubModuleForPermissions} = require("../subModuleManagement/subModuleManagement");
 const ObjectId = mongoose.Types.ObjectId;
 const menuItemJson = require("../../../../mocks/menuItem.json");
 const roleJson = require("../../../../mocks/roles.json");
+const {SUPER_ADMIN_ID} = require("../../../../mocks/constantData");
+const {filteredRoleList} = require("../../../../models/settings/repository/roleRepository");
+const User = require("../user/user");
 
 exports.create = asyncHandler(async (req, res) => {
     try {
@@ -65,7 +67,7 @@ exports.update = asyncHandler(async (req, res) => {
     }
 });
 exports.getAllSubModulePermissions = async userRoles => {
-    let superAdminExists = userRoles.role.some(x => String(x) == "64a687b4e9143bffd820fb3d");
+    let superAdminExists = userRoles.role.some(x => String(x) == SUPER_ADMIN_ID);
     let rows = await Model.aggregate([
         {
             $match: {
@@ -186,7 +188,25 @@ exports.getAllSubModulePermissions = async userRoles => {
 };
 exports.getAllMasterData = asyncHandler(async (req, res) => {
     try {
-        const roleList = await getAllRoles(req.user.company);
+        let user = await User.getAllRoleByUserId(req.user.company, req.user.sub);
+        let superAdminExist = user.role.some(x => String(x) == SUPER_ADMIN_ID);
+        const roleList = await filteredRoleList([
+            {
+                $match: {
+                    company: ObjectId(req.user.company),
+                    ...(!superAdminExist && {_id: {$nin: [ObjectId(SUPER_ADMIN_ID)]}})
+                }
+            },
+            {
+                $project: {
+                    roleCode: 1,
+                    roleName: 1,
+                    displayRoleName: 1,
+                    redirectTo: 1,
+                    permissions: 1
+                }
+            }
+        ]);
         const menuItemList = await MenuItem.getAllMenuItemsList(req.user.company, "main", {title: 1, menuOrder: 1});
         res.success({roleList, menuItemList});
     } catch (error) {
@@ -291,7 +311,7 @@ exports.getAllFilterData = asyncHandler(async (req, res) => {
 
 exports.permissionForSuperAdmin = async companyId => {
     try {
-        let role = roleJson.find(x => x._id == String("64a687b4e9143bffd820fb3d"));
+        let role = roleJson.find(x => x._id == String(SUPER_ADMIN_ID));
 
         for (const ele of menuItemJson) {
             if (ele._id == "64a6c1e33339d4dc9d8141b0") {

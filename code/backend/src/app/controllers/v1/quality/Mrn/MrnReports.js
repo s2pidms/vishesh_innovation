@@ -4,7 +4,6 @@ const {getAllSuppliers} = require("../../purchase/suppliers/suppliers");
 const {default: mongoose} = require("mongoose");
 const {getEndDateTime, getStartDateTime} = require("../../../../helpers/dateTime");
 const MRNHelper = require("../../../../models/quality/helpers/mrnHelper");
-const {filteredSupplierList} = require("../../../../models/purchase/repository/supplierRepository");
 const MRNRepository = require("../../../../models/quality/repository/mrnRepository");
 const {filteredItemList} = require("../../../../models/purchase/repository/itemRepository");
 const ObjectId = mongoose.Types.ObjectId;

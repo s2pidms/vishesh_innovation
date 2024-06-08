@@ -33,6 +33,7 @@ import {
     CompanyCurrencyPipe,
     UOMUnitsMasterPipe,
     SalesUOMUnitsMasterPipe,
+    SeparateWordsPipe,
     JCEDisabledProdInfoPipe,
     JCEDisabledIPQAInfoPipe
 } from "./pipes";
@@ -97,6 +98,7 @@ const PIPES: any = [
     CompanyCurrencyPipe,
     UOMUnitsMasterPipe,
     SalesUOMUnitsMasterPipe,
+    SeparateWordsPipe,
     JCEDisabledProdInfoPipe,
     JCEDisabledIPQAInfoPipe
 ];

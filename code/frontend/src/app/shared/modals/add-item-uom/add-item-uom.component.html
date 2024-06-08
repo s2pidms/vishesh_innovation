@@ -38,6 +38,7 @@
                                 (change)="setUnitsDimensions('secondaryUnit')"
                             >
                                 <option [value]="null" selected disabled>Select Secondary Unit</option>
+                                <option *ngIf="isNotApplicable" [value]="'-'">NA - Not Applicable</option>
                                 <option [value]="'Unit'">Unit</option>
                                 <option *ngFor="let u of ModalUOMsUnit" [value]="u.value">
                                     {{ u?.label }}
@@ -46,7 +47,10 @@
                         </div>
                         <div class="col-1"></div>
 
-                        <ng-container class="mt-3" *ngIf="flag && WXLDimensionsUnit.includes(DDetailsFlag)">
+                        <ng-container
+                            class="mt-3"
+                            *ngIf="flag && WXLDimensionsUnit.includes(DDetailsFlag) && form.value.secondaryUnit != '-'"
+                        >
                             <hr class="line-border mt-4 px-5" />
 
                             <div class="col-1"></div>
@@ -152,7 +156,11 @@
                                     />
                                     <div class="input-group-text bg-secondary text-white ms-1">
                                         {{
-                                            form.value.primaryUnit ? (form.value.primaryUnit | UOMUnitsMaster) : "Unit"
+                                            form.value.secondaryUnit == "-"
+                                                ? "-"
+                                                : form.value.primaryUnit
+                                                ? (form.value.primaryUnit | UOMUnitsMaster)
+                                                : "Unit"
                                         }}
                                     </div>
                                 </div>
@@ -166,6 +174,7 @@
                                         type="number"
                                         class="form-control"
                                         formControlName="primaryToSecondaryConversion"
+                                        [readOnly]="form.value.secondaryUnit == '-'"
                                     />
                                     <div class="input-group-text bg-secondary text-white ms-1">
                                         {{

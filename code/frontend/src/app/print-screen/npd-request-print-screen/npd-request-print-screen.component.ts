@@ -10,12 +10,12 @@ import {SpinnerService, StorageService, ToastService, UtilityService} from "@cor
 import {NPD_REQUEST_FORM_ERRORS} from "@mocks/validations/business-leads";
 import {NPDRequestService} from "@services/business-leads";
 import {INPDRequestMasterData} from "@mocks/models/business-leads/transactions";
-import {ProductCategoryModalComponent} from "src/app/default/sales/master/sku/screens/product-category-modal/product-category-modal.component";
 import {DetailsOfCustomersListComponent} from "@shared/modals";
 import {VariantsModalComponent} from "src/app/default/business-leads/transactions/npd-request/screens/variants-modal/variants-modal.component";
 import {OffTakeQtyModalComponent} from "src/app/default/business-leads/transactions/npd-request/screens/off-take-qty-modal/off-take-qty-modal.component";
 import {UploadDocsModalComponent} from "src/app/default/business-leads/transactions/npd-request/screens/upload-docs-modal/upload-docs-modal.component";
 import {CustomerInputChecklistComponent} from "src/app/default/business-leads/transactions/npd-request/screens/customer-input-checklist/customer-input-checklist.component";
+import {ProductCategoryModalComponent} from "src/app/default/sales/master/sku/screens/components";
 
 @Component({
     selector: "app-npd-request-print-screen",

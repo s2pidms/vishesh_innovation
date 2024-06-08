@@ -44,6 +44,11 @@ const routes: Routes = [
             {
                 path: "purchase_indent",
                 loadChildren: () => import("./purchase-indent/purchase-indent.module").then(m => m.PurchaseIndentModule)
+            },
+            {
+                path: "job_work_challan",
+                loadChildren: () =>
+                    import("./job-work-challan/job-work-challan.module").then(m => m.JobWorkChallanModule)
             }
         ]
     }

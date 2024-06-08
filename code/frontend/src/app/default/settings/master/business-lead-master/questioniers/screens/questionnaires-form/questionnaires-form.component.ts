@@ -1,6 +1,7 @@
 import {Component, OnInit} from "@angular/core";
 import {UntypedFormControl, UntypedFormGroup} from "@angular/forms";
-import {ActivatedRoute, Router} from "@angular/router";
+import {Location} from "@angular/common";
+import {ActivatedRoute} from "@angular/router";
 import {ToastService, UtilityService} from "@core/services";
 import {mergeMap, of} from "rxjs";
 import {QuestionsService} from "@services/business-leads";
@@ -23,19 +24,15 @@ export class QuestionnairesFormComponent implements OnInit {
 
     constructor(
         private questionsService: QuestionsService,
-        private router: Router,
         private activatedRoute: ActivatedRoute,
         private spinner: SpinnerService,
         private toastService: ToastService,
-        private utilityService: UtilityService
+        private utilityService: UtilityService,
+        private location: Location
     ) {}
 
     ngOnInit(): void {
         this.getInitialData();
-    }
-
-    navigateTo(path: string, id: any, action: string) {
-        this.router.navigate([path], {queryParams: {id, action}});
     }
 
     submit() {
@@ -58,7 +55,7 @@ export class QuestionnairesFormComponent implements OnInit {
             this.spinner.hide();
             this.submitted = false;
             this.toastService.success(success.message);
-            this.router.navigate(["/default/settings/master/business_lead_master/questioniers/list"]);
+            this.location.back();
         });
     }
 
@@ -68,7 +65,7 @@ export class QuestionnairesFormComponent implements OnInit {
             this.submitted = false;
             this.spinner.hide();
             this.toastService.success(success.message);
-            this.router.navigate(["/default/settings/master/business_lead_master/questioniers/list"]);
+            this.location.back();
         });
     }
     reset() {

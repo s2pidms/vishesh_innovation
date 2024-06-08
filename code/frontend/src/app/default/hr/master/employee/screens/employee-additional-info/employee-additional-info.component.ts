@@ -10,7 +10,7 @@ export class EmployeeAdditionalInfoComponent implements OnInit {
     @Input() action: any = "edit";
     @Input() formData: any = {};
     @Input() masterData: any = {};
-    credentialInfo: any = {};
+    @Input() credentialInfo: any = {};
     active: any = 1;
     constructor(public activeModal: NgbActiveModal) {}
 
@@ -31,6 +31,22 @@ export class EmployeeAdditionalInfoComponent implements OnInit {
         // }
         if (value.key == "credentialInfo") {
             this.credentialInfo = value.data;
+            this.formData.empPhoto = value?.data?.empPhoto;
+            this.formData.empPhotoUrl = value?.data?.empPhotoUrl;
+            this.formData.empResume = value?.data?.empResume;
+            this.formData.empResumeUrl = value?.data?.empResumeUrl;
+            this.formData.empAadharCard = value?.data?.empAadharCard;
+            this.formData.empAadharCardUrl = value?.data?.empAadharCardUrl;
+            this.formData.empPanCard = value?.data?.empPanCard;
+            this.formData.empPanCardUrl = value?.data?.empPanCardUrl;
+            this.formData.empExpCertificate = value?.data?.empExpCertificate;
+            this.formData.empExpCertificateUrl = value?.data?.empExpCertificateUrl;
+            this.formData.empRelievingLetter = value?.data?.empRelievingLetter;
+            this.formData.empRelievingLetterUrl = value?.data?.empRelievingLetterUrl;
+            this.formData.uploadBankPassBook = value?.data?.uploadBankPassBook;
+            this.formData.uploadBankPassBookUrl = value?.data?.uploadBankPassBookUrl;
+            this.formData.uploadBankCheckBook = value?.data?.uploadBankCheckBook;
+            this.formData.uploadBankCheckBookUrl = value?.data?.uploadBankCheckBookUrl;
             this.active = this.active + 1;
         }
         if (value.key == "bankDetailInfo") {

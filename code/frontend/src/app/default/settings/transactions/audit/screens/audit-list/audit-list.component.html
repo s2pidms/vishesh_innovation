@@ -59,9 +59,7 @@
                                     appAccessControl
                                     [accessType]="rolePermissionActions.viewAction"
                                     href="javascript:void(0)"
-                                    (click)="
-                                        navigateTo('/default/settings/transactions/audit/audit-form', u?._id, 'view')
-                                    "
+                                    (click)="navigateTo('../audit-form', u?._id, 'view')"
                                 >
                                     <i class="fa fa-eye fa-lg me-2 text-primary" aria-hidden="true"></i>
                                     View

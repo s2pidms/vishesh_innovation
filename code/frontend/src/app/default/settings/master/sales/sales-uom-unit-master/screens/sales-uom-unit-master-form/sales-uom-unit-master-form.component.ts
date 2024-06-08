@@ -1,6 +1,6 @@
 import {Component, OnInit} from "@angular/core";
 import {UntypedFormControl, UntypedFormGroup} from "@angular/forms";
-import {ActivatedRoute, Router} from "@angular/router";
+import {ActivatedRoute} from "@angular/router";
 import {SpinnerService, UtilityService} from "@core/services";
 import {MODULE_MASTER_FORM_ERRORS} from "@mocks/validations/settings/module-master-form.validation";
 import {ToastService} from "@core/services";
@@ -11,8 +11,7 @@ import {Location} from "@angular/common";
 
 @Component({
     selector: "app-sales-uom-unit-master-form",
-    templateUrl: "./sales-uom-unit-master-form.component.html",
-    styleUrls: ["./sales-uom-unit-master-form.component.scss"]
+    templateUrl: "./sales-uom-unit-master-form.component.html"
 })
 export class SalesUomUnitMasterFormComponent implements OnInit {
     submitted = false;
@@ -20,7 +19,6 @@ export class SalesUomUnitMasterFormComponent implements OnInit {
 
     constructor(
         private salesUOMUnitsMasterService: SalesUOMUnitsMasterService,
-        private router: Router,
         private activatedRoute: ActivatedRoute,
         private spinner: SpinnerService,
         private toastService: ToastService,
@@ -44,9 +42,6 @@ export class SalesUomUnitMasterFormComponent implements OnInit {
         this.getInitialData();
     }
 
-    navigateTo(path: string, id: any, action: string) {
-        this.router.navigate([path], {queryParams: {id, action}});
-    }
     reset() {
         this.form.reset();
         this.getInitialData();

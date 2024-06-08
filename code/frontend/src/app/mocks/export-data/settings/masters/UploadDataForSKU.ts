@@ -1,6 +1,5 @@
 import {EXCEL_STYLE} from "../../excelStyle";
-let widths = ["*", "*", "*", "*", "*", "*"];
-let title = "Upload Data";
+let title = "Invalid SKU Records";
 let headers: any = [
     {
         header: "SKU Name",

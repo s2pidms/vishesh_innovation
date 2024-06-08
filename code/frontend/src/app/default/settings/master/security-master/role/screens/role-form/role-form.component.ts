@@ -1,9 +1,10 @@
 import {Component, OnInit} from "@angular/core";
 import {UntypedFormControl, UntypedFormGroup, Validators} from "@angular/forms";
-import {RoleService} from "@services/settings";
-import {Router, ActivatedRoute} from "@angular/router";
+import {ActivatedRoute} from "@angular/router";
+import {Location} from "@angular/common";
 import {mergeMap, of} from "rxjs";
 import {ToastService, UtilityService} from "@core/services";
+import {RoleService} from "@services/settings";
 import {ValidationService} from "@core/components";
 import {ROLE_TO_MODULE_ROUTES} from "@mocks/roleToModuleRoutes";
 import {ROLE_FORM_ERRORS} from "@mocks/validations/settings/role.validation";
@@ -39,12 +40,12 @@ export class RoleFormComponent implements OnInit {
 
     constructor(
         private RoleService: RoleService,
-        private router: Router,
         private activatedRoute: ActivatedRoute,
         private spinner: SpinnerService,
         private toastService: ToastService,
         private validationService: ValidationService,
-        private utilityService: UtilityService
+        private utilityService: UtilityService,
+        private location: Location
     ) {}
 
     ngOnInit(): void {
@@ -76,7 +77,7 @@ export class RoleFormComponent implements OnInit {
             this.spinner.hide();
             this.submitted = false;
             this.toastService.success(success.message);
-            this.router.navigate(["default/settings/master/security_master/role/role-list"]);
+            this.location.back();
         });
     }
 
@@ -85,7 +86,7 @@ export class RoleFormComponent implements OnInit {
         this.RoleService.create(formData).subscribe(success => {
             this.spinner.hide();
             this.toastService.success(success.message);
-            this.router.navigate(["default/settings/master/security_master/role/role-list"]);
+            this.location.back();
         });
     }
 

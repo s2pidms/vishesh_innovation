@@ -1,6 +1,7 @@
 import {Component, OnInit} from "@angular/core";
 import {UntypedFormControl, UntypedFormGroup} from "@angular/forms";
-import {ActivatedRoute, Router} from "@angular/router";
+import {Location} from "@angular/common";
+import {ActivatedRoute} from "@angular/router";
 import {ToastService, UtilityService} from "@core/services";
 import {mergeMap, of} from "rxjs";
 import {ValidationService} from "@core/components";
@@ -14,13 +15,13 @@ import {CostHeadMasterService} from "@services/settings/costHead.service";
 })
 export class CostHeadFormComponent implements OnInit {
     constructor(
-        private router: Router,
         private activatedRoute: ActivatedRoute,
         private spinner: SpinnerService,
         private toastService: ToastService,
         private costHeadMasterService: CostHeadMasterService,
         private validationService: ValidationService,
-        private utilityService: UtilityService
+        private utilityService: UtilityService,
+        private location: Location
     ) {}
 
     form = new UntypedFormGroup({
@@ -37,10 +38,6 @@ export class CostHeadFormComponent implements OnInit {
 
     ngOnInit(): void {
         this.getInitialData();
-    }
-
-    navigateTo(path: string, id: any, action: string) {
-        this.router.navigate([path], {queryParams: {id, action}});
     }
 
     submit() {
@@ -62,7 +59,7 @@ export class CostHeadFormComponent implements OnInit {
             this.spinner.hide();
             this.submitted = false;
             this.toastService.success(success.message);
-            this.router.navigate(["default/settings/master/finance_master/cost_head/list"]);
+            this.location.back();
         });
     }
     create(formData: any) {
@@ -71,7 +68,7 @@ export class CostHeadFormComponent implements OnInit {
             this.submitted = false;
             this.spinner.hide();
             this.toastService.success(success.message);
-            this.router.navigate(["default/settings/master/finance_master/cost_head/list"]);
+            this.location.back();
         });
     }
     reset() {

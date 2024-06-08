@@ -65,7 +65,7 @@ export class SkuCategoryListComponent implements OnInit, OnDestroy {
         if (this.subscription) this.subscription.unsubscribe();
     }
     navigateTo(path: string, u: any, action: string) {
-        this.router.navigate([path], {queryParams: {id: u?._id, action}});
+        this.router.navigate([path], {relativeTo: this.activatedRoute, queryParams: {id: u?._id, action}});
     }
 
     eventHeader(event: any) {

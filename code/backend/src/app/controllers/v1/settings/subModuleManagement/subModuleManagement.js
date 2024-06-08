@@ -2,22 +2,39 @@ const asyncHandler = require("express-async-handler");
 const MESSAGES = require("../../../../helpers/messages.options");
 const {default: mongoose} = require("mongoose");
 const MenuItem = require("../menuItem/menuItem");
-const User = require("../user/user");
-const {getAllRoles} = require("../role/role");
 const {getAllSubModuleManagementAttributes} = require("../../../../models/settings/helpers/subModuleManagementHelper");
 const ObjectId = mongoose.Types.ObjectId;
 const subModuleJson = require("../../../../utilities/module");
 const SubModuleRepository = require("../../../../models/settings/repository/subModuleRepository");
 const {getAllAggregationFooter, outputData} = require("../../../../helpers/utility");
 const {getMatchData} = require("../../../../helpers/global.options");
+const {SUPER_ADMIN_ID} = require("../../../../mocks/constantData");
+const {filteredRoleList} = require("../../../../models/settings/repository/roleRepository");
+const User = require("../user/user");
 
 exports.getAll = asyncHandler(async (req, res) => {
     try {
-        const roles = await getAllRoles(req.user.company, true);
         let user = await User.getAllRoleByUserId(req.user.company, req.user.sub);
         const {search = null, menuID = null, tabType = null, display = true, subItemsFilter = "yes"} = req.query;
         let itemsCondition = 1;
-        let superAdminExist = user.role.some(x => String(x) == "64a687b4e9143bffd820fb3d");
+        let superAdminExist = user.role.some(x => String(x) == SUPER_ADMIN_ID);
+        const roles = await filteredRoleList([
+            {
+                $match: {
+                    company: ObjectId(req.user.company),
+                    ...(!superAdminExist && {_id: {$nin: [ObjectId(SUPER_ADMIN_ID)]}})
+                }
+            },
+            {
+                $project: {
+                    roleCode: 1,
+                    roleName: 1,
+                    displayRoleName: 1,
+                    redirectTo: 1,
+                    permissions: 1
+                }
+            }
+        ]);
         if (subItemsFilter == "yes" && !superAdminExist) {
             itemsCondition = {
                 $cond: [
@@ -70,7 +87,7 @@ exports.getAll = asyncHandler(async (req, res) => {
             {
                 $addFields: {
                     commonValues: {$cond: [superAdminExist, [], {$setIntersection: [user.role, "$roles"]}]},
-                    disabled: {$cond: [superAdminExist, false, null]}
+                    disabled: {$cond: [superAdminExist, false, "$disabled"]}
                 }
             },
             {
@@ -139,7 +156,7 @@ exports.getById = asyncHandler(async (req, res) => {
 exports.getAllSubModuleForPermissions = async data => {
     let menuItemRoles = await MenuItem.getAllMenuItemsRolesForPermissions(data.menuItemId);
     let roleExists = false;
-    if (data.role == "64a687b4e9143bffd820fb3d") {
+    if (data.role == SUPER_ADMIN_ID) {
         roleExists = true;
     } else {
         roleExists = menuItemRoles.roles.map(x => x.valueOf()).includes(data.role);

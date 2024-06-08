@@ -1,12 +1,13 @@
 import {Component, OnInit} from "@angular/core";
 import {UntypedFormControl, UntypedFormGroup, Validators} from "@angular/forms";
-import {ActivatedRoute, Router} from "@angular/router";
-import {DEPARTMENT_MASTER_FORM_ERRORS} from "@mocks/validations/settings/departmentMaster.validation";
-import {ToastService, UtilityService} from "@core/services";
+import {Location} from "@angular/common";
+import {ActivatedRoute} from "@angular/router";
 import {mergeMap, of} from "rxjs";
+import {NgbModal} from "@ng-bootstrap/ng-bootstrap";
+import {ToastService, UtilityService} from "@core/services";
+import {DEPARTMENT_MASTER_FORM_ERRORS} from "@mocks/validations/settings/departmentMaster.validation";
 import {ValidationService} from "@core/components";
 import {SpinnerService} from "@core/services";
-import {NgbModal} from "@ng-bootstrap/ng-bootstrap";
 import {AddSubDeptComponent} from "../add-sub-dept/add-sub-dept.component";
 import {DepartmentMasterService} from "@services/settings";
 import {IDepartmentMasterData} from "@mocks/models/settings/masters";
@@ -24,14 +25,14 @@ export class DepartmentFormComponent implements OnInit {
     };
 
     constructor(
-        private router: Router,
         private activatedRoute: ActivatedRoute,
         private spinner: SpinnerService,
         private toastService: ToastService,
         private validationService: ValidationService,
         private modalService: NgbModal,
         private departmentMasterService: DepartmentMasterService,
-        private utilityService: UtilityService
+        private utilityService: UtilityService,
+        private location: Location
     ) {}
 
     form = new UntypedFormGroup({
@@ -53,10 +54,6 @@ export class DepartmentFormComponent implements OnInit {
 
     ngOnInit(): void {
         this.getInitialData();
-    }
-
-    navigateTo(path: string, id: any, action: string) {
-        this.router.navigate([path], {queryParams: {id, action}});
     }
 
     submit() {
@@ -83,7 +80,7 @@ export class DepartmentFormComponent implements OnInit {
             this.spinner.hide();
             this.submitted = false;
             this.toastService.success(success.message);
-            this.router.navigate(["default/settings/master/global/department_master/list"]);
+            this.location.back();
         });
     }
 
@@ -93,7 +90,7 @@ export class DepartmentFormComponent implements OnInit {
             this.submitted = false;
             this.spinner.hide();
             this.toastService.success(success.message);
-            this.router.navigate(["default/settings/master/global/department_master/list"]);
+            this.location.back();
         });
     }
 

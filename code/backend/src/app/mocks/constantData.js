@@ -398,6 +398,11 @@ const SKU_MASTER_DIMENSIONS_UNITS = {
         return [this.mm, this.cm, this.m, this.ft, this.inch];
     }
 };
+const SUPER_ADMIN_ID = "64a687b4e9143bffd820fb3d";
+const COMPANY_DEPARTMENTS = {
+    PURCHASE: "Purchase",
+    SALES: "Sales",
+};
 module.exports = {
     SALES_CATEGORY,
     CHILD_ITEM_CATEGORY_NAME,
@@ -430,5 +435,7 @@ module.exports = {
     INDIAN_STATES,
     EMP_ACCOUNT_TYPE,
     INV_FORM_TYPE,
-    SKU_MASTER_DIMENSIONS_UNITS
+    SKU_MASTER_DIMENSIONS_UNITS,
+    SUPER_ADMIN_ID,
+    COMPANY_DEPARTMENTS
 };

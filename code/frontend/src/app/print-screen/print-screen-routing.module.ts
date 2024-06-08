@@ -153,13 +153,6 @@ const routes: Routes = [
             )
     },
     {
-        path: "quotation_of_dsku",
-        loadChildren: () =>
-            import("./quotations/quotation-of-dskuprint-screen/quotation-of-dskuprint-screen.module").then(
-                m => m.QuotationOfDSKUPrintScreenModule
-            )
-    },
-    {
         path: "job_card_print",
         loadChildren: () => import("./job-card-print/job-card-print.module").then(m => m.JobCardPrintModule)
     },
@@ -194,6 +187,13 @@ const routes: Routes = [
         loadChildren: () =>
             import("./sample-jc-creation-print/sample-jc-creation-print.module").then(
                 m => m.SampleJcCreationPrintModule
+            )
+    },
+    {
+        path: "job_work_challan_print",
+        loadChildren: () =>
+            import("./job-worker-challan-print-screen/job-worker-challan-print-screen.module").then(
+                m => m.JobWorkChallanPrintScreenModule
             )
     }
 ];

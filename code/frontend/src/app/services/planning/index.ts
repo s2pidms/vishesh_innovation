@@ -18,3 +18,4 @@ export * from "./directCost.service";
 export * from "./SKUCostSheet.service";
 export * from "./jobCardCreation.service";
 export * from "./GIPPICToProduction.service";
+export * from "./BOMOfJobWorkItem.service";

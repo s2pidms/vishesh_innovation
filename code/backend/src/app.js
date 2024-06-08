@@ -12,7 +12,6 @@ const fs = require("fs");
 const apiRouter = require("./app/routes");
 const customResponses = require("./app/helpers/customResponses");
 const utils = require("../src/app/middleware/utils");
-const cors = require("cors");
 const device = require("express-device");
 const app = express();
 const {mongooseCon} = require("./config/mongoose");
@@ -23,13 +22,10 @@ const helmet = require("helmet");
 const {mainDataInsertFn} = require("./app/seeders");
 const WebCacheMiddleware = require("./app/middleware/webCacheMiddleware");
 const RateLimiter = require("./app/utilities/rateLimitHandler");
-//To allow cross-origin requests
-// const corsOptions = {
-//     origin: "http://localhost:4200",
-//     optionsSuccessStatus: 200,
-// };
-// CORS Middleware
-// app.use(cors(corsOptions))
+const CorsHandler = require("./app/utilities/corsHandler");
+const cors = require("cors");
+
+// app.use(CorsHandler.getCorsMiddleware());
 app.use(cors("*"));
 const ENV = CONSTANTS.nodeEnv || config.env;
 app.set("env", ENV);

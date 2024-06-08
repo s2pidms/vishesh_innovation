@@ -1,12 +1,13 @@
 const asyncHandler = require("express-async-handler");
 const Model = require("../../../../models/purchase/sacModel");
 const MESSAGES = require("../../../../helpers/messages.options");
-const {generateCreateData} = require("../../../../helpers/global.options");
+const {generateCreateData, OPTIONS} = require("../../../../helpers/global.options");
 const {getAllSACAttributes} = require("../../../../models/purchase/helpers/sacHelper");
 const {default: mongoose} = require("mongoose");
 const {getAndSetAutoIncrementNo} = require("../../settings/autoIncrement/autoIncrement");
 const {PURCHASE_SAC} = require("../../../../mocks/schemasConstant/purchaseConstant");
 const SACRepository = require("../../../../models/purchase/repository/sacRepository");
+const validationJson = require("../../../../mocks/excelUploadColumn/validation.json");
 const ObjectId = mongoose.Types.ObjectId;
 
 exports.getAll = asyncHandler(async (req, res) => {
@@ -183,5 +184,84 @@ exports.InsertSAC = async createObj => {
         }
     } catch (e) {
         console.error("InsertSAC", e);
+    }
+};
+
+exports.checkPurchaseSACMasterValidation = async (purchaseSACData, column, company) => {
+    try {
+        const purchaseSACOptions = await SACRepository.filteredSACMasterList([
+            {$match: {company: ObjectId(company), isActive: "Y"}},
+            {
+                $project: {
+                    serviceDescription: 1
+                }
+            }
+        ]);
+        const requiredFields = [
+            "serviceDescription",
+            "gstRate",
+            "igstRate",
+            "sgstRate",
+            "cgstRate",
+            "ugstRate",
+            "revisionDate"
+        ];
+        const falseArr = OPTIONS.falsyArray;
+        let dropdownCheck = [];
+        let uniquePurchaseSAC = [];
+        for await (const x of purchaseSACData) {
+            x.isValid = true;
+            x.message = null;
+            let label = `${x["serviceDescription"]}`;
+            if (uniquePurchaseSAC.includes(label)) {
+                x.isValid = false;
+                x.message = `${x["serviceDescription"]} duplicate Entry`;
+                break;
+            }
+            uniquePurchaseSAC.push(label);
+            for (const ele of Object.values(column)) {
+                if (requiredFields.includes(ele) && falseArr.includes(x[ele])) {
+                    x.isValid = false;
+                    x.message = validationJson[ele] ?? `${ele} is Required`;
+                    break;
+                }
+                for (const dd of dropdownCheck) {
+                    if (ele == dd.key && !dd.options.map(values => values.value).includes(x[ele])) {
+                        x.isValid = false;
+                        x.message = `${ele} is Invalid Value & Value Must be ${dd.options.map(values => values.value)}`;
+                        break;
+                    }
+                }
+                for (const option of purchaseSACOptions) {
+                    if (option.serviceDescription == x["serviceDescription"]) {
+                        x.isValid = false;
+                        x.message = `${x["serviceDescription"]} already exists`;
+                        break;
+                    }
+                }
+            }
+        }
+        const inValidRecords = purchaseSACData.filter(x => !x.isValid);
+        const validRecords = purchaseSACData.filter(x => x.isValid);
+        return {inValidRecords, validRecords};
+    } catch (error) {
+        console.error(error);
+    }
+};
+
+exports.bulkInsertPurchaseSACMasterByCSV = async (jsonData, {company, createdBy, updatedBy}) => {
+    try {
+        let purchaseSACData = jsonData.map(rest => {
+            rest.company = company;
+            rest.createdBy = createdBy;
+            rest.updatedBy = updatedBy;
+            return rest;
+        });
+        for await (const item of purchaseSACData) {
+            await SACRepository.createSAC(item);
+        }
+        return {message: "Uploaded successfully!"};
+    } catch (error) {
+        console.error(error);
     }
 };

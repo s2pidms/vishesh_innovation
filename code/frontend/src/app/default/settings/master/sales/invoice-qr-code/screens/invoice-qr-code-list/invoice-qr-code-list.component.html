@@ -23,6 +23,8 @@
                     <th sortable="venderCode" (sort)="onSort($event)">Vender Code</th>
                     <th sortable="showPANNo" (sort)="onSort($event)">PAN</th>
                     <th sortable="showEximCode" (sort)="onSort($event)">Exim Code</th>
+                    <th sortable="TCSOnScrap" (sort)="onSort($event)">ScrapTCS</th>
+                    <th sortable="TCSOnVendor" (sort)="onSort($event)">VendorTCS</th>
                     <th sortable="GSTIN" (sort)="onSort($event)">GSTIN</th>
                     <th sortable="isActive" (sort)="onSort($event)">View Address</th>
                     <th>Action</th>
@@ -42,6 +44,8 @@
                     <td>{{ u?.venderCode }}</td>
                     <td>{{ u.showPANNo }}</td>
                     <td>{{ u.showEximCode }}</td>
+                    <td>{{ u.TCSOnScrap }}</td>
+                    <td>{{ u.TCSOnVendor }}</td>
                     <td>{{ u?.GSTIN }}</td>
                     <td>
                         <a href="javascript:void(0)" (click)="open(u)">

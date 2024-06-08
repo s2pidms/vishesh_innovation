@@ -1,6 +1,7 @@
 import {Component, OnInit} from "@angular/core";
 import {UntypedFormControl, UntypedFormGroup, Validators} from "@angular/forms";
-import {ActivatedRoute, Router} from "@angular/router";
+import {Location} from "@angular/common";
+import {ActivatedRoute} from "@angular/router";
 import {mergeMap, of} from "rxjs";
 import {UtilityService, SpinnerService, ToastService} from "@core/services";
 import {LeavesApplicationService} from "@services/hr";
@@ -55,12 +56,12 @@ export class LeaveAdjustmentFormComponent implements OnInit {
 
     constructor(
         private leaveAppService: LeavesApplicationService,
-        private router: Router,
         private activatedRoute: ActivatedRoute,
         private spinner: SpinnerService,
         private toastService: ToastService,
         private validationService: ValidationService,
-        private utilityService: UtilityService
+        private utilityService: UtilityService,
+        private location: Location
     ) {}
 
     ngOnInit(): void {
@@ -92,7 +93,7 @@ export class LeaveAdjustmentFormComponent implements OnInit {
             this.submitted = false;
             this.spinner.hide();
             this.toastService.success(success.message);
-            this.router.navigate(["/default/HR/transactions/leave_adjustment/leave-adjustment-list"]);
+            this.location.back();
         });
     }
     update(id: any) {
@@ -102,7 +103,7 @@ export class LeaveAdjustmentFormComponent implements OnInit {
             this.spinner.hide();
             this.submitted = false;
             this.toastService.success(success.message);
-            this.router.navigate(["/default/HR/transactions/leave_adjustment/leave-adjustment-list"]);
+            this.location.back();
         });
     }
 
@@ -350,9 +351,13 @@ export class LeaveAdjustmentFormComponent implements OnInit {
         );
         let holidays = [];
         if (["work", "factory"].some(e => employee?.joiningLocation?.toLowerCase().includes(e))) {
-            holidays = this.masterData?.allHolidaysOptions.filter((x: any) => ["Factory", "Office & Factory"].includes(x.holidayLocation));
+            holidays = this.masterData?.allHolidaysOptions.filter((x: any) =>
+                ["Factory", "Office & Factory"].includes(x.holidayLocation)
+            );
         } else {
-            holidays = this.masterData?.allHolidaysOptions.filter((x: any) => ["Office", "Office & Factory"].includes(x.holidayLocation));
+            holidays = this.masterData?.allHolidaysOptions.filter((x: any) =>
+                ["Office", "Office & Factory"].includes(x.holidayLocation)
+            );
         }
         return holidays;
     }

@@ -268,6 +268,14 @@ const employeeSchema = mongoose.Schema(
             type: String,
             required: false
         },
+        uploadOfferLetter: {
+            type: String,
+            required: false
+        },
+        uploadAppointmentLetter: {
+            type: String,
+            required: false
+        },
         empReportTo: {
             type: mongoose.Schema.Types.ObjectId,
             ref: "Employee",
@@ -332,6 +340,14 @@ const employeeSchema = mongoose.Schema(
         empRelievingLetter: {
             type: String,
             required: false
+        },
+        uploadBankPassBook: {
+            type: String,
+            required: false
+        },
+        uploadBankCheckBook: {
+            type: String,
+            required: false
         }
     },
     {
@@ -377,6 +393,26 @@ employeeSchema.virtual("empExpCertificateUrl").get(function () {
 employeeSchema.virtual("empRelievingLetterUrl").get(function () {
     if (this.empRelievingLetter && this.empRelievingLetter != "undefined") {
         return CONSTANTS.domainUrl + "employee/" + this.empRelievingLetter;
+    }
+});
+employeeSchema.virtual("uploadBankPassBookUrl").get(function () {
+    if (this.uploadBankPassBook && this.uploadBankPassBook != "undefined") {
+        return CONSTANTS.domainUrl + "employee/" + this.uploadBankPassBook;
+    }
+});
+employeeSchema.virtual("uploadBankCheckBookUrl").get(function () {
+    if (this.uploadBankCheckBook && this.uploadBankCheckBook != "undefined") {
+        return CONSTANTS.domainUrl + "employee/" + this.uploadBankCheckBook;
+    }
+});
+employeeSchema.virtual("uploadOfferLetterUrl").get(function () {
+    if (this.uploadOfferLetter && this.uploadOfferLetter != "undefined") {
+        return CONSTANTS.domainUrl + "employee/" + this.uploadOfferLetter;
+    }
+});
+employeeSchema.virtual("uploadAppointmentLetterUrl").get(function () {
+    if (this.uploadAppointmentLetter && this.uploadAppointmentLetter != "undefined") {
+        return CONSTANTS.domainUrl + "employee/" + this.uploadAppointmentLetter;
     }
 });
 // Ensure virtual fields are serialized.

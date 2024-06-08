@@ -274,6 +274,13 @@
                                     </div>
                                 </td>
                             </tr>
+                            <tr *ngIf="reportQMSName">
+                                <td class="text-end">
+                                    <div class="text-muted pdir-mapping">
+                                        {{ reportQMSName }}
+                                    </div>
+                                </td>
+                            </tr>
                         </table>
                     </div>
                     <div *ngIf="!last" class="page-break"></div>

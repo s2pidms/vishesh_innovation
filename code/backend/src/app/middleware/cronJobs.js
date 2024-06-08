@@ -65,7 +65,7 @@ const triggerDashboard = async () => {
                 productionDashboard(companyId),
                 dispatchDashboard(companyId),
                 maintenanceDashboard(companyId),
-                settingsDashboard(companyId),
+                // settingsDashboard(companyId),
                 planningDashboard(companyId),
                 salesDashboard(companyId),
                 accountsDashboard(companyId),

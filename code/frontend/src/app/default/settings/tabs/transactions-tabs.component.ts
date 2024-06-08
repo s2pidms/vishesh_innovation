@@ -49,31 +49,33 @@ export class TransactionsTabsComponent implements OnInit {
         };
         this.subModulesService.getAll(payload).subscribe(success => {
             this.cards = success.rows;
-            this.cards.push({
-                menuItemId: "64a6c1e33339d4dc9d8141ae",
-                module: "Settings",
-                type: "TRANSACTION",
-                order: 3,
-                isDisplay: true,
-                title: "Audit",
-                displayName: "Audit",
-                disabled: false,
-                url: "/default/settings/transactions/audit/audit-list",
-                items: []
-            });
             if (this.user.email == "spadmin@gmail.com" && this.user.name == "Super Admin") {
-                this.cards.push({
-                    menuItemId: "64a6c1e33339d4dc9d8141ae",
-                    module: "Settings",
-                    type: "TRANSACTION",
-                    order: 3,
-                    isDisplay: false,
-                    title: "API Stack",
-                    displayName: "API Stack",
-                    disabled: false,
-                    url: "/default/settings/transactions/api_stack",
-                    items: []
-                });
+                this.cards.push(
+                    {
+                        menuItemId: "64a6c1e33339d4dc9d8141ae",
+                        module: "Settings",
+                        type: "TRANSACTION",
+                        order: 3,
+                        isDisplay: true,
+                        title: "Audit",
+                        displayName: "Audit",
+                        disabled: false,
+                        url: "/default/settings/transactions/audit/audit-list",
+                        items: []
+                    },
+                    {
+                        menuItemId: "64a6c1e33339d4dc9d8141ae",
+                        module: "Settings",
+                        type: "TRANSACTION",
+                        order: 3,
+                        isDisplay: false,
+                        title: "API Stack",
+                        displayName: "API Stack",
+                        disabled: false,
+                        url: "/default/settings/transactions/api_stack",
+                        items: []
+                    }
+                );
             }
             let dummyCount = 3 - this.cards.length;
             if (dummyCount > 0) {

@@ -16,6 +16,8 @@ import {SalesInvoiceService} from "@services/dispatch";
 import {LIST_DEFAULT_PERMISSION_ACTIONS} from "@mocks/constant";
 import {SALES_REGISTER_PDF_DATA, SALES_REGISTER_REPORT_DATA} from "@mocks/export-data/sales/reports/salesRegisterWoTax";
 import {salesRegisterWoTax} from "@mocks/models/sales/reports";
+import {ConfirmDeleteComponent} from "@shared/modals";
+import {NgbModal} from "@ng-bootstrap/ng-bootstrap";
 
 export interface Order {
     _id: string;
@@ -68,7 +70,8 @@ export class SalesRegisterWOTaxComponent implements OnInit, OnDestroy {
         private appGlobalService: AppGlobalService,
         private storageService: StorageService,
         private toastService: ToastService,
-        private activatedRoute: ActivatedRoute
+        private activatedRoute: ActivatedRoute,
+        private modalService: NgbModal
     ) {}
 
     ngOnInit(): void {
@@ -206,5 +209,25 @@ export class SalesRegisterWOTaxComponent implements OnInit, OnDestroy {
             this.getAll();
             this.spinner.hide();
         });
+    }
+
+    openConfirmModal(id: any, item: any, salesInvoiceNumber: any) {
+        const modalRef = this.modalService.open(ConfirmDeleteComponent, {
+            centered: true,
+            size: "md",
+            backdrop: "static",
+            keyboard: false
+        });
+
+        modalRef.componentInstance.heading = "Confirm Update";
+        modalRef.componentInstance.confirmText = `Confirm Update of Invoice # ${salesInvoiceNumber} ?`;
+        modalRef.result.then(
+            (success: any) => {
+                if (success.title == "Yes") {
+                    this.update(id, item);
+                }
+            },
+            (reason: any) => {}
+        );
     }
 }

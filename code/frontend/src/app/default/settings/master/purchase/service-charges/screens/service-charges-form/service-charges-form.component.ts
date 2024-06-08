@@ -1,6 +1,6 @@
 import {Component, OnInit} from "@angular/core";
 import {UntypedFormControl, UntypedFormGroup, Validators} from "@angular/forms";
-import {ActivatedRoute, Router} from "@angular/router";
+import {ActivatedRoute} from "@angular/router";
 import {ToastService, UtilityService} from "@core/services";
 import {mergeMap, of} from "rxjs";
 import {STATES_LIST} from "@mocks/states.constant";
@@ -24,7 +24,6 @@ export class ServiceChargesFormComponent implements OnInit {
     };
     constructor(
         private servicesChargesService: ServicesChargesService,
-        private router: Router,
         private activatedRoute: ActivatedRoute,
         private spinner: SpinnerService,
         private toastService: ToastService,

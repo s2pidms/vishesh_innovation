@@ -167,10 +167,10 @@ export class GTRequestFormComponent implements OnInit {
     }
 
     setGRQty(item: any) {
-        if (item.GTRequestQty > item.IRQty) {
-            this.toastService.warning("GTR Qty. Should not be greater than IR Qty. !");
-            return;
-        }
+        // if (item.GTRequestQty > item.IRQty) {
+        //     this.toastService.warning("GTR Qty. Should not be greater than IR Qty. !");
+        //     return;
+        // }
     }
     getInitialData() {
         this.spinner.show();

@@ -13,17 +13,6 @@ const routes: Routes = [
                 loadChildren: () => import("./prospect/prospect.module").then(m => m.ProspectModule)
             },
             {
-                path: "npd",
-                loadChildren: () => import("./npd-master/npd-master.module").then(m => m.NpdMasterModule)
-            },
-            {
-                path: "cost_estimate_calculator",
-                loadChildren: () =>
-                    import("./cost-estimate-calculator/cost-estimate-calculator.module").then(
-                        m => m.CostEstimateCalculatorModule
-                    )
-            },
-            {
                 path: "bill-of-material",
                 loadChildren: () =>
                     import("./bill-of-material/bill-of-material.module").then(m => m.BillOfMaterialModule)

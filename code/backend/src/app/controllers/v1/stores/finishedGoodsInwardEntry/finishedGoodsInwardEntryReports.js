@@ -74,6 +74,38 @@ exports.getAllFGINSummaryReports = asyncHandler(async (req, res) => {
         let pipeline = [
             {
                 $match: query
+            },
+            {
+                $addFields: {
+                    shelfLife: {
+                        $cond: [
+                            {
+                                $ne: [{$type: "$shelfLife"}, "missing"]
+                            },
+                            {$ceil: "$shelfLife"},
+                            {$literal: null}
+                        ]
+                    }
+                }
+            },
+            {
+                $addFields: {
+                    expiryDate: {
+                        $cond: [
+                            {
+                                $ne: [{$type: "$shelfLife"}, "missing"]
+                            },
+                            {
+                                $dateAdd: {
+                                    startDate: "$manufacturingDate",
+                                    unit: "month",
+                                    amount: "$shelfLife"
+                                }
+                            },
+                            {$literal: null}
+                        ]
+                    }
+                }
             }
         ];
         let rows = await FGINRepository.getAllPaginate({

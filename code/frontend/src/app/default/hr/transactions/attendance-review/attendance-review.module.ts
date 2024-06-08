@@ -3,6 +3,7 @@ import {CommonModule} from "@angular/common";
 import {RouterModule, Routes} from "@angular/router";
 import {AttendanceReviewComponent} from "./attendance-review.component";
 import {SharedModule} from "../../../../shared/shared.module";
+import {AttendanceReviewEditModelComponent} from "./components";
 
 const routes: Routes = [
     {path: "", redirectTo: "attendance-review", pathMatch: "full"},
@@ -10,7 +11,7 @@ const routes: Routes = [
 ];
 
 @NgModule({
-    declarations: [AttendanceReviewComponent],
+    declarations: [AttendanceReviewComponent, AttendanceReviewEditModelComponent],
     imports: [CommonModule, RouterModule.forChild(routes), SharedModule]
 })
 export class AttendanceReviewModule {}

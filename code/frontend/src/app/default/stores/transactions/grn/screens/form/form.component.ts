@@ -15,7 +15,8 @@ import {AddtionalInfoModalComponent} from "../addtional-info-modal/addtional-inf
 import {GrnLocationMappingComponent} from "../grn-location-mapping/grn-location-mapping.component";
 import {CancelPoComponent} from "@shared/modals/cancel-po/cancel-po.component";
 import {IGRNMasterData} from "@mocks/models/stores/transactions";
-import {DetailsOfSupplierListComponent} from "@shared/modals";
+import {CustomSearchDetailsModalComponent, DetailsOfSupplierListComponent} from "@shared/modals";
+import TABLE_HEADERS from "./tableHeaders";
 
 @Component({
     selector: "app-form",
@@ -32,7 +33,8 @@ export class FormComponent implements OnInit {
     direction: number = -1;
     search: string = "";
     flag: number = -1;
-
+    selectedDetails: any = {};
+    tableHead: any = TABLE_HEADERS;
     submitted = false;
     action: string = "create";
     POFilter: any = [];
@@ -480,5 +482,35 @@ export class FormComponent implements OnInit {
             },
             (reason: any) => {}
         );
+    }
+    openPODetailsModal() {
+        if (this.action == "create") {
+            const modalRef = this.modalService.open(CustomSearchDetailsModalComponent, {
+                centered: true,
+                size: "xl",
+                backdrop: "static",
+                keyboard: false
+            });
+            modalRef.componentInstance.action = this.action;
+            modalRef.componentInstance.title = "PO No. Details";
+            modalRef.componentInstance.selectedDetails = this.selectedDetails;
+            modalRef.componentInstance.tableHead = this.tableHead;
+            modalRef.componentInstance.bodyList = this.POFilter?.map((x: any) => {
+                x.PODate = this.utilityService.getFormatDate(x?.PODate, "YYYY-MM-DD");
+                return x;
+            });
+            modalRef.componentInstance._id = this.form.controls["PONumber"].value;
+
+            modalRef.result.then(
+                (success: any) => {
+                    if (success) {
+                        this.selectedDetails = success?.selectedDetails;
+                        this.form.controls["PONumber"].setValue(success?.selectedDetails?._id);
+                        this.setTableDetails(success?.selectedDetails);
+                    }
+                },
+                (reason: any) => {}
+            );
+        }
     }
 }

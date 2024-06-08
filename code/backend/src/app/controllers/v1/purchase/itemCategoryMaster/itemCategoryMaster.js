@@ -1,7 +1,6 @@
 const asyncHandler = require("express-async-handler");
-const Model = require("../../../../models/purchase/itemCategoryModel");
 const MESSAGES = require("../../../../helpers/messages.options");
-const {generateCreateData, getMatchData, OPTIONS} = require("../../../../helpers/global.options");
+const {OPTIONS} = require("../../../../helpers/global.options");
 const {getAllItemCategoryAttributes} = require("../../../../models/purchase/helpers/itemCategoryHelper");
 const ItemCategoryRepository = require("../../../../models/purchase/repository/itemCategoryRepository");
 
@@ -29,8 +28,7 @@ exports.create = asyncHandler(async (req, res) => {
             updatedBy: req.user.sub,
             ...req.body
         };
-        const saveObj = new Model(createdObj);
-        const itemDetails = await saveObj.save();
+        const itemDetails = await ItemCategoryRepository.createDoc(createdObj);
         if (itemDetails) {
             res.success({
                 message: "Item Sub Category has been created successfully"
@@ -45,19 +43,13 @@ exports.create = asyncHandler(async (req, res) => {
 
 exports.update = asyncHandler(async (req, res) => {
     try {
-        let itemDetails = await Model.findById(req.params.id);
+        let itemDetails = await ItemCategoryRepository.getDocById(req.params.id);
         if (!itemDetails) {
             const errors = MESSAGES.apiErrorStrings.INVALID_REQUEST;
             return res.preconditionFailed(errors);
         }
         itemDetails.updatedBy = req.user.sub;
-
-        itemDetails = await generateCreateData(itemDetails, req.body);
-
-        if (req.body.subCategory) {
-            itemDetails.subCategory = req.body.subCategory;
-        }
-        itemDetails = await itemDetails.save();
+        itemDetails = await ItemCategoryRepository.updateDoc(itemDetails, req.body);
         if (itemDetails) {
             res.success({
                 message: "Item Sub Category has been updated successfully"
@@ -72,9 +64,8 @@ exports.update = asyncHandler(async (req, res) => {
 
 exports.deleteById = asyncHandler(async (req, res) => {
     try {
-        const deleteItem = await Model.findById(req.params.id);
+        const deleteItem = await ItemCategoryRepository.deleteDoc({_id: req.params.id});
         if (deleteItem) {
-            await deleteItem.remove();
             return res.success({
                 message: MESSAGES.apiSuccessStrings.DELETED("Item Sub Category")
             });
@@ -91,7 +82,7 @@ exports.deleteById = asyncHandler(async (req, res) => {
 
 exports.getById = asyncHandler(async (req, res) => {
     try {
-        let existing = await Model.findById(req.params.id);
+        let existing = await ItemCategoryRepository.getDocById(req.params.id);
         if (!existing) {
             let errors = MESSAGES.apiSuccessStrings.DATA_NOT_EXISTS("Item Sub Category");
             return res.unprocessableEntity(errors);
@@ -104,14 +95,17 @@ exports.getById = asyncHandler(async (req, res) => {
     }
 });
 
-exports.getAllItemCategory = async (company, project = {}) => {
+exports.getAllItemCategory = async (company, project = {__v: 0}) => {
     try {
-        let rows = await Model.find(
+        let rows = await ItemCategoryRepository.filteredItemCategoryList([
             {
-                categoryStatus: OPTIONS.defaultStatus.ACTIVE
+                $match: {
+                    categoryStatus: OPTIONS.defaultStatus.ACTIVE
+                }
             },
-            project
-        ).sort({category: 1});
+            {$project: project},
+            {$sort: {category: 1}}
+        ]);
         return rows;
     } catch (e) {
         console.error("getAllItemCategory", e);
@@ -120,9 +114,14 @@ exports.getAllItemCategory = async (company, project = {}) => {
 
 exports.getAllCheckedItemCategoriesList = async match => {
     try {
-        let rows = await Model.find(match, {
-            category: 1
-        });
+        let rows = await ItemCategoryRepository.filteredItemCategoryList([
+            {
+                $match: match
+            },
+            {
+                $project: {category: 1}
+            }
+        ]);
         return rows;
     } catch (e) {
         console.error("getAllCheckedItemCategoriesList", e);
@@ -131,7 +130,7 @@ exports.getAllCheckedItemCategoriesList = async match => {
 
 exports.setItemsNextAutoIncrementNo = async itemCategory => {
     try {
-        await Model.findOneAndUpdate(
+        await ItemCategoryRepository.findAndUpdateDoc(
             {
                 category: itemCategory
             },

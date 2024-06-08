@@ -1,7 +1,7 @@
 ng g m printScreen --route print --module=app.module
 ng g c print-screen/aas-ad-print-screen
 ng g c print-screen/GINPrintScreen
-
+ng g c print-screen/job-worker-challan-print-screen
 ng g c default/hr/transactions/iBASUploadAttendance/screens/product-code-list
 
 
@@ -68,6 +68,7 @@ ng g m default/purchase/reports/supplier-evaluationR --route supplier-evaluation
 
 ng g c default/purchase/reports/supplier-evaluation-r/supplier-evaluation-month
 
+ng g m default/purchase/reports/job-work-challan --route job_work_challan --module=reports.module
 
 
 ng g m default/purchase/reports/supplier --route supplier --module=reports.module
@@ -148,6 +149,7 @@ ng g m default/hr/transactions/salary-adv-summary --route salary_adv_summary --m
 ng g m default/hr/transactions/attendance-review --route attendance_review --module=transactions.module
 ng g m default/hr/transactions/payroll --route payroll --module=transactions.module
 ng g c default/hr/transactions/payroll/components/payroll-edit-model
+ng g c default/hr/transactions/attendance-review/components/attendance-review-edit-model
 ng g m default/hr/reports/leave-applicationR --route leave_applicationR --module=reports.module
 ng g m default/hr/reports/employee-attendanceR --route employee_attendanceR --module=reports.module
 ng g m default/hr/reports/payrollR --route payrollR --module=reports.module
@@ -300,10 +302,12 @@ ng g c default/sales/master/sales-product-master/screens/sales-product-master-li
 ng g c default/sales/master/sales-product-master/screens/mould-info-modal
 ng g c default/sales/master/sales-product-master/screens/product-packing-std-modal
 
-ng g m default/purchase/master/purchase-payment-terms --route purchase_payment_terms --module=master.module
+ng g m default/purchase/master/job-worker-master --route job_worker_master --module=master.module
 
-ng g c default/purchase/master/purchase-payment-terms/screens/purchase-payment-terms-form
-ng g c default/purchase/master/purchase-payment-terms/screens/purchase-payment-terms-list
+ng g c default/purchase/master/job-worker-master/screens/job-worker-master-form
+ng g c default/purchase/master/job-worker-master/screens/job-worker-master-list
+ng g c default/purchase/master/job-worker-master/screens/components/jw-nick-name-modal
+ng g c default/purchase/master/job-worker-master/screens/components/jw-MSME-category-modal
 
 
 
@@ -442,10 +446,10 @@ ng g c print-screen/job-card-print/screen/PI-schedule-print-screen
 
 
 ng g m default/planning/master/SKU-attributes --route sku_attributes --module=master.module 
-ng g m default/planning/master/HSN-master/screens/bom-of-product --route bom_of_product --module=bill-of-material.module
+ng g m default/planning/master/bill-of-material/screens/bom-of-job-work-item --route bom_of_job_work_item --module=bill-of-material.module
 
-ng g c default/planning/master/bill-of-material/screens/bom-of-product/bom-of-product-list
-ng g c default/planning/master/bill-of-material/screens/bom-of-product/bom-of-product-form
+ng g c default/planning/master/bill-of-material/screens/bom-of-job-work-item/bom-of-job-work-item-list
+ng g c default/planning/master/bill-of-material/screens/bom-of-job-work-item/bom-of-job-work-item-form
 ng g c default/planning/master/routing-master/screens/resource-management
 
 ng g m default/production/transactions/production-processes --route production_processes --module=transactions.module 
@@ -834,3 +838,21 @@ ng g c default/production/transactions/jc-production-entry/screens/screen-printi
 ng g c default/production/transactions/jc-production-entry/screens/stock-cutting/stock-cutting-IPQA-modal
 ng g c default/production/transactions/jc-production-entry/screens/weeding-log-entry-model/weeding-log-entry-IPQA-modal
 ng g c default/production/transactions/jc-production-entry/screens/stock-preparation/stock-preparation-IPQA-modal
+
+
+
+ng g m default/purchase/master/job-worker-item-master --route job_worker_item_master --module=master.module
+
+ng g c default/purchase/master/job-worker-item-master/screens/job-worker-item-master-form
+ng g c default/purchase/master/job-worker-item-master/screens/job-worker-item-master-list
+ng g c default/purchase/master/job-worker-item-master/screens/components/job-worker-modal
+ng g c default/purchase/master/job-worker-item-master/screens/components/dual-unit-modal
+
+
+ng g m default/purchase/transactions/job-work-challan --route job_work_challan --module=transactions.module
+
+ng g c default/purchase/transactions/job-work-challan/screens/job-work-challan-form
+ng g c default/purchase/transactions/job-work-challan/screens/job-work-challan-list
+ng g c default/purchase/transactions/job-work-challan/screens/components/job-work-address-modal
+ng g c default/purchase/transactions/job-work-challan/screens/components/freight-terms-modal
+ng g c default/purchase/transactions/job-work-challan/screens/components/job-work-modal

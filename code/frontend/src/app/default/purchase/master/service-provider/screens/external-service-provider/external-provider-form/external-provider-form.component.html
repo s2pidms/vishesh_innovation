@@ -38,10 +38,6 @@
             </div>
             <div class="row">
                 <div class="col">
-                    <label class="form-label"> PAN Card No.<span class="text-danger">*</span> </label>
-                    <input class="form-control" type="text" formControlName="PANNo" />
-                </div>
-                <div class="col">
                     <label class="form-label"> GST Classification <span class="text-danger">*</span></label>
                     <select class="form-select" formControlName="GSTClassification">
                         <option value="null" selected disabled>Select</option>
@@ -52,7 +48,11 @@
                 </div>
                 <div class="col">
                     <label class="form-label"> GSTIN No.<span class="text-danger">*</span> </label>
-                    <input class="form-control" type="text" formControlName="GSTIN" />
+                    <input class="form-control" type="text" formControlName="GSTIN" (input)="setPANNumber()" />
+                </div>
+                <div class="col">
+                    <label class="form-label"> PAN Card No.<span class="text-danger">*</span> </label>
+                    <input class="form-control" type="text" formControlName="PANNo" />
                 </div>
                 <div class="col">
                     <label class="form-label"> Udyam Aadhaar No.<span class="text-danger">*</span> </label>

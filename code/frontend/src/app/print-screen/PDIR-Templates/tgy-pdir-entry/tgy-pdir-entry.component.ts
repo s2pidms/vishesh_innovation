@@ -14,6 +14,7 @@ export class TGYPDIREntryComponent implements OnInit {
     noOfPDIR: any = [""];
     template: string = "PI Exports";
     isChecked: boolean = true;
+    reportQMSName: any = null;
     constructor(
         private pdirEntryService: PDIREntryService,
         private activatedRoute: ActivatedRoute,
@@ -29,8 +30,9 @@ export class TGYPDIREntryComponent implements OnInit {
     getDetailsById(id: any) {
         this.spinner.show();
         this.pdirEntryService.getPDIRDetailsById(id).subscribe(success => {
-            this.tableData = success;
-            this.noOfPDIR = success.PDIRDetails;
+            this.tableData = success?.existing;
+            this.reportQMSName = success?.display?.displayText;
+            this.noOfPDIR = success?.existing?.PDIRDetails;
             this.spinner.hide();
         });
     }

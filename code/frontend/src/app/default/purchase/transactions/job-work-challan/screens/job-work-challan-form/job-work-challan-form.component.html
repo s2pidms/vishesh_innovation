@@ -1,0 +1,301 @@
+<Form class="px-2" [formGroup]="form" class="formCard card">
+    <div class="set-remaining-margin">
+        <div class="row form-header">
+            <div class="col heading">
+                <label> Job Work Challan ({{ this.action | titlecase }}) </label>
+            </div>
+        </div>
+        <div class="form-body">
+            <div class="row mb-0">
+                <div class="col-7">
+                    <div class="row">
+                        <div class="col-3 pe-0">
+                            <label class="form-label mb-1">JW Challan No.<span class="text-danger pe-5">*</span></label>
+                            <input readonly class="form-control" type="text" formControlName="JWChallanNo" readonly />
+                        </div>
+                        <div class="col-3 pe-0">
+                            <label class="form-label mb-1">
+                                JW Challan Date<span class="text-danger pe-5">*</span></label
+                            >
+                            <input readonly class="form-control" type="text" formControlName="JWChallanDate" />
+                        </div>
+                        <div class="col-6 pe-0">
+                            <label class="form-label mb-1">
+                                Job Worker Name (Consignee) <span class="text-danger pe-5">*</span>
+                            </label>
+                            <div class="d-flex align-items-center">
+                                <div class="col-11">
+                                    <ng-select
+                                        [items]="masterData.jobWorkerOptions"
+                                        bindLabel="jobWorkerName"
+                                        bindValue="jobWorker"
+                                        [clearable]="false"
+                                        formControlName="jobWorker"
+                                        (change)="getJobWorkerDetails($event)"
+                                    >
+                                    </ng-select>
+                                </div>
+                                <div
+                                    style="height: 2.9rem"
+                                    class="set-input-group-text input-group-text bg-primary pointer col-auto"
+                                    id="basic-addon1"
+                                    (click)="openJobWorkDetailsModal()"
+                                >
+                                    <i class="fa fa-search text-white" aria-hidden="true"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-5">
+                    <div class="row">
+                        <div class="col-7 pe-0">
+                            <label class="form-label mb-0 d-flex justify-content-between">
+                                Ship to Address <span class="text-danger">*</span>
+                                <span></span>
+                                <span></span>
+                                <span></span>
+                                <span></span>
+                                <span></span>
+                                <span></span>
+                                <span></span>
+                                <span></span>
+                                <span></span>
+                                <span></span>
+                                <span></span>
+                                <span></span>
+                                <button
+                                    type="button"
+                                    (click)="openShipToAddressModal()"
+                                    class="btn btn-primary px-3 form-btn-sm py-0 mb-1"
+                                >
+                                    Address
+                                </button>
+                            </label>
+                            <ng-select
+                                [items]="shipToAddressArr"
+                                bindLabel="fullAddress"
+                                bindValue="addressType"
+                                [clearable]="false"
+                                formControlName="addressType"
+                                (change)="setShipAddress($event)"
+                            >
+                            </ng-select>
+                        </div>
+                        <div class="col-5">
+                            <label class="form-label mb-1">
+                                Place of Supply<span class="text-danger pe-5">*</span></label
+                            >
+                            <input
+                                class="form-control bg-white-smoke"
+                                type="text"
+                                formControlName="placeOfSupply"
+                                readonly
+                            />
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <hr class="row line-border mt-3 mb-4" />
+
+        <div class="row mt-2 justify-content-between">
+            <div class="col-4">
+                <div class="d-flex">
+                    <div class="set-input-group-text input-group-text bg-primary" id="basic-addon1">
+                        <i class="fa fa-search text-white" aria-hidden="true"></i>
+                    </div>
+                    <div>
+                        <input
+                            type="text"
+                            class="form-control"
+                            [(ngModel)]="search"
+                            [ngModelOptions]="{standalone: true}"
+                        />
+                    </div>
+                </div>
+            </div>
+            <div class="col-4 d-flex justify-content-center">
+                <ngb-pagination
+                    *ngIf="JWChallanDetailsArray.length > 0"
+                    [collectionSize]="JWChallanDetailsArray.length"
+                    [(page)]="page"
+                    [pageSize]="pageSize"
+                    [boundaryLinks]="false"
+                >
+                    <ng-template ngbPaginationPrevious>
+                        <img src="./assets/new_icons/pagination_prev.svg" width="20rem" />
+                    </ng-template>
+                    <ng-template ngbPaginationNext>
+                        <img src="./assets/new_icons/pagination_next.svg" width="20rem" />
+                    </ng-template>
+                    <ng-template ngbPaginationPages let-page let-pages="pages">
+                        <li class="ngb-custom-pages-item align-self-center" *ngIf="pages.length > 0">
+                            <span class="page-label me-2 ms-1"> Page {{ page }} of {{ pages[pages.length - 1] }} </span>
+                        </li>
+                    </ng-template>
+                </ngb-pagination>
+            </div>
+            <div class="col-4"></div>
+        </div>
+
+        <div class="table-responsive" style="min-height: 22rem">
+            <table class="table table-bordered table-sticky text-center">
+                <thead class="bg-primary">
+                    <tr class="text-white">
+                        <th sortable="itemCode" (sort)="onSort($event)">Item Code</th>
+                        <th class="text-start" sortable="name" (sort)="onSort($event)">Item Name</th>
+                        <th class="text-start" sortable="description" (sort)="onSort($event)">Item Description</th>
+                        <th sortable="unitConversion" (sort)="onSort($event)">HSN Code</th>
+                        <th sortable="UOM" (sort)="onSort($event)">UoM</th>
+                        <th sortable="quantity" (sort)="onSort($event)">Ccy</th>
+                        <th sortable="purchaseRate" (sort)="onSort($event)">Unit Rate</th>
+                        <th sortable="lineValue" (sort)="onSort($event)">Quantity</th>
+                        <th sortable="lineValue" (sort)="onSort($event)">Taxable Amount</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr
+                        *ngFor="
+                            let u of JWChallanDetailsArray
+                                | searchFi1ter : search
+                                | slice : (page - 1) * pageSize : (page - 1) * pageSize + pageSize;
+                            let i = index;
+                            trackBy: trackByFn
+                        "
+                    >
+                        <td>{{ u?.itemCode }}</td>
+                        <td class="text-start" [style.width]="itemName.clientWidth" #itemName>
+                            <span class="pointer" [positionTarget]="itemName" [ngbTooltip]="u.itemName">
+                                {{ u?.itemName }}
+                            </span>
+                        </td>
+                        <td class="text-start" [style.width]="itemDescription.clientWidth" #itemDescription>
+                            <span class="pointer" [positionTarget]="itemDescription" [ngbTooltip]="u.itemDescription">
+                                {{ u?.itemDescription }}
+                            </span>
+                        </td>
+                        <td>{{ u?.HSNCode }}</td>
+
+                        <td>
+                            <div class="d-flex justify-content-between px-2">
+                                <span
+                                    [ngbTooltip]="u.unitConversion"
+                                    placement="top"
+                                    [ngClass]="
+                                        u.UOM == u.secondaryUnit ? 'text-primary pointer' : 'text-secondary pointer'
+                                    "
+                                    >{{ u?.UOM | UOMUnitsMaster }}</span
+                                >
+                                <span class="pointer d-flex align-items-center">
+                                    <div
+                                        (click)="setConversionOfUnit(u)"
+                                        *ngIf="
+                                            u.stdCostUom2 && u.stdCostUom1 && u.primaryUnit && u.secondaryUnit != '-'
+                                        "
+                                        class="unit-switch-rev"
+                                    ></div>
+                                    <div
+                                        *ngIf="
+                                            !(u.stdCostUom2 && u.stdCostUom1 && u.primaryUnit && u.secondaryUnit != '-')
+                                        "
+                                        class="unit-switch-gray"
+                                    ></div>
+                                </span>
+                            </div>
+                        </td>
+                        <td>{{ u?.currency }}</td>
+                        <td>{{ u?.unitRate }}</td>
+                        <td>
+                            <div class="d-flex justify-content-center">
+                                <span *ngIf="['approve', 'reject', 'view', 'generate', 'cancel'].includes(action)">
+                                    {{ u.quantity | number : "1.3-3" }}
+                                </span>
+                                <input
+                                    *ngIf="!['approve', 'reject', 'view', 'generate', 'cancel'].includes(action)"
+                                    class="form-control form-control-sm w-25"
+                                    type="number"
+                                    [(ngModel)]="u.quantity"
+                                    [ngModelOptions]="{standalone: true}"
+                                    (input)="lineValueRate(u.JWLChallanLineNo, u)"
+                                />
+                            </div>
+                        </td>
+                        <td>{{ u?.taxableAmt }}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <hr class="row line-border" />
+        <div class="row">
+            <div class="col-3 ps-4 pe-0">
+                <div class="d-flex align-items-center">
+                    <div class="col-form-label text-nowrap">
+                        Total Taxable Amt.
+                        <i class="fa fa-caret-right fa-5x mx-1"></i>
+                    </div>
+                    <div class="d-flex">
+                        <span class="input-group-text combine-INR text-secondary">
+                            {{ f["currency"].value ?? "INR" }}
+                            <div class="vr ms-3"></div>
+                        </span>
+                        <input
+                            class="form-control border-start-0 ps-0"
+                            type="number"
+                            formControlName="totalTaxableAmt"
+                            readonly
+                        />
+                    </div>
+                    <!-- <input class="form-control" type="text" formControlName="totalTaxableAmt" readonly /> -->
+                </div>
+            </div>
+            <div class="col-2 pe-0">
+                <button class="plusIconSvg btn btn-primary me-1"></button>
+                <button (click)="openFreightTermsModal()" type="button" class="btn btn-primary px-3">
+                    Freight Terms
+                </button>
+            </div>
+            <div class="col-2 pe-0">
+                <button class="plusIconSvg btn btn-primary me-1"></button>
+                <button (click)="openJobWorkerModal()" type="button" class="btn btn-primary px-3">
+                    Job Work details
+                </button>
+            </div>
+            <div *ngIf="action == 'reject'" class="col-3 pe-0">
+                <div class="d-flex justify-content-start align-items-start">
+                    <div class="col-form-label text-nowrap">Rejection Remarks</div>
+                    <input class="form-control mx-2" type="text" formControlName="cancelReason" />
+                </div>
+            </div>
+            <div *ngIf="action == 'reject'" class="col-2 text-end">
+                <button type="button" class="btn btn-primary px-5" (click)="submit()">Reject</button>
+            </div>
+            <div class="col-5 ps-0 d-flex justify-content-end">
+                <div *ngIf="['create', 'edit'].includes(action)" class="d-grid gap-2 d-md-block">
+                    <button type="button" class="btn btn-primary px-5 me-3" (click)="reset()">Reset</button>
+                    <button
+                        type="button"
+                        class="btn btn-primary me-1"
+                        [disabled]="!isESCPreview"
+                        (click)="ESCPreview()"
+                    >
+                        Esc
+                    </button>
+                    <button type="button" class="btn btn-primary px-4 me-3" (click)="preview()">Preview</button>
+                    <button class="btn btn-primary px-5" type="button" [disabled]="!isPreview" (click)="submit()">
+                        Save
+                    </button>
+                </div>
+                <div *ngIf="['view'].includes(action)">
+                    <button class="btn btn-primary px-5" type="button" (click)="navigateTo()">
+                        Back To Action Center
+                    </button>
+                </div>
+
+                <div *ngIf="action == 'approve'" class="col-5 d-flex justify-content-end">
+                    <button type="button" class="btn btn-primary px-5" (click)="submit()">Approve</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</Form>

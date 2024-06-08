@@ -11,11 +11,6 @@ const routes: Routes = [
         path: "quotation_of_sku",
         loadChildren: () =>
             import("./screens/quotation-of-sku/quotation-of-sku.module").then(m => m.QuotationOfSkuModule)
-    },
-    {
-        path: "quotation_of_dsku",
-        loadChildren: () =>
-            import("./screens/quotation-of-dsku/quotation-of-dsku.module").then(m => m.QuotationOfDskuModule)
     }
 ];
 

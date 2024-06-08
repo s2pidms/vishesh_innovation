@@ -1,6 +1,7 @@
 import {Component, OnInit} from "@angular/core";
 import {UntypedFormControl, UntypedFormGroup, Validators} from "@angular/forms";
-import {ActivatedRoute, Router} from "@angular/router";
+import {ActivatedRoute} from "@angular/router";
+import {Location} from "@angular/common";
 import {mergeMap, of} from "rxjs";
 import {ProfessionalTaxService} from "@services/settings";
 import {PROFESSIONAL_TAX_FORM_ERRORS} from "@mocks/validations/settings";
@@ -24,12 +25,12 @@ export class ProfessionalTaxFormComponent implements OnInit {
 
     constructor(
         private professionalTaxService: ProfessionalTaxService,
-        private router: Router,
         private activatedRoute: ActivatedRoute,
         private spinner: SpinnerService,
         private toastService: ToastService,
         private validationService: ValidationService,
-        private utilityService: UtilityService
+        private utilityService: UtilityService,
+        private location: Location
     ) {}
 
     form = new UntypedFormGroup({
@@ -48,10 +49,6 @@ export class ProfessionalTaxFormComponent implements OnInit {
     }
     ngOnInit(): void {
         this.getInitialData();
-    }
-
-    navigateTo(path: string, id: any, action: string) {
-        this.router.navigate([path], {queryParams: {id, action}});
     }
     reset() {
         this.form.reset();
@@ -78,7 +75,7 @@ export class ProfessionalTaxFormComponent implements OnInit {
             this.submitted = false;
             this.spinner.hide();
             this.toastService.success(success.message);
-            this.router.navigate(["/default/settings/master/hr/professional_tax/list"]);
+            this.location.back();
         });
     }
 
@@ -88,7 +85,7 @@ export class ProfessionalTaxFormComponent implements OnInit {
             this.spinner.hide();
             this.submitted = false;
             this.toastService.success(success.message);
-            this.router.navigate(["/default/settings/master/hr/professional_tax/list"]);
+            this.location.back();
         });
     }
 

@@ -45,6 +45,7 @@ exports.getAllSKUMasterExcelAttributes = () => {
         hsn: 1,
         primaryUnit: 1,
         artWorkNo: 1,
+        internalPartNo: 1,
         status: 1,
         isActive: 1,
         customerName: "$customerInfo.customerName",

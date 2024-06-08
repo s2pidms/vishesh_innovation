@@ -1,0 +1,259 @@
+<div class="modelPage">
+    <div class="modal-header">
+        <div class="heading">
+            {{ PSPInventory == true ? "Dual Unit Conversion (DUC)" : "Set Dual Units of Measurement" }}
+        </div>
+        <div>
+            <button type="button" class="btn btn-cross btn-sm" aria-label="Close" (click)="this.activeModal.close()">
+                <i class="fa fa-times-circle" aria-hidden="true"></i>
+            </button>
+        </div>
+    </div>
+    <div class="">
+        <div class="container-fluid">
+            <div class="row">
+                <form [formGroup]="form">
+                    <div class="row p-0 mt-4">
+                        <div class="col-1"></div>
+                        <div class="col-5 ps-5">
+                            <label class="form-label mb-1"> Primary Unit <span class="text-danger">*</span> </label>
+                            <select
+                                class="form-select"
+                                formControlName="primaryUnit"
+                                (change)="setUnitsDimensions('primaryUnit')"
+                            >
+                                <option [value]="null" selected disabled>Select Primary Unit</option>
+                                <option [value]="'Unit'">Unit</option>
+                                <option *ngFor="let u of ModalUOMsUnit" [value]="u.value">
+                                    {{ u?.label }}
+                                </option>
+                            </select>
+                        </div>
+
+                        <div class="col-5 pe-5">
+                            <label class="form-label mb-1"> Secondary Unit <span class="text-danger">*</span> </label>
+                            <select
+                                class="form-select"
+                                formControlName="secondaryUnit"
+                                (change)="setUnitsDimensions('secondaryUnit')"
+                            >
+                                <option [value]="null" selected disabled>Select Secondary Unit</option>
+                                <option [value]="'-'">NA - Not Applicable</option>
+                                <option [value]="'Unit'">Unit</option>
+                                <option *ngFor="let u of ModalUOMsUnit" [value]="u.value">
+                                    {{ u?.label }}
+                                </option>
+                            </select>
+                        </div>
+                        <div class="col-1"></div>
+
+                        <ng-container
+                            class="mt-3"
+                            *ngIf="flag && WXLDimensionsUnit.includes(DDetailsFlag) && form.value.secondaryUnit != '-'"
+                        >
+                            <hr class="line-border mt-4 px-5" />
+
+                            <div class="col-1"></div>
+                            <div class="col-10 px-5" formGroupName="dualUnitsDimensionsDetails">
+                                <div class="row">
+                                    <div class="col-3 d-flex align-items-center mt-4">
+                                        <label class="form-label text-nowrap mt-1">
+                                            <!-- {{
+                                                f["secondaryUnit"].value == "Sheet"
+                                                    ? "Sheet Dimensions"
+                                                    : f["primaryUnit"].value == "Sheet"
+                                                    ? "Sheet Dimensions"
+                                                    : "Roll Dimensions"
+                                            }} -->
+                                            Sheet Dimensions
+                                            <span class="ms-1">&#9654;</span>
+                                        </label>
+                                    </div>
+                                    <div class="col-4 pe-0">
+                                        <label class="form-label">Width</label>
+
+                                        <div class="d-flex">
+                                            <div class="col-7">
+                                                <input
+                                                    type="number"
+                                                    class="form-control ps-2 pe-0"
+                                                    formControlName="width"
+                                                    (input)="setPrimaryToSecondaryValue()"
+                                                />
+                                            </div>
+                                            <div class="col-5">
+                                                <select
+                                                    (change)="setPrimaryToSecondaryValue()"
+                                                    class="form-select"
+                                                    formControlName="widthUnit"
+                                                >
+                                                    <option [value]="null" disabled>Select</option>
+                                                    <option [value]="item" *ngFor="let item of DimensionsUnits">
+                                                        {{ item }}
+                                                    </option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-1 d-flex align-items-center justify-content-center px-0">
+                                        <span class="d-flex justify-content-center mt-1">
+                                            <div class="drawingIcon mt-4"></div>
+                                        </span>
+                                    </div>
+                                    <div class="col-4 ps-0">
+                                        <label class="form-label">Length </label>
+
+                                        <div class="d-flex">
+                                            <div class="col-7">
+                                                <input
+                                                    type="number"
+                                                    class="form-control ps-2 pe-0"
+                                                    formControlName="length"
+                                                    (input)="setPrimaryToSecondaryValue()"
+                                                />
+                                            </div>
+                                            <div class="col-5">
+                                                <select
+                                                    (change)="setPrimaryToSecondaryValue()"
+                                                    class="form-select"
+                                                    formControlName="lengthUnit"
+                                                >
+                                                    <option [value]="null" disabled>Select</option>
+                                                    <option [value]="item" *ngFor="let item of DimensionsUnits">
+                                                        {{ item }}
+                                                    </option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-1"></div>
+                        </ng-container>
+
+                        <hr class="line-border mt-4 px-5" />
+                        <div class="col-1"></div>
+                        <div class="col-md-10 mt-4 text-end">
+                            <h3 class="text-center text-primary mb-5">Conversion of Units</h3>
+                            <div class="row justify-content-center align-items-center mt-4">
+                                <div class="col-md-auto">
+                                    <input
+                                        class="form-check-input form-check-input-lg pointer"
+                                        type="radio"
+                                        [value]="1"
+                                        formControlName="unitConversionFlag"
+                                        (change)="handleRadio()"
+                                    />
+                                </div>
+
+                                <div class="col-md-4 d-flex inputGroup">
+                                    <input
+                                        type="number"
+                                        formControlName="primaryConversion"
+                                        class="form-control"
+                                        value="1"
+                                        readOnly
+                                    />
+                                    <div class="input-group-text bg-secondary text-white ms-1">
+                                        {{
+                                            form.value.secondaryUnit == "-"
+                                                ? "-"
+                                                : form.value.primaryUnit
+                                                ? (form.value.primaryUnit | UOMUnitsMaster)
+                                                : "Unit"
+                                        }}
+                                    </div>
+                                </div>
+
+                                <div class="col-md-1 text-center">
+                                    <h3>=</h3>
+                                </div>
+
+                                <div class="col-md-4 d-flex inputGroup">
+                                    <input
+                                        type="number"
+                                        class="form-control"
+                                        formControlName="primaryToSecondaryConversion"
+                                        [readOnly]="form.value.secondaryUnit == '-'"
+                                    />
+                                    <div class="input-group-text bg-secondary text-white ms-1">
+                                        {{
+                                            form.value.secondaryUnit
+                                                ? (form.value.secondaryUnit | UOMUnitsMaster)
+                                                : "Unit"
+                                        }}
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row justify-content-center align-items-center my-4">
+                                <div class="col-md-auto">
+                                    <input class="form-check-input form-check-input-lg invisible" type="radio" />
+                                </div>
+                                <div class="col-md-4">
+                                    <hr class="text-danger" />
+                                </div>
+                                <div class="col-md-1 text-center">
+                                    <h4 class="text-primary">OR</h4>
+                                </div>
+                                <div class="col-md-4">
+                                    <hr class="text-danger" />
+                                </div>
+                            </div>
+
+                            <div class="row justify-content-center align-items-center">
+                                <div class="col-md-auto">
+                                    <input
+                                        class="form-check-input form-check-input-lg pointer"
+                                        type="radio"
+                                        name="unitConversionFlag"
+                                        [value]="2"
+                                        formControlName="unitConversionFlag"
+                                        (change)="handleRadio()"
+                                    />
+                                </div>
+                                <div class="col-md-4 d-flex inputGroup">
+                                    <input
+                                        type="number"
+                                        readonly
+                                        class="form-control"
+                                        formControlName="secondaryConversion"
+                                    />
+                                    <div class="input-group-text bg-secondary text-white ms-1">
+                                        {{ form.value.secondaryUnit == "-" ? "-" : "Unit 2" }}
+                                        <!-- Unit 2 -->
+                                    </div>
+                                </div>
+                                <div class="col-md-1 text-center">
+                                    <h3>=</h3>
+                                </div>
+                                <div class="col-md-4 d-flex inputGroup">
+                                    <input
+                                        type="number"
+                                        class="form-control"
+                                        formControlName="secondaryToPrimaryConversion"
+                                        [readOnly]="form.value.secondaryUnit == '-'"
+                                    />
+                                    <div class="input-group-text rounded-0 bg-secondary text-white ms-1"> 
+                                        {{ form.value.secondaryUnit == "-" ? "-" : "Unit 1" }}
+                                        <!-- Unit 1 -->
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-1"></div>
+                    </div>
+                </form>
+
+                <hr class="line-border my-5 px-05" />
+
+                <div *ngIf="!['view'].includes(this.action)" class="text-center mb-5">
+                    <button type="button" class="btn bg-primary px-5" (click)="dismissModel()">Save & Close</button>
+                </div>
+                <div *ngIf="PSPInventory" class="text-center mb-5">
+                    <button type="button" class="btn bg-primary px-5" (click)="activeModal.close()">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

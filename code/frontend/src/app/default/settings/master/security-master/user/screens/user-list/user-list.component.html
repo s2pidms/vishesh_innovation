@@ -3,11 +3,7 @@
         <label class="heading">Application Users Summary</label>
     </div>
     <div appAccessControl [accessType]="rolePermissionActions.createAction" class="text-center">
-        <button
-            class="btn btn-primary btn-add"
-            type="button"
-            (click)="navigateTo('/default/settings/master/security_master/user/user-form', null, 'create')"
-        >
+        <button class="btn btn-primary btn-add" type="button" (click)="navigateTo('../user-form', null, 'create')">
             <i class="fa fa-plus-square me-2 fa-lg" aria-hidden="true"></i>
             User
         </button>
@@ -45,13 +41,7 @@
                                     appAccessControl
                                     [accessType]="rolePermissionActions.viewAction"
                                     href="javascript:void(0)"
-                                    (click)="
-                                        navigateTo(
-                                            '/default/settings/master/security_master/user/user-form',
-                                            u?._id,
-                                            'view'
-                                        )
-                                    "
+                                    (click)="navigateTo('../user-form', u?._id, 'view')"
                                 >
                                     <i class="fa fa-eye fa-lg me-2 text-primary" aria-hidden="true"></i>
                                     View
@@ -60,13 +50,7 @@
                                     appAccessControl
                                     [accessType]="rolePermissionActions.editAction"
                                     href="javascript:void(0)"
-                                    (click)="
-                                        navigateTo(
-                                            '/default/settings/master/security_master/user/user-form',
-                                            u?._id,
-                                            'edit'
-                                        )
-                                    "
+                                    (click)="navigateTo('../user-form', u?._id, 'edit')"
                                 >
                                     <i class="fa fa-pencil-square-o fa-lg me-2 text-primary" aria-hidden="true"></i>
                                     Edit

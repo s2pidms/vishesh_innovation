@@ -1,6 +1,7 @@
 import {Component, OnInit} from "@angular/core";
 import {UntypedFormControl, UntypedFormGroup} from "@angular/forms";
-import {ActivatedRoute, Router} from "@angular/router";
+import {ActivatedRoute} from "@angular/router";
+import {Location} from "@angular/common";
 import {ToastService, UtilityService} from "@core/services";
 import {mergeMap, of} from "rxjs";
 import {ValidationService} from "@core/components";
@@ -19,13 +20,13 @@ export class AssetClassFormComponent implements OnInit {
     depreciationAndEnergySpecArr: any = ASSET_CLASS_DEPRECIATION_AND_ENERGY_SPEC;
 
     constructor(
-        private router: Router,
         private activatedRoute: ActivatedRoute,
         private spinner: SpinnerService,
         private toastService: ToastService,
         private assetClassService: AssetClassMasterService,
         private validationService: ValidationService,
-        private utilityService: UtilityService
+        private utilityService: UtilityService,
+        private location: Location
     ) {}
 
     form = new UntypedFormGroup({
@@ -48,10 +49,6 @@ export class AssetClassFormComponent implements OnInit {
         this.getInitialData();
     }
 
-    navigateTo(path: string, id: any, action: string) {
-        this.router.navigate([path], {queryParams: {id, action}});
-    }
-
     submit() {
         this.submitted = true;
         if (this.validationService.checkErrors(this.form, ESP_CATEGORY_FORM_ERRORS)) {
@@ -71,7 +68,7 @@ export class AssetClassFormComponent implements OnInit {
             this.spinner.hide();
             this.submitted = false;
             this.toastService.success(success.message);
-            this.router.navigate(["default/settings/master/finance_master/asset_class/list"]);
+            this.location.back();
         });
     }
     create(formData: any) {
@@ -80,7 +77,7 @@ export class AssetClassFormComponent implements OnInit {
             this.submitted = false;
             this.spinner.hide();
             this.toastService.success(success.message);
-            this.router.navigate(["default/settings/master/finance_master/asset_class/list"]);
+            this.location.back();
         });
     }
     reset() {

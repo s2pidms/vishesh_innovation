@@ -6,7 +6,7 @@
         <div class="container-fluid">
             <div class="row">
                 <div class="col px-0">
-                    <h4>{{ cancelText }}</h4>
+                    <h4>{{ cancelText | separateWords }}</h4>
                     <h4 *ngIf="HSNFlag">{{ cancelTextTwo }}</h4>
                 </div>
             </div>

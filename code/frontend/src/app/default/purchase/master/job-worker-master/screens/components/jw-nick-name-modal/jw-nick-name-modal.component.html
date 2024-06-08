@@ -1,0 +1,26 @@
+<div class="modelPage">
+    <div class="modal-header">
+        <div class="heading">Nick Name</div>
+        <div>
+            <button type="button" class="btn btn-cross btn-sm" aria-label="Close" (click)="activeModal.close()">
+                <i class="fa fa-times-circle" aria-hidden="true"></i>
+            </button>
+        </div>
+    </div>
+    <div class="container-fluid">
+        <div class="row my-4 px-5">
+            <div class="col px-0">
+                <label class="form-label mb-2"> Job Worker - Nick Name <span class="text-danger"></span> </label>
+                <input [disabled]="action == 'view'" class="form-control" type="text" [(ngModel)]="jobWorkerNickName" />
+            </div>
+        </div>
+
+        <hr class="row line-border" />
+
+        <div class="row mb-4">
+            <div *ngIf="action != 'view'" class="col text-center">
+                <button class="btn btn-primary" type="button" (click)="save()">Save & Close</button>
+            </div>
+        </div>
+    </div>
+</div>

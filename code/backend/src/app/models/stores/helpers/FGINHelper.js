@@ -45,7 +45,7 @@ exports.getAllFGINSummaryReportsAttributes = () => {
         FGINNo: 1,
         FGINDate: {$dateToString: {format: "%d-%m-%Y", date: "$FGINDate"}},
         manufacturingDate: {$dateToString: {format: "%d-%m-%Y", date: "$manufacturingDate"}},
-        expiryDate: 1,
+        expiryDate:  {$dateToString: {format: "%d-%m-%Y", date: "$expiryDate"}},
         FGINQuantity: 1,
         batchNo: 1,
         location: 1

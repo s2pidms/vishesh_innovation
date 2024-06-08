@@ -133,11 +133,6 @@ const BoMOfSKUSchema = mongoose.Schema(
                     set: value => setTwoDecimal(value, 3),
                     required: false
                 },
-                secondaryToPrimaryConversion: {
-                    type: Number,
-                    set: value => setTwoDecimal(value),
-                    required: false
-                },
                 ups: {
                     type: Number,
                     required: false

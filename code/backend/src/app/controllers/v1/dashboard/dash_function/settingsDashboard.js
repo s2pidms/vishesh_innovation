@@ -5,8 +5,7 @@ const {getAllCompanyLocationCount} = require("../../settings/company/company");
 const memoryCacheHandler = require("../../../../utilities/memoryCacheHandler");
 exports.setting = async (company, sub) => {
     try {
-        // let isSuperAdmin = await checkSuperAdmin(sub);
-        let isSuperAdmin = false;
+        let isSuperAdmin = await checkSuperAdmin(sub);
         const [userCounts, roleCounts, adminUserCounts, companyLocationCounts] = await Promise.all([
             getAllUserCounts(company, isSuperAdmin),
             getAllRoleCounts(company, isSuperAdmin),

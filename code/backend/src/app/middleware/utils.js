@@ -1,6 +1,7 @@
-const UserModel = require("../models/settings/userModel");
 const {permissionForSuperAdmin} = require("../controllers/v1/settings/subModulePermissions/subModulePermissions");
 const memoryCacheHandler = require("../utilities/memoryCacheHandler");
+const UserRepository = require("../models/settings/repository/userRepository");
+const {SUPER_ADMIN_ID} = require("../mocks/constantData");
 
 var utilsObj = {
     rolePermit: (...permittedRoles) => {
@@ -15,8 +16,8 @@ var utilsObj = {
         };
     },
     checkSuperAdmin: async userId => {
-        let user = await UserModel.findById(userId, {role: 1});
-        return user.role.some(x => String(x) == "64a687b4e9143bffd820fb3d");
+        let user = await UserRepository.getDocById(userId, {role: 1});
+        return user.role.some(x => String(x) == SUPER_ADMIN_ID);
     },
     // inside middleware handler
     // ipMiddleware: function (req, res, next) {

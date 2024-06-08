@@ -2,22 +2,31 @@ import {Component, OnInit} from "@angular/core";
 import {ToastService} from "@core/services";
 import {LIST_DEFAULT_PERMISSION_ACTIONS} from "@mocks/constant";
 import {SpinnerService} from "@core/services";
-import * as fs from "file-saver";
 import {SuppliersService} from "@services/purchase";
 import {CustomUploadDetailsComponent} from "../custom-upload-details/custom-upload-details.component";
 import {NgbModal} from "@ng-bootstrap/ng-bootstrap";
 import {CancelPoComponent} from "@shared/modals";
 import {ActivatedRoute} from "@angular/router";
-import TABLE_HEADERS_FOR_SUPPLIER from "./tableHeadersForSupplier";
-import TABLE_HEADERS_FOR_ITEMS from "./tableHeadersForItems";
-import TABLE_HEADERS_FOR_CUSTOMER from "./tableHeadersForCustomer";
-import TABLE_HEADERS_FOR_INVENTORY from "./tableHeadersForInventory";
-import TABLE_HEADERS_FOR_EMPLOYEE from "./tableHeadersForEmployee";
-import TABLE_HEADERS_FOR_SKU_MASTER from "./tableHeadersForSKUMaster";
-import TABLE_HEADERS_FOR_FGIN from "./tableHeadersForFGIN";
-import TABLE_HEADERS_FOR_ASSET from "./tableHeadersForAsset";
-import TABLE_HEADERS_FOR_SKU_DIMENSIONS from "./tableHeadersForSKUDimensions";
-import TABLE_HEADERS_FOR_SKU_MATERIAL from "./tableHeadersForSKUMaterial";
+import TABLE_HEADERS_FOR_SUPPLIER from "../tableHeaders/tableHeadersForSupplier";
+import TABLE_HEADERS_FOR_ITEMS from "../tableHeaders/tableHeadersForItems";
+import TABLE_HEADERS_FOR_CUSTOMER from "../tableHeaders/tableHeadersForCustomer";
+import TABLE_HEADERS_FOR_INVENTORY from "../tableHeaders/tableHeadersForInventory";
+import TABLE_HEADERS_FOR_EMPLOYEE from "../tableHeaders/tableHeadersForEmployee";
+import TABLE_HEADERS_FOR_SKU_MASTER from "../tableHeaders/tableHeadersForSKUMaster";
+import TABLE_HEADERS_FOR_FGIN from "../tableHeaders/tableHeadersForFGIN";
+import TABLE_HEADERS_FOR_ASSET from "../tableHeaders/tableHeadersForAsset";
+import TABLE_HEADERS_FOR_SKU_DIMENSIONS from "../tableHeaders/tableHeadersForSKUDimensions";
+import TABLE_HEADERS_FOR_SKU_MATERIAL from "../tableHeaders/tableHeadersForSKUMaterial";
+import TABLE_HEADERS_FOR_SPECIFICATION_MASTER from "../tableHeaders/tableHeadersForSpecificationMaster";
+import TABLE_HEADERS_FOR_HSN_MASTER from "../tableHeaders/tableHeadersForHSNMaster";
+import TABLE_HEADERS_FOR_SAC_MASTER from "../tableHeaders/tableHeadersForSACMaster";
+import TABLE_HEADERS_FOR_SALES_HSN_MASTER from "../tableHeaders/tableHeadersForSalesHSNMaster";
+import TABLE_HEADERS_FOR_SALES_SAC_MASTER from "../tableHeaders/tableHeadersForSalesSACMaster";
+import TABLE_HEADERS_FOR_TRANSPORTER_MASTER from "../tableHeaders/tableHeadersForTransporterMaster";
+import TABLE_HEADERS_FOR_PURCHASE_REGISTER_ENTRY from "../tableHeaders/tableHeadersForPurchaseRegisterEntry";
+import TABLE_HEADERS_FOR_JOB_WORK_ITEM_MASTER from "../tableHeaders/tableHeadersForJobWorkItemMaster";
+import TABLE_HEADERS_FOR_JOB_WORKER_MASTER from "../tableHeaders/tableHeadersForJobWorkerMaster";
+import TABLE_HEADERS_FOR_PPIC_INVENTORY from "../tableHeaders/tableHeadersForPPICInventory";
 
 @Component({
     selector: "app-custom-upload-data",
@@ -35,8 +44,6 @@ export class CustomUploadDataComponent implements OnInit {
     file: any = null;
     fileName = "";
     fileSuccessUpload = false;
-    dataSuccessUpload = false;
-    approvedFlag = false;
     rolePermissionActions: any = LIST_DEFAULT_PERMISSION_ACTIONS;
     inValidRecords: any = [];
     validRecords: any = [];
@@ -44,33 +51,35 @@ export class CustomUploadDataComponent implements OnInit {
     type: any = "";
     ngOnInit(): void {
         this.type = this.activatedRoute.snapshot.paramMap.get("uploadParameter");
-        if (this.type == "Supplier") {
-            this.tableHead = TABLE_HEADERS_FOR_SUPPLIER;
-        } else if (this.type == "Items") {
-            this.tableHead = TABLE_HEADERS_FOR_ITEMS;
-        } else if (this.type == "Customer") {
-            this.tableHead = TABLE_HEADERS_FOR_CUSTOMER;
-        } else if (this.type == "InventoryCorrection") {
-            this.tableHead = TABLE_HEADERS_FOR_INVENTORY;
-        } else if (this.type == "Employee") {
-            this.tableHead = TABLE_HEADERS_FOR_EMPLOYEE;
-        } else if (this.type == "SKUMaster") {
-            this.tableHead = TABLE_HEADERS_FOR_SKU_MASTER;
-        } else if (this.type == "FGIN") {
-            this.tableHead = TABLE_HEADERS_FOR_FGIN;
-        } else if (this.type == "Asset") {
-            this.tableHead = TABLE_HEADERS_FOR_ASSET;
-        } else if (this.type == "SKUDimensions") {
-            this.tableHead = TABLE_HEADERS_FOR_SKU_DIMENSIONS;
-        } else if (this.type == "SKUMaterial") {
-            this.tableHead = TABLE_HEADERS_FOR_SKU_MATERIAL;
-        }
+        const tableHeadersMapping: any = {
+            Supplier: TABLE_HEADERS_FOR_SUPPLIER,
+            Items: TABLE_HEADERS_FOR_ITEMS,
+            Customer: TABLE_HEADERS_FOR_CUSTOMER,
+            InventoryCorrection: TABLE_HEADERS_FOR_INVENTORY,
+            Employee: TABLE_HEADERS_FOR_EMPLOYEE,
+            SKUMaster: TABLE_HEADERS_FOR_SKU_MASTER,
+            FGIN: TABLE_HEADERS_FOR_FGIN,
+            Asset: TABLE_HEADERS_FOR_ASSET,
+            SKUDimensions: TABLE_HEADERS_FOR_SKU_DIMENSIONS,
+            SKUMaterial: TABLE_HEADERS_FOR_SKU_MATERIAL,
+            SpecificationMaster: TABLE_HEADERS_FOR_SPECIFICATION_MASTER,
+            HSN: TABLE_HEADERS_FOR_HSN_MASTER,
+            SAC: TABLE_HEADERS_FOR_SAC_MASTER,
+            SaleHSN: TABLE_HEADERS_FOR_SALES_HSN_MASTER,
+            SaleSAC: TABLE_HEADERS_FOR_SALES_SAC_MASTER,
+            Transporter: TABLE_HEADERS_FOR_TRANSPORTER_MASTER,
+            JobWorkerMaster: TABLE_HEADERS_FOR_JOB_WORKER_MASTER,
+            PurchaseRegisterEntry: TABLE_HEADERS_FOR_PURCHASE_REGISTER_ENTRY,
+            JobWorkItemMaster: TABLE_HEADERS_FOR_JOB_WORK_ITEM_MASTER,
+            PPICInventoryCorrection: TABLE_HEADERS_FOR_PPIC_INVENTORY
+        };
+        this.tableHead = tableHeadersMapping[this.type] || null;
     }
 
     fileChosen(event: any) {
         if (event.target.value) {
-            if (event.target.files[0].size > 2000000) {
-                this.toastService.warning("Unable to upload file of size more than 2MB");
+            if (event.target.files[0].size > 500000) {
+                this.toastService.warning("Unable to upload file of size more than 500KB");
                 return;
             }
             this.file = <File>event.target.files[0];
@@ -122,55 +131,56 @@ export class CustomUploadDataComponent implements OnInit {
     }
 
     downloadCSVFormat() {
-        let text = "";
-        let filename = "";
-        if (this.type == "Supplier") {
-            text = "./assets/upload-data-excel-csv/supplier.csv";
-            filename = "Upload Suppliers";
-        } else if (this.type == "Items") {
-            text = "./assets/upload-data-excel-csv/item.csv";
-            filename = "Upload Items";
-        } else if (this.type == "Customer") {
-            text = "./assets/upload-data-excel-csv/customer.csv";
-            filename = "Upload Customer";
-        } else if (this.type == "InventoryCorrection") {
-            text = "./assets/upload-data-excel-csv/inventory.csv";
-            filename = "Validate Inventory";
-        } else if (this.type == "Employee") {
-            text = "./assets/upload-data-excel-csv/employee.csv";
-            filename = "Upload Employee";
-        } else if (this.type == "SKUMaster") {
-            text = "./assets/upload-data-excel-csv/SKU.csv";
-            filename = "Upload SKU Master";
-        } else if (this.type == "FGIN") {
-            text = "./assets/upload-data-excel-csv/FGIN.csv";
-            filename = "Upload FGIN";
-        } else if (this.type == "Asset") {
-            text = "./assets/upload-data-excel-csv/asset.csv";
-            filename = "Upload Asset";
-        } else if (this.type == "SKUDimensions") {
-            text = "./assets/upload-data-excel-csv/SKUDimension.csv";
-            filename = "Upload SKU Dimensions";
-        } else if (this.type == "SKUMaterial") {
-            text = "./assets/upload-data-excel-csv/SKUMaterial.csv";
-            filename = "Upload SKU Material";
+        const typeMappings: any = {
+            Supplier: {path: "./assets/upload-data-excel-csv/supplier.csv", filename: "Upload Suppliers"},
+            Items: {path: "./assets/upload-data-excel-csv/item.csv", filename: "Upload Items"},
+            Customer: {path: "./assets/upload-data-excel-csv/customer.csv", filename: "Upload Customer"},
+            InventoryCorrection: {path: "./assets/upload-data-excel-csv/inventory.csv", filename: "Validate Inventory"},
+            Employee: {path: "./assets/upload-data-excel-csv/employee.csv", filename: "Upload Employee"},
+            SKUMaster: {path: "./assets/upload-data-excel-csv/SKU.csv", filename: "Upload SKU Master"},
+            FGIN: {path: "./assets/upload-data-excel-csv/FGIN.csv", filename: "Upload FGIN"},
+            Asset: {path: "./assets/upload-data-excel-csv/asset.csv", filename: "Upload Asset"},
+            SKUDimensions: {path: "./assets/upload-data-excel-csv/SKUDimension.csv", filename: "Upload SKU Dimensions"},
+            SKUMaterial: {path: "./assets/upload-data-excel-csv/SKUMaterial.csv", filename: "Upload SKU Material"},
+            SpecificationMaster: {
+                path: "./assets/upload-data-excel-csv/specificationMaster.csv",
+                filename: "Upload Specification Master"
+            },
+            HSN: {path: "./assets/upload-data-excel-csv/HSN.csv", filename: "Upload HSN Master"},
+            SAC: {path: "./assets/upload-data-excel-csv/SAC.csv", filename: "Upload SAC Master"},
+            SaleHSN: {path: "./assets/upload-data-excel-csv/salesHSN.csv", filename: "Upload Sales HSN Master"},
+            SaleSAC: {path: "./assets/upload-data-excel-csv/salesSAC.csv", filename: "Upload Sales SAC Master"},
+            Transporter: {
+                path: "./assets/upload-data-excel-csv/transporter.csv",
+                filename: "Upload Transporter Master"
+            },
+            JobWorkerMaster: {
+                path: "./assets/upload-data-excel-csv/jobWorker.csv",
+                filename: "Upload Job Worker Master"
+            },
+            PurchaseRegisterEntry: {
+                path: "./assets/upload-data-excel-csv/purchaseRegisterEntry.csv",
+                filename: "Upload Purchase Register Entry"
+            },
+            JobWorkItemMaster: {
+                path: "./assets/upload-data-excel-csv/jobWorkItem.csv",
+                filename: "Upload Job Work Item Master"
+            },
+            PPICInventoryCorrection: {
+                path: "./assets/upload-data-excel-csv/PPICInventory.csv",
+                filename: "Upload PPIC Inventory"
+            }
+        };
+
+        const mapping = typeMappings[this.type];
+
+        if (mapping) {
+            const link = document.createElement("a");
+            link.href = mapping.path;
+            link.download = `${mapping.filename}.csv`;
+            link.click();
+            document.body.removeChild(link);
         }
-        // const downloadPath = `${text.substring(0, text.lastIndexOf("/") + 1)}${filename}.csv`;
-        // fs.saveAs(downloadPath);
-
-        // Create a link element
-        const link = document.createElement("a");
-        link.href = text;
-        link.download = `${filename}.csv`;
-
-        // Append the link to the body
-        document.body.appendChild(link);
-
-        // Trigger the download
-        link.click();
-
-        // Clean up
-        document.body.removeChild(link);
     }
 
     openInvalidSupplierRecordsModal() {
@@ -186,14 +196,6 @@ export class CustomUploadDataComponent implements OnInit {
         modalRef.componentInstance.type = this.type;
         modalRef.componentInstance.tableHead = this.tableHead;
         modalRef.componentInstance.inValidRecords = this.inValidRecords;
-
-        modalRef.result.then(
-            (success: any) => {
-                if (success) {
-                }
-            },
-            (reason: any) => {}
-        );
     }
 
     openValidRecordsModal() {
@@ -204,7 +206,6 @@ export class CustomUploadDataComponent implements OnInit {
             keyboard: false
         });
 
-        // modalRef.componentInstance.action = this.action;
         modalRef.componentInstance.heading = "Upload Data";
         modalRef.componentInstance.cancelText = `Do You Want to Upload ${
             this.type == "InventoryCorrection" ? "Validate Inventory" : this.type

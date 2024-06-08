@@ -1,12 +1,12 @@
 import {Component, OnInit, QueryList, ViewChildren} from "@angular/core";
 import {GRDetails} from "@interfaces/GRDetails";
+import {NgbModal} from "@ng-bootstrap/ng-bootstrap";
 import {NgbdSortableHeader, SortEvent} from "@directives/sortable.directive";
 import {ToastService, SpinnerService, StorageService, UtilityService} from "@core/services";
 import {FinishedGoodsInwardEntryService} from "@services/stores";
 import {LIST_DEFAULT_PERMISSION_ACTIONS} from "@mocks/constant";
 import {IFinishedGoodsInwardArray, IFinishedGoodsInwardMasterData} from "@mocks/models/production/transactions";
-import {ProductCategoryModalComponent} from "src/app/default/sales/master/sku/screens/product-category-modal/product-category-modal.component";
-import {NgbModal} from "@ng-bootstrap/ng-bootstrap";
+import {ProductCategoryModalComponent} from "src/app/default/sales/master/sku/screens/components";
 
 @Component({
     selector: "app-multiple-fgin-form",
@@ -113,9 +113,13 @@ export class MultipleFginFormComponent implements OnInit {
         let obj = {
             productCategory: this.productCategory
         };
+        this.spinner.show();
         this.finishedGoodsInwardEntryService.getAllFGINByProductCategory(obj).subscribe(success => {
-            this.filterTableData = success;
-            this.collection = this.filterTableData.length;
+            if (success) {
+                this.filterTableData = success;
+                this.collection = this.filterTableData?.length;
+            }
+            this.spinner.hide();
         });
     }
     getInitialData() {

@@ -29,11 +29,7 @@ const routes: Routes = [
             {
                 path: "hr",
                 loadChildren: () => import("./hr/hr.module").then(m => m.HrModule)
-            },
-            {
-                path: "NPD",
-                loadChildren: () => import("./npd/npd.module").then(m => m.NPDModule)
-            },
+            }, 
             {
                 path: "production",
                 loadChildren: () => import("./production/production.module").then(m => m.ProductionModule)

@@ -47,14 +47,6 @@ const routes: Routes = [
                     import("./debit-note-summary/debit-note-summary.module").then(m => m.DebitNoteSummaryModule)
             },
             {
-                path: "PPV_summary",
-                loadChildren: () => import("./ppv-summary/ppv-summary.module").then(m => m.PPVSummaryModule)
-            },
-            {
-                path: "PPV_by_supplier",
-                loadChildren: () => import("./ppv-by-supplier/ppv-by-supplier.module").then(m => m.PPVBySupplierModule)
-            },
-            {
                 path: "PPV_details",
                 loadChildren: () => import("./ppv-details/ppv-details.module").then(m => m.PPVDetailsModule)
             },
@@ -113,6 +105,11 @@ const routes: Routes = [
                 path: "reorder_levelR",
                 loadChildren: () =>
                     import("./../../stores/reports/reorder-level/reorder-level.module").then(m => m.ReorderLevelModule)
+            },
+            {
+                path: "job_work_challan",
+                loadChildren: () =>
+                    import("./job-work-challan/job-work-challan.module").then(m => m.JobWorkChallanModule)
             }
         ]
     }

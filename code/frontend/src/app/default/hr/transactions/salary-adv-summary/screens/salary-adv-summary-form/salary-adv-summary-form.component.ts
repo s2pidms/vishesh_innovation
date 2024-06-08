@@ -1,11 +1,12 @@
 import {Component, OnInit} from "@angular/core";
 import {UntypedFormControl, UntypedFormGroup, Validators} from "@angular/forms";
-import {ActivatedRoute, Router} from "@angular/router";
+import {Location} from "@angular/common";
+import {ActivatedRoute} from "@angular/router";
 import {AdvanceSalaryRequestService} from "@services/hr";
 import {mergeMap, of} from "rxjs";
 import {ValidationService} from "@core/components";
 import {SALARY_ADVANCE_FORM_ERRORS} from "@mocks/validations/hr";
-import {MenuTitleService, SpinnerService, UtilityService, ToastService} from "@core/services";
+import {SpinnerService, UtilityService, ToastService} from "@core/services";
 import {ISalaryAdvanceSummaryMasterData} from "@mocks/models/hr&Admin/transactions";
 
 @Component({
@@ -22,13 +23,12 @@ export class SalaryAdvSummaryFormComponent implements OnInit {
 
     constructor(
         private salaryAdvanceSummaryService: AdvanceSalaryRequestService,
-        private router: Router,
         private activatedRoute: ActivatedRoute,
         private spinner: SpinnerService,
-        private menuTitleService: MenuTitleService,
         private toastService: ToastService,
         private validationService: ValidationService,
-        private utilityService: UtilityService
+        private utilityService: UtilityService,
+        private location: Location
     ) {}
     form = new UntypedFormGroup({
         _id: new UntypedFormControl(null),
@@ -84,7 +84,7 @@ export class SalaryAdvSummaryFormComponent implements OnInit {
             this.submitted = false;
             this.spinner.hide();
             this.toastService.success(success.message);
-            this.router.navigate(["/default/HR/transactions/salary_adv_summary/sas-list"]);
+            this.location.back();
         });
     }
     update(formData: any) {
@@ -93,7 +93,7 @@ export class SalaryAdvSummaryFormComponent implements OnInit {
             this.submitted = false;
             this.spinner.hide();
             this.toastService.success(success.message);
-            this.router.navigate(["/default/HR/transactions/salary_adv_summary/sas-list"]);
+            this.location.back();
         });
     }
 

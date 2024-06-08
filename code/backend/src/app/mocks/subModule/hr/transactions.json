@@ -98,30 +98,30 @@
         "roles": []
     },
     {
-        "_id": "655c3c1a3613e949b4d61bf9",
+        "_id": "65b1fc428c59788fa13d20cd",
         "menuItemId": "64a6c1e33339d4dc9d8141ab",
         "module": "HR & Admin",
         "type": "TRANSACTION",
         "order": 8,
         "isDisplay": false,
-        "title": "Goods Requisition",
-        "displayName": "Goods Requisition",
+        "title": "Cancel Leave",
+        "displayName": "Cancel Leave",
         "disabled": false,
-        "url": "/default/HR/transactions/grl/list",
+        "url": "/default/HR/transactions/leave_application/cancel_leave_list",
         "items": [],
         "roles": []
     },
     {
-        "_id": "65b1fc428c59788fa13d20cd",
+        "_id": "655c3c1a3613e949b4d61bf9",
         "menuItemId": "64a6c1e33339d4dc9d8141ab",
         "module": "HR & Admin",
         "type": "TRANSACTION",
         "order": 9,
         "isDisplay": false,
-        "title": "Cancel Leave",
-        "displayName": "Cancel Leave",
+        "title": "Goods Requisition",
+        "displayName": "Goods Requisition",
         "disabled": false,
-        "url": "/default/HR/transactions/leave_application/cancel_leave_list",
+        "url": "/default/HR/transactions/grl/list",
         "items": [],
         "roles": []
     }

@@ -123,6 +123,34 @@ exports.create = async (req, res) => {
             ) {
                 fs.unlinkSync(req.files["empRelievingLetter"][0].path);
             }
+            if (
+                req.files["uploadBankPassBook"] &&
+                req.files["uploadBankPassBook"].length > 0 &&
+                fs.existsSync(req.files["uploadBankPassBook"][0].path)
+            ) {
+                fs.unlinkSync(req.files["uploadBankPassBook"][0].path);
+            }
+            if (
+                req.files["uploadBankCheckBook"] &&
+                req.files["uploadBankCheckBook"].length > 0 &&
+                fs.existsSync(req.files["uploadBankCheckBook"][0].path)
+            ) {
+                fs.unlinkSync(req.files["uploadBankCheckBook"][0].path);
+            }
+            if (
+                req.files["uploadOfferLetter"] &&
+                req.files["uploadOfferLetter"].length > 0 &&
+                fs.existsSync(req.files["uploadOfferLetter"][0].path)
+            ) {
+                fs.unlinkSync(req.files["uploadOfferLetter"][0].path);
+            }
+            if (
+                req.files["uploadAppointmentLetter"] &&
+                req.files["uploadAppointmentLetter"].length > 0 &&
+                fs.existsSync(req.files["uploadAppointmentLetter"][0].path)
+            ) {
+                fs.unlinkSync(req.files["uploadAppointmentLetter"][0].path);
+            }
             let errors = MESSAGES.apiErrorStrings.Data_EXISTS("Employee");
             return res.preconditionFailed(errors);
         }
@@ -156,6 +184,18 @@ exports.create = async (req, res) => {
             }
             if (req.files["empRelievingLetter"] && req.files["empRelievingLetter"].length > 0) {
                 createdObj["empRelievingLetter"] = req.files["empRelievingLetter"][0].filename;
+            }
+            if (req.files["uploadBankPassBook"] && req.files["uploadBankPassBook"].length > 0) {
+                createdObj["uploadBankPassBook"] = req.files["uploadBankPassBook"][0].filename;
+            }
+            if (req.files["uploadBankCheckBook"] && req.files["uploadBankCheckBook"].length > 0) {
+                createdObj["uploadBankCheckBook"] = req.files["uploadBankCheckBook"][0].filename;
+            }
+            if (req.files["uploadOfferLetter"] && req.files["uploadOfferLetter"].length > 0) {
+                createdObj["uploadOfferLetter"] = req.files["uploadOfferLetter"][0].filename;
+            }
+            if (req.files["uploadAppointmentLetter"] && req.files["uploadAppointmentLetter"].length > 0) {
+                createdObj["uploadAppointmentLetter"] = req.files["uploadAppointmentLetter"][0].filename;
             }
         }
         if (createdObj.isLogin == "true") {
@@ -240,6 +280,34 @@ exports.update = async (req, res) => {
                 fs.existsSync(req.files["empRelievingLetter"][0].path)
             ) {
                 fs.unlinkSync(req.files["empRelievingLetter"][0].path);
+            }
+            if (
+                req.files["uploadBankPassBook"] &&
+                req.files["uploadBankPassBook"].length > 0 &&
+                fs.existsSync(req.files["uploadBankPassBook"][0].path)
+            ) {
+                fs.unlinkSync(req.files["uploadBankPassBook"][0].path);
+            }
+            if (
+                req.files["uploadBankCheckBook"] &&
+                req.files["uploadBankCheckBook"].length > 0 &&
+                fs.existsSync(req.files["uploadBankCheckBook"][0].path)
+            ) {
+                fs.unlinkSync(req.files["uploadBankCheckBook"][0].path);
+            }
+            if (
+                req.files["uploadOfferLetter"] &&
+                req.files["uploadOfferLetter"].length > 0 &&
+                fs.existsSync(req.files["uploadOfferLetter"][0].path)
+            ) {
+                fs.unlinkSync(req.files["uploadOfferLetter"][0].path);
+            }
+            if (
+                req.files["uploadAppointmentLetter"] &&
+                req.files["uploadAppointmentLetter"].length > 0 &&
+                fs.existsSync(req.files["uploadAppointmentLetter"][0].path)
+            ) {
+                fs.unlinkSync(req.files["uploadAppointmentLetter"][0].path);
             }
             const errors = MESSAGES.apiErrorStrings.INVALID_REQUEST;
             return res.preconditionFailed(errors);
@@ -360,6 +428,54 @@ exports.update = async (req, res) => {
                         }
                     }
                     employee["empRelievingLetter"] = req.files["empRelievingLetter"][0].filename;
+                }
+                if (req.files["uploadBankPassBook"] && req.files["uploadBankPassBook"].length > 0) {
+                    if (employee.uploadBankPassBook) {
+                        let destination = path.join(
+                            __dirname,
+                            `/../../../../../assets/employee/${employee.uploadBankPassBook}`
+                        );
+                        if (fs.existsSync(destination)) {
+                            fs.unlinkSync(destination);
+                        }
+                    }
+                    employee["uploadBankPassBook"] = req.files["uploadBankPassBook"][0].filename;
+                }
+                if (req.files["uploadBankCheckBook"] && req.files["uploadBankCheckBook"].length > 0) {
+                    if (employee.uploadBankCheckBook) {
+                        let destination = path.join(
+                            __dirname,
+                            `/../../../../../assets/employee/${employee.uploadBankCheckBook}`
+                        );
+                        if (fs.existsSync(destination)) {
+                            fs.unlinkSync(destination);
+                        }
+                    }
+                    employee["uploadBankCheckBook"] = req.files["uploadBankCheckBook"][0].filename;
+                }
+                if (req.files["uploadOfferLetter"] && req.files["uploadOfferLetter"].length > 0) {
+                    if (employee.uploadOfferLetter) {
+                        let destination = path.join(
+                            __dirname,
+                            `/../../../../../assets/employee/${employee.uploadOfferLetter}`
+                        );
+                        if (fs.existsSync(destination)) {
+                            fs.unlinkSync(destination);
+                        }
+                    }
+                    employee["uploadOfferLetter"] = req.files["uploadOfferLetter"][0].filename;
+                }
+                if (req.files["uploadAppointmentLetter"] && req.files["uploadAppointmentLetter"].length > 0) {
+                    if (employee.uploadAppointmentLetter) {
+                        let destination = path.join(
+                            __dirname,
+                            `/../../../../../assets/employee/${employee.uploadAppointmentLetter}`
+                        );
+                        if (fs.existsSync(destination)) {
+                            fs.unlinkSync(destination);
+                        }
+                    }
+                    employee["uploadAppointmentLetter"] = req.files["uploadAppointmentLetter"][0].filename;
                 }
             }
 
@@ -707,6 +823,15 @@ exports.getTotalNoOfEmployeesPerDay = async company => {
 
 exports.checkEmployeeValidation = async (empData, column, company) => {
     try {
+        const employeesOptions = await EmployeeRepository.filteredEmployeeList([
+            {$match: {empStatus: "A", company: ObjectId(company)}},
+            {
+                $project: {
+                    empFirstName: 1,
+                    empLastName: 1
+                }
+            }
+        ]);
         const requiredFields = [
             "empFirstName",
             "empLastName",
@@ -822,17 +947,12 @@ exports.checkEmployeeValidation = async (empData, column, company) => {
                         break;
                     }
                 }
-                if (
-                    await SKUMasterRepository.findOneDoc(
-                        {empFirstName: x["empFirstName"], empLastName: x["empLastName"]},
-                        {
-                            _id: 1
-                        }
-                    )
-                ) {
-                    x.isValid = false;
-                    x.message = `${ele} is already exists`;
-                    break;
+                for (const ele of employeesOptions) {
+                    if (ele.empFirstName == x["empFirstName"] && ele.empLastName == x["empLastName"]) {
+                        x.isValid = false;
+                        x.message = `${x["empFirstName"]} already exists`;
+                        break;
+                    }
                 }
             }
         }

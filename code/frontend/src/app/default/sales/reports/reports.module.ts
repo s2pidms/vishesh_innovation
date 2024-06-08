@@ -101,11 +101,6 @@ const routes: Routes = [
             import("./quotation-sku-report/quotation-sku-report.module").then(m => m.QuotationSkuReportModule)
     },
     {
-        path: "quotation-dsku-report",
-        loadChildren: () =>
-            import("./quotation-dsku-report/quotation-dsku-report.module").then(m => m.QuotationDskuReportModule)
-    },
-    {
         path: "sales_order_status_report",
         loadChildren: () => import("./sales-order-status/sales-order-status.module").then(m => m.SalesOrderStatusModule)
     }

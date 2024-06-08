@@ -11,3 +11,5 @@ export * from "./supplierEvaluation.service";
 export * from "./itemCategory.service";
 export * from "./externalServiceProvider.service";
 export * from "./purchaseIndent.service";
+export * from "./jobWorker.service";
+export * from "./jobWorkChallan.service";

@@ -1,4 +1,4 @@
-<div class="formCard card">
+<div class="formCard card mb-4">
     <div class="set-remaining-margin">
         <div class="row form-header">
             <div class="col heading">
@@ -61,12 +61,15 @@
                 </div>
             </div>
         </div>
-        <hr class="row line-border" />
-        <div class="row">
+        <hr
+            *ngIf="mastersData?.length > 0 || transactionsData?.length > 0 || reportsData?.length > 0"
+            class="row line-border"
+        />
+        <div class="row mb-0">
             <div class="col-4">
                 <div class="" *ngIf="mastersData?.length > 0">
                     <div class="row mb-0 justify-content-center">
-                        <div class="col-3">
+                        <div class="col-4">
                             <h3 class="">Masters</h3>
                         </div>
                         <div class="col-2 text-end pe-0">
@@ -139,7 +142,7 @@
             <div class="col-5 px-0">
                 <div class="" *ngIf="transactionsData?.length > 0">
                     <div class="row mb-0 justify-content-center">
-                        <div class="col-3">
+                        <div class="col-4">
                             <h3 class="">Transactions</h3>
                         </div>
                         <div class="col-2 text-end pe-0">
@@ -230,7 +233,7 @@
             <div class="col-3">
                 <div class="" *ngIf="reportsData?.length > 0">
                     <div class="row mb-0 justify-content-center">
-                        <div class="col-4">
+                        <div class="col-5">
                             <h3 class="">Reports</h3>
                         </div>
                         <div class="col-2 text-end pe-0">
@@ -283,7 +286,10 @@
                 </div>
             </div>
         </div>
-
+        <hr
+            *ngIf="mastersData?.length > 0 || transactionsData?.length > 0 || reportsData?.length > 0"
+            class="row line-border"
+        />
         <div *ngIf="mastersData?.length > 0 || transactionsData?.length > 0 || reportsData?.length > 0">
             <div
                 class="d-grid gap-2 d-md-flex justify-content-md-center mb-3"

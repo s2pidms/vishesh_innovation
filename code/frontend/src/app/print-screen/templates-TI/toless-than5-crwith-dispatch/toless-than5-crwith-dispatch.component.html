@@ -294,6 +294,23 @@
                                                 <td class="text-center sub-text">-</td>
                                                 <td class="text-center sub-text">-</td>
                                             </tr>
+
+                                            <tr
+                                                *ngIf="
+                                                    tableData?.customer?.TCSOnScrap == 'Yes' ||
+                                                    tableData?.customer?.TCSOnVendor == 'Yes'
+                                                "
+                                            >
+                                                <td class="text-center sub-text">-</td>
+                                                <td class="text-center sub-text">-</td>
+                                                <td class="text-center sub-text">-</td>
+                                                <td class="text-center sub-text">-</td>
+                                                <td class="text-center sub-text">-</td>
+                                                <td class="text-center sub-text">-</td>
+                                                <td class="text-center sub-text">-</td>
+                                                <td class="text-center sub-text">-</td>
+                                                <td class="text-center sub-text">-</td>
+                                            </tr>
                                             <tr>
                                                 <td class="text-center sub-text">Total >></td>
                                                 <td class="text-center sub-text">
@@ -400,6 +417,31 @@
                                                         tableData?.salesInvoiceTotalIGSTAmount
                                                             ? (tableData?.salesInvoiceTotalIGSTAmount | number : ".2-2")
                                                             : "-"
+                                                    }}
+                                                </td>
+                                            </tr>
+                                            <tr
+                                                *ngIf="
+                                                    tableData?.customer?.TCSOnScrap == 'Yes' ||
+                                                    tableData?.customer?.TCSOnVendor == 'Yes'
+                                                "
+                                            >
+                                                <td class="sub-text">
+                                                    {{
+                                                        tableData?.customer?.TCSOnScrap == "Yes"
+                                                            ? "TCS 1% for Scrap"
+                                                            : tableData?.customer?.TCSOnVendor == "Yes"
+                                                            ? "TCS 0.1% for Goods"
+                                                            : "TCS 1% for Scrap"
+                                                    }}
+                                                </td>
+                                                <td class="text-center sub-text">
+                                                    {{
+                                                        tableData?.customer?.TCSOnScrap == "Yes"
+                                                            ? tableData?.TCSOnScrap
+                                                            : tableData?.customer?.TCSOnVendor == "Yes"
+                                                            ? tableData?.TCSOnVendor
+                                                            : tableData?.TCSOnScrap
                                                     }}
                                                 </td>
                                             </tr>

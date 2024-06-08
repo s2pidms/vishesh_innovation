@@ -4,7 +4,7 @@
     <div class="table-header">
         <label class="heading">Attendance Review</label>
     </div>
-    <div class="row justify-content-center mt-4 ">
+    <div class="row justify-content-center mt-4">
         <div class="col-4">
             <div class="row">
                 <div class="col-6 mt-1 pe-1">
@@ -70,25 +70,29 @@
                     <td>{{ u?.weeklyOff }}</td>
                     <td>{{ u?.paidHolidays }}</td>
                     <td>
-                        <span *ngIf="u.status && !(u.status == 'Draft' && u._id == flag)">{{ u.paidLeaves }}</span>
-                        <input
-                            *ngIf="!u.status || (u.status == 'Draft' && u._id == flag)"
-                            class="form-control form-control-sm w-25"
-                            type="number"
-                            [(ngModel)]="u.paidLeaves"
-                            (input)="setLOP(u._id, u)"
-                        />
+                        <div class="d-flex justify-content-center">
+                            <span *ngIf="u.status && !(u.status == 'Draft' && u._id == flag)">{{ u.paidLeaves }}</span>
+                            <input
+                                *ngIf="!u.status || (u.status == 'Draft' && u._id == flag)"
+                                class="form-control form-control-sm w-25"
+                                type="number"
+                                [(ngModel)]="u.paidLeaves"
+                                (input)="setLOP(u._id, u)"
+                            />
+                        </div>
                     </td>
                     <td>{{ u?.ODDays }}</td>
                     <td>
-                        <span *ngIf="u.status && !(u.status == 'Draft' && u._id == flag)">{{ u.presentDays }}</span>
-                        <input
-                            *ngIf="!u.status || (u.status == 'Draft' && u._id == flag)"
-                            class="form-control form-control-sm w-25"
-                            type="number"
-                            [(ngModel)]="u.presentDays"
-                            (input)="setLOP(u._id, u)"
-                        />
+                        <div class="d-flex justify-content-center">
+                            <span *ngIf="u.status && !(u.status == 'Draft' && u._id == flag)">{{ u.presentDays }}</span>
+                            <input
+                                *ngIf="!u.status || (u.status == 'Draft' && u._id == flag)"
+                                class="form-control form-control-sm w-25"
+                                type="number"
+                                [(ngModel)]="u.presentDays"
+                                (input)="setLOP(u._id, u)"
+                            />
+                        </div>
                     </td>
                     <td>{{ u?.LOPDiff }}</td>
                     <td>{{ u?.status }}</td>
@@ -104,6 +108,17 @@
                                 >
                                     <i class="fa fa-pencil-square-o fa-lg me-2 text-primary" aria-hidden="true"></i>
                                     Edit
+                                </a>
+                                <a
+                                    [class.disable]="['Approved', null].includes(u.status)"
+                                    *ngIf="user == superAdminId"
+                                    appAccessControl
+                                    [accessType]="rolePermissionActions.editAction"
+                                    href="javascript:void(0)"
+                                    (click)="openAttendanceModal(u)"
+                                >
+                                    <i class="fa fa-pencil-square-o fa-lg me-2 text-primary" aria-hidden="true"></i>
+                                    Update
                                 </a>
                             </div>
                         </div>

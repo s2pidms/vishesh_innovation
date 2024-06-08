@@ -10,15 +10,28 @@ const {getAndSetAutoIncrementNo} = require("../../settings/autoIncrement/autoInc
 const {filteredSpecificationList} = require("../../../../models/quality/repository/specificationRepository");
 const RMSpecificationRepository = require("../../../../models/quality/repository/rmSpecificationRepository");
 const ItemRepository = require("../../../../models/purchase/repository/itemRepository");
+const {filteredSupplierList} = require("../../../../models/purchase/repository/supplierRepository");
 const ObjectId = mongoose.Types.ObjectId;
 
 exports.getAll = asyncHandler(async (req, res) => {
+    const supplierOptions = await filteredSupplierList([
+        {$match: {company: ObjectId(req.user.company), isSupplierActive: "A"}},
+        {
+            $project: {
+                supplierName: 1
+            }
+        }
+    ]);
     try {
+        const {supplier = null} = req.query;
         let project = getAllRMSpecificationAttributes();
         let pipeline = [
             {
                 $match: {
-                    company: ObjectId(req.user.company)
+                    company: ObjectId(req.user.company),
+                    ...(!!supplier && {
+                        "supplierDetails.supplierId": ObjectId(supplier)
+                    })
                 }
             },
             {
@@ -82,7 +95,7 @@ exports.getAll = asyncHandler(async (req, res) => {
                 }
             }
         ]);
-        return res.success({...rows, totalAmounts});
+        return res.success({...rows, totalAmounts, supplierOptions});
     } catch (e) {
         console.error("getAll", e);
         const errors = MESSAGES.apiErrorStrings.SERVER_ERROR;

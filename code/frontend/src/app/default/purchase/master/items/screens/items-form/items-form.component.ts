@@ -190,11 +190,11 @@ export class ItemsFormComponent implements OnInit {
                 primaryUnitData = this.findValue(this.UOMDefaultValueOptions, "PURCHASE_PRIMARY_UNIT");
                 this.f["primaryUnit"].setValue(primaryUnitData);
             }
-            if (!this.f["secondaryUnit"].value) {
-                let secondaryUnitData: any = null;
-                secondaryUnitData = this.findValue(this.UOMDefaultValueOptions, "PURCHASE_SECONDARY_UNIT");
-                this.f["secondaryUnit"].setValue(secondaryUnitData);
-            }
+            // if (!this.f["secondaryUnit"].value) {
+            //     let secondaryUnitData: any = null;
+            //     secondaryUnitData = this.findValue(this.UOMDefaultValueOptions, "PURCHASE_SECONDARY_UNIT");
+            //     this.f["secondaryUnit"].setValue(secondaryUnitData);
+            // }
         }
     }
     findValue(array: any, value: any) {
@@ -281,12 +281,16 @@ export class ItemsFormComponent implements OnInit {
         if (formData.rmSpecifications) {
             formData.rmSpecifications = [formData.rmSpecifications];
         }
-        if (formData.primaryToSecondaryConversion) {
-            formData.conversionOfUnits = `1 ${formData.primaryUnit} = ${formData.primaryToSecondaryConversion} ${formData.secondaryUnit}`;
+        if (formData.primaryUnit && formData.secondaryUnit && formData.secondaryUnit != "-") {
+            if (formData.primaryToSecondaryConversion) {
+                formData.conversionOfUnits = `1 ${formData.primaryUnit} = ${formData.primaryToSecondaryConversion} ${formData.secondaryUnit}`;
+            } else {
+                formData.conversionOfUnits = `1 ${formData.secondaryUnit ?? "Unit"} = ${
+                    formData.secondaryToPrimaryConversion ?? 1
+                } ${formData.primaryUnit ?? "Unit"}`;
+            }
         } else {
-            formData.conversionOfUnits = `1 ${formData.secondaryUnit ?? "Unit"} = ${
-                formData.secondaryToPrimaryConversion ?? 1
-            } ${formData.primaryUnit ?? "Unit"}`;
+            formData.conversionOfUnits = "";
         }
         let formValue = new FormData();
         formValue.append("key", "items");
@@ -398,6 +402,10 @@ export class ItemsFormComponent implements OnInit {
                     }
                     if (success.channelDetails.length) {
                         this.channelDetails = success.channelDetails;
+                    }
+
+                    if (success.secondaryUnit == "-") {
+                        success.primaryToSecondaryConversion = null;
                     }
 
                     this.form.patchValue(success);
@@ -531,6 +539,7 @@ export class ItemsFormComponent implements OnInit {
         modalRef.componentInstance.action = this.action;
         modalRef.componentInstance.ModalUOMsUnit = this.UOMUintMasterOptions;
         modalRef.componentInstance.flag = true;
+        modalRef.componentInstance.isNotApplicable = true;
         modalRef.componentInstance.dimensionData = this.dimensionData.value;
         modalRef.componentInstance.WXLDimensionsUnit = this.masterData?.WXLDimensionsUnit;
         modalRef.componentInstance.dualUnits = {

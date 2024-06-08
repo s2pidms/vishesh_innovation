@@ -11,6 +11,8 @@ const {default: mongoose} = require("mongoose");
 const {SALES_HSN} = require("../../../../mocks/schemasConstant/salesConstant");
 const {getAndSetAutoIncrementNo} = require("../../settings/autoIncrement/autoIncrement");
 const {getAllSaleHSNAggregate} = require("../../../../models/sales/repository/salesHSNRepository");
+const SalesHSNRepository = require("../../../../models/sales/repository/salesHSNRepository");
+const validationJson = require("../../../../mocks/excelUploadColumn/validation.json");
 
 const ObjectId = mongoose.Types.ObjectId;
 
@@ -180,5 +182,84 @@ exports.getSalesHSNByCode = async hsnCode => {
         return existing;
     } catch (e) {
         console.error("getById HSN", e);
+    }
+};
+
+exports.checkSalesHSNMasterValidation = async (salesHSNData, column, company) => {
+    try {
+        const salesHSNOptions = await SalesHSNRepository.filteredSaleHSNList([
+            {$match: {company: ObjectId(company), isActive: "Y"}},
+            {
+                $project: {
+                    goodsDescription: 1
+                }
+            }
+        ]);
+        const requiredFields = [
+            "goodsDescription",
+            "gstRate",
+            "igstRate",
+            "cgstRate",
+            "sgstRate",
+            "ugstRate",
+            "revisionDate"
+        ];
+        const falseArr = OPTIONS.falsyArray;
+        let dropdownCheck = [];
+        let uniqueSalesHSN = [];
+        for await (const x of salesHSNData) {
+            x.isValid = true;
+            x.message = null;
+            let label = `${x["goodsDescription"]}`;
+            if (uniqueSalesHSN.includes(label)) {
+                x.isValid = false;
+                x.message = `${x["goodsDescription"]} duplicate Entry`;
+                break;
+            }
+            uniqueSalesHSN.push(label);
+            for (const ele of Object.values(column)) {
+                if (requiredFields.includes(ele) && falseArr.includes(x[ele])) {
+                    x.isValid = false;
+                    x.message = validationJson[ele] ?? `${ele} is Required`;
+                    break;
+                }
+                for (const dd of dropdownCheck) {
+                    if (ele == dd.key && !dd.options.map(values => values.value).includes(x[ele])) {
+                        x.isValid = false;
+                        x.message = `${ele} is Invalid Value & Value Must be ${dd.options.map(values => values.value)}`;
+                        break;
+                    }
+                }
+                for (const option of salesHSNOptions) {
+                    if (option.goodsDescription == x["goodsDescription"]) {
+                        x.isValid = false;
+                        x.message = `${x["goodsDescription"]} already exists`;
+                        break;
+                    }
+                }
+            }
+        }
+        const inValidRecords = salesHSNData.filter(x => !x.isValid);
+        const validRecords = salesHSNData.filter(x => x.isValid);
+        return {inValidRecords, validRecords};
+    } catch (error) {
+        console.error(error);
+    }
+};
+
+exports.bulkInsertSalesHSNMasterByCSV = async (jsonData, {company, createdBy, updatedBy}) => {
+    try {
+        let salesHSNData = jsonData.map(rest => {
+            rest.company = company;
+            rest.createdBy = createdBy;
+            rest.updatedBy = updatedBy;
+            return rest;
+        });
+        for await (const item of salesHSNData) {
+            await SalesHSNRepository.createSaleHSN(item);
+        }
+        return {message: "Uploaded successfully!"};
+    } catch (error) {
+        console.error(error);
     }
 };

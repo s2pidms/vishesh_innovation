@@ -17,7 +17,6 @@ const {
     getAllProformaInvoiceReportsAttributes
 } = require("../../../../models/sales/helpers/proformaInvoiceHelper");
 // const {getPIMailConfig} = require("./proformaInvoiceMail");
-const {SALES_CATEGORY} = require("../../../../mocks/constantData");
 const {PROFORMA_INVOICE} = require("../../../../mocks/schemasConstant/salesConstant");
 const {getAndSetAutoIncrementNo} = require("../../settings/autoIncrement/autoIncrement");
 const {filteredCustomerList} = require("../../../../models/sales/repository/customerRepository");
@@ -226,11 +225,7 @@ exports.getProInvDetailsById = asyncHandler(async (req, res) => {
                 select: {
                     companyName: 1,
                     GSTIN: 1,
-                    companyContactPersonEmail: 1,
-                    companyAddress: 1,
                     placesOfBusiness: 1,
-                    companyContactPersonNumber: 1,
-                    companyContactPersonAltNum: 1,
                     companyBankName: 1,
                     companyBefName: 1,
                     companyBankIFSCCode: 1,

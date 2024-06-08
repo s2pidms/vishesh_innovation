@@ -291,7 +291,7 @@ exports.getPODetailsById = asyncHandler(async (req, res) => {
             })
             .lean();
         existing = await getDataPDF(existing);
-        if (existing.changedPaymentTerms) {
+        if (existing && existing.changedPaymentTerms) {
             existing.supplier.supplierPaymentTerms = existing.changedPaymentTerms;
         }
         for await (const x of existing.PODetails) {
@@ -589,16 +589,16 @@ exports.updatePOStatusOnGRN = asyncHandler(async (poId, grnId) => {
 
 async function getDataPDF(existing) {
     try {
-        if (existing.serviceChargesInfo && existing.serviceChargesInfo.length) {
+        if (existing && existing.serviceChargesInfo && existing.serviceChargesInfo.length) {
             existing.serviceChargesInfo = existing.serviceChargesInfo.filter(x => x.serviceCharges > 0);
         }
-        if (existing.supplier.supplierContactMatrix.length) {
+        if (existing && existing.supplier.supplierContactMatrix.length) {
             existing.supplier.supplierContactMatrix = existing.supplier.supplierContactMatrix[0];
         }
-        if (existing.supplier.supplierShippingAddress.length) {
+        if (existing && existing.supplier.supplierShippingAddress.length) {
             existing.supplier.supplierShippingAddress = existing.supplier.supplierShippingAddress[0];
         }
-        if (existing.supplier.supplierBillingAddress.length) {
+        if (existing && existing.supplier.supplierBillingAddress.length) {
             existing.supplier.supplierBillingAddress = existing.supplier.supplierBillingAddress[0];
         }
 

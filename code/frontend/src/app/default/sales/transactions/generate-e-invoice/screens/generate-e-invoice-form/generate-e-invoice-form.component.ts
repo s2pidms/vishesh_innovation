@@ -453,8 +453,8 @@ export class GenerateEInvoiceFormComponent implements OnInit {
                 },
                 ShipDtls: {
                     Gstin: success?.customer?.GSTIN,
-                    LglNm: success?.customer?.customerName,
-                    TrdNm: success?.customer?.customerName,
+                    LglNm: success?.customerShippingAddress?.contactPersonName,
+                    TrdNm: success?.customerShippingAddress?.contactPersonName,
                     Addr1: `${success?.customerShippingAddress?.line1} ${success?.customerShippingAddress?.line2}`,
                     Addr2: success?.customerShippingAddress?.line3,
                     Loc: success?.customerShippingAddress?.city,
@@ -466,8 +466,8 @@ export class GenerateEInvoiceFormComponent implements OnInit {
             if (success?.customer?.GSTClassification == "SEZ") {
                 this.tranDetails.controls["SupTyp"].setValue("SEZWOP");
             }
+            this.spinner.hide();
         });
-        this.spinner.hide();
     }
 
     reset() {

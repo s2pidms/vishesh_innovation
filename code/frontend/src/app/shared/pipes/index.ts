@@ -7,3 +7,4 @@ export * from "./jce-disabled-prod-info.pipe";
 export * from "./jce-disabled-ipqa-info.pipe";
 export * from "./uom-units-master.pipe";
 export * from "./sales-uom-units-master.pipe";
+export * from "./separateWords.pipe";

@@ -86,5 +86,10 @@ exports.SCHEMA = {
         type: Boolean,
         required: false,
         default: false
+    },
+    jobWorkItem: {
+        type: Boolean,
+        required: false,
+        default: false
     }
 };

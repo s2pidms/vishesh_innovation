@@ -1,6 +1,7 @@
 import {Component, OnInit} from "@angular/core";
 import {UntypedFormControl, UntypedFormGroup} from "@angular/forms";
-import {ActivatedRoute, Router} from "@angular/router";
+import {ActivatedRoute} from "@angular/router";
+import {Location} from "@angular/common";
 import {mergeMap, of} from "rxjs";
 import {SpinnerService, UtilityService, ToastService} from "@core/services";
 import {TaskSchedulingService} from "@services/maintenance";
@@ -20,12 +21,12 @@ export class TaskSchedulingFormComponent implements OnInit {
     };
 
     constructor(
-        private router: Router,
         private activatedRoute: ActivatedRoute,
         private spinner: SpinnerService,
         private toastService: ToastService,
         private taskSchedulingService: TaskSchedulingService,
-        private utilityService: UtilityService
+        private utilityService: UtilityService,
+        private location: Location
     ) {}
 
     form = new UntypedFormGroup({
@@ -47,10 +48,6 @@ export class TaskSchedulingFormComponent implements OnInit {
 
     ngOnInit(): void {
         this.getInitialData();
-    }
-
-    navigateTo(path: string, id: any, action: string) {
-        this.router.navigate([path], {queryParams: {id, action}});
     }
 
     reset() {
@@ -78,7 +75,7 @@ export class TaskSchedulingFormComponent implements OnInit {
             this.submitted = false;
             this.spinner.hide();
             this.toastService.success(success.message);
-            this.router.navigate(["/default/maintenance/transactions/task-scheduling/list"]);
+            this.location.back();
         });
     }
 
@@ -88,7 +85,7 @@ export class TaskSchedulingFormComponent implements OnInit {
             this.spinner.hide();
             this.submitted = false;
             this.toastService.success(success.message);
-            this.router.navigate(["/default/maintenance/transactions/task-scheduling/list"]);
+            this.location.back();
         });
     }
 

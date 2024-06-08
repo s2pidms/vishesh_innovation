@@ -173,6 +173,12 @@ export class ChannelPartnerFormComponent implements OnInit {
         }
     }
 
+    setPANNumber() {
+        let GSTIN = this.f["GSTIN"].value;
+        let PANValue = this.utilityService.patchPANNumber(GSTIN);
+        this.f["PANNo"].setValue(PANValue);
+    }
+
     getInitialData() {
         this.spinner.show();
         this.channelPartnerService.getAllMasterData({}).subscribe(result => {

@@ -24,16 +24,6 @@ const routes: Routes = [
                 loadChildren: () => import("./../../production/transactions/grl/grl.module").then(m => m.GRLModule)
             },
             {
-                path: "cost_sheet_for_dsku",
-                loadChildren: () =>
-                    import("./cost-sheet-for-dsku/cost-sheet-for-dsku.module").then(m => m.CostSheetForDskuModule)
-            },
-            {
-                path: "direct_cost_dsku",
-                loadChildren: () =>
-                    import("./direct-cost-dsku/direct-cost-dsku.module").then(m => m.DirectCostDskuModule)
-            },
-            {
                 path: "sample_request",
                 loadChildren: () => import("./sample-request/sample-request.module").then(m => m.SampleRequestModule)
             },

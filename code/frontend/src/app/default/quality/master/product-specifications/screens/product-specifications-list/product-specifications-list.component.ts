@@ -19,11 +19,13 @@ export class ProductSpecificationsListComponent implements OnInit, OnDestroy {
     @ViewChildren(NgbdSortableHeader) headers: QueryList<NgbdSortableHeader> | any;
 
     page: number = 1;
-    pageSize: number = 8;
+    pageSize: number = 7;
     collection: number = 0;
     column: string = "status";
     direction: number = 1;
     search: string = "";
+    customerOptions: any = [];
+    customer: string = "";
     tableData: ProductSpecification[] = [];
     superAdminId: any = superAdminId;
     user: any = "";
@@ -89,6 +91,7 @@ export class ProductSpecificationsListComponent implements OnInit, OnDestroy {
             search: this.search,
             column: this.column,
             direction: this.direction,
+            customer: this.customer,
             excel: excel
         };
         if (this.subscription) this.subscription.unsubscribe();
@@ -99,6 +102,7 @@ export class ProductSpecificationsListComponent implements OnInit, OnDestroy {
                 this.pdfDownload(success.rows);
             } else {
                 this.tableData = success.rows;
+                this.customerOptions = success.customerOptions;
                 this.collection = success.count;
                 if (success?.totalAmounts?.length > 0) {
                     this.totalAmounts = success.totalAmounts[0];
@@ -106,6 +110,10 @@ export class ProductSpecificationsListComponent implements OnInit, OnDestroy {
             }
             this.spinner.hide();
         });
+    }
+    reset() {
+        this.customer = "";
+        this.getAll();
     }
     delete(id: any) {
         this.spinner.show();

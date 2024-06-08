@@ -286,6 +286,8 @@ exports.getPOBySupplierId = async (req, res) => {
             {$sort: {PONumber: -1}},
             {
                 $project: {
+                    purchaseCategory: 1,
+                    POType: 1,
                     PONumber: 1,
                     PODate: 1,
                     deliveryLocation: 1

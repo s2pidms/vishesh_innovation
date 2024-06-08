@@ -1,0 +1,150 @@
+<form [formGroup]="form">
+    <div class="modelPage">
+        <div class="modal-header">
+            <div class="heading">Job Work Details</div>
+            <div>
+                <button
+                    type="button"
+                    class="btn btn-cross btn-sm"
+                    aria-label="Close"
+                    (click)="this.activeModal.close()"
+                >
+                    <i class="fa fa-times-circle" aria-hidden="true"></i>
+                </button>
+            </div>
+        </div>
+
+        <div class="container-fluid">
+            <div class="row">
+                <div class="line-border-with-title d-flex justify-content-center mt-0">
+                    <span class="px-4"> Job Work Item </span>
+                </div>
+            </div>
+            <div class="row mt-4">
+                <div class="col-5 mt-1 pe-0">
+                    <label class="form-label text-nowrap">Job Work Item Code <span class="text-danger"> *</span></label>
+                </div>
+                <div class="col-auto px-0">
+                    <i class="fa fa-caret-right mt-1 text-secondary"></i>
+                </div>
+                <div class="col-6 ps-0 pe-5">
+                    <div class="d-flex align-items-center">
+                        <div class="col-11">
+                            <ng-select
+                                [items]="JWItemsOptions"
+                                bindLabel="jobWorkItemName"
+                                bindValue="_id"
+                                [clearable]="false"
+                                formControlName="jobWorkItem"
+                                (change)="setPartDetails($event)"
+                            >
+                            </ng-select>
+                        </div>
+                        <div
+                            style="height: 2.9rem"
+                            class="set-input-group-text input-group-text bg-primary pointer col-auto fa-font-size"
+                            id="basic-addon1"
+                            (click)="openJobWorkDetailsModal()"
+                        >
+                            <i class="fa fa-search text-white" aria-hidden="true"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row mt-4">
+                <div class="col-5 pe-0">
+                    <label class="form-label text-nowrap">Job Work Item Name <span class="text-danger"> *</span></label>
+                </div>
+                <div class="col-auto px-0">
+                    <i class="fa fa-caret-right text-secondary"></i>
+                </div>
+                <div class="col-6 ps-0">
+                    <input type="text" class="form-control bg-white-smoke" formControlName="jobWorkItemName" readonly />
+                </div>
+            </div>
+            <div class="row mt-4">
+                <div class="col-5 pe-0">
+                    <label class="form-label text-nowrap"
+                        >Job Work Item Description<span class="text-danger"> *</span></label
+                    >
+                </div>
+                <div class="col-auto px-0">
+                    <i class="fa fa-caret-right text-secondary"></i>
+                </div>
+                <div class="col-6 ps-0">
+                    <input type="text" class="form-control bg-white-smoke" formControlName="jobWorkItemDescription" readonly />
+                </div>
+            </div>
+            <div class="row mt-4">
+                <div class="mt-1 line-border-with-title d-flex justify-content-center">
+                    <span class="px-4"> Nature of Process to be carried out </span>
+                </div>
+            </div>
+            <div class="row mt-4">
+                <div class="col-5 mt-1 pe-0">
+                    <label class="form-label text-nowrap"
+                        >Service Accounting Code <span class="text-danger"> *</span></label
+                    >
+                </div>
+                <div class="col-auto px-0">
+                    <i class="fa fa-caret-right mt-1 text-secondary"></i>
+                </div>
+                <div class="col-6 ps-0 pe-5">
+                    <div class="d-flex align-items-center">
+                        <div class="col-11">
+                            <ng-select
+                                [items]="SACOptions"
+                                bindLabel="SACCode"
+                                bindValue="SAC"
+                                [clearable]="false"
+                                formControlName="SAC"
+                                (change)="setSACDetails($event)"
+                            >
+                            </ng-select>
+                        </div>
+                        <div
+                            style="height: 2.9rem"
+                            class="set-input-group-text input-group-text bg-primary pointer col-auto fa-font-size"
+                            id="basic-addon1"
+                            (click)="openSACDetailsModal()"
+                        >
+                            <i class="fa fa-search text-white" aria-hidden="true"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row mt-4">
+                <div class="col-5 pe-0">
+                    <label class="form-label text-nowrap"
+                        >Description of Service <span class="text-danger"> *</span></label
+                    >
+                </div>
+                <div class="col-auto px-0">
+                    <i class="fa fa-caret-right text-secondary"></i>
+                </div>
+                <div class="col-6 ps-0">
+                    <input type="text" class="form-control bg-white-smoke" formControlName="descriptionOfService" readonly />
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col mt-4 px-0">
+                    <hr
+                        *ngIf="!['approve', 'reject', 'view', 'generate', 'cancel'].includes(action)"
+                        class="line-border mb-4"
+                    />
+                </div>
+            </div>
+            <div class="text-center">
+                <button
+                    *ngIf="!['approve', 'reject', 'view', 'generate', 'cancel'].includes(action)"
+                    class="btn bg-primary px-5 mb-4"
+                    type="button"
+                    (click)="dismissModel()"
+                >
+                    Save & Close
+                </button>
+            </div>
+        </div>
+    </div>
+</form>

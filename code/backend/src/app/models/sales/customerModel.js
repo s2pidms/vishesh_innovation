@@ -282,6 +282,18 @@ const customerSchema = mongoose.Schema(
             enum: ["Yes", "No"],
             default: "Yes"
         },
+        TCSOnScrap: {
+            type: String,
+            required: false,
+            enum: ["Yes", "No"],
+            default: "No"
+        },
+        TCSOnVendor: {
+            type: String,
+            required: false,
+            enum: ["Yes", "No"],
+            default: "No"
+        },
         eximCode: {
             type: String,
             required: false

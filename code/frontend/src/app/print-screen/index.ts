@@ -38,3 +38,4 @@ export * from "./npd-review-print-screen/npd-review-print-screen.module";
 export * from "./npd-request-print-screen/npd-request-print-screen.module";
 export * from "./npd-review-feasibility-print-screen/npd-review-feasibility-print-screen.module";
 export * from "./sample-jc-creation-print/sample-jc-creation-print.module";
+export * from "./job-worker-challan-print-screen/job-worker-challan-print-screen.component";

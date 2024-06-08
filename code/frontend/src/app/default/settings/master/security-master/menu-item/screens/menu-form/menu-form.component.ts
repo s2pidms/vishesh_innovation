@@ -1,10 +1,10 @@
 import {Component, OnInit} from "@angular/core";
 import {UntypedFormControl, UntypedFormGroup, Validators} from "@angular/forms";
 import {MenuService} from "@services/settings";
-import {Router, ActivatedRoute} from "@angular/router";
-
-import {ToastService, UtilityService} from "@core/services";
+import {ActivatedRoute} from "@angular/router";
+import {Location} from "@angular/common";
 import {mergeMap, of} from "rxjs";
+import {ToastService, UtilityService} from "@core/services";
 import {ValidationService} from "@core/components";
 import {MENU_ITEM_FORM_ERRORS} from "@mocks/validations/settings";
 import {SpinnerService, StorageService} from "@core/services";
@@ -37,13 +37,13 @@ export class MenuFormComponent implements OnInit {
     }
     constructor(
         private menuService: MenuService,
-        private router: Router,
         private activatedRoute: ActivatedRoute,
         private spinner: SpinnerService,
         private toastService: ToastService,
         private validationService: ValidationService,
         private storageService: StorageService,
-        private utilityService: UtilityService
+        private utilityService: UtilityService,
+        private location: Location
     ) {}
 
     ngOnInit(): void {
@@ -78,7 +78,7 @@ export class MenuFormComponent implements OnInit {
             this.submitted = false;
             this.spinner.hide();
             this.toastService.success(success.message);
-            this.router.navigate(["/default/settings/master/security_master/menu-item/menu-list"]);
+            this.location.back();
         });
     }
 
@@ -88,7 +88,7 @@ export class MenuFormComponent implements OnInit {
             this.spinner.hide();
             this.submitted = false;
             this.toastService.success(success.message);
-            this.router.navigate(["/default/settings/master/security_master/menu-item/menu-list"]);
+            this.location.back();
         });
     }
     getInitialData() {

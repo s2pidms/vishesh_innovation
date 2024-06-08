@@ -40,7 +40,6 @@ const DIR = [
     "./src/assets/documentFile",
     "./src/assets/NPDRequest"
 ];
-
 module.exports = {
     PATHS,
     DIR

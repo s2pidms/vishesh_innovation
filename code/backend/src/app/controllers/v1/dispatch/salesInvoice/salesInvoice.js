@@ -916,6 +916,13 @@ async function previewSalesDomestic(createdObj, condition) {
         (a, c) => a + c,
         0
     );
+    if (createdObj.customer && createdObj.customer.TCSOnScrap == BOOLEAN_VALUES.YES) {
+        createdObj.TCSOnScrap = +((createdObj.salesInvoiceTotalAmountWithTax * 1) / 100).toFixed(2);
+        createdObj.salesInvoiceTotalAmountWithTax += createdObj.TCSOnScrap;
+    } else if (createdObj.customer && createdObj.customer.TCSOnVendor == BOOLEAN_VALUES.YES) {
+        createdObj.TCSOnVendor = +((createdObj.salesInvoiceTotalAmountWithTax * 0.1) / 100).toFixed(2);
+        createdObj.salesInvoiceTotalAmountWithTax += createdObj.TCSOnVendor;
+    }
     createdObj.roundedOff = 0;
     createdObj.roundedOff +=
         Math.round(createdObj.salesInvoiceTotalAmountWithTax) - +createdObj.salesInvoiceTotalAmountWithTax;
@@ -1097,7 +1104,6 @@ exports.getSalesInvoiceByIdForPDF = asyncHandler(async (req, res) => {
                     companyName: 1,
                     GSTIN: 1,
                     companyContactPersonEmail: 1,
-                    companyAddress: 1,
                     placesOfBusiness: 1,
                     swiftCode: 1,
                     companyBankMICRCode: 1,

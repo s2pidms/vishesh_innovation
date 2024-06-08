@@ -1,0 +1,112 @@
+<div class="container-fluid">
+    <div class="row">
+        <div class="mt-0 px-5">
+            <app-setting-header
+                [data]="{page,pageSize,collection,search ,excelDisplay : 'none'}"
+                (dataChange)="eventHeader($event)"
+            >
+            </app-setting-header>
+        </div>
+        <div style="min-height: 29rem" class="table-responsive px-5">
+            <table class="table table-bordered table-sticky">
+                <thead class="bg-primary">
+                    <tr class="text-white">
+                        <th sortable="itemCode" (sort)="onSort($event)">Child Item</th>
+                        <th sortable="itemCode" (sort)="onSort($event)">Item Code</th>
+                        <th sortable="itemName" (sort)="onSort($event)" class="text-start">Item Name</th>
+                        <th sortable="itemDescription" (sort)="onSort($event)" class="text-start">Item Description</th>
+                        <th sortable="UOM" (sort)="onSort($event)">UoM</th>
+                        <th sortable="qtyPerSKUUnit" (sort)="onSort($event)">Qty/SKU Unit</th>
+                        <th sortable="isSelect" (sort)="onSort($event)">Select</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr
+                        *ngFor="
+                            let u of materialInfoArr
+                                | searchFi1ter : search
+                                | slice : (page - 1) * pageSize : (page - 1) * pageSize + pageSize;
+                            let i = index
+                        "
+                    >
+                        <td>
+                            <span class="d-flex justify-content-center pointer">
+                                <div
+                                    *ngIf="!u?.primaryToSecondaryConversion"
+                                    (click)="openUOMDetailsModal(u)"
+                                    class="child-item-red"
+                                ></div>
+                                <div
+                                    *ngIf="u?.primaryToSecondaryConversion"
+                                    (click)="openUOMDetailsModal(u)"
+                                    class="child-item-grey"
+                                ></div>
+                            </span>
+                        </td>
+                        <td>{{ u?.itemCode }}</td>
+                        <td class="text-start" #itemName>
+                            <span class="pointer" [positionTarget]="itemName" [ngbTooltip]="u.itemName">
+                                {{ u?.itemName }}
+                            </span>
+                        </td>
+                        <td class="text-start" #itemDescription>
+                            <span class="pointer" [positionTarget]="itemDescription" [ngbTooltip]="u.itemDescription">
+                                {{ u?.itemDescription }}
+                            </span>
+                        </td>
+                        <td>
+                            <span>
+                                <div class="d-flex justify-content-between align-items-center px-2">
+                                    {{ u?.UoM | UOMUnitsMaster }}
+
+                                    <span class="pointer d-flex align-items-center">
+                                        <div (click)="setUnit(u)" *ngIf="u.secondaryUnit" class="unit-switch-rev"></div>
+                                        <div *ngIf="!u.secondaryUnit" class="unit-switch-gray"></div>
+                                    </span>
+                                </div>
+                            </span>
+                        </td>
+                        <td>
+                            <div class="d-flex justify-content-center">
+                                <span *ngIf="['view', 'Converted to SKU'].includes(action)">
+                                    {{ u?.qtyPerSKUUnit | number : "1.4-4" }}
+                                </span>
+                                <input
+                                    type="number"
+                                    class="form-control form-control-ink w-25"
+                                    *ngIf="!['view', 'Converted to SKU'].includes(action)"
+                                    [(ngModel)]="u.qtyPerSKUUnit"
+                                    [ngModelOptions]="{standalone: true}"
+                                />
+                            </div>
+                        </td>
+                        <td>
+                            <input
+                                (change)="setSKUPerUnit(u, $event)"
+                                type="checkbox"
+                                class="form-check-input"
+                                [disabled]="['view', 'Converted to SKU'].includes(action)"
+                                [(ngModel)]="u.isSelect"
+                                [ngModelOptions]="{standalone: true}"
+                            />
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-12 px-0">
+            <hr *ngIf="!['view', 'Converted to SKU'].includes(action)" class="line-border" />
+        </div>
+    </div>
+    <div class="row">
+        <div *ngIf="!['view', 'Converted to SKU'].includes(action)" class="col-12 text-center">
+            <button class="btn btn-primary px-5 me-3" (click)="reset()">Reset</button>
+            <button class="btn btn-primary px-4 me-1" (click)="ESCPreview()" [disabled]="!isESCPreview">Esc</button>
+
+            <button class="btn btn-primary px-4 me-3" (click)="preview()">Preview</button>
+            <button (click)="dismissModel()" class="btn btn-primary px-5" [disabled]="!isPreview">Save</button>
+        </div>
+    </div>
+</div>

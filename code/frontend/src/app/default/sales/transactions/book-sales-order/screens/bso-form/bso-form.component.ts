@@ -179,7 +179,10 @@ export class BSOFormComponent implements OnInit {
         formData.popupResponse = this.popupResponse;
         formData.SOTargetDate = this.utilityService.getTodayDate("YYYY-MM-DD");
         formData.SODetails = this.SODetailsArray;
-
+        formData.SODetails = this.SODetailsArray?.map((x: any) => {
+            x.discount = x.discount ?? 0;
+            return x;
+        });
         if (this.SOTypeObj.Planned != this.f["SOType"].value) {
             for (const element of formData.SODetails) {
                 if (!element.dispatchSchedule || element.dispatchSchedule.length == 0) {

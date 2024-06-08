@@ -19,11 +19,15 @@ const {
     getStartDateTime,
     dateToAnyFormat
 } = require("../../../../helpers/dateTime");
-const {getAllReportsAggregationFooter, outputDataReports} = require("../../../../helpers/utility");
-const {getAllPayrollReportsAttributes} = require("../../../../models/HR/helpers/payrollHelper");
+const {
+    getAllPayrollReportsAttributes,
+    getAllSalarySlipReportsAttributes
+} = require("../../../../models/HR/helpers/payrollHelper");
 const {getPTForSalaryPayroll} = require("../StatutoryContributionsSetup/StatutoryContributionsSetup");
 const {LAKH} = require("../../../../mocks/number.constant");
 const SalaryPayrollRepository = require("../../../../models/HR/repository/salaryPayrollRepository");
+const expressAsyncHandler = require("express-async-handler");
+const {filteredEmployeeList} = require("../../../../models/HR/repository/employeeRepository");
 
 exports.create = async (req, res) => {
     const session = await db.startSession();
@@ -117,6 +121,123 @@ exports.getById = async (req, res) => {
         return res.serverError(errors);
     }
 };
+// exports.getByIdForSlip = async (req, res) => {
+//     try {
+//         let existing = await SalaryPayrollRepository.filteredSalaryPayrollList([
+//             {
+//                 $match: {
+//                     _id: ObjectId(req.params.id)
+//                 }
+//             },
+//             {
+//                 $lookup: {
+//                     from: "Employee",
+//                     localField: "employeeId",
+//                     foreignField: "_id",
+//                     pipeline: [
+//                         {
+//                             $project: {
+//                                 empDesignation: 1,
+//                                 empJoiningLocation: 1,
+//                                 empPFNo: 1,
+//                                 empESICNo: 1,
+//                                 empAccountNumber: 1
+//                             }
+//                         }
+//                     ],
+//                     as: "employee"
+//                 }
+//             },
+//             {$unwind: "$employee"},
+//             {
+//                 $lookup: {
+//                     from: "EmployeeAttendance",
+//                     localField: "employeeId",
+//                     foreignField: "employeeId",
+//                     pipeline: [
+//                         {
+//                             $match: {
+//                                 status: OPTIONS.defaultStatus.APPROVED
+//                             }
+//                         },
+//                         {
+//                             $project: {
+//                                 presentDays: 1,
+//                                 LOPDiff: 1
+//                             }
+//                         }
+//                     ],
+//                     as: "employeeAttendance"
+//                 }
+//             },
+//             {$unwind: "$employeeAttendance"},
+//             {
+//                 $lookup: {
+//                     from: "SalaryMaster",
+//                     localField: "employeeId",
+//                     foreignField: "employeeId",
+//                     pipeline: [
+//                         {
+//                             $project: {
+//                                 salaryComponentDetails: 1
+//                             }
+//                         }
+//                     ],
+//                     as: "salaryMaster"
+//                 }
+//             },
+//             {$unwind: "$salaryMaster"},
+//             {
+//                 $lookup: {
+//                     from: "Company",
+//                     localField: "company",
+//                     foreignField: "_id",
+//                     pipeline: [
+//                         {
+//                             $project: {
+//                                 _id: 1,
+//                                 companyName: 1,
+//                                 logoUrl: {$concat: [`${CONSTANTS.domainUrl}company/`, "$logo"]}
+//                             }
+//                         }
+//                     ],
+//                     as: "company"
+//                 }
+//             },
+//             {$unwind: "$company"},
+//             {
+//                 $project: {
+//                     empDesignation: "$employee.empDesignation",
+//                     empJoiningLocation: "$employee.empJoiningLocation",
+//                     empPFNo: "$employee.empPFNo",
+//                     empESICNo: "$employee.empESICNo",
+//                     empAccountNumber: "$employee.empAccountNumber",
+//                     presentDays: "$employeeAttendance.presentDays",
+//                     LOPDiff: "$employeeAttendance.LOPDiff",
+//                     salaryComponentDetails: "$salaryMaster.salaryComponentDetails",
+//                     companyName: "$company.companyName",
+//                     logoUrl: "$company.logoUrl",
+//                     PF: 1,
+//                     ESIC: 1,
+//                     TDS: 1,
+//                     PT: 1,
+//                     advSalary: 1
+//                 }
+//             }
+//         ]);
+//         if (!existing.length) {
+//             let errors = MESSAGES.apiSuccessStrings.DATA_NOT_EXISTS("Payroll");
+//             return res.unprocessableEntity(errors);
+//         } else {
+//             existing = existing[0];
+//         }
+//         return res.success(existing);
+//     } catch (e) {
+//         console.error("getById Payroll", e);
+//         const errors = MESSAGES.apiErrorStrings.SERVER_ERROR;
+//         return res.serverError(errors);
+//     }
+// };
 
 exports.getAllMasterData = async (req, res) => {
     try {
@@ -421,3 +542,53 @@ async function getGenderWisePT(PTEmployees, gender = "Male", grossSalary = 0, st
         }
     }
 }
+
+// exports.getAllSalarySlipReports = expressAsyncHandler(async (req, res) => {
+//     try {
+//         const employeesOptions = await filteredEmployeeList([
+//             {$match: {company: ObjectId(req.user.company), empStatus: "A"}},
+//             {
+//                 $project: {
+//                     empFullName: 1
+//                 }
+//             }
+//         ]);
+//         const {employee = null, date = null} = req.query;
+//         let query = {
+//             company: ObjectId(req.user.company),
+//             ...(!!employee && {
+//                 employeeId: ObjectId(employee)
+//             }),
+//             payrollForMonthYear: new Date(date)
+//         };
+//         let project = getAllSalarySlipReportsAttributes();
+//         let pipeline = [
+//             {
+//                 $match: query
+//             },
+//             {
+//                 $lookup: {
+//                     from: "Employee",
+//                     localField: "employeeId",
+//                     foreignField: "_id",
+//                     pipeline: [{$project: {empDesignation: 1}}],
+//                     as: "employee"
+//                 }
+//             },
+//             {$unwind: "$employee"}
+//         ];
+//         let rows = await SalaryPayrollRepository.getAllPaginate({
+//             pipeline,
+//             project,
+//             queryParams: req.query
+//         });
+//         return res.success({
+//             employeesOptions,
+//             ...rows
+//         });
+//     } catch (e) {
+//         console.error("getAllSalarySlipReports", e);
+//         const errors = MESSAGES.apiErrorStrings.SERVER_ERROR;
+//         return res.serverError(errors);
+//     }
+// });

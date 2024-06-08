@@ -1,0 +1,269 @@
+<div class="container-fluid printScreen">
+    <div class="row">
+        <div class="col-12 text-center px-0">
+            <div *ngIf="buttonCondition == 'true'" class="">
+                <button
+                    appAccessControl
+                    [accessType]="rolePermissionActions.downloadAction"
+                    class="btn btn-primary mt-4"
+                    type="button"
+                    (click)="windowPrint()"
+                    *ngIf="pdfAction != 'pdf'"
+                >
+                    <img src="/assets/images/print.png" width="20px" height="14px" class="mb-2" />&nbsp;&nbsp; Print
+                </button>
+            </div>
+
+            <div class="page py-3">
+                <div
+                    [ngStyle]="
+                        previewDraft == 'previewJWC'
+                            ? {
+                                  background: 'url(./assets/new_icons/draft-stamp.svg)',
+                                  'background-size': '100% 100%',
+                                  'background-color': 'transparent'
+                              }
+                            : {}
+                    "
+                    class="table-responsive shadow"
+                >
+                    <table class="table">
+                        <tr>
+                            <td colspan="12">
+                                <h2 class="page-title">Job Work Challan</h2>
+                                <p class="text-center">
+                                    [Under Section 143 read with rule 55(b) of Central Goods & Services Tax rule, 2017]
+                                </p>
+                            </td>
+                        </tr>
+                        <tr class="head-row">
+                            <th colspan="6" class="bg-grey">
+                                <label class="heading sub-text">Details of Consigner (Principal)</label>
+                            </th>
+                            <th colspan="6" class="bg-grey">
+                                <label class="heading sub-text">Document Details</label>
+                            </th>
+                        </tr>
+                        <tr>
+                            <td colspan="6">
+                                <div class="font_le">
+                                    <p class="fw-bold">{{ tableData?.company?.companyName }}</p>
+                                    <p>
+                                        {{ tableData?.company?.companyBillingAddress?.addressLine1 }}
+                                    </p>
+                                    <p>{{ tableData?.company?.companyBillingAddress?.addressLine2 }}</p>
+                                    <p>{{ tableData?.company?.companyBillingAddress?.addressLine3 }}</p>
+                                    <p>
+                                        {{ tableData?.company?.companyBillingAddress?.addressLine4 }},
+                                        {{ tableData?.company?.companyBillingAddress?.city }}
+                                        -
+                                        {{ tableData?.company?.companyBillingAddress?.pinCode }}
+                                    </p>
+                                    <p>
+                                        {{ tableData?.company?.companyBillingAddress?.state }},
+                                        {{ tableData?.company?.companyBillingAddress?.country }}
+                                    </p>
+                                    <p class="sub-text">GSTIN: {{ tableData?.company?.GSTIN }}</p>
+                                    <!-- <p>{{ tableData.SPONumber }}</p>
+                                    <p>
+                                        {{ tableData?.SPODate | date : "dd-MM-YYYY" }}
+                                    </p>
+                                    <p>
+                                        {{ tableData?.orderReference }}
+                                    </p>
+                                    <p>{{ tableData?.purchaseCategory }}</p> -->
+                                </div>
+                            </td>
+                            <td colspan="6">
+                                <p>Job Work Challan No.: {{ tableData?.JWChallanNo }}</p>
+                                <p>Challan Date: {{ tableData?.JWChallanDate | date : "dd-MM-YYYY" }}</p>
+                                <p>Reference: -</p>
+                                <p>Place of Supply:{{ tableData?.placeOfSupply }}</p>
+                                <p>Currency:{{ tableData?.currency }}</p>
+                            </td>
+                        </tr>
+                        <tr class="head-row">
+                            <th colspan="6">
+                                <label class="sub-text">Details of Consignee (Job Worker)</label>
+                            </th>
+                            <th colspan="6">
+                                <label class="sub-text">Ship to address</label>
+                            </th>
+                        </tr>
+                        <tr>
+                            <td colspan="6">
+                                <p class="fw-bold">
+                                    {{ tableData?.supplier?.supplierName }}
+                                </p>
+                                <p>{{ tableData?.primaryAddress?.line1 }}</p>
+                                <p>{{ tableData?.primaryAddress?.line2 }}</p>
+                                <p>{{ tableData?.primaryAddress?.line3 }}</p>
+                                <p>
+                                    {{ tableData?.primaryAddress?.line4 }},
+                                    {{ tableData?.primaryAddress?.cityOrDistrict }} -
+                                    {{ tableData?.primaryAddress?.pinCode }}
+                                </p>
+                                <p>{{ tableData?.primaryAddress?.state }}, {{ tableData?.primaryAddress?.country }}</p>
+                                <p class="sub-text">GSTIN: {{ tableData?.GSTINNo }}</p>
+                            </td>
+                            <td colspan="6">
+                                <p class="fw-bold">{{ tableData?.shipToAddress?.companyName }}</p>
+                                <p>
+                                    {{ tableData?.shipToAddress?.line1 }}
+                                </p>
+                                <p>{{ tableData?.shipToAddress?.line2 }}</p>
+                                <p>{{ tableData?.shipToAddress?.line3 }}</p>
+                                <p>
+                                    {{ tableData?.shipToAddress?.line4 }},
+                                    {{ tableData?.shipToAddress?.cityOrDistrict }} -
+                                    {{ tableData?.shipToAddress?.pinCode }}
+                                </p>
+                                <p>{{ tableData?.shipToAddress?.state }}, {{ tableData?.shipToAddress?.country }}</p>
+
+                                <p class="sub-text">GSTIN: {{ tableData?.GSTINNo }}</p>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan="12">
+                                <p class="sub-text">
+                                    Nature of Process to be carried out:
+                                    {{ tableData?.jobWorkDetails?.descriptionOfService }} for Part No.
+                                    {{ tableData?.jobWorkDetails?.partNo }} -
+                                    {{ tableData?.jobWorkDetails?.partName }}
+                                </p>
+                            </td>
+                        </tr>
+                        <tr class="head-row text-center">
+                            <th colspan="1" class="text-center set-SN-width">SN</th>
+                            <th colspan="3">Item Description</th>
+                            <th colspan="1" class="text-center">UoM</th>
+                            <th colspan="1" class="text-center">Quantity</th>
+                            <th colspan="1" class="text-center">Rate</th>
+                            <th colspan="1" class="text-center">Taxable Amt.</th>
+                            <th colspan="1" class="text-center">C-GST</th>
+                            <th colspan="1" class="text-center">S-GST</th>
+                            <th colspan="1" class="text-center">I-GST</th>
+                            <th colspan="1" class="text-center">Total Amt.</th>
+                        </tr>
+                        <tr *ngFor="let p of tableData.JWChallanDetails; let i = index">
+                            <td colspan="1" class="text-center">
+                                {{ i + 1 }}
+                            </td>
+                            <td colspan="3">
+                                <p>{{ p?.itemName }}</p>
+                                <p>{{ p?.itemDescription }}</p>
+                                <p>HSN Code:{{ p?.HSNCode }}</p>
+                            </td>
+                            <td colspan="1" class="text-center">{{ p?.UOM }}</td>
+                            <td colspan="1" class="text-center">{{ p?.quantity }}</td>
+                            <td colspan="1" class="text-center">
+                                {{ p?.unitRate | number : ".2-2" }}
+                            </td>
+                            <td colspan="1" class="text-center">
+                                <div class="">
+                                    {{ p?.taxableAmt | number : ".2-2" }}
+                                </div>
+                            </td>
+                            <td colspan="1" class="text-center">
+                                <div
+                                    *ngIf="tableData?.GSTINNo?.slice(0, 2) == tableData?.company?.GSTIN?.slice(0, 2)"
+                                    class="value-in-same-line"
+                                >
+                                    <p>({{ p?.cgst + "%" }})</p>
+                                    <p>{{ p?.CGSTAmt ? p?.CGSTAmt : null }}</p>
+                                </div>
+                                <p *ngIf="tableData?.GSTINNo?.slice(0, 2) != tableData?.company?.GSTIN?.slice(0, 2)">
+                                    -
+                                </p>
+                            </td>
+                            <td colspan="1" class="text-center">
+                                <div
+                                    *ngIf="tableData?.GSTINNo?.slice(0, 2) == tableData?.company?.GSTIN?.slice(0, 2)"
+                                    class="value-in-same-line"
+                                >
+                                    <p>({{ p?.sgst + "%" }})</p>
+                                    <p>{{ p?.SGSTAmt ? p?.SGSTAmt : null }}</p>
+                                </div>
+                                <p *ngIf="tableData?.GSTINNo?.slice(0, 2) != tableData?.company?.GSTIN?.slice(0, 2)">
+                                    -
+                                </p>
+                            </td>
+                            <td colspan="1" class="text-center">
+                                <div
+                                    *ngIf="tableData?.GSTINNo?.slice(0, 2) != tableData?.company?.GSTIN?.slice(0, 2)"
+                                    class="value-in-same-line"
+                                >
+                                    <p>({{ p?.igst + "%" }})</p>
+                                    <p>{{ p?.IGSTAmt ? p?.IGSTAmt : null }}</p>
+                                </div>
+
+                                <p *ngIf="tableData?.GSTINNo?.slice(0, 2) == tableData?.company?.GSTIN?.slice(0, 2)">
+                                    -
+                                </p>
+                            </td>
+                            <td colspan="1" class="text-center">
+                                {{ p?.lineValueWithTax | number : ".2-2" }}
+                            </td>
+                        </tr>
+                        <tr *ngFor="let d of tableData.rowRepeat; let j = index">
+                            <td colspan="1" class="text-center">
+                                <p class="py-3">
+                                    {{ tableData.JWChallanDetails.length + j + 1 }}
+                                </p>
+                            </td>
+                            <td colspan="3" class="text-center"></td>
+                            <td colspan="1" class="text-center"></td>
+                            <td colspan="1" class="text-center"></td>
+                            <td colspan="1" class="text-center"></td>
+                            <td colspan="1" class="text-center"></td>
+                            <td colspan="1" class="text-center"></td>
+                            <td colspan="1" class="text-center"></td>
+                            <td colspan="1" class="text-center"></td>
+                            <td colspan="1" class="text-center"></td>
+                        </tr>
+                        <tr>
+                            <th colspan="7" class="text-end">Grand Total >></th>
+                            <th colspan="1" class="text-center">{{ tableData?.totalTaxableAmt }}</th>
+                            <th colspan="1" class="text-center">{{ tableData?.totalCGSTAmt }}</th>
+                            <th colspan="1" class="text-center">{{ tableData?.totalSGSTAmt }}</th>
+                            <th colspan="1" class="text-center">{{ tableData?.totalIGSTAmt }}</th>
+                            <th colspan="1" class="text-center">{{ tableData?.totalAmtWithTax }}</th>
+                        </tr>
+
+                        <tr>
+                            <td colspan="12" style="height: 5rem"></td>
+                        </tr>
+                        <tr>
+                            <th colspan="8"><label>Freight Details</label></th>
+                            <td colspan="4" rowspan="6" class="text-center">
+                                <div>
+                                    <img src="{{ tableData?.company?.companySignatureUrl }}" class="img-sign" />
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan="2">Mode of transport</td>
+                            <td colspan="6">{{ tableData?.freightTermsInfo?.modeOfTransport }}</td>
+                        </tr>
+                        <tr>
+                            <td colspan="2">Transporter Name</td>
+                            <td colspan="6">{{ tableData?.freightTermsInfo?.transporterName }}</td>
+                        </tr>
+                        <tr>
+                            <td colspan="2">Vehicle No.</td>
+                            <td colspan="6">{{ tableData?.freightTermsInfo?.vehicleNo }}</td>
+                        </tr>
+                        <tr>
+                            <td colspan="2">Freight Terms</td>
+                            <td colspan="6">{{ tableData?.freightTermsInfo?.freightTerms }}</td>
+                        </tr>
+                        <tr>
+                            <td colspan="2">Destination</td>
+                            <td colspan="6">{{ tableData?.freightTermsInfo?.destination }}</td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

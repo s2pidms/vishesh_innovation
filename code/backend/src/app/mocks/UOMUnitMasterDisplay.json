@@ -170,5 +170,9 @@
     {
         "label": "Days",
         "value": "Days"
+    },
+    {
+        "label": "Running Meters",
+        "value": "RM"
     }
 ]

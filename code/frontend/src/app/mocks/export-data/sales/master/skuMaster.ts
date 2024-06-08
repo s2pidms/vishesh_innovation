@@ -33,6 +33,7 @@ let widths = [
     "*",
     "*",
     "*",
+    "*",
     "*"
 ];
 let title = "SKU Master";
@@ -180,6 +181,11 @@ let headers: any = [
     {
         header: "Rate/U1",
         key: "standardSellingRate",
+        ...EXCEL_STYLE
+    },
+    {
+        header: "Internal Part No.",
+        key: "internalPartNo",
         ...EXCEL_STYLE
     },
     {

@@ -82,6 +82,7 @@ export class StageInspectionIpqaEntryComponent implements OnInit {
         // ["create", "edit"].includes(this.action) &&
         if (this.stageInspectionIPQA?.stageInspectionIPQAInfo.length > 1) {
             this.stageInspectionIPQA?.stageInspectionIPQAInfo.pop();
+            this.totalOKQty();
         }
     }
     addTableRow() {

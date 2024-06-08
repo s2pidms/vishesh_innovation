@@ -60,13 +60,13 @@
                     <select class="form-select" formControlName="userType">
                         <option [value]="'Internal'">Internal</option>
                         <option [value]="'External'">External</option>
-                        <option [value]="'IDMS Support'">IDMS Support</option>
+                        <option [value]="'IDMS Support'" *ngIf="user == superAdminId">IDMS Support</option>
                     </select>
                     <validation-messages class="error-left" [control]="f['userType']"> </validation-messages>
                 </div>
             </div>
             <div class="row">
-                <div *ngIf="user == superAdminId" class="col-md-6">
+                <div *ngIf="user == superAdminId || adminUser == adminId" class="col-md-6">
                     <label class="form-label">
                         Role
                         <span class="text-danger">*</span>

@@ -11,7 +11,6 @@ const {JOB_CARD_STAGE, JOB_ORDER_TYPE} = require("../../../../mocks/constantData
 const {getAndSetAutoIncrementNo} = require("../../settings/autoIncrement/autoIncrement");
 const {getAllProspectsFiltered} = require("../../businessLeads/prospect/prospect");
 const {getAllCustomersFiltered} = require("../../sales/customerMaster/customerMaster");
-const {getAllDSKUByCustomerForJobCard} = require("../../businessLeads/NPDMaster/NPDMasters");
 const {getAllSObyCustomerIdForJobCard, updateSOQtyOnJCC} = require("../../sales/salesOrder/salesOrder");
 const {getAllSFbyCustomerIdForJobCard, updateSFQtyOnJCC} = require("../../sales/sales-forecast/sales-forecast");
 const {getAllModuleMaster} = require("../../settings/module-master/module-master");

@@ -10,8 +10,8 @@ import {SpinnerService} from "@core/services";
 import {InkHsnModalComponent} from "src/app/default/production/master/ink-master/screens/ink-hsn-modal/ink-hsn-modal.component";
 import {NgbModal} from "@ng-bootstrap/ng-bootstrap";
 import {IMapCategoryHSNMasterData} from "@mocks/models/sales/master";
-import {ProductCategoryModalComponent} from "../../../sku/screens/product-category-modal/product-category-modal.component";
 import {Location} from "@angular/common";
+import {ProductCategoryModalComponent} from "../../../sku/screens/components";
 
 @Component({
     selector: "app-map-category-hsn-form",

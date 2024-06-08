@@ -1,10 +1,24 @@
 [
     {
-        "_id": "656f5c12ea223fba9ce67502",
+        "_id": "660655241cb22dbbe1b6a924",
         "menuItemId": "64a6c1e33339d4dc9d8141ac",
         "module": "Accounts",
         "type": "TRANSACTION",
         "order": 1,
+        "isDisplay": false,
+        "title": "Purchase Register Entry",
+        "displayName": "Purchase Register Entry",
+        "disabled": false,
+        "url": "/default/accounts/transactions/purchase_register_entry/list",
+        "roles": [],
+        "items": []
+    },
+    {
+        "_id": "656f5c12ea223fba9ce67502",
+        "menuItemId": "64a6c1e33339d4dc9d8141ac",
+        "module": "Accounts",
+        "type": "TRANSACTION",
+        "order": 2,
         "isDisplay": false,
         "title": "Travel Request",
         "displayName": "Travel Request",
@@ -18,7 +32,7 @@
         "menuItemId": "64a6c1e33339d4dc9d8141ac",
         "module": "Accounts",
         "type": "TRANSACTION",
-        "order": 2,
+        "order": 3,
         "isDisplay": false,
         "title": "Invoice Payment",
         "displayName": "Invoice Payment",
@@ -27,20 +41,7 @@
         "roles": [],
         "items": []
     },
-    {
-        "_id": "660655241cb22dbbe1b6a924",
-        "menuItemId": "64a6c1e33339d4dc9d8141ac",
-        "module": "Accounts",
-        "type": "TRANSACTION",
-        "order": 3,
-        "isDisplay": false,
-        "title": "Purchase Register Entry",
-        "displayName": "Purchase Register Entry",
-        "disabled": false,
-        "url": "/default/accounts/transactions/purchase_register_entry/list",
-        "roles": [],
-        "items": []
-    },
+
     {
         "_id": "663c918b2864691e1980e080",
         "menuItemId": "64a6c1e33339d4dc9d8141ac",

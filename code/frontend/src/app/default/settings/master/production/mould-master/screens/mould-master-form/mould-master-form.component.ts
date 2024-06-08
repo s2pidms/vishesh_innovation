@@ -1,16 +1,16 @@
 import {Component, OnInit} from "@angular/core";
 import {UntypedFormControl, UntypedFormGroup, Validators} from "@angular/forms";
-import {ActivatedRoute, Router} from "@angular/router";
+import {Location} from "@angular/common";
+import {ActivatedRoute} from "@angular/router";
 import {ToastService, UtilityService} from "@core/services";
 import {mergeMap, of} from "rxjs";
+import {NgbModal} from "@ng-bootstrap/ng-bootstrap";
 import {ValidationService} from "@core/components";
 import {SpinnerService} from "@core/services";
 import {IMouldMasterData} from "@mocks/models/settings/masters";
 import {MouldMasterService} from "@services/settings/mouldMaster.service";
 import {MOULD_MASTER_FORM_ERRORS} from "@mocks/validations/settings/moduleMaster.validation";
-import {Location} from "@angular/common";
 import {DetailsOfSupplierListComponent} from "@shared/modals";
-import {NgbModal} from "@ng-bootstrap/ng-bootstrap";
 
 @Component({
     selector: "app-mould-master-form",
@@ -44,7 +44,6 @@ export class MouldMasterFormComponent implements OnInit {
 
     constructor(
         private mouldMasterService: MouldMasterService,
-        private router: Router,
         private activatedRoute: ActivatedRoute,
         private spinner: SpinnerService,
         private toastService: ToastService,
@@ -56,10 +55,6 @@ export class MouldMasterFormComponent implements OnInit {
 
     ngOnInit(): void {
         this.getInitialData();
-    }
-
-    navigateTo(path: string, id: any, action: string) {
-        this.router.navigate([path], {queryParams: {id, action}});
     }
 
     submit() {

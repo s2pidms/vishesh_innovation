@@ -2,13 +2,12 @@ import {Component, OnInit, QueryList, ViewChildren} from "@angular/core";
 import {ActivatedRoute, Router} from "@angular/router";
 import {NgbdSortableHeader, SortEvent} from "@directives/sortable.directive";
 import {LIST_DEFAULT_PERMISSION_ACTIONS} from "@mocks/constant";
-import {ExportExcelService, SpinnerService, StorageService, ToastService} from "@core/services";
+import {ExportExcelService, SpinnerService, ToastService} from "@core/services";
 import {SalesUOMUnitsMasterService} from "@services/settings/SalesUOMUnitsMaster.service";
 
 @Component({
     selector: "app-sales-uom-unit-master-list",
-    templateUrl: "./sales-uom-unit-master-list.component.html",
-    styleUrls: ["./sales-uom-unit-master-list.component.scss"]
+    templateUrl: "./sales-uom-unit-master-list.component.html"
 })
 export class SalesUomUnitMasterListComponent implements OnInit {
     @ViewChildren(NgbdSortableHeader) headers: QueryList<NgbdSortableHeader> | any;
@@ -27,7 +26,6 @@ export class SalesUomUnitMasterListComponent implements OnInit {
         private salesUOMUnitsMasterService: SalesUOMUnitsMasterService,
         private activatedRoute: ActivatedRoute,
         private toastService: ToastService,
-        private storageService: StorageService,
         private router: Router,
         private spinner: SpinnerService
     ) {}

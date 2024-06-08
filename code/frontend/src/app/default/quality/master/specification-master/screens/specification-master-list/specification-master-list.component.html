@@ -8,7 +8,7 @@
         <button
             class="btn btn-primary btn-add"
             type="button"
-            (click)="navigateTo('/default/quality/master/specification_master/form', null, 'create')"
+            (click)="navigateTo('../form', null, 'create')"
         >
             Specification
         </button>
@@ -44,7 +44,7 @@
                                     [accessType]="rolePermissionActions.viewAction"
                                     href="javascript:void(0)"
                                     (click)="
-                                        navigateTo('/default/quality/master/specification_master/form', u?._id, 'view')
+                                        navigateTo('../form', u?._id, 'view')
                                     "
                                 >
                                     <i class="fa fa-eye fa-lg me-2 text-primary" aria-hidden="true"></i>
@@ -55,7 +55,7 @@
                                     [accessType]="rolePermissionActions.editAction"
                                     href="javascript:void(0)"
                                     (click)="
-                                        navigateTo('/default/quality/master/specification_master/form', u?._id, 'edit')
+                                        navigateTo('../form', u?._id, 'edit')
                                     "
                                 >
                                     <i class="fa fa-pencil-square-o fa-lg me-2 text-primary" aria-hidden="true"></i>

@@ -62,17 +62,22 @@ export class SPOPrintScreenComponent implements OnInit {
             });
             this.totalAmount = Math.round(this.totalAmount);
             this.supplierGST = this.tableData?.supplier?.supplierGST.slice(0, 2);
+
+            this.tableData.rowRepeat = [];
+            for (var i = 1; i <= 6 - +this.tableData?.SPODetails?.length; i++) {
+                this.tableData.rowRepeat.push(i);
+            }
             this.spinner.hide();
         });
     }
     windowprint() {
         window.print();
     }
-    getAddress(address: any) {
-        if (address) {
-            return address.find((x: any) => x.addressType == "Shipping");
-        }
-    }
+    // getAddress(address: any) {
+    //     if (address) {
+    //         return address.find((x: any) => x.addressType == "Shipping");
+    //     }
+    // }
 
     @HostListener("window:keydown", ["$event"])
     onKeyDown(event: KeyboardEvent): void {

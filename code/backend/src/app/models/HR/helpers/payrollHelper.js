@@ -25,3 +25,13 @@ exports.getAllPayrollReportsAttributes = () => {
         createdAt: 1
     };
 };
+exports.getAllSalarySlipReportsAttributes = () => {
+    return {
+        employeeCode: 1,
+        employeeName: 1,
+        empDesignation: "$employee.empDesignation",
+        gross,
+        netPayable,
+        deduction: {$sum: ["$PF", "$ESIC", "$TDS", "$PT", "$advSalary"]}
+    };
+};

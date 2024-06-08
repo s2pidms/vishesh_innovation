@@ -4,7 +4,7 @@ import {CommonModule} from "@angular/common";
 import {PayrollRoutingModule} from "./payroll-routing.module";
 import {PayrollComponent} from "./payroll.component";
 import {SharedModule} from "@shared/shared.module";
-import {PayrollEditModelComponent} from "./components/payroll-edit-model/payroll-edit-model.component";
+import {PayrollEditModelComponent} from "./components";
 
 @NgModule({
     declarations: [PayrollComponent, PayrollEditModelComponent],

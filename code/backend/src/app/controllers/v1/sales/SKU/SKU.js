@@ -32,7 +32,6 @@ const {COMPANY_TYPE, STOCK_PREP_UOM} = require("../../../../mocks/constantData")
 const {filteredSalesProductMasterList} = require("../../../../models/sales/repository/salesProductMasterRepository");
 const {getAllModuleMaster} = require("../../settings/module-master/module-master");
 const CompanyRepository = require("../../../../models/settings/repository/companyRepository");
-const {getHSNByCode} = require("../../purchase/HSN/HSN");
 const validationJson = require("../../../../mocks/excelUploadColumn/validation.json");
 const ObjectId = mongoose.Types.ObjectId;
 
@@ -1080,6 +1079,10 @@ exports.getMouldDataBySKUId = asyncHandler(async (req, res) => {
 
 exports.checkSKUValidation = async (SKUData, column, company) => {
     try {
+        const SKUOptions = await SKUMasterRepository.filteredSKUMasterList([
+            {$match: {company: ObjectId(company), isActive: "A"}},
+            {$project: {SKUName: 1, SKUDescription: 1}}
+        ]);
         const requiredFields = [
             "SKUStage",
             "productCategory",
@@ -1145,9 +1148,17 @@ exports.checkSKUValidation = async (SKUData, column, company) => {
                 })
             }
         ];
+        let uniqueSKU = [];
         for await (const x of SKUData) {
             x.isValid = true;
             x.message = null;
+            let label = `${x["SKUName"]} - ${x["SKUDescription"]}`;
+            if (uniqueSKU.includes(label)) {
+                x.isValid = false;
+                x.message = `${x["SKUName"]} duplicate Entry`;
+                break;
+            }
+            uniqueSKU.push(label);
             for (const ele of Object.values(column)) {
                 if (requiredFields.includes(ele) && falseArr.includes(x[ele])) {
                     x.isValid = false;
@@ -1161,17 +1172,12 @@ exports.checkSKUValidation = async (SKUData, column, company) => {
                         break;
                     }
                 }
-                if (
-                    await SKUMasterRepository.findOneDoc(
-                        {SKUName: x["SKUName"], SKUDescription: x["SKUDescription"]},
-                        {
-                            _id: 1
-                        }
-                    )
-                ) {
-                    x.isValid = false;
-                    x.message = `${x["SKUName"]} is already exists`;
-                    break;
+                for (const SKU of SKUOptions) {
+                    if (SKU.SKUName == x["SKUName"] && SKU.SKUDescription == x["SKUDescription"]) {
+                        x.isValid = false;
+                        x.message = `${x["SKUName"]} already exists`;
+                        break;
+                    }
                 }
             }
         }
@@ -1196,13 +1202,8 @@ exports.bulkInsertSKUByCSV = async (jsonData, {company, createdBy, updatedBy}) =
                 }
             }
         ]);
-        let missingHSNCode = [];
         let missingCustomerName = [];
         for (const ele of jsonData) {
-            const HSNObj = await getHSNByCode(ele.hsn);
-            if (!HSNObj) {
-                missingHSNCode.push(ele.hsn);
-            }
             for (const customer of customersOptions) {
                 if (ele.customerName.trim() == customer.label) {
                     ele.customer = customer.value.valueOf();
@@ -1213,6 +1214,7 @@ exports.bulkInsertSKUByCSV = async (jsonData, {company, createdBy, updatedBy}) =
                 missingCustomerName.push(ele.customerName ? ele.customerName : ele.itemName);
             }
         }
+        console.log("missingCustomerName", missingCustomerName);
         let SKUData = jsonData.map(x => {
             const {
                 customer,

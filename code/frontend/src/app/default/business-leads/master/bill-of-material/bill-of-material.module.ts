@@ -32,6 +32,13 @@ const routes: Routes = [
     {
         path: "bom_of_d_sku",
         loadChildren: () => import("./screens/bom-of-d-sku/bom-of-d-sku.module").then(m => m.BomOfDSkuModule)
+    },
+    {
+        path: "bom_of_job_work_item",
+        loadChildren: () =>
+            import(
+                "./../../../planning/master/bill-of-material/screens/bom-of-job-work-item/bom-of-job-work-item.module"
+            ).then(m => m.BomOfJobWorkItemModule)
     }
 ];
 

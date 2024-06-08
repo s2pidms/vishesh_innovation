@@ -12,6 +12,8 @@ const {
 const {SALES_SAC} = require("../../../../mocks/schemasConstant/salesConstant");
 const {getAndSetAutoIncrementNo} = require("../../settings/autoIncrement/autoIncrement");
 const {getAllSaleSACAggregate} = require("../../../../models/sales/repository/saleSACRepository");
+const SaleSACRepository = require("../../../../models/sales/repository/saleSACRepository");
+const validationJson = require("../../../../mocks/excelUploadColumn/validation.json");
 
 exports.getAll = asyncHandler(async (req, res) => {
     try {
@@ -172,3 +174,82 @@ exports.getAllSalesSACs = asyncHandler(async company => {
         console.error("getAllSalesSACs", e);
     }
 });
+
+exports.checkSalesSACMasterValidation = async (salesSACData, column, company) => {
+    try {
+        const salesSACOptions = await SaleSACRepository.filteredSaleSACList([
+            {$match: {company: ObjectId(company), isActive: "Y"}},
+            {
+                $project: {
+                    serviceDescription: 1
+                }
+            }
+        ]);
+        const requiredFields = [
+            "serviceDescription",
+            "gstRate",
+            "igstRate",
+            "cgstRate",
+            "sgstRate",
+            "ugstRate",
+            "revisionDate"
+        ];
+        const falseArr = OPTIONS.falsyArray;
+        let dropdownCheck = [];
+        let uniqueSalesSAC = [];
+        for await (const x of salesSACData) {
+            x.isValid = true;
+            x.message = null;
+            let label = `${x["serviceDescription"]}`;
+            if (uniqueSalesSAC.includes(label)) {
+                x.isValid = false;
+                x.message = `${x["serviceDescription"]} duplicate Entry`;
+                break;
+            }
+            uniqueSalesSAC.push(label);
+            for (const ele of Object.values(column)) {
+                if (requiredFields.includes(ele) && falseArr.includes(x[ele])) {
+                    x.isValid = false;
+                    x.message = validationJson[ele] ?? `${ele} is Required`;
+                    break;
+                }
+                for (const dd of dropdownCheck) {
+                    if (ele == dd.key && !dd.options.map(values => values.value).includes(x[ele])) {
+                        x.isValid = false;
+                        x.message = `${ele} is Invalid Value & Value Must be ${dd.options.map(values => values.value)}`;
+                        break;
+                    }
+                }
+                for (const option of salesSACOptions) {
+                    if (option.serviceDescription == x["serviceDescription"]) {
+                        x.isValid = false;
+                        x.message = `${x["serviceDescription"]} already exists`;
+                        break;
+                    }
+                }
+            }
+        }
+        const inValidRecords = salesSACData.filter(x => !x.isValid);
+        const validRecords = salesSACData.filter(x => x.isValid);
+        return {inValidRecords, validRecords};
+    } catch (error) {
+        console.error(error);
+    }
+};
+
+exports.bulkInsertSalesSACMasterByCSV = async (jsonData, {company, createdBy, updatedBy}) => {
+    try {
+        let salesSACData = jsonData.map(rest => {
+            rest.company = company;
+            rest.createdBy = createdBy;
+            rest.updatedBy = updatedBy;
+            return rest;
+        });
+        for await (const item of salesSACData) {
+            await SaleSACRepository.createSaleSAC(item);
+        }
+        return {message: "Uploaded successfully!"};
+    } catch (error) {
+        console.error(error);
+    }
+};

@@ -1,31 +1,29 @@
-const {outputData} = require("../../../helpers/utility");
 const Model = require("../roleModel");
 
 module.exports = {
-    createRole: async role => {
-        return await Model.create(role);
+    createDoc: async obj => {
+        return await Model.create(obj);
     },
-    bulkCreateRoles: async roles => {
-        return await Model.insertMany(roles);
+    findOneDoc: async (match, project = {}) => {
+        return await Model.findOne(match, project);
     },
-    getAllRoleList: async pipeline => {
-        let rows = await Model.aggregate(pipeline);
-        return {...outputData(rows)};
+    findAndUpdateDoc: async (match, update) => {
+        return await Model.updateOne(match, update);
     },
-    getRoleById: async (roleId, options = {}) => {
-        return await Model.findById(roleId, options);
+    getDocById: async (_id, project = {}) => {
+        return await Model.findById(_id, project);
     },
-    updateRole: async (existing, updateBody) => {
+    getAllPaginate: async ({pipeline, project, queryParams}) => {
+        return Model.paginate({pipeline, project, queryParams});
+    },
+    updateDoc: async (existing, updateBody) => {
         Object.assign(existing, updateBody);
         return existing.save();
     },
-    deleteRole: async deleteItem => {
-        return await deleteItem.remove();
+    deleteDoc: async match => {
+        return await Model.deleteOne(match);
     },
-    findRole: async (match, project = {}) => {
-        return await Model.find(match, project);
-    },
-    findOneRole: async (match, project = {}) => {
-        return await Model.findOne(match, project);
+    filteredRoleList: async pipeline => {
+        return await Model.aggregate(pipeline);
     }
 };

@@ -22,7 +22,12 @@ const {
     checkSKUInkValidation,
     bulkInsertSKUInkByCSV
 } = require("../../sales/SKU/SKUAttributes");
-const {bulkInsertInventoryByCSV, checkInventoryValidation} = require("../../stores/Inventory/Inventory");
+const {
+    bulkInsertInventoryByCSV,
+    checkInventoryValidation,
+    checkPPICInventoryValidation,
+    bulkInsertPPICInventoryByCSV
+} = require("../../stores/Inventory/Inventory");
 const {checkSKUValidation, bulkInsertSKUByCSV} = require("../../sales/SKU/SKU");
 const {
     checkFGINValidation,
@@ -30,6 +35,27 @@ const {
 } = require("../../stores/finishedGoodsInwardEntry/finishedGoodsInwardEntry");
 const {checkEmployeeValidation, bulkInsertEmployeeByCSV} = require("../../HR/employee/Employee");
 const {checkAssetValidation, bulkInsertAssetByCSV} = require("../../finance/assetMaster/assetMaster");
+const {
+    checkSpecificationMasterValidation,
+    bulkInsertSpecificationMasterByCSV
+} = require("../../quality/specificationMaster/specificationMaster");
+const {checkPurchaseHSNMasterValidation, bulkInsertPurchaseHSNMasterByCSV} = require("../../purchase/HSN/HSN");
+const {bulkInsertPurchaseSACMasterByCSV, checkPurchaseSACMasterValidation} = require("../../purchase/SAC/SAC");
+const {checkSalesHSNMasterValidation, bulkInsertSalesHSNMasterByCSV} = require("../../sales/salesHSN/salesHSN");
+const {checkSalesSACMasterValidation, bulkInsertSalesSACMasterByCSV} = require("../../sales/salesSAC/salesSAC");
+const {
+    bulkInsertTransporterMasterByCSV,
+    checkTransporterMasterValidation
+} = require("../../sales/transporter/transporter");
+const {bulkInsertJobWorkerByCSV, checkJobWorkerValidation} = require("../../purchase/jobWorkerMaster/jobWorkerMaster");
+const {
+    bulkInsertPurchaseRegisterEntryByCSV,
+    checkPurchaseRegisterEntryValidation
+} = require("../../accounts/purchaseRegisterEntry/purchaseRegisterEntry");
+const {
+    checkJobWorkItemsValidation,
+    bulkInsertJobWorkItemsByCSV
+} = require("../../purchase/jobWorkItemMaster/jobWorkItemMaster");
 const ObjectId = mongoose.Types.ObjectId;
 exports.getAll = asyncHandler(async (req, res) => {
     try {
@@ -609,6 +635,56 @@ exports.uploadAndCheckCSVFile = async (req, res) => {
         if (req.body.collectionName == "SKUInk") {
             rows = await checkSKUInkValidation(jsonData, excelJson[req.body.collectionName], req.user.company);
         }
+        if (req.body.collectionName == "SpecificationMaster") {
+            rows = await checkSpecificationMasterValidation(
+                jsonData,
+                excelJson[req.body.collectionName],
+                req.user.company
+            );
+        }
+        if (req.body.collectionName == "HSN") {
+            rows = await checkPurchaseHSNMasterValidation(
+                jsonData,
+                excelJson[req.body.collectionName],
+                req.user.company
+            );
+        }
+        if (req.body.collectionName == "SAC") {
+            rows = await checkPurchaseSACMasterValidation(
+                jsonData,
+                excelJson[req.body.collectionName],
+                req.user.company
+            );
+        }
+        if (req.body.collectionName == "SaleHSN") {
+            rows = await checkSalesHSNMasterValidation(jsonData, excelJson[req.body.collectionName], req.user.company);
+        }
+        if (req.body.collectionName == "SaleSAC") {
+            rows = await checkSalesSACMasterValidation(jsonData, excelJson[req.body.collectionName], req.user.company);
+        }
+        if (req.body.collectionName == "Transporter") {
+            rows = await checkTransporterMasterValidation(
+                jsonData,
+                excelJson[req.body.collectionName],
+                req.user.company
+            );
+        }
+        if (req.body.collectionName == "JobWorkerMaster") {
+            rows = await checkJobWorkerValidation(jsonData, excelJson[req.body.collectionName], req.user.company);
+        }
+        if (req.body.collectionName == "PurchaseRegisterEntry") {
+            rows = await checkPurchaseRegisterEntryValidation(
+                jsonData,
+                excelJson[req.body.collectionName],
+                req.user.company
+            );
+        }
+        if (req.body.collectionName == "JobWorkItemMaster") {
+            rows = await checkJobWorkItemsValidation(jsonData, excelJson[req.body.collectionName], req.user.company);
+        }
+        if (req.body.collectionName == "PPICInventoryCorrection") {
+            rows = await checkPPICInventoryValidation(jsonData, excelJson[req.body.collectionName], req.user.company);
+        }
         return res.success(rows);
     } catch (e) {
         const errors = MESSAGES.apiErrorStrings.SERVER_ERROR;
@@ -688,6 +764,76 @@ exports.bulkInsertByCSVFile = async (req, res) => {
         }
         if (req.body.collectionName == "SKUInk") {
             rows = await bulkInsertSKUInkByCSV(req.body.validRecords, {
+                company: req.user.company,
+                createdBy: req.user.sub,
+                updatedBy: req.user.sub
+            });
+        }
+        if (req.body.collectionName == "SpecificationMaster") {
+            rows = await bulkInsertSpecificationMasterByCSV(req.body.validRecords, {
+                company: req.user.company,
+                createdBy: req.user.sub,
+                updatedBy: req.user.sub
+            });
+        }
+        if (req.body.collectionName == "HSN") {
+            rows = await bulkInsertPurchaseHSNMasterByCSV(req.body.validRecords, {
+                company: req.user.company,
+                createdBy: req.user.sub,
+                updatedBy: req.user.sub
+            });
+        }
+        if (req.body.collectionName == "SAC") {
+            rows = await bulkInsertPurchaseSACMasterByCSV(req.body.validRecords, {
+                company: req.user.company,
+                createdBy: req.user.sub,
+                updatedBy: req.user.sub
+            });
+        }
+        if (req.body.collectionName == "SaleHSN") {
+            rows = await bulkInsertSalesHSNMasterByCSV(req.body.validRecords, {
+                company: req.user.company,
+                createdBy: req.user.sub,
+                updatedBy: req.user.sub
+            });
+        }
+        if (req.body.collectionName == "SaleSAC") {
+            rows = await bulkInsertSalesSACMasterByCSV(req.body.validRecords, {
+                company: req.user.company,
+                createdBy: req.user.sub,
+                updatedBy: req.user.sub
+            });
+        }
+        if (req.body.collectionName == "Transporter") {
+            rows = await bulkInsertTransporterMasterByCSV(req.body.validRecords, {
+                company: req.user.company,
+                createdBy: req.user.sub,
+                updatedBy: req.user.sub
+            });
+        }
+        if (req.body.collectionName == "JobWorkerMaster") {
+            rows = await bulkInsertJobWorkerByCSV(req.body.validRecords, {
+                company: req.user.company,
+                createdBy: req.user.sub,
+                updatedBy: req.user.sub
+            });
+        }
+        if (req.body.collectionName == "PurchaseRegisterEntry") {
+            rows = await bulkInsertPurchaseRegisterEntryByCSV(req.body.validRecords, {
+                company: req.user.company,
+                createdBy: req.user.sub,
+                updatedBy: req.user.sub
+            });
+        }
+        if (req.body.collectionName == "JobWorkItemMaster") {
+            rows = await bulkInsertJobWorkItemsByCSV(req.body.validRecords, {
+                company: req.user.company,
+                createdBy: req.user.sub,
+                updatedBy: req.user.sub
+            });
+        }
+        if (req.body.collectionName == "PPICInventoryCorrection") {
+            rows = await bulkInsertPPICInventoryByCSV(req.body.validRecords, {
                 company: req.user.company,
                 createdBy: req.user.sub,
                 updatedBy: req.user.sub

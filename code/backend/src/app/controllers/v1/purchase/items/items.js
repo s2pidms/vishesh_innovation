@@ -766,6 +766,20 @@ exports.getAllItemsForFormulationInk = async (company, itemCategoriesList) => {
 
 exports.checkItemsValidation = async (itemsData, column, company) => {
     try {
+        const itemsOptions = await ItemRepository.filteredItemList([
+            {
+                $match: {
+                    isActive: "A",
+                    company: ObjectId(company)
+                }
+            },
+            {
+                $project: {
+                    itemName: 1,
+                    itemDescription: 1
+                }
+            }
+        ]);
         const requiredFields = [
             "itemType",
             "itemCode",
@@ -836,17 +850,12 @@ exports.checkItemsValidation = async (itemsData, column, company) => {
                         break;
                     }
                 }
-                if (
-                    await ItemRepository.findOneDoc(
-                        {itemName: x["itemName"], itemDescription: x["itemDescription"]},
-                        {
-                            _id: 1
-                        }
-                    )
-                ) {
-                    x.isValid = false;
-                    x.message = `${ele} is already exists`;
-                    break;
+                for (const ele of itemsOptions) {
+                    if (ele.itemName == x["itemName"] && ele.itemDescription == x["itemDescription"]) {
+                        x.isValid = false;
+                        x.message = `${x["itemName"]} already exists`;
+                        break;
+                    }
                 }
             }
         }

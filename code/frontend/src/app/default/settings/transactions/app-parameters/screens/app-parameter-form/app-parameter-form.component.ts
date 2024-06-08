@@ -1,10 +1,11 @@
 import {Component, OnInit} from "@angular/core";
-import {UntypedFormBuilder, UntypedFormControl, UntypedFormGroup, Validators} from "@angular/forms";
+import {UntypedFormControl, UntypedFormGroup, Validators} from "@angular/forms";
+import {ActivatedRoute} from "@angular/router";
+import {Location} from "@angular/common";
+import {mergeMap, of} from "rxjs";
 import {AppParameterService} from "@services/settings";
-import {Router, ActivatedRoute} from "@angular/router";
 import {SpinnerService, UtilityService} from "@core/services";
 import {ToastService} from "@core/services";
-import {map, mergeMap, of} from "rxjs";
 import {ValidationService} from "@core/components";
 import {APP_PARAMETER_FORM_ERRORS} from "@mocks/validations/settings";
 
@@ -31,14 +32,12 @@ export class AppParameterFormComponent implements OnInit {
     }
     constructor(
         private appParameterService: AppParameterService,
-
-        private router: Router,
         private activatedRoute: ActivatedRoute,
         private spinner: SpinnerService,
-        private formBuilder: UntypedFormBuilder,
         private toastService: ToastService,
         private validationService: ValidationService,
-        private utilityService: UtilityService
+        private utilityService: UtilityService,
+        private location: Location
     ) {}
 
     ngOnInit(): void {
@@ -72,7 +71,7 @@ export class AppParameterFormComponent implements OnInit {
             this.submitted = false;
             this.spinner.hide();
             this.toastService.success(success.message);
-            this.router.navigate(["/default/settings/transactions/app_parameters/AP-list"]);
+            this.location.back();
         });
     }
 
@@ -82,7 +81,7 @@ export class AppParameterFormComponent implements OnInit {
             this.spinner.hide();
             this.submitted = false;
             this.toastService.success(success.message);
-            this.router.navigate(["/default/settings/transactions/app_parameters/AP-list"]);
+            this.location.back();
         });
     }
 

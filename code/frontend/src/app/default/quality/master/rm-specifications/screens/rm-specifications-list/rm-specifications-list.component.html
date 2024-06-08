@@ -8,8 +8,35 @@
             RM Specification
         </button>
     </div> -->
-    <hr class="line-border mt-1" />
-    <div class="table-responsive">
+    <div class="row px-4 my-3">
+        <div class="col-6"></div>
+        <div class="col-4 pe-0">
+            <div class="row">
+                <div class="col-4 mt-1 pe-1">
+                    <label class="form-label text-nowrap">Supplier Name<span class="text-danger"></span></label>
+                </div>
+                <div class="col-1 d-flex align-items-center ps-2 pe-0">
+                    <i class="fa fa-caret-right fa-lg fs-4 text-secondary"></i>
+                </div>
+                <div class="col-7 px-0">
+                    <ng-select
+                        [items]="supplierOptions"
+                        bindLabel="supplierName"
+                        bindValue="_id"
+                        [clearable]="false"
+                        [(ngModel)]="supplier"
+                        (change)="getAll()"
+                    >
+                    </ng-select>
+                </div>
+            </div>
+        </div>
+        <div class="col-2 text-end pe-5">
+            <button class="btn btn-primary px-4" type="button" (click)="reset()">Reset Filter</button>
+        </div>
+    </div>
+    <hr class="line-border" />
+    <div style="min-height: 33.3rem" class="table-responsive">
         <app-setting-header [data]="{page,pageSize,collection,search,type: 'list'}" (dataChange)="eventHeader($event)">
         </app-setting-header>
         <table class="table table-bordered">

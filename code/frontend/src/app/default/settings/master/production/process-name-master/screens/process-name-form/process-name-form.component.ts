@@ -1,15 +1,16 @@
 import {Component, OnInit} from "@angular/core";
 import {UntypedFormControl, UntypedFormGroup, Validators} from "@angular/forms";
-import {ActivatedRoute, Router} from "@angular/router";
-import {ToastService, UtilityService} from "@core/services";
+import {ActivatedRoute} from "@angular/router";
+import {Location} from "@angular/common";
+import {NgbModal} from "@ng-bootstrap/ng-bootstrap";
 import {mergeMap, of} from "rxjs";
+import {ToastService, UtilityService} from "@core/services";
 import {ValidationService} from "@core/components";
 import {PROCESS_NAME_MASTER_FORM_ERRORS} from "@mocks/validations/settings";
 import {ProcessNameMasterService} from "@services/settings";
 import {SpinnerService} from "@core/services";
 import {IProcessNameMasterData} from "@mocks/models/settings/masters";
 import {DefineSubProcessesModalComponent} from "../define-sub-processes-modal/define-sub-processes-modal.component";
-import {NgbModal} from "@ng-bootstrap/ng-bootstrap";
 
 @Component({
     selector: "app-process-name-form",
@@ -34,21 +35,17 @@ export class ProcessNameFormComponent implements OnInit {
 
     constructor(
         private processNameMasterService: ProcessNameMasterService,
-        private router: Router,
         private activatedRoute: ActivatedRoute,
         private spinner: SpinnerService,
         private toastService: ToastService,
         private validationService: ValidationService,
         private utilityService: UtilityService,
-        private modalService: NgbModal
+        private modalService: NgbModal,
+        private location: Location
     ) {}
 
     ngOnInit(): void {
         this.getInitialData();
-    }
-
-    navigateTo(path: string, id: any, action: string) {
-        this.router.navigate([path], {queryParams: {id, action}});
     }
 
     submit() {
@@ -76,7 +73,7 @@ export class ProcessNameFormComponent implements OnInit {
             this.spinner.hide();
             this.submitted = false;
             this.toastService.success(success.message);
-            this.router.navigate(["/default/settings/master/production/process_name_master/list"]);
+            this.location.back();
         });
     }
 
@@ -86,7 +83,7 @@ export class ProcessNameFormComponent implements OnInit {
             this.submitted = false;
             this.spinner.hide();
             this.toastService.success(success.message);
-            this.router.navigate(["/default/settings/master/production/process_name_master/list"]);
+            this.location.back();
         });
     }
     reset() {

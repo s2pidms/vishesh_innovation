@@ -2,12 +2,7 @@
     <div class="modal-header">
         <div class="heading">Joining Details</div>
         <div>
-            <button
-                type="button"
-                class="btn btn-cross btn-sm"
-                aria-label="Close"
-                (click)="this.activeModal.close(joiningDetailsInfo)"
-            >
+            <button type="button" class="btn btn-cross btn-sm" aria-label="Close" (click)="this.activeModal.close()">
                 <i class="fa fa-times-circle" aria-hidden="true"></i>
             </button>
         </div>
@@ -113,11 +108,32 @@
                                 </select>
                             </div>
                         </div>
+                        <div class="row mb-4 px-0 mt-5">
+                            <hr class="line-border mt-5" />
+                            <div class="col-md-6">
+                                <app-file-upload
+                                    [fileName]="f['uploadOfferLetter'].value"
+                                    [url]="f['uploadOfferLetterUrl'].value"
+                                    [label]="'Upload Offer Letter'"
+                                    [(file)]="uploadOfferLetterFile"
+                                    (change)="setUploadOfferLetterData()"
+                                ></app-file-upload>
+                            </div>
+                            <div class="col-md-6">
+                                <app-file-upload
+                                    [fileName]="f['uploadAppointmentLetter'].value"
+                                    [url]="f['uploadAppointmentLetterUrl'].value"
+                                    [label]="'Upload Appointment Letter'"
+                                    [(file)]="uploadAppointmentLetterFile"
+                                    (change)="setUploadAppointmentLetter()"
+                                ></app-file-upload>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </form>
 
-            <hr *ngIf="!['view'].includes(action)" class="line-border mt-5 px-5" />
+            <hr *ngIf="!['view'].includes(action)" class="line-border mt-0 px-5" />
 
             <div class="text-center">
                 <div *ngIf="!['view'].includes(action)" class="text-center mb-3">

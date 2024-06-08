@@ -226,8 +226,9 @@
                                             (click)="openIPQAModal(item)"
                                         >
                                             {{
-                                                item.processOriginalName === "Printing on CPI" ||
-                                                item.processOriginalName === "Through Punching"
+                                                ["Printing on CPI", "Through Punching"].includes(
+                                                    item.processOriginalName
+                                                )
                                                     ? "IPQC Log"
                                                     : "IPQA Log"
                                             }}

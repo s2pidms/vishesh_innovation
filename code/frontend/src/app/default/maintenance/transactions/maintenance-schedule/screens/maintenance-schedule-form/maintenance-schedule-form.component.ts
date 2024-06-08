@@ -1,6 +1,7 @@
 import {Component, OnInit} from "@angular/core";
 import {UntypedFormControl, UntypedFormGroup} from "@angular/forms";
-import {ActivatedRoute, Router} from "@angular/router";
+import {Location} from "@angular/common";
+import {ActivatedRoute} from "@angular/router";
 import {mergeMap, of} from "rxjs";
 import {maintenanceScheduleCreationService} from "@services/maintenance";
 import {ToastService, SpinnerService, UtilityService} from "@core/services";
@@ -22,12 +23,12 @@ export class MaintenanceScheduleFormComponent implements OnInit {
     };
 
     constructor(
-        private router: Router,
         private activatedRoute: ActivatedRoute,
         private spinner: SpinnerService,
         private toastService: ToastService,
         private maintenanceScheduleCreationService: maintenanceScheduleCreationService,
-        private utilityService: UtilityService
+        private utilityService: UtilityService,
+        private location: Location
     ) {}
 
     form = new UntypedFormGroup({
@@ -47,10 +48,6 @@ export class MaintenanceScheduleFormComponent implements OnInit {
 
     ngOnInit(): void {
         this.getInitialData();
-    }
-
-    navigateTo(path: string, id: any, action: string) {
-        this.router.navigate([path], {queryParams: {id, action}});
     }
 
     reset() {
@@ -76,7 +73,7 @@ export class MaintenanceScheduleFormComponent implements OnInit {
             this.submitted = false;
             this.spinner.hide();
             this.toastService.success(success.message);
-            this.router.navigate(["/default/maintenance/transactions/maintenance-schedule/list"]);
+            this.location.back();
         });
     }
 
@@ -86,7 +83,7 @@ export class MaintenanceScheduleFormComponent implements OnInit {
             this.spinner.hide();
             this.submitted = false;
             this.toastService.success(success.message);
-            this.router.navigate(["/default/maintenance/transactions/maintenance-schedule/list"]);
+            this.location.back();
         });
     }
 

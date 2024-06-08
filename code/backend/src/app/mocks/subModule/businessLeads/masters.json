@@ -14,16 +14,16 @@
         "roles": []
     },
     {
-        "_id": "655c3c1b3613e949b4d61c9b",
+        "_id": "6603f0ae06bd089439d78e46",
         "menuItemId": "64a6c1e33339d4dc9d8141a2",
         "module": "Business Leads",
         "type": "MASTER",
         "order": 2,
         "isDisplay": false,
-        "title": "NPD Master",
-        "displayName": "NPD Master",
+        "title": "Process Master",
+        "displayName": "Process Master",
         "disabled": false,
-        "url": "/default/business-leads/master/npd/list",
+        "url": "/default/business-leads/master/process_master/list",
         "items": [],
         "roles": []
     },
@@ -84,130 +84,11 @@
         "roles": []
     },
     {
-        "_id": "655c3c1c3613e949b4d61cdc",
-        "menuItemId": "64a6c1e33339d4dc9d8141a2",
-        "module": "Business Leads",
-        "type": "MASTER",
-        "order": 7,
-        "isDisplay": false,
-        "title": "Bill of Material",
-        "displayName": "Bill of Material",
-        "disabled": false,
-        "url": "/default/business-leads/master/bill-of-material/list",
-        "items": [
-            {
-                "menuItemId": "64a6c1e33339d4dc9d8141a4",
-                "module": "Business Leads",
-                "type": "MASTER",
-                "order": 1,
-                "isDisplay": false,
-                "title": "BoM of SKU",
-                "displayName": "BoM of SKU",
-                "disabled": false,
-                "url": "/default/business-leads/master/bill-of-material/bom_of_sku/list",
-                "_id": "656ae19b6af3bcb4ec7f3e1c"
-            },
-            {
-                "menuItemId": "64a6c1e33339d4dc9d8141a4",
-                "module": "Business Leads",
-                "type": "MASTER",
-                "order": 2,
-                "isDisplay": false,
-                "title": "BoM of Child Part",
-                "displayName": "BoM of Child Part",
-                "disabled": false,
-                "url": "/default/business-leads/master/bill-of-material/bom_of_child_item/list",
-                "_id": "656ae19b6af3bcb4ec7f3e1d"
-            },
-            {
-                "menuItemId": "64a6c1e33339d4dc9d8141a4",
-                "module": "Business Leads",
-                "type": "MASTER",
-                "order": 3,
-                "isDisplay": false,
-                "title": "BoM of Gr. Child Part",
-                "displayName": "BoM of Gr. Child Part",
-                "disabled": false,
-                "url": "/default/business-leads/master/bill-of-material/bom_of_gr_child_item/list",
-                "_id": "656ae19b6af3bcb4ec7f3e1e"
-            },
-            {
-                "menuItemId": "64a6c1e33339d4dc9d8141a4",
-                "module": "Business Leads",
-                "type": "MASTER",
-                "order": 4,
-                "isDisplay": false,
-                "title": "BoM of D-SKU",
-                "displayName": "BoM of D-SKU",
-                "disabled": false,
-                "url": "/default/business-leads/master/bill-of-material/bom_of_d_sku/list",
-                "_id": "656ae19b6af3bcb4ec7f3e1f"
-            }
-        ],
-        "roles": []
-    },
-    {
-        "_id": "655c3c1d3613e949b4d61cee",
-        "menuItemId": "64a6c1e33339d4dc9d8141a2",
-        "module": "Business Leads",
-        "type": "MASTER",
-        "order": 8,
-        "isDisplay": false,
-        "title": "Cost Estimate Calculator",
-        "displayName": "Cost Estimate Calculator",
-        "disabled": false,
-        "url": "/default/business-leads/master/cost_estimate_calculator/cal",
-        "items": [],
-        "roles": []
-    },
-    {
-        "_id": "6603f0ae06bd089439d78e46",
-        "menuItemId": "64a6c1e33339d4dc9d8141a2",
-        "module": "Business Leads",
-        "type": "MASTER",
-        "order": 9,
-        "isDisplay": false,
-        "title": "Process Master",
-        "displayName": "Process Master",
-        "disabled": false,
-        "url": "/default/business-leads/master/process_master/list",
-        "items": [],
-        "roles": []
-    },
-    {
-        "_id": "6540f6a1d1cba8c5e3cfae74",
-        "menuItemId": "64a6c1e33339d4dc9d8141a2",
-        "module": "Business Leads",
-        "type": "MASTER",
-        "order": 10,
-        "isDisplay": false,
-        "title": "SKU Process Flow",
-        "displayName": "SKU Process Flow",
-        "disabled": false,
-        "url": "/default/business-leads/master/sku_process_flow/list",
-        "items": [],
-        "roles": []
-    },
-    {
-        "_id": "660a9faa5fc23bb4b5494080",
-        "menuItemId": "64a6c1e33339d4dc9d8141a2",
-        "module": "Business Leads",
-        "type": "MASTER",
-        "order": 11,
-        "isDisplay": false,
-        "title": "Map Category HSN",
-        "displayName": "Map Category HSN",
-        "disabled": false,
-        "url": "/default/business-leads/master/map_category_hsn/list",
-        "items": [],
-        "roles": []
-    },
-    {
         "_id": "662cba5bfe3de479c01ec258",
         "menuItemId": "64a6c1e33339d4dc9d8141a2",
         "module": "Business Leads",
         "type": "MASTER",
-        "order": 12,
+        "order": 7,
         "isDisplay": false,
         "title": "SKU Attributes",
         "displayName": "SKU Attributes",
@@ -263,6 +144,98 @@
                 "_id": "662cba80fe3de479c01ec25b"
             }
         ],
+        "roles": []
+    },
+    {
+        "_id": "6540f6a1d1cba8c5e3cfae74",
+        "menuItemId": "64a6c1e33339d4dc9d8141a2",
+        "module": "Business Leads",
+        "type": "MASTER",
+        "order": 8,
+        "isDisplay": false,
+        "title": "SKU Process Flow",
+        "displayName": "SKU Process Flow",
+        "disabled": false,
+        "url": "/default/business-leads/master/sku_process_flow/list",
+        "items": [],
+        "roles": []
+    },
+    {
+        "_id": "655c3c1c3613e949b4d61cdc",
+        "menuItemId": "64a6c1e33339d4dc9d8141a2",
+        "module": "Business Leads",
+        "type": "MASTER",
+        "order": 9,
+        "isDisplay": false,
+        "title": "Bill of Material",
+        "displayName": "Bill of Material",
+        "disabled": false,
+        "url": "/default/business-leads/master/bill-of-material/list",
+        "items": [
+            {
+                "menuItemId": "64a6c1e33339d4dc9d8141a4",
+                "module": "Business Leads",
+                "type": "MASTER",
+                "order": 1,
+                "isDisplay": false,
+                "title": "BoM of SKU",
+                "displayName": "BoM of SKU",
+                "disabled": false,
+                "url": "/default/business-leads/master/bill-of-material/bom_of_sku/list",
+                "_id": "656ae19b6af3bcb4ec7f3e1c"
+            },
+            {
+                "menuItemId": "64a6c1e33339d4dc9d8141a4",
+                "module": "Business Leads",
+                "type": "MASTER",
+                "order": 2,
+                "isDisplay": false,
+                "title": "BoM of Child Part",
+                "displayName": "BoM of Child Part",
+                "disabled": false,
+                "url": "/default/business-leads/master/bill-of-material/bom_of_child_item/list",
+                "_id": "656ae19b6af3bcb4ec7f3e1d"
+            },
+            {
+                "menuItemId": "64a6c1e33339d4dc9d8141a4",
+                "module": "Business Leads",
+                "type": "MASTER",
+                "order": 3,
+                "isDisplay": false,
+                "title": "BoM of Gr. Child Part",
+                "displayName": "BoM of Gr. Child Part",
+                "disabled": false,
+                "url": "/default/business-leads/master/bill-of-material/bom_of_gr_child_item/list",
+                "_id": "656ae19b6af3bcb4ec7f3e1e"
+            },
+            {
+                "menuItemId": "6655bacbe8b5e77e88de068a",
+                "module": "Business Leads",
+                "type": "MASTER",
+                "order": 4,
+                "isDisplay": false,
+                "title": "BoM of Job Work Item",
+                "displayName": "BoM of Job Work Item",
+                "disabled": false,
+                "url": "/default/business-leads/master/bill-of-material/bom_of_job_work_item/list",
+                "_id": "656ae19b6af3bcb4ec7f3e1f"
+            }
+        ],
+        "roles": []
+    },
+
+    {
+        "_id": "660a9faa5fc23bb4b5494080",
+        "menuItemId": "64a6c1e33339d4dc9d8141a2",
+        "module": "Business Leads",
+        "type": "MASTER",
+        "order": 10,
+        "isDisplay": false,
+        "title": "Map Category HSN",
+        "displayName": "Map Category HSN",
+        "disabled": false,
+        "url": "/default/business-leads/master/map_category_hsn/list",
+        "items": [],
         "roles": []
     }
 ]

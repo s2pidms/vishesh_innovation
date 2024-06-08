@@ -24,3 +24,4 @@ export * from "./processMasterData";
 export * from "./directCostMasterData";
 export * from "./SKUCostSheetMasterData";
 export * from "./SKUCostingMasterData";
+export * from "./BOMOfJobWorkItemMasterData";

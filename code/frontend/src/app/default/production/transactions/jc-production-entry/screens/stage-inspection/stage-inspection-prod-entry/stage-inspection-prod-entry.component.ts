@@ -83,6 +83,7 @@ export class StageInspectionProdEntryComponent implements OnInit {
         // ["create", "edit"].includes(this.action) &&
         if (this.stageInspection?.stageInspectionInfo.length > 1) {
             this.stageInspection?.stageInspectionInfo.pop();
+            this.totalOKQty();
         }
     }
     addTableRow() {

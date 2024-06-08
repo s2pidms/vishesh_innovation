@@ -1,0 +1,10 @@
+{
+    "Description of Goods": "goodsDescription",
+    "GST Rate % ": "gstRate",
+    "IGST Rate %": "igstRate",
+    "CGST Rate %": "sgstRate",
+    "SGST Rate %": "cgstRate",
+    "UTGST Rate %": "ugstRate",
+    "Revision No.": "revisionNo",
+    "Revision Date": "revisionDate"
+}

@@ -16,11 +16,6 @@ const routes: Routes = [
             import("./checklist-particulars/checklist-particulars.module").then(m => m.ChecklistParticularsModule)
     },
     {
-        path: "cost_sheet_components",
-        loadChildren: () =>
-            import("./cost-sheet-components/cost-sheet-components.module").then(m => m.CostSheetComponentsModule)
-    },
-    {
         path: "d_sku_attributes",
         loadChildren: () => import("./d-sku-attributes/d-sku-attributes.module").then(m => m.DSkuAttributesModule)
     }

@@ -4,11 +4,7 @@
     </div>
 
     <div appAccessControl [accessType]="rolePermissionActions.createAction" class="text-center">
-        <button
-            class="btn btn-primary btn-add"
-            type="button"
-            (click)="navigateTo('/default/settings/master/hr/professional_tax/form', null, 'create')"
-        >
+        <button class="btn btn-primary btn-add" type="button" (click)="navigateTo('../form', null, 'create')">
             <i class="fa fa-plus-square fa-lg me-2" aria-hidden="true"></i>
             Professional Tax
         </button>
@@ -43,9 +39,7 @@
                                     appAccessControl
                                     [accessType]="rolePermissionActions.viewAction"
                                     href="javascript:void(0)"
-                                    (click)="
-                                        navigateTo('/default/settings/master/hr/professional_tax/form', u?._id, 'view')
-                                    "
+                                    (click)="navigateTo('../form', u?._id, 'view')"
                                 >
                                     <i class="fa fa-eye fa-lg me-2 text-primary" aria-hidden="true"></i>
                                     View
@@ -54,9 +48,7 @@
                                     appAccessControl
                                     [accessType]="rolePermissionActions.editAction"
                                     href="javascript:void(0)"
-                                    (click)="
-                                        navigateTo('/default/settings/master/hr/professional_tax/form', u?._id, 'edit')
-                                    "
+                                    (click)="navigateTo('../form', u?._id, 'edit')"
                                 >
                                     <i class="fa fa-pencil-square-o fa-lg me-2 text-primary" aria-hidden="true"></i>
                                     Edit

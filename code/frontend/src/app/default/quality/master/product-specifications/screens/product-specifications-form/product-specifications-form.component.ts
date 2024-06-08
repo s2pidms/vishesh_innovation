@@ -1,7 +1,9 @@
 import {Component, OnInit, QueryList, ViewChildren} from "@angular/core";
 import {UntypedFormControl, UntypedFormGroup, Validators} from "@angular/forms";
-import {ActivatedRoute, Router} from "@angular/router";
+import {ActivatedRoute} from "@angular/router";
+import {Location} from "@angular/common";
 import {mergeMap, of} from "rxjs";
+import {NgbModal} from "@ng-bootstrap/ng-bootstrap";
 import {GRDetails} from "@interfaces/GRDetails";
 import {ToastService, UtilityService} from "@core/services";
 import {NgbdSortableHeader, SortEvent} from "@directives/sortable.directive";
@@ -11,8 +13,7 @@ import {ValidationService} from "@core/components";
 import {PRODUCT_SPECIFICATION_MASTER_FORM_ERRORS} from "@mocks/validations/quality/productSpecification.validation";
 import {SpinnerService} from "@core/services";
 import {IProductSpecificationsMasterData} from "@mocks/models/quality/master";
-import {ProductCategoryModalComponent} from "src/app/default/sales/master/sku/screens/product-category-modal/product-category-modal.component";
-import {NgbModal} from "@ng-bootstrap/ng-bootstrap";
+import {ProductCategoryModalComponent} from "src/app/default/sales/master/sku/screens/components";
 
 @Component({
     selector: "app-product-specifications-form",
@@ -65,11 +66,11 @@ export class ProductSpecificationsFormComponent implements OnInit {
         private productSpecificationMasterService: ProductSpecificationMasterService,
         private spinner: SpinnerService,
         private toastService: ToastService,
-        private router: Router,
         private activatedRoute: ActivatedRoute,
         private validationService: ValidationService,
         private utilityService: UtilityService,
-        private modalService: NgbModal
+        private modalService: NgbModal,
+        private location: Location
     ) {}
 
     ngOnInit(): void {
@@ -129,7 +130,7 @@ export class ProductSpecificationsFormComponent implements OnInit {
             this.submitted = false;
             this.spinner.hide();
             this.toastService.success(success.message);
-            this.router.navigate(["/default/quality/master/product_specifications/list"]);
+            this.location.back();
         });
     }
     update(formData: any) {
@@ -138,7 +139,7 @@ export class ProductSpecificationsFormComponent implements OnInit {
             this.spinner.hide();
             this.submitted = false;
             this.toastService.success(success.message);
-            this.router.navigate(["/default/quality/master/product_specifications/list"]);
+            this.location.back();
         });
     }
     eventHeader(event: any) {

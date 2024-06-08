@@ -1,6 +1,7 @@
 import {Component, OnInit} from "@angular/core";
 import {UntypedFormControl, UntypedFormGroup} from "@angular/forms";
-import {ActivatedRoute, Router} from "@angular/router";
+import {ActivatedRoute} from "@angular/router";
+import {Location} from "@angular/common";
 import {mergeMap, of} from "rxjs";
 import {NgbModal} from "@ng-bootstrap/ng-bootstrap";
 import {ViewChecklistInstructionComponent} from "src/app/default/maintenance/transactions/work-order-generation/screens/view-checklist-instruction/view-checklist-instruction.component";
@@ -24,14 +25,14 @@ export class WorkOrderGenerationFormComponent implements OnInit {
     };
 
     constructor(
-        private router: Router,
         private activatedRoute: ActivatedRoute,
         private spinner: SpinnerService,
         private toastService: ToastService,
         private generateWorkOrderService: GenerateWorkOrderService,
         private modalService: NgbModal,
         private validationService: ValidationService,
-        private utilityService: UtilityService
+        private utilityService: UtilityService,
+        private location: Location
     ) {}
 
     form = new UntypedFormGroup({
@@ -84,10 +85,6 @@ export class WorkOrderGenerationFormComponent implements OnInit {
         this.getInitialData();
     }
 
-    navigateTo(path: string, id: any, action: string) {
-        this.router.navigate([path], {queryParams: {id, action}});
-    }
-
     reset() {
         this.form.reset();
         this.getInitialData();
@@ -116,7 +113,7 @@ export class WorkOrderGenerationFormComponent implements OnInit {
             this.submitted = false;
             this.spinner.hide();
             this.toastService.success(success.message);
-            this.router.navigate(["/default/maintenance/transactions/work-order-generation/list"]);
+            this.location.back();
         });
     }
 
@@ -126,7 +123,7 @@ export class WorkOrderGenerationFormComponent implements OnInit {
             this.spinner.hide();
             this.submitted = false;
             this.toastService.success(success.message);
-            this.router.navigate(["/default/maintenance/transactions/work-order-generation/list"]);
+            this.location.back();
         });
     }
 

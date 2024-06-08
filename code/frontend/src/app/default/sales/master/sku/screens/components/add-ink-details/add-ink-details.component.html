@@ -1,0 +1,145 @@
+<div class="container-fluid">
+    <div class="row">
+        <div class="px-5 mt-0">
+            <app-setting-header
+                [data]="{page,pageSize,collection,search ,excelDisplay : 'none'}"
+                (dataChange)="eventHeader($event)"
+            >
+            </app-setting-header>
+        </div>
+        <div style="min-height: 29rem" class="table-responsive px-5">
+            <table class="table table-bordered table-sticky">
+                <thead class="bg-primary">
+                    <tr class="text-white">
+                        <th sortable="colSeq" (sort)="onSort($event)">Col. Seq.</th>
+                        <th sortable="itemCode" (sort)="onSort($event)">{{ "Item Code" | labelTranslate }}</th>
+                        <th sortable="itemName" (sort)="onSort($event)" class="text-start">
+                            {{ "Item Name" | labelTranslate }}
+                        </th>
+                        <th sortable="itemDescription" (sort)="onSort($event)" class="text-start">
+                            {{ "Item Description" | labelTranslate }}
+                        </th>
+                        <th sortable="UoM" (sort)="onSort($event)">UoM</th>
+                        <th sortable="mesh" (sort)="onSort($event)">Mesh #</th>
+                        <th sortable="GSM" (sort)="onSort($event)">GSM</th>
+                        <th sortable="areaSqm" (sort)="onSort($event)">Area sqm</th>
+                        <th sortable="inkArea" (sort)="onSort($event)">Ink Area %</th>
+                        <th sortable="inkAreaSqm" (sort)="onSort($event)">Ink Area sqm</th>
+                        <th sortable="ink" (sort)="onSort($event)">Ink (Gm)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr
+                        *ngFor="
+                            let u of inkDetailsArr
+                                | searchFi1ter : search
+                                | slice : (page - 1) * pageSize : (page - 1) * pageSize + pageSize;
+                            let i = index
+                        "
+                    >
+                        <td>
+                            <div class="d-flex justify-content-center">
+                                <span *ngIf="['view', 'Converted to SKU'].includes(action)">
+                                    {{ u?.colSeq | number : "1.2-2" }}
+                                </span>
+                                <input
+                                    type="number"
+                                    class="form-control form-control-ink w-25"
+                                    *ngIf="!['view', 'Converted to SKU'].includes(action)"
+                                    [(ngModel)]="u.colSeq"
+                                    [ngModelOptions]="{standalone: true}"
+                                />
+                            </div>
+                        </td>
+                        <td>{{ u?.itemCode }}</td>
+                        <td class="text-start" [style.width]="itemName.clientWidth" #itemName>
+                            <span class="pointer" [positionTarget]="itemName" [ngbTooltip]="u.itemName">
+                                {{ u?.itemName }}
+                            </span>
+                        </td>
+                        <td class="text-start" [style.width]="itemDescription.clientWidth" #itemDescription>
+                            <span class="pointer" [positionTarget]="itemDescription" [ngbTooltip]="u.itemDescription">
+                                {{ u?.itemDescription }}
+                            </span>
+                        </td>
+                        <td>
+                            <span>{{ (u.UoM | titlecase) == "Kg" ? "g" : (u.UoM | UOMUnitsMaster) }}</span>
+                        </td>
+                        <td>
+                            <div class="d-flex justify-content-center">
+                                <span *ngIf="['view', 'Converted to SKU'].includes(action)">
+                                    {{ u?.mesh | number : "1.2-2" }}
+                                </span>
+                                <input
+                                    type="number"
+                                    class="form-control form-control-ink w-25"
+                                    *ngIf="!['view', 'Converted to SKU'].includes(action)"
+                                    [(ngModel)]="u.mesh"
+                                    [ngModelOptions]="{standalone: true}"
+                                />
+                            </div>
+                        </td>
+                        <td>
+                            <div class="d-flex justify-content-center">
+                                <span *ngIf="['view', 'Converted to SKU'].includes(action)">
+                                    {{ u?.GSM | number : "1.2-2" }}
+                                </span>
+                                <input
+                                    type="number"
+                                    class="form-control form-control-ink w-25"
+                                    *ngIf="!['view', 'Converted to SKU'].includes(action)"
+                                    [(ngModel)]="u.GSM"
+                                    [ngModelOptions]="{standalone: true}"
+                                />
+                            </div>
+                        </td>
+                        <td>{{ u?.areaSqm | number : "1.4-4" }}</td>
+                        <td>
+                            <div class="d-flex justify-content-center">
+                                <span *ngIf="['view', 'Converted to SKU'].includes(action)">
+                                    {{ u?.inkArea | number : "1.2-2" }}
+                                </span>
+                                <input
+                                    type="number"
+                                    class="form-control form-control-ink w-25"
+                                    *ngIf="!['view', 'Converted to SKU'].includes(action)"
+                                    [(ngModel)]="u.inkArea"
+                                    [ngModelOptions]="{standalone: true}"
+                                    (input)="setInkAreaSQM(u)"
+                                />
+                            </div>
+                        </td>
+                        <td>
+                            <div class="d-flex justify-content-center">
+                                {{ u?.inkAreaSqm | number : "1.4-4" }}
+                            </div>
+                        </td>
+                        <td>{{ u?.ink | number : "1.3-3" }}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-12 px-0">
+            <hr class="line-border" />
+        </div>
+    </div>
+    <div class="row">
+        <div [ngClass]="action == 'Converted to SKU' ? 'col-3 px-5 mb-3' : 'col-3 px-5'">
+            <div class="d-flex align-items-center">
+                <div class="col-form-label text-nowrap">
+                    Total no. of colours
+                    <i class="fa fa-caret-right fs-4 mx-1"></i>
+                </div>
+                <input class="form-control" type="number" [(ngModel)]="totalNoOfColors" readonly />
+            </div>
+        </div>
+        <div *ngIf="!['view', 'Converted to SKU'].includes(action)" class="col-9 text-end pe-5">
+            <button class="btn btn-primary px-5 me-3" (click)="reset()">Reset</button>
+            <button class="btn btn-primary px-4 me-1" (click)="ESCPreview()" [disabled]="!isESCPreview">Esc</button>
+            <button class="btn btn-primary px-4 me-3" (click)="preview()">Preview</button>
+            <button (click)="dismissModel()" class="btn btn-primary px-5" [disabled]="!isPreview">Save</button>
+        </div>
+    </div>
+</div>

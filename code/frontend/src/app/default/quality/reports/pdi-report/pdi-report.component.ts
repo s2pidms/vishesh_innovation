@@ -27,6 +27,7 @@ export class PDIReportReportComponent implements OnInit, OnDestroy {
     templateNameObj: any = PDIR_ENTRY_TEMPLATE_NAME;
     rolePermissionActions: any = LIST_DEFAULT_PERMISSION_ACTIONS;
     subscription!: Subscription;
+    reportQMSName: any = null;
     fromDate = this.utilityService.getCurrentMonthDates().fromDate;
     toDate = this.utilityService.getCurrentMonthDates().toDate;
 
@@ -99,6 +100,7 @@ export class PDIReportReportComponent implements OnInit, OnDestroy {
                 this.tableData = success.rows;
                 this.customerList = success.customerList;
                 this.collection = success.count;
+                this.reportQMSName = success?.display?.displayText;
             }
             this.spinner.hide();
         });

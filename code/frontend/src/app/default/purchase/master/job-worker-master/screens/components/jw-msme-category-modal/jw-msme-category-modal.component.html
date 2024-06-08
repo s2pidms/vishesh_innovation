@@ -1,0 +1,31 @@
+<div class="modelPage">
+    <div class="modal-header">
+        <div class="heading">MSME Category</div>
+        <div>
+            <button type="button" class="btn btn-cross btn-sm" aria-label="Close" (click)="activeModal.close()">
+                <i class="fa fa-times-circle" aria-hidden="true"></i>
+            </button>
+        </div>
+    </div>
+    <div class="container-fluid">
+        <div class="row my-4 px-5">
+            <div class="col px-0">
+                <label class="form-label mb-2"> MSME Category of Job Worker <span class="text-danger"></span> </label>
+                <select [disabled]="action == 'view'" class="form-select" [(ngModel)]="MSMEClassification">
+                    <option [value]="null" selected disabled>Select</option>
+                    <option value="Micro">Micro</option>
+                    <option value="Small">Small</option>
+                    <option value="Medium">Medium</option>
+                    <option value="Large">Large</option>
+                </select>
+            </div>
+        </div>
+        <hr class="row line-border" />
+
+        <div class="row mb-4">
+            <div *ngIf="action != 'view'" class="col text-center">
+                <button class="btn btn-primary" type="button" (click)="save()">Save & Close</button>
+            </div>
+        </div>
+    </div>
+</div>

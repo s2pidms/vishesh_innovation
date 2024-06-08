@@ -119,11 +119,21 @@
                             <div class="dropdown">
                                 <button class="dropbtn"></button>
                                 <div class="dropdown-content">
-                                    <a href="javascript:void(0)" (click)="update(u?._id, {eWayBillStatus: true})">
+                                    <a
+                                        href="javascript:void(0)"
+                                        (click)="
+                                            openConfirmModal(u?._id, {eWayBillStatus: true}, u?.salesInvoiceNumber)
+                                        "
+                                    >
                                         <i class="fa fa-close fa-lg text-danger" aria-hidden="true"></i>
                                         E-Way Bill
                                     </a>
-                                    <a href="javascript:void(0)" (click)="update(u?._id, {eInvoiceStatus: true})">
+                                    <a
+                                        href="javascript:void(0)"
+                                        (click)="
+                                            openConfirmModal(u?._id, {eInvoiceStatus: true}, u?.salesInvoiceNumber)
+                                        "
+                                    >
                                         <i class="fa fa-close fa-lg text-danger" aria-hidden="true"></i>
                                         E-Invoice
                                     </a>

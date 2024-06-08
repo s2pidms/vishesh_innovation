@@ -40,13 +40,7 @@
                                     appAccessControl
                                     [accessType]="rolePermissionActions.viewAction"
                                     href="javascript:void(0)"
-                                    (click)="
-                                        navigateTo(
-                                            '/default/HR/transactions/leave_adjustment/leave-adjustment-form',
-                                            u,
-                                            'view'
-                                        )
-                                    "
+                                    (click)="navigateTo('../leave-adjustment-form', u, 'view')"
                                 >
                                     <i class="fa fa-eye fa-lg me-2 text-primary" aria-hidden="true"></i>
                                     View
@@ -56,13 +50,7 @@
                                     [accessType]="rolePermissionActions.editAction"
                                     href="javascript:void(0)"
                                     [class.disable]="u.status != 'Approved'"
-                                    (click)="
-                                        navigateTo(
-                                            '/default/HR/transactions/leave_adjustment/leave-adjustment-form',
-                                            u,
-                                            'edit'
-                                        )
-                                    "
+                                    (click)="navigateTo('../leave-adjustment-form', u, 'edit')"
                                 >
                                     <i class="fa fa-pencil-square-o fa-lg me-2 text-primary" aria-hidden="true"></i>
                                     Edit
@@ -72,13 +60,7 @@
                                     [accessType]="rolePermissionActions.approveAction"
                                     href="javascript:void(0)"
                                     [class.disable]="u.status !== 'Submitted'"
-                                    (click)="
-                                        navigateTo(
-                                            '/default/HR/transactions/leave_adjustment/leave-adjustment-form',
-                                            u,
-                                            'approve'
-                                        )
-                                    "
+                                    (click)="navigateTo('../leave-adjustment-form', u, 'approve')"
                                 >
                                     <i class="fa fa-check fa-lg me-2 text-success" aria-hidden="true"></i>
                                     Approve

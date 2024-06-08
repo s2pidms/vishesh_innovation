@@ -1,42 +1,27 @@
 const asyncHandler = require("express-async-handler");
 const Model = require("../../../../models/settings/roleModel");
 const MESSAGES = require("../../../../helpers/messages.options");
-const {getAllAggregationFooter} = require("../../../../helpers/utility");
-const {getMatchData} = require("../../../../helpers/global.options");
 const {default: mongoose} = require("mongoose");
 const RoleRepository = require("../../../../models/settings/repository/roleRepository");
 const {getAllRoleAttributes} = require("../../../../models/settings/helpers/roleHelper");
 const memoryCacheHandler = require("../../../../utilities/memoryCacheHandler");
 const {getAndSetAutoIncrementNo} = require("../autoIncrement/autoIncrement");
 const {ROLE} = require("../../../../mocks/schemasConstant/settingsConstant");
+const {SUPER_ADMIN_ID} = require("../../../../mocks/constantData");
 const ObjectId = mongoose.Types.ObjectId;
 
 exports.getAll = asyncHandler(async (req, res) => {
     try {
-        const {
-            search = null,
-            excel = "false",
-            page = 1,
-            pageSize = 10,
-            column = "createdAt",
-            direction = -1
-        } = req.query;
-        let skip = Math.max(0, page - 1) * pageSize;
-        let project = getAllRoleAttributes();
-        let match = await getMatchData(project, search);
-        let pagination = [];
-        if (excel == "false") {
-            pagination = [{$skip: +skip}, {$limit: +pageSize}];
-        }
-        let rows = await RoleRepository.getAllRoleList([
+        let pipeline = [
             {$match: {company: ObjectId(req.user.company)}},
             {
                 $addFields: {
                     createdAtS: {$dateToString: {format: "%d-%m-%Y", date: "$createdAt"}}
                 }
-            },
-            ...getAllAggregationFooter(project, match, column, direction, pagination)
-        ]);
+            }
+        ];
+        let project = getAllRoleAttributes();
+        let rows = await RoleRepository.getAllPaginate({pipeline, project, queryParams: req.query});
         return res.success(rows);
     } catch (e) {
         const errors = MESSAGES.apiErrorStrings.SERVER_ERROR;
@@ -46,7 +31,7 @@ exports.getAll = asyncHandler(async (req, res) => {
 });
 exports.create = asyncHandler(async (req, res) => {
     try {
-        let existing = await RoleRepository.findOneRole(
+        let existing = await RoleRepository.findOneDoc(
             {
                 roleName: req.body.roleName
             },
@@ -62,7 +47,7 @@ exports.create = asyncHandler(async (req, res) => {
             updatedBy: req.user.sub,
             ...req.body
         };
-        const itemDetails = RoleRepository.createRole(createdObj);
+        const itemDetails = RoleRepository.createDoc(createdObj);
         if (itemDetails) {
             res.success({
                 message: MESSAGES.apiSuccessStrings.ADDED("Role")
@@ -81,9 +66,9 @@ exports.create = asyncHandler(async (req, res) => {
 exports.update = asyncHandler(async (req, res) => {
     try {
         // let itemDetails = await Model.findById(req.params.id);
-        let itemDetails = await RoleRepository.getRoleById(req.params.id);
+        let itemDetails = await RoleRepository.getDocById(req.params.id);
         itemDetails.updatedBy = req.user.sub;
-        itemDetails = await RoleRepository.updateRole(itemDetails, req.body);
+        itemDetails = await RoleRepository.updateDoc(itemDetails, req.body);
         if (!itemDetails) {
             const errors = MESSAGES.apiErrorStrings.INVALID_REQUEST;
             return res.preconditionFailed(errors);
@@ -100,9 +85,8 @@ exports.update = asyncHandler(async (req, res) => {
 });
 exports.deleteById = asyncHandler(async (req, res) => {
     try {
-        const deleteItem = await RoleRepository.getRoleById(req.params.id);
+        const deleteItem = await RoleRepository.deleteDoc({_id: req.params.id});
         if (deleteItem) {
-            await RoleRepository.deleteRole(deleteItem);
             return res.success({
                 message: MESSAGES.apiSuccessStrings.DELETED("Role")
             });
@@ -118,7 +102,7 @@ exports.deleteById = asyncHandler(async (req, res) => {
 });
 exports.getById = asyncHandler(async (req, res) => {
     try {
-        let existing = await RoleRepository.getRoleById(req.params.id);
+        let existing = await RoleRepository.getDocById(req.params.id);
         if (!existing) {
             let errors = MESSAGES.apiSuccessStrings.DATA_NOT_EXISTS("Role");
             return res.unprocessableEntity(errors);
@@ -156,7 +140,7 @@ exports.updateCacheRoles = async (company, isSuperAdmin = false) => {
         let rows = await Model.find(
             {
                 company: company,
-                ...(!isSuperAdmin && {_id: {$ne: ObjectId("64a687b4e9143bffd820fb3d")}})
+                ...(!isSuperAdmin && {_id: {$ne: ObjectId(SUPER_ADMIN_ID)}})
             },
             {roleCode: 1, roleName: 1, displayRoleName: 1, redirectTo: 1, permissions: 1}
         ).sort({createdAt: -1});
@@ -169,11 +153,11 @@ exports.updateCacheRoles = async (company, isSuperAdmin = false) => {
 
 exports.getAllRoleCounts = async (company, isSuperAdmin) => {
     try {
-        const result = await Model.aggregate([
+        const result = await RoleRepository.filteredRoleList([
             {
                 $match: {
                     company: ObjectId(company),
-                    ...(!isSuperAdmin && {role: {$nin: [ObjectId("64a687b4e9143bffd820fb3d")]}})
+                    ...(!isSuperAdmin && {_id: {$nin: [ObjectId(SUPER_ADMIN_ID)]}})
                 }
             },
             {

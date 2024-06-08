@@ -1,0 +1,138 @@
+<form [formGroup]="form" class="formCard card">
+    <div class="set-remaining-margin">
+        <div class="row form-header">
+            <div class="col heading">
+                <label>Job Work Item Master ({{ this.action | titlecase }})</label>
+            </div>
+        </div>
+        <div class="form-body">
+            <div class="row mb-4">
+                <div class="col-3">
+                    <label class="form-label mb-1"> Item Category <span class="text-danger">*</span> </label>
+                    <select class="form-select" (change)="selectItemCategory($event)" formControlName="itemCategory">
+                        <option selected disabled value="">Select Item Category</option>
+                        <option *ngFor="let i of this.masterData?.itemCategories" [value]="i">
+                            {{ i }}
+                        </option>
+                    </select>
+                </div>
+                <div class="col-3">
+                    <label class="form-label mb-1"> Job Work Item Code<span class="text-danger">*</span> </label>
+                    <input class="form-control" type="text" formControlName="jobWorkItemCode" readonly />
+                </div>
+                <div class="col-3">
+                    <label class="form-label mb-1"> Job Work Item Name <span class="text-danger">*</span> </label>
+                    <input type="text" class="form-control" formControlName="jobWorkItemName" />
+                </div>
+                <div class="col-3">
+                    <label class="form-label mb-1">
+                        Job Work Item Description <span class="text-danger">*</span>
+                    </label>
+                    <input type="text" class="form-control" formControlName="jobWorkItemDescription" />
+                </div>
+            </div>
+            <div class="row mb-4">
+                <div class="col-3">
+                    <label class="form-label mb-1 d-flex justify-content-between">
+                        Unit of Measurement
+                        <span class="text-danger">*</span>
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                        <button
+                            (click)="openUOMDetailsModal()"
+                            type="button"
+                            class="btn btn-primary form-btn-sm py-0"
+                            [disabled]="!form.controls['orderInfoUOM'].value"
+                        >
+                            Dual Units
+                        </button>
+                    </label>
+                    <select (change)="setPrimaryUnit($event)" class="form-select" formControlName="orderInfoUOM">
+                        <option [value]="null" selected disabled>Select Primary Unit</option>
+                        <option [value]="'Unit'">Unit</option>
+                        <option *ngFor="let u of UOMUintMasterOptions" [value]="u.value">
+                            {{ u?.label }}
+                        </option>
+                    </select>
+                </div>
+                <div class="col-3">
+                    <label class="form-label mb-1"> HSN Code <span class="text-danger">*</span> </label>
+                    <div class="d-flex align-items-center">
+                        <div class="flex-grow-1">
+                            <select class="form-select" formControlName="HSNCode" (change)="setGST()">
+                                <option [value]="null" disabled selected>Select HSN Code</option>
+                                <option *ngFor="let h of masterData?.HSNCodesList" [value]="h.value">
+                                    {{ h?.value }}
+                                </option>
+                            </select>
+                        </div>
+                        <div
+                            style="height: 2.9rem"
+                            class="input-group-text bg-primary pointer"
+                            id="basic-addon1"
+                            (click)="openFormulationHSNModal()"
+                        >
+                            <i class="fa fa-search text-white" aria-hidden="true"></i>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-3">
+                    <label class="form-label mb-1">Shelf Life (Months) <span class="text-danger">*</span> </label>
+                    <!-- onkeypress="return event.charCode >= 48 && event.charCode <= 57" -->
+                    <input type="number" class="form-control" formControlName="shelfLife" />
+                </div>
+                <div class="col-3">
+                    <label class="form-label mb-1">Quality Control Level <span class="text-danger">*</span> </label>
+                    <ng-select
+                        [items]="masterData.QCLevelsOptions"
+                        bindLabel="label"
+                        bindValue="value"
+                        [clearable]="false"
+                        formControlName="QCLevels"
+                    >
+                    </ng-select>
+                </div>
+            </div>
+        </div>
+        <hr class="row line-border mb-4" />
+        <div class="row mb-4">
+            <div class="col-2 pe-0">
+                <button
+                    class="plusIconSvg btn btn-primary me-1"
+                    [disabled]="!form.controls['orderInfoUOM'].value"
+                ></button>
+                <button
+                    (click)="openJobWorkerDetailsModal()"
+                    class="btn btn-primary me-4 px-3"
+                    type="button"
+                    [disabled]="!form.controls['orderInfoUOM'].value"
+                >
+                    Job Worker
+                </button>
+            </div>
+            <div class="col-3 ps-0">
+                <div class="d-flex align-items-center">
+                    <div class="col-md-auto text-nowrap">
+                        <button type="button" class="btn btn-primary px-3">Status</button>
+                    </div>
+                    <select class="form-select statusSelectBorder" formControlName="status">
+                        <option [value]="'null'" selected disabled>Select Status</option>
+                        <option value="Active">Active</option>
+                        <option value="Inactive">Inactive</option>
+                    </select>
+                    <span class="input-group-text statusSpanHeight">
+                        <div class="statusActive" *ngIf="form.value['status'] == 'Active'" class="statusActive"></div>
+                        <div class="statusInActive" *ngIf="form.value['status'] == 'Inactive'"></div>
+                    </span>
+                </div>
+            </div>
+            <div *ngIf="action != 'view'" class="col text-end">
+                <button class="btn btn-primary px-5 me-3" type="button" (click)="reset()">Reset</button>
+                <button class="btn btn-primary px-5" type="button" (click)="submit()">Save</button>
+            </div>
+        </div>
+    </div>
+</form>

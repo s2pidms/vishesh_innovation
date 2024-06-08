@@ -56,11 +56,25 @@
         "roles": []
     },
     {
-        "_id": "655c3c2e3613e949b4d61f04",
+        "_id": "655c3c2f3613e949b4d61f13",
         "menuItemId": "64a6c1e33339d4dc9d8141a5",
         "module": "Purchase",
         "type": "TRANSACTION",
         "order": 5,
+        "isDisplay": false,
+        "title": "Amend PO",
+        "displayName": "Amend PO",
+        "disabled": false,
+        "url": "/default/purchase/transactions/generate_purchase_order/amend_po",
+        "items": [],
+        "roles": []
+    },
+    {
+        "_id": "655c3c2e3613e949b4d61f04",
+        "menuItemId": "64a6c1e33339d4dc9d8141a5",
+        "module": "Purchase",
+        "type": "TRANSACTION",
+        "order": 6,
         "isDisplay": false,
         "title": "Generate SPO",
         "displayName": "Generate SPO",
@@ -74,7 +88,7 @@
         "menuItemId": "64a6c1e33339d4dc9d8141a5",
         "module": "Purchase",
         "type": "TRANSACTION",
-        "order": 6,
+        "order": 7,
         "isDisplay": false,
         "title": "Debit Note",
         "displayName": "Debit Note",
@@ -88,7 +102,7 @@
         "menuItemId": "64a6c1e33339d4dc9d8141a5",
         "module": "Purchase",
         "type": "TRANSACTION",
-        "order": 7,
+        "order": 8,
         "isDisplay": false,
         "title": "Goods Requisition",
         "displayName": "Goods Requisition",
@@ -97,20 +111,7 @@
         "items": [],
         "roles": []
     },
-    {
-        "_id": "655c3c2f3613e949b4d61f13",
-        "menuItemId": "64a6c1e33339d4dc9d8141a5",
-        "module": "Purchase",
-        "type": "TRANSACTION",
-        "order": 8,
-        "isDisplay": false,
-        "title": "Amend PO",
-        "displayName": "Amend PO",
-        "disabled": false,
-        "url": "/default/purchase/transactions/generate_purchase_order/amend_po",
-        "items": [],
-        "roles": []
-    },
+
     {
         "_id": "650143cf3302e4c647865f7f",
         "menuItemId": "64a6c1e33339d4dc9d8141a5",
@@ -122,6 +123,20 @@
         "displayName": "Purchase Indent",
         "disabled": false,
         "url": "/default/purchase/transactions/purchase_indent/list",
+        "items": [],
+        "roles": []
+    },
+    {
+        "_id": "6656c7741bce1a4476b0255e",
+        "menuItemId": "64a6c1e33339d4dc9d8141a5",
+        "module": "Purchase",
+        "type": "TRANSACTION",
+        "order": 10,
+        "isDisplay": false,
+        "title": "Job Work Challan",
+        "displayName": "Job Work Challan",
+        "disabled": false,
+        "url": "/default/purchase/transactions/job_work_challan/list",
         "items": [],
         "roles": []
     }

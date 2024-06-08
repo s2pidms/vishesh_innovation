@@ -58,6 +58,18 @@
                 "disabled": false,
                 "url": "../bom_of_gr_child_item/list",
                 "_id": "656ae19f6af3bcb4ec7f3fdb"
+            },
+            {
+                "menuItemId": "64a6c1e33339d4dc9d8141ad",
+                "module": "Finance",
+                "type": "MASTER",
+                "order": 5,
+                "isDisplay": false,
+                "title": "BoM of Job Work Item",
+                "displayName": "BoM of Job Work Item",
+                "disabled": false,
+                "url": "../bom_of_job_work_item/list",
+                "_id": "6655bb98e8b5e77e88de0690"
             }
         ],
         "roles": []

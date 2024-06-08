@@ -212,7 +212,7 @@ exports.GOODS_ISSUE_PPIC_TO_PRODUCTION = {
             modulePrefix: this.MODULE_PREFIX
         };
     }
-}
+};
 exports.GOODS_TRANSFER_REQUEST = {
     COLLECTION_NAME: "GoodsTransferRequest",
     ADDED_ACTION: "Goods Transfer Request created",
@@ -228,11 +228,11 @@ exports.GOODS_TRANSFER_REQUEST = {
             modulePrefix: this.MODULE_PREFIX
         };
     }
-}
+};
 exports.STOCK_PREPARATION = {
     COLLECTION_NAME: "StockPreparation",
     ADDED_ACTION: "Stock Preparation created",
-    UPDATED_ACTION: "Stock Preparation updated",
+    UPDATED_ACTION: "Stock Preparation updated"
     // MODULE_NAME: "Stock Preparation",
     // MODULE: "StockPreparation",
     // MODULE_PREFIX: "null",
@@ -244,4 +244,20 @@ exports.STOCK_PREPARATION = {
     //         modulePrefix: this.MODULE_PREFIX
     //     };
     // }
-}
+};
+exports.BOM_OF_JOB_WORK_ITEM = {
+    COLLECTION_NAME: "BOMOfJobWorkItem",
+    ADDED_ACTION: "BoM Of Job Work Item created",
+    UPDATED_ACTION: "BoM Of Job Work Item updated",
+    MODULE_NAME: "BoM Of Job Work Item",
+    MODULE: "BOMOfJobWorkItem",
+    MODULE_PREFIX: "BOM/JWI/",
+    AUTO_INCREMENT_DATA: function () {
+        return {
+            moduleName: this.MODULE_NAME,
+            module: this.MODULE,
+            company: null,
+            modulePrefix: this.MODULE_PREFIX
+        };
+    }
+};

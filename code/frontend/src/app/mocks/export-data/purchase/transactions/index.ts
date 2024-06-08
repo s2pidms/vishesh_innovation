@@ -6,3 +6,4 @@ export * from "./goodsRequisition";
 export * from "./amendPo";
 export * from "./debitNote";
 export * from "./purchaseIndent";
+export * from "./jobWorkChallan";

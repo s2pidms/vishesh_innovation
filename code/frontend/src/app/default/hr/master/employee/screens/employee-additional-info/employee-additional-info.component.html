@@ -1,47 +1,42 @@
-<div style="min-height: 53.4rem;" class="modelPage">
-  <div class="modal-header">
-    <div class="heading">Additional Info</div>
-    <div>
-      <button
-        type="button"
-        class="btn btn-cross btn-sm"
-        aria-label="Close"
-        (click)="dismissModel()"
-      >
-        <i class="fa fa-times-circle" aria-hidden="true"></i>
-      </button>
+<div style="min-height: 53.4rem" class="modelPage">
+    <div class="modal-header">
+        <div class="heading">Additional Info</div>
+        <div>
+            <button type="button" class="btn btn-cross btn-sm" aria-label="Close" (click)="dismissModel()">
+                <i class="fa fa-times-circle" aria-hidden="true"></i>
+            </button>
+        </div>
     </div>
-  </div>
-  <div class="container-fluid mt-5 mb-3">
-    <div class="row">
-      <div class="col-12 px-0">
-        <ul
-          ngbNav
-          #nav="ngbNav"
-          [(activeId)]="active"
-          class="nav-pills tabs-card row justify-content-start ms-5 align-items-end"
-        >
-          <li [ngbNavItem]="1" class="col-auto d-grid px-0 btn-border-radius">
-            <a class="mb-0 ps-4 pe-5 pt-1" ngbNavLink> Family Info </a>
-            <ng-template ngbNavContent>
-              <app-family-info
-                [formData]="formData"
-                [action]="action"
-                (saveData)="saveData($event)"
-              ></app-family-info
-            ></ng-template>
-          </li>
-          <li [ngbNavItem]="2" class="col-auto px-0 d-grid btn-border-radius">
-            <a class="mb-0 ps-4 pe-5 pt-1" ngbNavLink> Address Info </a>
-            <ng-template ngbNavContent>
-              <app-address-info
-                [formData]="formData"
-                [action]="action"
-                (saveData)="saveData($event)"
-              ></app-address-info
-            ></ng-template>
-          </li>
-          <!-- <li [ngbNavItem]="3" class="col-auto px-0 d-grid btn-border-radius">
+    <div class="container-fluid mt-5 mb-3">
+        <div class="row">
+            <div class="col-12 px-0">
+                <ul
+                    ngbNav
+                    #nav="ngbNav"
+                    [(activeId)]="active"
+                    class="nav-pills tabs-card row justify-content-start ms-5 align-items-end"
+                >
+                    <li [ngbNavItem]="1" class="col-auto d-grid px-0 btn-border-radius">
+                        <a class="mb-0 ps-4 pe-5 pt-1" ngbNavLink> Family Info </a>
+                        <ng-template ngbNavContent>
+                            <app-family-info
+                                [formData]="formData"
+                                [action]="action"
+                                (saveData)="saveData($event)"
+                            ></app-family-info
+                        ></ng-template>
+                    </li>
+                    <li [ngbNavItem]="2" class="col-auto px-0 d-grid btn-border-radius">
+                        <a class="mb-0 ps-4 pe-5 pt-1" ngbNavLink> Address Info </a>
+                        <ng-template ngbNavContent>
+                            <app-address-info
+                                [formData]="formData"
+                                [action]="action"
+                                (saveData)="saveData($event)"
+                            ></app-address-info
+                        ></ng-template>
+                    </li>
+                    <!-- <li [ngbNavItem]="3" class="col-auto px-0 d-grid btn-border-radius">
             <a class="mb-0 ps-4 pe-5 pt-1" ngbNavLink> Joining Details </a>
             <ng-template ngbNavContent>
               <app-joining-details
@@ -52,40 +47,41 @@
               ></app-joining-details
             ></ng-template>
           </li> -->
-          <li [ngbNavItem]="3" class="col-auto px-0 d-grid btn-border-radius">
-            <a class="mb-0 ps-4 pe-5 pt-1" ngbNavLink> Credentials Info </a>
-            <ng-template ngbNavContent>
-              <app-credentials-info
-                [formData]="formData"
-                [action]="action"
-                (saveData)="saveData($event)"
-              ></app-credentials-info
-            ></ng-template>
-          </li>
-          <li [ngbNavItem]="4" class="col-auto px-0 d-grid btn-border-radius">
-            <a class="mb-0 ps-4 pe-5 pt-1" ngbNavLink> Bank Details </a>
-            <ng-template ngbNavContent>
-              <app-bank-details
-                [formData]="formData"
-                [action]="action"
-                (saveData)="saveData($event)"
-              ></app-bank-details
-            ></ng-template>
-          </li>
-          <li [ngbNavItem]="5" class="col-auto px-0 d-grid btn-border-radius">
-            <a class="mb-0 ps-4 pe-5 pt-1" ngbNavLink> Status </a>
-            <ng-template ngbNavContent>
-              <app-status
-                [formData]="formData"
-                [action]="action"
-                (saveData)="saveData($event)"
-              ></app-status
-            ></ng-template>
-          </li>
-        </ul>
-        <hr class="line-border mt-0" />
-        <div [ngbNavOutlet]="nav" class="mt-2"></div>
-      </div>
+                    <li [ngbNavItem]="3" class="col-auto px-0 d-grid btn-border-radius">
+                        <a class="mb-0 ps-4 pe-5 pt-1" ngbNavLink> Credentials Info </a>
+                        <ng-template ngbNavContent>
+                            <app-credentials-info
+                                [formData]="formData"
+                                [action]="action"
+                                [credentialInfo]="credentialInfo"
+                                (saveData)="saveData($event)"
+                            ></app-credentials-info
+                        ></ng-template>
+                    </li>
+                    <li [ngbNavItem]="4" class="col-auto px-0 d-grid btn-border-radius">
+                        <a class="mb-0 ps-4 pe-5 pt-1" ngbNavLink> Bank Details </a>
+                        <ng-template ngbNavContent>
+                            <app-bank-details
+                                [formData]="formData"
+                                [action]="action"
+                                (saveData)="saveData($event)"
+                            ></app-bank-details
+                        ></ng-template>
+                    </li>
+                    <li [ngbNavItem]="5" class="col-auto px-0 d-grid btn-border-radius">
+                        <a class="mb-0 ps-4 pe-5 pt-1" ngbNavLink> Status </a>
+                        <ng-template ngbNavContent>
+                            <app-status
+                                [formData]="formData"
+                                [action]="action"
+                                (saveData)="saveData($event)"
+                            ></app-status
+                        ></ng-template>
+                    </li>
+                </ul>
+                <hr class="line-border mt-0" />
+                <div [ngbNavOutlet]="nav" class="mt-2"></div>
+            </div>
+        </div>
     </div>
-  </div>
 </div>

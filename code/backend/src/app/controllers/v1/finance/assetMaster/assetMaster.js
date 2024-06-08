@@ -288,6 +288,20 @@ exports.getAllAssetData = asyncHandler(async company => {
 
 exports.checkAssetValidation = async (assetData, column, company) => {
     try {
+        const assetOptions = await AssetMasterRepository.filteredAssetMasterList([
+            {
+                $match: {
+                    company: ObjectId(company),
+                    status: OPTIONS.defaultStatus.ACTIVE
+                }
+            },
+            {
+                $project: {
+                    assetName: 1,
+                    assetDescription: 1
+                }
+            }
+        ]);
         const requiredFields = ["assetName", "assetDescription", "assetPurchaseCost"];
         const falseArr = OPTIONS.falsyArray;
         let {locationOptions} = await dropDownOptions(company);
@@ -313,17 +327,12 @@ exports.checkAssetValidation = async (assetData, column, company) => {
                         break;
                     }
                 }
-                if (
-                    await AssetMasterRepository.findOneDoc(
-                        {assetName: x["assetName"], assetDescription: x["assetDescription"]},
-                        {
-                            _id: 1
-                        }
-                    )
-                ) {
-                    x.isValid = false;
-                    x.message = `${ele} is already exists`;
-                    break;
+                for (const ele of assetOptions) {
+                    if (ele.assetName == x["assetName"] && ele.assetDescription == x["assetDescription"]) {
+                        x.isValid = false;
+                        x.message = `${x["assetName"]} already exists`;
+                        break;
+                    }
                 }
             }
         }

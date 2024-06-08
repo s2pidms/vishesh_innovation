@@ -38,7 +38,7 @@ export class QuestionnairesListComponent implements OnInit, OnDestroy {
         this.getAll();
     }
     navigateTo(path: string, u: any, action: string) {
-        this.router.navigate([path], {queryParams: {id: u?._id, action}});
+        this.router.navigate([path], {relativeTo: this.activatedRoute, queryParams: {id: u?._id, action}});
     }
     trackByFn(index: number, item: any) {
         return item?._id;

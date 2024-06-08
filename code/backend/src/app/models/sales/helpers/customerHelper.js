@@ -13,6 +13,8 @@ exports.getAllCustomerAttributes = () => {
         venderCode: 1,
         showPANNo: 1,
         showEximCode: 1,
+        TCSOnScrap: 1,
+        TCSOnVendor: 1
     };
 };
 exports.getAllCustomerExcelAttributes = () => {
@@ -31,6 +33,8 @@ exports.getAllCustomerExcelAttributes = () => {
         venderCode: 1,
         showPANNo: 1,
         showEximCode: 1,
+        TCSOnScrap: 1,
+        TCSOnVendor: 1,
         creditLimit: 1,
         customerPaymentTerms: 1,
         country: "$customerBillingAddress.country",

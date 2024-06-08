@@ -18,3 +18,4 @@ export * from "./purchasePaymentTermsMasterData";
 export * from "./purchasePaymentTermsMasterData";
 export * from "./channelPartner";
 export * from "./channelPartnerMasterData";
+export * from "./jobWorkerMasterData";

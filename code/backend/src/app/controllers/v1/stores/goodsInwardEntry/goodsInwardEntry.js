@@ -235,6 +235,115 @@ exports.insertInventory = async (GINId, MRNId, user) => {
         console.error("error", error);
     }
 };
+exports.insertPPICInventory = async (GINId, MRNId, excelJsonObj) => {
+    try {
+        let MRNData = await updateMRNStatusOnGIN(MRNId);
+        let inventoryInsertArray = await GINRepository.filteredGINList([
+            {
+                $match: {_id: ObjectId(GINId)}
+            },
+            {
+                $unwind: {
+                    path: "$GINDetails",
+                    preserveNullAndEmptyArrays: true
+                }
+            },
+            {
+                $lookup: {
+                    from: "Items",
+                    localField: "GINDetails.item",
+                    foreignField: "_id",
+                    pipeline: [
+                        {
+                            $project: {
+                                itemCode: 1,
+                                itemName: 1,
+                                itemDescription: 1,
+                                width: "$dualUnitsDimensionsDetails.widthInMM",
+                                length: {
+                                    $round: [{$multiply: ["$dualUnitsDimensionsDetails.lengthInM", 1000]}, 2]
+                                },
+                                SQM: "$dualUnitsDimensionsDetails.sqmPerRoll",
+                                shelfLife: 1
+                            }
+                        }
+                    ],
+                    as: "GINDetails.item"
+                }
+            },
+            {
+                $unwind: {
+                    path: "$GINDetails.item",
+                    preserveNullAndEmptyArrays: true
+                }
+            },
+            {
+                $addFields: {
+                    expiryDate: {
+                        $dateAdd: {
+                            startDate: "$GINDate",
+                            unit: "month",
+                            amount: "$GINDetails.item.shelfLife"
+                        }
+                    }
+                }
+            },
+            {
+                $project: {
+                    _id: 0,
+                    company: excelJsonObj.company,
+                    createdBy: excelJsonObj.sub,
+                    updatedBy: excelJsonObj.sub,
+                    GIN: "$_id",
+                    GINDate: 1,
+                    MRN: "$MRNNumber",
+                    supplier: 1,
+                    MRNNumber: MRNData?.MRNNumber,
+                    MRNDate: MRNData?.MRNDate,
+                    ICStatus: "IC Created",
+                    // GINLineNumber: ele.GINLineNumber,
+                    UOM: excelJsonObj.UOM,
+                    primaryToSecondaryConversion: excelJsonObj.primaryToSecondaryConversion,
+                    primaryUnit: excelJsonObj.primaryUnit,
+                    secondaryUnit: excelJsonObj.secondaryUnit,
+                    conversionOfUnits: excelJsonObj.conversionOfUnits,
+                    item: "$GINDetails.item._id",
+                    referenceModel: "Items",
+                    itemCode: "$GINDetails.item.itemCode",
+                    itemName: excelJsonObj.itemName,
+                    itemDescription: excelJsonObj.itemDescription,
+                    width: excelJsonObj.width,
+                    length: excelJsonObj.length,
+                    SQM: excelJsonObj.SQM,
+                    expiryDate: {$ifNull: ["$expiryDate", null]},
+                    itemType: "$GINDetails.itemType",
+                    itemSubCategory: "$GINDetails.itemSubCategory",
+                    // openIRQty: "$GINDetails.GINQty",
+                    updatedQty: {$literal: 0},
+                    closedIRQty: "$GINDetails.GINQty",
+                    standardRate: "$GINDetails.standardRate",
+                    purchaseRate: "$GINDetails.purchaseRate",
+                    purchaseRateUSD: "$GINDetails.purchaseRateUSD",
+                    purchaseRatINR: "$GINDetails.purchaseRatINR",
+                    lineValueINR: "$GINDetails.lineValueINR",
+                    // releasedQty: "$GINDetails.releasedQty",
+                    // rejectedQty: "$GINDetails.rejectedQty",
+                    batchDate: "$GINDetails.batchDate",
+                    deliveryLocation: 1,
+                    storageLocationMapping: 1,
+                    department: GOODS_TRANSFER_REQUEST_DEPT.PLANNING,
+                    type: "InventoryCorrection",
+                    formType: "Child"
+                }
+            }
+        ]);
+        if (inventoryInsertArray.length) {
+            await InventoryRepository.insertManyDoc(inventoryInsertArray);
+        }
+    } catch (error) {
+        console.error("error", error);
+    }
+};
 // @desc    update GoodsInwardEntry  Record
 exports.update = asyncHandler(async (req, res) => {
     try {

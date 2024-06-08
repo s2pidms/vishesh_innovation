@@ -5,7 +5,8 @@ const PORepository = require("../models/purchase/repository/purchaseOrderReposit
 const GRNRepository = require("../models/stores/repository/GRNRepository");
 const MRNRepository = require("../models/quality/repository/mrnRepository");
 const GINRepository = require("../models/stores/repository/goodInwardEntryRepository");
-const {insertInventory} = require("../controllers/v1/stores/goodsInwardEntry/goodsInwardEntry");
+const {insertInventory, insertPPICInventory} = require("../controllers/v1/stores/goodsInwardEntry/goodsInwardEntry");
+const {filteredHSNList} = require("../models/purchase/repository/hsnRepository");
 let PurchaseArray = [];
 let GRNArray = [];
 let MRNArray = [];
@@ -14,7 +15,6 @@ let InventoryArray = [];
 let notFoundSupplier = [];
 let notFoundItems = [];
 let notFoundHSN = [];
-
 exports.inventoryUpload = async excelData => {
     let supplierArray = excelData.map(x => x.supplierCode);
     var uniqueSetSupplier = Array.from(new Set(supplierArray));
@@ -110,7 +110,7 @@ exports.inventoryUpload = async excelData => {
                 purchaseRate: stdCostUom1,
                 lineValue: +stdCostUom1 * +element.POQty,
                 linePPV: 0,
-                deliveryDate: new Date(reverseString(element.deliveryDate)),
+                deliveryDate: element.deliveryDate ? new Date(reverseString(element.deliveryDate)) : new Date(),
                 gst: hsn?.gstRate,
                 igst: hsn?.igstRate,
                 cgst: hsn?.cgstRate,
@@ -174,14 +174,14 @@ async function createPurchaseOrder(supplierDetails, PODetails, element, itemDeta
             purchaseCategory: element.purchaseCategory,
             supplier: supplierDetails._id,
             PONumber: "0000000",
-            PODate: new Date(reverseString(element.PODate)),
-            orderReference: element.orderReference,
+            PODate: element.PODate ? new Date(reverseString(element.PODate)) : new Date(),
+            orderReference: element.orderReference ?? "-",
             currency: element.currency,
             deliveryLocation: element.deliveryLocation,
-            deliveryDate: new Date(reverseString(element.deliveryDate)),
+            deliveryDate: element.deliveryDate ? new Date(reverseString(element.deliveryDate)) : new Date(),
             PODetails: PODetails,
-            remarks: "",
-            PORemarks: element.POremarks,
+            remarks: "-",
+            PORemarks: element.PORemarks ?? "-",
             totalLineValue: PODetails.map(m => m.lineValue).reduce((a, c) => +a + +c, 0),
             netPOValue: PODetails.map(m => m.lineValue).reduce((a, c) => +a + +c, 0),
             totalPPV: 0,
@@ -204,15 +204,17 @@ const createGRN = async (PO, element, itemDetails) => {
             createdBy: PO.createdBy,
             updatedBy: PO.updatedBy,
             GRNNumber: "0000000",
-            GRNDate: new Date(reverseString(element.GRNDate)),
+            GRNDate: element.GRNDate ? new Date(reverseString(element.GRNDate)) : new Date(),
             PONumber: PO._id,
             supplier: PO.supplier,
-            supplierInvoiceRef: element.supplierInvoice,
-            supplierInvoiceRefDate: new Date(reverseString(element.supplierInvoiceRefDate)),
+            supplierInvoiceRef: element.supplierInvoice ?? "-",
+            supplierInvoiceRefDate: element.supplierInvoiceRefDate
+                ? new Date(reverseString(element.supplierInvoiceRefDate))
+                : new Date(),
             GRNStatus: "Closed",
-            remarks: element.remarks,
-            transporterName: element.transporterName,
-            AWB_LR_BR: element.AWB_LR_BR,
+            remarks: element.remarks ?? "-",
+            transporterName: element.transporterName ?? "-",
+            AWB_LR_BR: element.AWB_LR_BR ?? "-",
             deliveryLocation: PO.deliveryLocation,
             GRNDetails: PO.PODetails.map((ele, idx) => {
                 return {
@@ -231,7 +233,7 @@ const createGRN = async (PO, element, itemDetails) => {
                     invoicedQty: ele.POQty,
                     balancedQty: 0,
                     canceledQty: 0,
-                    batchDate: new Date(reverseString(element.batchDate))
+                    batchDate: element.batchDate ? new Date(reverseString(element.batchDate)) : new Date()
                 };
             }),
             isTaxInvoice: false,
@@ -258,8 +260,8 @@ const createMRN = async (GRN, element, itemDetails) => {
             MRNNumber: "0000000",
             GRNNumber: GRN._id,
             supplier: GRN.supplier,
-            supplierInvoice: element.supplierInvoice,
-            supplierDate: new Date(reverseString(element.GRNDate)),
+            supplierInvoice: element.supplierInvoice ?? "-",
+            supplierDate: element.GRNDate ? new Date(reverseString(element.GRNDate)) : new Date(),
             MRNStatus: "Closed",
             deliveryLocation: GRN.deliveryLocation,
             MRNDetails: GRN.GRNDetails.map((ele, idx) => {
@@ -279,7 +281,7 @@ const createMRN = async (GRN, element, itemDetails) => {
                     purchaseRate: ele.purchaseRate,
                     rejectedQty: 0,
                     releasedQty: ele.GRNQty,
-                    batchDate: new Date(reverseString(element.batchDate))
+                    batchDate: element.batchDate ? new Date(reverseString(element.batchDate)) : new Date()
                 };
             })
         };
@@ -299,13 +301,15 @@ const createGIN = async (MRN, element, itemDetails) => {
             company: MRN.company,
             createdBy: MRN.createdBy,
             updatedBy: MRN.updatedBy,
-            GINDate: new Date(reverseString(element.PODate)),
+            GINDate: element.PODate ? new Date(reverseString(element.PODate)) : new Date(),
             GINNumber: "0000000",
             MRNNumber: MRN._id,
             purchaseCategory: element.purchaseCategory,
             supplier: MRN.supplier,
-            supplierInvoice: element.supplierInvoice,
-            supplierInvoiceDate: new Date(reverseString(element.supplierInvoiceRefDate)),
+            supplierInvoice: element.supplierInvoice ?? "-",
+            supplierInvoiceDate: element.supplierInvoiceRefDate
+                ? new Date(reverseString(element.supplierInvoiceRefDate))
+                : new Date(),
             currency: element.currency,
             FXRateINR: element.FXRateINR,
             deliveryLocation: MRN.deliveryLocation,
@@ -328,7 +332,7 @@ const createGIN = async (MRN, element, itemDetails) => {
                     purchaseRateUSD: ele.purchaseRate,
                     purchaseRatINR: ele.purchaseRate * element.FXRateINR,
                     lineValueINR: ele.releasedQty * ele.purchaseRate * element.FXRateINR,
-                    batchDate: new Date(reverseString(element.batchDate)),
+                    batchDate: element.batchDate ? new Date(reverseString(element.batchDate)) : new Date(),
                     balancedQty: 0,
                     rejectedQty: 0,
                     releasedQty: ele.releasedQty ?? 0
@@ -339,11 +343,20 @@ const createGIN = async (MRN, element, itemDetails) => {
         const GIN = await GINRepository.createDoc(createdObj);
         GINArray.push(GIN._id);
         // console.log("GIN", GIN);
-        await insertInventory(GIN._id, GIN.MRNNumber.valueOf(), {
-            company: GIN.company,
-            sub: GIN.createdBy,
-            sub: GIN.updatedBy
-        });
+        if (element.PPIC) {
+            await insertPPICInventory(GIN._id, GIN.MRNNumber.valueOf(), {
+                company: GIN.company,
+                sub: GIN.createdBy,
+                sub: GIN.updatedBy,
+                ...element
+            });
+        } else {
+            await insertInventory(GIN._id, GIN.MRNNumber.valueOf(), {
+                company: GIN.company,
+                sub: GIN.createdBy,
+                sub: GIN.updatedBy
+            });
+        }
         // let icArr = GIN.GINDetails.map((ele, i) => {
         //     return {
         //         company: GIN.company,
@@ -392,3 +405,176 @@ function reverseString(str) {
     }
     return str ? str.split("-").reverse().join("-") : "";
 }
+
+exports.PPICInventoryUpload = async excelData => {
+    console.log("excelData", excelData);
+    let supplierOptions = await SupplierRepository.filteredSupplierList([
+        {$match: {isSupplierActive: "A"}},
+        {
+            $project: {
+                _id: 1,
+                supplierCode: 1,
+                supplierPurchaseType: 1,
+                supplierCurrency: 1,
+                company: 1,
+                createdBy: 1,
+                updatedBy: 1,
+                supplierName: 1
+            }
+        }
+    ]);
+    let itemOptions = await ItemRepository.filteredItemList([
+        {$match: {isActive: "A"}},
+        {
+            $unwind: "$supplierDetails"
+        },
+        {
+            $lookup: {
+                from: "Supplier",
+                localField: "supplierDetails.supplierId",
+                foreignField: "_id",
+                pipeline: [{$project: {supplierCode: 1}}],
+                as: "supplierId"
+            }
+        },
+        {$unwind: "$supplierId"},
+        {
+            $project: {
+                _id: 1,
+                itemCode: 1,
+                itemName: 1,
+                itemDescription: 1,
+                orderInfoUOM: 1,
+                hsn: 1,
+                company: 1,
+                createdBy: 1,
+                updatedBy: 1,
+                itemSubCategory: 1,
+                itemType: 1,
+                primaryToSecondaryConversion: 1,
+                secondaryToPrimaryConversion: 1,
+                primaryUnit: 1,
+                secondaryUnit: 1,
+                conversionOfUnits: 1,
+                supplierCode: "$supplierId.supplierCode",
+                supplierId: "$supplierDetails.supplierId",
+                supplierName: "$supplierDetails.supplierName",
+                stdCostUom1: "$supplierDetails.stdCostUom1"
+            }
+        }
+    ]);
+    const HSNCodesOptions = await filteredHSNList([
+        {$match: {isActive: "Y"}},
+        {
+            $project: {
+                hsnCode: 1,
+                gstRate: 1,
+                igstRate: 1,
+                cgstRate: 1,
+                sgstRate: 1,
+                ugstRate: 1
+            }
+        }
+    ]);
+    for await (const excel of excelData.jsonData) {
+        let supplierObj = supplierOptions.find(supp => supp.supplierCode == excel.supplierCode);
+        if (!supplierObj) {
+            notFoundSupplier.push(supplierCode);
+            continue;
+        }
+        company = supplierObj.company;
+        // items details bt item code
+
+        // console.log(supplierCode, "itemDetails", JSON.stringify(itemDetails));
+        let itemDetails = itemOptions.filter(
+            item => item.supplierCode == excel.supplierCode && item.itemCode == excel.itemCode
+        );
+        if (!itemDetails.length) {
+            notFoundItems.push(excel.itemCode);
+        }
+        let PODetails = [];
+        let index = 0;
+        for await (const item of itemDetails) {
+            const stdCostUom1 = String(item.supplierId) === String(supplierObj._id) ? item.stdCostUom1 : 0;
+            const hsn = await HSNCodesOptions.find(hsn => hsn.hsnCode == item.hsn);
+            if (!hsn) {
+                notFoundHSN.push(item.hsn);
+            }
+            if (!!!excel.conversionOfUnits) {
+                if (excel.primaryToSecondaryConversion) {
+                    excel.conversionOfUnits = `1 ${excel.primaryUnit ?? "Unit"} - ${
+                        excel.primaryToSecondaryConversion ?? 1
+                    } ${excel.secondaryUnit ?? "Unit"}`;
+                }
+            }
+            // console.log("hsn", hsn);
+            PODetails.push({
+                item: item._id,
+                POLineNumber: index + 1,
+                UOM: excel.UOM,
+                primaryToSecondaryConversion: excel.primaryToSecondaryConversion || 1,
+                secondaryToPrimaryConversion: excel.secondaryToPrimaryConversion,
+                primaryUnit: excel.primaryUnit || "unit",
+                secondaryUnit: excel.secondaryUnit || "unit",
+                unitConversion: excel.conversionOfUnits ?? "1 unit - 1 unit",
+                POQty: excel.POQty,
+                balancedQty: 0,
+                standardRate: stdCostUom1,
+                purchaseRate: stdCostUom1,
+                lineValue: +stdCostUom1 * +excel.POQty,
+                linePPV: 0,
+                deliveryDate: excel.deliveryDate ? new Date(reverseString(excel.deliveryDate)) : new Date(),
+                gst: hsn?.gstRate,
+                igst: hsn?.igstRate,
+                cgst: hsn?.cgstRate,
+                sgst: hsn?.sgstRate,
+                ugst: hsn?.ugstRate
+            });
+            index++;
+        }
+        excel.PPIC = true;
+        // console.log("PODetails", JSON.stringify(PODetails));
+        await createPurchaseOrder(supplierObj, PODetails, excel, itemDetails);
+    }
+    console.log("PurchaseArray", PurchaseArray);
+    // try {
+    //     const modulePrefix = await findAppParameterValue("PURCHASE_ORDER_MODULE_PREFIX", company);
+    //     let autoIncrementNo = getAutoIncrementNumber(modulePrefix, "", 0, 7);
+    //     let updatedCode = await PurchaseModel.updateMany(
+    //         {_id: {$in: PurchaseArray}},
+    //         {$set: {PONumber: autoIncrementNo}}
+    //     );
+    //     // console.log("updatedCode PO", updatedCode);
+    // } catch (e) {
+    //     console.log(e);
+    // }
+    console.log("GRNArray", GRNArray);
+    // try {
+    //     const modulePrefix = await findAppParameterValue("GRN_MODULE_PREFIX", company);
+    //     let autoIncrementNo = getAutoIncrementNumber(modulePrefix, "", 0, 7);
+    //     let updatedCode = await GRNModel.updateMany({_id: {$in: GRNArray}}, {$set: {GRNNumber: autoIncrementNo}});
+    //     // console.log("updatedCode GRN", updatedCode);
+    // } catch (e) {
+    //     console.log(e);
+    // }
+    console.log("MRNArray", MRNArray);
+    // try {
+    //     const modulePrefix = await findAppParameterValue("MRN_MODULE_PREFIX", company);
+    //     let autoIncrementNo = getAutoIncrementNumber(modulePrefix, "", 0, 4);
+    //     let updatedCode = await MRNModel.updateMany({_id: {$in: MRNArray}}, {$set: {MRNNumber: autoIncrementNo}});
+    //     // console.log("updatedCode MRN", updatedCode);
+    // } catch (e) {
+    //     console.log(e);
+    // }
+    console.log("GINArray", GINArray);
+    // try {
+    //     const modulePrefix = await findAppParameterValue("GOODS_INWARD_ENTRY_MODULE_PREFIX", company);
+    //     let autoIncrementNo = getAutoIncrementNumber(modulePrefix, "", 0, 4);
+    //     let updatedCode = await GINModel.updateMany({_id: {$in: GINArray}}, {$set: {GINNumber: autoIncrementNo}});
+    //     // console.log("updatedCode GIN", updatedCode);
+    // } catch (e) {
+    //     console.log(e);
+    // }
+    console.log("InventoryArray", InventoryArray);
+    return {notFoundSupplier, notFoundItems, notFoundHSN};
+};

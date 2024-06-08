@@ -1,8 +1,7 @@
 const asyncHandler = require("express-async-handler");
 const Model = require("../../../../models/HR/salaryMasterModel");
 const MESSAGES = require("../../../../helpers/messages.options");
-const {outputData, getAllAggregationFooter} = require("../../../../helpers/utility");
-const {generateCreateData, getMatchData} = require("../../../../helpers/global.options");
+const {generateCreateData} = require("../../../../helpers/global.options");
 const {getAllSalaryComponents} = require("../SalaryComponent/SalaryComponent");
 const {getCurrentFinancialYear} = require("../../../../utilities/utility");
 const {dateToAnyFormat} = require("../../../../helpers/dateTime");

@@ -10,7 +10,7 @@ import {DirectCostService} from "@services/planning";
 import {DIRECT_COST_FORM_ERRORS} from "@mocks/validations/planning";
 import {AssetCostModalComponent, LabourCostModalComponent, ToolingCostModalComponent} from "../components";
 import {IDirectCostMasterData} from "@mocks/models/planning/masters";
-import {ProductCategoryModalComponent} from "src/app/default/sales/master/sku/screens/product-category-modal/product-category-modal.component";
+import {ProductCategoryModalComponent} from "src/app/default/sales/master/sku/screens/components";
 
 @Component({
     selector: "app-direct-cost-form",

@@ -6,10 +6,15 @@ const {
     getAllTransporterMasterAttributes,
     getAllTransporterMasterExcelAttributes
 } = require("../../../../models/sales/helpers/transporterMasterHelper");
-const {getAndSetAutoIncrementNo} = require("../../settings/autoIncrement/autoIncrement");
+const {getAndSetAutoIncrementNo, getNextAutoIncrementNo} = require("../../settings/autoIncrement/autoIncrement");
 const {TRANSPORTER_MASTER} = require("../../../../mocks/schemasConstant/salesConstant");
 const TransporterMasterRepository = require("../../../../models/sales/repository/transporterMasterRepository");
 const {OPTIONS} = require("../../../../helpers/global.options");
+const statesJson = require("../../../../mocks/states.json");
+const validationJson = require("../../../../mocks/excelUploadColumn/validation.json");
+const {getIncrementNumWithPrefix} = require("../../../../helpers/utility");
+const AutoIncrementRepository = require("../../../../models/settings/repository/autoIncrementRepository");
+
 const ObjectId = mongoose.Types.ObjectId;
 
 exports.getAll = asyncHandler(async (req, res) => {
@@ -121,15 +126,11 @@ exports.getAllMasterData = asyncHandler(async (req, res) => {
             TRANSPORTER_MASTER.AUTO_INCREMENT_DATA(),
             req.user.company
         );
-        let transporterTypeOptions = await findAppParameterValue("MODE_OF_TRANSPORT", req.user.company);
+        const options = await dropDownOptions(req.user.company);
+        // let transporterTypeOptions = await findAppParameterValue("MODE_OF_TRANSPORT", req.user.company);
         return res.success({
             autoIncrementNo,
-            transporterTypeOptions: transporterTypeOptions.split(",").map(x => {
-                return {
-                    label: x,
-                    value: x
-                };
-            })
+            ...options
         });
     } catch (error) {
         console.error("getAllMasterData Transporter", error);
@@ -137,6 +138,22 @@ exports.getAllMasterData = asyncHandler(async (req, res) => {
         return res.serverError(errors);
     }
 });
+
+const dropDownOptions = async company => {
+    try {
+        let [transporterTypeOptions] = await Promise.all([findAppParameterValue("MODE_OF_TRANSPORT", company)]);
+        return {
+            transporterTypeOptions: transporterTypeOptions.split(",").map(x => {
+                return {
+                    label: x,
+                    value: x
+                };
+            })
+        };
+    } catch (error) {
+        console.error(error);
+    }
+};
 exports.getAllTransporter = async (match, project) => {
     try {
         let rows = await TransporterMasterRepository.filteredTransporterMasterList([
@@ -153,5 +170,106 @@ exports.getAllTransporter = async (match, project) => {
         return rows;
     } catch (e) {
         console.error("getAllTransporter", e);
+    }
+};
+
+exports.checkTransporterMasterValidation = async (transporterData, column, company) => {
+    try {
+        const transporterOptions = await TransporterMasterRepository.filteredTransporterMasterList([
+            {$match: {company: ObjectId(req.user.company), status: OPTIONS.defaultStatus.ACTIVE}},
+            {
+                $project: {
+                    name: 1
+                }
+            }
+        ]);
+        const requiredFields = ["transporterType"];
+        const falseArr = OPTIONS.falsyArray;
+        let {transporterTypeOptions} = await dropDownOptions(company);
+        let dropdownCheck = [
+            {
+                key: "transporterType",
+                options: transporterTypeOptions.map(x => {
+                    return {
+                        label: x.label,
+                        value: x.value
+                    };
+                })
+            },
+            {
+                key: "state",
+                options: statesJson
+            }
+        ];
+        let uniqueTransporter = [];
+        for await (const x of transporterData) {
+            x.isValid = true;
+            x.message = null;
+            let label = `${x["name"]}`;
+            if (uniqueTransporter.includes(label)) {
+                x.isValid = false;
+                x.message = `${x["name"]} duplicate Entry`;
+                break;
+            }
+            uniqueTransporter.push(label);
+            for (const ele of Object.values(column)) {
+                if (requiredFields.includes(ele) && falseArr.includes(x[ele])) {
+                    x.isValid = false;
+                    x.message = validationJson[ele] ?? `${ele} is Required`;
+                    break;
+                }
+                for (const dd of dropdownCheck) {
+                    if (ele == dd.key && !dd.options.map(values => values.value).includes(x[ele])) {
+                        x.isValid = false;
+                        x.message = `${ele} is Invalid Value & Value Must be ${dd.options.map(values => values.value)}`;
+                        break;
+                    }
+                }
+                for (const option of transporterOptions) {
+                    if (option.name == x["name"]) {
+                        x.isValid = false;
+                        x.message = `${x["name"]} already exists`;
+                        break;
+                    }
+                }
+            }
+        }
+        const inValidRecords = transporterData.filter(x => !x.isValid);
+        const validRecords = transporterData.filter(x => x.isValid);
+        return {inValidRecords, validRecords};
+    } catch (error) {
+        console.error(error);
+    }
+};
+
+exports.bulkInsertTransporterMasterByCSV = async (jsonData, {company, createdBy, updatedBy}) => {
+    try {
+        let autoIncrementObj = await getNextAutoIncrementNo({
+            ...TRANSPORTER_MASTER.AUTO_INCREMENT_DATA(),
+            company: company
+        });
+        let transporterData = jsonData.map(x => {
+            rest.transporterCode = getIncrementNumWithPrefix(autoIncrementObj);
+            rest.company = company;
+            rest.createdBy = createdBy;
+            rest.updatedBy = updatedBy;
+            autoIncrementObj.autoIncrementValue++;
+            return rest;
+        });
+        await TransporterMasterRepository.insertManyDoc(transporterData);
+        await AutoIncrementRepository.findAndUpdateDoc(
+            {
+                module: TRANSPORTER_MASTER.MODULE,
+                company: company
+            },
+            {
+                $set: {
+                    autoIncrementValue: autoIncrementObj.autoIncrementValue
+                }
+            }
+        );
+        return {message: "Uploaded successfully!"};
+    } catch (error) {
+        console.error(error);
     }
 };

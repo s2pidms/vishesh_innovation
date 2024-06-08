@@ -14,6 +14,20 @@
         "items": []
     },
     {
+        "_id": "661691cefbecc291a3531308",
+        "menuItemId": "64a6c1e33339d4dc9d8141a8",
+        "module": "Production",
+        "type": "MASTER",
+        "order": 2,
+        "isDisplay": false,
+        "title": "Mould Master",
+        "displayName": "Mould Master",
+        "disabled": false,
+        "url": "/default/production/master/mould_master/list",
+        "items": [],
+        "roles": []
+    },
+    {
         "_id": "655c3c293613e949b4d61e6b",
         "menuItemId": "64a6c1e33339d4dc9d8141a8",
         "module": "Production",
@@ -24,20 +38,6 @@
         "displayName": "Map Process and Machine",
         "disabled": false,
         "url": "/default/production/master/map_process_and_machine/list",
-        "items": [],
-        "roles": []
-    },
-    {
-        "_id": "661691cefbecc291a3531308",
-        "menuItemId": "64a6c1e33339d4dc9d8141a8",
-        "module": "Production",
-        "type": "MASTER",
-        "order": 3,
-        "isDisplay": false,
-        "title": "Mould Master",
-        "displayName": "Mould Master",
-        "disabled": false,
-        "url": "/default/production/master/mould_master/list",
         "items": [],
         "roles": []
     }

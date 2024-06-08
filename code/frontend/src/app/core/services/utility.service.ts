@@ -120,4 +120,15 @@ export class UtilityService {
 
         return item.quantity;
     }
+
+    patchPANNumber(GSTINNo: any) {
+        if (GSTINNo) {
+            let resultStr = GSTINNo?.substring(2);
+            if (resultStr) {
+                return resultStr.slice(0, 10);
+            }
+        } else {
+            return null;
+        }
+    }
 }

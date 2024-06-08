@@ -95,27 +95,27 @@
                             <td colspan="6">
                                 <p class="fw-bold">{{ tableData?.company?.companyName }}</p>
                                 <p>
-                                    {{ getAddress(tableData?.company?.companyAddress)?.addressLine1 }}
-                                    {{ getAddress(tableData?.company?.companyAddress)?.addressLine2 }}
-                                    {{ getAddress(tableData?.company?.companyAddress)?.addressLine3 }},
-                                    {{ getAddress(tableData?.company?.companyAddress)?.city }} -
-                                    {{ getAddress(tableData?.company?.companyAddress)?.pinCode }}
+                                    {{ tableData?.company?.companyAddress?.addressLine1 }}
+                                    {{ tableData?.company?.companyAddress?.addressLine2 }}
+                                    {{ tableData?.company?.companyAddress?.addressLine3 }},
+                                    {{ tableData?.company?.companyAddress?.city }} -
+                                    {{ tableData?.company?.companyAddress?.pinCode }}
 
-                                    {{ getAddress(tableData?.company?.companyAddress)?.state }},
-                                    {{ getAddress(tableData?.company?.companyAddress)?.country }}
+                                    {{ tableData?.company?.companyAddress?.state }},
+                                    {{ tableData?.company?.companyAddress?.country }}
                                 </p>
                                 <p>GSTIN:{{ tableData?.company?.GSTIN }}</p>
                                 <p>
                                     Contact:
 
-                                    <span *ngIf="tableData?.company?.companyContactPersonNumber">
-                                        {{ tableData?.company?.companyContactPersonNumber }}
+                                    <span *ngIf="tableData?.company?.contactInfo?.companyContactPersonNumber">
+                                        {{ tableData?.company?.contactInfo?.companyContactPersonNumber }}
                                     </span>
-                                    <span *ngIf="tableData?.company?.companyContactPersonAltNum">
-                                        / {{ tableData?.company?.companyContactPersonAltNum }}
+                                    <span *ngIf="tableData?.company?.contactInfo?.companyContactPersonAltNum">
+                                        / {{ tableData?.company?.contactInfo?.companyContactPersonAltNum }}
                                     </span>
-                                    <span *ngIf="tableData?.company?.companyContactPersonEmail">
-                                        ( {{ tableData?.company?.companyContactPersonEmail }} )
+                                    <span *ngIf="tableData?.company?.contactInfo?.companyContactPersonEmail">
+                                        ( {{ tableData?.company?.contactInfo?.companyContactPersonEmail }} )
                                     </span>
                                 </p>
                             </td>
@@ -181,6 +181,19 @@
                             <td colspan="2" class="text-center">
                                 {{ p?.deliveryDate | date : "dd-MM-YYYY" }}
                             </td>
+                        </tr>
+
+                        <tr *ngFor="let d of tableData.rowRepeat; let j = index" class="">
+                            <td colspan="1" class="text-center set-row-repeat-hide">
+                                <p class="py-3">
+                                    {{ tableData.SPODetails.length + j + 1 }}
+                                </p>
+                            </td>
+                            <td colspan="3" class="text-center set-row-repeat-hide"><p></p></td>
+                            <td colspan="1" class="text-center set-row-repeat-hide"><p></p></td>
+                            <td colspan="1" class="text-center set-row-repeat-hide"><p></p></td>
+                            <td colspan="3" class="text-center set-row-repeat-hide"><p></p></td>
+                            <td colspan="2" class="text-center set-row-repeat-hide"><p></p></td>
                         </tr>
 
                         <tr>

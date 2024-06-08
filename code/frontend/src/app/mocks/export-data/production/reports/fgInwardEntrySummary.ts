@@ -1,6 +1,6 @@
 import {EXCEL_STYLE} from "../../excelStyle";
 import {GET_PDF_EXPORT_DATA} from "../../exportPdfData";
-let widths = ["*", "*", "*", "*", "*", "*", "*", "*", "*", "*"];
+let widths = ["*", "*", "*", "*", "*", "*", "*", "*", "*", "*","*"];
 let title = "FG Inward Entry Summary Report";
 let headers: any = [
     {
@@ -51,6 +51,11 @@ let headers: any = [
     {
         header: "Batch Date",
         key: "manufacturingDate",
+        ...EXCEL_STYLE
+    },
+    {
+        header: "Exp Date",
+        key: "expiryDate",
         ...EXCEL_STYLE
     }
 ];

@@ -1,0 +1,139 @@
+<div class="listCard card">
+    <div class="table-header">
+        <label class="heading">Job Work Item Master Summary</label>
+    </div>
+    <div appAccessControl [accessType]="rolePermissionActions.createAction" class="text-center">
+        <button class="btn btn-primary btn-add" type="button" (click)="navigateTo('../form', {}, 'create')">
+            <i class="fa fa-plus-square fa-lg me-2" aria-hidden="true"></i>
+            Job Work Item
+        </button>
+    </div>
+    <hr class="line-border" />
+    <div class="table-responsive">
+        <app-setting-header [data]="{page,pageSize,collection,search,type: 'list'}" (dataChange)="eventHeader($event)">
+        </app-setting-header>
+
+        <table class="table table-bordered">
+            <thead class="bg-primary">
+                <tr class="text-white">
+                    <th sortable="jobWorkItemCode" (sort)="onSort($event)">Job Work Item Code</th>
+                    <th class="text-start" sortable="jobWorkItemName" (sort)="onSort($event)">Job Work Item Name</th>
+                    <th class="text-start" sortable="jobWorkItemDescription" (sort)="onSort($event)">
+                        Job Work Item Description
+                    </th>
+                    <th sortable="orderInfoUOM" (sort)="onSort($event)">UoM</th>
+                    <th sortable="HSNCode" (sort)="onSort($event)">HSN Code</th>
+                    <th sortable="shelfLife" (sort)="onSort($event)">Shelf Life (Mo)</th>
+                    <th sortable="QCLevels" (sort)="onSort($event)">QC Level</th>
+                    <th sortable="status" (sort)="onSort($event)">Status</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                <tr *ngFor="let i of itemData; trackBy: trackByFn">
+                    <td>{{ i?.jobWorkItemCode }}</td>
+                    <td class="text-start" [style.width]="jobWorkItemName.clientWidth" #jobWorkItemName>
+                        <span class="pointer" [positionTarget]="jobWorkItemName" [ngbTooltip]="i.jobWorkItemName">
+                            {{ i.jobWorkItemName }}
+                        </span>
+                    </td>
+                    <td class="text-start" [style.width]="jobWorkItemDescription.clientWidth" #jobWorkItemDescription>
+                        <span
+                            class="pointer"
+                            [positionTarget]="jobWorkItemDescription"
+                            [ngbTooltip]="i.jobWorkItemDescription"
+                        >
+                            {{ i.jobWorkItemDescription }}
+                        </span>
+                    </td>
+                    <!-- <td>{{ i?.orderInfoUOM | UOMUnitsMaster }}</td> -->
+                    <td>
+                        <!-- <span>
+                            {{ i?.orderInfoUOM | UOMUnitsMaster }}
+                        </span> -->
+
+                        <ng-container>
+                            <div class="d-flex justify-content-between px-2">
+                                <span
+                                    [ngbTooltip]="i.conversionOfUnits"
+                                    placement="top"
+                                    [ngClass]="
+                                        i.orderInfoUOM == i.secondaryUnit
+                                            ? 'text-primary pointer'
+                                            : 'text-secondary pointer'
+                                    "
+                                    >{{ i?.orderInfoUOM | UOMUnitsMaster }}
+                                </span>
+
+                                <span class="pointer d-flex align-items-center">
+                                    <div
+                                        (click)="setConversionOfUnit(i)"
+                                        *ngIf="i.primaryUnit && i.secondaryUnit != '-'"
+                                        class="unit-switch-rev"
+                                    ></div>
+                                    <div
+                                        *ngIf="!(i.primaryUnit && i.secondaryUnit != '-')"
+                                        class="unit-switch-gray"
+                                    ></div>
+                                </span>
+                            </div>
+                        </ng-container>
+                    </td>
+                    <td>{{ i?.HSNCode }}</td>
+                    <td>{{ i?.shelfLife }}</td>
+                    <td>{{ i?.QCLevels }}</td>
+                    <td>
+                        <span class="d-flex justify-content-center">
+                            <div *ngIf="i.status == 'Active'" class="statusActive"></div>
+                            <div *ngIf="i.status == 'Inactive'" class="statusInActive"></div>
+                        </span>
+                    </td>
+                    <td>
+                        <div class="dropdown">
+                            <button class="dropbtn"></button>
+                            <div class="dropdown-content">
+                                <a
+                                    appAccessControl
+                                    [accessType]="rolePermissionActions.viewAction"
+                                    href="javascript:void(0)"
+                                    (click)="navigateTo('../form', i, 'view')"
+                                >
+                                    <i class="fa fa-eye fa-lg me-2 text-primary" aria-hidden="true"></i>
+                                    View
+                                </a>
+                                <a
+                                    appAccessControl
+                                    [accessType]="rolePermissionActions.editAction"
+                                    href="javascript:void(0)"
+                                    (click)="navigateTo('../form', i, 'edit')"
+                                >
+                                    <i class="fa fa-pencil-square-o fa-lg me-2 text-primary" aria-hidden="true"></i>
+                                    Edit
+                                </a>
+                                <!-- <a
+                                    appAccessControl
+                                    [accessType]="rolePermissionActions.editAction"
+                                    [class.disable]="i.isActive == 'Inactive'"
+                                    href="javascript:void(0)"
+                                    (click)="navigateTo('../form', i, 'copy')"
+                                >
+                                    <i class="fa fa-clone fa-lg me-2 text-primary" aria-hidden="true"></i>
+                                    Copy
+                                </a> -->
+                                <a
+                                    *ngIf="this.user == superAdminId"
+                                    href="javascript:void(0)"
+                                    (click)="openConfirmModal(i?._id, i?.jobWorkItemCode)"
+                                >
+                                    <i class="fa fa-trash text-primary" aria-hidden="true"></i>
+                                    Delete
+                                </a>
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>

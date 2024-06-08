@@ -17,7 +17,6 @@ const paymentTerms = require("./paymentTerms/routes");
 const salesForecast = require("./sales-forecast/routes");
 const salesDebitNote = require("./salesDebitNote/routes");
 const quotationSKU = require("./quotationSKU/routes");
-const quotationDSKU = require("./quotationDSKU/routes");
 const salesProductMaster = require("./salesProductMaster/routes");
 const customerDiscountManagement = require("./customerDiscountManagement/routes");
 
@@ -39,7 +38,6 @@ router.use("/paymentTerms", paymentTerms);
 router.use("/salesForecast", salesForecast);
 router.use("/salesDebitNote", salesDebitNote);
 router.use("/quotationSKU", quotationSKU);
-router.use("/quotationDSKU", quotationDSKU);
 router.use("/salesProductMaster", salesProductMaster);
 router.use("/customerDiscountManagement", customerDiscountManagement);
 

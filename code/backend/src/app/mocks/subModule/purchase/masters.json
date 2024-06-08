@@ -14,25 +14,11 @@
         "roles": []
     },
     {
-        "_id": "655c3c2c3613e949b4d61ec8",
-        "menuItemId": "64a6c1e33339d4dc9d8141a5",
-        "module": "Purchase",
-        "type": "MASTER",
-        "order": 2,
-        "isDisplay": false,
-        "title": "SAC Master",
-        "displayName": "SAC Master",
-        "disabled": false,
-        "url": "/default/purchase/master/sac/list",
-        "items": [],
-        "roles": []
-    },
-    {
         "_id": "655c3c2c3613e949b4d61ecd",
         "menuItemId": "64a6c1e33339d4dc9d8141a5",
         "module": "Purchase",
         "type": "MASTER",
-        "order": 3,
+        "order": 2,
         "isDisplay": false,
         "title": "Supplier Master",
         "displayName": "Supplier Master",
@@ -46,7 +32,7 @@
         "menuItemId": "64a6c1e33339d4dc9d8141a5",
         "module": "Purchase",
         "type": "MASTER",
-        "order": 4,
+        "order": 3,
         "isDisplay": false,
         "title": "Item Master",
         "displayName": "Item Master",
@@ -55,6 +41,21 @@
         "items": [],
         "roles": []
     },
+    {
+        "_id": "655c3c2c3613e949b4d61ec8",
+        "menuItemId": "64a6c1e33339d4dc9d8141a5",
+        "module": "Purchase",
+        "type": "MASTER",
+        "order": 4,
+        "isDisplay": false,
+        "title": "SAC Master",
+        "displayName": "SAC Master",
+        "disabled": false,
+        "url": "/default/purchase/master/sac/list",
+        "items": [],
+        "roles": []
+    },
+
     {
         "_id": "655c3c2d3613e949b4d61ed7",
         "menuItemId": "64a6c1e33339d4dc9d8141a5",
@@ -69,26 +70,13 @@
         "items": [],
         "roles": []
     },
-    {
-        "_id": "655c3c2d3613e949b4d61ee1",
-        "menuItemId": "64a6c1e33339d4dc9d8141a5",
-        "module": "Purchase",
-        "type": "MASTER",
-        "order": 7,
-        "isDisplay": false,
-        "title": "Supplier Evaluation Master",
-        "displayName": "Supplier Evaluation Master",
-        "disabled": false,
-        "url": "/default/purchase/master/supplier-evaluation/list",
-        "items": [],
-        "roles": []
-    },
+
     {
         "_id": "655c3c2d3613e949b4d61eeb",
         "menuItemId": "64a6c1e33339d4dc9d8141a5",
         "module": "Purchase",
         "type": "MASTER",
-        "order": 9,
+        "order": 6,
         "isDisplay": false,
         "title": "Payment Terms",
         "displayName": "Payment Terms",
@@ -103,7 +91,7 @@
         "module": "Purchase",
         "roles": [],
         "type": "MASTER",
-        "order": 10,
+        "order": 7,
         "isDisplay": false,
         "title": "Transporter Master",
         "displayName": "Transporter Master",
@@ -116,7 +104,7 @@
         "menuItemId": "64a6c1e33339d4dc9d8141a5",
         "module": "Purchase",
         "type": "MASTER",
-        "order": 11,
+        "order": 8,
         "isDisplay": false,
         "title": "Service Provider",
         "displayName": "Service Provider",
@@ -148,6 +136,48 @@
                 "_id": "65f7e003bb8de3268a345bf0"
             }
         ],
+        "roles": []
+    },
+    {
+        "_id": "6654369c2c850f32c4e81d04",
+        "menuItemId": "64a6c1e33339d4dc9d8141a5",
+        "module": "Purchase",
+        "roles": [],
+        "type": "MASTER",
+        "order": 9,
+        "isDisplay": false,
+        "title": "Job Worker Master",
+        "displayName": "Job Worker Master",
+        "disabled": false,
+        "url": "/default/purchase/master/job_worker_master/list",
+        "items": []
+    },
+    {
+        "_id": "665576813905376083b560b0",
+        "menuItemId": "64a6c1e33339d4dc9d8141a5",
+        "module": "Purchase",
+        "roles": [],
+        "type": "MASTER",
+        "order": 10,
+        "isDisplay": false,
+        "title": "Job Work Item Master",
+        "displayName": "Job Work Item Master",
+        "disabled": false,
+        "url": "/default/purchase/master/job_worker_item_master/list",
+        "items": []
+    },
+    {
+        "_id": "655c3c2d3613e949b4d61ee1",
+        "menuItemId": "64a6c1e33339d4dc9d8141a5",
+        "module": "Purchase",
+        "type": "MASTER",
+        "order": 11,
+        "isDisplay": false,
+        "title": "Supplier Evaluation Master",
+        "displayName": "Supplier Evaluation Master",
+        "disabled": false,
+        "url": "/default/purchase/master/supplier-evaluation/list",
+        "items": [],
         "roles": []
     }
 ]

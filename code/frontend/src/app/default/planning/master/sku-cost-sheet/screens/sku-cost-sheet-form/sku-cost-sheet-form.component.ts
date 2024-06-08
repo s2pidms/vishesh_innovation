@@ -10,7 +10,7 @@ import {SKUCostSheetService} from "@services/planning";
 import {SKU_COST_SHEET_FORM_ERRORS} from "@mocks/validations/planning";
 import {CostSheetDetailsModalComponent} from "../cost-sheet-details-modal/cost-sheet-details-modal.component";
 import {ISKUCostSheetMasterData} from "@mocks/models/planning/masters";
-import {ProductCategoryModalComponent} from "src/app/default/sales/master/sku/screens/product-category-modal/product-category-modal.component";
+import {ProductCategoryModalComponent} from "src/app/default/sales/master/sku/screens/components";
 
 @Component({
     selector: "app-sku-cost-sheet-form",

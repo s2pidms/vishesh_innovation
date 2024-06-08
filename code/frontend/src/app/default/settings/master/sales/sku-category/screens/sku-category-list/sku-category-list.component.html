@@ -4,11 +4,7 @@
     </div>
 
     <div appAccessControl [accessType]="rolePermissionActions.createAction" class="text-center">
-        <button
-            class="btn btn-primary btn-add"
-            type="button"
-            (click)="navigateTo('/default/settings/master/sales/sku_category/form', {}, 'create')"
-        >
+        <button class="btn btn-primary btn-add" type="button" (click)="navigateTo('../form', {}, 'create')">
             <i class="fa fa-plus-square fa-lg me-2" aria-hidden="true"></i>
             Product Category Master
         </button>
@@ -27,9 +23,7 @@
                     <th sortable="displayProductCategoryName" (sort)="onSort($event)">DD/Display Value</th>
                     <th sortable="SKUCategoryPrefix" (sort)="onSort($event)">Product Category Prefix</th>
                     <th sortable="digit" (sort)="onSort($event)">Digit</th>
-                    <th sortable="SKUCategoryAutoIncrement" (sort)="onSort($event)">
-                        Auto Increment No.
-                    </th>
+                    <th sortable="SKUCategoryAutoIncrement" (sort)="onSort($event)">Auto Increment No.</th>
                     <th sortable="application" (sort)="onSort($event)">Application</th>
                     <th>Action</th>
                 </tr>
@@ -52,7 +46,7 @@
                                     appAccessControl
                                     [accessType]="rolePermissionActions.viewAction"
                                     href="javascript:void(0)"
-                                    (click)="navigateTo('/default/settings/master/sales/sku_category/form', u, 'view')"
+                                    (click)="navigateTo('../form', u, 'view')"
                                 >
                                     <i class="fa fa-eye fa-lg me-2 text-primary" aria-hidden="true"></i>
                                     View
@@ -61,7 +55,7 @@
                                     appAccessControl
                                     [accessType]="rolePermissionActions.editAction"
                                     href="javascript:void(0)"
-                                    (click)="navigateTo('/default/settings/master/sales/sku_category/form', u, 'edit')"
+                                    (click)="navigateTo('../form', u, 'edit')"
                                 >
                                     <i class="fa fa-pencil-square-o fa-lg me-2 text-primary" aria-hidden="true"></i>
                                     Edit

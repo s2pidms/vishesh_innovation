@@ -1,12 +1,11 @@
 import {Location} from "@angular/common";
 import {Component, OnInit} from "@angular/core";
 import {UntypedFormControl, UntypedFormGroup, Validators} from "@angular/forms";
-import {ActivatedRoute, Router} from "@angular/router";
-import {ValidationService} from "@core/components";
+import {mergeMap, of} from "rxjs";
+import {ActivatedRoute} from "@angular/router";
 import {SpinnerService, ToastService, UtilityService} from "@core/services";
 import {AUTO_RENEWAL} from "@mocks/constant";
 import {CustomersService} from "@services/sales";
-import {mergeMap, of} from "rxjs";
 @Component({
     selector: "app-invoice-qr-code-form",
     templateUrl: "./invoice-qr-code-form.component.html"
@@ -25,18 +24,18 @@ export class InvoiceQRCodeFormComponent implements OnInit {
         customerNickName: new UntypedFormControl(null),
         showSKUDescription: new UntypedFormControl("Yes"),
         showPANNo: new UntypedFormControl("No"),
-        showEximCode: new UntypedFormControl("No")
+        showEximCode: new UntypedFormControl("No"),
+        TCSOnScrap: new UntypedFormControl("No"),
+        TCSOnVendor: new UntypedFormControl("No")
     });
 
     printCodeOptions: any = AUTO_RENEWAL;
 
     constructor(
         private customerService: CustomersService,
-        private router: Router,
         private activatedRoute: ActivatedRoute,
         private spinner: SpinnerService,
         private toastService: ToastService,
-        private validationService: ValidationService,
         private location: Location,
         private utilityService: UtilityService
     ) {}

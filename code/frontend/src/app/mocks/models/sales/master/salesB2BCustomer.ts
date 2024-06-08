@@ -30,4 +30,6 @@ export interface salesB2BCustomer {
     venderCode?: string;
     showPANNo?: string;
     showEximCode?: string;
+    TCSOnScrap?: string;
+    TCSOnVendor?: string;
 }

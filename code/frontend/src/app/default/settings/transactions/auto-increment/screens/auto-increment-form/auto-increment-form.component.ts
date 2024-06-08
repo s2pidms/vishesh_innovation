@@ -32,7 +32,6 @@ export class AutoIncrementFormComponent implements OnInit {
 
     constructor(
         private autoIncrementService: AutoIncrementService,
-
         private activatedRoute: ActivatedRoute,
         private spinner: SpinnerService,
         private toastService: ToastService,

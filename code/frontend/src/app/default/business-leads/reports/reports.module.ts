@@ -70,24 +70,6 @@ const routes: Routes = [
                     )
             },
             {
-                path: "pending_D-SKU_conversion",
-                loadChildren: () =>
-                    import("./pending-d-sku-conversion/pending-d-sku-conversion.module").then(
-                        m => m.PendingDSKUConversionModule
-                    )
-            },
-            {
-                path: "D-SKU_to_SKU_conversion",
-                loadChildren: () =>
-                    import("./d-sku-to-sku-conversion/d-sku-to-sku-conversion.module").then(
-                        m => m.DSKUToSKUConversionModule
-                    )
-            },
-            {
-                path: "dsku_cost_sheet",
-                loadChildren: () => import("./dsku-cost-sheet/dsku-cost-sheet.module").then(m => m.DskuCostSheetModule)
-            },
-            {
                 path: "sample_request_report",
                 loadChildren: () =>
                     import("./sample-request-report/sample-request-report.module").then(

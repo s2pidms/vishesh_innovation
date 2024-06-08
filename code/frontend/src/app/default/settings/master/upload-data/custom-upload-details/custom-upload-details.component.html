@@ -1,6 +1,6 @@
 <div class="modelPage">
     <div class="modal-header">
-        <div class="heading">{{ title }}</div>
+        <div class="heading">{{ title | separateWords }}</div>
         <div>
             <button type="button" class="btn btn-cross btn-sm" aria-label="Close" (click)="this.activeModal.close()">
                 <i class="fa fa-times-circle" aria-hidden="true"></i>

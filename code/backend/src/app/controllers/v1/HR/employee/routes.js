@@ -40,6 +40,22 @@ app.post(
         {
             name: "empRelievingLetter",
             maxCount: 1
+        },
+        {
+            name: "uploadBankPassBook",
+            maxCount: 1
+        },
+        {
+            name: "uploadBankCheckBook",
+            maxCount: 1
+        },
+        {
+            name: "uploadOfferLetter",
+            maxCount: 1
+        },
+        {
+            name: "uploadAppointmentLetter",
+            maxCount: 1
         }
     ]),
     create
@@ -75,6 +91,22 @@ app.put(
         },
         {
             name: "empRelievingLetter",
+            maxCount: 1
+        },
+        {
+            name: "uploadBankPassBook",
+            maxCount: 1
+        },
+        {
+            name: "uploadBankCheckBook",
+            maxCount: 1
+        },
+        {
+            name: "uploadOfferLetter",
+            maxCount: 1
+        },
+        {
+            name: "uploadAppointmentLetter",
             maxCount: 1
         }
     ]),

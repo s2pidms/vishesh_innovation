@@ -1,11 +1,10 @@
 import {Component, OnInit} from "@angular/core";
 import {UntypedFormControl, UntypedFormGroup, Validators} from "@angular/forms";
-import {ActivatedRoute, Router} from "@angular/router";
-
+import {ActivatedRoute} from "@angular/router";
+import {Location} from "@angular/common";
 import {ToastService, UtilityService} from "@core/services";
 import {mergeMap, of} from "rxjs";
 import {ValidationService} from "@core/components";
-import {NgbModal} from "@ng-bootstrap/ng-bootstrap";
 import {ESP_CATEGORY_FORM_ERRORS} from "@mocks/validations/settings";
 import {ChildItemCategoryService} from "@services/settings";
 import {CHILD_ITEM_CATEGORY_NAME} from "@mocks/constant";
@@ -17,14 +16,13 @@ import {SpinnerService} from "@core/services";
 })
 export class ChildItemCategoryFormComponent implements OnInit {
     constructor(
-        private router: Router,
         private activatedRoute: ActivatedRoute,
         private spinner: SpinnerService,
         private toastService: ToastService,
         private childItemCategoryService: ChildItemCategoryService,
         private validationService: ValidationService,
-        private modalService: NgbModal,
-        private utilityService: UtilityService
+        private utilityService: UtilityService,
+        private location: Location
     ) {}
 
     form = new UntypedFormGroup({
@@ -42,10 +40,6 @@ export class ChildItemCategoryFormComponent implements OnInit {
 
     ngOnInit(): void {
         this.getInitialData();
-    }
-
-    navigateTo(path: string, id: any, action: string) {
-        this.router.navigate([path], {queryParams: {id, action}});
     }
 
     submit() {
@@ -71,7 +65,7 @@ export class ChildItemCategoryFormComponent implements OnInit {
             this.spinner.hide();
             this.submitted = false;
             this.toastService.success(success.message);
-            this.router.navigate(["default/settings/master/planning/child_item_category/list"]);
+            this.location.back();
         });
     }
 
@@ -81,7 +75,7 @@ export class ChildItemCategoryFormComponent implements OnInit {
             this.submitted = false;
             this.spinner.hide();
             this.toastService.success(success.message);
-            this.router.navigate(["default/settings/master/planning/child_item_category/list"]);
+            this.location.back();
         });
     }
 

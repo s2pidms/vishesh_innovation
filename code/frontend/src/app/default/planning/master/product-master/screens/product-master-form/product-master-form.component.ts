@@ -12,7 +12,7 @@ import {ProductMasterService} from "@services/planning";
 import {PRODUCT_MASTER_FORM_ERRORS} from "@mocks/validations/planning";
 import {ToastService, SpinnerService, UtilityService, AppGlobalService} from "@core/services";
 import {IProductMasterData} from "@mocks/models/planning/masters";
-import {ProductCategoryModalComponent} from "src/app/default/sales/master/sku/screens/product-category-modal/product-category-modal.component";
+import {ProductCategoryModalComponent} from "src/app/default/sales/master/sku/screens/components";
 
 @Component({
     selector: "app-product-master-form",

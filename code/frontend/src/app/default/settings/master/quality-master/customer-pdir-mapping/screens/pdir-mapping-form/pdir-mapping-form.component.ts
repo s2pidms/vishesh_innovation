@@ -1,6 +1,6 @@
 import {Component, OnInit} from "@angular/core";
 import {FormControl, FormGroup} from "@angular/forms";
-import {ActivatedRoute, Router} from "@angular/router";
+import {ActivatedRoute} from "@angular/router";
 import {mergeMap, of} from "rxjs";
 import {ValidationService} from "@core/components";
 import {ToastService, UtilityService} from "@core/services";
@@ -11,6 +11,7 @@ import {PDIR_ENTRY_TEMPLATE_NAME} from "@mocks/constant";
 import {ICustomerPDIRMappingMasterData} from "@mocks/models/settings/masters";
 import {NgbModal} from "@ng-bootstrap/ng-bootstrap";
 import {DetailsOfCustomersListComponent} from "@shared/modals";
+import {Location} from "@angular/common";
 
 @Component({
     selector: "app-pdir-mapping-form",
@@ -37,13 +38,13 @@ export class PdirMappingFormComponent implements OnInit {
 
     constructor(
         private customerPDIRMappingService: CustomerPDIRMappingService,
-        private router: Router,
         private activatedRoute: ActivatedRoute,
         private spinner: SpinnerService,
         private toastService: ToastService,
         private validationService: ValidationService,
         private utilityService: UtilityService,
-        private modalService: NgbModal
+        private modalService: NgbModal,
+        private location: Location
     ) {}
 
     ngOnInit(): void {
@@ -70,7 +71,7 @@ export class PdirMappingFormComponent implements OnInit {
             this.spinner.hide();
             this.submitted = false;
             this.toastService.success(success.message);
-            this.router.navigate(["/default/settings/master/quality_master/customer_pdir_mapping/list"]);
+            this.location.back();
         });
     }
 
@@ -80,7 +81,7 @@ export class PdirMappingFormComponent implements OnInit {
             this.submitted = false;
             this.spinner.hide();
             this.toastService.success(success.message);
-            this.router.navigate(["/default/settings/master/quality_master/customer_pdir_mapping/list"]);
+            this.location.back();
         });
     }
 

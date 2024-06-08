@@ -14,6 +14,7 @@ export class AddItemUOMComponent implements OnInit {
     @Input() action: any = "";
     @Input() PSPInventory: boolean = false;
     @Input() flag: boolean = false;
+    @Input() isNotApplicable: boolean = false;
     @Input() ModalUOMsUnit: any = [];
     @Input() WXLDimensionsUnit: any = [];
     @Input() dualUnits = {};
@@ -203,7 +204,11 @@ export class AddItemUOMComponent implements OnInit {
         if (this.validationService.checkErrors(this.form, ITEM_DUAL_UNITS_FORM_ERRORS)) {
             return;
         }
-        if (this.flag == true && this.WXLDimensionsUnit.includes(this.DDetailsFlag)) {
+        if (
+            this.flag == true &&
+            this.WXLDimensionsUnit.includes(this.DDetailsFlag) &&
+            this.form.value.secondaryUnit != "-"
+        ) {
             if (!this.dualUnitsDimensionsData.value.width) {
                 this.toastService.warning("Width is required !");
                 return;
@@ -219,11 +224,19 @@ export class AddItemUOMComponent implements OnInit {
             return;
         }
 
-        if (this.f["unitConversionFlag"].value == 1 && !this.f["primaryToSecondaryConversion"].value) {
+        if (
+            this.f["unitConversionFlag"].value == 1 &&
+            !this.f["primaryToSecondaryConversion"].value &&
+            this.form.value.secondaryUnit != "-"
+        ) {
             this.toastService.warning("Conversion of Units is required !");
             return;
         }
-        if (this.f["unitConversionFlag"].value == 2 && !this.f["secondaryToPrimaryConversion"].value) {
+        if (
+            this.f["unitConversionFlag"].value == 2 &&
+            !this.f["secondaryToPrimaryConversion"].value &&
+            this.form.value.secondaryUnit != "-"
+        ) {
             this.toastService.warning("Conversion of Units is required !");
             return;
         }
@@ -264,6 +277,25 @@ export class AddItemUOMComponent implements OnInit {
         this.setWidthDetails();
         if (flag == "primaryUnit" || flag == "secondaryUnit") {
             this.setDualUnitsWidthDetails();
+        }
+
+        if (secondaryUnit == "-") {
+            this.f["primaryToSecondaryConversion"].setValue(null);
+            this.f["secondaryToPrimaryConversion"].setValue(null);
+            this.f["unitConversionFlag"].disable();
+            this.f["primaryConversion"].disable();
+            this.dualUnitsDimensionsData.patchValue({
+                type: null,
+                width: null,
+                length: null,
+                // widthUnit: null,
+                // lengthUnit: null,
+                widthInMM: null,
+                lengthInM: null,
+                sqmPerRoll: null
+            });
+        } else {
+            this.f["unitConversionFlag"].enable();
         }
     }
 

@@ -1,6 +1,7 @@
 import {Component, OnInit} from "@angular/core";
 import {UntypedFormControl, UntypedFormGroup, Validators} from "@angular/forms";
-import {Router, ActivatedRoute} from "@angular/router";
+import {Location} from "@angular/common";
+import {ActivatedRoute} from "@angular/router";
 import {mergeMap, of} from "rxjs";
 import {ToastService, UtilityService} from "@core/services";
 import {UserService} from "@services/settings";
@@ -8,6 +9,7 @@ import {ValidationService} from "@core/components";
 import {USER_FORM_ERRORS} from "@mocks/validations/settings";
 import {SpinnerService, StorageService} from "@core/services";
 import {IUserMasterData} from "@mocks/models/settings/masters";
+import {adminId} from "@mocks/constant";
 @Component({
     selector: "app-user-form",
     templateUrl: "./user-form.component.html"
@@ -17,13 +19,15 @@ export class UserFormComponent implements OnInit {
     action: string = "create";
     status: any = "";
     isActive: any;
-    user: any = {};
+    user: any = "";
     superAdminId = "64a687b4e9143bffd820fb3d";
+    adminId = adminId;
     masterData: IUserMasterData = {
         autoIncrementNo: "",
         departmentOptions: [],
         rolesOptions: []
     };
+    adminUser: any = "";
 
     form = new UntypedFormGroup({
         _id: new UntypedFormControl(null),
@@ -44,19 +48,21 @@ export class UserFormComponent implements OnInit {
     }
     constructor(
         private userService: UserService,
-        private router: Router,
         private activatedRoute: ActivatedRoute,
         private spinner: SpinnerService,
         private toastService: ToastService,
         private validationService: ValidationService,
         private storageService: StorageService,
-        private utilityService: UtilityService
+        private utilityService: UtilityService,
+        private location: Location
     ) {}
 
     ngOnInit(): void {
         this.getInitialData();
-        this.user = this.storageService.get("IDMSAUser")?.roles;
-        this.user = this.user.find((x: any) => x == this.superAdminId);
+        let rolesData = this.storageService.get("IDMSAUser")?.roles;
+
+        this.user = rolesData.find((x: any) => x == this.superAdminId);
+        this.adminUser = rolesData.find((x: any) => x == this.adminId);
     }
 
     reset() {
@@ -83,7 +89,7 @@ export class UserFormComponent implements OnInit {
             this.submitted = false;
             this.spinner.hide();
             this.toastService.success(success.message);
-            this.router.navigate(["default/settings/master/security_master/user/user-list"]);
+            this.location.back();
         });
     }
 
@@ -93,7 +99,7 @@ export class UserFormComponent implements OnInit {
             this.spinner.hide();
             this.submitted = false;
             this.toastService.success(success.message);
-            this.router.navigate(["default/settings/master/security_master/user/user-list"]);
+            this.location.back();
         });
     }
 

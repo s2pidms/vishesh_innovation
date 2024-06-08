@@ -12,3 +12,5 @@ export * from "./generateSPOMasterData";
 export * from "./debitNoteMasterData";
 export * from "./debitNoteDetailsArray";
 export * from "./purchaseIndentMasterData";
+export * from "./jobWorkChallanMasterData";
+export * from "./jobWorkChallan";

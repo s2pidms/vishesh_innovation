@@ -1,6 +1,7 @@
 import {Component, OnInit, QueryList, ViewChildren} from "@angular/core";
 import {UntypedFormControl, UntypedFormGroup, Validators} from "@angular/forms";
-import {ActivatedRoute, Router} from "@angular/router";
+import {Location} from "@angular/common";
+import {ActivatedRoute} from "@angular/router";
 import {mergeMap, of} from "rxjs";
 import {ToastService} from "@core/services";
 import {GRDetails} from "@interfaces/GRDetails";
@@ -15,8 +16,7 @@ import {ItemCategorySpecificationService} from "@services/quality/itemCategorySp
 
 @Component({
     selector: "app-item-category-specifications-form",
-    templateUrl: "./item-category-specifications-form.component.html",
-   
+    templateUrl: "./item-category-specifications-form.component.html"
 })
 export class ItemCategorySpecificationsFormComponent implements OnInit {
     @ViewChildren(NgbdSortableHeader) headers: QueryList<NgbdSortableHeader> | any;
@@ -62,9 +62,9 @@ export class ItemCategorySpecificationsFormComponent implements OnInit {
         private spinner: SpinnerService,
         private toastService: ToastService,
         private utilityService: UtilityService,
-        private router: Router,
         private validationService: ValidationService,
-        private activatedRoute: ActivatedRoute
+        private activatedRoute: ActivatedRoute,
+        private location: Location
     ) {}
 
     ngOnInit(): void {
@@ -120,7 +120,7 @@ export class ItemCategorySpecificationsFormComponent implements OnInit {
             this.submitted = false;
             this.spinner.hide();
             this.toastService.success(success.message);
-            this.router.navigate(["/default/quality/master/item_category_specifications/list"]);
+            this.location.back();
         });
     }
 
@@ -130,7 +130,7 @@ export class ItemCategorySpecificationsFormComponent implements OnInit {
             this.spinner.hide();
             this.submitted = false;
             this.toastService.success(success.message);
-            this.router.navigate(["/default/quality/master/item_category_specifications/list"]);
+            this.location.back();
         });
     }
 

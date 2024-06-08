@@ -1,13 +1,13 @@
 import {Component, OnInit, Input, QueryList, ViewChildren, Output, EventEmitter} from "@angular/core";
+import {Location} from "@angular/common";
+import {mergeMap, of} from "rxjs";
 import {NgbActiveModal, NgbModal} from "@ng-bootstrap/ng-bootstrap";
 import {SpinnerService, ToastService} from "@core/services";
 import {NgbdSortableHeader, SortEvent} from "@directives/sortable.directive";
 import {IMaterialList} from "@mocks/models/sales/master";
-import {ChildPartInfoModalComponent} from "src/app/default/sales/master/sku/screens/child-part-info-modal/child-part-info-modal.component";
 import {SKUService} from "@services/sales";
 import {ActivatedRoute} from "@angular/router";
-import {mergeMap, of} from "rxjs";
-import {Location} from "@angular/common";
+import {ChildPartInfoModalComponent} from "src/app/default/sales/master/sku/screens/components";
 
 @Component({
     selector: "app-sku-material-master-form",

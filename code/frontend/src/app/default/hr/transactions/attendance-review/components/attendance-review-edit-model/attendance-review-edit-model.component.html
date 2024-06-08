@@ -1,0 +1,85 @@
+<div class="modelPage">
+    <div class="modal-header">
+        <div class="heading">Update Attendance Review</div>
+        <div>
+            <button type="button" class="btn btn-cross btn-sm" aria-label="Close" (click)="this.activeModal.close()">
+                <i class="fa fa-times-circle" aria-hidden="true"></i>
+            </button>
+        </div>
+    </div>
+    <div class="">
+        <ng-container>
+            <div class="row my-4 px-5">
+                <div class="col-3">
+                    <label class="form-label mb-1"> Month Days <span class="text-danger"></span> </label>
+                    <input
+                        type="number"
+                        class="form-control"
+                        [(ngModel)]="attendanceData.monthDays"
+                        (input)="setAttendance()"
+                        readonly
+                    />
+                </div>
+                <div class="col-3 ps-0">
+                    <label class="form-label mb-1"> Weekly Off <span class="text-danger"></span> </label>
+                    <input
+                        type="number"
+                        class="form-control"
+                        [(ngModel)]="attendanceData.weeklyOff"
+                        (input)="setAttendance()"
+                    />
+                </div>
+                <div class="col-3 ps-0">
+                    <label class="form-label mb-1"> Paid Holidays <span class="text-danger"></span> </label>
+                    <input
+                        type="number"
+                        class="form-control"
+                        [(ngModel)]="attendanceData.paidHolidays"
+                        (input)="setAttendance()"
+                    />
+                </div>
+                <div class="col-3 ps-0">
+                    <label class="form-label mb-1"> Paid Leaves/Comp off <span class="text-danger"></span> </label>
+                    <input
+                        type="number"
+                        class="form-control"
+                        [(ngModel)]="attendanceData.paidLeaves"
+                        (input)="setAttendance()"
+                    />
+                </div>
+            </div>
+            <div class="row my-4 px-5">
+                <div class="col-4 pe-3">
+                    <label class="form-label mb-1"> OD Days <span class="text-danger"></span> </label>
+                    <input
+                        type="number"
+                        class="form-control"
+                        [(ngModel)]="attendanceData.ODDays"
+                        (input)="setAttendance()"
+                    />
+                </div>
+                <div class="col-4 px-3">
+                    <label class="form-label mb-1"> Present Days <span class="text-danger"></span> </label>
+                    <input
+                        type="number"
+                        class="form-control"
+                        [(ngModel)]="attendanceData.presentDays"
+                        (input)="setAttendance()"
+                    />
+                </div>
+                <div class="col-4 ps-3">
+                    <label class="form-label mb-1"> LOP/Diff <span class="text-danger"></span> </label>
+                    <input type="number" class="form-control" [(ngModel)]="attendanceData.LOPDiff" />
+                </div>
+            </div>
+        </ng-container>
+        <hr class="line-border my-4" />
+        <div class="row px-5">
+            <div class="ps-0 d-flex justify-content-center">
+                <div class="mb-4">
+                    <button type="button" class="btn bg-primary px-2" (click)="dismissModel()">Save & Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

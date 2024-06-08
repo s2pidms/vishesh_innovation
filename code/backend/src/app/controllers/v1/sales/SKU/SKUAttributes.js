@@ -375,6 +375,10 @@ exports.createCopyForSKUInkAttributes = asyncHandler(async (req, res) => {
 });
 exports.checkSKUDimensionValidation = async (dimensionData, column, company) => {
     try {
+        const SKUOptions = await SKUMasterRepository.filteredSKUMasterList([
+            {$match: {company: ObjectId(company), isActive: "A"}},
+            {$project: {SKUNo: 1}}
+        ]);
         let dropdownCheck = [
             {
                 key: "unit",
@@ -397,17 +401,12 @@ exports.checkSKUDimensionValidation = async (dimensionData, column, company) => 
                         break;
                     }
                 }
-                if (
-                    !(await SKUMasterRepository.findOneDoc(
-                        {SKUNo: x["SKUNo"]},
-                        {
-                            _id: 1
-                        }
-                    ))
-                ) {
-                    x.isValid = false;
-                    x.message = `${ele} not exists`;
-                    break;
+                for (const ele of SKUOptions) {
+                    if (ele.SKUNo != x["SKUNo"]) {
+                        x.isValid = false;
+                        x.message = `${x["SKUNo"]} not exists`;
+                        break;
+                    }
                 }
             }
         }
@@ -483,6 +482,10 @@ exports.bulkInsertSKUDimByCSV = async (jsonData, {company, createdBy, updatedBy}
 
 exports.checkSKUMaterialValidation = async (materialData, column, company) => {
     try {
+        const SKUOptions = await SKUMasterRepository.filteredSKUMasterList([
+            {$match: {company: ObjectId(company), isActive: "A"}},
+            {$project: {SKUNo: 1}}
+        ]);
         const requiredFields = [
             "SKUNo",
             "itemCode",
@@ -554,17 +557,12 @@ exports.checkSKUMaterialValidation = async (materialData, column, company) => {
                         break;
                     }
                 }
-                if (
-                    !(await SKUMasterRepository.findOneDoc(
-                        {SKUNo: x["SKUNo"]},
-                        {
-                            _id: 1
-                        }
-                    ))
-                ) {
-                    x.isValid = false;
-                    x.message = `${ele} not exists`;
-                    break;
+                for (const ele of SKUOptions) {
+                    if (ele.SKUNo != x["SKUNo"]) {
+                        x.isValid = false;
+                        x.message = `${x["SKUNo"]} not exists`;
+                        break;
+                    }
                 }
             }
         }
@@ -666,8 +664,12 @@ exports.bulkInsertSKUMaterialByCSV = async (jsonData, {company, createdBy, updat
     }
 };
 
-exports.checkSKUInkValidation = async (materialData, column, company) => {
+exports.checkSKUInkValidation = async (inkData, column, company) => {
     try {
+        const SKUOptions = await SKUMasterRepository.filteredSKUMasterList([
+            {$match: {company: ObjectId(company), isActive: "A"}},
+            {$project: {SKUNo: 1}}
+        ]);
         const requiredFields = [
             "colSeq",
             "itemCode",
@@ -700,17 +702,12 @@ exports.checkSKUInkValidation = async (materialData, column, company) => {
                         break;
                     }
                 }
-                if (
-                    !(await SKUMasterRepository.findOneDoc(
-                        {SKUNo: x["SKUNo"]},
-                        {
-                            _id: 1
-                        }
-                    ))
-                ) {
-                    x.isValid = false;
-                    x.message = `${ele} not exists`;
-                    break;
+                for (const ele of SKUOptions) {
+                    if (ele.SKUNo != x["SKUNo"]) {
+                        x.isValid = false;
+                        x.message = `${x["SKUNo"]} not exists`;
+                        break;
+                    }
                 }
             }
         }

@@ -432,8 +432,8 @@ export class GenerateExportEInvoiceFormComponent implements OnInit {
                 },
                 ShipDtls: {
                     Gstin: "URP" || success?.customer?.GSTIN,
-                    LglNm: success?.customer?.customerName,
-                    TrdNm: success?.customer?.customerName,
+                    LglNm: success?.customerShippingAddress?.contactPersonName,
+                    TrdNm: success?.customerShippingAddress?.contactPersonName,
                     Addr1: `${success?.customerShippingAddress?.line1} ${success?.customerShippingAddress?.line2}`,
                     Addr2: success?.customerShippingAddress?.line3,
                     Loc: success?.customerShippingAddress?.city,
@@ -442,9 +442,8 @@ export class GenerateExportEInvoiceFormComponent implements OnInit {
                 }
             };
             this.form.patchValue(obj);
+            this.spinner.hide();
         });
-
-        this.spinner.hide();
     }
 
     reset() {

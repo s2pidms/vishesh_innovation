@@ -74,10 +74,13 @@ exports.getAllSILineDetailsAttributes = () => {
         salesInvoiceTotalSGSTAmount: {$round: ["$salesInvoiceTotalSGSTAmount", 2]},
         salesInvoiceTotalIGSTAmount: {$round: ["$salesInvoiceTotalIGSTAmount", 2]},
         salesInvoiceTotalUGSTAmount: {$round: ["$salesInvoiceTotalUGSTAmount", 2]},
-        salesInvoiceTotalTaxAmount: {$round: ["$salesInvoiceTotalTaxAmount", 2]},
+        salesInvoiceTotalTaxAmount: {$round: [{$add: ["$IGSTAmount", "$CGSTAmount", "$SGSTAmount"]}, 2]},
         salesInvoiceTotalAmountWithTax: {$round: ["$salesInvoiceTotalAmountWithTax", 2]},
         lineValueWithTax: {
-            $round: [{$add: ["$salesInvoiceTotalTaxAmount", "$salesInvoiceDetails.salesInvoiceLineValue"]}, 2]
+            $round: [
+                {$add: ["$IGSTAmount", "$CGSTAmount", "$SGSTAmount", "$salesInvoiceDetails.salesInvoiceLineValue"]},
+                2
+            ]
         },
         salesInvoiceDateS: 1,
         customerName: "$customer.customerName",

@@ -201,5 +201,12 @@
         "value": "Days",
         "order": 29,
         "status": "Inactive"
+    },
+    {
+        "_id": "665712fc828fba9a9d89716a",
+        "label": "Running Meters",
+        "value": "Running Meters",
+        "order": 30,
+        "status": "Inactive"
     }
 ]

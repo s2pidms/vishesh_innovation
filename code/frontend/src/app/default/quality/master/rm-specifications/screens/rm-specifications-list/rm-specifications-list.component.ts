@@ -19,7 +19,7 @@ export class RmSpecificationsListComponent implements OnInit, OnDestroy {
     @ViewChildren(NgbdSortableHeader) headers: QueryList<NgbdSortableHeader> | any;
 
     page: number = 1;
-    pageSize: number = 8;
+    pageSize: number = 7;
     collection: number = 0;
     column: string = "status";
     direction: number = 1;
@@ -27,7 +27,9 @@ export class RmSpecificationsListComponent implements OnInit, OnDestroy {
     tableData: RMSpecificationMaster[] = [];
     superAdminId: any = superAdminId;
     user: any = "";
+    supplier: any = "";
     totalAmounts: any = {};
+    supplierOptions: any = [];
     rolePermissionActions: any = LIST_DEFAULT_PERMISSION_ACTIONS;
     subscription!: Subscription;
     constructor(
@@ -91,6 +93,7 @@ export class RmSpecificationsListComponent implements OnInit, OnDestroy {
             search: this.search,
             column: this.column,
             direction: this.direction,
+            supplier: this.supplier,
             excel: excel
         };
         if (this.subscription) this.subscription.unsubscribe();
@@ -102,12 +105,18 @@ export class RmSpecificationsListComponent implements OnInit, OnDestroy {
             } else {
                 this.tableData = success.rows;
                 this.collection = success.count;
+                this.supplierOptions = success?.supplierOptions;
                 if (success?.totalAmounts?.length > 0) {
                     this.totalAmounts = success.totalAmounts[0];
                 }
             }
             this.spinner.hide();
         });
+    }
+
+    reset() {
+        this.supplier = "";
+        this.getAll();
     }
     delete(id: any) {
         this.spinner.show();

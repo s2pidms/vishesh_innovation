@@ -85,7 +85,11 @@ export class QuotationOfSKUPrintScreenComponent implements OnInit {
             this.display = success?.display;
             this.tableData = success?.quotation;
             this.isDomestic = success?.quotation?.customerCategory.includes("Domestic");
-            this.termsAndCondOfQuotation = success?.termsAndCondOfQuotation;
+            if (success.quotation.termsAndCond && success.quotation.termsAndCond.length) {
+                this.termsAndCondOfQuotation = success?.quotation?.termsAndCond;
+            } else {
+                this.termsAndCondOfQuotation = success?.termsAndCondOfQuotation;
+            }
         });
     }
 

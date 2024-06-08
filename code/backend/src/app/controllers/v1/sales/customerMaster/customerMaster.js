@@ -429,6 +429,19 @@ exports.getAllCustomersWithAddress = asyncHandler(async (req, res) => {
 
 exports.checkCustomersValidation = async (customerData, column, company) => {
     try {
+        const customersOptions = await CustomerRepository.filteredCustomerList([
+            {
+                $match: {
+                    isCustomerActive: "A",
+                    company: ObjectId(company)
+                }
+            },
+            {
+                $project: {
+                    customerName: 1
+                }
+            }
+        ]);
         const requiredFields = [
             "customerCode",
             "customerName",
@@ -489,17 +502,12 @@ exports.checkCustomersValidation = async (customerData, column, company) => {
                         break;
                     }
                 }
-                if (
-                    await CustomerRepository.findOneDoc(
-                        {customerName: x["customerName"]},
-                        {
-                            _id: 1
-                        }
-                    )
-                ) {
-                    x.isValid = false;
-                    x.message = `${ele} is already exists`;
-                    break;
+                for (const ele of customersOptions) {
+                    if (ele.customerName == x["customerName"]) {
+                        x.isValid = false;
+                        x.message = `${x["customerName"]}  already exists`;
+                        break;
+                    }
                 }
             }
         }

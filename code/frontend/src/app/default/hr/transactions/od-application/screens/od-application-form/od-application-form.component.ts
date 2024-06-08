@@ -1,7 +1,8 @@
 import {Component, OnInit} from "@angular/core";
 import {UntypedFormControl, UntypedFormGroup, Validators} from "@angular/forms";
 import {OnDutyApplicationService} from "@services/hr";
-import {Router, ActivatedRoute} from "@angular/router";
+import {Location} from "@angular/common";
+import {ActivatedRoute} from "@angular/router";
 import {mergeMap, of} from "rxjs";
 import {ValidationService} from "@core/components";
 import {OD_APPLICATION_FORM_ERRORS} from "@mocks/validations/hr";
@@ -52,13 +53,13 @@ export class ODApplicationFormComponent implements OnInit {
     }
     constructor(
         private OnDutyService: OnDutyApplicationService,
-        private router: Router,
         private activatedRoute: ActivatedRoute,
         private spinner: SpinnerService,
         private menuTitleService: MenuTitleService,
         private toastService: ToastService,
         private validationService: ValidationService,
-        private utilityService: UtilityService
+        private utilityService: UtilityService,
+        private location: Location
     ) {}
     ngOnInit(): void {
         this.getInitialData();
@@ -95,7 +96,7 @@ export class ODApplicationFormComponent implements OnInit {
             this.submitted = false;
             this.spinner.hide();
             this.toastService.success(success.message);
-            this.router.navigate(["/default/HR/transactions/OD_application/od-list"]);
+            this.location.back();
         });
     }
 
@@ -105,7 +106,7 @@ export class ODApplicationFormComponent implements OnInit {
             this.spinner.hide();
             this.submitted = false;
             this.toastService.success(success.message);
-            this.router.navigate(["/default/HR/transactions/OD_application/od-list"]);
+            this.location.back();
         });
     }
 

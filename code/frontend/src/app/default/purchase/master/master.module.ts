@@ -54,6 +54,18 @@ const routes: Routes = [
                 path: "service_provider",
                 loadChildren: () =>
                     import("./service-provider/service-provider.module").then(m => m.ServiceProviderModule)
+            },
+            {
+                path: "job_worker_master",
+                loadChildren: () =>
+                    import("./job-worker-master/job-worker-master.module").then(m => m.JobWorkerMasterModule)
+            },
+            {
+                path: "job_worker_item_master",
+                loadChildren: () =>
+                    import("./job-worker-item-master/job-worker-item-master.module").then(
+                        m => m.JobWorkerItemMasterModule
+                    )
             }
         ]
     }

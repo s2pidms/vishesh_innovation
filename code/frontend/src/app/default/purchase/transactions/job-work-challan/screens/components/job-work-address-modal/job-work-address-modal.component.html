@@ -1,0 +1,84 @@
+<form [formGroup]="form">
+    <div class="modelPage">
+        <div class="modal-header">
+            <div class="heading">Ship To Address</div>
+            <div>
+                <button
+                    type="button"
+                    class="btn btn-cross btn-sm"
+                    aria-label="Close"
+                    (click)="this.activeModal.close(this.form.value)"
+                >
+                    <i class="fa fa-times-circle" aria-hidden="true"></i>
+                </button>
+            </div>
+        </div>
+        <div class="container-fluid mt-5 mb-3">
+            <div class="row">
+                <div class="col-12 px-0">
+                    <div class="row mb-4 px-5">
+                        <div class="col-6">
+                            <label class="form-label"> Address Line 1 <span class="text-danger"></span> </label>
+                            <input class="form-control bg-white-smoke" type="text" formControlName="line1" readonly />
+                        </div>
+                        <div class="col-6">
+                            <label class="form-label"> Address Line 2 <span class="text-danger"></span></label>
+                            <input class="form-control bg-white-smoke" type="text" formControlName="line2" readonly />
+                        </div>
+                    </div>
+                    <div class="row mb-4 px-5">
+                        <div class="col-6">
+                            <label class="form-label"> Address Line 3 <span class="text-danger"></span></label>
+                            <input class="form-control bg-white-smoke" type="text" formControlName="line3" readonly />
+                        </div>
+                        <div class="col-6">
+                            <label class="form-label"> Address Line 4 <span class="text-danger"></span></label>
+                            <input class="form-control bg-white-smoke" type="text" formControlName="line4" readonly />
+                        </div>
+                    </div>
+                    <div class="row mb-4 px-5">
+                        <div class="col-6">
+                            <label class="form-label"> City/District <span class="text-danger"></span> </label>
+                            <input
+                                class="form-control bg-white-smoke"
+                                type="text"
+                                formControlName="cityOrDistrict"
+                                readonly
+                            />
+                        </div>
+                        <div class="col-6">
+                            <label class="form-label"> State/Province <span class="text-danger"></span> </label>
+                            <input class="form-control bg-white-smoke" type="text" formControlName="state" readonly />
+                        </div>
+                    </div>
+                    <div class="row my-4 px-5">
+                        <div class="col-6">
+                            <label class="form-label"> Pin Code <span class="text-danger"></span> </label>
+                            <input
+                                class="form-control bg-white-smoke"
+                                oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
+                                type="number"
+                                maxlength="6"
+                                formControlName="pinCode"
+                                readonly
+                            />
+                        </div>
+                        <div class="col-6">
+                            <div class="row justify-content-between">
+                                <div class="col">
+                                    <label class="form-label">Country <span class="text-danger"></span> </label>
+                                    <input
+                                        class="form-control bg-white-smoke"
+                                        type="text"
+                                        formControlName="country"
+                                        readonly
+                                    />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>

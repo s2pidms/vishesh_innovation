@@ -1,6 +1,7 @@
 import {Component, OnInit} from "@angular/core";
 import {UntypedFormControl, UntypedFormGroup} from "@angular/forms";
-import {ActivatedRoute, Router} from "@angular/router";
+import {ActivatedRoute} from "@angular/router";
+import {Location} from "@angular/common";
 import {mergeMap, of} from "rxjs";
 import {ToastService, UtilityService} from "@core/services";
 import {ValidationService} from "@core/components";
@@ -29,13 +30,13 @@ export class QmsMappingFormComponent implements OnInit {
 
     constructor(
         private reportQMSMappingService: ReportQMSMappingService,
-        private router: Router,
         private activatedRoute: ActivatedRoute,
         private spinner: SpinnerService,
         private toastService: ToastService,
         private validationService: ValidationService,
         private appGlobalService: AppGlobalService,
-        private utilityService: UtilityService
+        private utilityService: UtilityService,
+        private location: Location
     ) {}
 
     ngOnInit(): void {
@@ -65,7 +66,7 @@ export class QmsMappingFormComponent implements OnInit {
             this.spinner.hide();
             this.submitted = false;
             this.toastService.success(success.message);
-            this.router.navigate(["/default/settings/master/global/qms_mapping/list"]);
+            this.location.back();
         });
     }
 
@@ -75,7 +76,7 @@ export class QmsMappingFormComponent implements OnInit {
             this.submitted = false;
             this.spinner.hide();
             this.toastService.success(success.message);
-            this.router.navigate(["/default/settings/master/global/qms_mapping/list"]);
+            this.location.back();
         });
     }
 

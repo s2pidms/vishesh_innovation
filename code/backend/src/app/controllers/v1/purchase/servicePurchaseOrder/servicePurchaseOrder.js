@@ -12,7 +12,7 @@ const {
     getAllServicePurchaseOrderReportsAttributes
 } = require("../../../../models/purchase/helpers/servicePurchaseOrderHelper");
 const {getSACObj} = require("../SAC/SAC");
-const {OTHER_CHARGES_SAC_CODE} = require("../../../../mocks/constantData");
+const {OTHER_CHARGES_SAC_CODE, COMPANY_DEPARTMENTS} = require("../../../../mocks/constantData");
 const {getEndDateTime, getStartDateTime, dateToAnyFormat} = require("../../../../helpers/dateTime");
 const {getAndSetAutoIncrementNo} = require("../../settings/autoIncrement/autoIncrement");
 const {SERVICE_PURCHASE_ORDER} = require("../../../../mocks/schemasConstant/purchaseConstant");
@@ -154,6 +154,8 @@ exports.getById = asyncHandler(async (req, res) => {
                 path: "company",
                 model: "Company",
                 select: {
+                    contactInfo: 1,
+                    placesOfBusiness: 1,
                     companyName: 1,
                     GSTIN: 1,
                     companyContactPersonEmail: 1,
@@ -168,10 +170,28 @@ exports.getById = asyncHandler(async (req, res) => {
                     companySignatureUrl: {$concat: [`${CONSTANTS.domainUrl}company/`, "$companySignature"]},
                     companyPdfHeaderUrl: {$concat: [`${CONSTANTS.domainUrl}company/`, "$companyPdfHeader"]}
                 }
-            });
+            })
+            .lean();
         if (!existing) {
             let errors = MESSAGES.apiSuccessStrings.DATA_NOT_EXISTS("ServicePurchaseOrder");
             return res.unprocessableEntity(errors);
+        }
+        if (existing.company.placesOfBusiness.length > 0) {
+            for (const e of existing.company.placesOfBusiness) {
+                if (e.locationID == existing.deliveryLocation) {
+                    existing.company.GSTIN = e.GSTINForAdditionalPlace;
+                    existing.company.companyAddress = e;
+                }
+                if (e.locationID == existing.deliveryLocation) {
+                    existing.company.GSTIN = e.GSTINForAdditionalPlace;
+                    existing.company.companyAddress = e;
+                }
+            }
+        }
+        if (existing.company.contactInfo.length > 0) {
+            existing.company.contactInfo = existing.company.contactInfo.find(
+                x => x.department == COMPANY_DEPARTMENTS.PURCHASE
+            );
         }
         return res.success(existing);
     } catch (e) {

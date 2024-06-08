@@ -54,7 +54,7 @@ export class ODApplicationListComponent implements OnInit, OnDestroy {
         ) {
             return null;
         } else {
-            this.router.navigate([path], {queryParams: {id: u?._id, action}});
+            this.router.navigate([path], {relativeTo: this.activatedRoute, queryParams: {id: u?._id, action}});
             return;
         }
     }

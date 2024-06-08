@@ -63,7 +63,7 @@ const serviceInvoiceSchema = mongoose.Schema(
             {
                 service: {
                     type: String,
-                    required: true,
+                    required: false,
                     ref: "ServiceMaster"
                 },
                 serviceCode: {

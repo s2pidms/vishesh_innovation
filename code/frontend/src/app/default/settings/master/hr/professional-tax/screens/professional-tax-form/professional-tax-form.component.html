@@ -47,7 +47,7 @@
                 </div>
             </div>
         </div>
-        <hr class="row line-border" />
+        <hr *ngIf="action != 'view'" class="row line-border" />
         <div *ngIf="action != 'view'" class="d-flex justify-content-center mb-3">
             <div class="d-grid col-md-1 me-5">
                 <button class="btn btn-primary btn-lg" type="button" (click)="reset()">Reset</button>

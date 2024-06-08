@@ -1,7 +1,7 @@
 import {Component, OnInit} from "@angular/core";
 import {UntypedFormControl, UntypedFormGroup, Validators} from "@angular/forms";
 import {Location} from "@angular/common";
-import {ActivatedRoute, Router} from "@angular/router";
+import {ActivatedRoute} from "@angular/router";
 import {mergeMap, of} from "rxjs";
 import {SpecificationMasterService} from "@services/quality";
 import {SPECIFICATION_MASTER_FORM_ERRORS} from "@mocks/validations/quality/specification.validation";
@@ -23,7 +23,6 @@ export class SpecificationMasterFormComponent implements OnInit {
 
     constructor(
         private specificationMasterService: SpecificationMasterService,
-        private router: Router,
         private activatedRoute: ActivatedRoute,
         private spinner: SpinnerService,
         private toastService: ToastService,
@@ -77,7 +76,7 @@ export class SpecificationMasterFormComponent implements OnInit {
             this.submitted = false;
             this.spinner.hide();
             this.toastService.success(success.message);
-            this.router.navigate(["/default/quality/master/specification_master/list"]);
+            this.location.back();
         });
     }
 
@@ -87,7 +86,7 @@ export class SpecificationMasterFormComponent implements OnInit {
             this.spinner.hide();
             this.submitted = false;
             this.toastService.success(success.message);
-            this.router.navigate(["/default/quality/master/specification_master/list"]);
+            this.location.back();
         });
     }
 

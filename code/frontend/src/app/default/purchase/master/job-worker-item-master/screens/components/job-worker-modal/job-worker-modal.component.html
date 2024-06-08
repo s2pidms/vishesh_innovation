@@ -1,0 +1,334 @@
+<div class="modelPage">
+    <div class="modal-header">
+        <div class="heading">Add Job Worker</div>
+        <div>
+            <button type="button" class="btn btn-cross btn-sm" aria-label="Close" (click)="dismissModal()">
+                <i class="fa fa-times-circle" aria-hidden="true"></i>
+            </button>
+        </div>
+    </div>
+    <div class="">
+        <div class="container-fluid px-0">
+            <form [formGroup]="form">
+                <div class="row px-5 mt-4">
+                    <div class="col-7 separate-row">
+                        <div class="row">
+                            <div class="col-5 ps-1 pe-5">
+                                <label class="form-label"> Job Worker Name<span class="text-danger">*</span> </label>
+                                <div class="d-flex align-items-center">
+                                    <div class="col-11">
+                                        <ng-select
+                                            [items]="jobWorkerOptions"
+                                            bindLabel="label"
+                                            bindValue="value"
+                                            formControlName="jobWorker"
+                                            [clearable]="false"
+                                            (change)="setJobWorkerCurrency($event)"
+                                        >
+                                        </ng-select>
+                                    </div>
+                                    <div
+                                        style="height: 2.9rem"
+                                        class="input-group-text bg-primary pointer col-auto fs-4"
+                                        id="basic-addon1"
+                                        (click)="openJobWorkDetailsModal()"
+                                    >
+                                        <i class="fa fa-search text-white" aria-hidden="true"></i>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-3 ps-0">
+                                <label class="form-label"> Part No. (JW) </label>
+                                <input class="form-control" type="text" formControlName="partNo" />
+                            </div>
+                            <div class="col-4 px-0">
+                                <label class="form-label">
+                                    Part Name (JW)
+                                    <span class="text-danger"> </span>
+                                </label>
+                                <input class="form-control" type="text" formControlName="partName" />
+                            </div>
+                        </div>
+                        <!-- <span class="set-position mt-1">
+                            <img src="./assets/new_icons/redstroke.svg" alt="" height="27" width="8" />
+                        </span> -->
+                    </div>
+
+                    <!-- <div class="col-md-3">
+                        <label class="form-label mb-1"> Currency </label>
+                        <input class="form-control" type="text" formControlName="supplierCurrency" />
+                    </div> -->
+
+                    <div class="col-5">
+                        <div class="row">
+                            <div class="col-5 pe-0">
+                                <div class="d-flex">
+                                    <div class="col-4 me-1">
+                                        <label class="form-label">Unit 1 <span class="text-danger">*</span></label>
+                                        <input
+                                            *ngIf="
+                                                secondaryUnit &&
+                                                (primaryToSecondaryConversion || secondaryToPrimaryConversion)
+                                            "
+                                            type="text"
+                                            class="form-control ps-2 pe-0 pointer"
+                                            readonly
+                                            [ngbTooltip]="list"
+                                            placement="bottom"
+                                            value="{{ form.controls['uom1'].value | UOMUnitsMaster }}"
+                                        />
+                                        <input
+                                            *ngIf="
+                                                !secondaryUnit ||
+                                                (!primaryToSecondaryConversion && !secondaryToPrimaryConversion)
+                                            "
+                                            type="text"
+                                            class="form-control ps-2 pe-0"
+                                            value="{{ form.controls['uom1'].value | UOMUnitsMaster }}"
+                                            readonly
+                                        />
+                                    </div>
+                                    <div class="col-8">
+                                        <label class="form-label">
+                                            Process Cost <span class="text-danger">*</span>
+                                        </label>
+                                        <div class="d-flex">
+                                            <span class="input-group-text combine-INR text-secondary">
+                                                {{ "INR" | companyCurrency }}
+                                                <div class="vr ms-3"></div>
+                                            </span>
+                                            <input
+                                                class="form-control border-start-0"
+                                                formControlName="stdCostUom1"
+                                                type="number"
+                                                (input)="setUnit2PurchaseCost()"
+                                            />
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-1 d-flex align-items-center justify-content-center px-0">
+                                <span class="d-flex justify-content-center mt-1">
+                                    <div class="fs-3 mt-4 text-secondary">=</div>
+                                </span>
+                            </div>
+                            <div class="col-5 ps-0">
+                                <div class="d-flex">
+                                    <div class="col-4 me-1">
+                                        <label class="form-label">Unit 2</label>
+                                        <input
+                                            *ngIf="
+                                                secondaryUnit &&
+                                                (primaryToSecondaryConversion || secondaryToPrimaryConversion)
+                                            "
+                                            type="text"
+                                            class="form-control ps-2 pe-0 pointer"
+                                            value="{{ form.controls['uom2'].value | UOMUnitsMaster }}"
+                                            readonly
+                                            [ngbTooltip]="list2"
+                                            placement="bottom"
+                                        />
+                                        <input
+                                            *ngIf="
+                                                !secondaryUnit ||
+                                                (!primaryToSecondaryConversion && !secondaryToPrimaryConversion)
+                                            "
+                                            type="text"
+                                            class="form-control ps-2 pe-0"
+                                            value="{{ form.controls['uom2'].value | UOMUnitsMaster }}"
+                                            readonly
+                                        />
+                                    </div>
+                                    <div class="col-8">
+                                        <label class="form-label">
+                                            Process Cost <span class="text-danger">*</span>
+                                        </label>
+                                        <div class="d-flex">
+                                            <span class="input-group-text combine-INR text-secondary">
+                                                {{ "INR" | companyCurrency }}
+                                                <div class="vr ms-3"></div>
+                                            </span>
+                                            <input
+                                                class="form-control border-start-0"
+                                                formControlName="stdCostUom2"
+                                                type="number"
+                                            />
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-1 d-flex align-items-end ps-0">
+                                <button
+                                    class="plusIconSvg btn btn-primary"
+                                    type="button"
+                                    [disabled]="btnDisable || action == 'view'"
+                                    (click)="addJobWorker()"
+                                ></button>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- <div class="col-md-3 ps-3 pe-0">
+                        <div class="row">
+                            <div class="col-9 ps-3 pe-0">
+                                <label class="form-label mb-1">
+                                    Purchase Cost [Excl. of GST]
+                                    <span class="text-danger">*</span>
+                                </label>
+                                <input class="form-control" type="number" formControlName="stdCostUom1" />
+                            </div>
+                            <div class="col-2 d-flex align-items-end ps-2">
+                                <button
+                                    class="plusIconSvg btn btn-primary"
+                                    type="button"
+                                    [disabled]="btnDisable || action == 'view'"
+                                    (click)="addJobWorker()"
+                                ></button>
+                            </div>
+                        </div>
+                    </div> -->
+                </div>
+            </form>
+            <hr class="line-border mt-4 px-5" />
+            <div class="row justify-content-center px-4">
+                <div class="col-12">
+                    <div>
+                        <app-setting-header
+                            [data]="{page,pageSize,collection,search ,excelDisplay : 'none'}"
+                            (dataChange)="eventHeader($event)"
+                        >
+                        </app-setting-header>
+                    </div>
+                    <div style="min-height: 17rem" class="table-responsive mt-1">
+                        <table class="table table-bordered table-sticky">
+                            <thead class="bg-primary">
+                                <tr class="text-white">
+                                    <th class="text-start">Job Worker Name</th>
+                                    <th>Part No. (JW)</th>
+                                    <th class="text-start">Part Name (JW)</th>
+                                    <!-- <th>Currency</th> -->
+                                    <th>Unit 1</th>
+                                    <th>Process Cost</th>
+                                    <th>Unit 2</th>
+                                    <th>Process Cost</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr
+                                    *ngFor="
+                                        let u of jobWorkerDetails
+                                            | searchFi1ter : search
+                                            | slice : (page - 1) * pageSize : (page - 1) * pageSize + pageSize;
+                                        let i = index
+                                    "
+                                >
+                                    <td class="text-start" [style.width]="jobWorkerName.clientWidth" #jobWorkerName>
+                                        <span
+                                            class="pointer"
+                                            [positionTarget]="jobWorkerName"
+                                            [ngbTooltip]="u.jobWorkerName"
+                                        >
+                                            {{ u?.jobWorkerName }}
+                                        </span>
+                                    </td>
+                                    <td>{{ u?.partNo }}</td>
+                                    <td class="text-start" [style.width]="partName.clientWidth" #partName>
+                                        <span class="pointer" [positionTarget]="partName" [ngbTooltip]="u.partName">
+                                            {{ u?.partName }}
+                                        </span>
+                                    </td>
+                                    <!-- <td>{{ u?.supplierCurrency }}</td> -->
+                                    <td>{{ u?.uom1 ? (u?.uom1 | UOMUnitsMaster) : null }}</td>
+                                    <td class="py-0">
+                                        <div class="d-flex justify-content-start align-items-center">
+                                            <span
+                                                *ngIf="u?.stdCostUom1"
+                                                class="input-group-text text-secondary combine-INR border border-0"
+                                            >
+                                                {{ "INR" | companyCurrency }}
+                                                <div class="vr ms-3"></div>
+                                            </span>
+                                            <span class="total-cost-color">
+                                                {{ u?.stdCostUom1 }}
+                                            </span>
+                                        </div>
+                                    </td>
+                                    <td>{{ u?.uom2 ? (u?.uom2 | UOMUnitsMaster) : null }}</td>
+                                    <td class="py-0">
+                                        <div class="d-flex justify-content-start align-items-center">
+                                            <span
+                                                *ngIf="u?.stdCostUom2"
+                                                class="input-group-text text-secondary combine-INR border border-0"
+                                            >
+                                                {{ "INR" | companyCurrency }}
+                                                <div class="vr ms-3"></div>
+                                            </span>
+                                            <span class="total-cost-color">
+                                                {{ u?.stdCostUom2 }}
+                                            </span>
+                                        </div>
+                                    </td>
+
+                                    <td>
+                                        <div class="dropdown">
+                                            <button class="dropbtn"></button>
+                                            <div class="dropdown-content">
+                                                <a href="javascript:void(0)" (click)="patchItem(u, i, 'view')">
+                                                    <i class="fa fa-eye fa-lg me-2 text-primary" aria-hidden="true"></i>
+                                                    View
+                                                </a>
+                                                <a href="javascript:void(0)" (click)="patchItem(u, i, 'edit')">
+                                                    <i
+                                                        class="fa fa-pencil-square-o fa-lg me-2 text-primary"
+                                                        aria-hidden="true"
+                                                    ></i>
+                                                    Edit
+                                                </a>
+                                                <a
+                                                    [class.disable]="this.action == 'view'"
+                                                    href="javascript:void(0)"
+                                                    (click)="deleteItem(i)"
+                                                >
+                                                    <i class="fa fa-trash me-2 text-primary" aria-hidden="true"></i>
+                                                    Delete
+                                                </a>
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <hr class="line-border my-5 px-5" />
+
+            <div class="text-center mb-5">
+                <button
+                    class="btn bg-primary px-5"
+                    type="button"
+                    [disabled]="btnDisable || action == 'view'"
+                    (click)="dismissModal()"
+                >
+                    Save & Close
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<ng-template #list>
+    <div *ngIf="primaryUnit || secondaryUnit" class="d-flex flex-column">
+        <span class="text-start">
+            {{ conversionOfUnitsForPrimary }}
+        </span>
+    </div>
+</ng-template>
+<ng-template #list2>
+    <div *ngIf="primaryUnit || secondaryUnit" class="d-flex flex-column">
+        <span class="text-start">
+            {{ conversionOfUnitsForSecondary }}
+        </span>
+    </div>
+</ng-template>

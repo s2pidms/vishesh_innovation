@@ -26,6 +26,7 @@ let widths = [
     "*",
     "*",
     "*",
+    "*",
     "*"
 ];
 let title = "Item Master";
@@ -48,6 +49,11 @@ let headers: any = [
     {
         header: "Item Description",
         key: "itemDescription",
+        ...EXCEL_STYLE
+    },
+    {
+        header: "Unit of Measurement",
+        key: "orderInfoUOM",
         ...EXCEL_STYLE
     },
     {

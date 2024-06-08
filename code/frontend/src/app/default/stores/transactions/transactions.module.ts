@@ -27,17 +27,6 @@ const routes: Routes = [
                 loadChildren: () => import("./gia-gr/gia-gr.module").then(m => m.GIAGRModule)
             },
             {
-                path: "fgie",
-                loadChildren: () => import("./fgie/fgie.module").then(m => m.FGIEModule)
-            },
-            {
-                path: "upload_direct_inventory",
-                loadChildren: () =>
-                    import("./upload-direct-inventory/upload-direct-inventory.module").then(
-                        m => m.UploadDirectInventoryModule
-                    )
-            },
-            {
                 path: "gie_direct",
                 loadChildren: () => import("./gie-direct/gie-direct.module").then(m => m.GieDirectModule)
             },

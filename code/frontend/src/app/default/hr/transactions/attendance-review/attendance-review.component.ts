@@ -1,10 +1,11 @@
 import {Component, OnInit, QueryList, ViewChildren} from "@angular/core";
-
 import {Router} from "@angular/router";
 import {NgbdSortableHeader, SortEvent} from "@directives/sortable.directive";
 import {EmployeeAttendanceService} from "@services/hr";
-import {ExportExcelService, ToastService, SpinnerService} from "@core/services";
+import {ExportExcelService, ToastService, SpinnerService, StorageService} from "@core/services";
 import {LIST_DEFAULT_PERMISSION_ACTIONS} from "@mocks/constant";
+import {NgbModal} from "@ng-bootstrap/ng-bootstrap";
+import {AttendanceReviewEditModelComponent} from "./components";
 export interface Attendance {
     _id: string;
     employeeCode: string;
@@ -15,6 +16,7 @@ export interface Attendance {
     paidLeaves: number;
     presentDays: number;
     LOPDiff: number;
+    ODDays?: number;
     status: string;
 }
 @Component({
@@ -60,15 +62,20 @@ export class AttendanceReviewComponent implements OnInit {
     ];
     btnFlag: boolean = true;
     rolePermissionActions: any = LIST_DEFAULT_PERMISSION_ACTIONS;
+    superAdminId: any = "64a687b4e9143bffd820fb3d";
     constructor(
         private router: Router,
         private spinner: SpinnerService,
         private attendanceService: EmployeeAttendanceService,
         private toastService: ToastService,
-        private exportExcelService: ExportExcelService
+        private exportExcelService: ExportExcelService,
+        private modalService: NgbModal,
+        private storageService: StorageService
     ) {}
 
-    ngOnInit(): void {}
+    ngOnInit(): void {
+        this.user = this.storageService.get("IDMSAUser")?.roles?.find((x: any) => x == this.superAdminId);
+    }
     trackByFn(index: number, item: any) {
         return item?._id;
     }
@@ -129,6 +136,41 @@ export class AttendanceReviewComponent implements OnInit {
 
             this.spinner.hide();
         });
+    }
+
+    openAttendanceModal(item: any) {
+        if (item?.status == "Draft") {
+            let index = this.tableData.map((x: any) => x.employeeId).indexOf(item.employeeId);
+            const modalRef = this.modalService.open(AttendanceReviewEditModelComponent, {
+                centered: true,
+                size: "lg",
+                backdrop: "static",
+                keyboard: false
+            });
+
+            modalRef.componentInstance.attendanceData = {
+                monthDays: item.monthDays,
+                weeklyOff: item.weeklyOff,
+                paidHolidays: item.paidHolidays,
+                paidLeaves: item.paidLeaves,
+                ODDays: item.ODDays,
+                presentDays: item.presentDays,
+                LOPDiff: item.LOPDiff
+            };
+            modalRef.result.then(
+                (success: any) => {
+                    if (success) {
+                        this.tableData[index].weeklyOff = success.weeklyOff;
+                        this.tableData[index].paidHolidays = success.paidHolidays;
+                        this.tableData[index].paidLeaves = success.paidLeaves;
+                        this.tableData[index].ODDays = success.ODDays;
+                        this.tableData[index].presentDays = success.presentDays;
+                        this.tableData[index].LOPDiff = success.LOPDiff;
+                    }
+                },
+                (reason: any) => {}
+            );
+        }
     }
 
     onSort({column, direction}: SortEvent) {

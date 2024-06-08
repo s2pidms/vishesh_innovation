@@ -245,6 +245,12 @@ export class SuppliersFormComponent implements OnInit {
         }
     }
 
+    setPANNumber() {
+        let supplierGST = this.f["supplierGST"].value;
+        let PANValue = this.utilityService.patchPANNumber(supplierGST);
+        this.f["supplierPAN"].setValue(PANValue);
+    }
+
     getInitialData() {
         this.spinner.show();
         this.suppliersService.getAllMasterData({}).subscribe(result => {

@@ -14,8 +14,8 @@ import {OffTakeQtyModalComponent} from "../off-take-qty-modal/off-take-qty-modal
 import {NPDRequestService} from "@services/business-leads";
 import {CustomerInputChecklistComponent} from "../customer-input-checklist/customer-input-checklist.component";
 import {INPDRequestMasterData} from "@mocks/models/business-leads/transactions";
-import {ProductCategoryModalComponent} from "src/app/default/sales/master/sku/screens/product-category-modal/product-category-modal.component";
 import {DetailsOfCustomersListComponent} from "@shared/modals";
+import {ProductCategoryModalComponent} from "src/app/default/sales/master/sku/screens/components";
 
 @Component({
     selector: "app-npd-request-form",
@@ -65,7 +65,7 @@ export class NpdRequestFormComponent implements OnInit {
         referenceModel: new UntypedFormControl("", [Validators.required]),
         productCategory: new UntypedFormControl(null, [Validators.required]),
         projectName: new UntypedFormControl(null, [Validators.required]),
-        productBrief: new UntypedFormControl("", [Validators.required]),
+        productBrief: new UntypedFormControl(""),
         buildStage: new UntypedFormControl(null, [Validators.required]),
         orderType: new UntypedFormControl(null, [Validators.required]),
         developmentCharges: new UntypedFormControl(null, [Validators.required]),

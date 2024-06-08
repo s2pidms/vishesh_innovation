@@ -529,6 +529,10 @@ exports.getAllFGINByProductCategory = async (req, res) => {
 
 exports.checkFGINValidation = async (FGINData, column, company) => {
     try {
+        const SKUOptions = await filteredSKUMasterList([
+            {$match: {company: ObjectId(company), isActive: "A"}},
+            {$project: {SKUName: 1, SKUDescription: 1}}
+        ]);
         const requiredFields = ["FGINDate", "SKUName", "FGINQuantity", "batchNo", "manufacturingDate"];
         const falseArr = OPTIONS.falsyArray;
         let {location} = await dropDownOptions(company);
@@ -565,6 +569,13 @@ exports.checkFGINValidation = async (FGINData, column, company) => {
                     x.isValid = false;
                     x.message = `${ele} is already exists`;
                     break;
+                }
+                for (const ele of SKUOptions) {
+                    if (ele.SKUName == x["SKUName"] && ele.SKUDescription == x["SKUDescription"]) {
+                        x.isValid = false;
+                        x.message = `${x["SKUName"]} already exists`;
+                        break;
+                    }
                 }
             }
         }

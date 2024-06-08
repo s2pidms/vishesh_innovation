@@ -17,7 +17,8 @@ const {INVENTORY_CORRECTION} = require("../../../../mocks/schemasConstant/stores
 const {filteredSupplierList} = require("../../../../models/purchase/repository/supplierRepository");
 const {filteredItemList} = require("../../../../models/purchase/repository/itemRepository");
 const {filteredHSNList} = require("../../../../models/purchase/repository/hsnRepository");
-const {inventoryUpload} = require("../../../../middleware/inventoryUpload");
+const {inventoryUpload, PPICInventoryUpload} = require("../../../../middleware/inventoryUpload");
+const validationJson = require("../../../../mocks/excelUploadColumn/validation.json");
 // const {inventoryUpload} = require("../../../../middleware/inventoryUpload");
 const ObjectId = mongoose.Types.ObjectId;
 
@@ -486,7 +487,6 @@ exports.checkInventoryValidation = async excelData => {
     let supplierArray = excelData.map(x => x.supplierCode);
     let uniqueSetSupplier = Array.from(new Set(supplierArray));
     const falseArr = OPTIONS.falsyArray;
-    console.log("uniqueSetSupplier", uniqueSetSupplier);
     let allSuppliers = await filteredSupplierList([
         {
             $match: {
@@ -503,7 +503,6 @@ exports.checkInventoryValidation = async excelData => {
     ]);
     let itemArray = excelData.map(element => element.itemCode);
     let uniqueSetItems = Array.from(new Set(itemArray));
-    console.log("uniqueSetItems", uniqueSetItems);
     let allItemDetails = await filteredItemList([
         {$match: {itemCode: {$in: uniqueSetItems}}},
         {
@@ -523,7 +522,6 @@ exports.checkInventoryValidation = async excelData => {
     ]);
     let hsnArray = allItemDetails.map(element => element.hsn);
     let uniqueSetHSN = Array.from(new Set(hsnArray));
-    console.log("uniqueSetHSN", uniqueSetHSN);
     let allHSN = await filteredHSNList([
         {
             $match: {
@@ -540,12 +538,12 @@ exports.checkInventoryValidation = async excelData => {
         let itemsDetails = allItemDetails.find(item => String(item.itemCode) === String(x.itemCode));
         if (falseArr.includes(itemsDetails)) {
             x.isValid = false;
-            x.message = `Item Code - ${x.itemCode} is not exists`;
+            x.message = `Item Code - ${x.itemCode} not exists`;
         }
         let supplierDetails = allSuppliers.find(s => String(s.supplierCode) === String(x.supplierCode));
         if (falseArr.includes(supplierDetails)) {
             x.isValid = false;
-            x.message = `Supplier Code - ${x.supplierCode} is not exists`;
+            x.message = `Supplier Code - ${x.supplierCode} not exists`;
         } else {
             let supplierDetailsData = itemsDetails.supplierDetails.find(
                 s => String(s.supplierId) === String(supplierDetails._id)
@@ -558,24 +556,24 @@ exports.checkInventoryValidation = async excelData => {
 
         if (!itemsDetails.orderInfoUOM) {
             x.isValid = false;
-            x.message = `Item orderInfoUOM is not exists`;
+            x.message = `Item orderInfoUOM not exists`;
         }
         let hsnDetails = allHSN.find(h => String(h.hsnCode) === String(itemsDetails.hsn));
         if (falseArr.includes(hsnDetails)) {
             x.isValid = false;
-            x.message = `HSN Code - ${itemsDetails.hsn} is not exists`;
+            x.message = `HSN Code - ${itemsDetails.hsn} not exists`;
         }
         if (!itemsDetails.primaryUnit) {
             x.isValid = false;
-            x.message = `Item primaryUnit is not exists`;
+            x.message = `Item primaryUnit not exists`;
         }
         if (!itemsDetails.secondaryUnit) {
             x.isValid = false;
-            x.message = `Item secondaryUnit is not exists`;
+            x.message = `Item secondaryUnit not exists`;
         }
         if (!itemsDetails.primaryToSecondaryConversion || !itemsDetails.primaryToSecondaryConversion) {
             x.isValid = false;
-            x.message = `Item Unit Conversions is not exists`;
+            x.message = `Item Unit Conversions not exists`;
         }
 
         return x;
@@ -612,3 +610,131 @@ exports.updateSPSInventory = asyncHandler(async (req, res) => {
         return res.serverError(errors);
     }
 });
+
+exports.checkPPICInventoryValidation = async excelData => {
+    let supplierArray = excelData.map(x => x.supplierCode);
+    let uniqueSetSupplier = Array.from(new Set(supplierArray));
+    const requiredFields = [
+        "itemName",
+        "itemDescription",
+        "primaryUnit",
+        "secondaryUnit",
+        "primaryToSecondaryConversion",
+        "conversionOfUnits",
+        "UOM",
+        "SQM",
+        "width",
+        "length"
+    ];
+    const falseArr = OPTIONS.falsyArray;
+    let allSuppliers = await filteredSupplierList([
+        {
+            $match: {
+                supplierCode: {$in: uniqueSetSupplier}
+            }
+        },
+        {
+            $project: {
+                _id: 1,
+                supplierCode: 1,
+                supplierName: 1
+            }
+        }
+    ]);
+    let itemArray = excelData.map(element => element.itemCode);
+    let uniqueSetItems = Array.from(new Set(itemArray));
+    let allItemDetails = await filteredItemList([
+        {$match: {itemCode: {$in: uniqueSetItems}}},
+        {
+            $project: {
+                _id: 1,
+                itemCode: 1,
+                itemName: 1,
+                supplierDetails: 1,
+                hsn: 1,
+                orderInfoUOM: 1,
+                primaryToSecondaryConversion: 1,
+                secondaryToPrimaryConversion: 1,
+                primaryUnit: 1,
+                secondaryUnit: 1
+            }
+        }
+    ]);
+    let hsnArray = allItemDetails.map(element => element.hsn);
+    let uniqueSetHSN = Array.from(new Set(hsnArray));
+    let allHSN = await filteredHSNList([
+        {
+            $match: {
+                hsnCode: {$in: uniqueSetHSN}
+            }
+        },
+        {
+            $project: {hsnCode: 1}
+        }
+    ]);
+    excelData = excelData.map(x => {
+        x.isValid = true;
+        x.message = null;
+        let itemsDetails = allItemDetails.find(item => String(item.itemCode) === String(x.itemCode));
+        if (falseArr.includes(itemsDetails)) {
+            x.isValid = false;
+            x.message = `Item Code - ${x.itemCode} not exists`;
+        }
+        let supplierDetails = allSuppliers.find(s => String(s.supplierCode) === String(x.supplierCode));
+        if (falseArr.includes(supplierDetails)) {
+            x.isValid = false;
+            x.message = `Supplier Code - ${x.supplierCode} not exists`;
+        } else {
+            let supplierDetailsData = itemsDetails.supplierDetails.find(
+                s => String(s.supplierId) === String(supplierDetails._id)
+            );
+            if (falseArr.includes(supplierDetailsData)) {
+                x.isValid = false;
+                x.message = `Supplier is not link with item - ${x.supplierCode}-${x.itemCode} `;
+            }
+        }
+
+        if (!itemsDetails.orderInfoUOM) {
+            x.isValid = false;
+            x.message = `Item orderInfoUOM not exists`;
+        }
+        let hsnDetails = allHSN.find(h => String(h.hsnCode) === String(itemsDetails.hsn));
+        if (hsnDetails && falseArr.includes(hsnDetails.hsnCode)) {
+            x.isValid = false;
+            x.message = `HSN Code - ${itemsDetails.hsn} not exists`;
+        }
+        if (!itemsDetails.primaryUnit) {
+            x.isValid = false;
+            x.message = `Item primaryUnit not exists`;
+        }
+        if (!itemsDetails.secondaryUnit) {
+            x.isValid = false;
+            x.message = `Item secondaryUnit not exists`;
+        }
+        // if (!itemsDetails.primaryToSecondaryConversion || !itemsDetails.primaryToSecondaryConversion) {
+        //     x.isValid = false;
+        //     x.message = `Item Unit Conversions not exists`;
+        // }
+        let inventoryKeys = Object.keys(x);
+        for (const keys of inventoryKeys) {
+            if (requiredFields.includes(keys) && falseArr.includes(x[keys])) {
+                x.isValid = false;
+                x.message = validationJson[keys] ?? `${keys} is Required`;
+                break;
+            }
+        }
+        return x;
+    });
+    const inValidRecords = excelData.filter(x => !x.isValid);
+    const validRecords = excelData.filter(x => x.isValid);
+    return {inValidRecords, validRecords};
+};
+
+exports.bulkInsertPPICInventoryByCSV = async jsonData => {
+    try {
+        notFounds = await PPICInventoryUpload({jsonData});
+        return {message: "Uploaded successfully!", notFounds};
+    } catch (error) {
+        console.error(error);
+    }
+};

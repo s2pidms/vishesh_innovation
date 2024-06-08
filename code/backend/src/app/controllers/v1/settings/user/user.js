@@ -3,7 +3,6 @@ const Model = require("../../../../models/settings/userModel");
 const Employee = require("../../../../models/HR/employeeModel");
 const MESSAGES = require("../../../../helpers/messages.options");
 const {outputData} = require("../../../../helpers/utility");
-const {getAllRoles} = require("../role/role");
 const {findAppParameterValue} = require("../../settings/appParameter/appParameter");
 const {getMatchData} = require("../../../../helpers/global.options");
 const {checkSuperAdmin} = require("../../../../middleware/utils");
@@ -21,12 +20,21 @@ const ObjectId = mongoose.Types.ObjectId;
 const MailTriggerRepository = require("../../../../models/settings/repository/mailTriggerRepository");
 const {SETTINGS_MAIL_CONST} = require("../../../../mocks/mailTriggerConstants");
 const UserRepository = require("../../../../models/settings/repository/userRepository");
+const {SUPER_ADMIN_ID} = require("../../../../mocks/constantData");
+const {filteredRoleList} = require("../../../../models/settings/repository/roleRepository");
 // @route   POST /api/user/getAll
 exports.getAll = asyncHandler(async (req, res) => {
     try {
+        let superAdminId = SUPER_ADMIN_ID;
         let project = getAllUserAttributes();
+        let superAdminAccess = await checkSuperAdmin(req.user.sub);
         let pipeline = [
-            {$match: {company: ObjectId(req.user.company)}},
+            {
+                $match: {
+                    company: ObjectId(req.user.company),
+                    ...(!superAdminAccess && {role: {$elemMatch: {$ne: ObjectId(superAdminId)}}})
+                }
+            },
             {
                 $lookup: {
                     from: "Role",
@@ -398,16 +406,25 @@ exports.getAllMasterData = asyncHandler(async (req, res) => {
             }
         ]);
         const autoIncrementNo = await getAndSetAutoIncrementNo(USER.AUTO_INCREMENT_DATA(), req.user.company);
-        let rolesOptions = await getAllRoles(req.user.company, isSuperAdmin);
+        const rolesOptions = await filteredRoleList([
+            {
+                $match: {
+                    company: ObjectId(req.user.company),
+                    ...(!isSuperAdmin && {_id: {$nin: [ObjectId(SUPER_ADMIN_ID)]}})
+                }
+            },
+            {
+                $project: {
+                    _id: 0,
+                    label: "$displayRoleName",
+                    value: "$_id"
+                }
+            }
+        ]);
         return res.success({
             departmentOptions,
             autoIncrementNo,
-            rolesOptions: rolesOptions.map(x => {
-                return {
-                    label: x.displayRoleName,
-                    value: x._id
-                };
-            })
+            rolesOptions
         });
     } catch (error) {
         console.error("getAllMasterDataForUser", error);
@@ -468,7 +485,7 @@ exports.getAllReports = asyncHandler(async (req, res) => {
             {
                 $match: {
                     company: ObjectId(req.user.company),
-                    ...(!isSuperAdmin && {role: {$nin: [ObjectId("64a687b4e9143bffd820fb3d")]}})
+                    ...(!isSuperAdmin && {role: {$nin: [ObjectId(SUPER_ADMIN_ID)]}})
                 }
             },
             {
@@ -508,7 +525,7 @@ exports.getAllUserCounts = async (company, isSuperAdmin) => {
                 $match: {
                     company: ObjectId(company),
                     isActive: true,
-                    ...(!isSuperAdmin && {role: {$nin: [ObjectId("64a687b4e9143bffd820fb3d")]}})
+                    ...(!isSuperAdmin && {role: {$nin: [ObjectId(SUPER_ADMIN_ID)]}})
                 }
             },
 

@@ -265,6 +265,12 @@ export class CompanyComponent implements OnInit {
         });
     }
 
+    setPANNumber() {
+        let GSTIN = this.form.controls["GSTIN"].value;
+        let PANValue = this.utilityService.patchPANNumber(GSTIN);
+        this.form.controls["companyPAN"].setValue(PANValue);
+    }
+
     getAll() {
         this.spinner.show();
         this.company.getAll({}).subscribe(success => {

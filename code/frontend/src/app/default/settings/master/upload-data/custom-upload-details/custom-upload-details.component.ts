@@ -4,9 +4,24 @@ import {NgbdSortableHeader, SortEvent} from "@directives/sortable.directive";
 import {
     UPLOAD_DATA_FOR_CUSTOMER_INVENTORY,
     UPLOAD_DATA_FOR_ITEM_INVENTORY,
+    UPLOAD_DATA_FOR_PPIC_INVENTORY,
     UPLOAD_DATA_FOR_SUPPLIER_INVENTORY,
     UPLOAD_DATA_FOR_VALIDATE_INVENTORY,
-    UPLOAD_DATA_FOR_VALIDATE_SKU
+    UPLOAD_DATA_FOR_VALIDATE_SKU,
+    UPLOAD_DATA_FOR_JOB_WORK_ITEM_MASTER,
+    UPLOAD_DATA_FOR_PURCHASE_REGISTER_ENTRY,
+    UPLOAD_DATA_FOR_JOB_WORKER_MASTER_ENTRY,
+    UPLOAD_DATA_FOR_TRANSPORTER_MASTER_ENTRY,
+    UPLOAD_DATA_FOR_SALES_SAC_MASTER,
+    UPLOAD_DATA_FOR_SALES_HSN_MASTER,
+    UPLOAD_DATA_FOR_PURCHASE_HSN_MASTER,
+    UPLOAD_DATA_FOR_PURCHASE_SAC_MASTER,
+    UPLOAD_DATA_FOR_SPECIFICATION_MASTER,
+    UPLOAD_DATA_FOR_SKU_MATERIAL_MASTER,
+    UPLOAD_DATA_FOR_SKU_DIMENSION_MASTER,
+    UPLOAD_DATA_FOR_ASSET_MASTER,
+    UPLOAD_DATA_FOR_FGIN,
+    UPLOAD_DATA_FOR_EMPLOYEE_MASTER
 } from "@mocks/export-data/settings/masters";
 import {ExportExcelService} from "@core/services";
 
@@ -41,16 +56,32 @@ export class CustomUploadDetailsComponent implements OnInit {
                 break;
             case "EXCEL":
                 // this.excelDownload();
-                if (this.type == "Supplier") {
-                    this.excelDownloadForSupplier();
-                } else if (this.type == "Items") {
-                    this.excelDownloadForItem();
-                } else if (this.type == "Customer") {
-                    this.excelDownloadForCustomer();
-                } else if (this.type == "InventoryCorrection") {
-                    this.excelDownloadForInventory();
-                } else if (this.type == "SKUMaster") {
-                    this.excelDownloadForSKU();
+                const downloadFunctions: any = {
+                    Supplier: this.excelDownloadForSupplier,
+                    Items: this.excelDownloadForItem,
+                    Customer: this.excelDownloadForCustomer,
+                    InventoryCorrection: this.excelDownloadForInventory,
+                    SKUMaster: this.excelDownloadForSKU,
+                    PPICInventoryCorrection: this.excelDownloadForPPICInventory,
+                    JobWorkItemMaster: this.excelDownloadForJobWorkItemMaster,
+                    PurchaseRegisterEntry: this.excelDownloadForPurchaseRegisterEntry,
+                    JobWorkerMaster: this.excelDownloadForJobWorkerMaster,
+                    Transporter: this.excelDownloadForTransporterMaster,
+                    SaleSAC: this.excelDownloadForSalesSAC,
+                    SaleHSN: this.excelDownloadForSalesHSN,
+                    HSN: this.excelDownloadForPurchaseHSN,
+                    SAC: this.excelDownloadForPurchaseSAC,
+                    SpecificationMaster: this.excelDownloadForSpecificationMaster,
+                    SKUMaterial: this.excelDownloadForSKUMaterialMaster,
+                    SKUDimensions: this.excelDownloadForSKUDimensionMaster,
+                    Asset: this.excelDownloadForAssetMaster,
+                    FGIN: this.excelDownloadForFGIN,
+                    Employee: this.excelDownloadForEmployeeMaster
+                };
+
+                const downloadFunction = downloadFunctions[this.type];
+                if (downloadFunction) {
+                    downloadFunction.call(this);
                 }
                 break;
             case "PAGE":
@@ -75,6 +106,51 @@ export class CustomUploadDetailsComponent implements OnInit {
     }
     excelDownloadForSupplier() {
         this.exportExcelService.exportExcel(UPLOAD_DATA_FOR_SUPPLIER_INVENTORY(this.inValidRecords));
+    }
+    excelDownloadForPPICInventory() {
+        this.exportExcelService.exportExcel(UPLOAD_DATA_FOR_PPIC_INVENTORY(this.inValidRecords));
+    }
+    excelDownloadForJobWorkItemMaster() {
+        this.exportExcelService.exportExcel(UPLOAD_DATA_FOR_JOB_WORK_ITEM_MASTER(this.inValidRecords));
+    }
+    excelDownloadForPurchaseRegisterEntry() {
+        this.exportExcelService.exportExcel(UPLOAD_DATA_FOR_PURCHASE_REGISTER_ENTRY(this.inValidRecords));
+    }
+    excelDownloadForJobWorkerMaster() {
+        this.exportExcelService.exportExcel(UPLOAD_DATA_FOR_JOB_WORKER_MASTER_ENTRY(this.inValidRecords));
+    }
+    excelDownloadForTransporterMaster() {
+        this.exportExcelService.exportExcel(UPLOAD_DATA_FOR_TRANSPORTER_MASTER_ENTRY(this.inValidRecords));
+    }
+    excelDownloadForSalesSAC() {
+        this.exportExcelService.exportExcel(UPLOAD_DATA_FOR_SALES_SAC_MASTER(this.inValidRecords));
+    }
+    excelDownloadForSalesHSN() {
+        this.exportExcelService.exportExcel(UPLOAD_DATA_FOR_SALES_HSN_MASTER(this.inValidRecords));
+    }
+    excelDownloadForPurchaseHSN() {
+        this.exportExcelService.exportExcel(UPLOAD_DATA_FOR_PURCHASE_HSN_MASTER(this.inValidRecords));
+    }
+    excelDownloadForPurchaseSAC() {
+        this.exportExcelService.exportExcel(UPLOAD_DATA_FOR_PURCHASE_SAC_MASTER(this.inValidRecords));
+    }
+    excelDownloadForSpecificationMaster() {
+        this.exportExcelService.exportExcel(UPLOAD_DATA_FOR_SPECIFICATION_MASTER(this.inValidRecords));
+    }
+    excelDownloadForSKUMaterialMaster() {
+        this.exportExcelService.exportExcel(UPLOAD_DATA_FOR_SKU_MATERIAL_MASTER(this.inValidRecords));
+    }
+    excelDownloadForSKUDimensionMaster() {
+        this.exportExcelService.exportExcel(UPLOAD_DATA_FOR_SKU_DIMENSION_MASTER(this.inValidRecords));
+    }
+    excelDownloadForAssetMaster() {
+        this.exportExcelService.exportExcel(UPLOAD_DATA_FOR_ASSET_MASTER(this.inValidRecords));
+    }
+    excelDownloadForFGIN() {
+        this.exportExcelService.exportExcel(UPLOAD_DATA_FOR_FGIN(this.inValidRecords));
+    }
+    excelDownloadForEmployeeMaster() {
+        this.exportExcelService.exportExcel(UPLOAD_DATA_FOR_EMPLOYEE_MASTER(this.inValidRecords));
     }
 
     onSort({column, direction}: SortEvent) {

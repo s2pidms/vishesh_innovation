@@ -14,6 +14,9 @@ const itemCategoryMaster = require("./itemCategoryMaster/routes");
 const externalServiceProvider = require("./externalServiceProviderMaster/routes");
 const channelPartner = require("./channelPartner/routes");
 const purchaseIndent = require("./purchaseIndent/routes");
+const jobWorkerMaster = require("./jobWorkerMaster/routes");
+const jobWorkItemMaster = require("./jobWorkItemMaster/routes");
+const jobWorkChallan = require("./jobWorkChallan/routes");
 
 router.use("/supplierMaster", supplier);
 router.use("/itemMaster", item);
@@ -29,5 +32,8 @@ router.use("/itemCategoryMaster", itemCategoryMaster);
 router.use("/externalServiceProvider", externalServiceProvider);
 router.use("/channelPartner", channelPartner);
 router.use("/purchaseIndent", purchaseIndent);
+router.use("/jobWorkerMaster", jobWorkerMaster);
+router.use("/jobWorkItemMaster", jobWorkItemMaster);
+router.use("/jobWorkChallan", jobWorkChallan);
 
 module.exports = router;

@@ -1,14 +1,13 @@
 import {Component, OnInit, QueryList, ViewChildren} from "@angular/core";
-
 import {Router} from "@angular/router";
 import {NgbdSortableHeader, SortEvent} from "@directives/sortable.directive";
 import {StorageService, ToastService} from "@core/services";
 import {PayrollService} from "@services/hr";
 import {Payroll} from "@interfaces/payroll";
-import {ExportExcelService, MenuTitleService, SpinnerService} from "@core/services";
+import {ExportExcelService, SpinnerService} from "@core/services";
 import {LIST_DEFAULT_PERMISSION_ACTIONS} from "@mocks/constant";
 import {NgbModal} from "@ng-bootstrap/ng-bootstrap";
-import {PayrollEditModelComponent} from "./components/payroll-edit-model/payroll-edit-model.component";
+import {PayrollEditModelComponent} from "./components";
 @Component({
     selector: "app-payroll",
     templateUrl: "./payroll.component.html",

@@ -7,12 +7,12 @@ import {ValidationService} from "@core/components";
 import {NgbModal} from "@ng-bootstrap/ng-bootstrap";
 import {PRODUCT_MASTER_SOURCE_OF_MFG} from "@mocks/constant";
 import {ToastService, SpinnerService, UtilityService} from "@core/services";
-import {ProductCategoryModalComponent} from "src/app/default/sales/master/sku/screens/product-category-modal/product-category-modal.component";
 import {ISalesProductMasterData} from "@mocks/models/sales/master";
 import {SalesProductMasterService} from "@services/sales";
 import {MouldInfoModalComponent} from "../mould-info-modal/mould-info-modal.component";
 import {SALES_PRODUCT_MASTER_FORM_ERRORS} from "@mocks/validations/sales/salesProductMaster.validation";
 import {ProductPackingStdModalComponent} from "../product-packing-std-modal/product-packing-std-modal.component";
+import {ProductCategoryModalComponent} from "../../../sku/screens/components";
 
 @Component({
     selector: "app-sales-product-master-form",

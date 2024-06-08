@@ -1,11 +1,10 @@
 import {Component, OnInit} from "@angular/core";
 import {UntypedFormControl, UntypedFormGroup, Validators} from "@angular/forms";
-import {ActivatedRoute, Router} from "@angular/router";
-
+import {ActivatedRoute} from "@angular/router";
+import {Location} from "@angular/common";
 import {ToastService, UtilityService} from "@core/services";
 import {mergeMap, of} from "rxjs";
 import {ValidationService} from "@core/components";
-import {NgbModal} from "@ng-bootstrap/ng-bootstrap";
 import {PURCHASE_CATEGORY_FORM_ERRORS} from "@mocks/validations/settings/purchase-category.validation";
 import {PurchaseCategoryService} from "@services/settings";
 import {SpinnerService} from "@core/services";
@@ -15,17 +14,18 @@ import {SpinnerService} from "@core/services";
     templateUrl: "./purchase-category-form.component.html"
 })
 export class PurchaseCategoryFormComponent implements OnInit {
+    submitted = false;
+    action: string = "create";
     collection: number = 0;
 
     constructor(
-        private router: Router,
         private activatedRoute: ActivatedRoute,
         private spinner: SpinnerService,
         private toastService: ToastService,
         private purchaseCategoryService: PurchaseCategoryService,
         private validationService: ValidationService,
-        private modalService: NgbModal,
-        private utilityService: UtilityService
+        private utilityService: UtilityService,
+        private location: Location
     ) {}
 
     form = new UntypedFormGroup({
@@ -37,15 +37,8 @@ export class PurchaseCategoryFormComponent implements OnInit {
         categoryStatus: new UntypedFormControl("Active", [Validators.required])
     });
 
-    submitted = false;
-    action: string = "create";
-
     ngOnInit(): void {
         this.getInitialData();
-    }
-
-    navigateTo(path: string, id: any, action: string) {
-        this.router.navigate([path], {queryParams: {id, action}});
     }
 
     submit() {
@@ -71,7 +64,7 @@ export class PurchaseCategoryFormComponent implements OnInit {
             this.spinner.hide();
             this.submitted = false;
             this.toastService.success(success.message);
-            this.router.navigate(["default/settings/master/purchase/purchase_category/list"]);
+            this.location.back();
         });
     }
 
@@ -81,7 +74,7 @@ export class PurchaseCategoryFormComponent implements OnInit {
             this.submitted = false;
             this.spinner.hide();
             this.toastService.success(success.message);
-            this.router.navigate(["default/settings/master/purchase/purchase_category/list"]);
+            this.location.back();
         });
     }
 

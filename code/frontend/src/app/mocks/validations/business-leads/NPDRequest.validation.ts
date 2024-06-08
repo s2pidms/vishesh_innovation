@@ -11,10 +11,10 @@ export const NPD_REQUEST_FORM_ERRORS = [
         message: "Project Name is Required",
         key: "projectName"
     },
-    {
-        message: "Product Brief is Required",
-        key: "productBrief"
-    },
+    // {
+    //     message: "Product Brief is Required",
+    //     key: "productBrief"
+    // },
     {
         message: "Build Stage is Required",
         key: "buildStage"

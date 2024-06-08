@@ -142,7 +142,9 @@ const salesOrderSchema = mongoose.Schema(
                             return parseFloat(value).toFixed(2);
                         }
                     },
-                    required: true
+                    required: true,
+                    default: 0
+
                 },
                 netRate: {
                     // standardRate - (standardRate * discount)

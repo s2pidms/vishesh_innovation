@@ -10,16 +10,37 @@ const {filteredSpecificationList} = require("../../../../models/quality/reposito
 const ProductSpecificationRepository = require("../../../../models/quality/repository/productSpecificationRepository");
 const {filteredProductCategoryMasterList} = require("../../../../models/settings/repository/productCategoryRepository");
 const SKUMasterRepository = require("../../../../models/sales/repository/SKUMasterRepository");
+const {filteredCustomerList} = require("../../../../models/sales/repository/customerRepository");
+
 const ObjectId = mongoose.Types.ObjectId;
 
 exports.getAll = asyncHandler(async (req, res) => {
     try {
-        let project = getAllProductSpecificationAttributes();
-        let pipeline = [
+        const customerOptions = await filteredCustomerList([
+            {$match: {company: ObjectId(req.user.company), isCustomerActive: "A"}},
+            {$sort: {customerName: 1}},
             {
-                $match: {
-                    company: ObjectId(req.user.company)
+                $project: {
+                    customerName: 1
                 }
+            }
+        ]);
+        const {customer = null} = req.query;
+        let project = getAllProductSpecificationAttributes();
+        let query = {
+            company: ObjectId(req.user.company),
+            ...(!!customer && {
+                "customerInfo.customer": ObjectId(customer)
+            })
+        };
+        let pipeline = [
+            // {
+            //     $match: {
+            //         company: ObjectId(req.user.company)
+            //     }
+            // },
+            {
+                $match: query
             },
             {
                 $lookup: {
@@ -83,7 +104,7 @@ exports.getAll = asyncHandler(async (req, res) => {
                 }
             }
         ]);
-        return res.success({...rows, totalAmounts});
+        return res.success({...rows, totalAmounts, customerOptions});
     } catch (e) {
         console.error("getAll", e);
         const errors = MESSAGES.apiErrorStrings.SERVER_ERROR;

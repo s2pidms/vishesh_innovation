@@ -20,6 +20,7 @@ const {filteredCustomerList} = require("../../../../models/sales/repository/cust
 const PreDispatchInspectionRepository = require("../../../../models/quality/repository/preDispatchInspectionRepository");
 const ProductSpecificationRepository = require("../../../../models/quality/repository/productSpecificationRepository");
 const ProductCategorySpecificationsRepository = require("../../../../models/quality/repository/productCategorySpecificationsRepository");
+const {getQMSMappingByModuleAndTitle} = require("../../settings/report-qms-mapping/report-qms-mapping");
 const ObjectId = mongoose.Types.ObjectId;
 
 exports.getAll = asyncHandler(async (req, res) => {
@@ -144,6 +145,7 @@ exports.getById = asyncHandler(async (req, res) => {
 });
 exports.getPDIRDetailsById = asyncHandler(async (req, res) => {
     try {
+        const display = await getQMSMappingByModuleAndTitle(req.user.company, "Quality", "PDI Report");
         let existing = await Model.findById(req.params.id)
             .populate({
                 path: "company",
@@ -158,7 +160,7 @@ exports.getPDIRDetailsById = asyncHandler(async (req, res) => {
             let errors = MESSAGES.apiSuccessStrings.DATA_NOT_EXISTS("Pre Dispatch Inspection");
             return res.unprocessableEntity(errors);
         }
-        return res.success(existing);
+        return res.success({existing, display});
     } catch (e) {
         console.error("getById Pre Dispatch Inspection", e);
         const errors = MESSAGES.apiErrorStrings.SERVER_ERROR;
@@ -281,6 +283,7 @@ exports.getAllReports = asyncHandler(async (req, res) => {
                 }
             }
         ];
+        const display = await getQMSMappingByModuleAndTitle(req.user.company, "Quality", "PDI Report");
         let rows = await PreDispatchInspectionRepository.getAllPaginate({
             pipeline,
             project,
@@ -288,6 +291,7 @@ exports.getAllReports = asyncHandler(async (req, res) => {
         });
         return res.success({
             ...rows,
+            display,
             customerList
         });
     } catch (e) {

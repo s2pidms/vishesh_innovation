@@ -12,11 +12,9 @@ import {
     UtilityService
 } from "@core/services";
 import {InventoryCorrectionService} from "@services/stores";
-import {AddItemUOMComponent} from "@shared/modals";
 import {SPS_INVENTORY_PDF_DATA, SPS_INVENTORY_REPORT_DATA} from "@mocks/export-data/planning/reports";
 import {LIST_DEFAULT_PERMISSION_ACTIONS} from "@mocks/constant";
 import {SpsDucModalComponent} from "../sps-duc-modal/sps-duc-modal.component";
-import {ChildPartInfoModalComponent} from "src/app/default/sales/master/sku/screens/child-part-info-modal/child-part-info-modal.component";
 
 @Component({
     selector: "app-sps-inventory-reconciliation-list",

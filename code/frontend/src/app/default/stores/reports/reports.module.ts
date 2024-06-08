@@ -16,10 +16,6 @@ const routes: Routes = [
                     )
             },
             {
-                path: "FGINR",
-                loadChildren: () => import("./fginr/fginr.module").then(m => m.FGINRModule)
-            },
-            {
                 path: "Goods_Receipt_Note_Discrepancy",
                 loadChildren: () =>
                     import("./goods-receipt-note-discrepancy/goods-receipt-note-discrepancy.module").then(
@@ -74,7 +70,10 @@ const routes: Routes = [
                         m => m.RawMaterialInspectionModule
                     )
             },
-            {path: "GRN_report", loadChildren: () => import("./grn/grn.module").then(m => m.GRNModule)},
+            {
+                path: "GRN_report",
+                loadChildren: () => import("./grn/grn.module").then(m => m.GRNModule)
+            },
             {
                 path: "gt_request_fulfillment_status",
                 loadChildren: () =>

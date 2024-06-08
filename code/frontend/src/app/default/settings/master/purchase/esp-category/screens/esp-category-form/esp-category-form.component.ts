@@ -1,10 +1,10 @@
 import {Component, OnInit} from "@angular/core";
 import {UntypedFormControl, UntypedFormGroup, Validators} from "@angular/forms";
-import {ActivatedRoute, Router} from "@angular/router";
+import {Location} from "@angular/common";
+import {ActivatedRoute} from "@angular/router";
 import {ToastService, UtilityService} from "@core/services";
 import {mergeMap, of} from "rxjs";
 import {ValidationService} from "@core/components";
-import {NgbModal} from "@ng-bootstrap/ng-bootstrap";
 import {ESPCategoryService} from "@services/settings";
 import {ESP_CATEGORY_FORM_ERRORS} from "@mocks/validations/settings";
 import {SpinnerService} from "@core/services";
@@ -15,14 +15,13 @@ import {SpinnerService} from "@core/services";
 })
 export class ESPCategoryFormComponent implements OnInit {
     constructor(
-        private router: Router,
         private activatedRoute: ActivatedRoute,
         private spinner: SpinnerService,
         private toastService: ToastService,
         private espCategoryService: ESPCategoryService,
         private validationService: ValidationService,
-        private modalService: NgbModal,
-        private utilityService: UtilityService
+        private utilityService: UtilityService,
+        private location: Location
     ) {}
 
     form = new UntypedFormGroup({
@@ -39,10 +38,6 @@ export class ESPCategoryFormComponent implements OnInit {
 
     ngOnInit(): void {
         this.getInitialData();
-    }
-
-    navigateTo(path: string, id: any, action: string) {
-        this.router.navigate([path], {queryParams: {id, action}});
     }
 
     submit() {
@@ -68,7 +63,7 @@ export class ESPCategoryFormComponent implements OnInit {
             this.spinner.hide();
             this.submitted = false;
             this.toastService.success(success.message);
-            this.router.navigate(["default/settings/master/purchase/esp_category/list"]);
+            this.location.back();
         });
     }
 
@@ -78,7 +73,7 @@ export class ESPCategoryFormComponent implements OnInit {
             this.submitted = false;
             this.spinner.hide();
             this.toastService.success(success.message);
-            this.router.navigate(["default/settings/master/purchase/esp_category/list"]);
+            this.location.back();
         });
     }
 

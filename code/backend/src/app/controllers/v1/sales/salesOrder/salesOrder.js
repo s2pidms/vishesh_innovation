@@ -3,11 +3,7 @@ const Model = require("../../../../models/sales/salesOrderModel");
 const MESSAGES = require("../../../../helpers/messages.options");
 const {outputData, checkDomesticCustomer} = require("../../../../helpers/utility");
 const {generateCreateData, getMatchData, OPTIONS} = require("../../../../helpers/global.options");
-const {
-    getAllSKUListByCustomerId,
-    getAllUniquePODetailsByCustomerId,
-    getAllSKUListOnOpenPOByCustomerId
-} = require("../SKU/SKU");
+const {getAllUniquePODetailsByCustomerId, getAllSKUListOnOpenPOByCustomerId} = require("../SKU/SKU");
 const {default: mongoose} = require("mongoose");
 const {findAppParameterValue} = require("../../settings/appParameter/appParameter");
 const {getSalesHSNByCode} = require("../salesHSN/salesHSN");
@@ -18,7 +14,7 @@ const {getAllSalesOrderAttributes} = require("../../../../models/sales/helpers/s
 const {dateToAnyFormat} = require("../../../../helpers/dateTime");
 // const {getSOMailConfig} = require("./salesOrderMail");
 const {LAKH} = require("../../../../mocks/number.constant");
-const {SALES_CATEGORY, JOB_CARD_STAGE} = require("../../../../mocks/constantData");
+const {JOB_CARD_STAGE} = require("../../../../mocks/constantData");
 const {SALES_ORDER} = require("../../../../mocks/schemasConstant/salesConstant");
 const {getAndSetAutoIncrementNo} = require("../../settings/autoIncrement/autoIncrement");
 const {filteredCustomerList} = require("../../../../models/sales/repository/customerRepository");
@@ -824,7 +820,7 @@ exports.getCustomerDiscount = async (SKUList, company) => {
                         let customerDiscountInfo = ele.customerDiscountInfo.find(
                             y => y.SKU?.valueOf() == x.SKU?.valueOf()
                         );
-                        if (customerDiscountInfo.discountInfo.discountValue) {
+                        if (customerDiscountInfo && customerDiscountInfo.discountInfo.discountValue) {
                             x.discount = customerDiscountInfo.discountInfo.discountValue;
                             x.netRate = +(
                                 x.standardRate -

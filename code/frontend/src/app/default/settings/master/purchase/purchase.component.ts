@@ -35,6 +35,12 @@ export class PurchaseComponent implements OnInit {
             tabType: SUB_MODULES_TYPES.MASTER
         };
         this.subModulesService.getAll(payload).subscribe(success => {
+            // let hashMap = new Map();
+            // success.rows.forEach((card: any) => {
+            //     hashMap.set(card.title, card);
+            // });
+            // this.cards = hashMap.get("Purchase Master");
+
             this.cards = success?.rows.find((x: any) => x.title == "Purchase Master");
             this.cardsData = this.cards.items.sort((a: any, b: any) => a.order - b.order);
             let dummyCount = 3 - this.cards.items.length;

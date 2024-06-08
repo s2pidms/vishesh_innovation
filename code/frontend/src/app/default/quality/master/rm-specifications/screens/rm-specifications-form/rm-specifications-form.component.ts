@@ -1,6 +1,7 @@
 import {Component, OnInit, QueryList, ViewChildren} from "@angular/core";
 import {UntypedFormControl, UntypedFormGroup, Validators} from "@angular/forms";
-import {ActivatedRoute, Router} from "@angular/router";
+import {Location} from "@angular/common";
+import {ActivatedRoute} from "@angular/router";
 import {mergeMap, of} from "rxjs";
 import {ToastService} from "@core/services";
 import {GRDetails} from "@interfaces/GRDetails";
@@ -12,7 +13,6 @@ import {RMSpecificationMasterService} from "@services/quality";
 import {ValidationService} from "@core/components";
 import {RM_SPECIFICATION_MASTER_FORM_ERRORS} from "@mocks/validations/quality/rmSpecification.validation";
 import {IRMSpecificationsMasterData} from "@mocks/models/quality/master";
-import {Location} from "@angular/common";
 
 @Component({
     selector: "app-rm-specifications-form",
@@ -69,7 +69,6 @@ export class RmSpecificationsFormComponent implements OnInit {
         private spinner: SpinnerService,
         private toastService: ToastService,
         private utilityService: UtilityService,
-        private router: Router,
         private validationService: ValidationService,
         private activatedRoute: ActivatedRoute,
         private location: Location

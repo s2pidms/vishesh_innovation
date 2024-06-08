@@ -6,8 +6,9 @@
                     <div class="col-md-10 px-5">
                         <div class="d-flex justify-content-between">
                             <div class="d-flex align-items-center">
-                                Download {{ type == "InventoryCorrection" ? "Validate Inventory" : type }}.csv File
-                                Sample Template
+                                Download
+                                {{ type == "InventoryCorrection" ? "Validate Inventory" : (type | separateWords) }}.csv
+                                File Sample Template
                             </div>
                             <div
                                 appAccessControl
@@ -31,7 +32,7 @@
             <div class="biometricContainer">
                 <div class="row row-box mb-5">
                     <div class="col-12 data-box text-center blue-text">
-                        Upload {{ type == "InventoryCorrection" ? "Validate Inventory" : type }}
+                        Upload {{ type == "InventoryCorrection" ? "Validate Inventory" : (type | separateWords) }}
                     </div>
                 </div>
 
@@ -48,8 +49,13 @@
                             <div class="me-3 w-50">
                                 <div class="text-center">
                                     <label class="text-primary mb-2">
-                                        Upload {{ type == "InventoryCorrection" ? "Validate Inventory" : type }} in
-                                        Excel format [.csv]
+                                        Upload
+                                        {{
+                                            type == "InventoryCorrection"
+                                                ? "Validate Inventory"
+                                                : (type | separateWords)
+                                        }}
+                                        in Excel format [.csv]
                                     </label>
                                 </div>
                                 <div class="d-flex inputGroup">

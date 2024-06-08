@@ -157,3 +157,51 @@ exports.PURCHASE_INDENT = {
         };
     }
 }
+exports.JOB_WORKER_MASTER = {
+    COLLECTION_NAME: "JobWorkerMaster",
+    ADDED_ACTION: "Job Worker Master created",
+    UPDATED_ACTION: "Job Worker Master updated",
+    MODULE_NAME: "Job Worker Master",
+    MODULE: "JobWorkerMaster",
+    MODULE_PREFIX: "JW/",
+    AUTO_INCREMENT_DATA: function () {
+        return {
+            moduleName: this.MODULE_NAME,
+            module: this.MODULE,
+            company: null,
+            modulePrefix: this.MODULE_PREFIX
+        };
+    }
+}
+exports.JOB_WORK_ITEM_MASTER = {
+    COLLECTION_NAME: "JobWorkItemMaster",
+    ADDED_ACTION: "Job Work Item Master created",
+    UPDATED_ACTION: "Job Work Item Master updated",
+    MODULE_NAME: "Job Work Item Master",
+    MODULE: "JobWorkItemMaster",
+    MODULE_PREFIX: "JWI/",
+    AUTO_INCREMENT_DATA: function () {
+        return {
+            moduleName: this.MODULE_NAME,
+            module: this.MODULE,
+            company: null,
+            modulePrefix: this.MODULE_PREFIX
+        };
+    }
+}
+exports.JOB_WORK_CHALLAN = {
+    COLLECTION_NAME: "JobWorkChallan",
+    ADDED_ACTION: "Job Work Challan created",
+    UPDATED_ACTION: "Job Work Challan updated",
+    MODULE_NAME: "Job Work Challan",
+    MODULE: "JobWorkChallan",
+    MODULE_PREFIX: "JWC/",
+    AUTO_INCREMENT_DATA: function () {
+        return {
+            moduleName: this.MODULE_NAME,
+            module: this.MODULE,
+            company: null,
+            modulePrefix: this.MODULE_PREFIX
+        };
+    }
+}

@@ -13,21 +13,11 @@ const routes: Routes = [
                 loadChildren: () => import("./../../production/transactions/grl/grl.module").then(m => m.GRLModule)
             },
             {
-                path: "stock_issue_to_production",
-                loadChildren: () =>
-                    import("./stock-issue-to-production/stock-issue-to-production.module").then(
-                        m => m.StockIssueToProductionModule
-                    )
+                path: "job_card",
+                loadChildren: () => import("./job-card/job-card.module").then(m => m.JobCardModule)
             },
             {
-                path: "stock_transfer",
-                loadChildren: () => import("./stock-transfer/stock-transfer.module").then(m => m.StockTransferModule)
-            },
-            {path: "job_card", loadChildren: () => import("./job-card/job-card.module").then(m => m.JobCardModule)},
-
-            {path: "pre_press", loadChildren: () => import("./pre-press/pre-press.module").then(m => m.PrePressModule)},
-            {
-                path: "gi_ppic_to_production",
+                path: "",
                 loadChildren: () =>
                     import("./gi-ppic-to-production/gi-ppic-to-production.module").then(m => m.GIPPICToProductionModule)
             },

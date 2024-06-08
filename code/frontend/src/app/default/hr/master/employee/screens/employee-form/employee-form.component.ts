@@ -28,6 +28,10 @@ export class EmployeeFormComponent implements OnInit {
     empPanCardFile: any = null;
     empExpCertificateFile: any = null;
     empRelievingLetterFile: any = null;
+    uploadBankPassBookFile: any = null;
+    uploadBankCheckBookFile: any = null;
+    uploadOfferLetterFile: any = null;
+    uploadAppointmentLetterFile: any = null;
     masterData: IEmployeeMasterData = {
         autoIncrementNo: "",
         empDesignationsOptions: [],
@@ -38,6 +42,7 @@ export class EmployeeFormComponent implements OnInit {
         empDepartmentsOptions: [],
         employeesOptions: []
     };
+    credentialInfo: any = {};
 
     form = this.formBuilder.group({
         _id: new UntypedFormControl(null),
@@ -98,6 +103,10 @@ export class EmployeeFormComponent implements OnInit {
         empGrade: new UntypedFormControl(null),
         empDesignation: new UntypedFormControl(null, [Validators.required]),
         empDepartment: new UntypedFormControl(null, [Validators.required]),
+        uploadOfferLetter: new UntypedFormControl(null),
+        uploadOfferLetterUrl: new UntypedFormControl(null),
+        uploadAppointmentLetter: new UntypedFormControl(null),
+        uploadAppointmentLetterUrl: new UntypedFormControl(null),
         empReportTo: new UntypedFormControl(null),
         empOTApplicability: new UntypedFormControl(null),
         empType: new UntypedFormControl(null),
@@ -119,7 +128,11 @@ export class EmployeeFormComponent implements OnInit {
         empExpCertificate: new UntypedFormControl(null),
         empExpCertificateUrl: new UntypedFormControl(null),
         empRelievingLetter: new UntypedFormControl(null),
-        empRelievingLetterUrl: new UntypedFormControl(null)
+        empRelievingLetterUrl: new UntypedFormControl(null),
+        uploadBankPassBook: new UntypedFormControl(null),
+        uploadBankPassBookUrl: new UntypedFormControl(null),
+        uploadBankCheckBook: new UntypedFormControl(null),
+        uploadBankCheckBookUrl: new UntypedFormControl(null)
     });
 
     statesOfIndia = STATES_LIST;
@@ -197,6 +210,22 @@ export class EmployeeFormComponent implements OnInit {
         }
         if (this.empRelievingLetterFile) {
             formData.append("empRelievingLetter", this.empRelievingLetterFile, this.empRelievingLetterFile.name);
+        }
+        if (this.uploadBankPassBookFile) {
+            formData.append("uploadBankPassBook", this.uploadBankPassBookFile, this.uploadBankPassBookFile.name);
+        }
+        if (this.uploadBankCheckBookFile) {
+            formData.append("uploadBankCheckBook", this.uploadBankCheckBookFile, this.uploadBankCheckBookFile.name);
+        }
+        if (this.uploadOfferLetterFile) {
+            formData.append("uploadOfferLetter", this.uploadOfferLetterFile, this.uploadOfferLetterFile.name);
+        }
+        if (this.uploadAppointmentLetterFile) {
+            formData.append(
+                "uploadAppointmentLetter",
+                this.uploadAppointmentLetterFile,
+                this.uploadAppointmentLetterFile.name
+            );
         }
 
         if (formValue._id) {
@@ -368,22 +397,22 @@ export class EmployeeFormComponent implements OnInit {
         //   empDateOfResignation: this.form.controls["empDateOfResignation"].value,
         // };
         modalRef.componentInstance.masterData = this.masterData;
+        modalRef.componentInstance.credentialInfo = this.credentialInfo;
         modalRef.componentInstance.formData = this.form.value;
 
         modalRef.result.then(
             (success: any) => {
-                console.log("-------", success);
-
                 if (success && ["create", "edit", "copy"].includes(this.action)) {
-                    console.log("success.formData", success);
-
                     this.form.patchValue(success.formData);
+                    this.credentialInfo = success.credentialInfo;
                     this.empPhotoFile = success.credentialInfo.empPhotoFile;
                     this.empAadharCardFile = success.credentialInfo.empAadharCardFile;
                     this.empResumeFile = success.credentialInfo.empResumeFile;
                     this.empPanCardFile = success.credentialInfo.empPanCardFile;
                     this.empExpCertificateFile = success.credentialInfo.empExpCertificateFile;
                     this.empRelievingLetterFile = success.credentialInfo.empRelievingLetterFile;
+                    this.uploadBankPassBookFile = success.credentialInfo.uploadBankPassBookFile;
+                    this.uploadBankCheckBookFile = success.credentialInfo.uploadBankCheckBookFile;
                 }
             },
             (reason: any) => {}
@@ -408,16 +437,24 @@ export class EmployeeFormComponent implements OnInit {
             empReportTo: this.form.controls["empReportTo"].value,
             empType: this.form.controls["empType"].value,
             empGrade: this.form.controls["empGrade"].value,
-            empOTApplicability: this.form.controls["empOTApplicability"].value
+            empOTApplicability: this.form.controls["empOTApplicability"].value,
+            uploadOfferLetter: this.form.controls["uploadOfferLetter"].value,
+            uploadOfferLetterUrl: this.form.controls["uploadOfferLetterUrl"].value,
+            uploadAppointmentLetter: this.form.controls["uploadAppointmentLetter"].value,
+            uploadAppointmentLetterUrl: this.form.controls["uploadAppointmentLetterUrl"].value
         };
 
         modalRef.componentInstance.masterData = this.masterData;
+        modalRef.componentInstance.uploadOfferLetterFile = this.uploadOfferLetterFile;
+        modalRef.componentInstance.uploadAppointmentLetterFile = this.uploadAppointmentLetterFile;
         // modalRef.componentInstance.formData = this.form.value;
 
         modalRef.result.then(
             (success: any) => {
                 if (success && ["create", "edit", "copy"].includes(this.action)) {
-                    this.form.patchValue(success);
+                    this.form.patchValue(success?.joiningDetailsInfo);
+                    this.uploadOfferLetterFile = success?.uploadOfferLetterFile;
+                    this.uploadAppointmentLetterFile = success?.uploadAppointmentLetterFile;
                 }
             },
             (reason: any) => {}

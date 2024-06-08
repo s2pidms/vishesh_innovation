@@ -1,7 +1,7 @@
 import {Component, OnInit} from "@angular/core";
 import {UntypedFormControl, UntypedFormGroup} from "@angular/forms";
-import {Router, ActivatedRoute} from "@angular/router";
-
+import {Location} from "@angular/common";
+import {ActivatedRoute} from "@angular/router";
 import {ToastService} from "@core/services";
 import {mergeMap, of} from "rxjs";
 import {AuditService} from "@services/settings";
@@ -32,11 +32,11 @@ export class AuditFormComponent implements OnInit {
     }
     constructor(
         private auditService: AuditService,
-        private router: Router,
         private activatedRoute: ActivatedRoute,
         private spinner: SpinnerService,
         private toastService: ToastService,
-        private utilityService: UtilityService
+        private utilityService: UtilityService,
+        private location: Location
     ) {}
 
     ngOnInit(): void {
@@ -65,7 +65,7 @@ export class AuditFormComponent implements OnInit {
             this.submitted = false;
             this.spinner.hide();
             this.toastService.success(success.message);
-            this.router.navigate(["/default/settings/transactions/audit/audit-list"]);
+            this.location.back();
         });
     }
 
@@ -75,7 +75,7 @@ export class AuditFormComponent implements OnInit {
             this.spinner.hide();
             this.submitted = false;
             this.toastService.success(success.message);
-            this.router.navigate(["/default/settings/transactions/audit/audit-list"]);
+            this.location.back();
         });
     }
 

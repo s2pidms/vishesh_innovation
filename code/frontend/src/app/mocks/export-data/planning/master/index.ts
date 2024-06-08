@@ -17,4 +17,6 @@ export * from "./SKUCostSheet";
 export * from "./SKUInkMaster";
 export * from "./SKUDimensionMaster";
 export * from "./SKUMaterialMaster";
+export * from "./bomOfJobWorkItem";
+export * from "./bomofJobWorkItemForm";
 export * from "./materialRequirementPlanning.excel";

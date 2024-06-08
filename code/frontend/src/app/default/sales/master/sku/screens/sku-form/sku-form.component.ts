@@ -8,23 +8,20 @@ import {Observable, mergeMap, of} from "rxjs";
 import {ValidationService} from "@core/components";
 import {NgbModal} from "@ng-bootstrap/ng-bootstrap";
 import {SKUCustomerInfo} from "@interfaces/SKUCustomerInfo";
-import {
-    AddItemUOMComponent,
-    AddMultipleCustomerSkuComponent,
-    CancelPoComponent,
-    CustomSearchDetailsModalComponent
-} from "@shared/modals";
+import {AddItemUOMComponent, CancelPoComponent, CustomSearchDetailsModalComponent} from "@shared/modals";
 import {SKU_FORM_ERRORS} from "@mocks/validations/sales";
 import {UtilityService} from "@core/services";
 import {COMPANY_TYPE_INJECTION_MOLDING, COMPANY_TYPE_IP_MANUFACTURING, SKU_STAGE_OPTIONS} from "@mocks/constant";
-import {SkuAttributesComponent} from "../sku-attributes/sku-attributes.component";
 import {InkHsnModalComponent} from "src/app/default/production/master/ink-master/screens/ink-hsn-modal/ink-hsn-modal.component";
 import {Location} from "@angular/common";
 import {ISKUMasterMasterData} from "@mocks/models/sales/master";
-import {ProductCategoryModalComponent} from "../product-category-modal/product-category-modal.component";
-import {CanComponentDeactivate, UnsavedChangesGuard} from "@core/guards/UnsavedChangesGuard";
+import {CanComponentDeactivate} from "@core/guards/UnsavedChangesGuard";
 import TABLE_HEADERS from "./tableHeaders";
-import {SKUCustomerInjectionMoldingComponent} from "../sku-customer-injection-molding/sku-customer-injection-molding.component";
+import {
+    ProductCategoryModalComponent,
+    SKUCustomerInjectionMoldingComponent,
+    SkuAttributesComponent
+} from "../components";
 @Component({
     selector: "app-sku-form",
     templateUrl: "./sku-form.component.html",

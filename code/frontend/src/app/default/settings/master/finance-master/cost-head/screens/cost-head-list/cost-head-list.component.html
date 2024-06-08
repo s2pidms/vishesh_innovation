@@ -32,9 +32,7 @@
                                     appAccessControl
                                     [accessType]="rolePermissionActions.viewAction"
                                     href="javascript:void(0)"
-                                    (click)="
-                                        navigateTo('default/settings/master/finance_master/cost_head/form', u, 'view')
-                                    "
+                                    (click)="navigateTo('../form', u, 'view')"
                                 >
                                     <i class="fa fa-eye fa-lg me-2 text-primary" aria-hidden="true"></i>
                                     View
@@ -43,9 +41,7 @@
                                     appAccessControl
                                     [accessType]="rolePermissionActions.editAction"
                                     href="javascript:void(0)"
-                                    (click)="
-                                        navigateTo('default/settings/master/finance_master/cost_head/form', u, 'edit')
-                                    "
+                                    (click)="navigateTo('../form', u, 'edit')"
                                 >
                                     <i class="fa fa-pencil-square-o fa-lg me-2 text-primary" aria-hidden="true"></i>
                                     Edit

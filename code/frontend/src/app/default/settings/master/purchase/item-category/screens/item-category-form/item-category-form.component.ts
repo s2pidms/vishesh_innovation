@@ -1,9 +1,9 @@
 import {Component, OnInit} from "@angular/core";
 import {UntypedFormControl, UntypedFormGroup, Validators} from "@angular/forms";
-import {ActivatedRoute, Router} from "@angular/router";
+import {ActivatedRoute} from "@angular/router";
+import {Location} from "@angular/common";
 import {ItemCategoryService} from "@services/purchase";
 import {ITEM_CATEGORY_FORM_ERRORS} from "@mocks/validations/purchase/item-category.validation";
-
 import {ToastService, UtilityService} from "@core/services";
 import {mergeMap, of} from "rxjs";
 import {ValidationService} from "@core/components";
@@ -20,14 +20,14 @@ export class ItemCategoryFormComponent implements OnInit {
     collection: number = 0;
 
     constructor(
-        private router: Router,
         private activatedRoute: ActivatedRoute,
         private spinner: SpinnerService,
         private toastService: ToastService,
         private itemCategoryService: ItemCategoryService,
         private validationService: ValidationService,
         private modalService: NgbModal,
-        private utilityService: UtilityService
+        private utilityService: UtilityService,
+        private location: Location
     ) {}
 
     form = new UntypedFormGroup({
@@ -41,7 +41,8 @@ export class ItemCategoryFormComponent implements OnInit {
         subCategory: new UntypedFormControl([]),
         inkMaster: new UntypedFormControl(false),
         BOM: new UntypedFormControl(false),
-        stockPreparation: new UntypedFormControl(false)
+        stockPreparation: new UntypedFormControl(false),
+        jobWorkItem: new UntypedFormControl(false)
     });
 
     submitted = false;
@@ -49,10 +50,6 @@ export class ItemCategoryFormComponent implements OnInit {
 
     ngOnInit(): void {
         this.getInitialData();
-    }
-
-    navigateTo(path: string, id: any, action: string) {
-        this.router.navigate([path], {queryParams: {id, action}});
     }
 
     submit() {
@@ -79,7 +76,7 @@ export class ItemCategoryFormComponent implements OnInit {
             this.spinner.hide();
             this.submitted = false;
             this.toastService.success(success.message);
-            this.router.navigate(["default/settings/master/purchase/item-category/list"]);
+            this.location.back();
         });
     }
 
@@ -89,7 +86,7 @@ export class ItemCategoryFormComponent implements OnInit {
             this.submitted = false;
             this.spinner.hide();
             this.toastService.success(success.message);
-            this.router.navigate(["default/settings/master/purchase/item-category/list"]);
+            this.location.back();
         });
     }
 

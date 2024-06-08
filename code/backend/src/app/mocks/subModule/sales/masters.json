@@ -14,25 +14,11 @@
         "roles": []
     },
     {
-        "_id": "655c3c373613e949b4d61ff5",
-        "menuItemId": "64a6c1e33339d4dc9d8141a3",
-        "module": "Sales",
-        "type": "MASTER",
-        "order": 2,
-        "isDisplay": false,
-        "title": "SAC Master",
-        "displayName": "SAC Master",
-        "disabled": false,
-        "url": "/default/sales/master/sac/list",
-        "items": [],
-        "roles": []
-    },
-    {
         "_id": "655c3c373613e949b4d61ffa",
         "menuItemId": "64a6c1e33339d4dc9d8141a3",
         "module": "Sales",
         "type": "MASTER",
-        "order": 3,
+        "order": 2,
         "isDisplay": false,
         "title": "B2B Customer",
         "displayName": "B2B Customer",
@@ -46,7 +32,7 @@
         "menuItemId": "64a6c1e33339d4dc9d8141a3",
         "module": "Sales",
         "type": "MASTER",
-        "order": 4,
+        "order": 3,
         "isDisplay": false,
         "title": "SKU Master",
         "displayName": "SKU Master",
@@ -55,6 +41,21 @@
         "items": [],
         "roles": []
     },
+    {
+        "_id": "655c3c373613e949b4d61ff5",
+        "menuItemId": "64a6c1e33339d4dc9d8141a3",
+        "module": "Sales",
+        "type": "MASTER",
+        "order": 4,
+        "isDisplay": false,
+        "title": "SAC Master",
+        "displayName": "SAC Master",
+        "disabled": false,
+        "url": "/default/sales/master/sac/list",
+        "items": [],
+        "roles": []
+    },
+
     {
         "_id": "655c3c383613e949b4d62004",
         "menuItemId": "64a6c1e33339d4dc9d8141a3",
@@ -70,16 +71,16 @@
         "roles": []
     },
     {
-        "_id": "655c3c383613e949b4d62009",
+        "_id": "655c3c383613e949b4d62018",
         "menuItemId": "64a6c1e33339d4dc9d8141a3",
         "module": "Sales",
         "type": "MASTER",
         "order": 6,
         "isDisplay": false,
-        "title": "B2C Customer",
-        "displayName": "B2C Customer",
+        "title": "Payment Terms",
+        "displayName": "Payment Terms",
         "disabled": false,
-        "url": "/default/sales/master/btc/list",
+        "url": "/default/sales/master/sales_payment_terms/list",
         "items": [],
         "roles": []
     },
@@ -112,30 +113,16 @@
         "roles": []
     },
     {
-        "_id": "655c3c383613e949b4d62018",
+        "_id": "664b15610f4f985c76cdadf4",
         "menuItemId": "64a6c1e33339d4dc9d8141a3",
         "module": "Sales",
         "type": "MASTER",
         "order": 9,
         "isDisplay": false,
-        "title": "Payment Terms",
-        "displayName": "Payment Terms",
+        "title": "Discount Management",
+        "displayName": "Discount Management",
         "disabled": false,
-        "url": "/default/sales/master/sales_payment_terms/list",
-        "items": [],
-        "roles": []
-    },
-    {
-        "_id": "655c3c393613e949b4d6201d",
-        "menuItemId": "64a6c1e33339d4dc9d8141a3",
-        "module": "Sales",
-        "type": "MASTER",
-        "order": 10,
-        "isDisplay": false,
-        "title": "Cost Estimate Calculator",
-        "displayName": "Cost Estimate Calculator",
-        "disabled": false,
-        "url": "/default/sales/master/cost_estimate_calculator/cal",
+        "url": "/default/sales/master/discount_management/list",
         "items": [],
         "roles": []
     },
@@ -144,7 +131,7 @@
         "menuItemId": "64a6c1e33339d4dc9d8141a3",
         "module": "Sales",
         "type": "MASTER",
-        "order": 11,
+        "order": 10,
         "isDisplay": false,
         "title": "Product Master",
         "displayName": "Product Master",
@@ -153,17 +140,18 @@
         "items": [],
         "roles": []
     },
+
     {
-        "_id": "664b15610f4f985c76cdadf4",
+        "_id": "655c3c383613e949b4d62009",
         "menuItemId": "64a6c1e33339d4dc9d8141a3",
         "module": "Sales",
         "type": "MASTER",
-        "order": 12,
+        "order": 11,
         "isDisplay": false,
-        "title": "Discount Management",
-        "displayName": "Discount Management",
+        "title": "B2C Customer",
+        "displayName": "B2C Customer",
         "disabled": false,
-        "url": "/default/sales/master/discount_management/list",
+        "url": "/default/sales/master/btc/list",
         "items": [],
         "roles": []
     }

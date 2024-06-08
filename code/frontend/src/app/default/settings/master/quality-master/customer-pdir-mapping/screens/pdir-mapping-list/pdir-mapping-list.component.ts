@@ -39,7 +39,7 @@ export class PdirMappingListComponent implements OnInit, OnDestroy {
     }
 
     navigateTo(path: string, id: any, action: string) {
-        this.router.navigate([path], {queryParams: {id, action}});
+        this.router.navigate([path], {relativeTo: this.activatedRoute, queryParams: {id, action}});
     }
     trackByFn(index: number, item: any) {
         return item?._id;

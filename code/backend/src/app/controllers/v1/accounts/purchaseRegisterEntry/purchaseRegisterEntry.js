@@ -4,7 +4,7 @@ const {
     getAllPurchaseRegistryEntryAttributes,
     getAllPREReportsAttributes
 } = require("../../../../models/accounts/helpers/purchaseRegisterEntryHelper");
-const {getAndSetAutoIncrementNo} = require("../../settings/autoIncrement/autoIncrement");
+const {getAndSetAutoIncrementNo, getNextAutoIncrementNo} = require("../../settings/autoIncrement/autoIncrement");
 const {PURCHASE_REGISTER_ENTRY} = require("../../../../mocks/schemasConstant/accountsConstant");
 const PurchaseRegistryEntryRepository = require("../../../../models/accounts/repository/purchaseRegisterEntryRepository");
 const {ObjectId} = require("../../../../../config/mongoose");
@@ -14,6 +14,9 @@ const {filteredMRNList} = require("../../../../models/quality/repository/mrnRepo
 const {getAllSuppliers} = require("../../purchase/suppliers/suppliers");
 const {getEndDateTime, getStartDateTime} = require("../../../../helpers/dateTime");
 const {OPTIONS} = require("../../../../helpers/global.options");
+const autoIncrementRepository = require("../../../../models/settings/repository/autoIncrementRepository");
+const {getIncrementNumWithPrefix} = require("../../../../helpers/utility");
+const validationJson = require("../../../../mocks/excelUploadColumn/validation.json");
 
 exports.getAll = asyncHandler(async (req, res) => {
     try {
@@ -124,9 +127,19 @@ exports.getAllMasterData = asyncHandler(async (req, res) => {
             req.user.company,
             false
         );
-        const purchaseCategoryOptions = await getAllModuleMaster(req.user.company, "ACCOUNT_PURCHASE_CATEGORY");
+        const options = await dropDownOptions(req.user.company);
+        return res.success({autoIncrementNo, ...options});
+    } catch (error) {
+        console.error("getAllMasterData Purchase Registry Entry", error);
+        const errors = MESSAGES.apiErrorStrings.SERVER_ERROR;
+        return res.serverError(errors);
+    }
+});
+
+const dropDownOptions = async company => {
+    try {
         const suppliersOptions = await filteredSupplierList([
-            {$match: {company: ObjectId(req.user.company), isSupplierActive: "A"}},
+            {$match: {company: ObjectId(company), isSupplierActive: "A"}},
             {$sort: {supplierName: 1}},
             {
                 $project: {
@@ -138,13 +151,16 @@ exports.getAllMasterData = asyncHandler(async (req, res) => {
                 }
             }
         ]);
-        return res.success({autoIncrementNo, purchaseCategoryOptions, suppliersOptions});
+        const purchaseCategoryOptions = await getAllModuleMaster(company, "ACCOUNT_PURCHASE_CATEGORY");
+        return {
+            purchaseCategoryOptions,
+            suppliersOptions
+        };
     } catch (error) {
-        console.error("getAllMasterData Purchase Registry Entry", error);
-        const errors = MESSAGES.apiErrorStrings.SERVER_ERROR;
-        return res.serverError(errors);
+        console.error(error);
     }
-});
+};
+
 exports.getAllMRNBySupplierId = asyncHandler(async (req, res) => {
     try {
         let currentDate = new Date();
@@ -241,3 +257,112 @@ exports.getAllReports = asyncHandler(async (req, res) => {
         return res.serverError(errors);
     }
 });
+
+exports.checkPurchaseRegisterEntryValidation = async (purchaseRegisterEntryData, column, company) => {
+    try {
+        const purchaseRegisterEntryOptions = await PurchaseRegistryEntryRepository.filteredPurchaseRegisterEntryList([
+            {
+                $match: {
+                    company: ObjectId(company),
+                    status: OPTIONS.defaultStatus.AWAITING_APPROVAL
+                }
+            },
+            {
+                $project: {supplierName: 1, taxInvoiceNo: 1}
+            }
+        ]);
+        const requiredFields = ["supplierName", "purchaseCategory", "taxInvoiceNo"];
+        const falseArr = OPTIONS.falsyArray;
+        let {suppliersOptions, purchaseCategoryOptions} = await dropDownOptions(company);
+        let dropdownCheck = [
+            {
+                key: "supplierName",
+                options: suppliersOptions.map(x => {
+                    return {
+                        label: x.supplierName,
+                        value: x.supplierName
+                    };
+                })
+            },
+            {
+                key: "purchaseCategory",
+                options: purchaseCategoryOptions.map(x => {
+                    return {
+                        label: x.label,
+                        value: x.value
+                    };
+                })
+            }
+        ];
+        let uniquePurchaseRegisterEntry = [];
+        for await (const x of purchaseRegisterEntryData) {
+            x.isValid = true;
+            x.message = null;
+            let label = `${x["supplierName"]} - ${x["taxInvoiceNo"]}`;
+            if (uniquePurchaseRegisterEntry.includes(label)) {
+                x.isValid = false;
+                x.message = `${x["supplierName"]} duplicate Entry`;
+                break;
+            }
+            uniquePurchaseRegisterEntry.push(label);
+            for (const ele of Object.values(column)) {
+                if (requiredFields.includes(ele) && falseArr.includes(x[ele])) {
+                    x.isValid = false;
+                    x.message = validationJson[ele] ?? `${ele} is Required`;
+                    break;
+                }
+                for (const dd of dropdownCheck) {
+                    if (ele == dd.key && !dd.options.map(values => values.value).includes(x[ele])) {
+                        x.isValid = false;
+                        x.message = `${ele} is Invalid Value & Value Must be ${dd.options.map(values => values.value)}`;
+                        break;
+                    }
+                }
+                for (const item of purchaseRegisterEntryOptions) {
+                    if (item.supplierName == x["supplierName"] && item.taxInvoiceNo == x["taxInvoiceNo"]) {
+                        x.isValid = false;
+                        x.message = `${x["supplierName"]} - ${x["taxInvoiceNo"]} already exists`;
+                        break;
+                    }
+                }
+            }
+        }
+        const inValidRecords = purchaseRegisterEntryData.filter(x => !x.isValid);
+        const validRecords = purchaseRegisterEntryData.filter(x => x.isValid);
+        return {inValidRecords, validRecords};
+    } catch (error) {
+        console.error(error);
+    }
+};
+
+exports.bulkInsertPurchaseRegisterEntryByCSV = async (jsonData, {company, createdBy, updatedBy}) => {
+    try {
+        let autoIncrementObj = await getNextAutoIncrementNo({
+            ...PURCHASE_REGISTER_ENTRY.AUTO_INCREMENT_DATA(),
+            company: company
+        });
+        let purchaseRegisterEntryData = jsonData.map(rest => {
+            rest.jobWorkerCode = getIncrementNumWithPrefix(autoIncrementObj);
+            rest.company = company;
+            rest.createdBy = createdBy;
+            rest.updatedBy = updatedBy;
+            autoIncrementObj.autoIncrementValue++;
+            return rest;
+        });
+        await PurchaseRegistryEntryRepository.createDoc(purchaseRegisterEntryData);
+        await autoIncrementRepository.findAndUpdateDoc(
+            {
+                module: PURCHASE_REGISTER_ENTRY.MODULE,
+                company: company
+            },
+            {
+                $set: {
+                    autoIncrementValue: autoIncrementObj.autoIncrementValue
+                }
+            }
+        );
+        return {message: "Uploaded successfully!"};
+    } catch (error) {
+        console.error(error);
+    }
+};

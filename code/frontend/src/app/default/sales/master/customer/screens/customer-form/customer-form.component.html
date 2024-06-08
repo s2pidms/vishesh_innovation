@@ -76,10 +76,7 @@
                         </option>
                     </select>
                 </div>
-                <div class="col">
-                    <label class="form-label"> PAN No. <span class="text-danger">*</span> </label>
-                    <input type="text" class="form-control" formControlName="customerPAN" />
-                </div>
+
                 <div class="col">
                     <label class="form-label">
                         GST Classification
@@ -95,7 +92,11 @@
                 </div>
                 <div class="col">
                     <label class="form-label"> GSTIN <span class="text-danger">*</span> </label>
-                    <input type="text" class="form-control" formControlName="GSTIN" />
+                    <input type="text" class="form-control" formControlName="GSTIN" (input)="setPANNumber()" />
+                </div>
+                <div class="col">
+                    <label class="form-label"> PAN No. <span class="text-danger">*</span> </label>
+                    <input type="text" class="form-control" formControlName="customerPAN" />
                 </div>
             </div>
             <div class="row">

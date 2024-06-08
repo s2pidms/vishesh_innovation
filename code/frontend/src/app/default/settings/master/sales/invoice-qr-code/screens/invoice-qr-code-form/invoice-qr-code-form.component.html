@@ -127,6 +127,36 @@
                     </ng-select>
                 </div>
             </div>
+            <div class="row">
+                <div class="col-4">
+                    <label class="form-label">
+                        TCS On Scrap
+                        <span class="text-danger">*</span>
+                    </label>
+                    <ng-select
+                        [items]="printCodeOptions"
+                        bindValue="value"
+                        bindLabel="label"
+                        formControlName="TCSOnScrap"
+                        [clearable]="false"
+                    >
+                    </ng-select>
+                </div>
+                <div class="col-4">
+                    <label class="form-label">
+                        TCS On Vendor
+                        <span class="text-danger">*</span>
+                    </label>
+                    <ng-select
+                        [items]="printCodeOptions"
+                        bindValue="value"
+                        bindLabel="label"
+                        formControlName="TCSOnVendor"
+                        [clearable]="false"
+                    >
+                    </ng-select>
+                </div>
+            </div>
         </div>
 
         <hr *ngIf="['edit', 'create'].includes(action)" class="row line-border" />
