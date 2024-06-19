@@ -77,16 +77,16 @@
                             <tr class="text-wrap" *ngFor="let s of getSkuData(l); let i = index">
                                 <td class="text-center" colspan="1">{{ i + 1 }}</td>
                                 <td colspan="4">
-                                    <p>{{ "SKU Name" | labelTranslate }}: {{ s?.SKU?.SKUName }}</p>
+                                    <p>{{ "SKU Name" | labelTranslate }}: {{ s?.SKUName }}</p>
                                     <p>
                                         {{ "SKU Description" | labelTranslate }}:
-                                        {{ s?.SKU?.SKUDescription }}
+                                        {{ s?.SKUDescription }}
                                     </p>
                                 </td>
                                 <td class="text-center" colspan="2">
                                     {{
-                                        s?.SKU?.customerInfo?.customerPartNo
-                                            ? s?.SKU?.customerInfo?.customerPartNo
+                                        s?.customerInfo?.customerPartNo
+                                            ? s?.customerInfo?.customerPartNo
                                             : "-"
                                     }}
                                 </td>

@@ -20,3 +20,4 @@ export * from './saleDebitNoteReport';
 export * from './quotationOfSKU';
 export * from './quotationOfDSKU';
 export * from './jobCardCreation';
+export * from './dispatchListReport';

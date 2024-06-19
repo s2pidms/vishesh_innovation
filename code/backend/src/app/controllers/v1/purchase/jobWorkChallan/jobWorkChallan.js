@@ -203,7 +203,7 @@ exports.getAllMasterData = asyncHandler(async (req, res) => {
         );
         const jobWorkerOptions = await filteredJobWorkerMasterList([
             {
-                $match: {company: ObjectId(req.user.company)}
+                $match: {company: ObjectId(req.user.company), status: OPTIONS.defaultStatus.ACTIVE}
             },
             {
                 $addFields: {

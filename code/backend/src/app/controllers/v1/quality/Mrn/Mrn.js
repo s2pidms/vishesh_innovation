@@ -2,12 +2,8 @@ const asyncHandler = require("express-async-handler");
 const Model = require("../../../../models/quality/mrnModel");
 const RejectQtyModel = require("../../../../models/quality/rejectedQtyMgntModel");
 const MESSAGES = require("../../../../helpers/messages.options");
-const {generateCreateData} = require("../../../../helpers/global.options");
-const {
-    getAllGrnList,
-    updateGRNStatusOnMRN,
-    getMonthlyGeneratedGRNVolume
-} = require("../../stores/goodsReceiptNote/goodsReceiptNote");
+const {OPTIONS} = require("../../../../helpers/global.options");
+const {getAllGrnList, getMonthlyGeneratedGRNVolume} = require("../../stores/goodsReceiptNote/goodsReceiptNote");
 const {default: mongoose} = require("mongoose");
 const {
     getFirstDateOfCurrentFiscalYear,
@@ -31,6 +27,7 @@ const {QUALITY_MAIL_CONST} = require("../../../../mocks/mailTriggerConstants");
 const {getAllModuleMaster} = require("../../settings/module-master/module-master");
 const {filteredCompanyList} = require("../../../../models/settings/repository/companyRepository");
 const CompanyRepository = require("../../../../models/settings/repository/companyRepository");
+const GRNRepository = require("../../../../models/stores/repository/GRNRepository");
 
 exports.getAll = asyncHandler(async (req, res) => {
     try {
@@ -80,36 +77,31 @@ exports.getAll = asyncHandler(async (req, res) => {
 
 exports.create = asyncHandler(async (req, res) => {
     try {
-        let existing = await Model.findOne(
-            {
-                GRNNumber: req.body.GRNNumber
-            },
-            {_id: 1}
-        );
-        if (existing) {
-            let errors = MESSAGES.apiErrorStrings.Data_EXISTS("MRN");
-            return res.preconditionFailed(errors);
-        }
+        // let existing = await MRNRepository.findOneDoc(
+        //     {
+        //         GRNNumber: req.body.GRNNumber
+        //     },
+        //     {_id: 1}
+        // );
+        // if (existing) {
+        //     let errors = MESSAGES.apiErrorStrings.Data_EXISTS("MRN");
+        //     return res.preconditionFailed(errors);
+        // }
         let createdObj = {
             company: req.user.company,
             createdBy: req.user.sub,
             updatedBy: req.user.sub,
             ...req.body
         };
-        const saveObj = new Model(createdObj);
-        const itemDetails = await saveObj.save();
-        await updateGRNStatusOnMRN(itemDetails.GRNNumber);
+        const itemDetails = await MRNRepository.createDoc(createdObj);
+        // await updateGRNStatusOnMRN(itemDetails.GRNNumber);
+
         if (itemDetails) {
+            await updateBalanceGRNQtyCreate(itemDetails.GRNNumber, itemDetails.MRNDetails);
+            await checkForClosingGRN(itemDetails.GRNNumber);
             res.success({
                 message: MESSAGES.apiSuccessStrings.ADDED("MRN")
             });
-            // let mailCreateObj = {
-            //     MRNId: itemDetails._id,
-            //     action: "created",
-            //     company: req.user.company,
-            //     mailAction: itemDetails.MRNStatus
-            // };
-            // getMRNMailConfig(mailCreateObj);
             let mailTriggerCreateObj = {
                 subModuleId: itemDetails._id,
                 action: "created",
@@ -129,20 +121,62 @@ exports.create = asyncHandler(async (req, res) => {
         return res.serverError(errors);
     }
 });
-
+const updateBalanceGRNQtyCreate = async (GRNId, details) => {
+    try {
+        for await (const ele of details) {
+            let GRNData = await GRNRepository.findOneDoc({_id: GRNId, "GRNDetails.item": ele.item});
+            for (const GRN of GRNData?.GRNDetails) {
+                if (String(GRN.item) == String(ele.item)) {
+                    GRN.balancedMRNQty = GRN.balancedMRNQty - ele.releasedQty - ele.rejectedQty;
+                    GRN.previousMRNQty = ele.releasedQty + ele.rejectedQty;
+                }
+            }
+            await GRNData.save();
+        }
+    } catch (error) {
+        console.error("error", error);
+    }
+};
+const updateBalanceGRNQtyUpdate = async (GRNId, details) => {
+    try {
+        for await (const ele of details) {
+            let GRNData = await GRNRepository.findOneDoc({_id: GRNId, "GRNDetails.item": ele.item});
+            for (const GRN of GRNData?.GRNDetails) {
+                if (String(GRN.item) == String(ele.item)) {
+                    GRN.balancedMRNQty = GRN.previousMRNQty + GRN.balancedMRNQty - ele.releasedQty - ele.rejectedQty;
+                    GRN.previousMRNQty = ele.releasedQty + ele.rejectedQty;
+                }
+            }
+            await GRNData.save();
+        }
+    } catch (error) {
+        console.error("error", error);
+    }
+};
+const checkForClosingGRN = async GRNId => {
+    try {
+        let GRNData = await GRNRepository.findOneDoc({_id: GRNId});
+        if (GRNData?.GRNDetails?.every(ele => ele?.balancedMRNQty == 0)) {
+            GRNData.GRNStatus = OPTIONS.defaultStatus.CLOSED;
+            await GRNData.save();
+        }
+    } catch (error) {
+        console.error("error", error);
+    }
+};
 exports.update = asyncHandler(async (req, res) => {
     try {
-        let itemDetails = await Model.findById(req.params.id);
+        let itemDetails = await MRNRepository.getDocById(req.params.id);
         if (!itemDetails) {
             const errors = MESSAGES.apiErrorStrings.INVALID_REQUEST;
             return res.preconditionFailed(errors);
         }
         itemDetails.updatedBy = req.user.sub;
-        itemDetails = await generateCreateData(itemDetails, req.body);
-
-        itemDetails = await itemDetails.save();
-        if (itemDetails.MRNStatus == "Report Generated") {
-            await updateGRNStatusOnMRN(itemDetails.GRNNumber.valueOf());
+        itemDetails = await MRNRepository.updateDoc(itemDetails, req.body);
+        await updateBalanceGRNQtyUpdate(itemDetails.GRNNumber, itemDetails.MRNDetails);
+        if (itemDetails.MRNStatus == OPTIONS.defaultStatus.REPORT_GENERATED) {
+            await checkForClosingGRN(itemDetails.GRNNumber);
+            // await updateGRNStatusOnMRN(itemDetails.GRNNumber.valueOf());
             // if (itemDetails.MRNDetails.some(x => x.rejectedQty > 0)) {
             //     await rejectQtyUpdate(itemDetails);
             // }
@@ -184,9 +218,8 @@ exports.update = asyncHandler(async (req, res) => {
 // @route   PUT /quality/inventoryCorrection/delete/:id
 exports.deleteById = asyncHandler(async (req, res) => {
     try {
-        const deleteItem = await Model.findById(req.params.id);
+        const deleteItem = await MRNRepository.deleteDoc({_id: req.params.id});
         if (deleteItem) {
-            await deleteItem.remove();
             return res.success({
                 message: MESSAGES.apiSuccessStrings.DELETED("MRN")
             });

@@ -19,10 +19,10 @@ export const PURCHASE_JOB_WORK_ITEM_FORM_ERRORS = [
         message: "Unit of Measurement is required",
         key: "orderInfoUOM"
     },
-    {
-        message: "Dual Units is required",
-        key: "primaryUnit"
-    },
+    // {
+    //     message: "Dual Units is required",
+    //     key: "primaryUnit"
+    // },
     {
         message: "HSN Code is required",
         key: "HSNCode"

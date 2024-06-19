@@ -6,7 +6,7 @@ import {AppGlobalService, MenuTitleService, SpinnerService, StorageService} from
 
 @Component({
     selector: "app-production-processes",
-    templateUrl: "./production-processes.component.html",
+    templateUrl: "./production-processes.component.html"
 })
 export class ProductionProcessesComponent implements OnInit {
     constructor(
@@ -39,7 +39,6 @@ export class ProductionProcessesComponent implements OnInit {
         this.subModulesService.getAll(payload).subscribe(success => {
             this.cards = success?.rows.find((x: any) => x.title == "Production Processes");
             this.cardsData = this.cards.items.sort((a: any, b: any) => a.order - b.order);
-
             let dummyCount = 3 - this.cards.items.length;
             if (dummyCount > 0) {
                 for (var i = 0; i < dummyCount; i++) {

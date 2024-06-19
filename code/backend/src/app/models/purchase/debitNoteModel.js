@@ -2,13 +2,220 @@ const mongoose = require("mongoose");
 const Audit = require("../../controllers/v1/settings/audit/audit");
 const {DEBIT_NOTE: SCHEMA_CONSTANT} = require("../../mocks/schemasConstant/purchaseConstant");
 const {getAndSetAutoIncrementNo} = require("../../controllers/v1/settings/autoIncrement/autoIncrement");
-const {SCHEMA} = require("./schemas/debitNoteSchema");
 const {paginatePlugin, reportPaginatePlugin} = require("../plugins/paginatePlugin");
+const {setTwoDecimal} = require("../../helpers/utility");
 
-const debitNoteSchema = mongoose.Schema(SCHEMA, {
-    timestamps: true,
-    collection: SCHEMA_CONSTANT.COLLECTION_NAME
-});
+const debitNoteSchema = mongoose.Schema(
+    {
+        company: {
+            type: mongoose.Schema.Types.ObjectId,
+            required: false,
+            ref: "Company"
+        },
+        createdBy: {
+            type: mongoose.Schema.Types.ObjectId,
+            required: false,
+            ref: "User"
+        },
+        updatedBy: {
+            type: mongoose.Schema.Types.ObjectId,
+            required: false,
+            ref: "User"
+        },
+        DNNumber: {
+            type: String,
+            required: true
+        },
+        DNDate: {
+            type: Date,
+            required: true,
+            default: new Date()
+        },
+        purchaseCategory: {
+            type: String,
+            required: true
+        },
+        supplier: {
+            type: mongoose.Schema.Types.ObjectId,
+            required: true,
+            ref: "Supplier"
+        },
+        invoiceNo: {
+            type: String,
+            required: false
+        },
+        invoiceDate: {
+            type: Date,
+            required: true,
+            default: new Date()
+        },
+        currency: {
+            type: String,
+            required: true
+        },
+        DNDetails: [
+            {
+                DNLineNumber: {
+                    type: Number,
+                    required: false
+                },
+                item: {
+                    type: mongoose.Schema.Types.ObjectId,
+                    required: false,
+                    ref: "Items"
+                },
+                UOM: {
+                    type: String,
+                    required: false
+                },
+                // from item
+                primaryUnit: {
+                    type: String,
+                    required: false
+                },
+                // enter
+                MRNRejectedQty: {
+                    type: Number,
+                    set: value => setTwoDecimal(value),
+                    required: false
+                },
+                returnQty: {
+                    type: Number,
+                    set: value => setTwoDecimal(value),
+                    required: false
+                },
+                // balancedQty: {
+                //   type: Number,
+                //   set: value => {
+                //     if (![undefined, null, "NaN"].includes(value) && typeof +value == "number") {
+                //         return parseFloat(value).toFixed(2);
+                //     }
+                // },
+                //     required: false,
+                //     default: 0,
+                // },
+                // previousMRNQty: {
+                //    type: Number,
+                //    set: value => {
+                //     if (![undefined, null, "NaN"].includes(value) && typeof +value == "number") {
+                //         return parseFloat(value).toFixed(2);
+                //     }
+                // },
+                //     required: false,
+                //     default: 0,
+                // },
+                // from item
+                standardRate: {
+                    type: Number,
+                    set: value => setTwoDecimal(value),
+                    required: false
+                },
+                // from item but editable
+                purchaseRate: {
+                    type: Number,
+                    set: value => setTwoDecimal(value),
+                    required: false
+                },
+                // POQty *  purchaseRate
+                lineValue: {
+                    type: Number,
+                    set: value => setTwoDecimal(value),
+                    required: false
+                },
+                hsn: {
+                    type: String,
+                    required: false
+                },
+                gst: {
+                    type: Number,
+                    set: value => setTwoDecimal(value),
+                    required: false,
+                    default: 0
+                },
+                igst: {
+                    type: Number,
+                    set: value => setTwoDecimal(value),
+                    required: false,
+                    default: 0
+                },
+                cgst: {
+                    type: Number,
+                    set: value => setTwoDecimal(value),
+                    required: false,
+                    default: 0
+                },
+                sgst: {
+                    type: Number,
+                    set: value => setTwoDecimal(value),
+                    required: false,
+                    default: 0
+                }
+            }
+        ],
+        reasonForDN: {
+            type: String,
+            required: false
+        },
+        remarks: {
+            type: String,
+            required: false
+        },
+        netDNValue: {
+            type: Number,
+            set: value => setTwoDecimal(value),
+            required: false,
+            default: 0
+        },
+        otherCharges: {
+            packagingAndForwarding: {
+                type: Number,
+                set: value => setTwoDecimal(value),
+                required: false,
+                default: 0
+            },
+            freight: {
+                type: Number,
+                set: value => setTwoDecimal(value),
+                required: false,
+                default: 0
+            },
+            insurance: {
+                type: Number,
+                set: value => setTwoDecimal(value),
+                required: false,
+                default: 0
+            },
+            loadingAndUnloading: {
+                type: Number,
+                set: value => setTwoDecimal(value),
+                required: false,
+                default: 0
+            },
+            miscellaneous: {
+                type: Number,
+                set: value => setTwoDecimal(value),
+                required: false,
+                default: 0
+            },
+            totalAmount: {
+                type: Number,
+                set: value => setTwoDecimal(value),
+                required: false,
+                default: 0
+            }
+        },
+        DNStatus: {
+            type: String,
+            required: true,
+            enum: ["Awaiting Approval", "Approved", "Rejected", "Report Generated", "Closed"],
+            default: "Awaiting Approval"
+        }
+    },
+    {
+        timestamps: true,
+        collection: SCHEMA_CONSTANT.COLLECTION_NAME
+    }
+);
 
 debitNoteSchema.pre("save", async function (next) {
     const {isNew, isModified} = this;

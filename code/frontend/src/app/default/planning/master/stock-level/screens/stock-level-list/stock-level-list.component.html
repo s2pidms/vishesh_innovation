@@ -1,0 +1,100 @@
+<div class="listCard card">
+    <div class="table-header">
+        <label class="heading">Stock Level Summary</label>
+    </div>
+    <hr class="line-border mt-1" />
+    <div class="table-responsive" style="min-height: 37rem">
+        <app-setting-header [data]="{page,pageSize,collection,search,type: 'list'}" (dataChange)="eventHeader($event)">
+        </app-setting-header>
+        <table class="table table-bordered">
+            <thead class="bg-primary">
+                <tr class="text-white">
+                    <th sortable="itemCode" (sort)="onSort($event)">Item Code</th>
+                    <th class="text-start" sortable="itemName" (sort)="onSort($event)">
+                        {{ "Item Name" | labelTranslate }}
+                    </th>
+                    <th class="text-start" sortable="itemDescription" (sort)="onSort($event)">
+                        {{ "Item Description" | labelTranslate }}
+                    </th>
+                    <th sortable="conversionOfUnits" (sort)="onSort($event)">DU Conversion</th>
+                    <th sortable="orderInfoUOM" (sort)="onSort($event)">UoM</th>
+                    <th sortable="itemROL" (sort)="onSort($event)">RO Level</th>
+                    <th sortable="itemAMU" (sort)="onSort($event)">RO Qty</th>
+                    <th sortable="status" (sort)="onSort($event)">Status</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let u of tableData; trackBy: trackByFn">
+                    <td>{{ u?.itemCode }}</td>
+                    <td class="text-start" [style.width]="itemName.clientWidth" #itemName>
+                        <span class="pointer" [ngbTooltip]="u.itemName" [positionTarget]="itemName">
+                            {{ u?.itemName }}
+                        </span>
+                    </td>
+                    <td class="text-start" [style.width]="itemDescription.clientWidth" #itemDescription>
+                        <span class="pointer" [ngbTooltip]="u.itemDescription" [positionTarget]="itemDescription">
+                            {{ u?.itemDescription }}
+                        </span>
+                    </td>
+                    <td>{{ u?.conversionOfUnits ? u?.conversionOfUnits : "-" }}</td>
+                    <td>{{ u?.orderInfoUOM | SalesUOMUnitMaster }}</td>
+
+                    <td>{{ u?.reorderLevel }}</td>
+                    <td>{{ u?.reorderQuantity }}</td>
+                    <td>
+                        <span class="d-flex justify-content-center">
+                            <div *ngIf="u.status == 'Active'" class="statusActive"></div>
+                            <div *ngIf="u.status == 'Inactive'" class="statusInActive"></div>
+                        </span>
+                    </td>
+                    <td>
+                        <div class="dropdown">
+                            <button class="dropbtn"></button>
+                            <div class="dropdown-content">
+                                <a
+                                    [class.disable]="u.status === 'Active'"
+                                    appAccessControl
+                                    [accessType]="rolePermissionActions.editAction"
+                                    href="javascript:void(0)"
+                                    (click)="navigateTo('../form', u, 'stock')"
+                                >
+                                    <i class="fa fa-pencil-square-o fa-lg me-2 text-primary" aria-hidden="true"></i>
+                                    + Stock Levels
+                                </a>
+                                <a
+                                    [class.disable]="u.status === 'Inactive'"
+                                    appAccessControl
+                                    [accessType]="rolePermissionActions.viewAction"
+                                    href="javascript:void(0)"
+                                    (click)="navigateTo('../form', u, 'view')"
+                                >
+                                    <i class="fa fa-eye fa-lg me-2 text-primary" aria-hidden="true"></i>
+                                    View
+                                </a>
+                                <a
+                                    [class.disable]="u.status === 'Inactive'"
+                                    appAccessControl
+                                    [accessType]="rolePermissionActions.editAction"
+                                    href="javascript:void(0)"
+                                    (click)="navigateTo('../form', u, 'edit')"
+                                >
+                                    <i class="fa fa-pencil-square-o fa-lg me-2 text-primary" aria-hidden="true"></i>
+                                    Edit
+                                </a>
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <hr class="line-border" />
+    <div class="row mt-3 ms-1">
+        <div class="col-12">
+            <button class="btn btn-primary px-4" type="button" (click)="openStatusSummaryModal()">
+                Status Summary
+            </button>
+        </div>
+    </div>
+</div>

@@ -2,12 +2,84 @@ const mongoose = require("mongoose");
 const Audit = require("../../controllers/v1/settings/audit/audit");
 const {PURCHASE_SERVICE_MASTER: SCHEMA_CONSTANT} = require("../../mocks/schemasConstant/purchaseConstant");
 const {getAndSetAutoIncrementNo} = require("../../controllers/v1/settings/autoIncrement/autoIncrement");
-const {SCHEMA} = require("./schemas/serviceMasterSchema");
 const {paginatePlugin} = require("../plugins/paginatePlugin");
-const serviceMasterSchema = mongoose.Schema(SCHEMA, {
-    timestamps: true,
-    collection: SCHEMA_CONSTANT.COLLECTION_NAME
-});
+const {setTwoDecimal} = require("../../helpers/utility");
+const serviceMasterSchema = mongoose.Schema(
+    {
+        company: {
+            type: mongoose.Schema.Types.ObjectId,
+            required: true,
+            ref: "Company"
+        },
+        createdBy: {
+            type: mongoose.Schema.Types.ObjectId,
+            required: false,
+            ref: "User"
+        },
+        updatedBy: {
+            type: mongoose.Schema.Types.ObjectId,
+            required: false,
+            ref: "User"
+        },
+        serviceCode: {
+            type: String,
+            required: false
+        },
+        serviceDescription: {
+            type: String,
+            required: true
+        },
+        unit: {
+            type: String,
+            required: false
+        },
+        sacId: {
+            type: mongoose.Schema.Types.ObjectId,
+            required: true,
+            ref: "SAC"
+        },
+        sacCode: {
+            type: String,
+            required: false
+        },
+        isActive: {
+            type: String,
+            required: true,
+            enum: ["Y", "N"],
+            default: "Y"
+        },
+        servicePrice: {
+            type: Number,
+            set: value => setTwoDecimal(value),
+            required: false,
+            default: 0
+        },
+        gst: {
+            type: Number,
+            set: value => setTwoDecimal(value),
+            required: false
+        },
+        igst: {
+            type: Number,
+            set: value => setTwoDecimal(value),
+            required: false
+        },
+        sgst: {
+            type: Number,
+            set: value => setTwoDecimal(value),
+            required: false
+        },
+        cgst: {
+            type: Number,
+            set: value => setTwoDecimal(value),
+            required: false
+        }
+    },
+    {
+        timestamps: true,
+        collection: SCHEMA_CONSTANT.COLLECTION_NAME
+    }
+);
 serviceMasterSchema.pre("save", async function (next) {
     const {isNew, isModified} = this;
     if (this.isNew) {

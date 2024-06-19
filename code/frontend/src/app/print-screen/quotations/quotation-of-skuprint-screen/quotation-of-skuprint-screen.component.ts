@@ -11,36 +11,53 @@ import {IQuotationOfSKUPrintScreen} from "@mocks/models/print-screen";
     styleUrls: ["./quotation-of-skuprint-screen.component.scss"]
 })
 export class QuotationOfSKUPrintScreenComponent implements OnInit {
-    tableData: any = {};
-    // {
-    //     _id: "",
-    //     quotationNo: "",
-    //     customerCategory: "",
-    //     exchangeRate: 0,
-    //     customerName: "",
-    //     currency: "",
-    //     quotationDetails: [],
-    //     termsAndCond: [],
-    //     RFQReference: "",
-    //     quotationDate: "",
-    //     customerBillingAddress: {
-    //         line1: "",
-    //         line2: "",
-    //         line3: "",
-    //         line4: "",
-    //         state: "",
-    //         city: "",
-    //         district: "",
-    //         pinCode: "",
-    //         country: "",
-    //         contactPersonName: "",
-    //         contactPersonNumber: "",
-    //         _id: ""
-    //     },
-    //     contactPersonName: "",
-    //     SOSignatureUrl: "",
-    //     SOPdfHeaderUrl: ""
-    // };
+    tableData: IQuotationOfSKUPrintScreen = {
+        _id: "",
+        quotationNo: "",
+        customerCategory: "",
+        exchangeRate: 0,
+        currency: "",
+        quotationDetails: [
+            {
+                SKUName: "",
+                SKUDescription: "",
+                drawingRef: "",
+                partNo: "",
+                UOM: "",
+                MOQ: 0,
+                QPrice: 0,
+                developmentCost: 0,
+                _id: ""
+            }
+        ],
+        termsAndCond: [
+            {
+                parameterName: "",
+                parameterLabel: "",
+                order: 0,
+                _id: ""
+            }
+        ],
+        RFQReference: "",
+        quotationDate: "",
+        customerBillingAddress: {
+            line1: "",
+            line2: "",
+            line3: "",
+            line4: "",
+            state: "",
+            city: "",
+            district: "",
+            pinCode: "",
+            country: "",
+            contactPersonName: "",
+            _id: ""
+        },
+        contactPersonName: "",
+        SOSignatureUrl: "",
+        SOPdfHeaderUrl: ""
+    };
+
     termsAndCondOfQuotation: any = [];
     display: any = {};
     pdfAction: any = "";

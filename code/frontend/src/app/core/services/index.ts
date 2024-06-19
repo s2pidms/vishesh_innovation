@@ -7,3 +7,4 @@ export * from './utility.service';
 export * from './app-global.service';
 export * from './spinner.service';
 export * from './toast.service';
+export * from './crypto.service';

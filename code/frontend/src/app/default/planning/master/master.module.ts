@@ -111,6 +111,10 @@ const routes: Routes = [
             {
                 path: "sku_attributes",
                 loadChildren: () => import("./sku-attributes/sku-attributes.module").then(m => m.SKUAttributesModule)
+            },
+            {
+                path: "stock_level",
+                loadChildren: () => import("./stock-level/stock-level.module").then(m => m.StockLevelModule)
             }
         ]
     }

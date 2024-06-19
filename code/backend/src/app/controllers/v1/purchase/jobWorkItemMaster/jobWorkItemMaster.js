@@ -10,7 +10,6 @@ const {filteredJobWorkerMasterList} = require("../../../../models/purchase/repos
 const {OPTIONS} = require("../../../../helpers/global.options");
 const {getIncrementNumWithPrefix} = require("../../../../helpers/utility");
 const {filteredItemCategoryList} = require("../../../../models/purchase/repository/itemCategoryRepository");
-const {getAllItemCategory} = require("../itemCategoryMaster/itemCategoryMaster");
 const validationJson = require("../../../../mocks/excelUploadColumn/validation.json");
 
 exports.getAll = asyncHandler(async (req, res) => {
@@ -172,7 +171,14 @@ const dropDownOptions = async company => {
                 }
             }
         ]);
-        const itemCategories = await getAllItemCategory(company);
+        const itemCategories = await filteredItemCategoryList([
+            {
+                $match: {
+                    categoryStatus: OPTIONS.defaultStatus.ACTIVE,
+                    jobWorkItem: true
+                }
+            }
+        ]);
         return {
             jobWorkerOptions,
             QCLevelsOptions,

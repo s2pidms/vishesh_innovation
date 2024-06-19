@@ -160,7 +160,6 @@
         "items": [],
         "roles": []
     },
-
     {
         "_id": "655c3c293613e949b4d61e7f",
         "menuItemId": "64a6c1e33339d4dc9d8141a8",
@@ -238,6 +237,20 @@
                 "_id": "656ae1a06af3bcb4ec7f401b"
             }
         ],
+        "roles": []
+    },
+    {
+        "_id": "666fe3734180093c52725ede",
+        "menuItemId": "64a6c1e33339d4dc9d8141a8",
+        "module": "Production",
+        "type": "TRANSACTION",
+        "order": 12,
+        "isDisplay": false,
+        "title": "Job Card Creation",
+        "displayName": "Job Card Creation",
+        "disabled": false,
+        "url": "/default/production/transactions/job_card/list",
+        "items": [],
         "roles": []
     }
 ]

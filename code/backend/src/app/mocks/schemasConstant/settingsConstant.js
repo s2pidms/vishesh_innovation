@@ -27,7 +27,15 @@ exports.AUDIT = {
     COLLECTION_NAME: "Audit"
 };
 exports.AUTO_INCREMENT = {
-    COLLECTION_NAME: "AutoIncrement"
+    COLLECTION_NAME: "AutoIncrement",
+    ADDED_ACTION: "Setting Auto Increment created",
+    UPDATED_ACTION: "Setting Auto Increment updated",
+    MODULE_NAME: "Auto Increment",
+    MODULE: "AutoIncrement",
+    MODULE_PREFIX: "AUTOINCREMENT",
+    AUTO_INCREMENT_DATA: function () {
+        return {moduleName: this.MODULE_NAME, module: this.MODULE, company: null, modulePrefix: this.MODULE_PREFIX};
+    }
 };
 exports.CHILD_ITEM_CATEGORY = {
     COLLECTION_NAME: "ChildItemCategory",
@@ -330,7 +338,7 @@ exports.SALES_UOM_UNIT_MASTER = {
             modulePrefix: this.MODULE_PREFIX
         };
     }
-}
+};
 exports.SERVICE_CHARGES = {
     COLLECTION_NAME: "ServiceCharges",
     ADDED_ACTION: "Service Charges created",
@@ -346,4 +354,4 @@ exports.SERVICE_CHARGES = {
             modulePrefix: this.MODULE_PREFIX
         };
     }
-}
+};

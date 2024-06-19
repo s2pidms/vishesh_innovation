@@ -11,8 +11,8 @@ import {SalesInvoiceService} from "@services/dispatch";
 export class TaxInvoicePrintScreenComponent implements OnInit {
     tableData: any = {};
     pdfAction: any = "";
+    // status: any = "";
     template: string = "Turnover less than 5 CR";
-
     buttonCondition: any = "true";
 
     constructor(
@@ -39,6 +39,7 @@ export class TaxInvoicePrintScreenComponent implements OnInit {
         this.spinner.show();
         this.salesInvoiceService.getSalesInvoiceByIdForPDF(id).subscribe(success => {
             this.spinner.hide();
+            // this.status = success.salesInvoiceStatus;
             if (success.customer.customerCategory.includes("Domestic")) {
                 this.template = success?.company?.TIDomesticTemplates ?? "Turnover less than 5 CR";
             } else {

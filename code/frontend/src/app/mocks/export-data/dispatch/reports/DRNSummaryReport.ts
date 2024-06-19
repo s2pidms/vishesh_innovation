@@ -1,7 +1,8 @@
 import {EXCEL_STYLE} from "../../excelStyle";
 import {GET_PDF_EXPORT_DATA} from "../../exportPdfData";
+
 let widths = ["*", "*", "*", "*", "*", "*", "*", "*", "*", "*"];
-let title = "DRN Summary Report";
+let title = `DRN Report`;
 let headers: any = [
     {
         header: "DRN No.",

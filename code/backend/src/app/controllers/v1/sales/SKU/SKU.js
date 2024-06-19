@@ -622,7 +622,7 @@ exports.getAllUniquePODetailsByCustomerId = async customerId => {
 };
 exports.getAllSKUListOnOpenPOByCustomerId = async query => {
     try {
-        let rows = await Model.aggregate([
+        let rows = await SKUMasterRepository.filteredSKUMasterList([
             {$unwind: {path: "$customerInfo", preserveNullAndEmptyArrays: true}},
             {
                 $match: {

@@ -93,7 +93,6 @@ export class PurchaseRegisterEntryFormComponent implements OnInit {
             delete formData._id;
             this.create(formData);
         }
-        // this.create(formData);
     }
 
     create(formData: any) {
@@ -144,9 +143,7 @@ export class PurchaseRegisterEntryFormComponent implements OnInit {
                     success.taxInvoiceDate = this.utilityService.getFormatDate(success.taxInvoiceDate, "yyyy-MM-DD");
                     success.status = this.statusArr[this.action];
                     this.form.patchValue(success);
-                    // if (this.action != "edit") {
-                    //     this.form.disable();
-                    // }
+
                     if (this.action != "edit") {
                         this.form.disable();
                         if (["view", "cancel"].includes(this.action)) {

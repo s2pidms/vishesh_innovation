@@ -1,0 +1,134 @@
+<form [formGroup]="form" class="formCard card">
+    <div class="set-remaining-margin">
+        <div class="row form-header">
+            <div class="col heading">
+                <label> Inventory (stock) Levels</label>
+            </div>
+        </div>
+        <div class="form-body">
+            <div class="row">
+                <div class="col-6">
+                    <label class="form-label mb-1"> Maximum Consumption/Day <span class="text-danger">*</span> </label>
+                    <div class="d-flex">
+                        <input
+                            class="form-control input-margin"
+                            type="number"
+                            formControlName="maxConsumptionPerDay"
+                            (input)="setAvgConsumptionPerDay()"
+                        />
+                        <span class="input-group-text set-uom px-4"> {{ unitOfMeasurement }}</span>
+                    </div>
+                </div>
+
+                <div class="col-6">
+                    <label class="form-label mb-1"> Minimum Consumption/Day <span class="text-danger">*</span> </label>
+                    <div class="d-flex">
+                        <input
+                            class="form-control input-margin"
+                            type="number"
+                            formControlName="minConsumptionPerDay"
+                            (input)="setAvgConsumptionPerDay()"
+                        />
+
+                        <span class="input-group-text set-uom px-4"> {{ unitOfMeasurement }}</span>
+                    </div>
+                </div>
+            </div>
+            <div class="row mt-4">
+                <div class="col-6">
+                    <label class="form-label mb-1"> Average Consumption/Day <span class="text-danger">*</span> </label>
+                    <div class="d-flex">
+                        <input
+                            class="form-control input-margin"
+                            type="number"
+                            formControlName="avgConsumptionPerDay"
+                            readonly
+                        />
+
+                        <span class="input-group-text set-uom px-4"> {{ unitOfMeasurement }}</span>
+                    </div>
+                </div>
+
+                <div class="col-6">
+                    <label class="form-label mb-1"> Supply Lead Time <span class="text-danger">*</span> </label>
+                    <div class="d-flex">
+                        <input
+                            class="form-control input-margin"
+                            type="number"
+                            formControlName="supplyLeadTime"
+                            (input)="setAvgConsumptionPerDay()"
+                        />
+
+                        <span class="input-group-text set-uom px-3"> Days</span>
+                    </div>
+                </div>
+            </div>
+            <div class="row mt-4">
+                <div class="col-6">
+                    <label class="form-label mb-1"> Inventory Turnover Cycle <span class="text-danger">*</span> </label>
+                    <div class="d-flex">
+                        <input
+                            class="form-control input-margin"
+                            type="number"
+                            formControlName="inventoryTurnoverCycle"
+                            (input)="setReorderQty()"
+                        />
+                        <span class="input-group-text set-uom px-3"> Days</span>
+                    </div>
+                </div>
+
+                <div class="col-6">
+                    <label class="form-label mb-1"> No. of orders/cycle <span class="text-danger">*</span> </label>
+                    <div class="d-flex">
+                        <input
+                            class="form-control input-margin"
+                            type="number"
+                            formControlName="noOfOrdersPerCycle"
+                            (input)="setReorderQty()"
+                        />
+
+                        <span class="input-group-text set-uom px-3"> Count</span>
+                    </div>
+                </div>
+            </div>
+            <hr class="row line-border my-4" />
+
+            <div class="row mt-3">
+                <div class="col-6">
+                    <label class="form-label mb-1"> Reorder Level <span class="text-danger">*</span> </label>
+                    <div class="d-flex">
+                        <input
+                            class="form-control input-margin"
+                            type="number"
+                            formControlName="reorderLevel"
+                            readonly
+                        />
+
+                        <span class="input-group-text set-uom px-4"> {{ unitOfMeasurement }}</span>
+                    </div>
+                </div>
+
+                <div class="col-6">
+                    <label class="form-label mb-1"> Reorder Quantity <span class="text-danger">*</span> </label>
+                    <div class="d-flex">
+                        <input
+                            class="form-control input-margin"
+                            type="number"
+                            formControlName="reorderQuantity"
+                            readonly
+                        />
+
+                        <span class="input-group-text set-uom px-4"> {{ unitOfMeasurement }}</span>
+                    </div>
+                </div>
+            </div>
+            <hr *ngIf="action != 'view'" class="row line-border my-4" />
+
+            <div class="text-center mb-4">
+                <button *ngIf="action != 'view'" type="button" class="btn bg-primary px-5" (click)="submit()">
+                    Save & Close
+                </button>
+            </div>
+        </div>
+    </div>
+</form>

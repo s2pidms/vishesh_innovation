@@ -1,8 +1,14 @@
 import {ICommonData} from "@mocks/models/business-leads/transactions";
 
 export interface IDirectTaxInvoiceMasterData {
-    autoIncrementNo: string;
-    salesCategoryOptions: ICommonData[];
+    autoIncrementedValues: any;
+    companyData: any;
+    customerCategoryOptions: ICommonData[];
+    transporterOptions: ICommonData[];
+    freightTermsOptions: ICommonData[];
+    modeOfTransportOptions: ICommonData[];
+    paymentTermsOptions: ICommonData[];
+    billFromLocationOptions: ICommonData[];
     customersOptions: IInvoiceCustomers[];
 }
 export interface IInvoiceCustomers {

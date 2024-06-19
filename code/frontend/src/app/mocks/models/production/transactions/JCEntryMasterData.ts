@@ -43,6 +43,7 @@ export interface IPQAInfo {
     seq: string;
     subProcessName: string;
     inspectedBy: any;
+    offerDate: any;
     releasedDate: any;
     releaseStatus: any;
     IPQAStatus: boolean;

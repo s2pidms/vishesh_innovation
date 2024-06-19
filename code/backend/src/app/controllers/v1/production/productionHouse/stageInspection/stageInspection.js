@@ -54,6 +54,7 @@ exports.createOrUpdate = asyncHandler(async (req, res) => {
                 stageInspectionIPQAInfo: req.body.stageInspectionInfo,
                 ...req.body
             };
+            delete createdObj._id;
             await StageInspectionRepository.createDoc(createdObj);
             await StageInspectionIPQARepository.createDoc(createdObj);
         }

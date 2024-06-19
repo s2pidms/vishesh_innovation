@@ -1,7 +1,6 @@
 const asyncHandler = require("express-async-handler");
 const Model = require("../../../../models/purchase/serviceMasterModel");
 const MESSAGES = require("../../../../helpers/messages.options");
-const {generateCreateData, getMatchData} = require("../../../../helpers/global.options");
 const {getAllServiceMasterAttributes} = require("../../../../models/purchase/helpers/serviceMasterHelper");
 const {default: mongoose} = require("mongoose");
 const {getAndSetAutoIncrementNo} = require("../../settings/autoIncrement/autoIncrement");
@@ -52,9 +51,7 @@ exports.create = asyncHandler(async (req, res) => {
             updatedBy: req.user.sub,
             ...req.body
         };
-        const saveObj = new Model(createdObj);
-
-        const itemDetails = await saveObj.save();
+        const itemDetails = await ServiceMasterRepository.createDoc(createdObj);
         if (itemDetails) {
             return res.success({
                 message: MESSAGES.apiSuccessStrings.ADDED("ServiceMaster")
@@ -72,14 +69,13 @@ exports.create = asyncHandler(async (req, res) => {
 
 exports.update = asyncHandler(async (req, res) => {
     try {
-        let itemDetails = await Model.findById(req.params.id);
+        let itemDetails = await ServiceMasterRepository.getDocById(req.params.id);
         if (!itemDetails) {
             const errors = MESSAGES.apiErrorStrings.INVALID_REQUEST;
             return res.preconditionFailed(errors);
         }
         itemDetails.updatedBy = req.user.sub;
-        itemDetails = await generateCreateData(itemDetails, req.body);
-        itemDetails = await itemDetails.save();
+        itemDetails = await ServiceMasterRepository.updateDoc(itemDetails, req.body);
 
         return res.success({
             message: MESSAGES.apiSuccessStrings.UPDATE("Service Master has been")
@@ -93,7 +89,7 @@ exports.update = asyncHandler(async (req, res) => {
 
 exports.deleteById = asyncHandler(async (req, res) => {
     try {
-        const deleteItem = await Model.findById(req.params.id);
+        const deleteItem = await ServiceMasterRepository.deleteDoc({_id: req.params.id});
         if (deleteItem) {
             await deleteItem.remove();
             return res.success({
@@ -150,17 +146,5 @@ exports.getAllMasterData = asyncHandler(async (req, res) => {
         console.error("getAllMasterData Service Master", error);
         const errors = MESSAGES.apiErrorStrings.SERVER_ERROR;
         return res.serverError(errors);
-    }
-});
-
-exports.getAllServiceMasters = asyncHandler(async company => {
-    try {
-        let rows = await Model.find({
-            isActive: "Y",
-            company: company
-        }).sort({serviceCode: -1});
-        return rows;
-    } catch (e) {
-        console.error("getAllService Masters", e);
     }
 });

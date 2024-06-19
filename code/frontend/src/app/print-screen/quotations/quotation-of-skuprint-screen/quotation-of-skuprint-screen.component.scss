@@ -2,14 +2,7 @@
     size: B5;
     margin: 0;
 }
-.end-of-content-height {
-    // height: 25vh;
-}
 @media print {
-    .end-of-content-height {
-        // height: 25vh;
-    }
-
     button {
         display: none !important;
     }

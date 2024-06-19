@@ -48,7 +48,7 @@
                 </div>
                 <div class="col-md-4">
                     <label class="form-label">SGST Rate % <span class="text-danger">*</span></label>
-                    <input class="form-control" type="number" formControlName="sgstRate" />
+                    <input class="form-control" type="number" formControlName="sgstRate" (input)="setUTGSTValue()" />
                     <validation-messages class="error-left" [control]="form.controls['sgstRate']">
                     </validation-messages>
                 </div>

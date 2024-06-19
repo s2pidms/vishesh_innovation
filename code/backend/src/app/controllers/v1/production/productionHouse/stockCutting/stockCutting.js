@@ -43,6 +43,7 @@ exports.createOrUpdate = asyncHandler(async (req, res) => {
                 updatedBy: req.user.sub,
                 ...req.body
             };
+            delete createdObj._id;
             let itemSelected = createdObj.stockCuttingDetails.find(x => x.isSelectItem)?.reference;
             const itemDetails = await StockCuttingRepository.createDoc(createdObj);
             if (itemDetails) {

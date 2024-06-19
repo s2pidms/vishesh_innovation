@@ -110,14 +110,12 @@
                         </td>
                         <td>
                             <div class="d-flex justify-content-center align-items-center">
+                                <!--  item?.processName == 'Packing' || -->
                                 <button
                                     type="button"
                                     class="btn btn-primary form-btn-sm py-0"
                                     (click)="openProdInfoModal(item)"
-                                    [disabled]="
-                                        item?.processName == 'Packing' || JCEntryDetailsList
-                                            | JCEDisabledProdInfo : item.seq
-                                    "
+                                    [disabled]="JCEntryDetailsList | JCEDisabledProdInfo : item.seq"
                                 >
                                     Prod. Info
                                 </button>
@@ -125,14 +123,12 @@
                         </td>
                         <td>
                             <div class="d-flex justify-content-center align-items-center">
+                                <!-- item?.processName == 'Packing' || -->
                                 <button
                                     type="button"
                                     class="btn btn-primary form-btn-sm py-0"
                                     (click)="openIPQAModal(item)"
-                                    [disabled]="
-                                        item?.processName == 'Packing' || JCEntryDetailsList
-                                            | JCEDisabledIPQAInfo : item.seq
-                                    "
+                                    [disabled]="JCEntryDetailsList | JCEDisabledIPQAInfo : item.seq"
                                 >
                                     Control Plan
                                 </button>

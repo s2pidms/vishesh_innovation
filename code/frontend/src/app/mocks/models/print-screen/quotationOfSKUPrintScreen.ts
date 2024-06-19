@@ -3,22 +3,18 @@ export interface IQuotationOfSKUPrintScreen {
     quotationNo: string;
     customerCategory: string;
     exchangeRate: number;
-    customerName: string;
     currency: string;
     quotationDetails: IQuotationDetail[];
     termsAndCond: ITermsAndCond[];
     RFQReference: string;
     quotationDate: string;
-    customerBillingAddress: ICustomerBillingAddress;
+    customerBillingAddress: QOfSKUCustomerBillingAddress;
     contactPersonName: string;
     SOSignatureUrl: string;
     SOPdfHeaderUrl: string;
 }
 
 export interface IQuotationDetail {
-    srNo: number;
-    SKU: string;
-    SKUNo: string;
     SKUName: string;
     SKUDescription: string;
     drawingRef: string;
@@ -37,7 +33,7 @@ export interface ITermsAndCond {
     _id: string;
 }
 
-export interface ICustomerBillingAddress {
+export interface QOfSKUCustomerBillingAddress {
     line1: string;
     line2: string;
     line3: string;
@@ -48,6 +44,5 @@ export interface ICustomerBillingAddress {
     pinCode: string;
     country: string;
     contactPersonName: string;
-    contactPersonNumber: string;
     _id: string;
 }

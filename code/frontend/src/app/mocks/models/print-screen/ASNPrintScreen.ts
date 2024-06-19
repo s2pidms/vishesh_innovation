@@ -1,18 +1,18 @@
 export interface IASNLabelPrintScreen {
     _id: string;
-    company: ICompany | any;
+    company: ASNCompany;
     ASNNumber: string;
-    salesInvoice: ISalesInvoice | any;
+    salesInvoice: SalesInvoice;
     salesInvoiceDate: string;
-    customer: ICustomer | any;
+    customer: ASNCustomer;
     customerName: string;
     stateOfSupply: string;
     invoiceValue: number;
     totalNoOfBoxes: number;
     totalGrossWeight: number;
     ASNStatus: string;
-    rowRepeat: any[] | any;
-    salesInvoiceDetails: ISalesInvoiceDetail[];
+    salesInvoiceDetails: ASNSalesInvoiceDetail[];
+    rowRepeat: any[];
     transporter: string;
     modeOfTransport: string;
     frightCharge: number;
@@ -21,20 +21,21 @@ export interface IASNLabelPrintScreen {
     docketLR: string;
     docketLRDate: string;
     freight: number;
+    SKUInfo: Skuinfo[];
 }
 
-export interface ICompany {
+export interface ASNCompany {
     _id: string;
     companyName: string;
-    companyBillingAddress: ICompanyBillingAddress | any;
-    contactInfo: IContactInfo;
+    companyBillingAddress: CompanyBillingAddress;
+    contactInfo: ContactInfo;
     SOSignatureUrl: string;
     companyPdfHeaderUrl: string;
     SOPdfHeaderUrl: string;
     logoUrl: string;
 }
 
-export interface ICompanyBillingAddress {
+export interface CompanyBillingAddress {
     addressLine1: string;
     addressLine2: string;
     addressLine3: string;
@@ -47,7 +48,7 @@ export interface ICompanyBillingAddress {
     state: string;
 }
 
-export interface IContactInfo {
+export interface ContactInfo {
     department: string;
     contactPersonName: string;
     designation: string;
@@ -56,20 +57,31 @@ export interface IContactInfo {
     _id: string;
 }
 
-export interface ISalesInvoice {
+export interface SalesInvoice {
     _id: string;
     salesInvoiceNumber: string;
+    customerShippingAddress: ASNCustomerShippingAddress;
 }
 
-export interface ICustomer {
+export interface ASNCustomerShippingAddress {
+    line1: string;
+    line2: string;
+    line3: string;
+    state: string;
+    city: string;
+    pinCode: string;
+    contactPersonName: string;
+}
+
+export interface ASNCustomer {
     _id: string;
     customerName: string;
     GSTIN: string;
-    customerShippingAddress: ICustomerShippingAddress[];
-    customerContactInfo: ICustomerContactInfo[];
+    customerShippingAddress: ASNCustomerShippingAddress2[];
+    customerContactInfo: ASNCustomerContactInfo[];
 }
 
-export interface ICustomerShippingAddress {
+export interface ASNCustomerShippingAddress2 {
     line1: string;
     line2: string;
     line3: string;
@@ -83,7 +95,7 @@ export interface ICustomerShippingAddress {
     _id: string;
 }
 
-export interface ICustomerContactInfo {
+export interface ASNCustomerContactInfo {
     contactPersonName: string;
     contactPersonDesignation: string;
     contactPersonDepartment: string;
@@ -92,12 +104,11 @@ export interface ICustomerContactInfo {
     _id: string;
 }
 
-export interface ISalesInvoiceDetail {
+export interface ASNSalesInvoiceDetail {
     PONumber: string;
-    SOId: ISoid;
-    batchDate: string;
-    SKUQty: any;
-    SKU: ISku;
+    SOId: string;
+    batchDate: any;
+    SKU: string;
     dispatchQty: number;
     unit: string;
     salesInvoiceUnitRate: number;
@@ -106,21 +117,19 @@ export interface ISalesInvoiceDetail {
     boxNos: string;
     boxDetails: BoxDetail[];
     _id: string;
-}
-
-export interface ISoid {
-    _id: string;
-    PONumber: string;
-}
-
-export interface ISku {
-    _id: string;
     SKUName: string;
     SKUDescription: string;
-    customerInfo: ICustomerInfo;
+    customerInfo: ASNCustomerInfo;
 }
 
-export interface ICustomerInfo {
+export interface BoxDetail {
+    boxNo: number;
+    qty: number;
+    weight: number;
+    _id: string;
+}
+
+export interface ASNCustomerInfo {
     customer: string;
     customerName: string;
     customerPartNo: string;
@@ -133,9 +142,22 @@ export interface ICustomerInfo {
     _id: string;
 }
 
-export interface BoxDetail {
-    boxNo: number;
-    qty: number;
-    weight: number;
+export interface Skuinfo {
+    _id: string;
+    SKUName: string;
+    SKUDescription: string;
+    customerInfo: CustomerInfo2[];
+}
+
+export interface CustomerInfo2 {
+    customer: string;
+    customerName: string;
+    customerPartNo: string;
+    PONo: any;
+    PODate: any;
+    customerCurrency: string;
+    standardSellingRate: string;
+    monthlyOffTake: any;
+    POValidDate: any;
     _id: string;
 }

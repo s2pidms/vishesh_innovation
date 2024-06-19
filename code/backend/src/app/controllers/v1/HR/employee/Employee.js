@@ -3,10 +3,8 @@ const Model = require("../../../../models/HR/employeeModel");
 const EmployeeRepository = require("../../../../models/HR/repository/employeeRepository");
 const userModel = require("../../../../models/settings/userModel");
 const roleModel = require("../../../../models/settings/roleModel");
-const AutoIncrement = require("../../../../models/settings/autoIncrementModel");
 const MESSAGES = require("../../../../helpers/messages.options");
 const path = require("path");
-const {USER_MODULE_PREFIX} = require("../../../../helpers/moduleConstants");
 const {getAutoIncrementNumber} = require("../../../../helpers/utility");
 const {readExcel} = require("../../../../middleware/readExcel");
 const {generateCreateData} = require("../../../../helpers/global.options");
@@ -31,6 +29,7 @@ const {
     BOOLEAN_VALUES,
     EMP_ACCOUNT_TYPE
 } = require("../../../../mocks/constantData");
+const {USER} = require("../../../../mocks/schemasConstant/settingsConstant");
 const ObjectId = mongoose.Types.ObjectId;
 // @desc    getAll Employee Record
 exports.getAll = async (req, res) => {
@@ -329,13 +328,13 @@ exports.update = async (req, res) => {
         if (employee.isLogin) {
             if (!createUser) {
                 let role = await roleModel.findOne({roleName: "Employee"});
-                const autoIncrementedNo = await AutoIncrement.getNextId("User", USER_MODULE_PREFIX, req.user.company);
+                const autoIncrementedNo = await getAndSetAutoIncrementNo(USER.AUTO_INCREMENT_DATA(), req.user.company);
                 let user = new userModel({
                     company: req.user.company,
                     createdBy: req.user.sub,
                     updatedBy: req.user.sub,
                     role: [role._id],
-                    userCode: getAutoIncrementNumber(USER_MODULE_PREFIX.charAt(0), " ", autoIncrementedNo, 4),
+                    userCode: getAutoIncrementNumber(USER.MODULE.charAt(0), " ", autoIncrementedNo, 4),
                     name: `${employee.empFirstName} ${employee.empLastName}`,
                     email: empCode,
                     password: CONSTANTS.employeePassword,

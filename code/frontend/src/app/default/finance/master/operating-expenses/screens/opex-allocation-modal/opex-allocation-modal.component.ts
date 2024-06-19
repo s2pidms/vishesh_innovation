@@ -31,10 +31,22 @@ export class OpexAllocationModalComponent implements OnInit {
         let opexData = this.costHeadList.find((x: any) => x.costHead == "TOTAL OPEX");
         this.opexAllocation = this.opexAllocation.map((x: any) => {
             if (x.particulars == "Total OPEX (Ccy)") {
-                x.fy_25 = opexData?.fy_25;
-                x.fy_24 = opexData?.fy_24;
-                x.fy_23 = opexData?.fy_23;
-                x.fy_22 = opexData?.fy_22;
+                // x.fy_25 = opexData?.fy_25;
+                // x.fy_24 = opexData?.fy_24;
+                // x.fy_23 = opexData?.fy_23;
+                // x.fy_22 = opexData?.fy_22;
+                for (const key in opexData) {
+                    if (opexData.hasOwnProperty(key)) {
+                        x[key] = opexData[key];
+                    }
+                }
+
+                // const entries = Object.entries(opexData);
+                // for (const [key, value] of entries) {
+                //     console.log(`${key}: ${value}`);
+                //     console.log("x", opexData[key]);
+                //     x[key] = opexData[key];
+                // }
             }
             return x;
         });

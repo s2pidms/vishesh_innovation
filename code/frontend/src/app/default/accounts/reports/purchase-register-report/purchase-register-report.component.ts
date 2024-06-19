@@ -171,12 +171,6 @@ export class PurchaseRegisterReportComponent implements OnInit, OnDestroy {
         modalRef.componentInstance.POQty = item.SOQty;
         modalRef.componentInstance.deliveryCount = item.dispatchCount;
         modalRef.componentInstance.deliveryScheduleArr = item?.dispatchSchedule;
-        // if (item.dispatchSchedule) {
-        //     modalRef.componentInstance.deliveryScheduleArr = item?.dispatchSchedule.map((x: any) => {
-        //         x.dispatchDate = this.utilityService.getFormatDate(x.dispatchDate, "YYYY-MM-DD");
-        //         return x;
-        //     });
-        // }
     }
     onSort({column, direction}: SortEvent) {
         this.headers.forEach((header: any) => {

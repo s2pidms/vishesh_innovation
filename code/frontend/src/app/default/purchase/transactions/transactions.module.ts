@@ -49,6 +49,10 @@ const routes: Routes = [
                 path: "job_work_challan",
                 loadChildren: () =>
                     import("./job-work-challan/job-work-challan.module").then(m => m.JobWorkChallanModule)
+            },
+            {
+                path: "job_work_order",
+                loadChildren: () => import("./job-work-order/job-work-order.module").then(m => m.JobWorkOrderModule)
             }
         ]
     }

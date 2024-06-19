@@ -38,3 +38,5 @@ export * from "./UploadDataForSKUDimensionMaster";
 export * from "./UploadDataForAssetMaster";
 export * from "./UploadDataForFGIN";
 export * from "./UploadDataForEmployeeMaster";
+export * from "./UploadDataForRMSpecification";
+export * from "./UploadDataForProductSpecification";

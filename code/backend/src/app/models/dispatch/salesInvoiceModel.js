@@ -1,17 +1,17 @@
 const mongoose = require("mongoose");
-const {findAppParameterValue} = require("../../controllers/v1/settings/appParameter/appParameter");
 const {getCompanyLocationsWithGST} = require("../../controllers/v1/settings/company/company");
 const Audit = require("../../controllers/v1/settings/audit/audit");
 const {OPTIONS} = require("../../helpers/global.options");
-const {SALES_INVOICE: SCHEMA_CONST, SALES_INVOICE} = require("../../mocks/schemasConstant/dispatchConstant");
+const {SALES_INVOICE: SCHEMA_CONST} = require("../../mocks/schemasConstant/dispatchConstant");
 const {getAndSetAutoIncrementNo} = require("../../controllers/v1/settings/autoIncrement/autoIncrement");
 const {reportPaginatePlugin} = require("../plugins/paginatePlugin");
 const AutoIncrementRepository = require("../settings/repository/autoIncrementRepository");
+const {setTwoDecimal} = require("../../helpers/utility");
 const salesInvoiceSchema = mongoose.Schema(
     {
         company: {
             type: mongoose.Schema.Types.ObjectId,
-            required: true,
+            required: false,
             ref: "Company"
         },
         createdBy: {
@@ -26,7 +26,7 @@ const salesInvoiceSchema = mongoose.Schema(
         },
         salesInvoiceNumber: {
             type: String,
-            required: true
+            required: false
         },
         salesInvoiceDate: {
             type: Date,
@@ -45,11 +45,7 @@ const salesInvoiceSchema = mongoose.Schema(
         },
         salesInvoiceTotalAmountWithTax: {
             type: Number,
-            set: value => {
-                if (![undefined, null, "NaN"].includes(value) && typeof +value == "number") {
-                    return parseFloat(value).toFixed(2);
-                }
-            },
+            set: value => setTwoDecimal(value),
             required: false,
             default: 0
         },
@@ -169,60 +165,36 @@ const salesInvoiceSchema = mongoose.Schema(
         },
         salesInvoiceTotalAmount: {
             type: Number,
-            set: value => {
-                if (![undefined, null, "NaN"].includes(value) && typeof +value == "number") {
-                    return parseFloat(value).toFixed(2);
-                }
-            },
+            set: value => setTwoDecimal(value),
             required: true
         },
         salesInvoiceTotalCGSTAmount: {
             type: Number,
-            set: value => {
-                if (![undefined, null, "NaN"].includes(value) && typeof +value == "number") {
-                    return parseFloat(value).toFixed(2);
-                }
-            },
+            set: value => setTwoDecimal(value),
             required: false,
             default: 0
         },
         salesInvoiceTotalSGSTAmount: {
             type: Number,
-            set: value => {
-                if (![undefined, null, "NaN"].includes(value) && typeof +value == "number") {
-                    return parseFloat(value).toFixed(2);
-                }
-            },
+            set: value => setTwoDecimal(value),
             required: false,
             default: 0
         },
         salesInvoiceTotalIGSTAmount: {
             type: Number,
-            set: value => {
-                if (![undefined, null, "NaN"].includes(value) && typeof +value == "number") {
-                    return parseFloat(value).toFixed(2);
-                }
-            },
+            set: value => setTwoDecimal(value),
             required: false,
             default: 0
         },
         salesInvoiceTotalUGSTAmount: {
             type: Number,
-            set: value => {
-                if (![undefined, null, "NaN"].includes(value) && typeof +value == "number") {
-                    return parseFloat(value).toFixed(2);
-                }
-            },
+            set: value => setTwoDecimal(value),
             required: false,
             default: 0
         },
         salesInvoiceTotalTaxAmount: {
             type: Number,
-            set: value => {
-                if (![undefined, null, "NaN"].includes(value) && typeof +value == "number") {
-                    return parseFloat(value).toFixed(2);
-                }
-            },
+            set: value => setTwoDecimal(value),
             required: false,
             default: 0
         },
@@ -230,11 +202,7 @@ const salesInvoiceSchema = mongoose.Schema(
             {
                 salesInvoiceLineNumber: {
                     type: Number,
-                    set: value => {
-                        if (![undefined, null, "NaN"].includes(value) && typeof +value == "number") {
-                            return parseFloat(value).toFixed(2);
-                        }
-                    },
+                    set: value => setTwoDecimal(value),
                     required: true
                 },
                 SONumber: {
@@ -270,40 +238,24 @@ const salesInvoiceSchema = mongoose.Schema(
                 },
                 dispatchQty: {
                     type: Number,
-                    set: value => {
-                        if (![undefined, null, "NaN"].includes(value) && typeof +value == "number") {
-                            return parseFloat(value).toFixed(2);
-                        }
-                    },
+                    set: value => setTwoDecimal(value),
                     required: true
                 },
                 invoicedQty: {
                     type: Number,
-                    set: value => {
-                        if (![undefined, null, "NaN"].includes(value) && typeof +value == "number") {
-                            return parseFloat(value).toFixed(2);
-                        }
-                    },
+                    set: value => setTwoDecimal(value),
                     required: false,
                     default: 0
                 },
                 discount: {
                     type: Number,
-                    set: value => {
-                        if (![undefined, null, "NaN"].includes(value) && typeof +value == "number") {
-                            return parseFloat(value).toFixed(2);
-                        }
-                    },
+                    set: value => setTwoDecimal(value),
                     required: false,
                     default: 0
                 },
                 purchaseRate: {
                     type: Number,
-                    set: value => {
-                        if (![undefined, null, "NaN"].includes(value) && typeof +value == "number") {
-                            return parseFloat(value).toFixed(2);
-                        }
-                    },
+                    set: value => setTwoDecimal(value),
                     required: false,
                     default: 0
                 },
@@ -313,20 +265,12 @@ const salesInvoiceSchema = mongoose.Schema(
                 },
                 salesInvoiceUnitRate: {
                     type: Number,
-                    set: value => {
-                        if (![undefined, null, "NaN"].includes(value) && typeof +value == "number") {
-                            return parseFloat(value).toFixed(2);
-                        }
-                    },
+                    set: value => setTwoDecimal(value),
                     required: true
                 },
                 salesInvoiceLineValue: {
                     type: Number,
-                    set: value => {
-                        if (![undefined, null, "NaN"].includes(value) && typeof +value == "number") {
-                            return parseFloat(value).toFixed(2);
-                        }
-                    },
+                    set: value => setTwoDecimal(value),
                     required: true
                 },
                 HSN: {
@@ -340,71 +284,43 @@ const salesInvoiceSchema = mongoose.Schema(
                 },
                 igst: {
                     type: Number,
-                    set: value => {
-                        if (![undefined, null, "NaN"].includes(value) && typeof +value == "number") {
-                            return parseFloat(value).toFixed(2);
-                        }
-                    },
+                    set: value => setTwoDecimal(value),
                     required: false,
                     default: 0
                 },
                 cgst: {
                     type: Number,
-                    set: value => {
-                        if (![undefined, null, "NaN"].includes(value) && typeof +value == "number") {
-                            return parseFloat(value).toFixed(2);
-                        }
-                    },
+                    set: value => setTwoDecimal(value),
                     required: false,
                     default: 0
                 },
                 sgst: {
                     type: Number,
-                    set: value => {
-                        if (![undefined, null, "NaN"].includes(value) && typeof +value == "number") {
-                            return parseFloat(value).toFixed(2);
-                        }
-                    },
+                    set: value => setTwoDecimal(value),
                     required: false,
                     default: 0
                 },
                 ugst: {
                     type: Number,
-                    set: value => {
-                        if (![undefined, null, "NaN"].includes(value) && typeof +value == "number") {
-                            return parseFloat(value).toFixed(2);
-                        }
-                    },
+                    set: value => setTwoDecimal(value),
                     required: false,
                     default: 0
                 },
                 IgstAmt: {
                     type: Number,
-                    set: value => {
-                        if (![undefined, null, "NaN"].includes(value) && typeof +value == "number") {
-                            return parseFloat(value).toFixed(2);
-                        }
-                    },
+                    set: value => setTwoDecimal(value),
                     required: false,
                     default: 0
                 },
                 CgstAmt: {
                     type: Number,
-                    set: value => {
-                        if (![undefined, null, "NaN"].includes(value) && typeof +value == "number") {
-                            return parseFloat(value).toFixed(2);
-                        }
-                    },
+                    set: value => setTwoDecimal(value),
                     required: false,
                     default: 0
                 },
                 SgstAmt: {
                     type: Number,
-                    set: value => {
-                        if (![undefined, null, "NaN"].includes(value) && typeof +value == "number") {
-                            return parseFloat(value).toFixed(2);
-                        }
-                    },
+                    set: value => setTwoDecimal(value),
                     required: false,
                     default: 0
                 }
@@ -418,101 +334,61 @@ const salesInvoiceSchema = mongoose.Schema(
                 },
                 taxableValue: {
                     type: Number,
-                    set: value => {
-                        if (![undefined, null, "NaN"].includes(value) && typeof +value == "number") {
-                            return parseFloat(value).toFixed(2);
-                        }
-                    },
+                    set: value => setTwoDecimal(value),
                     required: false,
                     default: 0
                 },
                 igstRate: {
                     type: Number,
-                    set: value => {
-                        if (![undefined, null, "NaN"].includes(value) && typeof +value == "number") {
-                            return parseFloat(value).toFixed(2);
-                        }
-                    },
+                    set: value => setTwoDecimal(value),
                     required: false,
                     default: 0
                 },
                 igstAmount: {
                     type: Number,
-                    set: value => {
-                        if (![undefined, null, "NaN"].includes(value) && typeof +value == "number") {
-                            return parseFloat(value).toFixed(2);
-                        }
-                    },
+                    set: value => setTwoDecimal(value),
                     required: false,
                     default: 0
                 },
                 cgstRate: {
                     type: Number,
-                    set: value => {
-                        if (![undefined, null, "NaN"].includes(value) && typeof +value == "number") {
-                            return parseFloat(value).toFixed(2);
-                        }
-                    },
+                    set: value => setTwoDecimal(value),
                     required: false,
                     default: 0
                 },
                 cgstAmount: {
                     type: Number,
-                    set: value => {
-                        if (![undefined, null, "NaN"].includes(value) && typeof +value == "number") {
-                            return parseFloat(value).toFixed(2);
-                        }
-                    },
+                    set: value => setTwoDecimal(value),
                     required: false,
                     default: 0
                 },
                 sgstRate: {
                     type: Number,
-                    set: value => {
-                        if (![undefined, null, "NaN"].includes(value) && typeof +value == "number") {
-                            return parseFloat(value).toFixed(2);
-                        }
-                    },
+                    set: value => setTwoDecimal(value),
                     required: false,
                     default: 0
                 },
                 sgstAmount: {
                     type: Number,
-                    set: value => {
-                        if (![undefined, null, "NaN"].includes(value) && typeof +value == "number") {
-                            return parseFloat(value).toFixed(2);
-                        }
-                    },
+                    set: value => setTwoDecimal(value),
                     required: false,
                     default: 0
                 },
                 ugstRate: {
                     type: Number,
-                    set: value => {
-                        if (![undefined, null, "NaN"].includes(value) && typeof +value == "number") {
-                            return parseFloat(value).toFixed(2);
-                        }
-                    },
+                    set: value => setTwoDecimal(value),
                     required: false,
                     default: 0
                 },
                 ugstAmount: {
                     type: Number,
-                    set: value => {
-                        if (![undefined, null, "NaN"].includes(value) && typeof +value == "number") {
-                            return parseFloat(value).toFixed(2);
-                        }
-                    },
+                    set: value => setTwoDecimal(value),
                     required: false,
                     default: 0
                 },
                 totalTaxableValue: {
                     type: Number,
-                    set: value => {
-                        if (![undefined, null, "NaN"].includes(value) && typeof +value == "number") {
-                            return parseFloat(value).toFixed(2);
-                        }
-                    },
+                    set: value => setTwoDecimal(value),
                     required: false,
                     default: 0
                 }
@@ -521,61 +397,37 @@ const salesInvoiceSchema = mongoose.Schema(
         otherCharges: {
             packagingAndForwarding: {
                 type: Number,
-                set: value => {
-                    if (![undefined, null, "NaN"].includes(value) && typeof +value == "number") {
-                        return parseFloat(value).toFixed(2);
-                    }
-                },
+                set: value => setTwoDecimal(value),
                 required: false,
                 default: 0
             },
             freight: {
                 type: Number,
-                set: value => {
-                    if (![undefined, null, "NaN"].includes(value) && typeof +value == "number") {
-                        return parseFloat(value).toFixed(2);
-                    }
-                },
+                set: value => setTwoDecimal(value),
                 required: false,
                 default: 0
             },
             insurance: {
                 type: Number,
-                set: value => {
-                    if (![undefined, null, "NaN"].includes(value) && typeof +value == "number") {
-                        return parseFloat(value).toFixed(2);
-                    }
-                },
+                set: value => setTwoDecimal(value),
                 required: false,
                 default: 0
             },
             loadingAndUnloading: {
                 type: Number,
-                set: value => {
-                    if (![undefined, null, "NaN"].includes(value) && typeof +value == "number") {
-                        return parseFloat(value).toFixed(2);
-                    }
-                },
+                set: value => setTwoDecimal(value),
                 required: false,
                 default: 0
             },
             miscellaneous: {
                 type: Number,
-                set: value => {
-                    if (![undefined, null, "NaN"].includes(value) && typeof +value == "number") {
-                        return parseFloat(value).toFixed(2);
-                    }
-                },
+                set: value => setTwoDecimal(value),
                 required: false,
                 default: 0
             },
             totalAmount: {
                 type: Number,
-                set: value => {
-                    if (![undefined, null, "NaN"].includes(value) && typeof +value == "number") {
-                        return parseFloat(value).toFixed(2);
-                    }
-                },
+                set: value => setTwoDecimal(value),
                 required: false,
                 default: 0
             }
@@ -602,11 +454,7 @@ const salesInvoiceSchema = mongoose.Schema(
         },
         roundedOff: {
             type: Number,
-            set: value => {
-                if (![undefined, null, "NaN"].includes(value) && typeof +value == "number") {
-                    return parseFloat(value).toFixed(2);
-                }
-            },
+            set: value => setTwoDecimal(value),
             required: false
         },
         // paymentDueDate: {
@@ -648,11 +496,7 @@ const salesInvoiceSchema = mongoose.Schema(
         },
         AckNo: {
             type: Number,
-            set: value => {
-                if (![undefined, null, "NaN"].includes(value) && typeof +value == "number") {
-                    return parseFloat(value).toFixed(2);
-                }
-            },
+            set: value => setTwoDecimal(value),
             required: false
         },
         SignedQrCodeImgUrl: {

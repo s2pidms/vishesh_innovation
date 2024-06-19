@@ -40,7 +40,7 @@ export class AccessControlDirective {
       );
       if (
         moduleCards &&
-        moduleCards[this.tabType].length > 0 &&
+        moduleCards[this.tabType]?.length > 0 &&
         this.menuTitleData?.subModuleId
       ) {
         this.cardData = moduleCards[this.tabType].find(

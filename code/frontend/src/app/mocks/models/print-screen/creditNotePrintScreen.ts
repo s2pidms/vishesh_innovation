@@ -1,48 +1,39 @@
 export interface ICreditNote {
     _id: string;
-    company: Company | any;
+    company: CNCompany | any;
     CNNumber: string;
     CNDate: string;
-    salesCategory: string;
-    customer: Customer;
+    customer: CNCustomer;
     invoiceNo: string;
     invoiceDate: string;
     currency: string;
-    CNDetails: ICndetail[];
+    CNDetails: ICNDetail[];
     reasonForCN: string;
-    remarks: string;
-    netCNValue: number;
     otherCharges: IOtherCharges | any;
-    CNStatus: string;
-    GSTDetails: IGstdetail[];
+    GSTDetails: IGSTDetail[];
     totalTaxableAmount: number;
     totalCGSTAmount: number;
     totalSGSTAmount: number;
     totalIGSTAmount: number;
     totalUGSTAmount: number;
-    totalTaxAmount: number;
     totalAmountWithTax: number;
     roundedOff: number;
+    summaryRowRepeat: any[];
+    rowRepeat: any[];
 }
 
-export interface Company {
+export interface CNCompany {
     _id: string;
-    companyBankName: string;
-    companyAccountNumber: string;
-    companyBankIFSCCode: string;
     companyName: string;
     GSTIN: string;
-    companyBankBranch: string;
-    companyBankMICRCode: string;
-    companyBefName: string;
-    companyBillingAddress: CompanyBillingAddress;
-    contactInfo: ContactInfo[];
+    companyBillingAddress: CNCompanyBillingAddress;
     companySignatureUrl: string;
-    companyPdfHeaderUrl: string;
     SOPdfHeaderUrl: string;
+    companyContactPersonNumber: string;
+    companyContactPersonEmail: string;
 }
 
-export interface CompanyBillingAddress {
+export interface CNCompanyBillingAddress {
     addressLine1: string;
     addressLine2: string;
     addressLine3: string;
@@ -55,48 +46,14 @@ export interface CompanyBillingAddress {
     state: string;
 }
 
-export interface ContactInfo {
-    department: string;
-    contactPersonName: string;
-    designation: string;
-    companyContactPersonNumber: string;
-    companyContactPersonEmail: string;
+export interface CNCustomer {
     _id: string;
-}
-
-export interface Customer {
-    _id: string;
-    company: string;
-    createdBy: string;
-    updatedBy: string;
-    customerCode: string;
     customerName: string;
-    customerNickName: string;
-    customerCategory: string;
-    customerType: any;
-    region: string;
-    customerUdyogAadhar: string;
-    customerPAN: string;
     GSTIN: string;
-    GSTClassification: string;
-    customerBillingAddress: CustomerBillingAddress;
-    customerShippingAddress: CustomerShippingAddress;
-    customerContactInfo: CustomerContactInfo;
-    frightCharge: string;
-    transporter: string;
-    destination: string;
-    customerCurrency: string;
-    creditLimit: string;
-    customerPaymentTerms: string;
-    isCustomerActive: string;
-    customerWebsite: string;
-    customerBankDetails: any[];
-    createdAt: string;
-    updatedAt: string;
-    __v: number;
+    customerBillingAddress: CNCustomerBillingAddress;
+    customerContactInfo: CNCustomerContactInfo;
 }
-
-export interface CustomerBillingAddress {
+export interface CNCustomerBillingAddress {
     line1: string;
     line2: string;
     line3: string;
@@ -111,51 +68,30 @@ export interface CustomerBillingAddress {
     _id: string;
 }
 
-export interface CustomerShippingAddress {
-    line1: string;
-    line2: string;
-    line3: string;
-    state: string;
-    city: string;
-    district: string;
-    pinCode: string;
-    country: string;
-    contactPersonName: string;
-    contactPersonNumber: string;
-    _id: string;
-}
-
-export interface CustomerContactInfo {
-    contactPersonName: string;
-    contactPersonDesignation: string;
-    contactPersonDepartment: string;
+export interface CNCustomerContactInfo {
     contactPersonNumber: string;
     contactPersonEmail: string;
     _id: string;
 }
 
-export interface ICndetail {
-    CNLineNumber: number;
-    SKU: Sku;
+export interface ICNDetail {
+    SKU: SKU;
     UOM: string;
     returnQty: number;
     standardRate: number;
     lineValue: number;
     hsn: string;
-    gst: number;
-    igst: number;
-    cgst: number;
-    sgst: number;
+    primaryUnit?: string;
     _id: string;
 }
 
-export interface Sku {
+export interface SKU {
     _id: string;
     SKUNo: string;
     SKUName: string;
     SKUDescription: string;
     hsn: string;
-    customerInfo: CustomerInfo[];
+    customerInfo: CNCustomerInfo[];
     HSNCode: string;
     HSN: string;
     igst: number;
@@ -164,27 +100,16 @@ export interface Sku {
     ugst: number;
 }
 
-export interface CustomerInfo {
-    customer: string;
-    customerName: string;
+export interface CNCustomerInfo {
     customerPartNo: string;
-    customerCurrency: string;
-    standardSellingRate: string;
     _id: string;
-    PONo?: string;
-    PODate: any;
 }
 
 export interface IOtherCharges {
-    packagingAndForwarding: number;
-    freight: number;
-    insurance: number;
-    loadingAndUnloading: number;
-    miscellaneous: number;
     totalAmount: number;
 }
 
-export interface IGstdetail {
+export interface IGSTDetail {
     hsn: string;
     taxableValue: number;
     igstRate: number;
@@ -193,7 +118,4 @@ export interface IGstdetail {
     cgstAmount: number;
     sgstRate: number;
     sgstAmount: number;
-    ugstRate: number;
-    ugstAmount: number;
-    totalTaxableValue: string;
 }

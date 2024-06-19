@@ -9,7 +9,8 @@ const {
     deleteById,
     getAllMasterData,
     getAllReports,
-    updateItemByFile
+    updateItemByFile,
+    getAllForStockLevels
 } = require("./items");
 
 app.post(
@@ -56,4 +57,5 @@ app.delete("/delete/:id", validate("checkParamId"), deleteById);
 app.get("/getAllMasterData", getAllMasterData);
 app.get("/getAllReports", getAllReports);
 app.post("/updateItemByFile", upload.single("uploadFile"), updateItemByFile);
+app.get("/getAllForStockLevels", getAllForStockLevels);
 module.exports = app;

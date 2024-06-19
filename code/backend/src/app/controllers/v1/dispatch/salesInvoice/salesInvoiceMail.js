@@ -116,3 +116,62 @@ exports.sendSalesInvMail = async ({
         console.error(error);
     }
 };
+
+exports.sendDirectTaxInvMail = async ({
+    subModuleId = null,
+    action = null,
+    message = null,
+    emailTo = null,
+    emailCC = null,
+    emailBCC = null
+}) => {
+    try {
+        let DTData = await Model.findById(subModuleId, {
+            DTINumber: 1,
+            customer: 1,
+            salesInvoiceDate: 1,
+            DTIValue: 1,
+            DTIStatus: 1,
+            company: 1,
+            DTIDetails: 1
+        })
+            .populate("company", "contactInfo companyName")
+            .populate("customer", "customerCode customerName")
+            .populate("DTIDetails.SKU", "SKUNo SKUName SKUDescription hsn");
+        DTData.contactStr = getContactStr(DTData.company.contactInfo, "Sales");
+        let replacement = {
+            contactStr: DTData.contactStr ?? "",
+            salesInvoiceNumber: DTData?.DTINumber,
+            DTINumber: DTData?.DTINumber,
+            customerName: DTData?.customer?.customerName,
+            salesInvoiceDate: formatDate(DTData.salesInvoiceDate),
+            salesInvoiceTotalAmountWithTax: DTData.DTIValue,
+            DTIStatus: DTData.DTIStatus,
+            companyName: DTData?.company?.companyName
+        };
+        let mailData = {
+            templateUrl: SALES_MAIL_CONST.DIRECT_TAX_INV.CREATE_TEMPLATE,
+            subject: message,
+            replacement: replacement,
+            toEmailValue: emailTo ? emailTo : [DEFAULT_MAIL_RECEIVER],
+            cc: emailCC ? emailCC : [],
+            bcc: emailBCC ? emailBCC : [],
+            attachments: null,
+            fileDelete: false
+        };
+        mailData.replacement.cnRows = getCNtableRows(replacement.CNDetails);
+        if (action == "Report Generated" && SIId) {
+            mailData.fileDelete = true;
+            let url = `${CONSTANTS.reqURL}/#/print/tax_invoice?id=${SIId}&action=pdf`;
+            mailData.attachments = await generatePdfPuppeteer(SIId, replacementObj?.DTINumber, url);
+            mailData.replacement.msgEnsure = MESSAGES.emailStrings.DTI_CREATE_MSG(
+                "report has been generated",
+                replacementObj?.companyName
+            );
+            mailData.subject = `Direct Tax Invoice Report has been Generated - ${replacementObj?.DTINumber}`;
+        }
+        return mailData;
+    } catch (error) {
+        console.error(error);
+    }
+};

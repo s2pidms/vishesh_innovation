@@ -1,8 +1,4 @@
 const mongoose = require("mongoose");
-const {
-    SETTINGS_AUTO_INCREMENT_MASTER_ADDED,
-    SETTINGS_AUTO_INCREMENT_MASTER_UPDATED
-} = require("../../helpers/auditAction");
 const {auditModule} = require("../../controllers/v1/settings/audit/audit");
 const {AUTO_INCREMENT: SCHEMA_CONST} = require("../../mocks/schemasConstant/settingsConstant");
 const {paginatePlugin} = require("../plugins/paginatePlugin");
@@ -152,7 +148,7 @@ const auditTrail = async (master, modifiedPaths, isNew, isModified) => {
         oldData: JSON.stringify(await master.constructor.findById(master._id)),
         data: JSON.stringify(master),
         user: isNew ? createdBy : updatedBy,
-        action: isNew ? SETTINGS_AUTO_INCREMENT_MASTER_ADDED : SETTINGS_AUTO_INCREMENT_MASTER_UPDATED,
+        action: isNew ? SCHEMA_CONST.ADDED_ACTION : SCHEMA_CONST.UPDATED_ACTION,
         fieldsModified: modifiedPaths.toString()
     };
     await auditModule(auditTrail);

@@ -1,4 +1,5 @@
 const path = require("path");
+const fs = require("fs");
 const asyncHandler = require("express-async-handler");
 const Model = require("../../../../models/settings/companyModel");
 const MESSAGES = require("../../../../helpers/messages.options");
@@ -56,6 +57,15 @@ const {
     checkJobWorkItemsValidation,
     bulkInsertJobWorkItemsByCSV
 } = require("../../purchase/jobWorkItemMaster/jobWorkItemMaster");
+const {
+    checkRMSpecificationValidation,
+    bulkInsertRMSpecificationByCSV
+} = require("../../quality/rm-specification/rm-specification");
+const {
+    bulkInsertProdSpecificationByCSV,
+    checkProdSpecificationValidation
+} = require("../../quality/product-specification/product-specification");
+const CompanyRepository = require("../../../../models/settings/repository/companyRepository");
 const ObjectId = mongoose.Types.ObjectId;
 exports.getAll = asyncHandler(async (req, res) => {
     try {
@@ -272,7 +282,7 @@ exports.create = asyncHandler(async (req, res) => {
 });
 exports.update = asyncHandler(async (req, res) => {
     try {
-        let itemDetails = await Model.findById(req.params.id);
+        let itemDetails = await CompanyRepository.getDocById(req.params.id);
 
         if (!itemDetails) {
             const errors = MESSAGES.apiErrorStrings.INVALID_REQUEST;
@@ -295,16 +305,7 @@ exports.update = asyncHandler(async (req, res) => {
         if (req.body.accountsDetails) {
             req.body.accountsDetails = JSON.parse(req.body.accountsDetails);
         }
-        itemDetails = await generateCreateData(itemDetails, req.body);
-        if (req.body.contactInfo) {
-            itemDetails.contactInfo = req.body.contactInfo;
-        }
-        if (req.body.placesOfBusiness) {
-            itemDetails.placesOfBusiness = req.body.placesOfBusiness;
-        }
-        if (req.body.exportsDetails) {
-            itemDetails.exportsDetails = req.body.exportsDetails;
-        }
+        itemDetails = await CompanyRepository.updateDoc(itemDetails, req.body);
         if (req.files) {
             if (req.files.companyPdfHeaderFile && req.files.companyPdfHeaderFile.length > 0) {
                 if (itemDetails.companyPdfHeader) {
@@ -383,7 +384,6 @@ exports.update = asyncHandler(async (req, res) => {
                 itemDetails.welcomeInfo = req.files.welcomeInfoFile[0].filename;
             }
         }
-        itemDetails = await itemDetails.save();
         return res.success({
             message: MESSAGES.apiSuccessStrings.UPDATE("Company has been")
         });
@@ -514,21 +514,21 @@ exports.uploadSOSignPDF = asyncHandler(async (req, res) => {
         if (req.files) {
             let destination = "";
             for (const ele of itemDetails.placesOfBusiness) {
-                if (req.files.newSOSignatureFile && req.files.newSOSignatureFile.length > 0) {
+                if (req.files["newSOSignatureFile"] && req.files["newSOSignatureFile"].length > 0) {
                     if (ele._id == req.body.locationId) {
-                        if (itemDetails.SOSignature) {
+                        if (ele.SOSignature) {
                             destination = path.join(
                                 __dirname,
                                 `/../../../../../assets/company/${itemDetails.SOSignature}`
                             );
                             removeFile(destination);
                         }
-                        ele.SOSignature = req.files.newSOSignatureFile[0].filename;
+                        ele["SOSignature"] = req.files["newSOSignatureFile"][0].filename;
                     }
                 }
                 if (req.files.newSOPdfHeaderFile && req.files.newSOPdfHeaderFile.length > 0) {
                     if (ele._id == req.body.locationId) {
-                        if (itemDetails.SOPdfHeader) {
+                        if (ele.SOPdfHeader) {
                             destination = path.join(
                                 __dirname,
                                 `/../../../../../assets/company/${itemDetails.SOPdfHeader}`
@@ -540,7 +540,7 @@ exports.uploadSOSignPDF = asyncHandler(async (req, res) => {
                 }
                 if (req.files.PISignatureFile && req.files.PISignatureFile.length > 0) {
                     if (ele._id == req.body.locationId) {
-                        if (itemDetails.PISignature) {
+                        if (ele.PISignature) {
                             destination = path.join(
                                 __dirname,
                                 `/../../../../../assets/company/${itemDetails.PISignature}`
@@ -552,7 +552,7 @@ exports.uploadSOSignPDF = asyncHandler(async (req, res) => {
                 }
                 if (req.files.TISignatureFile && req.files.TISignatureFile.length > 0) {
                     if (ele._id == req.body.locationId) {
-                        if (itemDetails.TISignature) {
+                        if (ele.TISignature) {
                             destination = path.join(
                                 __dirname,
                                 `/../../../../../assets/company/${itemDetails.TISignature}`
@@ -567,6 +567,7 @@ exports.uploadSOSignPDF = asyncHandler(async (req, res) => {
             const errors = MESSAGES.apiErrorStrings.INVALID_REQUEST;
             return res.serverError(errors);
         }
+        console.log("itemDetails", itemDetails.placesOfBusiness);
         itemDetails = await itemDetails.save();
         return res.success({
             message: MESSAGES.apiSuccessStrings.UPDATE("SO PDF and Signature has been")
@@ -602,88 +603,35 @@ exports.uploadAndCheckCSVFile = async (req, res) => {
         }
         let rows = [];
         let jsonData = await fileHandler.readExcelIntoJson(fname, excelJson[req.body.collectionName]);
-        if (req.body.collectionName == "Supplier") {
-            rows = await checkSupplierValidation(jsonData, excelJson[req.body.collectionName], req.user.company);
-        }
-        if (req.body.collectionName == "Items") {
-            rows = await checkItemsValidation(jsonData, excelJson[req.body.collectionName], req.user.company);
-        }
-        if (req.body.collectionName == "Customer") {
-            rows = await checkCustomersValidation(jsonData, excelJson[req.body.collectionName], req.user.company);
-        }
+        let validationFunctions = {
+            Supplier: checkSupplierValidation,
+            Items: checkItemsValidation,
+            Customer: checkCustomersValidation,
+            SKUMaster: checkSKUValidation,
+            FGIN: checkFGINValidation,
+            Employee: checkEmployeeValidation,
+            Asset: checkAssetValidation,
+            SKUDimensions: checkSKUDimensionValidation,
+            SKUMaterial: checkSKUMaterialValidation,
+            SKUInk: checkSKUInkValidation,
+            SpecificationMaster: checkSpecificationMasterValidation,
+            HSN: checkPurchaseHSNMasterValidation,
+            SAC: checkPurchaseSACMasterValidation,
+            SaleHSN: checkSalesHSNMasterValidation,
+            SaleSAC: checkSalesSACMasterValidation,
+            Transporter: checkTransporterMasterValidation,
+            JobWorkerMaster: checkJobWorkerValidation,
+            PurchaseRegisterEntry: checkPurchaseRegisterEntryValidation,
+            JobWorkItemMaster: checkJobWorkItemsValidation,
+            PPICInventoryCorrection: checkPPICInventoryValidation,
+            RMSpecification: checkRMSpecificationValidation,
+            ProductSpecification: checkProdSpecificationValidation
+        };
+        const validationFunction = validationFunctions[req.body.collectionName];
         if (req.body.collectionName == "InventoryCorrection") {
             rows = await checkInventoryValidation(jsonData);
-        }
-        if (req.body.collectionName == "SKUMaster") {
-            rows = await checkSKUValidation(jsonData, excelJson[req.body.collectionName], req.user.company);
-        }
-        if (req.body.collectionName == "FGIN") {
-            rows = await checkFGINValidation(jsonData, excelJson[req.body.collectionName], req.user.company);
-        }
-        if (req.body.collectionName == "Employee") {
-            rows = await checkEmployeeValidation(jsonData, excelJson[req.body.collectionName], req.user.company);
-        }
-        if (req.body.collectionName == "Asset") {
-            rows = await checkAssetValidation(jsonData, excelJson[req.body.collectionName], req.user.company);
-        }
-        if (req.body.collectionName == "SKUDimensions") {
-            rows = await checkSKUDimensionValidation(jsonData, excelJson[req.body.collectionName], req.user.company);
-        }
-        if (req.body.collectionName == "SKUMaterial") {
-            rows = await checkSKUMaterialValidation(jsonData, excelJson[req.body.collectionName], req.user.company);
-        }
-        if (req.body.collectionName == "SKUInk") {
-            rows = await checkSKUInkValidation(jsonData, excelJson[req.body.collectionName], req.user.company);
-        }
-        if (req.body.collectionName == "SpecificationMaster") {
-            rows = await checkSpecificationMasterValidation(
-                jsonData,
-                excelJson[req.body.collectionName],
-                req.user.company
-            );
-        }
-        if (req.body.collectionName == "HSN") {
-            rows = await checkPurchaseHSNMasterValidation(
-                jsonData,
-                excelJson[req.body.collectionName],
-                req.user.company
-            );
-        }
-        if (req.body.collectionName == "SAC") {
-            rows = await checkPurchaseSACMasterValidation(
-                jsonData,
-                excelJson[req.body.collectionName],
-                req.user.company
-            );
-        }
-        if (req.body.collectionName == "SaleHSN") {
-            rows = await checkSalesHSNMasterValidation(jsonData, excelJson[req.body.collectionName], req.user.company);
-        }
-        if (req.body.collectionName == "SaleSAC") {
-            rows = await checkSalesSACMasterValidation(jsonData, excelJson[req.body.collectionName], req.user.company);
-        }
-        if (req.body.collectionName == "Transporter") {
-            rows = await checkTransporterMasterValidation(
-                jsonData,
-                excelJson[req.body.collectionName],
-                req.user.company
-            );
-        }
-        if (req.body.collectionName == "JobWorkerMaster") {
-            rows = await checkJobWorkerValidation(jsonData, excelJson[req.body.collectionName], req.user.company);
-        }
-        if (req.body.collectionName == "PurchaseRegisterEntry") {
-            rows = await checkPurchaseRegisterEntryValidation(
-                jsonData,
-                excelJson[req.body.collectionName],
-                req.user.company
-            );
-        }
-        if (req.body.collectionName == "JobWorkItemMaster") {
-            rows = await checkJobWorkItemsValidation(jsonData, excelJson[req.body.collectionName], req.user.company);
-        }
-        if (req.body.collectionName == "PPICInventoryCorrection") {
-            rows = await checkPPICInventoryValidation(jsonData, excelJson[req.body.collectionName], req.user.company);
+        } else if (validationFunction) {
+            rows = await validationFunction(jsonData, excelJson[req.body.collectionName], req.user.company);
         }
         return res.success(rows);
     } catch (e) {
@@ -696,144 +644,37 @@ exports.uploadAndCheckCSVFile = async (req, res) => {
 exports.bulkInsertByCSVFile = async (req, res) => {
     try {
         let rows = [];
-        if (req.body.collectionName == "Supplier") {
-            rows = await bulkInsertSupplierByCSV(req.body.validRecords, {
-                company: req.user.company,
-                createdBy: req.user.sub,
-                updatedBy: req.user.sub
-            });
-        }
-        if (req.body.collectionName == "Items") {
-            rows = await bulkInsertItemsByCSV(req.body.validRecords, {
-                company: req.user.company,
-                createdBy: req.user.sub,
-                updatedBy: req.user.sub
-            });
-        }
-        if (req.body.collectionName == "Customer") {
-            rows = await bulkInsertCustomersByCSV(req.body.validRecords, {
-                company: req.user.company,
-                createdBy: req.user.sub,
-                updatedBy: req.user.sub
-            });
-        }
+        let insertFunctions = {
+            Supplier: bulkInsertSupplierByCSV,
+            Items: bulkInsertItemsByCSV,
+            Customer: bulkInsertCustomersByCSV,
+            InventoryCorrection: bulkInsertInventoryByCSV,
+            SKUMaster: bulkInsertSKUByCSV,
+            FGIN: bulkInsertFGINByCSV,
+            Employee: bulkInsertEmployeeByCSV,
+            Asset: bulkInsertAssetByCSV,
+            SKUDimensions: bulkInsertSKUDimByCSV,
+            SKUMaterial: bulkInsertSKUMaterialByCSV,
+            SKUInk: bulkInsertSKUInkByCSV,
+            SpecificationMaster: bulkInsertSpecificationMasterByCSV,
+            HSN: bulkInsertPurchaseHSNMasterByCSV,
+            SAC: bulkInsertPurchaseSACMasterByCSV,
+            SaleHSN: bulkInsertSalesHSNMasterByCSV,
+            SaleSAC: bulkInsertSalesSACMasterByCSV,
+            Transporter: bulkInsertTransporterMasterByCSV,
+            JobWorkerMaster: bulkInsertJobWorkerByCSV,
+            PurchaseRegisterEntry: bulkInsertPurchaseRegisterEntryByCSV,
+            JobWorkItemMaster: bulkInsertJobWorkItemsByCSV,
+            PPICInventoryCorrection: bulkInsertPPICInventoryByCSV,
+            RMSpecification: bulkInsertRMSpecificationByCSV,
+            ProductSpecification: bulkInsertProdSpecificationByCSV
+        };
+
+        const insertFunction = insertFunctions[req.body.collectionName];
         if (req.body.collectionName == "InventoryCorrection") {
             rows = await bulkInsertInventoryByCSV(req.body.validRecords, {});
-        }
-        if (req.body.collectionName == "SKUMaster") {
-            rows = await bulkInsertSKUByCSV(req.body.validRecords, {
-                company: req.user.company,
-                createdBy: req.user.sub,
-                updatedBy: req.user.sub
-            });
-        }
-        if (req.body.collectionName == "FGIN") {
-            rows = await bulkInsertFGINByCSV(req.body.validRecords, {
-                company: req.user.company,
-                createdBy: req.user.sub,
-                updatedBy: req.user.sub
-            });
-        }
-        if (req.body.collectionName == "Employee") {
-            rows = await bulkInsertEmployeeByCSV(req.body.validRecords, {
-                company: req.user.company,
-                createdBy: req.user.sub,
-                updatedBy: req.user.sub
-            });
-        }
-        if (req.body.collectionName == "Asset") {
-            rows = await bulkInsertAssetByCSV(req.body.validRecords, {
-                company: req.user.company,
-                createdBy: req.user.sub,
-                updatedBy: req.user.sub
-            });
-        }
-        if (req.body.collectionName == "SKUDimensions") {
-            rows = await bulkInsertSKUDimByCSV(req.body.validRecords, {
-                company: req.user.company,
-                createdBy: req.user.sub,
-                updatedBy: req.user.sub
-            });
-        }
-        if (req.body.collectionName == "SKUMaterial") {
-            rows = await bulkInsertSKUMaterialByCSV(req.body.validRecords, {
-                company: req.user.company,
-                createdBy: req.user.sub,
-                updatedBy: req.user.sub
-            });
-        }
-        if (req.body.collectionName == "SKUInk") {
-            rows = await bulkInsertSKUInkByCSV(req.body.validRecords, {
-                company: req.user.company,
-                createdBy: req.user.sub,
-                updatedBy: req.user.sub
-            });
-        }
-        if (req.body.collectionName == "SpecificationMaster") {
-            rows = await bulkInsertSpecificationMasterByCSV(req.body.validRecords, {
-                company: req.user.company,
-                createdBy: req.user.sub,
-                updatedBy: req.user.sub
-            });
-        }
-        if (req.body.collectionName == "HSN") {
-            rows = await bulkInsertPurchaseHSNMasterByCSV(req.body.validRecords, {
-                company: req.user.company,
-                createdBy: req.user.sub,
-                updatedBy: req.user.sub
-            });
-        }
-        if (req.body.collectionName == "SAC") {
-            rows = await bulkInsertPurchaseSACMasterByCSV(req.body.validRecords, {
-                company: req.user.company,
-                createdBy: req.user.sub,
-                updatedBy: req.user.sub
-            });
-        }
-        if (req.body.collectionName == "SaleHSN") {
-            rows = await bulkInsertSalesHSNMasterByCSV(req.body.validRecords, {
-                company: req.user.company,
-                createdBy: req.user.sub,
-                updatedBy: req.user.sub
-            });
-        }
-        if (req.body.collectionName == "SaleSAC") {
-            rows = await bulkInsertSalesSACMasterByCSV(req.body.validRecords, {
-                company: req.user.company,
-                createdBy: req.user.sub,
-                updatedBy: req.user.sub
-            });
-        }
-        if (req.body.collectionName == "Transporter") {
-            rows = await bulkInsertTransporterMasterByCSV(req.body.validRecords, {
-                company: req.user.company,
-                createdBy: req.user.sub,
-                updatedBy: req.user.sub
-            });
-        }
-        if (req.body.collectionName == "JobWorkerMaster") {
-            rows = await bulkInsertJobWorkerByCSV(req.body.validRecords, {
-                company: req.user.company,
-                createdBy: req.user.sub,
-                updatedBy: req.user.sub
-            });
-        }
-        if (req.body.collectionName == "PurchaseRegisterEntry") {
-            rows = await bulkInsertPurchaseRegisterEntryByCSV(req.body.validRecords, {
-                company: req.user.company,
-                createdBy: req.user.sub,
-                updatedBy: req.user.sub
-            });
-        }
-        if (req.body.collectionName == "JobWorkItemMaster") {
-            rows = await bulkInsertJobWorkItemsByCSV(req.body.validRecords, {
-                company: req.user.company,
-                createdBy: req.user.sub,
-                updatedBy: req.user.sub
-            });
-        }
-        if (req.body.collectionName == "PPICInventoryCorrection") {
-            rows = await bulkInsertPPICInventoryByCSV(req.body.validRecords, {
+        } else if (insertFunction) {
+            rows = await insertFunction(req.body.validRecords, {
                 company: req.user.company,
                 createdBy: req.user.sub,
                 updatedBy: req.user.sub

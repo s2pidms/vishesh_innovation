@@ -39,6 +39,7 @@ exports.createOrUpdate = asyncHandler(async (req, res) => {
                 updatedBy: req.user.sub,
                 ...req.body
             };
+            delete createdObj._id;
             await PackingRepository.createDoc(createdObj);
         }
         res.success({

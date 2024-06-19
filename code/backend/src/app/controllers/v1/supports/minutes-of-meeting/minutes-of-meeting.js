@@ -2,7 +2,6 @@ const asyncHandler = require("express-async-handler");
 const Model = require("../../../../models/supports/minutesOfMeetingModel");
 const AutoIncrement = require("../../../../models/settings/autoIncrementModel");
 const MESSAGES = require("../../../../helpers/messages.options");
-const {MINUTES_OF_MEETING_MODULE_PREFIX} = require("../../../../helpers/moduleConstants");
 const {getAutoIncrementNumber, outputData, getAllAggregationFooter} = require("../../../../helpers/utility");
 const {generateCreateData, getMatchData} = require("../../../../helpers/global.options");
 const {getAllMinutesOfMeetAttributes} = require("../../../../models/supports/helpers/minutesOfMeetingHelper");
@@ -122,12 +121,8 @@ exports.getById = asyncHandler(async (req, res) => {
 // @desc    getAllMasterData Minutes Of Meeting Record
 exports.getAllMasterData = asyncHandler(async (req, res) => {
     try {
-        const autoIncrementedNo = await AutoIncrement.getNextId(
-            "Minutes Of Meeting",
-            MINUTES_OF_MEETING_MODULE_PREFIX,
-            req.user.company
-        );
-        let autoIncrementNo = getAutoIncrementNumber(MINUTES_OF_MEETING_MODULE_PREFIX, "", autoIncrementedNo, 4);
+        const autoIncrementedNo = await AutoIncrement.getNextId("Minutes Of Meeting", "MoM/", req.user.company);
+        let autoIncrementNo = getAutoIncrementNumber("MoM/", "", autoIncrementedNo, 4);
         return res.success({
             autoIncrementNo
         });

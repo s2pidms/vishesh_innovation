@@ -1,0 +1,125 @@
+<div class="reportTablePage">
+    <div class="table-body pb-0 shadow-none">
+        <div class="row table-header">
+            <div class="col">
+                <label class="heading">Dispatch List Report</label>
+            </div>
+        </div>
+        <div class="row my-4">
+            <div class="col-3 ps-5 separate-row">
+                <label class="form-label">Customer Name<span class="text-danger">*</span> </label>
+
+                <ng-select
+                    [items]="customersOptions"
+                    bindLabel="customerName"
+                    bindValue="_id"
+                    [(ngModel)]="customer"
+                    [clearable]="false"
+                >
+                </ng-select>
+                <span class="set-position">
+                    <img src="./assets/new_icons/redstroke.svg" alt="" height="27" width="8" />
+                </span>
+            </div>
+            <div class="col-3">
+                <label class="form-label">From Date<span class="text-danger">*</span> </label>
+                <input class="form-control" type="date" [(ngModel)]="fromDate" />
+            </div>
+            <div class="col-3">
+                <label class="form-label">To Date<span class="text-danger">*</span> </label>
+                <input class="form-control" type="date" [(ngModel)]="toDate" />
+            </div>
+            <div class="col-3 align-self-end separate-image pe-4">
+                <span class="image-position">
+                    <img src="./assets/new_icons/redstroke.svg" alt="" height="27" width="8" />
+                </span>
+                <button type="button" class="btn btn-primary px-4 me-3" (click)="getAll()">Apply Filter</button>
+                <button type="button" class="btn btn-primary px-4 ms-4" (click)="reset()">Reset Filter</button>
+            </div>
+        </div>
+
+        <hr class="row line-border" />
+        <div class="table-responsive mb-0">
+            <app-setting-header
+                [data]="{page,pageSize,collection,search,type: 'list',pdfDisplay : true}"
+                (dataChange)="eventHeader($event)"
+            >
+            </app-setting-header>
+            <table class="table table-bordered table-sticky">
+                <thead class="bg-primary">
+                    <tr class="text-white">
+                        <th sortable="DRNNumber" (sort)="onSort($event)">DRN No.</th>
+                        <th sortable="customerName" (sort)="onSort($event)">SO No.</th>
+                        <th class="text-start" sortable="customerName" (sort)="onSort($event)">Customer Name</th>
+                        <th class="text-start" sortable="SKUName" (sort)="($event)">
+                            {{ "SKU Name" | labelTranslate }}
+                        </th>
+                        <th sortable="UOM" (sort)="onSort($event)">UoM</th>
+                        <th sortable="dispatchQty" (sort)="onSort($event)">Qty. (in Cartons)</th>
+                        <th sortable="dispatchQty" (sort)="onSort($event)">Weight (in Kgs)</th>
+                        <th sortable="dispatchQty" (sort)="onSort($event)">Transporter</th>
+                        <th sortable="dispatchQty" (sort)="onSort($event)">Destination</th>
+                        <th class="text-start" sortable="dispatchQty" (sort)="onSort($event)">Bill-to Address</th>
+                        <th class="text-start" sortable="dispatchQty" (sort)="onSort($event)">Ship-to Address</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let u of tableData; trackBy: trackByFn">
+                        <td>{{ u?.DRNNumber }}</td>
+                        <td>{{ u?.SONumber }}</td>
+                        <td class="text-start" [style.width]="SKUName.clientWidth" #SKUName>
+                            <span class="pointer" [positionTarget]="SKUName" [ngbTooltip]="u.SKUName">
+                                {{ u?.SKUName }}
+                            </span>
+                        </td>
+                        <td class="text-start" [style.width]="customerName.clientWidth" #customerName>
+                            <span class="pointer" [positionTarget]="customerName" [ngbTooltip]="u.customerName">
+                                {{ u.customerName }}
+                            </span>
+                        </td>
+                        <td>{{ u?.UOM | SalesUOMUnitMaster }}</td>
+                        <td>{{ u?.dispatchQty }}</td>
+                        <td>{{ 0 }}</td>
+
+                        <td>{{ u?.transporter }}</td>
+                        <td>{{ u?.destination }}</td>
+                        <td class="text-start" [style.width]="billingFullAddress.clientWidth" #billingFullAddress>
+                            <span
+                                class="pointer"
+                                [positionTarget]="billingFullAddress"
+                                [ngbTooltip]="u.billingFullAddress"
+                            >
+                                {{ u?.customerBillingAddress?.state ? u?.customerBillingAddress?.state + "," : null }}
+                                {{ u?.customerBillingAddress?.country }}
+                            </span>
+                        </td>
+                        <td class="text-start" [style.width]="shippingFullAddress.clientWidth" #shippingFullAddress>
+                            <span
+                                class="pointer"
+                                [positionTarget]="shippingFullAddress"
+                                [ngbTooltip]="u.shippingFullAddress"
+                            >
+                                {{ u?.customerShippingAddress?.state ? u?.customerShippingAddress?.state + "," : null }}
+                                {{ u?.customerShippingAddress?.country }}
+                            </span>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <!-- <div class="table-footer">
+          <hr class="row line-border" />
+          <div class="row align-items-center mt-3">
+              <div class="col-3 pe-0">
+                  <div class="d-flex justify-content-center">
+                      <div class="col-form-label text-nowrap pe-1 pt-0 ms-3">
+                          Total DRN Value <i class="fa fa-caret-right fs-4 mx-2"></i>
+                          <button type="button" class="btn btn-info py-1 ms-2">{{ "INR" | companyCurrency }}</button>
+                      </div>
+                      <input [value]="totalAmount | number : '1.2-2'" class="form-control" type="text" readonly />
+                  </div>
+              </div>
+          </div>
+      </div> -->
+    </div>
+</div>

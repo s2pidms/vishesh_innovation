@@ -1,6 +1,6 @@
 import {Component, OnInit} from "@angular/core";
 import {AppGlobalService, MenuTitleService, SpinnerService, StorageService} from "@core/services";
-import {SUB_MODULES_TYPES} from "@mocks/constant";
+import {SUB_MODULES_TYPES, superAdminId} from "@mocks/constant";
 import {SubModulesService} from "@services/settings";
 import {Router} from "@angular/router";
 
@@ -17,7 +17,8 @@ import {Router} from "@angular/router";
 })
 export class TransactionsTabsComponent implements OnInit {
     title: any = "";
-    user: any = {};
+    user: any = "";
+    superAdminId: any = superAdminId;
     menuItemId: any = "";
     cards: any = [];
     constructor(
@@ -32,7 +33,7 @@ export class TransactionsTabsComponent implements OnInit {
     ngOnInit(): void {
         this.title = this.appGlobalService.moduleName;
         this.menuItemId = this.appGlobalService.menuItemId;
-        this.user = this.storageService.get("IDMSAUser");
+        this.user = this.storageService.get("IDMSAUser")?.roles?.find((x: any) => x == this.superAdminId);
         this.getAll();
         this.menuTitleService.set({
             title: `${this.title} - Transactions`,
@@ -49,7 +50,7 @@ export class TransactionsTabsComponent implements OnInit {
         };
         this.subModulesService.getAll(payload).subscribe(success => {
             this.cards = success.rows;
-            if (this.user.email == "spadmin@gmail.com" && this.user.name == "Super Admin") {
+            if (this.user == this.superAdminId) {
                 this.cards.push(
                     {
                         menuItemId: "64a6c1e33339d4dc9d8141ae",

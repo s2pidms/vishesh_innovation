@@ -87,7 +87,7 @@ let headers: any = [
         ...EXCEL_STYLE
     },
     {
-        header: "DUC",
+        header: "DU Conversion",
         key: "conversionOfUnits",
         ...EXCEL_STYLE
     },
@@ -97,7 +97,7 @@ let headers: any = [
         ...EXCEL_STYLE
     },
     {
-        header: "Shelf Life [Months]",
+        header: "S/Life (M)",
         key: "shelfLife",
         ...EXCEL_STYLE
     },

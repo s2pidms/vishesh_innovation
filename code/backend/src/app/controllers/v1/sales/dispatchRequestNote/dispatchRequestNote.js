@@ -10,7 +10,8 @@ const {getDateDiff, dateToAnyFormat, getEndDateTime, getStartDateTime} = require
 const {getAllPaymentTerms} = require("../paymentTerms/paymentTerms");
 const {
     getAllDispatchRequestNoteAttributes,
-    getAllDRNSummaryReportAttributes
+    getAllDRNSummaryReportAttributes,
+    getAllReportAttributes
 } = require("../../../../models/sales/helpers/dispatchRequestNoteHelper");
 const {DISPATCH_REQUEST_NOTE} = require("../../../../mocks/schemasConstant/salesConstant");
 const {getAndSetAutoIncrementNo} = require("../../settings/autoIncrement/autoIncrement");
@@ -434,32 +435,6 @@ const getAllData = asyncHandler(async (req, query, excel) => {
         console.error("getAllData SalesOrder", e);
     }
 });
-exports.getAllReports = asyncHandler(async (req, res) => {
-    try {
-        let {SKU = null, search = null, excel = "false"} = req.query;
-        let query = {
-            company: ObjectId(req.user.company),
-            SOStatus: {$in: ["Created"]},
-            ...(![undefined, null, ""].includes(search) && {
-                $text: {$search: search}
-            }),
-            ...(!!SKU && {
-                "SODetails.SKU": SKU
-            })
-        };
-        let count = await Model.countDocuments(query);
-        let rows = await getAllData(req, query, excel);
-
-        return res.success({
-            rows,
-            count
-        });
-    } catch (e) {
-        console.error("getAllReports", e);
-        const errors = MESSAGES.apiErrorStrings.SERVER_ERROR;
-        return res.serverError(errors);
-    }
-});
 exports.getAllDRNs = async company => {
     try {
         let rows = await Model.find({
@@ -561,6 +536,71 @@ exports.getAllDRNSummaryReports = asyncHandler(async (req, res) => {
         });
     } catch (e) {
         console.error("getAllDRNSummaryReports", e);
+        const errors = MESSAGES.apiErrorStrings.SERVER_ERROR;
+        return res.serverError(errors);
+    }
+});
+exports.getAllReports = asyncHandler(async (req, res) => {
+    try {
+        const {customer = null, fromDate = null, toDate = null} = req.query;
+        let customerOptions = await filteredCustomerList([
+            {
+                $match: {
+                    isCustomerActive: "A",
+                    company: ObjectId(req.user.company)
+                }
+            },
+            {$sort: {customerName: 1}},
+            {
+                $project: {
+                    customerName: 1
+                }
+            }
+        ]);
+        let project = getAllReportAttributes();
+        let query = {
+            company: ObjectId(req.user.company),
+            DRNStatus: {
+                $in: [OPTIONS.defaultStatus.APPROVED, OPTIONS.defaultStatus.CLOSED]
+            },
+            ...(!!customer && {
+                customer: {$eq: ObjectId(customer)}
+            }),
+            ...(!!toDate &&
+                !!fromDate && {
+                    DRNDate: {
+                        $lt: getEndDateTime(toDate),
+                        $gt: getStartDateTime(fromDate)
+                    }
+                })
+        };
+        let pipeline = [
+            {$match: query},
+            {
+                $lookup: {
+                    from: "Customer",
+                    localField: "customer",
+                    foreignField: "_id",
+                    pipeline: [
+                        {$project: {customerName: 1, customerBillingAddress: {$first: "$customerBillingAddress"}}}
+                    ],
+                    as: "customer"
+                }
+            },
+            {$unwind: "$customer"},
+            {$unwind: "$DRNDetails"}
+        ];
+        let rows = await DRNRepository.getAllPaginate({
+            pipeline,
+            project,
+            queryParams: req.query
+        });
+        return res.success({
+            customerOptions,
+            ...rows
+        });
+    } catch (e) {
+        console.error("getAllReports", e);
         const errors = MESSAGES.apiErrorStrings.SERVER_ERROR;
         return res.serverError(errors);
     }

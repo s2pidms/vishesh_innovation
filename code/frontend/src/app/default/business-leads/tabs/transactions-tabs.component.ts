@@ -10,7 +10,7 @@ import {Router} from "@angular/router";
     template: `<appTabCard
         [data]="{
                   cards,
-                  noOfCards:3,
+                  noOfCards:4,
                   cardClass:'txnCard'
                 }"
         (dataChange)="navigateTo($event)"
@@ -48,7 +48,7 @@ export class TransactionsTabsComponent implements OnInit {
         };
         this.subModulesService.getAll(payload).subscribe(success => {
             this.cards = success.rows;
-            let dummyCount = 3 - this.cards.length;
+            let dummyCount = 4 - this.cards.length;
             if (dummyCount > 0) {
                 for (var i = 0; i < dummyCount; i++) {
                     this.cards.push({

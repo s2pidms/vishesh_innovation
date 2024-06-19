@@ -105,6 +105,11 @@ const routes: Routes = [
             {
                 path: "MRN_report",
                 loadChildren: () => import("./../../quality/reports/mrn/mrn.module").then(m => m.MRNModule)
+            },
+            {
+                path: "item_wise_inventory",
+                loadChildren: () =>
+                    import("./item-wise-inventory/item-wise-inventory.module").then(m => m.ItemWiseInventoryModule)
             }
         ]
     }

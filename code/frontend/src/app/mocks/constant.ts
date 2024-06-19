@@ -392,3 +392,5 @@ export const DISCOUNT_TYPE = [
     {label: "Fixed Amount", value: "Fixed Amount"},
     {label: "Volume-Based", value: "Volume-Based"}
 ];
+
+export const SESSION_SECRET = "IDMSA@9999";

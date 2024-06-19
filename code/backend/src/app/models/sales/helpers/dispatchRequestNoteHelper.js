@@ -26,3 +26,18 @@ exports.getAllDRNSummaryReportAttributes = () => {
         dispatchQty: "$DRNDetails.dispatchQty"
     };
 };
+
+exports.getAllReportAttributes = () => {
+    return {
+        DRNNumber: 1,
+        customerName: "$customer.customerName",
+        customerBillingAddress: "$customer.customerBillingAddress",
+        SONumber: "$DRNDetails.SONumber",
+        SKUName: "$DRNDetails.SKUName",
+        UOM: "$DRNDetails.UOM",
+        dispatchQty: "$DRNDetails.dispatchQty",
+        customerShippingAddress: 1,
+        transporter: 1,
+        destination: 1
+    };
+};

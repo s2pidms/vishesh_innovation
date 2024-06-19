@@ -1,12 +1,10 @@
 const asyncHandler = require("express-async-handler");
 const Model = require("../../../../models/sales/salesOrderModel");
 const MESSAGES = require("../../../../helpers/messages.options");
-const {outputData, checkDomesticCustomer} = require("../../../../helpers/utility");
-const {generateCreateData, getMatchData, OPTIONS} = require("../../../../helpers/global.options");
+const {checkDomesticCustomer} = require("../../../../helpers/utility");
+const {generateCreateData, OPTIONS} = require("../../../../helpers/global.options");
 const {getAllUniquePODetailsByCustomerId, getAllSKUListOnOpenPOByCustomerId} = require("../SKU/SKU");
-const {default: mongoose} = require("mongoose");
 const {findAppParameterValue} = require("../../settings/appParameter/appParameter");
-const {getSalesHSNByCode} = require("../salesHSN/salesHSN");
 const {CONSTANTS} = require("../../../../../config/config");
 const {getCompanyLocations, getCompanyById} = require("../../settings/company/company");
 const {getAllPaymentTerms} = require("../paymentTerms/paymentTerms");
@@ -14,7 +12,7 @@ const {getAllSalesOrderAttributes} = require("../../../../models/sales/helpers/s
 const {dateToAnyFormat} = require("../../../../helpers/dateTime");
 // const {getSOMailConfig} = require("./salesOrderMail");
 const {LAKH} = require("../../../../mocks/number.constant");
-const {JOB_CARD_STAGE} = require("../../../../mocks/constantData");
+const {JOB_CARD_STAGE, COMPANY_DEPARTMENTS} = require("../../../../mocks/constantData");
 const {SALES_ORDER} = require("../../../../mocks/schemasConstant/salesConstant");
 const {getAndSetAutoIncrementNo} = require("../../settings/autoIncrement/autoIncrement");
 const {filteredCustomerList} = require("../../../../models/sales/repository/customerRepository");
@@ -27,8 +25,8 @@ const {filteredSKUMasterList} = require("../../../../models/sales/repository/SKU
 const {
     filteredCustomerDiscountManagementList
 } = require("../../../../models/sales/repository/customerDiscountManagementRepository");
-
-const ObjectId = mongoose.Types.ObjectId;
+const {ObjectId} = require("../../../../../config/mongoose");
+const {filteredSaleHSNList} = require("../../../../models/sales/repository/salesHSNRepository");
 
 exports.getAll = asyncHandler(async (req, res) => {
     try {
@@ -173,9 +171,8 @@ exports.update = asyncHandler(async (req, res) => {
 // @desc    deleteById Sales Order Record
 exports.deleteById = asyncHandler(async (req, res) => {
     try {
-        const deleteItem = await Model.findById(req.params.id);
+        const deleteItem = await SORepository.deleteDoc({_id: req.params.id});
         if (deleteItem) {
-            await deleteItem.remove();
             return res.success({
                 message: MESSAGES.apiSuccessStrings.DELETED("Sales Order")
             });
@@ -288,7 +285,7 @@ exports.getAllMasterData = asyncHandler(async (req, res) => {
 
 exports.getAllSObyCustomerID = asyncHandler(async (customerId, company) => {
     try {
-        let rows = await Model.aggregate([
+        let rows = await SORepository.filteredSalesOrderList([
             {
                 $match: {
                     customer: ObjectId(customerId),
@@ -316,6 +313,7 @@ exports.getAllSObyCustomerID = asyncHandler(async (customerId, company) => {
                     "SODetails.balancedQty": {$gt: 0}
                 }
             },
+            {$sort: {createdAt: -1}},
             {
                 $project: {
                     _id: 1,
@@ -337,10 +335,10 @@ exports.getAllSObyCustomerID = asyncHandler(async (customerId, company) => {
                     "SODetails.SOLineNumber": 1
                 }
             }
-        ]).sort({createdAt: -1});
+        ]);
         return rows;
     } catch (e) {
-        console.error("getAllCustomers", e);
+        console.error("getAllSObyCustomerID", e);
         const errors = MESSAGES.apiErrorStrings.SERVER_ERROR;
         return res.serverError(errors);
     }
@@ -349,7 +347,7 @@ exports.getAllSObyCustomerID = asyncHandler(async (customerId, company) => {
 // @desc    Update Balance Qty
 exports.updateSOQtyOnDRN = asyncHandler(async (updatedBy, SOId, updateSKUId, Qty, status, DRNLineNumber) => {
     try {
-        const salesOrder = await Model.findById(SOId);
+        const salesOrder = await SORepository.getDocById(SOId);
         if (salesOrder) {
             const newSODetails = salesOrder.SODetails.map(ele => {
                 if (
@@ -411,7 +409,7 @@ exports.createSO = asyncHandler(async obj => {
             }),
             SOStatus: OPTIONS.defaultStatus.CREATED
         };
-        let newSO = await Model.create(createdObj);
+        let newSO = await SORepository.createDoc(createdObj);
         return {
             _id: newSO._id,
             SONumber: newSO.SONumber
@@ -422,32 +420,164 @@ exports.createSO = asyncHandler(async obj => {
 });
 exports.getSOConfirmationById = asyncHandler(async (req, res) => {
     try {
-        let existing = await Model.findById(req.params.id)
-            .populate({
-                path: "company",
-                model: "Company",
-                select: {
-                    companyName: 1,
-                    GSTIN: 1,
-                    companyBillingAddress: 1,
-                    contactInfo: 1,
-                    placesOfBusiness: 1,
-                    swiftCode: 1,
-                    companyBankMICRCode: 1,
-                    intermediaryBank: 1,
-                    companyBefName: 1,
-                    companyBankName: 1,
-                    companyAccountNumber: 1,
-                    companyBankIFSCCode: 1,
-                    companyBankBranch: 1,
-                    intermediaryBankSwiftCode: 1,
-                    SOSignatureUrl: {$concat: [`${CONSTANTS.domainUrl}company/`, "$SOSignature"]},
-                    SOPdfHeaderUrl: {$concat: [`${CONSTANTS.domainUrl}company/`, "$SOPdfHeader"]}
+        let existing = await SORepository.filteredSalesOrderList([
+            {
+                $match: {
+                    _id: ObjectId(req.params.id)
                 }
-            })
-            .populate("SODetails.SKU")
-            .populate("customer")
-            .lean();
+            },
+            {
+                $lookup: {
+                    from: "Customer",
+                    localField: "customer",
+                    foreignField: "_id",
+                    pipeline: [
+                        {
+                            $project: {
+                                GSTIN: 1,
+                                GSTClassification: 1,
+                                customerBillingAddress: 1,
+                                customerShippingAddress: 1,
+                                customerContactInfo: 1,
+                                transporter: 1,
+                                destination: 1,
+                                customerPaymentTerms: 1,
+                                customerCategory: 1
+                            }
+                        }
+                    ],
+                    as: "customer"
+                }
+            },
+            {$unwind: "$customer"},
+            {
+                $lookup: {
+                    from: "Company",
+                    localField: "company",
+                    foreignField: "_id",
+                    pipeline: [
+                        {
+                            $addFields: {
+                                contactInfo: {
+                                    $arrayElemAt: [
+                                        {
+                                            $filter: {
+                                                input: "$contactInfo",
+                                                as: "info",
+                                                cond: {$eq: ["$$info.department", COMPANY_DEPARTMENTS.SALES]}
+                                            }
+                                        },
+                                        0
+                                    ]
+                                }
+                            }
+                        },
+                        {
+                            $project: {
+                                placesOfBusiness: 1,
+                                companyBankName: 1,
+                                companyAccountNumber: 1,
+                                companyBankIFSCCode: 1,
+                                companyName: 1,
+                                GSTIN: 1,
+                                companyBankBranch: 1,
+                                companyBankMICRCode: 1,
+                                companyBefName: 1,
+                                companyContactPersonNumber: "$contactInfo.companyContactPersonNumber",
+                                companyContactPersonEmail: "$contactInfo.companyContactPersonEmail",
+                                SOSignatureUrl: {$concat: [`${CONSTANTS.domainUrl}company/`, "$SOSignature"]},
+                                SOPdfHeaderUrl: {$concat: [`${CONSTANTS.domainUrl}company/`, "$SOPdfHeader"]}
+                            }
+                        }
+                    ],
+                    as: "company"
+                }
+            },
+            {$unwind: "$company"},
+            {
+                $lookup: {
+                    from: "SKUMaster",
+                    localField: "SODetails.SKU",
+                    foreignField: "_id",
+                    pipeline: [
+                        {
+                            $project: {
+                                SKUNo: 1,
+                                SKUName: 1,
+                                SKUDescription: 1,
+                                hsn: 1
+                            }
+                        }
+                    ],
+                    as: "SKUInfo"
+                }
+            },
+            {
+                $addFields: {
+                    SODetails: {
+                        $map: {
+                            input: "$SODetails",
+                            as: "detail",
+                            in: {
+                                $mergeObjects: [
+                                    "$$detail",
+                                    {
+                                        SKU: {
+                                            $arrayElemAt: [
+                                                {
+                                                    $filter: {
+                                                        input: "$SKUInfo",
+                                                        as: "sku",
+                                                        cond: {$eq: ["$$sku._id", "$$detail.SKU"]}
+                                                    }
+                                                },
+                                                0
+                                            ]
+                                        }
+                                    }
+                                ]
+                            }
+                        }
+                    }
+                }
+            },
+            {
+                $project: {
+                    salesCategory: 1,
+                    billFromLocation: 1,
+                    company: 1,
+                    customer: 1,
+                    SONumber: 1,
+                    SOType: 1,
+                    SODate: 1,
+                    PONumber: 1,
+                    PODate: 1,
+                    currency: 1,
+                    SODetails: {
+                        $sortArray: {input: "$SODetails", sortBy: {"SKU.SKUNo": 1}}
+                    },
+                    customerBillingAddress: 1,
+                    customerShippingAddress: 1,
+                    modeOfTransport: 1,
+                    frightTerms: 1,
+                    transporter: 1,
+                    destination: 1,
+                    SORemarks: 1,
+                    otherCharges: 1,
+                    totalCGSTAmount: 1,
+                    totalSGSTAmount: 1,
+                    totalIGSTAmount: 1,
+                    totalAmountWithTax: 1,
+                    roundedOff: 1,
+                    EWayBillApplicable: 1
+                }
+            }
+        ]);
+        if (!existing.length) {
+            let errors = MESSAGES.apiSuccessStrings.DATA_NOT_EXISTS("Sales Order");
+            return res.unprocessableEntity(errors);
+        }
+        existing = existing[0];
         let data = JSON.parse(JSON.stringify(existing.SODetails));
         if (data.every(x => !!x.dispatchSchedule && x.dispatchSchedule.length > 0)) {
             existing.SODetails = [];
@@ -467,7 +597,6 @@ exports.getSOConfirmationById = asyncHandler(async (req, res) => {
                 }
             }
         }
-        existing.SODetails = existing.SODetails.sort((a, b) => a.SKU.SKUNo.localeCompare(b.SKU.SKUNo));
         if (existing && existing.company.placesOfBusiness.length > 0) {
             for (const e of existing.company.placesOfBusiness) {
                 if (e.locationID == existing.billFromLocation && e.SOPdfHeader) {
@@ -479,10 +608,7 @@ exports.getSOConfirmationById = asyncHandler(async (req, res) => {
             }
         }
         existing = await getDataPDF(existing);
-        if (!existing) {
-            let errors = MESSAGES.apiSuccessStrings.DATA_NOT_EXISTS("Sales Order");
-            return res.unprocessableEntity(errors);
-        }
+
         return res.success(existing);
     } catch (e) {
         console.error("getAllSOConfirmationReports", e);
@@ -492,19 +618,34 @@ exports.getSOConfirmationById = asyncHandler(async (req, res) => {
 });
 async function getDataPDF(existing) {
     try {
-        if (existing.customer.customerContactInfo.length) {
+        if (existing?.customer?.customerContactInfo?.length) {
             existing.customer.customerContactInfo = existing.customer.customerContactInfo[0];
         }
-        if (existing.customer.customerBillingAddress.length) {
+        if (existing?.customer?.customerBillingAddress?.length) {
             existing.customer.customerBillingAddress = existing.customer.customerBillingAddress[0];
         }
-        if (existing.customer.customerShippingAddress.length) {
+        if (existing?.customer?.customerShippingAddress?.length) {
             existing.customer.customerShippingAddress = existing.customer.customerShippingAddress[0];
         }
-        if (existing.SODetails.length) {
+        const salesHSNList = await filteredSaleHSNList([
+            {$match: {isActive: "Y"}},
+            {
+                $project: {
+                    hsnCode: 1,
+                    _id: 1,
+                    igstRate: 1,
+                    cgstRate: 1,
+                    sgstRate: 1,
+                    ugstRate: 1
+                }
+            }
+        ]);
+        if (existing?.SODetails?.length) {
             let arr = [];
             for await (const x of existing?.SODetails) {
-                let HSN = await getSalesHSNByCode(x.SKU.hsn);
+                // let HSN = await getSalesHSNByCode(x.SKU.hsn);
+                let HSN = new Map(salesHSNList.map(ele => [ele.hsnCode, ele])).get(x.SKU.hsn);
+                console.log("HSN", HSN);
                 x.SKU.HSNCode = HSN?.hsnCode;
                 x.SKU.HSN = HSN?._id;
                 x.SKU.igst = HSN?.igstRate;
@@ -519,7 +660,7 @@ async function getDataPDF(existing) {
         existing.GSTDetails = [];
         let customerCategoryCondition = await checkDomesticCustomer(existing.customer.customerCategory);
         let condition = false;
-        if (existing.company && existing.company.placesOfBusiness.length > 0 && customerCategoryCondition) {
+        if (existing?.company?.placesOfBusiness?.length > 0 && customerCategoryCondition) {
             for (const ele of existing.company.placesOfBusiness) {
                 if (existing.billFromLocation == ele.locationID) {
                     condition = existing.customer.GSTIN.substring(0, 2) != ele.GSTINForAdditionalPlace.substring(0, 2);
@@ -563,7 +704,7 @@ async function getDataPDF(existing) {
                 totalTaxableValue: Number(+lineValue + +cgstAmount + +igstAmount + +sgstAmount + +ugstAmount).toFixed(2)
             });
         }
-        if (existing.otherCharges && existing.otherCharges.totalAmount && customerCategoryCondition) {
+        if (existing?.otherCharges?.totalAmount && customerCategoryCondition) {
             let lineValue = +existing?.otherCharges?.totalAmount;
             let igstRate = 0;
             let igstAmount = 0;
@@ -623,15 +764,6 @@ async function getDataPDF(existing) {
 }
 exports.getAllShortSOForClosing = asyncHandler(async (req, res) => {
     try {
-        const {
-            search = null,
-            excel = "false",
-            page = 1,
-            pageSize = 10,
-            column = "createdAt",
-            direction = -1
-        } = req.query;
-        let skip = Math.max(0, page - 1) * pageSize;
         let project = {
             SODate: {$dateToString: {format: "%d-%m-%Y", date: "$SODate"}},
             SONumber: 1,
@@ -646,12 +778,7 @@ exports.getAllShortSOForClosing = asyncHandler(async (req, res) => {
             SODetailsId: "$SODetails._id",
             createdAt: 1
         };
-        let match = await getMatchData(project, search);
-        let pagination = [];
-        if (excel == "false") {
-            pagination = [{$skip: +skip}, {$limit: +pageSize}];
-        }
-        let rows = await Model.aggregate([
+        let pipeline = [
             {$unwind: "$SODetails"},
             {
                 $match: {
@@ -679,22 +806,10 @@ exports.getAllShortSOForClosing = asyncHandler(async (req, res) => {
                     as: "customer"
                 }
             },
-            {$unwind: "$customer"},
-            {
-                $project: project
-            },
-            {$match: match},
-            {$sort: {[column]: +direction}},
-            {
-                $facet: {
-                    metadata: [{$count: "total"}],
-                    data: pagination
-                }
-            }
-        ]);
-        return res.success({
-            ...outputData(rows)
-        });
+            {$unwind: "$customer"}
+        ];
+        let rows = await SORepository.getAllPaginate({pipeline, project, queryParams: req.query});
+        return res.success(rows);
     } catch (e) {
         console.error("getAllShortSOForClosing", e);
         const errors = MESSAGES.apiErrorStrings.SERVER_ERROR;
@@ -705,7 +820,7 @@ exports.getAllShortSOForClosing = asyncHandler(async (req, res) => {
 exports.updateSODetailsLineStatusById = asyncHandler(async (req, res) => {
     try {
         let query = req.body;
-        await Model.findOneAndUpdate(
+        await SORepository.findAndUpdateDoc(
             {
                 _id: req.params.id,
                 "SODetails._id": query.SODetailsId,
@@ -724,11 +839,11 @@ exports.updateSODetailsLineStatusById = asyncHandler(async (req, res) => {
         res.success({
             message: `Sales Order has been updated successfully`
         });
-        let existing = await Model.findById(req.params.id);
+        let existing = await SORepository.getDocById(req.params.id);
         if (existing && existing.SODetails.length > 0) {
             let SODetails = existing.SODetails.every(x => x.balancedQty == 0);
             if (SODetails) {
-                await Model.findOneAndUpdate(
+                await SORepository.findAndUpdateDoc(
                     {
                         _id: existing._id
                     },
@@ -852,7 +967,7 @@ exports.getAllSalesSKUListOnOpenPO = asyncHandler(async (req, res) => {
 
 exports.getAllSObyCustomerIdForJobCard = async (customerId, company) => {
     try {
-        let rows = await Model.aggregate([
+        let rows = await SORepository.filteredSalesOrderList([
             {
                 $match: {
                     customer: ObjectId(customerId),
@@ -1045,7 +1160,7 @@ exports.updateBalanceJCCQtyOfSO = async () => {
 
 exports.updateSOQtyOnJCC = async (updatedBy, SOId, updateSKUId, qty, status, lineNumber) => {
     try {
-        const salesOrder = await Model.findById(SOId);
+        const salesOrder = await SORepository.getDocById(SOId);
         if (salesOrder) {
             const newSODetails = salesOrder.SODetails.map(ele => {
                 if (

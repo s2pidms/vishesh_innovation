@@ -1,14 +1,29 @@
 const Model = require("../labelMasterModel");
 
 module.exports = {
-    createLabelMaster: async obj => {
+    createDoc: async obj => {
         return await Model.create(obj);
     },
-    findOneLabelMaster: async (match, project = {}) => {
+    findOneDoc: async (match, project = {}) => {
         return await Model.findOne(match, project);
     },
-    updateLabelMaster: async (existing, updateBody) => {
+    findAndUpdateDoc: async (match, update) => {
+        return await Model.updateOne(match, update);
+    },
+    getDocById: async (_id, project = {}) => {
+        return await Model.findById(_id, project);
+    },
+    getAllPaginate: async ({pipeline, project, queryParams}) => {
+        return await Model.paginate({pipeline, project, queryParams});
+    },
+    updateDoc: async (existing, updateBody) => {
         Object.assign(existing, updateBody);
         return existing.save();
+    },
+    deleteDoc: async match => {
+        return await Model.deleteOne(match);
+    },
+    filteredLabelList: async pipeline => {
+        return await Model.aggregate(pipeline);
     }
 };

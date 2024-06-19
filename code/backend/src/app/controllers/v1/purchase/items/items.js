@@ -20,7 +20,8 @@ const ObjectId = mongoose.Types.ObjectId;
 const {
     getAllItemAttributes,
     getAllItemExcelAttributes,
-    getAllItemReportsAttributes
+    getAllItemReportsAttributes,
+    getAllForStockLevelAttributes
 } = require("../../../../models/purchase/helpers/itemHelper");
 const {filteredSupplierList} = require("../../../../models/purchase/repository/supplierRepository");
 const {filteredHSNList} = require("../../../../models/purchase/repository/hsnRepository");
@@ -664,22 +665,6 @@ exports.getAllItemsBySupplierId = asyncHandler(async (company, supplierId) => {
     }
 });
 
-exports.getAllFilteredItems = async (company, itemCategoriesList, project = {}) => {
-    try {
-        let rows = await Model.find(
-            {
-                isActive: "A",
-                company: company,
-                itemType: {$in: itemCategoriesList}
-            },
-            project
-        ).sort({itemCode: 1});
-        return rows;
-    } catch (e) {
-        console.error("getAllFilteredItems", e);
-    }
-};
-
 exports.updateItemByFile = asyncHandler(async (req, res) => {
     try {
         let fname = req.file.filename;
@@ -760,7 +745,7 @@ exports.getAllItemsForFormulationInk = async (company, itemCategoriesList) => {
         ]);
         return rows;
     } catch (e) {
-        console.error("getAllFilteredItems", e);
+        console.error("getAllItemsForFormulationInk", e);
     }
 };
 
@@ -938,3 +923,38 @@ exports.bulkInsertItemsByCSV = async (jsonData, {company, createdBy, updatedBy})
         console.error(error);
     }
 };
+
+exports.getAllForStockLevels = asyncHandler(async (req, res) => {
+    try {
+        let project = getAllForStockLevelAttributes();
+        let pipeline = [{$match: {company: ObjectId(req.user.company), isActive: "A"}}];
+        let rows = await ItemRepository.getAllReportsPaginate({
+            pipeline,
+            project,
+            queryParams: req.query,
+            groupValues: [
+                {
+                    $group: {
+                        _id: null,
+                        activeItems: {$sum: 1},
+                        itemWithSLData: {$sum: {$cond: [{$eq: ["$status", OPTIONS.defaultStatus.ACTIVE]}, 1, 0]}},
+                        itemWithoutSLData: {$sum: {$cond: [{$eq: ["$status", OPTIONS.defaultStatus.INACTIVE]}, 1, 0]}}
+                    }
+                },
+                {
+                    $project: {
+                        _id: 0,
+                        activeItems: 1,
+                        itemWithSLData: 1,
+                        itemWithoutSLData: 1
+                    }
+                }
+            ]
+        });
+        return res.success(rows);
+    } catch (e) {
+        console.error("getAllForStockLevels items", e);
+        const errors = MESSAGES.apiErrorStrings.SERVER_ERROR;
+        return res.serverError(errors);
+    }
+});

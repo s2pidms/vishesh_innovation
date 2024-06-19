@@ -201,16 +201,6 @@
                                 <p *ngIf="tableData?.customer?.showSKUDescription != 'No'">
                                     {{ s?.SKU?.SKUDescription }}
                                 </p>
-                                <!-- <p>
-                                    Part No.
-                                    {{
-                                        s?.SKU?.customerInfo[0]?.customerPartNo
-                                            ? s?.SKU?.customerInfo[0]?.customerPartNo
-                                            : s?.SKU?.SKUNo
-                                    }}
-                                    | Batch No./Date :
-                                    {{ s?.batchDate ? (s?.batchDate | date : "dd-MM-yy") : s?.tBatchNo }}
-                                </p> -->
                             </td>
 
                             <td colspan="1" class="text-center">
@@ -310,14 +300,7 @@
                                             </tr>
                                             <tr>
                                                 <td class="text-center sub-text">Total >></td>
-                                                <td class="text-center sub-text">
-                                                    <!-- {{
-                                                        tableData?.salesInvoiceTotalAmount
-                                                            ? (tableData?.salesInvoiceTotalAmount | number : ".2-2")
-                                                            : "-"
-                                                    }} -->
-                                                    -
-                                                </td>
+                                                <td class="text-center sub-text">-</td>
 
                                                 <td class="text-center sub-text">-</td>
                                                 <td class="text-center sub-text">
@@ -337,14 +320,7 @@
                                                 </td>
                                             </tr>
                                             <tr>
-                                                <th colspan="9" class="text-start">
-                                                    Total Tax Amount (In words): NIL
-                                                    <!-- {{
-                                                        tableData.salesInvoiceTotalTaxAmount
-                                                            ? (tableData.salesInvoiceTotalTaxAmount ?? 0 | toWords)
-                                                            : "NIL"
-                                                    }} -->
-                                                </th>
+                                                <th colspan="9" class="text-start">Total Tax Amount (In words): NIL</th>
                                             </tr>
                                         </table>
                                         <div class="py-3"></div>

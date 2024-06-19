@@ -135,7 +135,10 @@ export class ShipmentCreationFormComponent implements OnInit {
 
         let formData: any = {...this.form.value, ...this.dispatchDetails};
         formData.otherCharges = this.otherCharges;
-        formData.SPDetails = this.SPDetailsArray.filter((x: any) => x.dispatchQty > 0);
+        formData.SPDetails = this.SPDetailsArray.filter((x: any) => x.dispatchQty > 0)?.map((x: any) => {
+            x.discount = x?.discount ?? 0;
+            return x;
+        });
         if (formData._id) {
             this.update(formData);
         } else {

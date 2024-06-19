@@ -1,9 +1,6 @@
 const asyncHandler = require("express-async-handler");
 const Model = require("../../../../models/HR/statutoryContributionsSetup");
-const AutoIncrement = require("../../../../models/settings/autoIncrementModel");
 const MESSAGES = require("../../../../helpers/messages.options");
-const {SCS_MODULE_PREFIX} = require("../../../../helpers/moduleConstants");
-const {getAutoIncrementNumber} = require("../../../../helpers/utility");
 const {generateCreateData} = require("../../../../helpers/global.options");
 const {default: mongoose} = require("mongoose");
 const {getAllProfessionalTax} = require("../../settings/professionalTax/professionalTax");
@@ -104,22 +101,6 @@ exports.getByCompanyId = asyncHandler(async (req, res) => {
         }
     } catch (error) {
         console.error("getByCompanyId Statutory Contributions Setup", error);
-        const errors = MESSAGES.apiErrorStrings.SERVER_ERROR;
-        return res.serverError(errors);
-    }
-});
-// @desc    getAllMasterData Statutory Contributions Setup Record
-exports.getAllMasterData = asyncHandler(async (req, res) => {
-    try {
-        const autoIncrementedNo = await AutoIncrement.getNextId(
-            "Statutory Contributions Setup",
-            SCS_MODULE_PREFIX,
-            req.user.company
-        );
-        let autoIncrementNo = getAutoIncrementNumber(SCS_MODULE_PREFIX, "", autoIncrementedNo, 4);
-        return res.success({autoIncrementNo});
-    } catch (error) {
-        console.error("getAllMasterData Statutory Contributions Setup", error);
         const errors = MESSAGES.apiErrorStrings.SERVER_ERROR;
         return res.serverError(errors);
     }

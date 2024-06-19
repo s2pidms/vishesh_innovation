@@ -1,4 +1,5 @@
 const {CONSTANTS} = require("../../../../config/config");
+const {OPTIONS} = require("../../../helpers/global.options");
 
 exports.getAllItemAttributes = () => {
     return {
@@ -23,6 +24,8 @@ exports.getAllItemAttributes = () => {
         stdCostUom2: "$supplierDetails.stdCostUom2",
         primaryUnit: 1,
         shelfLife: 1,
+        QCLevels: 1,
+        isActive: 1,
         itemAMU: 1,
         itemROL: 1,
         tdsFile: 1,
@@ -94,5 +97,27 @@ exports.getAllItemReportsAttributes = () => {
         itemAMU: 1,
         itemROL: 1,
         orderInfoUOM: 1
+    };
+};
+exports.getAllForStockLevelAttributes = () => {
+    return {
+        itemCode: 1,
+        itemName: 1,
+        itemDescription: 1,
+        conversionOfUnits: 1,
+        orderInfoUOM: 1,
+        // itemROL: 1,
+        // itemAMU: 1,
+        reorderLevel: "$inventoryStockLevels.reorderLevel",
+        reorderQuantity: "$inventoryStockLevels.reorderQuantity",
+        status: {
+            $cond: [
+                {
+                    $and: ["$inventoryStockLevels.reorderLevel", "$inventoryStockLevels.reorderQuantity"]
+                },
+                OPTIONS.defaultStatus.ACTIVE,
+                OPTIONS.defaultStatus.INACTIVE
+            ]
+        }
     };
 };

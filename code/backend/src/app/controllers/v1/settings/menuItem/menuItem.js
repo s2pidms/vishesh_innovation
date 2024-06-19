@@ -1,7 +1,7 @@
 const asyncHandler = require("express-async-handler");
 const Model = require("../../../../models/settings/menuItemModel");
 const MESSAGES = require("../../../../helpers/messages.options");
-const {generateCreateData, OPTIONS} = require("../../../../helpers/global.options");
+const {OPTIONS} = require("../../../../helpers/global.options");
 const {getAllRoles} = require("../role/role");
 const User = require("../user/user");
 const SubModulePermissions = require("../subModulePermissions/subModulePermissions");
@@ -11,6 +11,7 @@ const UOMUnitMasterRepository = require("../../../../models/settings/repository/
 const {ObjectId} = require("../../../../../config/mongoose");
 const SalesUOMUnitMasterRepository = require("../../../../models/settings/repository/SalesUOMUnitMasterRepository");
 const {getAllModuleMaster} = require("../module-master/module-master");
+const MenuItemRepository = require("../../../../models/settings/repository/menuItemRepository");
 
 exports.getAll = asyncHandler(async (req, res) => {
     try {
@@ -25,7 +26,7 @@ exports.getAll = asyncHandler(async (req, res) => {
 });
 exports.create = asyncHandler(async (req, res) => {
     try {
-        let existing = await Model.findOne(
+        let existing = await MenuItemRepository.findOneDoc(
             {
                 title: req.body.title
             },
@@ -41,8 +42,7 @@ exports.create = asyncHandler(async (req, res) => {
             updatedBy: req.user.sub,
             ...req.body
         };
-        const saveObj = new Model(createdObj);
-        const itemDetails = await saveObj.save();
+        const itemDetails = await MenuItemRepository.createDoc(createdObj);
         if (itemDetails) {
             return res.success({
                 message: MESSAGES.apiSuccessStrings.ADDED("Menu Item")
@@ -59,10 +59,9 @@ exports.create = asyncHandler(async (req, res) => {
 });
 exports.update = asyncHandler(async (req, res) => {
     try {
-        let itemDetails = await Model.findById(req.params.id);
+        let itemDetails = await MenuItemRepository.getDocById(req.params.id);
         itemDetails.updatedBy = req.user.sub;
-        itemDetails = await generateCreateData(itemDetails, req.body);
-        itemDetails = await itemDetails.save();
+        itemDetails = await MenuItemRepository.updateDoc(itemDetails, req.body);
         if (!itemDetails) {
             const errors = MESSAGES.apiErrorStrings.INVALID_REQUEST;
             return res.preconditionFailed(errors);
@@ -79,9 +78,8 @@ exports.update = asyncHandler(async (req, res) => {
 });
 exports.deleteById = asyncHandler(async (req, res) => {
     try {
-        const deleteItem = await Model.findById(req.params.id);
+        const deleteItem = await MenuItemRepository.deleteDoc({_id: req.params.id});
         if (deleteItem) {
-            await deleteItem.remove();
             return res.success({
                 message: MESSAGES.apiSuccessStrings.DELETED("Menu Item")
             });
@@ -97,7 +95,7 @@ exports.deleteById = asyncHandler(async (req, res) => {
 });
 exports.getById = asyncHandler(async (req, res) => {
     try {
-        let existing = await Model.findById(req.params.id);
+        let existing = await MenuItemRepository.getDocById(req.params.id);
         if (!existing) {
             let errors = MESSAGES.apiSuccessStrings.DATA_NOT_EXISTS("Menu Item");
             return res.unprocessableEntity(errors);
@@ -180,12 +178,12 @@ exports.getAllGlobalData = asyncHandler(async (req, res) => {
 });
 const checkMenuItemInCacheBySystem = async (company, system) => {
     let menuItems = [];
-    const cachedData = memoryCacheHandler.get("mainMenuItems");
-    if (cachedData) {
-        menuItems = cachedData;
-    } else {
-        menuItems = await this.updateCacheGlobalMenuItems(company, system);
-    }
+    // const cachedData = memoryCacheHandler.get("mainMenuItems");
+    // if (cachedData) {
+    //     menuItems = cachedData;
+    // } else {
+    menuItems = await this.updateCacheGlobalMenuItems(company, system);
+    // }
     return menuItems;
 };
 exports.updateCacheGlobalMenuItems = async (company, system) => {
@@ -197,29 +195,37 @@ exports.updateCacheGlobalMenuItems = async (company, system) => {
         isMenuActive: 1,
         isActive: 1,
         activeClass: 1,
-        roles: 1
+        roles: 1,
+        id: "$_id"
     });
-    memoryCacheHandler.put("mainMenuItems", menuItems);
+    // memoryCacheHandler.put("mainMenuItems", menuItems);
     return menuItems;
 };
 
-exports.getAllMenuItemsList = async (company, system = "main", project = {}) => {
-    let rows = await Model.find(
+exports.getAllMenuItemsList = async (company, system = "main", project = {__v: 0}) => {
+    let rows = await MenuItemRepository.filteredMenuItemList([
         {
-            // company: company,
-            system: system
+            $match: {
+                // company: company,
+                system: system
+            }
         },
-        project
-    ).sort({menuOrder: 1});
+        {
+            $sort: {menuOrder: 1}
+        },
+        {
+            $project: project
+        }
+    ]);
     return rows;
 };
 
 exports.getAllMenuItemsRolesForPermissions = async menuItemId => {
-    let rows = await Model.findOne(
+    let rows = await MenuItemRepository.findOneDoc(
         {
             _id: menuItemId
         },
         {roles: 1}
-    ).lean();
+    );
     return rows;
 };

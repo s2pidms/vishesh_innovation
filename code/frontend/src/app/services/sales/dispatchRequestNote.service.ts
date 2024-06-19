@@ -11,6 +11,7 @@ export class DispatchRequestNoteService {
         getAllPath: "/sales/drn/getAll",
         getAllForCancelPath: "/sales/drn/getAllForCancel",
         getAllMasterDataPath: "/sales/drn/getAllMasterData",
+        getAllReportsPath: "/sales/drn/getAllReports",
         updatePath: (id: string) => `/sales/drn/update/${id}`,
         getByIdPath: (id: string) => `/sales/drn/getById/${id}`,
         DRNDetailsByCustomerIdPath: (id: string) => `/sales/drn/DRNDetailsByCustomerId/${id}`,
@@ -28,6 +29,9 @@ export class DispatchRequestNoteService {
         return this.http.get(this.routes.getAllPath, params).pipe(map((res: any) => res));
     }
 
+    getAllReports(params: any) {
+        return this.http.get(this.routes.getAllReportsPath, params).pipe(map((res: any) => res));
+    }
     getAllMasterData(params: any) {
         return this.http.get(this.routes.getAllMasterDataPath, params).pipe(map((res: any) => res));
     }

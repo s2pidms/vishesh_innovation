@@ -34,6 +34,7 @@ const OPTIONS = {
         ACCOUNT_VERIFY: "account_verify"
     },
     defaultStatus: {
+        NA: "NA",
         ACTIVE: "Active",
         CLOSED: "Closed",
         OPENED: "Opened",
@@ -193,15 +194,6 @@ const OPTIONS = {
                 statusArray.push(OPTIONS.defaultStatus[ele]);
             }
             return statusArray;
-        },
-        getAllDirectTaxInvoiceStatus: function () {
-            return [
-                OPTIONS.defaultStatus.AWAITING_APPROVAL,
-                OPTIONS.defaultStatus.REJECTED,
-                OPTIONS.defaultStatus.CLOSED,
-                OPTIONS.defaultStatus.APPROVED,
-                OPTIONS.defaultStatus.REPORT_GENERATED
-            ];
         },
         getAllCalibrationStandardStatusArray: function () {
             return [OPTIONS.defaultStatus.ACTIVE, OPTIONS.defaultStatus.INACTIVE, OPTIONS.defaultStatus.UNDER_REPAIR];

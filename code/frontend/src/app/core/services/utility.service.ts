@@ -2,6 +2,8 @@ import {Injectable} from "@angular/core";
 import * as moment from "moment";
 import {ToastService} from "./toast.service";
 import {Router} from "@angular/router";
+const {format} = require("date-fns");
+
 const timeZone = "Asia/Kolkata";
 @Injectable({
     providedIn: "root"
@@ -131,4 +133,22 @@ export class UtilityService {
             return null;
         }
     }
+
+    // getCurrentFormattedDateTime = () => {
+    //     const todayDate = new Date();
+    //     const formattedDate = moment(todayDate).format("DD.MM.YYYY");
+    //     const formattedTime = moment(todayDate).format("hh:mm A");
+    //     return `-${formattedDate}-${formattedTime}`;
+    // };
+
+    getCurrentFormattedDateTime = () => {
+        const todayDate = new Date();
+        const formattedDate = format(todayDate, "dd.MM.yyyy");
+        const formattedTime = format(todayDate, "hh:mm a");
+        return `-${formattedDate}-${formattedTime}`;
+    };
+    checkDomesticCustomer = (category: string) => {
+        const regex = /domestic/i;
+        return regex.test(category);
+    };
 }

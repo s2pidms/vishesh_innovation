@@ -462,6 +462,30 @@
                 "disabled": false,
                 "url": "/default/settings/master/upload_data/form/PPICInventoryCorrection",
                 "_id": "665d9abdab50b2cedc289138"
+            },
+            {
+                "menuItemId": "64a6c1e33339d4dc9d8141ae",
+                "module": "Settings",
+                "type": "MASTER",
+                "order": 21,
+                "isDisplay": false,
+                "title": "Upload RM Specification Master",
+                "displayName": "Upload RM Specification Master",
+                "disabled": false,
+                "url": "/default/settings/master/upload_data/form/RMSpecification",
+                "_id": "66682f0da62ba2ce142a4299"
+            },
+            {
+                "menuItemId": "64a6c1e33339d4dc9d8141ae",
+                "module": "Settings",
+                "type": "MASTER",
+                "order": 22,
+                "isDisplay": false,
+                "title": "Upload Product Specification Master",
+                "displayName": "Upload Product Specification Master",
+                "disabled": false,
+                "url": "/default/settings/master/upload_data/form/ProductSpecification",
+                "_id": "66682f23a62ba2ce142a429a"
             }
         ],
         "roles": []
@@ -727,7 +751,6 @@
         ],
         "roles": []
     },
-
     {
         "_id": "655c3c413613e949b4d620fb",
         "menuItemId": "64a6c1e33339d4dc9d8141ae",
@@ -847,11 +870,22 @@
                 "disabled": false,
                 "url": "/default/settings/master/purchase/service_charges/list",
                 "_id": "663f030821fb1b8a558a9079"
+            },
+            {
+                "menuItemId": "64a6c1e33339d4dc9d8141ae",
+                "module": "Settings",
+                "type": "MASTER",
+                "order": 11,
+                "isDisplay": false,
+                "title": "Job WO Discount",
+                "displayName": "Job WO Discount",
+                "disabled": false,
+                "url": "/default/settings/master/module_master/list/JOB_WO_DISCOUNT",
+                "_id": "6672c9c6c55986406fd4ddc9"
             }
         ],
         "roles": []
     },
-
     {
         "_id": "655c3c413613e949b4d6210e",
         "menuItemId": "64a6c1e33339d4dc9d8141ae",

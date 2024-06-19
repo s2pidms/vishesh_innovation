@@ -57,6 +57,7 @@ export class JcEntryFormComponent implements OnInit {
             seq: null,
             subProcessName: "",
             inspectedBy: "",
+            offerDate: this.utilityService.getTodayDate("YYYY-MM-DD"),
             releasedDate: this.utilityService.getTodayDate("YYYY-MM-DD"),
             releaseStatus: null,
             IPQAStatus: false
@@ -113,6 +114,13 @@ export class JcEntryFormComponent implements OnInit {
             formData.status = "Approved";
         }
         formData.JCEntryDetails = this.JCEntryDetailsList;
+
+        // console.log("formData", formData);
+        // if (formData?.JCEntryDetails?.some((x: any) => !x.processStatus)) {
+        //     this.toastService.warning(`Pls fill Table Data !`);
+        //     return;
+        // }
+
         if (formData._id) {
             this.update(formData);
         } else {
@@ -290,6 +298,7 @@ export class JcEntryFormComponent implements OnInit {
                 if (success) {
                     let index = this.JCEntryDetailsList.findIndex((x: any) => x.process == item?.process);
                     this.prodInfoList = success?.prodInfoList;
+
                     this.JCEntryDetailsList[index].production = success?.production;
                     this.updateProcessStatus(index);
                 }
@@ -328,7 +337,8 @@ export class JcEntryFormComponent implements OnInit {
             this.JCEntryDetailsList[index]?.production?.prodInfo?.every((s: ProdInfo) => s?.prodStatus) &&
             this.JCEntryDetailsList[index]?.IPQA?.IPQAInfo?.every((s: IPQAInfo) => s.IPQAStatus);
         this.isMarkAsCompleted = !this.JCEntryDetailsList?.every(
-            (x: IProcessNameList) => x?.processStatus || x?.processName == "Packing"
+            (x: IProcessNameList) => x?.processStatus
+            // || x?.processName == "Packing"
         );
         this.JCEntryDetailsList = [...this.JCEntryDetailsList];
     }

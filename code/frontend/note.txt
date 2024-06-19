@@ -5,7 +5,6 @@ ng g c print-screen/job-worker-challan-print-screen
 ng g c default/hr/transactions/iBASUploadAttendance/screens/product-code-list
 
 
-
 ng g m default/stores/master/SAC --route sac --module=master.module
 ng g m default/stores/master/suppliers --route suppliers --module=master.module
 ng g m default/stores/master/items --route items --module=master.module
@@ -327,8 +326,10 @@ ng g c shared/modals/add-item-channel-partner
 
 ng g c print-screen/templates-TI/tax-invoice-exports
 ng g c print-screen/rmi-print-screen
+ng g c print-screen/DTI-preview-print-screen
 
-ng g m default/sales/reports/service-invoice --route service_invoice --module=reports.module
+
+ng g m default/sales/reports/dispatch-list --route dispatch_list --module=reports.module
 
 ng g s services/purchase/debitNote
 ng g m default/purchase/reports/purchase-indent --route purchase_indent --module=reports.module
@@ -485,8 +486,7 @@ ng g m default/stores/reports/gi-report --route gi_report --module=reports.modul
 
 
 
-ng g m default/stores/reports/ir-report-name-wise --route ir_report_name_wise --module=reports.module
-
+ng g m default/stores/reports/item-wise-inventory --route item_wise_inventory --module=reports.module
 
 
 ng g m default/planning/transactions/material-requirement-planning --route material_requirement_planning --module=transactions.module
@@ -855,4 +855,22 @@ ng g c default/purchase/transactions/job-work-challan/screens/job-work-challan-f
 ng g c default/purchase/transactions/job-work-challan/screens/job-work-challan-list
 ng g c default/purchase/transactions/job-work-challan/screens/components/job-work-address-modal
 ng g c default/purchase/transactions/job-work-challan/screens/components/freight-terms-modal
-ng g c default/purchase/transactions/job-work-challan/screens/components/job-work-modal
+ng g c default/sales/transactions/direct-tax-invoice/screens/components/DTI-Other-charges-modal
+
+ng g m default/planning/master/stock-level --route stock_level --module=master.module
+ng g c default/planning/master/stock-level/screens/stock-level-list
+ng g c default/planning/master/stock-level/screens/stock-level-form
+ng g c default/planning/master/stock-level/screens/components/status-summary-modal
+
+
+
+ng g m default/purchase/transactions/job-work-order --route job_work_order --module=transactions.module
+
+ng g c default/purchase/transactions/job-work-order/screens/job-work-order-form
+ng g c default/purchase/transactions/job-work-order/screens/job-work-order-list
+ng g c default/purchase/transactions/job-work-order/screens/components/job-work-order-address-modal
+ng g c default/purchase/transactions/job-work-order/screens/components/review-wo-terms-modal
+
+
+ng g c print-screen/job-work-order-print-screen
+ng g c print-screen/job-work-order-print-screen --module=print-screen-routing.module

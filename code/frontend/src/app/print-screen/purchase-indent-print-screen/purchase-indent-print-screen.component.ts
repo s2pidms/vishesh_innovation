@@ -35,7 +35,6 @@ export class PurchaseIndentPrintScreenComponent implements OnInit {
         this.activatedRoute.queryParams.subscribe((params: any) => {
             this.pdfAction = params.action;
             this.previewPO = params.preview;
-            console.log("params", params);
 
             this.getPurchaseServiceById(params.id);
             this.getAppParameterByCode();

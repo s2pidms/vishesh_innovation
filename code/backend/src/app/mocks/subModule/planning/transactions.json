@@ -111,5 +111,68 @@
         "url": "/default/planning/transactions/gr_acknowledgement/list",
         "items": [],
         "roles": []
+    },
+    {
+        "_id": "667131d418728600f251b07d",
+        "menuItemId": "64a6c1e33339d4dc9d8141a4",
+        "module": "Planning",
+        "type": "TRANSACTION",
+        "order": 10,
+        "isDisplay": false,
+        "title": "Production Processes",
+        "displayName": "Production House",
+        "disabled": false,
+        "url": "/default/planning/transactions/production_processes/tab_list",
+        "items": [
+            {
+                "menuItemId": "64a6c1e33339d4dc9d8141a4",
+                "module": "Production",
+                "type": "TRANSACTION",
+                "order": 1,
+                "isDisplay": false,
+                "title": "Screen Making",
+                "displayName": "Screen Making",
+                "disabled": false,
+                "url": "/default/planning/transactions/production_processes/screen_making_form",
+                "_id": "6630c17bd3c9e3d6c299f646"
+            },
+            {
+                "menuItemId": "64a6c1e33339d4dc9d8141a4",
+                "module": "Planning",
+                "type": "TRANSACTION",
+                "order": 2,
+                "isDisplay": false,
+                "title": "Ink Mixing",
+                "displayName": "Ink Mixing",
+                "disabled": false,
+                "url": "/default/planning/transactions/production_processes/pp_ink_mixing_form",
+                "_id": "6630c185d3c9e3d6c299f647"
+            },
+            {
+                "menuItemId": "64a6c1e33339d4dc9d8141a4",
+                "module": "Planning",
+                "type": "TRANSACTION",
+                "order": 3,
+                "isDisplay": false,
+                "title": "Screen Printing",
+                "displayName": "Screen Printing",
+                "disabled": false,
+                "url": "/default/planning/transactions/production_processes/screen_printing_form",
+                "_id": "6630c18cd3c9e3d6c299f648"
+            },
+            {
+                "menuItemId": "64a6c1e33339d4dc9d8141a4",
+                "module": "Planning",
+                "type": "TRANSACTION",
+                "order": 4,
+                "isDisplay": false,
+                "title": "Stock Preparation",
+                "displayName": "Stock Preparation",
+                "disabled": false,
+                "url": "/default/planning/transactions/production_processes/stock_preparation_form",
+                "_id": "6634818408d71d94a46184f9"
+            }
+        ],
+        "roles": []
     }
 ]

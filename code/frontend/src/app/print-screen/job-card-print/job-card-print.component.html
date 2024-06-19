@@ -10,17 +10,9 @@
                         <table class="table border-btm">
                             <tr>
                                 <td colspan="12" class="border-bottom-0">
-                                    <div class="text-center set-job-card-size py-5">
-                                        <!-- <img src="./assets/images/job_card_header.png" class="set-image" /> -->
-                                        Job Card
-                                    </div>
+                                    <div class="text-center set-job-card-size py-5">Job Card</div>
                                 </td>
                             </tr>
-                            <!-- <tr>
-                                <th colspan="12" class="text-center border-bottom-0 border-top-0">
-                                    <div class="fs-3">Cost Sheet</div>
-                                </th>
-                            </tr> -->
                             <tr class="border-btm">
                                 <td colspan="12" class="px-3">
                                     <div class="row mt-4 justify-content-between">
@@ -30,7 +22,7 @@
                                                     <td class="border stroke">
                                                         <div class="row">
                                                             <div class="px-0 text-dark">
-                                                                Job Card No: {{ tableData?.jobCard?.jobCardNo }}
+                                                                Job Card No: {{ tableData.jobCard.jobCardNo }}
                                                             </div>
                                                         </div>
                                                     </td>
@@ -44,7 +36,7 @@
                                                         <div class="row">
                                                             <div class="px-0 text-dark">
                                                                 Job Card Date:
-                                                                {{ tableData?.jobCard?.jobCardDate }}
+                                                                {{ tableData.jobCard.jobCardDate }}
                                                             </div>
                                                         </div>
                                                     </td>
@@ -59,7 +51,7 @@
                                                     <td class="border stroke">
                                                         <div class="row">
                                                             <div class="px-0 text-dark">
-                                                                Product Code: {{ tableData?.jobCard?.productCategory }}
+                                                                Product Code: {{ tableData.jobCard.productCategory }}
                                                             </div>
                                                         </div>
                                                     </td>
@@ -72,7 +64,7 @@
                                                     <td class="border stroke">
                                                         <div class="row">
                                                             <div class="px-0 text-dark">
-                                                                Customer Name: {{ tableData?.jobCard?.customerName }}
+                                                                Customer Name: {{ tableData.jobCard.customerName }}
                                                             </div>
                                                         </div>
                                                     </td>
@@ -89,7 +81,7 @@
                                                             <td class="border stroke">
                                                                 <div class="row">
                                                                     <div class="px-0 text-dark">
-                                                                        SKU No.: {{ tableData?.jobCard?.SKUNo }}
+                                                                        SKU No.: {{ tableData.jobCard.SKUNo }}
                                                                     </div>
                                                                 </div>
                                                             </td>
@@ -102,7 +94,7 @@
                                                             <td class="border stroke">
                                                                 <div class="row">
                                                                     <div class="px-0 text-dark">
-                                                                        Stage: {{ tableData?.jobCard?.stage }}
+                                                                        Stage: {{ tableData.jobCard.stage }}
                                                                     </div>
                                                                 </div>
                                                             </td>
@@ -119,7 +111,7 @@
                                                             <td class="border stroke">
                                                                 <div class="row">
                                                                     <div class="px-0 text-dark">
-                                                                        Part #: {{ tableData?.jobCard?.customerPartNo }}
+                                                                        Part #: {{ tableData.jobCard.customerPartNo }}
                                                                     </div>
                                                                 </div>
                                                             </td>
@@ -132,7 +124,7 @@
                                                             <td class="border stroke">
                                                                 <div class="row">
                                                                     <div class="px-0 text-dark">
-                                                                        DWG #: {{ tableData?.jobCard?.artWorkNo }}
+                                                                        DWG #: {{ tableData.jobCard.artWorkNo }}
                                                                     </div>
                                                                 </div>
                                                             </td>
@@ -149,7 +141,7 @@
                                                     <td class="border stroke">
                                                         <div class="row">
                                                             <div class="px-0 text-dark">
-                                                                SKU Name: {{ tableData?.jobCard?.SKUName }}
+                                                                SKU Name: {{ tableData.jobCard.SKUName }}
                                                             </div>
                                                         </div>
                                                     </td>
@@ -165,16 +157,16 @@
                                                                 Actual Size:
                                                                 <span
                                                                     *ngIf="
-                                                                        tableData?.jobCard?.actualDimensionsLength &&
-                                                                        tableData?.jobCard?.actualDimensionsWidth
+                                                                        tableData.jobCard.actualDimensionsLength &&
+                                                                        tableData.jobCard.actualDimensionsWidth
                                                                     "
                                                                 >
-                                                                    {{ tableData?.jobCard?.actualDimensionsWidth }}
-                                                                    {{ tableData?.jobCard?.actualDimensionsUnit }}
+                                                                    {{ tableData.jobCard.actualDimensionsWidth }}
+                                                                    {{ tableData.jobCard.actualDimensionsUnit }}
                                                                     <span>X</span>
-                                                                    {{ tableData?.jobCard?.actualDimensionsLength }}
-                                                                    {{ tableData?.jobCard?.actualDimensionsUnit }} ({{
-                                                                        tableData?.jobCard?.actualDimensionsUps
+                                                                    {{ tableData.jobCard.actualDimensionsLength }}
+                                                                    {{ tableData.jobCard.actualDimensionsUnit }} ({{
+                                                                        tableData.jobCard.actualDimensionsUps
                                                                     }})
                                                                 </span>
                                                             </div>
@@ -194,17 +186,17 @@
                                                                 Production Layout Size:
                                                                 <span
                                                                     *ngIf="
-                                                                        tableData?.jobCard?.layoutDimensionsLength &&
-                                                                        tableData?.jobCard?.layoutDimensionsWidth
+                                                                        tableData.jobCard.layoutDimensionsLength &&
+                                                                        tableData.jobCard.layoutDimensionsWidth
                                                                     "
                                                                 >
-                                                                    {{ tableData?.jobCard?.layoutDimensionsWidth }}
-                                                                    {{ tableData?.jobCard?.layoutDimensionsUnit }}
+                                                                    {{ tableData.jobCard.layoutDimensionsWidth }}
+                                                                    {{ tableData.jobCard.layoutDimensionsUnit }}
                                                                     <span>X</span>
 
-                                                                    {{ tableData?.jobCard?.layoutDimensionsLength }}
-                                                                    {{ tableData?.jobCard?.layoutDimensionsUnit }} ({{
-                                                                        tableData?.jobCard?.layoutDimensionsUps
+                                                                    {{ tableData.jobCard.layoutDimensionsLength }}
+                                                                    {{ tableData.jobCard.layoutDimensionsUnit }} ({{
+                                                                        tableData.jobCard.layoutDimensionsUps
                                                                     }})
                                                                 </span>
                                                             </div>
@@ -223,7 +215,7 @@
                                                                 <div class="row">
                                                                     <div class="px-0 text-dark">
                                                                         No. of Colours:
-                                                                        {{ tableData?.jobCard?.totalNoOfColors }}
+                                                                        {{ tableData.jobCard.totalNoOfColors }}
                                                                     </div>
                                                                 </div>
                                                             </td>
@@ -236,7 +228,7 @@
                                                             <td class="border stroke">
                                                                 <div class="row">
                                                                     <div class="px-0 text-dark">
-                                                                        UoM: {{ tableData?.jobCard?.UOM }}
+                                                                        UoM: {{ tableData.jobCard.UOM }}
                                                                     </div>
                                                                 </div>
                                                             </td>
@@ -254,7 +246,7 @@
                                                         <div class="row">
                                                             <div class="px-0 text-dark">
                                                                 Batch Input Quantity:
-                                                                {{ tableData?.jobCard?.totalBatchQuantity }}
+                                                                {{ tableData.jobCard.totalBatchQuantity }}
                                                             </div>
                                                         </div>
                                                     </td>
@@ -268,9 +260,7 @@
                                                         <div class="row">
                                                             <div class="px-0 text-dark">
                                                                 Batch Date:
-                                                                {{
-                                                                    tableData?.jobCard?.batchDate | date : "dd-MM-YYYY"
-                                                                }}
+                                                                {{ tableData.jobCard.batchDate | date : "dd-MM-YYYY" }}
                                                             </div>
                                                         </div>
                                                     </td>
@@ -285,7 +275,7 @@
                                                     <td class="border stroke">
                                                         <div class="row">
                                                             <div class="px-0 text-dark">
-                                                                Order Reference: {{ tableData?.jobCard?.SONo }}
+                                                                Order Reference: {{ tableData.jobCard.SONo }}
                                                             </div>
                                                         </div>
                                                     </td>
@@ -300,7 +290,7 @@
                                                             <div class="px-0 text-dark">
                                                                 Target Dispatch Date:
                                                                 {{
-                                                                    tableData?.jobCard?.dispatchSchedule?.dispatchDate
+                                                                    tableData.jobCard.dispatchSchedule.dispatchDate
                                                                         | date : "dd-MM-YYYY"
                                                                 }}
                                                             </div>
@@ -317,7 +307,7 @@
                                                     <td class="border stroke">
                                                         <div class="row">
                                                             <div class="px-0 text-dark">
-                                                                NPD Input: {{ tableData?.jobCard?.NPDInput }}
+                                                                NPD Input: {{ tableData.jobCard.NPDInput }}
                                                             </div>
                                                         </div>
                                                     </td>
@@ -361,22 +351,22 @@
                                                     <tbody>
                                                         <tr
                                                             class="text-wrap"
-                                                            *ngFor="let s of tableData?.MRPData; let i = index"
+                                                            *ngFor="let s of tableData.MRPData; let i = index"
                                                         >
                                                             <td class="text-center border stroke">
-                                                                {{ s?.itemCode }}
+                                                                {{ s.itemCode }}
                                                             </td>
                                                             <td class="border stroke">
-                                                                {{ s?.itemName }}
+                                                                {{ s.itemName }}
                                                             </td>
                                                             <td class="border stroke">
-                                                                {{ s?.itemDescription }}
+                                                                {{ s.itemDescription }}
                                                             </td>
                                                             <td class="text-center border stroke">
-                                                                {{ s?.UOM }}
+                                                                {{ s.UOM }}
                                                             </td>
                                                             <td class="text-center border stroke">
-                                                                {{ s?.partCount }}
+                                                                {{ s.partCount }}
                                                             </td>
                                                         </tr>
                                                     </tbody>
@@ -398,7 +388,6 @@
                                                 <table class="table table-bordered table-sticky">
                                                     <thead>
                                                         <tr>
-                                                            <!-- <th class="text-center border stroke">MRN No.</th> -->
                                                             <th class="text-center border stroke">Item Code</th>
                                                             <th class="text-start border stroke">Item Name</th>
                                                             <th class="text-start border stroke">Item Description</th>
@@ -410,27 +399,24 @@
                                                         <tr
                                                             class="text-wrap"
                                                             *ngFor="
-                                                                let s of tableData?.PPICToProdGoodsList;
+                                                                let s of tableData.PPICToProdGoodsList;
                                                                 let i = index
                                                             "
                                                         >
-                                                            <!-- <td class="text-center border stroke">
-                                                                {{ s?.MRNNumber }}
-                                                            </td> -->
                                                             <td class="text-center border stroke">
-                                                                {{ s?.itemCode }}
+                                                                {{ s.itemCode }}
                                                             </td>
                                                             <td class="border stroke">
-                                                                {{ s?.itemName }}
+                                                                {{ s.itemName }}
                                                             </td>
                                                             <td class="border stroke">
-                                                                {{ s?.itemDescription }}
+                                                                {{ s.itemDescription }}
                                                             </td>
                                                             <td class="text-center border stroke">
-                                                                {{ s?.UOM }}
+                                                                {{ s.UOM }}
                                                             </td>
                                                             <td class="text-center border stroke">
-                                                                {{ s?.issueQty }}
+                                                                {{ s.issueQty }}
                                                             </td>
                                                         </tr>
                                                     </tbody>

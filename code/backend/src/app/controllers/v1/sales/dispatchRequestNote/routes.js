@@ -9,7 +9,8 @@ const {
     getAllMasterData,
     DRNDetailsByCustomerId,
     getAllForCancel,
-    getAllDRNSummaryReports
+    getAllDRNSummaryReports,
+    getAllReports
 } = require("./dispatchRequestNote");
 
 app.post("/create", create);
@@ -21,4 +22,5 @@ app.put("/update/:id", validate("checkParamId"), update);
 app.delete("/delete/:id", validate("checkParamId"), deleteById);
 app.get("/getAllMasterData", getAllMasterData);
 app.get("/getAllDRNSummaryReports", getAllDRNSummaryReports);
+app.get("/getAllReports", getAllReports);
 module.exports = app;

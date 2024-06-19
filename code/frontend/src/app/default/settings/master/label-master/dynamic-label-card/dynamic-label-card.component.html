@@ -20,15 +20,7 @@
                 </tr>
             </thead>
             <tbody>
-                <ng-container
-                    *ngFor="
-                        let item of labelData
-                            | searchFi1ter : search
-                            | slice : (page - 1) * pageSize : (page - 1) * pageSize + pageSize;
-                        let i = index;
-                        trackBy: trackByFn
-                    "
-                >
+                <ng-container *ngFor="let item of labelData; let i = index; trackBy: trackByFn">
                     <tr>
                         <td>
                             {{ 1 + i + (page - 1) * pageSize }}

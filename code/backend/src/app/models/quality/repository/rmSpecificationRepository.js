@@ -3,6 +3,9 @@ module.exports = {
     createDoc: async obj => {
         return await Model.create(obj);
     },
+    insertManyDoc: async docArray => {
+        return await Model.insertMany(docArray);
+    },
     findOneDoc: async (match, project = {}) => {
         return await Model.findOne(match, project);
     },

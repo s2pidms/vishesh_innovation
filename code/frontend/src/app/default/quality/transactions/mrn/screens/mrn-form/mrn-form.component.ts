@@ -306,7 +306,7 @@ export class MRNFormComponent implements OnInit {
                 batchNo: null,
                 batchDate: this.utilityService.getFormatDate(ele.batchDate, "YYYY-MM-DD"),
                 UOM: ele.UOM,
-                GRNQty: ele.GRNQty ?? 0,
+                GRNQty: ele.balancedMRNQty ?? 0,
                 balancedQty: ele.balancedQty,
                 standardRate: ele.standardRate,
                 purchaseRate: ele.purchaseRate,
@@ -319,10 +319,10 @@ export class MRNFormComponent implements OnInit {
 
     changeREJQty(MRNLineNumber: any, ele: any) {
         let index: number = this.MRNDetailsArray.map((x: any) => x.MRNLineNumber).indexOf(MRNLineNumber);
-        if (ele.rejectedQty > ele.GRNQty) {
+        if (ele.rejectedQty > ele.GRNQty || ele.releasedQty + ele.rejectedQty > ele.GRNQty) {
             this.MRNDetailsArray[index].rejectedQty = 0;
         }
-        this.MRNDetailsArray[index].releasedQty = ele.GRNQty - ele.rejectedQty;
+        // this.MRNDetailsArray[index].releasedQty = ele.GRNQty - ele.rejectedQty;
         this.rejectFlag = this.MRNDetailsArray.some(x => x.rejectedQty != x.GRNQty);
         this.releasedFlag = this.MRNDetailsArray.some(x => x.releasedQty != x.GRNQty);
         this.partialRFlag = this.releasedFlag && this.rejectFlag ? true : false;
@@ -330,10 +330,10 @@ export class MRNFormComponent implements OnInit {
 
     changeRelQty(MRNLineNumber: any, ele: any) {
         let index: number = this.MRNDetailsArray.map((x: any) => x.MRNLineNumber).indexOf(MRNLineNumber);
-        if (ele.releasedQty > ele.GRNQty) {
+        if (ele.releasedQty > ele.GRNQty || ele.releasedQty + ele.rejectedQty > ele.GRNQty) {
             this.MRNDetailsArray[index].releasedQty = 0;
         }
-        this.MRNDetailsArray[index].rejectedQty = ele.GRNQty - ele.releasedQty;
+        // this.MRNDetailsArray[index].rejectedQty = ele.GRNQty - ele.releasedQty;
         this.rejectFlag = this.MRNDetailsArray.some(x => x.rejectedQty != x.GRNQty);
         this.releasedFlag = this.MRNDetailsArray.some(x => x.releasedQty != x.GRNQty);
         this.partialRFlag = this.releasedFlag && this.rejectFlag ? true : false;

@@ -2,26 +2,38 @@
     <div class="set-remaining-margin">
         <div class="row form-header">
             <div class="col heading">
-                <label>{{ this.dispatchName }}</label>
+                <label>{{ this.action | titlecase }} Direct Tax Invoice</label>
             </div>
         </div>
         <div class="form-body">
             <div class="row mb-2">
-                <div class="col-3">
+                <div class="col-2">
+                    <label class="form-label mb-0">Bill From Location<span class="text-danger"></span> </label>
+                    <ng-select
+                        [items]="masterData.billFromLocationOptions"
+                        bindLabel="label"
+                        bindValue="value"
+                        [clearable]="false"
+                        formControlName="billFromLocation"
+                        (change)="setBillFromAddress($event)"
+                    >
+                    </ng-select>
+                </div>
+                <div class="col-2">
                     <label class="form-label mb-0"> Invoice # <span class="text-danger"></span> </label>
-                    <input class="form-control" type="text" formControlName="DTINumber" readonly />
+                    <input class="form-control" type="text" formControlName="DTICode" readonly />
                 </div>
 
-                <div class="col-3">
+                <div class="col-2">
                     <label class="form-label mb-0"> Invoice Date <span class="text-danger"></span> </label>
                     <input class="form-control" type="date" formControlName="salesInvoiceDate" readonly />
                 </div>
 
                 <div class="col-3">
                     <label class="form-label mb-0"> Customer Category <span class="text-danger">*</span> </label>
-                    <select class="form-select" formControlName="salesCategory" (change)="getCustomers()">
+                    <select class="form-select" formControlName="customerCategory" (change)="getCustomers()">
                         <option [value]="null" selected disabled>Select Category</option>
-                        <option [value]="ele.value" *ngFor="let ele of masterData?.salesCategoryOptions">
+                        <option [value]="ele.value" *ngFor="let ele of masterData?.customerCategoryOptions">
                             {{ ele.label }}
                         </option>
                     </select>
@@ -35,7 +47,7 @@
                             <ng-select
                                 [items]="customerOptions"
                                 bindLabel="customerName"
-                                bindValue="_id"
+                                bindValue="customer"
                                 [clearable]="false"
                                 formControlName="customer"
                                 (change)="customerValueChange($event)"
@@ -54,7 +66,7 @@
                 </div>
             </div>
         </div>
-        <hr class="row line-border" />
+        <hr class="row line-border mt-3" />
 
         <div class="">
             <app-setting-header
@@ -64,12 +76,10 @@
             </app-setting-header>
         </div>
 
-        <div class="table-responsive mt-0 text-wrap" style="min-height: 19.2rem">
+        <div class="table-responsive mt-0 text-wrap" style="min-height: 18.8rem">
             <table class="table table-bordered mt-0 table-sticky">
                 <thead class="bg-info">
                     <tr class="text-white">
-                        <th sortable="SONumber" (sort)="onSort($event)">SO No.</th>
-                        <th sortable="SODate" (sort)="onSort($event)">SO Date</th>
                         <th sortable="SKUNo" (sort)="onSort($event)">SKU No.</th>
                         <th class="text-start" sortable="SKUName" (sort)="onSort($event)">
                             {{ "SKU Name" | labelTranslate }}
@@ -77,14 +87,12 @@
                         <th class="text-start" sortable="SKUDescription" (sort)="onSort($event)">
                             {{ "SKU Description" | labelTranslate }}
                         </th>
-                        <th sortable="UOM" (sort)="onSort($event)">UoM</th>
-                        <th sortable="SOBalancedQty" (sort)="onSort($event)">SO Bal. Qty.</th>
-                        <th sortable="dispatchQty" (sort)="onSort($event)">Disp. Qty.</th>
-                        <th sortable="currency" (sort)="onSort($event)">Ccy</th>
+                        <th sortable="unit" (sort)="onSort($event)">UoM</th>
+                        <th sortable="dispatchQty" (sort)="onSort($event)">Qty.</th>
                         <th sortable="purchaseRate" (sort)="onSort($event)">Rate/Unit</th>
                         <th sortable="discount" (sort)="onSort($event)">Disc %</th>
-                        <th sortable="netRate" (sort)="onSort($event)">Net Rate</th>
-                        <th sortable="lineValue" (sort)="onSort($event)">Line Value</th>
+                        <th sortable="salesInvoiceUnitRate" (sort)="onSort($event)">Net Rate</th>
+                        <th sortable="salesInvoiceLineValue" (sort)="onSort($event)">Line Value</th>
                     </tr>
                 </thead>
 
@@ -97,8 +105,6 @@
                             trackBy: trackByFn
                         "
                     >
-                        <td>{{ d?.SONumber }}</td>
-                        <td>{{ d?.SODate | date : "dd-MM-YYYY" }}</td>
                         <td>{{ d?.SKUNo }}</td>
                         <td class="text-start" [style.width]="SKUName.clientWidth" #SKUName>
                             <span class="pointer" [positionTarget]="SKUName" [ngbTooltip]="d.SKUName">
@@ -110,8 +116,7 @@
                                 {{ d?.SKUDescription }}
                             </span>
                         </td>
-                        <td>{{ d?.UOM | SalesUOMUnitMaster }}</td>
-                        <td>{{ d?.SOBalancedQty | number : "1.2-2" }}</td>
+                        <td>{{ d?.unit | SalesUOMUnitMaster }}</td>
                         <td>
                             <div class="d-flex justify-content-center">
                                 <span *ngIf="['approval', 'rejection', 'view', 'generate', 'cancel'].includes(action)">
@@ -127,8 +132,21 @@
                                 />
                             </div>
                         </td>
-                        <td>{{ d?.currency }}</td>
-                        <td>{{ d?.purchaseRate | number : "1.2-2" }}</td>
+                        <td>
+                            <div class="d-flex justify-content-center">
+                                <span *ngIf="['approval', 'rejection', 'view', 'generate', 'cancel'].includes(action)">
+                                    {{ d?.purchaseRate | number : "1.2-2" }}
+                                </span>
+                                <input
+                                    type="number"
+                                    class="form-control form-control-sm w-25"
+                                    *ngIf="!['approval', 'rejection', 'view', 'generate', 'cancel'].includes(action)"
+                                    [(ngModel)]="d.purchaseRate"
+                                    [ngModelOptions]="{standalone: true}"
+                                    (input)="checkDispatchQty(d)"
+                                />
+                            </div>
+                        </td>
                         <td>
                             <div class="d-flex justify-content-center">
                                 <span *ngIf="['approval', 'rejection', 'view', 'generate', 'cancel'].includes(action)">
@@ -144,22 +162,14 @@
                                 />
                             </div>
                         </td>
-                        <td>{{ d?.netRate | number : "1.2-2" }}</td>
-                        <td>{{ d?.lineValue | number : "1.2-2" }}</td>
+                        <td>{{ d?.salesInvoiceUnitRate | number : "1.2-2" }}</td>
+                        <td>{{ d?.salesInvoiceLineValue | number : "1.2-2" }}</td>
                     </tr>
                 </tbody>
             </table>
         </div>
-        <ng-container
-            *ngIf="
-                action == 'approval' ||
-                action == 'rejection' ||
-                action == 'generate' ||
-                action == 'create' ||
-                action == 'edit' ||
-                action == 'view'
-            "
-        >
+        <hr class="row line-border" />
+        <ng-container>
             <div class="col-md-12 d-flex">
                 <div class="d-flex justify-content-center">
                     <div class="col-form-label text-nowrap pe-1 pt-0">
@@ -168,7 +178,7 @@
                             {{ "INR" | companyCurrency }}
                         </button>
                     </div>
-                    <input class="form-control" type="number" formControlName="DTITotalAmount" readonly />
+                    <input class="form-control" type="number" formControlName="DTIValue" readonly />
                 </div>
                 <div class="d-flex justify-content-center">
                     <div class="mx-2 align-self-center mb-2">
@@ -178,7 +188,7 @@
                         <button
                             type="button "
                             class="btn btn-sm btn-primary me-2 d-flex align-items-center mb-2"
-                            (click)="openOtherChargesModal()"
+                            (click)="openShipmentDetailsModal()"
                         >
                             <span>Add other charges</span>
                         </button>
@@ -205,38 +215,34 @@
                             {{ "INR" | companyCurrency }}
                         </button>
                     </div>
-                    <input class="form-control" type="number" formControlName="DTIValue" readonly />
+                    <input class="form-control" type="number" formControlName="salesInvoiceTotalAmount" readonly />
                 </div>
             </div>
 
-            <hr class="row line-border" />
+            <hr class="row line-border mt-2" />
 
-            <div class="row d-flex justify-content-center align-items-center mb-2">
-                <div class="col-md-auto" *ngIf="['create'].includes(action)">
-                    <div class="d-grid gap-2 d-md-block">
+            <div class="row d-flex justify-content-between align-items-center mb-3">
+                <div class="col-2 d-flex justify-content-start align-items-end">
+                    <button class="btn btn-primary px-4" type="button" (click)="openViewDRNTermsModal()">
+                        Tax Invoice Details
+                    </button>
+                </div>
+                <div class="col-md-auto ms-auto">
+                    <div *ngIf="['create'].includes(action)" class="d-grid gap-2 d-md-block">
                         <button class="btn btn-primary px-5 me-4" (click)="reset()">Reset</button>
                         <button class="btn btn-primary px-4 me-4" (click)="preview()">Preview</button>
                         <button class="btn btn-primary px-5" type="button" (click)="submit()" [disabled]="!isPreview">
                             Save
                         </button>
                     </div>
-                </div>
-
-                <div *ngIf="action == 'approval'" class="d-flex justify-content-center">
-                    <button class="btn btn-primary px-5" type="button" (click)="submit()">Approve</button>
-                </div>
-                <div *ngIf="action == 'edit'" class="d-flex justify-content-center">
-                    <button class="btn btn-primary px-5" type="button" (click)="submit()">Save</button>
-                </div>
-            </div>
-            <div class="row d-flex">
-                <div *ngIf="action == 'rejection'" class="d-flex justify-content-start">
-                    <div class="d-flex inputGroup ms-0 col-4">
-                        <span class="input-group-text text-white bg-primary"> Remark</span>
-                        <input class="form-control" type="text" formControlName="remarks" />
+                    <div *ngIf="['edit'].includes(action)" class="d-grid gap-2 d-md-block">
+                        <button type="button" class="btn btn-primary px-5" (click)="submit()">Save</button>
                     </div>
-                    <div class="col-8 text-end">
+                    <div *ngIf="action == 'rejection'" class="content-end">
                         <button class="btn btn-primary px-5" type="button" (click)="submit()">Reject</button>
+                    </div>
+                    <div *ngIf="action == 'approval'" class="content-end">
+                        <button class="btn btn-primary px-5" type="button" (click)="submit()">Approve</button>
                     </div>
                 </div>
             </div>

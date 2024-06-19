@@ -277,7 +277,6 @@
         "url": "/default/planning/master/ink_master/list",
         "items": []
     },
-
     {
         "_id": "660aa3095fc23bb4b5494082",
         "menuItemId": "64a6c1e33339d4dc9d8141a4",
@@ -452,6 +451,20 @@
                 "_id": "6628f3f9b0241ce6ce372a1d"
             }
         ],
+        "roles": []
+    },
+    {
+        "_id": "666c03425e5d581fa4a91032",
+        "menuItemId": "64a6c1e33339d4dc9d8141a4",
+        "module": "Planning",
+        "type": "MASTER",
+        "order": 22,
+        "isDisplay": false,
+        "title": "Stock Levels",
+        "displayName": "Stock Levels",
+        "disabled": false,
+        "url": "/default/planning/master/stock_level/list",
+        "items": [],
         "roles": []
     }
 ]

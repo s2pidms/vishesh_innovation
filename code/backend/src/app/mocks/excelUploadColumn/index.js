@@ -19,6 +19,8 @@ const jobWorkerColumns = require("./jobWorkerKeys.json");
 const purchaseRegisterEntryColumns = require("./purchaseRegisterEntryKeys.json");
 const jobWorkItemColumns = require("./jobWorkItemKeys.json");
 const PPICInventoryColumns = require("./PPICInventoryKeys.json");
+const RMSpecificationColumns = require("./RMSpecificationKeys.json");
+const prodSpecificationColumns = require("./prodSpecificationKeys.json");
 
 module.exports = {
     Supplier: supplierColumns,
@@ -41,5 +43,7 @@ module.exports = {
     JobWorkerMaster: jobWorkerColumns,
     PurchaseRegisterEntry: purchaseRegisterEntryColumns,
     JobWorkItemMaster: jobWorkItemColumns,
-    PPICInventoryCorrection: PPICInventoryColumns
+    PPICInventoryCorrection: PPICInventoryColumns,
+    RMSpecification: RMSpecificationColumns,
+    ProductSpecification: prodSpecificationColumns
 };

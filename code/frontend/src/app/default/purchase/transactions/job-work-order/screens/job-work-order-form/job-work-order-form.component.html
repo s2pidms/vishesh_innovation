@@ -1,0 +1,361 @@
+<form [formGroup]="form" class="formCard card">
+    <div class="set-remaining-margin">
+        <div class="row form-header">
+            <div class="col heading">
+                <label>Job Worker Details</label>
+            </div>
+        </div>
+        <div class="form-body">
+            <div class="row">
+                <div class="col-3">
+                    <div class="row">
+                        <div class="col-6 pe-0">
+                            <label class="form-label"> WO No.<span class="text-danger">*</span></label>
+                            <input class="form-control" type="text" formControlName="WONo" readonly />
+                        </div>
+                        <div class="col-6 px-3">
+                            <label class="form-label"> WO Date <span class="text-danger">*</span></label>
+                            <input class="form-control" type="date" formControlName="WODate" readonly />
+                        </div>
+                    </div>
+                </div>
+                <div class="col-3 pe-0">
+                    <label class="form-label mb-1">
+                        Job Worker Name <span class="text-danger">*</span>
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                        <button (click)="openAddressModal()" type="button" class="btn btn-primary form-btn-sm py-0">
+                            Address
+                        </button>
+                    </label>
+                    <div class="d-flex align-items-center">
+                        <div class="col-11">
+                            <ng-select
+                                [items]="masterData.jobWorkerOptions"
+                                bindLabel="jobWorkerName"
+                                bindValue="jobWorker"
+                                [clearable]="false"
+                                formControlName="jobWorker"
+                                (change)="setJobWorker($event)"
+                            >
+                            </ng-select>
+                        </div>
+                        <div
+                            style="height: 2.9rem"
+                            class="set-input-group-text input-group-text bg-primary pointer col-auto"
+                            id="basic-addon1"
+                            (click)="openJobWorkDetailsModal()"
+                        >
+                            <i class="fa fa-search text-white" aria-hidden="true"></i>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-3">
+                    <label class="form-label"> Order Reference<span class="text-danger">*</span> </label>
+                    <input class="form-control" type="text" formControlName="orderReference" />
+                </div>
+                <div class="col-3">
+                    <label class="form-label"> Place Of Supply<span class="text-danger">*</span> </label>
+                    <input class="form-control" type="text" formControlName="placeOfSupply" readonly />
+                </div>
+            </div>
+
+            <hr class="row line-border mb-0" />
+            <ul ngbNav #nav="ngbNav" [(activeId)]="active" class="nav-tabs tabs-card">
+                <li *ngFor="let id of jobWODetails; let j = index" [ngbNavItem]="j">
+                    <button ngbNavLink>
+                        WO Line {{ j + 1 }}
+                        <span class="" *ngIf="j != 0">
+                            <i (click)="removePlace(j)" class="fa fa-minus-circle pe-0" aria-hidden="true"></i>
+                        </span>
+                    </button>
+                    <ng-template ngbNavContent>
+                        <ng-container formGroupName="WODetails">
+                            <div class="row">
+                                <div class="col-3">
+                                    <label class="form-label text-nowrap"
+                                        >Job Work Service Code <span class="text-danger"> *</span></label
+                                    >
+                                    <div class="d-flex align-items-center">
+                                        <div class="col-11">
+                                            <ng-select
+                                                [items]="masterData.serviceMastersOptions"
+                                                bindLabel="serviceCode"
+                                                bindValue="_id"
+                                                [clearable]="false"
+                                                [(ngModel)]="id.jobWorkService"
+                                                [ngModelOptions]="{standalone: true}"
+                                                (change)="setServiceInfo($event, j)"
+                                            >
+                                            </ng-select>
+                                        </div>
+                                        <div
+                                            style="height: 2.9rem"
+                                            class="set-input-group-text input-group-text bg-primary pointer col-auto fa-font-size"
+                                            id="basic-addon1"
+                                            (click)="openJobWorkServiceMasterDetailsModal()"
+                                        >
+                                            <i class="fa fa-search text-white" aria-hidden="true"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-3">
+                                    <label class="form-label mb-1">
+                                        Nature of Job Work<span class="text-danger">*</span>
+                                    </label>
+                                    <input
+                                        type="text"
+                                        class="form-control"
+                                        [(ngModel)]="id.SACInfo.natureOfJobWork"
+                                        [ngModelOptions]="{standalone: true}"
+                                        readonly
+                                    />
+                                </div>
+                                <div class="col-3">
+                                    <label class="form-label"> SAC Code <span class="text-danger">*</span> </label>
+                                    <input
+                                        type="text"
+                                        class="form-control"
+                                        [(ngModel)]="id.SACInfo.SACCode"
+                                        [ngModelOptions]="{standalone: true}"
+                                        readonly
+                                    />
+                                </div>
+                                <div class="col-3">
+                                    <label class="form-label"> GST Rate % <span class="text-danger">*</span> </label>
+                                    <input
+                                        type="text"
+                                        class="form-control"
+                                        [(ngModel)]="id.SACInfo.gstRate"
+                                        [ngModelOptions]="{standalone: true}"
+                                        readonly
+                                    />
+                                </div>
+                            </div>
+                            <div class="row mt-4">
+                                <div class="col-3">
+                                    <label class="form-label text-nowrap"
+                                        >Job Work Item Code <span class="text-danger"> *</span></label
+                                    >
+                                    <div class="d-flex align-items-center">
+                                        <div class="col-11">
+                                            <ng-select
+                                                [items]="jobWorkerItemsOptions"
+                                                bindLabel="jobWorkItemName"
+                                                bindValue="_id"
+                                                [clearable]="false"
+                                                [(ngModel)]="id.jobWorkItem"
+                                                [ngModelOptions]="{standalone: true}"
+                                                (change)="setJobWorkItemInfo($event, j)"
+                                            >
+                                            </ng-select>
+                                        </div>
+                                        <div
+                                            style="height: 2.9rem"
+                                            class="set-input-group-text input-group-text bg-primary pointer col-auto fa-font-size"
+                                            id="basic-addon1"
+                                            (click)="openJobWorkDetailsModal()"
+                                        >
+                                            <i class="fa fa-search text-white" aria-hidden="true"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-3">
+                                    <label class="form-label mb-1">
+                                        JW Item Name<span class="text-danger">*</span>
+                                    </label>
+                                    <input
+                                        type="text"
+                                        class="form-control"
+                                        [(ngModel)]="id.jobWorkItemName"
+                                        [ngModelOptions]="{standalone: true}"
+                                        readonly
+                                    />
+                                </div>
+                                <div class="col-3">
+                                    <label class="form-label">
+                                        JW Item Description <span class="text-danger">*</span>
+                                    </label>
+                                    <input
+                                        type="text"
+                                        class="form-control"
+                                        [(ngModel)]="id.jobWorkItemDescription"
+                                        [ngModelOptions]="{standalone: true}"
+                                        readonly
+                                    />
+                                </div>
+                                <div class="col-3">
+                                    <label class="form-label"> Drawing No. <span class="text-danger">*</span> </label>
+                                    <input
+                                        type="text"
+                                        class="form-control"
+                                        [(ngModel)]="id.drawingNo"
+                                        [ngModelOptions]="{standalone: true}"
+                                        [disabled]="action == 'view'"
+                                    />
+                                </div>
+                            </div>
+                            <div class="row mt-4">
+                                <div class="col-3">
+                                    <label class="form-label"> HSN Code <span class="text-danger">*</span> </label>
+                                    <input
+                                        type="text"
+                                        class="form-control"
+                                        [(ngModel)]="id.HSNCode"
+                                        [ngModelOptions]="{standalone: true}"
+                                        [disabled]="action == 'view'"
+                                    />
+                                </div>
+                                <div class="col-3">
+                                    <label class="form-label"> UOM <span class="text-danger">*</span> </label>
+                                    <input
+                                        type="text"
+                                        class="form-control"
+                                        [(ngModel)]="id.UOM"
+                                        [ngModelOptions]="{standalone: true}"
+                                        [disabled]="action == 'view'"
+                                    />
+                                </div>
+                                <div class="col-3">
+                                    <label class="form-label">
+                                        Process Rate Unit <span class="text-danger">*</span>
+                                    </label>
+                                    <div class="d-flex">
+                                        <span class="input-group-text text-secondary combine-INR">
+                                            {{ "INR" | companyCurrency }}
+                                            <div class="vr ms-3"></div>
+                                        </span>
+                                        <input
+                                            class="form-control border-start-0 ps-1"
+                                            type="number"
+                                            [(ngModel)]="id.processRatePerUnit"
+                                            [ngModelOptions]="{standalone: true}"
+                                            [disabled]="action == 'view'"
+                                            readonly
+                                        />
+                                    </div>
+                                    <!-- <input type="text" class="form-control" formControlName="cityOrDistrict" /> -->
+                                </div>
+                                <div class="col-3">
+                                    <label class="form-label mb-1">
+                                        Discount %<span class="text-danger">*</span>
+                                    </label>
+                                    <select class="form-select" type="text" formControlName="discountPercent">
+                                        <option [value]="null" selected disabled>Select Location</option>
+                                        <option
+                                            [value]="j.parameterName"
+                                            *ngFor="let j of masterData.jobWODiscountOptions"
+                                        >
+                                            {{ j.parameterLabel }}
+                                        </option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="row mt-4">
+                                <div class="col-3">
+                                    <label class="form-label">
+                                        Net Rate/Unit (After Discount) <span class="text-danger">*</span>
+                                    </label>
+                                    <div class="d-flex">
+                                        <span class="input-group-text text-secondary combine-INR bg-mix-pink-color">
+                                            {{ "INR" | companyCurrency }}
+                                            <div class="vr ms-3"></div>
+                                        </span>
+                                        <input
+                                            class="form-control bg-mix-pink-color border-start-0 ps-1"
+                                            type="number"
+                                            [(ngModel)]="id.netRatePerUnit"
+                                            [ngModelOptions]="{standalone: true}"
+                                            [disabled]="action == 'view'"
+                                            readonly
+                                        />
+                                    </div>
+                                    <!-- <input type="text" class="form-control" formControlName="cityOrDistrict" /> -->
+                                </div>
+                                <div class="col-3">
+                                    <label class="form-label"> Quantity <span class="text-danger">*</span> </label>
+                                    <input
+                                        type="number"
+                                        class="form-control"
+                                        [(ngModel)]="id.quantity"
+                                        [ngModelOptions]="{standalone: true}"
+                                        [disabled]="action == 'view'"
+                                    />
+                                </div>
+                                <div class="col-3">
+                                    <label class="form-label"> Taxable Value <span class="text-danger">*</span> </label>
+                                    <div class="d-flex">
+                                        <span class="input-group-text text-secondary combine-INR bg-mix-pink-color">
+                                            {{ "INR" | companyCurrency }}
+                                            <div class="vr ms-3"></div>
+                                        </span>
+                                        <input
+                                            class="form-control bg-mix-pink-color border-start-0 ps-1"
+                                            type="number"
+                                            [(ngModel)]="id.taxableValue"
+                                            [ngModelOptions]="{standalone: true}"
+                                            readonly
+                                        />
+                                    </div>
+                                    <!-- <input type="text" class="form-control" formControlName="cityOrDistrict" /> -->
+                                </div>
+                                <div class="col-3">
+                                    <label class="form-label"> Delivery Date <span class="text-danger">*</span> </label>
+                                    <input
+                                        type="date"
+                                        class="form-control"
+                                        [(ngModel)]="id.deliveryDate"
+                                        [ngModelOptions]="{standalone: true}"
+                                        [disabled]="action == 'view'"
+                                    />
+                                </div>
+                            </div>
+                        </ng-container>
+                    </ng-template>
+                </li>
+
+                <li class="nav-item align-self-center" role="presentation">
+                    <!-- <button type="button" class="nav-link" (click)="addPlace()">+</button> -->
+                    <button
+                        (click)="addPlace()"
+                        [ngbTooltip]="'Additional places of business'"
+                        class="plusSmallIconSvg btn btn-primary add-address"
+                        type="button"
+                    ></button>
+                </li>
+            </ul>
+
+            <div [ngbNavOutlet]="nav" class="mt-2"></div>
+        </div>
+
+        <hr class="row line-border" />
+
+        <div class="row mb-4">
+            <div class="col-3">
+                <button class="plusIconSvg btn btn-primary me-1"></button>
+                <button (click)="openWOReviewTermsModal()" class="btn bg-primary me-4" type="button">
+                    Review WO Terms
+                </button>
+            </div>
+            <div class="col-3 ps-0 pe-5">
+                <div class="d-flex">
+                    <div class="col-form-label text-nowrap">
+                        WO Taxable Value <span class="text-danger pe-2">*</span>
+                        <i class="fa fa-caret-right fa-5x mx-1"></i>
+                    </div>
+                    <input class="form-control" type="number" formControlName="WOTaxableValue" />
+                </div>
+            </div>
+            <div class="col-2"></div>
+
+            <div *ngIf="action != 'view'" class="col-4 text-end">
+                <button class="btn btn-primary px-5 me-3" type="button" (click)="reset()">Reset</button>
+                <button class="btn btn-primary px-5" type="button" (click)="submit()">Save</button>
+            </div>
+        </div>
+    </div>
+</form>

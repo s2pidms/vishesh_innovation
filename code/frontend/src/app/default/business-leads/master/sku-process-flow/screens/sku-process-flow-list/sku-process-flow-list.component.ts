@@ -124,12 +124,7 @@ export class SkuProcessFlowListComponent implements OnInit, OnDestroy {
         });
         modalRef.componentInstance.totalAmounts = this.totalAmounts;
         modalRef.result.then(
-            (success: any) => {
-                if (success) {
-                    console.log("success", success);
-                    // this.form.patchValue(success);
-                }
-            },
+            (success: any) => {},
             (reason: any) => {}
         );
     }
@@ -148,7 +143,6 @@ export class SkuProcessFlowListComponent implements OnInit, OnDestroy {
                 (success: any) => {
                     console.log("success", success);
                     this.getAll();
-                    // this.form.patchValue(success);
                 },
 
                 (reason: any) => {}

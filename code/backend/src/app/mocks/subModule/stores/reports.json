@@ -187,5 +187,18 @@
         "disabled": false,
         "url": "/default/stores/reports/purchase_order",
         "items": []
+    },
+    {
+        "_id": "66695e2e6462c525b9486d96",
+        "menuItemId": "64a6c1e33339d4dc9d8141a6",
+        "module": "Stores",
+        "type": "REPORT",
+        "order": 15,
+        "isDisplay": false,
+        "title": "Item Wise Inventory",
+        "displayName": "Item Wise Inventory",
+        "disabled": false,
+        "url": "/default/stores/reports/item_wise_inventory",
+        "items": []
     }
 ]

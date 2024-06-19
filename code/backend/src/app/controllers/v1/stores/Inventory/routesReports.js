@@ -6,7 +6,8 @@ const {
     getStockAgingReports,
     getAllInventoryLocationWiseReports,
     getAllLocationSupplierItemWiseReports,
-    getStockPreparationShopReports
+    getStockPreparationShopReports,
+    getAllItemWiseReports
 } = require("./InventoryReports");
 
 app.get("/getAllFilterData", getAllFilterData);
@@ -16,5 +17,6 @@ app.get("/getStockAgingReports", getStockAgingReports);
 app.get("/getAllInventoryLocationWiseReports", getAllInventoryLocationWiseReports);
 app.get("/getAllLocationSupplierItemWiseReports", getAllLocationSupplierItemWiseReports);
 app.get("/getStockPreparationShopReports", getStockPreparationShopReports);
+app.get("/getAllItemWiseReports", getAllItemWiseReports);
 
 module.exports = app;

@@ -20,10 +20,13 @@
                     <th class="text-start" sortable="itemName" (sort)="onSort($event)">Item Name</th>
                     <th class="text-start" sortable="itemDescription" (sort)="onSort($event)">Item Description</th>
                     <th sortable="hsn" (sort)="onSort($event)">HSN Code</th>
-                    <th sortable="conversionOfUnits" (sort)="onSort($event)">Unit Conversion</th>
                     <th sortable="orderInfoUOM" (sort)="onSort($event)">UoM</th>
-                    <th sortable="itemROL" (sort)="onSort($event)">RO Level</th>
-                    <th sortable="itemAMU" (sort)="onSort($event)">RO Qty</th>
+                    <th sortable="conversionOfUnits" (sort)="onSort($event)">DU Conversion</th>
+                    <th sortable="conversionOfUnits" (sort)="onSort($event)">S/Life (M)</th>
+                    <th sortable="conversionOfUnits" (sort)="onSort($event)">QC Level</th>
+                    <th sortable="conversionOfUnits" (sort)="onSort($event)">Status</th>
+                    <!-- <th sortable="itemROL" (sort)="onSort($event)">RO Level</th>
+                    <th sortable="itemAMU" (sort)="onSort($event)">RO Qty</th> -->
                     <th>Action</th>
                 </tr>
             </thead>
@@ -42,10 +45,16 @@
                         </span>
                     </td>
                     <td>{{ i?.hsn }}</td>
-                    <td>{{ i?.conversionOfUnits }}</td>
                     <td>{{ i?.orderInfoUOM | UOMUnitsMaster }}</td>
-                    <td>{{ i?.itemROL }}</td>
-                    <td>{{ i?.itemAMU }}</td>
+                    <td>{{ i?.conversionOfUnits ? i?.conversionOfUnits : "-" }}</td>
+                    <td>{{ i?.shelfLife }}</td>
+                    <td>{{ i?.QCLevels }}</td>
+                    <td>
+                        <span class="d-flex justify-content-center">
+                            <div *ngIf="i.isActive == 'A'" class="statusActive"></div>
+                            <div *ngIf="i.isActive == 'I'" class="statusInActive"></div>
+                        </span>
+                    </td>
                     <td>
                         <div class="dropdown">
                             <button class="dropbtn"></button>

@@ -385,17 +385,17 @@ exports.getAllGrnList = async company => {
     }
 };
 
-exports.updateGRNStatusOnMRN = async grnId => {
-    try {
-        let GRN = await Model.findById(grnId);
-        GRN.GRNStatus = "Closed";
-        await GRN.save();
-    } catch (error) {
-        console.error("updatePOQtyOnGRN::::: Error in updating Purchase Order ======= ", error);
-        const errors = MESSAGES.apiErrorStrings.SERVER_ERROR;
-        return res.serverError(errors);
-    }
-};
+// exports.updateGRNStatusOnMRN = async grnId => {
+//     try {
+//         let GRN = await Model.findById(grnId);
+//         GRN.GRNStatus = "Closed";
+//         await GRN.save();
+//     } catch (error) {
+//         console.error("updatePOQtyOnGRN::::: Error in updating Purchase Order ======= ", error);
+//         const errors = MESSAGES.apiErrorStrings.SERVER_ERROR;
+//         return res.serverError(errors);
+//     }
+// };
 
 exports.getGRNCounts = async company => {
     try {

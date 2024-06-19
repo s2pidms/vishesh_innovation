@@ -1,9 +1,7 @@
 const mongoose = require("mongoose");
-const AutoIncrement = require("../settings/autoIncrementModel");
-const {getAutoIncrementNumber} = require("../../helpers/utility");
-const {MINUTES_OF_MEETING_MODULE_PREFIX} = require("../../helpers/moduleConstants");
-const {SUPPORT_MINUTES_OF_MEETING_ADDED, SUPPORT_MINUTES_OF_MEETING_UPDATED} = require("../../helpers/auditAction");
 const Audit = require("../../controllers/v1/settings/audit/audit");
+const {MOM: SCHEMA_CONST} = require("../../mocks/schemasConstant/supportConstant");
+const {getAndSetAutoIncrementNo} = require("../../controllers/v1/settings/autoIncrement/autoIncrement");
 const minutesOfMeetingSchema = mongoose.Schema(
     {
         company: {
@@ -81,20 +79,14 @@ const minutesOfMeetingSchema = mongoose.Schema(
     },
     {
         timestamps: true,
-        collection: "MinutesOfMeeting"
+        collection: SCHEMA_CONST.COLLECTION_NAME
     }
 );
 
 minutesOfMeetingSchema.pre("save", async function (next) {
     const {isNew, isModified} = this;
     if (this.isNew) {
-        const autoIncrementedNo = await AutoIncrement.getNextId(
-            "MinutesOfMeeting",
-            MINUTES_OF_MEETING_MODULE_PREFIX,
-            this.company
-        );
-        this.MOMCode = getAutoIncrementNumber(MINUTES_OF_MEETING_MODULE_PREFIX, "", autoIncrementedNo, 4);
-        await AutoIncrement.setNextId("Minutes Of Meeting", MINUTES_OF_MEETING_MODULE_PREFIX, this.company);
+        this.MOMCode = await getAndSetAutoIncrementNo(SCHEMA_CONST.AUTO_INCREMENT_DATA(), this.company, true);
     }
     await auditTrail(this, this.modifiedPaths(), isNew, isModified);
     next();
@@ -111,7 +103,7 @@ const auditTrail = async (master, modifiedPaths, isNew, isModified) => {
         oldData: JSON.stringify(await master.constructor.findById(master._id)),
         data: JSON.stringify(master),
         user: isNew ? createdBy : updatedBy,
-        action: isNew ? SUPPORT_MINUTES_OF_MEETING_ADDED : SUPPORT_MINUTES_OF_MEETING_UPDATED,
+        action: isNew ? SCHEMA_CONST.ADDED_ACTION : SCHEMA_CONST.UPDATED_ACTION,
         fieldsModified: modifiedPaths.toString()
     };
     await Audit.auditModule(auditTrail);

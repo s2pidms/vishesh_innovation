@@ -112,12 +112,14 @@ const MRNSchema = mongoose.Schema(
                 releasedQty: {
                     type: Number,
                     set: value => setTwoDecimal(value),
-                    required: false
+                    required: false,
+                    default: 0
                 },
                 rejectedQty: {
                     type: Number,
                     set: value => setTwoDecimal(value),
-                    required: false
+                    required: false,
+                    default: 0
                 },
                 // balanceRejectedQty: {
                 //     type: Number,

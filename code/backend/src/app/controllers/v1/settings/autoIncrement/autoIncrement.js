@@ -1,17 +1,12 @@
 const asyncHandler = require("express-async-handler");
 const Model = require("../../../../models/settings/autoIncrementModel");
 const MESSAGES = require("../../../../helpers/messages.options");
-const {AUTO_INCREMENT_MODULE_PREFIX} = require("../../../../helpers/moduleConstants");
-const {
-    getAutoIncrementNumber,
-    outputData,
-    getAllAggregationFooter,
-    getIncrementNumWithPrefix
-} = require("../../../../helpers/utility");
+const {outputData, getAllAggregationFooter, getIncrementNumWithPrefix} = require("../../../../helpers/utility");
 const {generateCreateData, getMatchData} = require("../../../../helpers/global.options");
 const {getAllAutoIncrementsAttributes} = require("../../../../models/settings/helpers/autoIncrementHelper");
 const {default: mongoose} = require("mongoose");
 const AutoIncrementRepository = require("../../../../models/settings/repository/autoIncrementRepository");
+const {AUTO_INCREMENT} = require("../../../../mocks/schemasConstant/settingsConstant");
 const ObjectId = mongoose.Types.ObjectId;
 
 exports.getAll = asyncHandler(async (req, res) => {
@@ -160,12 +155,10 @@ exports.getById = asyncHandler(async (req, res) => {
 });
 exports.getAllMasterData = asyncHandler(async (req, res) => {
     try {
-        const autoIncrementedNo = await Model.getNextId(
-            "AutoIncrement",
-            AUTO_INCREMENT_MODULE_PREFIX,
+        const autoIncrementNo = await this.getAndSetAutoIncrementNo(
+            AUTO_INCREMENT.AUTO_INCREMENT_DATA(),
             req.user.company
         );
-        let autoIncrementNo = getAutoIncrementNumber(AUTO_INCREMENT_MODULE_PREFIX.charAt(0), "", autoIncrementedNo, 4);
         res.success({autoIncrementNo});
     } catch (error) {
         console.error("getAllMasterDataForUser", error);

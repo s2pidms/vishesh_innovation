@@ -1,8 +1,8 @@
 import {Component, OnInit} from "@angular/core";
 import {ActivatedRoute} from "@angular/router";
 import {SpinnerService} from "@core/services";
+import {IRawMaterialInspection} from "@mocks/models/print-screen/rmiPrintScreen";
 import {MaterialReleaseNoteService} from "@services/quality";
-import {PDIREntryService} from "@services/quality";
 
 @Component({
     selector: "app-rmi-print-screen",
@@ -10,7 +10,7 @@ import {PDIREntryService} from "@services/quality";
     styleUrls: ["./rmi-print-screen.component.scss"]
 })
 export class RmiPrintScreenComponent {
-    tableData: any = [];
+    tableData: IRawMaterialInspection[] = [];
     pdfAction: any = "";
     logoUrl: any = "";
     template: string = "PI Exports";

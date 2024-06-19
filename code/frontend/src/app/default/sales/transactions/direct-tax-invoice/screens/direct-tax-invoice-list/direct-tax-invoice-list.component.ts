@@ -7,6 +7,7 @@ import {DirectTaxInvoiceService} from "@services/sales";
 import {ToastService} from "@core/services";
 import {DIRECT_TAX_INVOICE_PDF_DATA, DIRECT_TAX_INVOICE_REPORT_DATA} from "@mocks/export-data/sales/transactions";
 import {salesDirectTaxInvoice} from "@mocks/models/sales/transactions";
+import {LIST_DEFAULT_PERMISSION_ACTIONS} from "@mocks/constant";
 
 @Component({
     selector: "app-direct-tax-invoice-list",
@@ -22,6 +23,8 @@ export class DirectTaxInvoiceListComponent implements OnInit, OnDestroy {
     direction: number = -1;
     search: string = "";
     tableData: salesDirectTaxInvoice[] = [];
+    rolePermissionActions: any = LIST_DEFAULT_PERMISSION_ACTIONS;
+
     subscription!: Subscription;
     constructor(
         private exportExcelService: ExportExcelService,
@@ -85,6 +88,9 @@ export class DirectTaxInvoiceListComponent implements OnInit, OnDestroy {
         }
     }
 
+    navigateToPrint(path: string, u: any, action: string, preview: string) {
+        window.open(`${window.location.origin}${path}?id=${u?._id}&action=${action}&preview=${preview}`, "_blank");
+    }
     update(u: any, action: string) {
         if (u?.DTIStatus === "Approved") {
             this.spinner.show();

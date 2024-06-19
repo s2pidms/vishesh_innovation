@@ -11,7 +11,6 @@ const lusca = require("lusca");
 const fs = require("fs");
 const apiRouter = require("./app/routes");
 const customResponses = require("./app/helpers/customResponses");
-const utils = require("../src/app/middleware/utils");
 const device = require("express-device");
 const app = express();
 const {mongooseCon} = require("./config/mongoose");
@@ -24,6 +23,7 @@ const WebCacheMiddleware = require("./app/middleware/webCacheMiddleware");
 const RateLimiter = require("./app/utilities/rateLimitHandler");
 const CorsHandler = require("./app/utilities/corsHandler");
 const cors = require("cors");
+const decryptMiddleware = require("./app/middleware/decryptMiddleware");
 
 // app.use(CorsHandler.getCorsMiddleware());
 app.use(cors("*"));
@@ -65,10 +65,11 @@ logger.token("errorMsg", function (req, res) {
     res.json().then(data => console.info(data));
     return res.error;
 });
+// app.use(decryptMiddleware);
 const rateLimiter = new RateLimiter(5 * 60 * 1000, 250);
 rateLimiter.apply(app);
 mainDataInsertFn();
-app.use(utils.countRequests);
+// app.use(utils.countRequests);
 // JWT token verification Middleware
 app.use("/", jwtHandler.getMiddleware());
 

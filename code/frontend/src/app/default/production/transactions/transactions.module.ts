@@ -73,6 +73,11 @@ const routes: Routes = [
                 path: "production_processes",
                 loadChildren: () =>
                     import("./production-processes/production-processes.module").then(m => m.ProductionProcessesModule)
+            },
+            {
+                path: "job_card",
+                loadChildren: () =>
+                    import("./../../planning/transactions/job-card/job-card.module").then(m => m.JobCardModule)
             }
         ]
     }

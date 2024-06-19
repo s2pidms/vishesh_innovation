@@ -24,9 +24,11 @@ export class DrnBillToComponent implements OnInit {
         line3: new UntypedFormControl(null),
         line4: new UntypedFormControl(null),
         pinCode: new UntypedFormControl(null),
+        district: new UntypedFormControl(""),
         city: new UntypedFormControl(null),
         state: new UntypedFormControl(null),
-        country: new UntypedFormControl(null)
+        country: new UntypedFormControl(null),
+        contactPersonNumber: new UntypedFormControl("")
     });
 
     constructor(public activeModal: NgbActiveModal, private toastService: ToastService) {}

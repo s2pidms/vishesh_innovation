@@ -84,10 +84,11 @@
                                 let g of GTRequestDetailsArray
                                     | searchFi1ter : search
                                     | slice : (page - 1) * pageSize : (page - 1) * pageSize + pageSize;
+                                let i = index;
                                 trackBy: trackByFn
                             "
                         >
-                            <td>{{ g.GTRequestLineNumber }}</td>
+                            <td>{{ i + 1 }}</td>
                             <td>{{ g.itemCode }}</td>
                             <td class="text-start" [style.width]="itemName.clientWidth" #itemName>
                                 <span class="pointer" [positionTarget]="itemName" [ngbTooltip]="g.itemName">

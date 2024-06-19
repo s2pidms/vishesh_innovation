@@ -940,3 +940,139 @@ exports.getAllStockPreparationShop = asyncHandler(async (req, res) => {
         return res.serverError(errors);
     }
 });
+
+exports.getAllItemWiseReports = asyncHandler(async (req, res) => {
+    try {
+        const itemsOptions = await filteredItemList([
+            {
+                $match: {
+                    company: ObjectId(req.user.company),
+                    isActive: "A"
+                }
+            },
+            {
+                $project: {itemCode: 1, itemName: 1}
+            }
+        ]);
+        const {
+            toDate = null,
+            fromDate = null,
+            itemId = null,
+            department = GOODS_TRANSFER_REQUEST_DEPT.STORES
+        } = req.query;
+        let query = {
+            company: ObjectId(req.user.company),
+            closedIRQty: {$gt: 0},
+            ...(!!itemId && {
+                item: ObjectId(itemId)
+            }),
+            ...(!!toDate &&
+                !!fromDate && {
+                    ICDate: {
+                        $lte: getEndDateTime(toDate),
+                        $gte: getStartDateTime(fromDate)
+                    }
+                }),
+            ...(!!department && {
+                department: department
+            })
+        };
+        let project = {
+            _id: 0
+        };
+        let pipeline = [
+            {
+                $match: query
+            },
+            {
+                $lookup: {
+                    from: "Items",
+                    localField: "item",
+                    foreignField: "_id",
+                    pipeline: [
+                        {
+                            $project: {
+                                itemCode: 1,
+                                itemName: 1,
+                                itemDescription: 1
+                            }
+                        }
+                    ],
+                    as: "item"
+                }
+            },
+            {
+                $lookup: {
+                    from: "ChildItem",
+                    localField: "item",
+                    foreignField: "_id",
+                    pipeline: [
+                        {
+                            $project: {
+                                itemCode: 1,
+                                itemName: 1,
+                                itemDescription: 1
+                            }
+                        }
+                    ],
+                    as: "childItem"
+                }
+            },
+            {
+                $addFields: {
+                    item: {
+                        $concatArrays: ["$item", "$childItem"]
+                    }
+                }
+            },
+            {
+                $unwind: {
+                    path: "$item",
+                    preserveNullAndEmptyArrays: true
+                }
+            },
+            {
+                $group: {
+                    _id: {MRN: "$item._id", UOM: "$UOM"},
+                    UOM: {$first: "$UOM"},
+                    closedIRQty: {$sum: "$closedIRQty"},
+                    purchaseRatINR: {$sum: "$purchaseRatINR"},
+                    itemCode: {$first: "$item.itemCode"},
+                    itemName: {$first: "$item.itemName"},
+                    itemDescription: {$first: "$item.itemDescription"},
+                    primaryUnit: {$first: "$primaryUnit"},
+                    secondaryUnit: {$first: "$secondaryUnit"},
+                    conversionOfUnits: {$first: "$conversionOfUnits"},
+                    primaryToSecondaryConversion: {$first: "$primaryToSecondaryConversion"},
+                    secondaryToPrimaryConversion: {$first: "$secondaryToPrimaryConversion"}
+                }
+            },
+            {
+                $addFields: {
+                    lineValue: {$round: [{$multiply: ["$closedIRQty", "$purchaseRatINR"]}, 2]}
+                }
+            }
+        ];
+        let output = await InventoryCorrectionRepo.getAllReportsPaginate({
+            pipeline,
+            project,
+            queryParams: req.query,
+            groupValues: [
+                {
+                    $group: {
+                        _id: null,
+                        value: {$sum: "$lineValue"}
+                    }
+                }
+            ]
+        });
+        return res.success({
+            itemsOptions,
+            ...output
+        });
+    } catch (e) {
+        console.error("getAllLocationSupplierItemWiseReports", e);
+        const errors = MESSAGES.apiErrorStrings.SERVER_ERROR;
+        return res.serverError(errors);
+    }
+});

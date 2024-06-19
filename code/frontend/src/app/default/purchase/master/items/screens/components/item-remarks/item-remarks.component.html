@@ -1,0 +1,51 @@
+<div class="modelPage">
+  <div class="">
+    <div class="container-fluid">
+      <div style="min-height: 29rem" class="row">
+        <form [formGroup]="form">
+          <div class="row px-5 mt-4 mb-5 form-page">
+            <div class="col-2"></div>
+            <div class="col-8 card-form">
+              <div class="row">
+                <div class="col-12 px-0">
+                  <div class="form-header mb-1">
+                    <div class="col ps-3 heading">Purchase Remarks</div>
+                  </div>
+                  <div class="col pt-2 px-3">
+                    <textarea
+                      class="form-control form-text-area"
+                      formControlName="generalSpecifications"
+                      rows="11"
+                    ></textarea>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="col-2"></div>
+          </div>
+        </form>
+
+        <hr *ngIf="!['view'].includes(action)" class="line-border mt-5 px-5" />
+
+        <div class="text-center">
+          <div *ngIf="!['view'].includes(action)" class="text-center">
+            <button
+              (click)="reset()"
+              class="btn bg-primary px-5 mb-2 me-3"
+              type="button"
+            >
+              Reset
+            </button>
+            <button
+              class="btn bg-primary px-5 mb-2"
+              type="button"
+              (click)="dismissModel()"
+            >
+              Save
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

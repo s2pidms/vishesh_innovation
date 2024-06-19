@@ -4,13 +4,15 @@ const {OPTIONS} = require("../../../../helpers/global.options");
 const {getAllSKUCategory} = require("../../settings/SKUCategoryMaster/SKUCategoryMaster");
 const {getAllProductSpecificationAttributes} = require("../../../../models/quality/helpers/productSpecificationHelper");
 const {default: mongoose} = require("mongoose");
-const {getAndSetAutoIncrementNo} = require("../../settings/autoIncrement/autoIncrement");
+const {getAndSetAutoIncrementNo, getNextAutoIncrementNo} = require("../../settings/autoIncrement/autoIncrement");
 const {PRODUCT_SPECIFICATION} = require("../../../../mocks/schemasConstant/qualityConstant");
 const {filteredSpecificationList} = require("../../../../models/quality/repository/specificationRepository");
 const ProductSpecificationRepository = require("../../../../models/quality/repository/productSpecificationRepository");
 const {filteredProductCategoryMasterList} = require("../../../../models/settings/repository/productCategoryRepository");
 const SKUMasterRepository = require("../../../../models/sales/repository/SKUMasterRepository");
 const {filteredCustomerList} = require("../../../../models/sales/repository/customerRepository");
+const {getIncrementNumWithPrefix} = require("../../../../helpers/utility");
+const AutoIncrementRepository = require("../../../../models/settings/repository/autoIncrementRepository");
 
 const ObjectId = mongoose.Types.ObjectId;
 
@@ -242,8 +244,22 @@ exports.getById = asyncHandler(async (req, res) => {
 // @route   GET /quality/inspectionParameter/getAllMasterData
 exports.getAllMasterData = asyncHandler(async (req, res) => {
     try {
+        const options = await dropDownOptions(req.user.company);
+        let autoIncrementNo = await getAndSetAutoIncrementNo(
+            PRODUCT_SPECIFICATION.AUTO_INCREMENT_DATA(),
+            req.user.company
+        );
+        return res.success({autoIncrementNo, ...options});
+    } catch (error) {
+        console.error("getAllMasterData Product Specification", error);
+        const errors = MESSAGES.apiErrorStrings.SERVER_ERROR;
+        return res.serverError(errors);
+    }
+});
+const dropDownOptions = async company => {
+    try {
         const specificationList = await filteredSpecificationList([
-            {$match: {company: ObjectId(req.user.company), status: OPTIONS.defaultStatus.ACTIVE}},
+            {$match: {company: ObjectId(company), status: OPTIONS.defaultStatus.ACTIVE}},
             {$sort: {createdAt: -1}},
             {
                 $project: {
@@ -260,7 +276,8 @@ exports.getAllMasterData = asyncHandler(async (req, res) => {
                 }
             }
         ]);
-        const SKUCategoryList = await getAllSKUCategory(req.user.company, null);
+        const SKUCategoryList = await getAllSKUCategory(company, null);
+        let productCategories = [];
         if (SKUCategoryList.length > 0) {
             productCategories = SKUCategoryList.map(x => {
                 return {
@@ -275,7 +292,7 @@ exports.getAllMasterData = asyncHandler(async (req, res) => {
             productCategories = await filteredProductCategoryMasterList([
                 {
                     $match: {
-                        company: ObjectId(req.user.company),
+                        company: ObjectId(company),
                         categoryStatus: OPTIONS.defaultStatus.ACTIVE
                     }
                 },
@@ -300,22 +317,16 @@ exports.getAllMasterData = asyncHandler(async (req, res) => {
             });
         }
         const SKUOptions = await SKUMasterRepository.filteredSKUMasterList([
-            {$match: {isActive: "A", company: ObjectId(req.user.company)}},
+            {$match: {isActive: "A", company: ObjectId(company)}},
             {$sort: {createdAt: -1}},
             {$project: {SKUNo: 1, SKUName: 1, SKUDescription: 1, productCategory: 1, primaryUnit: 1, _id: 1}}
         ]);
-        let autoIncrementNo = await getAndSetAutoIncrementNo(
-            PRODUCT_SPECIFICATION.AUTO_INCREMENT_DATA(),
-            req.user.company
-        );
-        return res.success({autoIncrementNo, specificationList, productCategories, SKUOptions});
-    } catch (error) {
-        console.error("getAllMasterData Product Specification", error);
-        const errors = MESSAGES.apiErrorStrings.SERVER_ERROR;
-        return res.serverError(errors);
-    }
-});
 
+        return {specificationList, productCategories, SKUOptions};
+    } catch (error) {
+        console.error(error);
+    }
+};
 exports.getBySKUId = async (company, SKUId) => {
     try {
         let rows = await ProductSpecificationRepository.findOneDoc(
@@ -329,5 +340,184 @@ exports.getBySKUId = async (company, SKUId) => {
         return rows;
     } catch (e) {
         console.error("getAllRM Specification", e);
+    }
+};
+
+exports.checkProdSpecificationValidation = async (data, column, company) => {
+    try {
+        const specificationOptions = await ProductSpecificationRepository.filteredProductSpecificationList([
+            {$match: {company: ObjectId(company), status: OPTIONS.defaultStatus.ACTIVE}},
+            {
+                $lookup: {
+                    from: "SKUMaster",
+                    localField: "SKU",
+                    foreignField: "_id",
+                    pipeline: [{$project: {SKUNo: 1}}],
+                    as: "SKU"
+                }
+            },
+            {$unwind: "$SKU"},
+            {$project: {SKUNo: "$SKU.SKUNo"}}
+        ]);
+        const requiredFields = [
+            "productCategory",
+            "SKUNo",
+            "seq",
+            "specificationCode",
+            "specValue",
+            "tolerance",
+            "LTL",
+            "UTL"
+        ];
+        const falseArr = OPTIONS.falsyArray;
+        let {specificationList, productCategories, SKUOptions} = await dropDownOptions(company);
+        let dropdownCheck = [
+            {
+                key: "specificationCode",
+                options: specificationList.map(x => {
+                    return {
+                        label: x.specificationCode,
+                        value: x.specificationCode
+                    };
+                })
+            },
+            {
+                key: "productCategory",
+                options: productCategories.map(x => {
+                    return {
+                        label: x.label,
+                        value: x.value
+                    };
+                })
+            },
+            {
+                key: "SKUNo",
+                options: SKUOptions.map(x => {
+                    return {
+                        label: x.SKUNo,
+                        value: x.SKUNo
+                    };
+                })
+            }
+        ];
+        let unique = [];
+        for await (const x of data) {
+            x.isValid = true;
+            x.message = null;
+            if (unique.includes(x["SKUNo"])) {
+                x.isValid = false;
+                x.message = `${x["SKUNo"]} duplicate Entry`;
+                break;
+            }
+            unique.push(x["SKUNo"]);
+            for (const ele of Object.values(column)) {
+                if (requiredFields.includes(ele) && falseArr.includes(x[ele])) {
+                    x.isValid = false;
+                    x.message = validationJson[ele] ?? `${ele} is Required`;
+                    break;
+                }
+                for (const dd of dropdownCheck) {
+                    if (ele == dd.key && !dd.options.map(values => values.value).includes(x[ele])) {
+                        x.isValid = false;
+                        x.message = `${ele} is Invalid Value & Value Must be ${dd.options.map(values => values.value)}`;
+                        break;
+                    }
+                }
+                for (const option of specificationOptions) {
+                    if (option.SKUNo == x["SKUNo"]) {
+                        x.isValid = false;
+                        x.message = `${x["SKUNo"]} already exists`;
+                        break;
+                    }
+                }
+            }
+        }
+        const inValidRecords = data.filter(x => !x.isValid);
+        const validRecords = data.filter(x => x.isValid);
+        return {inValidRecords, validRecords};
+    } catch (error) {
+        console.error(error);
+    }
+};
+
+exports.bulkInsertProdSpecificationByCSV = async (jsonData, {company, createdBy, updatedBy}) => {
+    try {
+        const specificationList = await filteredSpecificationList([
+            {$match: {company: ObjectId(company), status: OPTIONS.defaultStatus.ACTIVE}},
+            {$sort: {createdAt: -1}},
+            {
+                $project: {
+                    seq: null,
+                    specValue: null,
+                    tolerance: null,
+                    LTL: null,
+                    UTL: null,
+                    specificationCode: 1,
+                    characteristic: 1,
+                    UOM: 1,
+                    testStandard: 1,
+                    measuringInstrument: 1
+                }
+            }
+        ]);
+        const SKUOptions = await SKUMasterRepository.filteredSKUMasterList([
+            {$match: {isActive: "A", company: ObjectId(company)}},
+            {$sort: {createdAt: -1}},
+            {$project: {SKUNo: 1, SKUName: 1, SKUDescription: 1, productCategory: 1, primaryUnit: 1, _id: 1}}
+        ]);
+        let autoIncrementObj = await getNextAutoIncrementNo({
+            ...PRODUCT_SPECIFICATION.AUTO_INCREMENT_DATA(),
+            company: company
+        });
+        let data = jsonData.map(x => {
+            const {seq, specificationCode, specValue, LTL, UTL, ...rest} = x;
+            let SKUWiseData = jsonData.filter(y => y.SKUNo == rest.SKUNo);
+            if (SKUWiseData.length) {
+                SKUWiseData = SKUWiseData.map(SKU => {
+                    let specificationObj = new Map(specificationList.map(ele => [ele.specificationCode, ele])).get(
+                        SKU.specificationCode
+                    );
+                    return {
+                        seq: SKU.seq,
+                        specificationCode: SKU.specificationCode,
+                        characteristic: specificationObj?.characteristic,
+                        UOM: specificationObj?.UOM,
+                        testStandard: specificationObj?.testStandard,
+                        measuringInstrument: specificationObj?.measuringInstrument,
+                        specValue: SKU.specValue,
+                        LTL: SKU.LTL,
+                        UTL: SKU.UTL
+                    };
+                });
+            }
+            let SKUObj = new Map(SKUOptions.map(ele => [ele.SKUNo, ele])).get(rest.SKUNo);
+            rest.SKUNo = SKUObj.SKUNo;
+            rest.SKUName = SKUObj.SKUName;
+            rest.SKUDescription = SKUObj.SKUDescription;
+            rest.UOM = SKUObj.primaryUnit;
+            rest.specificationInfo = SKUWiseData;
+            rest.productSpecificationCode = getIncrementNumWithPrefix(autoIncrementObj);
+            rest.company = company;
+            rest.createdBy = createdBy;
+            rest.updatedBy = updatedBy;
+            jsonData = jsonData.filter(data => data.SKUNo != rest.SKUNo);
+            autoIncrementObj.autoIncrementValue++;
+            return rest;
+        });
+        await ProductSpecificationRepository.insertManyDoc(data);
+        await AutoIncrementRepository.findAndUpdateDoc(
+            {
+                module: PRODUCT_SPECIFICATION.MODULE,
+                company: company
+            },
+            {
+                $set: {
+                    autoIncrementValue: autoIncrementObj.autoIncrementValue
+                }
+            }
+        );
+        return {message: "Uploaded successfully!"};
+    } catch (error) {
+        console.error(error);
     }
 };

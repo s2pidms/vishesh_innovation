@@ -459,7 +459,10 @@ exports.PPICInventoryUpload = async excelData => {
                 supplierCode: "$supplierId.supplierCode",
                 supplierId: "$supplierDetails.supplierId",
                 supplierName: "$supplierDetails.supplierName",
-                stdCostUom1: "$supplierDetails.stdCostUom1"
+                stdCostUom1: "$supplierDetails.stdCostUom1",
+                stdCostUom2: "$supplierDetails.stdCostUom2",
+                uom1: "$supplierDetails.uom1",
+                uom2: "$supplierDetails.uom2"
             }
         }
     ]);
@@ -495,7 +498,10 @@ exports.PPICInventoryUpload = async excelData => {
         let PODetails = [];
         let index = 0;
         for await (const item of itemDetails) {
-            const stdCostUom1 = String(item.supplierId) === String(supplierObj._id) ? item.stdCostUom1 : 0;
+            let stdCostUom1 = 0;
+            if (String(item.supplierId) === String(supplierObj._id)) {
+                stdCostUom1 = item.uom1 == excel.primaryUnit ? item.stdCostUom1 : item.stdCostUom2;
+            }
             const hsn = await HSNCodesOptions.find(hsn => hsn.hsnCode == item.hsn);
             if (!hsn) {
                 notFoundHSN.push(item.hsn);

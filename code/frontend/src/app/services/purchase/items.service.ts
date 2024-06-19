@@ -9,6 +9,7 @@ export class ItemsService {
     routes: any = {
         createPath: "/purchase/itemMaster/create",
         getAllPath: "/purchase/itemMaster/getAll",
+        getAllForStockLevelsPath: "/purchase/itemMaster/getAllForStockLevels",
         getAllMasterDataPath: "/purchase/itemMaster/getAllMasterData",
         updatePath: (id: string) => `/purchase/itemMaster/update/${id}`,
         getByIdPath: (id: string) => `/purchase/itemMaster/getById/${id}`,
@@ -21,6 +22,9 @@ export class ItemsService {
     }
     getAll(params: any) {
         return this.http.get(this.routes.getAllPath, params).pipe(map((res: any) => res));
+    }
+    getAllForStockLevels(params: any) {
+        return this.http.get(this.routes.getAllForStockLevelsPath, params).pipe(map((res: any) => res));
     }
     getAllMasterData(params: any) {
         return this.http.get(this.routes.getAllMasterDataPath, params).pipe(map((res: any) => res));

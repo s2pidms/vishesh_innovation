@@ -182,45 +182,182 @@ exports.sendMailById = asyncHandler(async (req, res) => {
 
 exports.getANSDetailsById = asyncHandler(async (req, res) => {
     try {
-        let existing = await Model.findById(req.params.id)
-            .populate({
-                path: "company",
-                model: "Company",
-                select: {
-                    companyName: 1,
-                    contactInfo: 1,
-                    companyBillingAddress: 1,
-                    SOSignatureUrl: {$concat: [`${CONSTANTS.domainUrl}company/`, "$SOSignature"]},
-                    companyPdfHeaderUrl: {$concat: [`${CONSTANTS.domainUrl}company/`, "$companyPdfHeader"]},
-                    SOPdfHeaderUrl: {$concat: [`${CONSTANTS.domainUrl}company/`, "$SOPdfHeader"]},
-                    logoUrl: {$concat: [`${CONSTANTS.domainUrl}company/`, "$logo"]}
+        let existing = await ASNRepository.filteredAdvanceShipmentList([
+            {
+                $match: {_id: ObjectId(req.params.id)}
+            },
+            {
+                $lookup: {
+                    from: "SalesInvoice",
+                    localField: "salesInvoice",
+                    foreignField: "_id",
+                    pipeline: [{$project: {salesInvoiceNumber: 1, customerShippingAddress: 1}}],
+                    as: "salesInvoice"
                 }
-            })
-            .populate("customer", "customerName GSTIN customerShippingAddress customerContactInfo")
-            .populate("salesInvoice", "salesInvoiceNumber customerShippingAddress")
-            .populate("salesInvoiceDetails.SKU", "SKUName SKUDescription customerInfo")
-            .populate("salesInvoiceDetails.SOId", "PONumber")
-            .lean();
-        if (existing.salesInvoiceDetails.length > 0) {
-            for (let ele of existing.salesInvoiceDetails) {
-                ele = JSON.parse(JSON.stringify(ele));
-                ele.SKU.customerInfo = ele.SKU.customerInfo.find(x => {
-                    String(x.customer) == String(existing.customer._id);
-                    return x;
-                });
+            },
+            {$unwind: "$salesInvoice"},
+            {
+                $lookup: {
+                    from: "Customer",
+                    localField: "customer",
+                    foreignField: "_id",
+                    pipeline: [
+                        {
+                            $project: {
+                                customerName: 1,
+                                GSTIN: 1,
+                                customerShippingAddress: 1,
+                                customerContactInfo: 1
+                            }
+                        }
+                    ],
+                    as: "customer"
+                }
+            },
+            {
+                $unwind: "$customer"
+            },
+            {
+                $lookup: {
+                    from: "Company",
+                    localField: "company",
+                    foreignField: "_id",
+                    pipeline: [
+                        {
+                            $project: {
+                                companyName: 1,
+                                contactInfo: 1,
+                                companyBillingAddress: 1,
+                                SOSignatureUrl: {$concat: [`${CONSTANTS.domainUrl}company/`, "$SOSignature"]},
+                                companyPdfHeaderUrl: {$concat: [`${CONSTANTS.domainUrl}company/`, "$companyPdfHeader"]},
+                                SOPdfHeaderUrl: {$concat: [`${CONSTANTS.domainUrl}company/`, "$SOPdfHeader"]},
+                                logoUrl: {$concat: [`${CONSTANTS.domainUrl}company/`, "$logo"]}
+                            }
+                        }
+                    ],
+                    as: "company"
+                }
+            },
+            {$unwind: "$company"},
+            {
+                $lookup: {
+                    from: "SKUMaster",
+                    localField: "salesInvoiceDetails.SKU",
+                    foreignField: "_id",
+                    pipeline: [
+                        {
+                            $project: {
+                                customerInfo: 1,
+                                SKUName: 1,
+                                SKUDescription: 1
+                            }
+                        }
+                    ],
+                    as: "SKUInfo"
+                }
+            },
+            {
+                $lookup: {
+                    from: "SalesOrder",
+                    localField: "salesInvoiceDetails.SOId",
+                    foreignField: "_id",
+                    pipeline: [
+                        {
+                            $project: {
+                                PONumber: 1
+                            }
+                        }
+                    ],
+                    as: "SOInfo"
+                }
+            },
+            {
+                $addFields: {
+                    salesInvoiceDetails: {
+                        $map: {
+                            input: "$salesInvoiceDetails",
+                            as: "detail",
+                            in: {
+                                $mergeObjects: [
+                                    "$$detail",
+                                    {
+                                        $arrayElemAt: [
+                                            {
+                                                $filter: {
+                                                    input: "$SKUInfo",
+                                                    as: "sku",
+                                                    cond: {$eq: ["$$sku._id", "$$detail.SKU"]}
+                                                }
+                                            },
+                                            0
+                                        ]
+                                    },
+                                    {
+                                        $arrayElemAt: [
+                                            {
+                                                $filter: {
+                                                    input: "$SOInfo",
+                                                    as: "so",
+                                                    cond: {$eq: ["$$so._id", "$$detail.SOId"]}
+                                                }
+                                            },
+                                            0
+                                        ]
+                                    }
+                                ]
+                            }
+                        }
+                    }
+                }
+            },
+            {
+                $project: {
+                    SKUInfo: 1,
+                    company: 1,
+                    ASNNumber: 1,
+                    salesInvoice: 1,
+                    salesInvoiceDate: 1,
+                    customer: 1,
+                    customerName: 1,
+                    stateOfSupply: 1,
+                    invoiceValue: 1,
+                    totalNoOfBoxes: 1,
+                    totalGrossWeight: 1,
+                    ASNStatus: 1,
+                    rowRepeat: 1,
+                    salesInvoiceDetails: 1,
+                    transporter: 1,
+                    modeOfTransport: 1,
+                    frightCharge: 1,
+                    frightTerms: 1,
+                    deliveryType: 1,
+                    docketLR: 1,
+                    docketLRDate: 1,
+                    freight: 1
+                }
             }
-        }
-        // console.log("existing.salesInvoiceDetails", existing.salesInvoiceDetails);
-        if (existing && existing.company && !!existing.company.contactInfo && existing.company.contactInfo.length > 0) {
-            existing.company.contactInfo = existing.company.contactInfo.find(x => x.department == "Sales");
-        }
-        if (!existing) {
+        ]);
+        if (!existing.length) {
             let errors = MESSAGES.apiSuccessStrings.DATA_NOT_EXISTS("Advance Shipment Notice");
             return res.unprocessableEntity(errors);
+        } else {
+            existing = existing[0];
+            if (existing.salesInvoiceDetails?.length > 0) {
+                for (let ele of existing.salesInvoiceDetails) {
+                    ele.customerInfo = ele?.customerInfo?.find(
+                        x => String(x.customer) == String(existing.customer._id)
+                    );
+                }
+            }
+            // console.log("existing.salesInvoiceDetails", existing.salesInvoiceDetails);
+            if (existing?.company?.contactInfo?.length > 0) {
+                existing.company.contactInfo = existing.company.contactInfo.find(x => x.department == "Sales");
+            }
         }
+
         return res.success(existing);
     } catch (e) {
-        console.error("getById Advance Shipment Notice", e);
+        console.error("getANSDetailsById Advance Shipment Notice", e);
         const errors = MESSAGES.apiErrorStrings.SERVER_ERROR;
         return res.serverError(errors);
     }

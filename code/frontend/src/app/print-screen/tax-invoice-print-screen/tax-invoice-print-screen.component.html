@@ -6,7 +6,18 @@
                     <img src="./assets/images/print.png" width="20px" height="14px" class="mb-2" />&nbsp;&nbsp; Print
                 </button>
             </div>
-            <div class="page py-3">
+            <div
+                class="page py-3"
+                [ngStyle]="
+                    tableData.salesInvoiceStatus === 'Cancelled'
+                        ? {
+                              background: 'url(./assets/buttons/cancelled.svg)',
+                              'background-size': '100% 100%',
+                              'background-color': 'transparent'
+                          }
+                        : {}
+                "
+            >
                 <ng-template [ngIf]="template == 'Turnover less than 5 CR'">
                     <app-TOLT5CR [tableData]="tableData"></app-TOLT5CR>
                 </ng-template>

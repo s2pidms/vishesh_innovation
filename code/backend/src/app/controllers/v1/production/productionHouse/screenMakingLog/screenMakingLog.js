@@ -40,6 +40,7 @@ exports.createOrUpdate = asyncHandler(async (req, res) => {
                 updatedBy: req.user.sub,
                 ...req.body
             };
+            delete createdObj._id;
             await ScreenMakingLogRepository.createDoc(createdObj);
         }
         res.success({

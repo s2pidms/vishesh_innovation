@@ -205,3 +205,19 @@ exports.JOB_WORK_CHALLAN = {
         };
     }
 }
+exports.JOB_WORK_ORDER = {
+    COLLECTION_NAME: "JobWorkOrder",
+    ADDED_ACTION: "Job Work Order created",
+    UPDATED_ACTION: "Job Work Order updated",
+    MODULE_NAME: "Job Work Order",
+    MODULE: "JobWorkOrder",
+    MODULE_PREFIX: "JWO/",
+    AUTO_INCREMENT_DATA: function () {
+        return {
+            moduleName: this.MODULE_NAME,
+            module: this.MODULE,
+            company: null,
+            modulePrefix: this.MODULE_PREFIX
+        };
+    }
+}

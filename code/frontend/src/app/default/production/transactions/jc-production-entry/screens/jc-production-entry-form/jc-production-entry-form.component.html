@@ -57,8 +57,13 @@
                             <label class="form-label"> SKU Number <span class="text-danger"> </span></label>
                             <span class="text-secondary fs-5">&#9654;</span>
                         </div>
-                        <div class="col-8 ps-3">
+                        <div class="col-7 px-3">
                             <input type="text" class="form-control bg-white-smoke" formControlName="SKUNo" readonly />
+                        </div>
+                        <div class="col-1 d-flex align-items-center px-0">
+                            <span class="d-flex justify-content-end pointer">
+                                <div (click)="openDrawing()" class="drawingIcon"></div>
+                            </span>
                         </div>
                     </div>
                     <div class="row mt-4">

@@ -126,8 +126,6 @@ export interface ShipmentPlanningId {
 export interface Customer {
     _id: string;
     company: string;
-    createdBy: string;
-    updatedBy: string;
     customerCode: string;
     customerName: string;
     customerNickName: string;
@@ -150,9 +148,6 @@ export interface Customer {
     isCustomerActive: string;
     customerWebsite: string;
     customerBankDetails: any[];
-    createdAt: string;
-    updatedAt: string;
-    __v: number;
 }
 
 export interface CustomerBillingAddress {
@@ -490,6 +485,7 @@ export interface ToolInfo {
 
 export interface Gstdetail {
     HSNCode: string;
+    hsn?: string
     taxableValue: number;
     igstRate: number;
     igstAmount: number;

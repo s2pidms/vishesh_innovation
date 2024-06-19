@@ -4,7 +4,7 @@ import {Location} from "@angular/common";
 import {mergeMap, of} from "rxjs";
 import {ActivatedRoute, Router} from "@angular/router";
 import {NgbModal} from "@ng-bootstrap/ng-bootstrap";
-import {ToastService} from "@core/services";
+import {AppGlobalService, ToastService} from "@core/services";
 import {SpinnerService, UtilityService} from "@core/services";
 import {ValidationService} from "@core/components";
 import {JobCardDetailsModalComponent} from "src/app/default/planning/transactions/gi-ppic-to-production/screens/job-card-details-modal/job-card-details-modal.component";
@@ -18,7 +18,6 @@ import {
     IpqaLogModelComponent,
     ScreenMakingLogFormComponent
 } from "../components";
-import {StockCuttingFormComponent} from "../stock-cutting/stock-cutting-form/stock-cutting-form.component";
 import {CancelPoComponent} from "@shared/modals";
 import {ScreenPrintingLogModelComponent} from "../screen-printing/screen-printing-log-model/screen-printing-log-model.component";
 import {JcStockPreparationEntryComponent} from "../stock-preparation/jc-stock-preparation-entry/jc-stock-preparation-entry.component";
@@ -36,6 +35,7 @@ import {LaminationLogEntryIPQAModalComponent} from "../lamination-log-entry-mode
 import {PunchingLogEntryIPQAModalComponent} from "../punching-log-entry-model/punching-log-entry-ipqa-modal/punching-log-entry-ipqa-modal.component";
 import {PackingLogEntryIPQAModalComponent} from "../packing-log-entry-model/packing-log-entry-ipqa-modal/packing-log-entry-ipqa-modal.component";
 import {ScreenPrintingIPQAModalComponent} from "../screen-printing/screen-printing-ipqa-modal/screen-printing-ipqa-modal.component";
+import {MENU_IDS} from "@mocks/menuIds.constant";
 
 @Component({
     selector: "app-jc-production-entry-form",
@@ -64,6 +64,7 @@ export class JcProductionEntryFormComponent implements OnInit {
     batchInputQty: any = 0;
     processDetailsList: IJCEntryDetails[] = [];
     ESCPreviewArr: any = [];
+    menuItemId: any = "";
     masterData: IJobCardEntryMasterData = {
         autoIncrementNo: "",
         JCOptions: [],
@@ -80,6 +81,7 @@ export class JcProductionEntryFormComponent implements OnInit {
         }
     ];
     IPQAInfoList: any = {};
+    drawingLink: any = "";
     componentModal: any = {
         // "Stock Preparation": StockCuttingFormComponent,
         "Stock Preparation": JcStockPreparationEntryComponent,
@@ -130,7 +132,8 @@ export class JcProductionEntryFormComponent implements OnInit {
         private modalService: NgbModal,
         private utilityService: UtilityService,
         private location: Location,
-        private router: Router
+        private router: Router,
+        private appGlobalService: AppGlobalService
     ) {}
 
     form = new UntypedFormGroup({
@@ -169,8 +172,18 @@ export class JcProductionEntryFormComponent implements OnInit {
         return this.form.get("generateReport") as FormGroup;
     }
     ngOnInit(): void {
+        this.menuItemId = this.appGlobalService.menuItemId;
         this.getInitialData();
     }
+
+    openDrawing() {
+        if (this.drawingLink) {
+            window.open(this.drawingLink, "_blank");
+        } else {
+            this.toastService.warning("Drawing File Not Present");
+        }
+    }
+
     // ngAfterViewInit() {
     //     this.modalService.open(InkMixingLogModalComponent, {
     //         centered: true,
@@ -305,6 +318,7 @@ export class JcProductionEntryFormComponent implements OnInit {
             this.f["SKUName"].setValue(success?.jobCardEntryData?.SKUName);
             this.f["SKUStage"].setValue(success?.jobCardEntryData?.SKUStage);
             this.f["SKUDescription"].setValue(success?.jobCardEntryData?.SKUDescription);
+            this.drawingLink = success?.jobCardEntryData?.artWorkHyperLink;
             this.f["UOM"].setValue(success?.jobCardEntryData?.UOM);
             this.f["batchQty"].setValue(success?.jobCardEntryData?.batchQty);
             this.f["batchDate"].setValue(
@@ -374,6 +388,9 @@ export class JcProductionEntryFormComponent implements OnInit {
             });
             modalRef.componentInstance.sourceOfManufacturing = item?.sourceOfManufacturing;
             modalRef.componentInstance.action = this.action;
+            if (this.menuItemId == MENU_IDS.Quality) {
+                modalRef.componentInstance.action = "view";
+            }
             modalRef.componentInstance.selectedDetails = {
                 jobCard: this.selectedJobCardDetails?._id,
                 jobCardNo: this.selectedJobCardDetails?.jobCardNo,
@@ -406,6 +423,9 @@ export class JcProductionEntryFormComponent implements OnInit {
                 keyboard: false
             });
             modalRef.componentInstance.action = this.action;
+            if (this.menuItemId == MENU_IDS.Production) {
+                modalRef.componentInstance.action = "view";
+            }
             modalRef.componentInstance.IPQAInfoList = item?.IPQALog;
             modalRef.componentInstance.selectedDetails = {
                 jobCard: this.selectedJobCardDetails?._id,

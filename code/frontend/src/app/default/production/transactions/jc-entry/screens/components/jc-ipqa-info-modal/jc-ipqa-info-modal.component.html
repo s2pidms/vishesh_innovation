@@ -13,14 +13,15 @@
             <span class="px-5"> IPQA Details </span>
         </div>
         <div class="row mx-4 px-3">
-            <div class="col-7">
+            <div class="col-8">
                 <div class="row">
                     <div class="col-2 pe-1 text-center"><label class="form-label">Seq.</label></div>
-                    <div class="col-6 ps-0 pe-1"><label class="form-label">Sub-Process Name</label></div>
-                    <div class="col-4 ps-0"><label class="form-label">Inspected By </label></div>
+                    <div class="col-4 ps-0 pe-1"><label class="form-label">Sub-Process Name</label></div>
+                    <div class="col-3 ps-0 pe-1"><label class="form-label">Inspected By </label></div>
+                    <div class="col-3 ps-0"><label class="form-label">Offer Date </label></div>
                 </div>
             </div>
-            <div class="col-5 ps-2">
+            <div class="col-4 ps-2">
                 <div class="row">
                     <div class="col-5 ps-0 pe-1"><label class="form-label">Release Date </label></div>
                     <div class="col-5 ps-0"><label class="form-label">Release Status</label></div>
@@ -30,7 +31,7 @@
         </div>
 
         <div *ngFor="let item of prodInfoList; let i = index" class="row mx-4 px-3 mb-2">
-            <div class="col-7">
+            <div class="col-8">
                 <div class="row">
                     <div class="col-2 pe-1">
                         <input
@@ -40,7 +41,7 @@
                             [disabled]="['view', 'approve'].includes(action)"
                         />
                     </div>
-                    <div class="col-6 ps-0 pe-1">
+                    <div class="col-4 ps-0 pe-1">
                         <input
                             [(ngModel)]="item.subProcessName"
                             class="form-control"
@@ -48,7 +49,7 @@
                             [disabled]="['view', 'approve'].includes(action)"
                         />
                     </div>
-                    <div class="col-4 ps-0">
+                    <div class="col-3 ps-0 pe-1">
                         <input
                             [(ngModel)]="item.inspectedBy"
                             class="form-control"
@@ -56,9 +57,17 @@
                             [disabled]="['view', 'approve'].includes(action)"
                         />
                     </div>
+                    <div class="col-3 ps-0 pe-4">
+                        <input
+                            [(ngModel)]="item.offerDate"
+                            class="form-control"
+                            type="date"
+                            [disabled]="['view', 'approve'].includes(action)"
+                        />
+                    </div>
                 </div>
             </div>
-            <div class="col-5 ps-2">
+            <div class="col-4 ps-2">
                 <div class="row">
                     <div class="col-5 ps-0 pe-1">
                         <input

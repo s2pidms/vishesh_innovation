@@ -73,11 +73,6 @@ export class SPOPrintScreenComponent implements OnInit {
     windowprint() {
         window.print();
     }
-    // getAddress(address: any) {
-    //     if (address) {
-    //         return address.find((x: any) => x.addressType == "Shipping");
-    //     }
-    // }
 
     @HostListener("window:keydown", ["$event"])
     onKeyDown(event: KeyboardEvent): void {

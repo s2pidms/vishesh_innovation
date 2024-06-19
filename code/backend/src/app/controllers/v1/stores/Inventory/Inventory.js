@@ -1,8 +1,6 @@
 const asyncHandler = require("express-async-handler");
 const Model = require("../../../../models/stores/inventoryCorrectionModel");
-const AutoIncrement = require("../../../../models/settings/autoIncrementModel");
 const MESSAGES = require("../../../../helpers/messages.options");
-const {INVENTORY_CORRECTION_MODULE_PREFIX} = require("../../../../helpers/moduleConstants");
 const {generateCreateData, OPTIONS} = require("../../../../helpers/global.options");
 const {findAppParameterValue} = require("../../settings/appParameter/appParameter");
 const {default: mongoose} = require("mongoose");
@@ -22,7 +20,7 @@ const validationJson = require("../../../../mocks/excelUploadColumn/validation.j
 // const {inventoryUpload} = require("../../../../middleware/inventoryUpload");
 const ObjectId = mongoose.Types.ObjectId;
 
-// @desc    getAll   InventoryCorrection Record
+// @desc    getAll InventoryCorrection Record
 exports.getAll = asyncHandler(async (req, res) => {
     try {
         let project = getAllInventoryCorrectionAttributes();
@@ -61,14 +59,14 @@ exports.getAll = asyncHandler(async (req, res) => {
     }
 });
 
-// @desc    create   InventoryCorrection new Record
+// @desc    create InventoryCorrection new Record
 exports.create = asyncHandler(async (req, res) => {
     try {
         // let existing = await Model.findOne({
         //     roleName: req.body.roleName,
         // });
         // if (existing) {
-        //     let errors = MESSAGES.apiErrorStrings.Data_EXISTS("  InventoryCorrection");
+        //     let errors = MESSAGES.apiErrorStrings.Data_EXISTS("InventoryCorrection");
         //     return res.preconditionFailed(errors);
         // }
         let createdObj = {
@@ -81,22 +79,21 @@ exports.create = asyncHandler(async (req, res) => {
 
         const itemDetails = await saveObj.save();
         if (itemDetails) {
-            await AutoIncrement.setNextId("InventoryCorrection", INVENTORY_CORRECTION_MODULE_PREFIX, req.user.company);
             return res.success({
-                message: MESSAGES.apiSuccessStrings.ADDED("  InventoryCorrection")
+                message: MESSAGES.apiSuccessStrings.ADDED("InventoryCorrection")
             });
         } else {
             const errors = MESSAGES.apiErrorStrings.INVALID_REQUEST;
             return res.serverError(errors);
         }
     } catch (e) {
-        console.error("create   InventoryCorrection", e);
+        console.error("create InventoryCorrection", e);
         const errors = MESSAGES.apiErrorStrings.SERVER_ERROR;
         return res.serverError(errors);
     }
 });
 
-// @desc    update   InventoryCorrection  Record
+// @desc    update InventoryCorrection  Record
 exports.update = asyncHandler(async (req, res) => {
     try {
         for await (const element of req.body) {
@@ -109,49 +106,49 @@ exports.update = asyncHandler(async (req, res) => {
             message: MESSAGES.apiSuccessStrings.UPDATE("InventoryCorrection has been")
         });
     } catch (e) {
-        console.error("update   InventoryCorrection", e);
+        console.error("update InventoryCorrection", e);
         const errors = MESSAGES.apiErrorStrings.SERVER_ERROR;
         return res.serverError(errors);
     }
 });
 
-// @desc    deleteById   InventoryCorrection Record
+// @desc    deleteById InventoryCorrection Record
 exports.deleteById = asyncHandler(async (req, res) => {
     try {
         const deleteItem = await Model.findById(req.params.id);
         if (deleteItem) {
             await deleteItem.remove();
             return res.success({
-                message: MESSAGES.apiSuccessStrings.DELETED("  InventoryCorrection")
+                message: MESSAGES.apiSuccessStrings.DELETED("InventoryCorrection")
             });
         } else {
-            let errors = MESSAGES.apiSuccessStrings.DATA_NOT_EXISTS("  InventoryCorrection");
+            let errors = MESSAGES.apiSuccessStrings.DATA_NOT_EXISTS("InventoryCorrection");
             return res.preconditionFailed(errors);
         }
     } catch (e) {
-        console.error("deleteById   InventoryCorrection", e);
+        console.error("deleteById InventoryCorrection", e);
         const errors = MESSAGES.apiErrorStrings.SERVER_ERROR;
         return res.serverError(errors);
     }
 });
 
-// @desc    getById   InventoryCorrection Record
+// @desc    getById InventoryCorrection Record
 exports.getById = asyncHandler(async (req, res) => {
     try {
         let existing = await Model.findById(req.params.id);
         if (!existing) {
-            let errors = MESSAGES.apiSuccessStrings.DATA_NOT_EXISTS("  InventoryCorrection");
+            let errors = MESSAGES.apiSuccessStrings.DATA_NOT_EXISTS("InventoryCorrection");
             return res.unprocessableEntity(errors);
         }
         return res.success(existing);
     } catch (e) {
-        console.error("getById   InventoryCorrection", e);
+        console.error("getById InventoryCorrection", e);
         const errors = MESSAGES.apiErrorStrings.SERVER_ERROR;
         return res.serverError(errors);
     }
 });
 
-// @desc    getAllMasterData   InventoryCorrection Record
+// @desc    getAllMasterData InventoryCorrection Record
 exports.getAllMasterData = asyncHandler(async (req, res) => {
     try {
         const itemCategoryList = await getAllItemCategory(req.user.company);
@@ -171,13 +168,13 @@ exports.getAllMasterData = asyncHandler(async (req, res) => {
             })
         });
     } catch (error) {
-        console.error("getAllMasterData   InventoryCorrection", error);
+        console.error("getAllMasterData InventoryCorrection", error);
         const errors = MESSAGES.apiErrorStrings.SERVER_ERROR;
         return res.serverError(errors);
     }
 });
 
-// @desc    getAllServicePurchaseOrders   InventoryCorrection Record
+// @desc    getAllServicePurchaseOrders InventoryCorrection Record
 exports.getAllServicePurchaseOrders = asyncHandler(async company => {
     try {
         let rows = await Model.find(
@@ -605,7 +602,7 @@ exports.updateSPSInventory = asyncHandler(async (req, res) => {
             message: MESSAGES.apiSuccessStrings.UPDATE("InventoryCorrection has been")
         });
     } catch (e) {
-        console.error("update   InventoryCorrection", e);
+        console.error("update InventoryCorrection", e);
         const errors = MESSAGES.apiErrorStrings.SERVER_ERROR;
         return res.serverError(errors);
     }

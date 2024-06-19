@@ -55,8 +55,6 @@ export class JobWorkChallanFormComponent implements OnInit {
         jobWorkerOptions: [],
         transporterOptions: [],
         SACOptions: [],
-        jobWorkItemOptions: [],
-        purchaseCategoryOptions: [],
         freightTermsOptions: [],
         modeOfTransportOptions: []
     };
@@ -90,7 +88,6 @@ export class JobWorkChallanFormComponent implements OnInit {
             line3: new UntypedFormControl(null),
             line4: new UntypedFormControl(null)
         }),
-
         JWChallanDetails: new UntypedFormControl([]),
         totalTaxableAmt: new UntypedFormControl(null),
         freightTermsInfo: new UntypedFormGroup({
@@ -163,13 +160,8 @@ export class JobWorkChallanFormComponent implements OnInit {
             this.toastService.warning("Rejection Remark is Required");
             return;
         }
-        // if (this.action == "cancel" && !this.form.controls["cancellationReason"].value) {
-        //     this.toastService.warning("Reason for Cancellation is Required");
-        //     return;
-        // }
-        let formData: any = this.form.value;
 
-        // formData.otherCharges = this.otherCharges;
+        let formData: any = this.form.value;
         formData.JWChallanDetails = this.JWChallanDetailsArray.filter((x: any) => x.quantity > 0);
         if (formData.JWChallanDetails.length == 0) {
             this.toastService.warning("Quantity can not be zero");
@@ -293,12 +285,17 @@ export class JobWorkChallanFormComponent implements OnInit {
                         );
 
                         this.shipToAddressArr = data?.additionalPlacesOfBusiness?.map((x: any) => {
-                            if (x.line4) {
-                                x.fullAddress = `${x.line1} ,${x.line2}, ${x.line3}, ${x.line4}, ${x.cityOrDistrict}, ${x.pinCode}, ${x.state}, ${x.country} `;
-                            } else {
-                                x.fullAddress = `${x.line1} ,${x.line2}, ${x.line3}, ${x.cityOrDistrict}, ${x.pinCode}, ${x.state}, ${x.country} `;
-                            }
-
+                            const addressParts = [
+                                x.line1,
+                                x.line2,
+                                x.line3,
+                                x.line4,
+                                x.cityOrDistrict,
+                                x.pinCode,
+                                x.state,
+                                x.country
+                            ];
+                            x.fullAddress = addressParts.filter(Boolean).join(", ");
                             return x;
                         });
                     }
@@ -312,7 +309,6 @@ export class JobWorkChallanFormComponent implements OnInit {
                         this.form.disable();
                         if (["approve", "reject", "cancel"].includes(this.action)) {
                             this.f["cancelReason"].enable();
-                            // this.f["cancellationReason"].enable();
                         }
                         this.f["status"].enable();
                     }
@@ -320,50 +316,13 @@ export class JobWorkChallanFormComponent implements OnInit {
         });
     }
 
-    openCancelModal() {
-        const modalRef = this.modalService.open(CancelPoComponent, {
-            centered: true,
-            size: "sm",
-            backdrop: "static",
-            keyboard: false
-        });
-
-        modalRef.componentInstance.action = this.action;
-        modalRef.componentInstance.heading = "PO Cancellation";
-        modalRef.componentInstance.cancelText = "Do You Want to Cancel Purchase Order ?";
-        modalRef.result.then(
-            (success: any) => {
-                if (success == "Yes") {
-                    this.submit();
-                }
-            },
-            (reason: any) => {}
-        );
-    }
-
-    // {
-    //     "country": "India",
-    //     "state": "Andhra Pradesh",
-    //     "cityOrDistrict": "435sdfg",
-    //     "pinCode": "43534",
-    //     "line1": "fdg",
-    //     "line2": "4fdsgfsdg",
-    //     "line3": "sdfsdf",
-    //     "line4": null,
-    //     "addressType": "Primary Address"
-    // }
-
     getJobWorkerDetails(ev: any) {
         this.f["GSTINNo"].setValue(ev?.GSTINNo);
         this.f["currency"].setValue(ev?.currency);
         this.f["jobWorkerName"].setValue(ev?.jobWorkerName);
         this.shipToAddressArr = ev?.additionalPlacesOfBusiness?.map((x: any) => {
-            if (x.line4) {
-                x.fullAddress = `${x.line1} ,${x.line2}, ${x.line3}, ${x.line4}, ${x.cityOrDistrict}, ${x.pinCode}, ${x.state}, ${x.country} `;
-            } else {
-                x.fullAddress = `${x.line1} ,${x.line2}, ${x.line3}, ${x.cityOrDistrict}, ${x.pinCode}, ${x.state}, ${x.country} `;
-            }
-
+            const addressParts = [x.line1, x.line2, x.line3, x.line4, x.cityOrDistrict, x.pinCode, x.state, x.country];
+            x.fullAddress = addressParts.filter(Boolean).join(", ");
             return x;
         });
 
@@ -388,7 +347,6 @@ export class JobWorkChallanFormComponent implements OnInit {
 
     lineValueRate(JWLChallanLineNo: number, element: any) {
         let index = this.JWChallanDetailsArray.map((x: any) => x.JWLChallanLineNo).indexOf(JWLChallanLineNo);
-        // this.JWChallanDetailsArray[index].taxableAmt = Number((+element.quantity * +element.unitRate).toFixed(2));
         this.JWChallanDetailsArray[index].taxableAmt = Number((+element.quantity * +element.unitRate).toFixed(2));
 
         this.f["totalTaxableAmt"].setValue(
@@ -420,10 +378,30 @@ export class JobWorkChallanFormComponent implements OnInit {
         return item?._id;
     }
 
+    openCancelModal() {
+        const modalRef = this.modalService.open(CancelPoComponent, {
+            centered: true,
+            size: "sm",
+            backdrop: "static",
+            keyboard: false
+        });
+
+        modalRef.componentInstance.action = this.action;
+        modalRef.componentInstance.heading = "PO Cancellation";
+        modalRef.componentInstance.cancelText = "Do You Want to Cancel Purchase Order ?";
+        modalRef.result.then(
+            (success: any) => {
+                if (success == "Yes") {
+                    this.submit();
+                }
+            },
+            (reason: any) => {}
+        );
+    }
+
     openFreightTermsModal() {
         const modalRef = this.modalService.open(FreightTermsModalComponent, {
             centered: true,
-            // size: "lg",
             backdrop: "static",
             keyboard: false,
             windowClass: "custom-modal-sm"
@@ -445,7 +423,6 @@ export class JobWorkChallanFormComponent implements OnInit {
     openJobWorkerModal() {
         const modalRef = this.modalService.open(JobWorkModalComponent, {
             centered: true,
-            // size: "lg",
             backdrop: "static",
             keyboard: false,
             windowClass: "custom-modal-sm"

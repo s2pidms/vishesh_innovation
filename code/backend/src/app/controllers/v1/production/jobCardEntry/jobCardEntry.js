@@ -455,7 +455,7 @@ exports.getJCEntryDataByJobCardId = asyncHandler(async (req, res) => {
                         from: "SKUMaster",
                         localField: "_id.SKU",
                         foreignField: "_id",
-                        pipeline: [{$project: {SKUStage: 1}}],
+                        pipeline: [{$project: {SKUStage: 1, artWorkHyperLink: 1}}],
                         as: "SKU"
                     }
                 },
@@ -469,6 +469,7 @@ exports.getJCEntryDataByJobCardId = asyncHandler(async (req, res) => {
                         SKUStage: "$SKU.SKUStage",
                         SKUName: 1,
                         SKUDescription: 1,
+                        artWorkHyperLink: "$SKU.artWorkHyperLink",
                         UOM: 1,
                         batchQty: 1,
                         batchDate: 1,

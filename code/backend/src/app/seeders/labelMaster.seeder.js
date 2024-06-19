@@ -5,16 +5,16 @@ const {updateCacheGlobalLabel} = require("../controllers/v1/settings/label-maste
 exports.labelMasterInsert = async companyId => {
     try {
         for await (const label of labelJson) {
-            const existingLabel = await LabelMasterRepository.findOneLabelMaster({
+            const existingLabel = await LabelMasterRepository.findOneDoc({
                 menuItemId: label.menuItemId,
                 labelName: label.labelName
             });
             if (!existingLabel) {
                 label.company = companyId;
-                await LabelMasterRepository.createLabelMaster(label);
+                await LabelMasterRepository.createDoc(label);
             } else {
                 delete label.displayLabelName;
-                await LabelMasterRepository.updateLabelMaster(existingLabel, label);
+                await LabelMasterRepository.updateDoc(existingLabel, label);
             }
         }
         await updateCacheGlobalLabel(companyId);

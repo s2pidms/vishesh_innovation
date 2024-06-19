@@ -27,7 +27,7 @@ export class HSNFormComponent implements OnInit {
         provisionType: new UntypedFormControl(true, [Validators.required]),
         hsnMasterEntryNo: new UntypedFormControl(""),
         hsnEntryDate: new UntypedFormControl(""),
-        hsnCode: new UntypedFormControl("", [Validators.required]),
+        hsnCode: new UntypedFormControl("", [Validators.required, Validators.pattern("^[0-9]{4,8}$")]),
         isActive: new UntypedFormControl("Y", [Validators.required]),
         goodsDescription: new UntypedFormControl("", [Validators.required]),
         gstRate: new UntypedFormControl("", [Validators.required]),
@@ -107,6 +107,7 @@ export class HSNFormComponent implements OnInit {
             this.form.controls["isActive"].setValue("Y");
             this.form.controls["provisionType"].setValue(true);
             this.Revision.controls["revisionDate"].setValue(this.utilityService.getTodayDate("YYYY-MM-DD"));
+            this.Revision.controls["revisionNo"].setValue(1);
             this.activatedRoute.queryParams
                 .pipe(
                     mergeMap((params: any) => {
@@ -139,6 +140,11 @@ export class HSNFormComponent implements OnInit {
                     }
                 });
         });
+    }
+
+    setUTGSTValue() {
+        let sgstRate = this.form.controls["sgstRate"].value;
+        this.form.controls["ugstRate"].setValue(sgstRate);
     }
 
     openCancelModal() {

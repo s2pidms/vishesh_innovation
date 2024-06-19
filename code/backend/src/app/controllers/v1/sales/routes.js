@@ -6,7 +6,6 @@ const salesOrder = require("./salesOrder/routes");
 const B2c = require("./B2c/routes");
 const proformaInvoice = require("./proformaInvoice/routes");
 const creditNote = require("./creditNote/routes");
-const directTaxInvoice = require("./directTaxInvoice/routes");
 const HSN = require("./salesHSN/routes");
 const SAC = require("./salesSAC/routes");
 const transporter = require("./transporter/routes");
@@ -19,9 +18,9 @@ const salesDebitNote = require("./salesDebitNote/routes");
 const quotationSKU = require("./quotationSKU/routes");
 const salesProductMaster = require("./salesProductMaster/routes");
 const customerDiscountManagement = require("./customerDiscountManagement/routes");
+const directTaxInvoice = require("./directTaxInvoice/routes");
 
 router.use("/SKU", SKU);
-router.use("/directTaxInvoice", directTaxInvoice);
 router.use("/customerMaster", customerMaster);
 router.use("/drn", dispatch);
 router.use("/salesOrder", salesOrder);
@@ -40,5 +39,6 @@ router.use("/salesDebitNote", salesDebitNote);
 router.use("/quotationSKU", quotationSKU);
 router.use("/salesProductMaster", salesProductMaster);
 router.use("/customerDiscountManagement", customerDiscountManagement);
+router.use("/directTaxInvoice", directTaxInvoice);
 
 module.exports = router;

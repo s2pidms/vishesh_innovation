@@ -1,24 +1,17 @@
 const asyncHandler = require("express-async-handler");
 const Model = require("../../../../models/dispatch/salesInvoiceModel");
-const AutoIncrement = require("../../../../models/settings/autoIncrementModel");
 const MESSAGES = require("../../../../helpers/messages.options");
-const {
-    getAutoIncrementNumber,
-    outputData,
-    getAllAggregationFooter,
-    checkDomesticCustomer
-} = require("../../../../helpers/utility");
-const {getMatchData, OPTIONS} = require("../../../../helpers/global.options");
+const {checkDomesticCustomer} = require("../../../../helpers/utility");
+const {OPTIONS} = require("../../../../helpers/global.options");
 const {default: mongoose} = require("mongoose");
 const {CONSTANTS} = require("../../../../../config/config");
-const {findAppParameterValue} = require("../../settings/appParameter/appParameter");
 const {
     getAllShipmentPlannings,
     getShipmentPlanningById,
     updateShippingStatusOnTaxInvoiceGenerate
 } = require("../shipmentPlanning/shipmentPlanning");
 const {getB2BCustomerById, getAllCustomers} = require("../../sales/customerMaster/customerMaster");
-const {getCompanyById, getCompanyLocationsWithGST} = require("../../settings/company/company");
+const {getCompanyById, getCompanyLocationsWithGST, getCompanyLocations} = require("../../settings/company/company");
 const {getSubtractedDate, getEndDateTime, getStartDateTime, dateToAnyFormat} = require("../../../../helpers/dateTime");
 const {getSalesHSNByCode} = require("../../sales/salesHSN/salesHSN");
 const {SALES_CATEGORY, BOOLEAN_VALUES} = require("../../../../mocks/constantData");
@@ -36,25 +29,12 @@ const {DISPATCH_MAIL_CONST} = require("../../../../mocks/mailTriggerConstants");
 const AutoIncrementRepository = require("../../../../models/settings/repository/autoIncrementRepository");
 const TransporterRepository = require("../../../../models/sales/repository/transporterMasterRepository");
 const {salesUOMPipe} = require("../../settings/SalesUOMUnitMaster/SalesUOMUnitMaster");
+const {filteredCustomerList} = require("../../../../models/sales/repository/customerRepository");
 
 exports.getAll = asyncHandler(async (req, res) => {
     try {
-        const {
-            search = null,
-            excel = "false",
-            page = 1,
-            pageSize = 10,
-            column = "createdAt",
-            direction = -1
-        } = req.query;
-        let skip = Math.max(0, page - 1) * pageSize;
         let project = getAllSalesInvoiceAttributes();
-        let match = await getMatchData(project, search);
-        let pagination = [];
-        if (excel == "false") {
-            pagination = [{$skip: +skip}, {$limit: +pageSize}];
-        }
-        let rows = await Model.aggregate([
+        let pipeline = [
             {
                 $match: {
                     company: ObjectId(req.user.company),
@@ -75,14 +55,12 @@ exports.getAll = asyncHandler(async (req, res) => {
                     as: "customer"
                 }
             },
-            {$unwind: "$customer"},
-            ...getAllAggregationFooter(project, match, column, direction, pagination)
-        ]);
-        return res.success({
-            ...outputData(rows)
-        });
+            {$unwind: "$customer"}
+        ];
+        let rows = await SalesInvoiceRepository.getAllPaginate({pipeline, project, queryParams: req.query});
+        return res.success(rows);
     } catch (e) {
-        console.error("getAllB2c", e);
+        console.error("getAll", e);
         const errors = MESSAGES.apiErrorStrings.SERVER_ERROR;
         return res.serverError(errors);
     }
@@ -94,8 +72,7 @@ exports.create = asyncHandler(async (req, res) => {
             ele.SKU = ele.SKU._id;
             return ele;
         });
-        const saveObj = new Model(createdObj);
-        const itemDetails = await saveObj.save();
+        const itemDetails = await SalesInvoiceRepository.createDoc(createdObj);
         if (itemDetails) {
             await updateShippingStatusOnTaxInvoiceGenerate(itemDetails?.shipmentPlanningId);
             res.success({
@@ -126,9 +103,8 @@ exports.create = asyncHandler(async (req, res) => {
 });
 exports.deleteById = asyncHandler(async (req, res) => {
     try {
-        const deleteItem = await Model.findById(req.params.id);
+        const deleteItem = await SalesInvoiceRepository.deleteDoc({_id: req.params.id});
         if (deleteItem) {
-            await deleteItem.remove();
             return res.success({
                 message: MESSAGES.apiSuccessStrings.DELETED("SalesInvoice")
             });
@@ -273,177 +249,6 @@ exports.previewTaxInv = asyncHandler(async (req, res) => {
         console.error("create SalesInvoice", e);
         const errors = MESSAGES.apiErrorStrings.SERVER_ERROR;
         return res.serverError(errors);
-    }
-});
-exports.createSalesInvoiceFromDTI = asyncHandler(async data => {
-    try {
-        let customer = await getB2BCustomerById(data.customer);
-        const modulePrefix = await findAppParameterValue("SALES_INVOICE_MODULE_PREFIX", data.company);
-        const autoIncrementedNo = await AutoIncrement.getNextId(
-            "Sales Invoice",
-            SALES_INVOICE_MODULE_PREFIX,
-            data.company
-        );
-        let autoIncrementNo = getAutoIncrementNumber(modulePrefix, "", autoIncrementedNo, 4);
-        let createdObj = {
-            ...data,
-            customerBillingAddress: customer?.customerBillingAddress.length
-                ? customer?.customerBillingAddress[0]
-                : null,
-            customerShippingAddress: customer?.customerShippingAddress.length
-                ? customer?.customerShippingAddress[0]
-                : null,
-            salesInvoiceNumber: autoIncrementNo,
-            salesInvoiceStatus: "Closed",
-            paymentTerms: customer?.customerPaymentTerms,
-            salesInvoiceDetails: [],
-            GSTDetails: [],
-            salesInvoiceTotalAmount: 0,
-            salesInvoiceTotalCGSTAmount: 0,
-            salesInvoiceTotalSGSTAmount: 0,
-            salesInvoiceTotalIGSTAmount: 0,
-            salesInvoiceTotalUGSTAmount: 0,
-            salesInvoiceTotalTaxAmount: 0,
-            salesInvoiceTotalAmountWithTax: 0
-        };
-
-        createdObj.salesInvoiceDetails = data?.DTIDetails.map((x, i) => {
-            return {
-                salesInvoiceLineNumber: i + 1,
-                SONumber: x.SONumber,
-                SOId: x.SOId,
-                SPLineNumber: x.DTILineNumber,
-                dispatchQty: x.dispatchQty,
-                invoicedQty: x.invoicedQty,
-                unit: x.UOM,
-                salesInvoiceUnitRate: x.netRate,
-                salesInvoiceLineValue: x.lineValue,
-                currency: x.currency,
-                discount: x.discount,
-                purchaseRate: x.purchaseRate,
-                SKU: x.SKU._id,
-                HSNCode: x.SKU.HSNCode,
-                HSN: x.SKU.HSN,
-                igst: x.SKU.igst,
-                cgst: x.SKU.cgst,
-                sgst: x.SKU.sgst,
-                ugst: x.SKU.ugst
-            };
-        });
-        if (data.DTIDetails.length) {
-            createdObj.frightCharge = data?.DTIDetails[0]?.SOId?.frightCharge;
-            createdObj.frightTerms = data?.DTIDetails[0]?.SOId?.frightTerms;
-            createdObj.transporter = data?.DTIDetails[0]?.SOId?.transporter;
-            createdObj.destination = data?.DTIDetails[0]?.SOId?.destination;
-        }
-        let condition = customer.GSTIN.substring(0, 2) != customer.company.GSTIN.substring(0, 2);
-        let hsnArr = [...new Set(createdObj?.salesInvoiceDetails.map(x => x.HSNCode))];
-        for (let i = 0; i < hsnArr.length; i++) {
-            const element = hsnArr[i];
-            let arr = createdObj?.salesInvoiceDetails.filter(m => m.HSNCode == element);
-            let salesInvoiceLineValue = Number(
-                arr.map(y => +y.salesInvoiceLineValue).reduce((a, c) => a + c, 0)
-            ).toFixed(2);
-            let igstRate = 0;
-            let igstAmount = 0;
-            let cgstRate = 0;
-            let cgstAmount = 0;
-            let sgstRate = 0;
-            let sgstAmount = 0;
-            let ugstRate = 0;
-            let ugstAmount = 0;
-            if (condition) {
-                igstRate = arr[0].igst;
-                igstAmount = (+igstRate * +salesInvoiceLineValue) / 100;
-            } else {
-                cgstRate = arr[0].cgst;
-                cgstAmount = (+cgstRate * +salesInvoiceLineValue) / 100;
-                sgstRate = arr[0].sgst;
-                sgstAmount = (+sgstRate * +salesInvoiceLineValue) / 100;
-            }
-            createdObj.GSTDetails.push({
-                HSNCode: arr[0].HSNCode,
-                taxableValue: +salesInvoiceLineValue,
-                igstRate: igstRate,
-                igstAmount: igstAmount,
-                cgstRate: cgstRate,
-                cgstAmount: cgstAmount,
-                sgstRate: sgstRate,
-                sgstAmount: sgstAmount,
-                ugstRate: ugstRate,
-                ugstAmount: ugstAmount,
-                totalTaxableValue: Number(
-                    +salesInvoiceLineValue + +cgstAmount + +igstAmount + +sgstAmount + +ugstAmount
-                ).toFixed(2)
-            });
-        }
-        createdObj.otherCharges = data?.otherCharges;
-        if (createdObj.otherCharges && createdObj.otherCharges.totalAmount) {
-            let lineValue = +createdObj?.otherCharges?.totalAmount;
-            let igstRate = 0;
-            let igstAmount = 0;
-            let cgstRate = 0;
-            let cgstAmount = 0;
-            let sgstRate = 0;
-            let sgstAmount = 0;
-            let ugstRate = 0;
-            let ugstAmount = 0;
-            if (condition) {
-                igstRate = 18;
-                igstAmount = (+igstRate * +lineValue) / 100;
-            } else {
-                cgstRate = 9;
-                sgstRate = 9;
-                cgstAmount = (+cgstRate * +lineValue) / 100;
-                sgstAmount = (+sgstRate * +lineValue) / 100;
-            }
-            createdObj.GSTDetails.push({
-                HSNCode: "996511",
-                taxableValue: +lineValue,
-                igstRate: igstRate,
-                igstAmount: igstAmount,
-                cgstRate: cgstRate,
-                cgstAmount: cgstAmount,
-                sgstRate: sgstRate,
-                sgstAmount: sgstAmount,
-                ugstRate: ugstRate,
-                ugstAmount: ugstAmount,
-                totalTaxableValue: Number(+lineValue + +cgstAmount + +igstAmount + +sgstAmount + +ugstAmount).toFixed(2)
-            });
-        }
-        createdObj.salesInvoiceTotalCGSTAmount = createdObj?.GSTDetails.map(y => +y.cgstAmount).reduce(
-            (a, c) => a + c,
-            0
-        );
-        createdObj.salesInvoiceTotalSGSTAmount = createdObj?.GSTDetails.map(y => +y.sgstAmount).reduce(
-            (a, c) => a + c,
-            0
-        );
-        createdObj.salesInvoiceTotalIGSTAmount = createdObj?.GSTDetails.map(y => +y.igstAmount).reduce(
-            (a, c) => a + c,
-            0
-        );
-        createdObj.salesInvoiceTotalUGSTAmount = createdObj?.GSTDetails.map(y => +y.ugstAmount).reduce(
-            (a, c) => a + c,
-            0
-        );
-        createdObj.salesInvoiceTotalTaxAmount = createdObj?.GSTDetails.map(y => +y.taxableValue).reduce(
-            (a, c) => a + c,
-            0
-        );
-        createdObj.salesInvoiceTotalAmountWithTax = createdObj?.GSTDetails.map(y => +y.totalTaxableValue).reduce(
-            (a, c) => a + c,
-            0
-        );
-        createdObj.roundedOff = 0;
-        createdObj.roundedOff +=
-            Math.round(createdObj.salesInvoiceTotalAmountWithTax) - +createdObj.salesInvoiceTotalAmountWithTax;
-        createdObj.salesInvoiceTotalAmountWithTax = Math.round(createdObj.salesInvoiceTotalAmountWithTax);
-        const saveObj = new Model(createdObj);
-        const itemDetails = await saveObj.save();
-        return itemDetails;
-    } catch (e) {
-        console.error("create SalesInvoice", e);
     }
 });
 exports.getAllSILineDetails = asyncHandler(async (req, res) => {
@@ -961,25 +766,11 @@ exports.getAllEwayBillList = asyncHandler(async (req, res) => {
 });
 exports.updateSalesInvoiceStatusOnASN = asyncHandler(async salesInvoiceId => {
     try {
-        let salesInvoice = await Model.findById(salesInvoiceId);
+        let salesInvoice = await SalesInvoiceRepository.getDocById(salesInvoiceId);
         salesInvoice.isDispatched = true;
         await salesInvoice.save();
     } catch (error) {
         console.error("updatePOQtyOnGRN::::: Error in updating Purchase Order ======= ", error);
-    }
-});
-exports.getAllSalesInvoiceForASN = asyncHandler(async company => {
-    try {
-        let rows = await Model.find(
-            {
-                isDispatched: {$ne: true},
-                company: company
-            },
-            {_id: 1, salesInvoiceNumber: 1}
-        ).sort({createdAt: -1});
-        return rows;
-    } catch (e) {
-        console.error("getAllSalesInvoiceForASN", e);
     }
 });
 exports.getAllSalesInvoiceForPDIR = async (company, customerId) => {
@@ -1257,3 +1048,36 @@ exports.update = asyncHandler(async (req, res) => {
         return res.serverError(errors);
     }
 });
+
+exports.createDirectTaxInvoice = async (body, preview) => {
+    try {
+        let createdObj = {
+            GSTDetails: [],
+            salesInvoiceStatus: OPTIONS.defaultStatus.CLOSED,
+            ...body
+        };
+        let customerCategoryCondition =
+            (await checkDomesticCustomer(createdObj.customer.customerCategory)) &&
+            createdObj?.customer?.GSTClassification != "SEZ";
+        let taxCondition = false;
+        if (createdObj?.company?.placesOfBusiness?.length > 0 && customerCategoryCondition) {
+            for (const ele of createdObj.company.placesOfBusiness) {
+                if (createdObj.billFromLocation == ele.locationID) {
+                    taxCondition =
+                        createdObj?.customer?.GSTIN?.substring(0, 2) != ele?.GSTINForAdditionalPlace?.substring(0, 2);
+                }
+            }
+        }
+        if (createdObj.customer.customerCategory) {
+            createdObj = await previewSalesDomestic(createdObj, taxCondition);
+        } else {
+            createdObj = await previewSalesExports(createdObj);
+        }
+        if (!preview) {
+            await SalesInvoiceRepository.createDoc(createdObj);
+        }
+        return createdObj;
+    } catch (e) {
+        console.error("create SalesInvoice", e);
+    }
+};

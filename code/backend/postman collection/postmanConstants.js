@@ -14,7 +14,6 @@ exports.SUB_MODULE_NAME = {
     ],
     Transactions: [
         "creditNote",
-        "directTaxInvoice",
         "dispatchRequestNote",
         "proformaInvoice",
         "quotationDSKU",

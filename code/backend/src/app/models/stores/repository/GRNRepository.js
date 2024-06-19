@@ -6,6 +6,9 @@ module.exports = {
     findOneDoc: async (match, project = {}) => {
         return await Model.findOne(match, project);
     },
+    findAndUpdateDoc: async (match, update) => {
+        return await Model.updateOne(match, update);
+    },
     getDocById: async (_id, project = {}) => {
         return await Model.findById(_id, project);
     },

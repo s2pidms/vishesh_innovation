@@ -1,43 +1,31 @@
+const {ObjectId} = require("../../../../../config/mongoose");
 const asyncHandler = require("express-async-handler");
-const Model = require("../../../../models/sales/directTaxInvoiceModel");
 const MESSAGES = require("../../../../helpers/messages.options");
-const {generateCreateData, OPTIONS} = require("../../../../helpers/global.options");
-const {findAppParameterValue} = require("../../settings/appParameter/appParameter");
-const {getAllSObyCustomerID, updateSOQtyOnDRN} = require("../salesOrder/salesOrder");
-const {createSalesInvoiceFromDTI} = require("../../dispatch/salesInvoice/salesInvoice");
-const {getSalesHSNByCode} = require("../salesHSN/salesHSN");
-const {
-    getAllDirectTaxInvoiceAttributes,
-    getAllDirectTaxInvoiceExcelAttributes
-} = require("../../../../models/sales/helpers/directTaxInvoiceHelper");
-// const {getDTIMailConfig} = require("./directTaxInvoiceMail");
-const {default: mongoose} = require("mongoose");
-const {DIRECT_TAX_INVOICE} = require("../../../../mocks/schemasConstant/salesConstant");
+const {getAllDirectTaxInvoiceAttributes} = require("../../../../models/sales/helpers/directTaxInvoiceHelper");
 const {getAndSetAutoIncrementNo} = require("../../settings/autoIncrement/autoIncrement");
+const DirectTaxInvoiceRepository = require("../../../../models/sales/repository/directTaxInvoiceRepository");
+const {getCompanyLocationsWithGST, getCompanyById} = require("../../settings/company/company");
 const {filteredCustomerList} = require("../../../../models/sales/repository/customerRepository");
-const {getAllDirectTaxInvoiceAggregate} = require("../../../../models/sales/repository/directTaxInvoiceRepository");
-const ObjectId = mongoose.Types.ObjectId;
-const MailTriggerRepository = require("../../../../models/settings/repository/mailTriggerRepository");
-const {SALES_MAIL_CONST} = require("../../../../mocks/mailTriggerConstants");
+const {getAllTransporter} = require("../transporter/transporter");
+const {getAllModuleMaster} = require("../../settings/module-master/module-master");
+const {findAppParameterValue} = require("../../settings/appParameter/appParameter");
+const {filteredCompanyList} = require("../../../../models/settings/repository/companyRepository");
+const {getAllPaymentTerms} = require("../paymentTerms/paymentTerms");
+const {filteredSKUMasterList} = require("../../../../models/sales/repository/SKUMasterRepository");
+const {createDirectTaxInvoice} = require("../../dispatch/salesInvoice/salesInvoice");
+const {OPTIONS} = require("../../../../helpers/global.options");
+const {CONSTANTS} = require("../../../../../config/config");
+const AutoIncrementRepository = require("../../../../models/settings/repository/autoIncrementRepository");
+const {SALES_INVOICE} = require("../../../../mocks/schemasConstant/dispatchConstant");
 
 exports.getAll = asyncHandler(async (req, res) => {
     try {
         let project = getAllDirectTaxInvoiceAttributes();
-        if (req.query.excel == "true") {
-            project = getAllDirectTaxInvoiceExcelAttributes();
-        }
         let pipeline = [
-            {$match: {company: ObjectId(req.user.company)}},
-            {
-                $addFields: {
-                    salesInvoiceDateS: {$dateToString: {format: "%d-%m-%Y", date: "$salesInvoiceDate"}}
-                }
-            },
             {
                 $match: {
-                    DTIStatus: {
-                        $nin: OPTIONS.defaultStatus.getAllFilterStatusArray(["CLOSED", "REPORT_GENERATED", "REJECTED"])
-                    }
+                    company: ObjectId(req.user.company),
+                    DTIStatus: {$nin: [OPTIONS.defaultStatus.REPORT_GENERATED]}
                 }
             },
             {
@@ -45,13 +33,17 @@ exports.getAll = asyncHandler(async (req, res) => {
                     from: "Customer",
                     localField: "customer",
                     foreignField: "_id",
-                    pipeline: [{$project: {customerName: 1, customerCategory: 1}}],
+                    pipeline: [{$project: {customerName: 1}}],
                     as: "customer"
                 }
             },
             {$unwind: "$customer"}
         ];
-        let rows = await getAllDirectTaxInvoiceAggregate({pipeline, project, queryParams: req.query});
+        let rows = await DirectTaxInvoiceRepository.getAllPaginate({
+            pipeline,
+            project,
+            queryParams: req.query
+        });
         return res.success(rows);
     } catch (e) {
         console.error("getAll", e);
@@ -66,44 +58,13 @@ exports.create = asyncHandler(async (req, res) => {
             company: req.user.company,
             createdBy: req.user.sub,
             updatedBy: req.user.sub,
-
             ...req.body
         };
-        const saveObj = new Model(createdObj);
-        const itemDetails = await saveObj.save();
+        const itemDetails = await DirectTaxInvoiceRepository.createDoc(createdObj);
         if (itemDetails) {
-            for (let n of itemDetails.DTIDetails) {
-                await updateSOQtyOnDRN(
-                    req.user.sub,
-                    n.SOId.valueOf(),
-                    n.SKU.valueOf(),
-                    n.dispatchQty,
-                    itemDetails.DTIStatus,
-                    n.DTILineNumber
-                );
-            }
             res.success({
                 message: MESSAGES.apiSuccessStrings.ADDED("Direct Tax Invoice")
             });
-            // let mailCreateObj = {
-            //     DTIId: itemDetails._id,
-            //     action: "created",
-            //     company: req.user.company,
-            //     mailAction: "Generate"
-            // };
-            // getDTIMailConfig(mailCreateObj);
-            let mailTriggerCreateObj = {
-                subModuleId: itemDetails._id,
-                action: "created",
-                company: req.user.company,
-                mailAction: "Generate",
-                collectionName: DIRECT_TAX_INVOICE.COLLECTION_NAME,
-                message: `Direct Tax Invoice created - ${itemDetails?.DTINumber}`,
-                module: SALES_MAIL_CONST.DIRECT_TAX_INV.MODULE,
-                subModule: SALES_MAIL_CONST.DIRECT_TAX_INV.SUB_MODULE,
-                isSent: false
-            };
-            await MailTriggerRepository.createDoc(mailTriggerCreateObj);
         } else {
             const errors = MESSAGES.apiErrorStrings.INVALID_REQUEST;
             return res.serverError(errors);
@@ -117,77 +78,21 @@ exports.create = asyncHandler(async (req, res) => {
 
 exports.update = asyncHandler(async (req, res) => {
     try {
-        let itemDetails = await Model.findById(req.params.id).populate("DTIDetails.SOId").populate("DTIDetails.SKU");
+        let itemDetails = await DirectTaxInvoiceRepository.getDocById(req.params.id);
         if (!itemDetails) {
             const errors = MESSAGES.apiErrorStrings.INVALID_REQUEST;
             return res.preconditionFailed(errors);
         }
         itemDetails.updatedBy = req.user.sub;
-        itemDetails = await generateCreateData(itemDetails, req.body);
-
-        itemDetails = await itemDetails.save();
-        for (let n of itemDetails.DTIDetails) {
-            await updateSOQtyOnDRN(
-                req.user.sub,
-                n.SOId.valueOf(),
-                n.SKU.valueOf(),
-                n.dispatchQty,
-                itemDetails.DTIStatus,
-                n.DTILineNumber
-            );
-        }
-        let salesInvoice = {};
+        itemDetails = await DirectTaxInvoiceRepository.updateDoc(itemDetails, req.body);
         if (itemDetails.DTIStatus == OPTIONS.defaultStatus.REPORT_GENERATED) {
-            let arr = [];
-            if (itemDetails?.DTIDetails.length) {
-                itemDetails = JSON.parse(JSON.stringify(itemDetails));
-                for await (const x of itemDetails?.DTIDetails) {
-                    let HSN = await getSalesHSNByCode(x.SKU.hsn);
-                    x.SKU.HSNCode = HSN?.hsnCode;
-                    x.SKU.HSN = HSN?._id;
-                    x.SKU.igst = HSN?.igstRate;
-                    x.SKU.cgst = HSN?.cgstRate;
-                    x.SKU.sgst = HSN?.sgstRate;
-                    x.SKU.ugst = HSN?.ugstRate;
-                    arr.push(x);
-                }
-                itemDetails.DTIDetails = arr;
-            }
-            salesInvoice = await createSalesInvoiceFromDTI(itemDetails);
+            let salesInvData = JSON.parse(JSON.stringify(itemDetails));
+            delete salesInvData._id;
+            await createDirectTaxInvoice(salesInvData, false);
         }
-        if (itemDetails) {
-            res.success({
-                message: `Direct Tax Invoice has been ${
-                    itemDetails.DTIStatus == "Awaiting Approval" ? "updated" : itemDetails.DTIStatus.toLowerCase()
-                } successfully`
-            });
-            // let mailUpdateObj = {
-            //     DTIId: itemDetails._id,
-            //     action: "modified",
-            //     company: req.user.company,
-            //     mailAction: itemDetails.DTIStatus,
-            //     SIId: salesInvoice._id
-            // };
-            // getDTIMailConfig(mailUpdateObj);
-            if (["Awaiting Approval", "Report Generated"].includes(itemDetails.DTIStatus)) {
-                let actions = {
-                    "Awaiting Approval": "Modified",
-                    "Report Generated": "Report Generated"
-                };
-                let mailTriggerCreateObj = {
-                    subModuleId: itemDetails._id,
-                    action: actions[actions.DTIStatus],
-                    company: req.user.company,
-                    mailAction: actions[actions.DTIStatus],
-                    collectionName: DIRECT_TAX_INVOICE.COLLECTION_NAME,
-                    message: `Direct Tax Invoice ${itemDetails.DTIStatus} - ${itemDetails?.DTINumber}`,
-                    module: SALES_MAIL_CONST.DIRECT_TAX_INV.MODULE,
-                    subModule: SALES_MAIL_CONST.DIRECT_TAX_INV.SUB_MODULE,
-                    isSent: false
-                };
-                await MailTriggerRepository.createDoc(mailTriggerCreateObj);
-            }
-        }
+        return res.success({
+            message: MESSAGES.apiSuccessStrings.UPDATE("Direct Tax Invoice has been")
+        });
     } catch (e) {
         console.error("update Direct Tax Invoice", e);
         const errors = MESSAGES.apiErrorStrings.SERVER_ERROR;
@@ -195,12 +100,10 @@ exports.update = asyncHandler(async (req, res) => {
     }
 });
 
-// @route   PUT /sales/Direct Tax Invoice/delete/:id
 exports.deleteById = asyncHandler(async (req, res) => {
     try {
-        const deleteItem = await Model.findById(req.params.id);
+        const deleteItem = await DirectTaxInvoiceRepository.deleteDoc({_id: req.params.id});
         if (deleteItem) {
-            await deleteItem.remove();
             return res.success({
                 message: MESSAGES.apiSuccessStrings.DELETED("Direct Tax Invoice")
             });
@@ -215,13 +118,61 @@ exports.deleteById = asyncHandler(async (req, res) => {
     }
 });
 
-// @route   GET /sales/Direct Tax Invoice/getById/:id
 exports.getById = asyncHandler(async (req, res) => {
     try {
-        let existing = await Model.findById(req.params.id).populate("customer", "customerName customerCategory");
-        if (!existing) {
+        let existing = await DirectTaxInvoiceRepository.filteredDirectTaxInvoiceList([
+            {$match: {_id: ObjectId(req.params.id)}},
+            {
+                $lookup: {
+                    from: "SKUMaster",
+                    localField: "salesInvoiceDetails.SKU",
+                    foreignField: "_id",
+                    pipeline: [
+                        {
+                            $project: {
+                                SKUNo: 1,
+                                primaryUnit: 1,
+                                SKUDescription: 1,
+                                SKUName: 1
+                            }
+                        }
+                    ],
+                    as: "SKUInfo"
+                }
+            },
+            {
+                $addFields: {
+                    salesInvoiceDetails: {
+                        $map: {
+                            input: "$salesInvoiceDetails",
+                            as: "detail",
+                            in: {
+                                $mergeObjects: [
+                                    "$$detail",
+                                    {
+                                        $arrayElemAt: [
+                                            {
+                                                $filter: {
+                                                    input: "$SKUInfo",
+                                                    as: "sku",
+                                                    cond: {$eq: ["$$sku._id", "$$detail.SKU"]}
+                                                }
+                                            },
+                                            0
+                                        ]
+                                    }
+                                ]
+                            }
+                        }
+                    }
+                }
+            }
+        ]);
+        if (!existing.length) {
             let errors = MESSAGES.apiSuccessStrings.DATA_NOT_EXISTS("Direct Tax Invoice");
             return res.unprocessableEntity(errors);
+        } else {
+            existing = existing[0];
         }
         return res.success(existing);
     } catch (e) {
@@ -230,49 +181,187 @@ exports.getById = asyncHandler(async (req, res) => {
         return res.serverError(errors);
     }
 });
-exports.DTIDetailsByCustomerId = asyncHandler(async (req, res) => {
+
+exports.getByIdForPDF = asyncHandler(async (req, res) => {
     try {
-        let salesOrder = await getAllSObyCustomerID(req.params.id, req.user.company);
-        let DTIDetails = [];
-        let index = 1;
-        for await (const ele of salesOrder) {
-            DTIDetails.push({
-                DTILineNumber: index,
-                SOId: ele?._id,
-                SONumber: ele?.SONumber,
-                currency: ele?.currency,
-                SODate: ele?.SODate,
-                SKU: ele?.SODetails?.SKU?._id,
-                SKUNo: ele?.SODetails?.SKU?.SKUNo,
-                SKUName: ele?.SODetails?.SKU?.SKUName,
-                SKUDescription: ele?.SODetails?.SKU?.SKUDescription,
-                UOM: ele?.SODetails?.UOM,
-                standardRate: ele?.SODetails?.standardRate,
-                purchaseRate: ele?.SODetails?.standardRate,
-                SOBalancedQty: ele?.SODetails?.balancedQty,
-                dispatchQty: 0,
-                invoicedQty: 0,
-                discount: 0,
-                netRate: 0,
-                lineValue: 0,
-                SPVLine: 0
-            });
-            index++;
+        let existing = await DirectTaxInvoiceRepository.filteredDirectTaxInvoiceList([
+            {$match: {_id: ObjectId(req.params.id)}},
+            {
+                $lookup: {
+                    from: "Customer",
+                    localField: "customer",
+                    foreignField: "_id",
+                    pipeline: [
+                        {
+                            $project: {
+                                customerCurrency: 1,
+                                customerName: 1,
+                                customerContactInfo: 1,
+                                TCSOnScrap: 1,
+                                TCSOnVendor: 1,
+                                GSTIN: 1,
+                                showSKUDescription: 1,
+                                GSTClassification: 1,
+                                customerCategory: 1,
+                                printQRCodeOnInvoice: 1,
+                                customerContactInfo: {$first: "$customerContactInfo"}
+                            }
+                        }
+                    ],
+                    as: "customer"
+                }
+            },
+            {
+                $unwind: "$customer"
+            },
+            {
+                $lookup: {
+                    from: "SKUMaster",
+                    localField: "salesInvoiceDetails.SKU",
+                    foreignField: "_id",
+                    pipeline: [
+                        {
+                            $project: {
+                                SKUNo: 1,
+                                primaryUnit: 1,
+                                SKUDescription: 1,
+                                SKUName: 1,
+                                customerInfo: 1,
+                                hsn: 1
+                            }
+                        }
+                    ],
+                    as: "SKUInfo"
+                }
+            },
+            {
+                $addFields: {
+                    salesInvoiceDetails: {
+                        $map: {
+                            input: "$salesInvoiceDetails",
+                            as: "detail",
+                            in: {
+                                $mergeObjects: [
+                                    "$$detail",
+                                    {
+                                        SKU: {
+                                            $arrayElemAt: [
+                                                {
+                                                    $filter: {
+                                                        input: "$SKUInfo",
+                                                        as: "sku",
+                                                        cond: {$eq: ["$$sku._id", "$$detail.SKU"]}
+                                                    }
+                                                },
+                                                0
+                                            ]
+                                        }
+                                    }
+                                ]
+                            }
+                        }
+                    }
+                }
+            },
+            {
+                $lookup: {
+                    from: "Company",
+                    localField: "company",
+                    foreignField: "_id",
+                    pipeline: [
+                        {
+                            $project: {
+                                _id: 1,
+                                companyName: 1,
+                                GSTIN: 1,
+                                companyContactPersonEmail: 1,
+                                placesOfBusiness: 1,
+                                swiftCode: 1,
+                                companyBankMICRCode: 1,
+                                intermediaryBank: 1,
+                                companyBefName: 1,
+                                companyBankName: 1,
+                                companyAccountNumber: 1,
+                                companyBankIFSCCode: 1,
+                                companyBankBranch: 1,
+                                intermediaryBankSwiftCode: 1,
+                                TIDomesticTemplates: 1,
+                                TIExportsTemplates: 1,
+                                accountsDetails: 1,
+                                exportsDetails: 1,
+                                logoUrl: {$concat: [`${CONSTANTS.domainUrl}company/`, "$logo"]},
+                                companySignatureUrl: {$concat: [`${CONSTANTS.domainUrl}company/`, "$companySignature"]},
+                                companyPdfHeaderUrl: {$concat: [`${CONSTANTS.domainUrl}company/`, "$companyPdfHeader"]},
+                                SOSignatureUrl: {$concat: [`${CONSTANTS.domainUrl}company/`, "$SOSignature"]},
+                                SOPdfHeaderUrl: {$concat: [`${CONSTANTS.domainUrl}company/`, "$SOPdfHeader"]}
+                            }
+                        }
+                    ],
+                    as: "company"
+                }
+            },
+            {$unwind: "$company"},
+            {
+                $project: {
+                    SKUInfo: 0,
+                    createdAt: 0,
+                    updatedAt: 0
+                }
+            }
+        ]);
+        if (!existing.length) {
+            let errors = MESSAGES.apiSuccessStrings.DATA_NOT_EXISTS("Direct Tax Invoice");
+            return res.unprocessableEntity(errors);
+        } else {
+            existing = await createDirectTaxInvoice(existing[0], true);
+            if (existing?.company?.placesOfBusiness.length > 0) {
+                for (const e of existing.company.placesOfBusiness) {
+                    if (e.locationID == existing.billFromLocation && e.SOPdfHeader) {
+                        existing.company.SOPdfHeaderUrl = `${CONSTANTS.domainUrl}company/` + e.SOPdfHeader;
+                    }
+                    if (e.locationID == existing.billFromLocation && e.SOSignature) {
+                        existing.company.SOSignatureUrl = `${CONSTANTS.domainUrl}company/` + e.SOSignature;
+                    }
+                    if (e.locationID == existing.billFromLocation && e.TISignature) {
+                        existing.company.TISignatureUrl = `${CONSTANTS.domainUrl}company/` + e.TISignature;
+                    }
+                }
+            }
         }
-        return res.success(DTIDetails);
+        return res.success(existing);
     } catch (e) {
         console.error("getById Direct Tax Invoice", e);
         const errors = MESSAGES.apiErrorStrings.SERVER_ERROR;
         return res.serverError(errors);
     }
 });
-// @route   GET /sales/Direct Tax Invoice/getAllMasterData
 exports.getAllMasterData = asyncHandler(async (req, res) => {
     try {
-        const autoIncrementNo = await getAndSetAutoIncrementNo(
-            {...DIRECT_TAX_INVOICE.AUTO_INCREMENT_DATA()},
-            req.user.company
+        let billToOptions = await getCompanyLocationsWithGST(req.user.company);
+        const salesInvObj = await AutoIncrementRepository.findOneDoc(
+            {
+                moduleName: SALES_INVOICE.MODULE_NAME,
+                module: SALES_INVOICE.MODULE
+            },
+            {
+                modulePrefix: 1,
+                digit: 1,
+                _id: 0
+            }
         );
+        let autoIncrementedValues = {};
+        for await (const ele of billToOptions) {
+            let subAutoIncrement = {
+                location: ele.GSTINForAdditionalPlace,
+                digit: salesInvObj?.digit ?? 4,
+                modulePrefix: salesInvObj?.modulePrefix ?? SALES_INVOICE.MODULE_PREFIX
+            };
+            let autoIncrementNo = await getAndSetAutoIncrementNo(
+                {...SALES_INVOICE.AUTO_INCREMENT_DATA(), subAutoIncrement},
+                req.user.company
+            );
+            autoIncrementedValues[ele.locationID] = autoIncrementNo;
+        }
         const customersOptions = await filteredCustomerList([
             {$match: {company: ObjectId(req.user.company), isCustomerActive: "A"}},
             {$sort: {customerName: 1}},
@@ -284,19 +373,62 @@ exports.getAllMasterData = asyncHandler(async (req, res) => {
             {
                 $project: {
                     customerName: 1,
-                    customerCategory: 1,
                     customerCode: 1,
                     customerBillingState: "$customerBillingAddress.state",
                     customerBillingCity: "$customerBillingAddress.city",
-                    customerBillingPinCode: "$customerBillingAddress.pinCode"
+                    customerBillingPinCode: "$customerBillingAddress.pinCode",
+                    customer: "$_id",
+                    customerCategory: 1,
+                    customerShippingAddress: 1
                 }
             }
         ]);
-        let salesCategory = await findAppParameterValue("SALES_CATEGORY", req.user.company);
+        const transporterOptions = await getAllTransporter(
+            {
+                company: ObjectId(req.user.company)
+            },
+            {label: "$name", value: "$name", _id: 0}
+        );
+        const freightTermsOptions = await getAllModuleMaster(req.user.company, "FREIGHT_TERMS");
+        let modeOfTransportOptions = await findAppParameterValue("MODE_OF_TRANSPORT", req.user.company);
+        const billFromLocationOptions = await filteredCompanyList([
+            {
+                $match: {
+                    _id: ObjectId(req.user.company)
+                }
+            },
+            {$unwind: "$placesOfBusiness"},
+            {$group: {_id: null, locationIDs: {$addToSet: "$placesOfBusiness.locationID"}}},
+            {
+                $unwind: "$locationIDs"
+            },
+            {$project: {_id: 0, label: "$locationIDs", value: "$locationIDs"}}
+        ]);
+        const paymentTermsOptions = await getAllPaymentTerms(req.user.company);
+        const customerCategory = await findAppParameterValue("SALES_CATEGORY", req.user.company);
+
+        let companyData = await getCompanyById(req.user.company, {placesOfBusiness: 1});
         return res.success({
-            autoIncrementNo,
+            autoIncrementedValues,
+            companyData,
             customersOptions,
-            salesCategoryOptions: salesCategory.split(",").map(x => {
+            billToOptions,
+            paymentTermsOptions: paymentTermsOptions.map(x => {
+                return {
+                    label: x.paymentDescription,
+                    value: x.paymentDescription
+                };
+            }),
+            billFromLocationOptions: billFromLocationOptions,
+            transporterOptions: transporterOptions,
+            freightTermsOptions,
+            modeOfTransportOptions: modeOfTransportOptions.split(",").map(x => {
+                return {
+                    label: x,
+                    value: x
+                };
+            }),
+            customerCategoryOptions: customerCategory.split(",").map(x => {
                 return {
                     label: x,
                     value: x
@@ -305,6 +437,83 @@ exports.getAllMasterData = asyncHandler(async (req, res) => {
         });
     } catch (error) {
         console.error("getAllMasterData Direct Tax Invoice", error);
+        const errors = MESSAGES.apiErrorStrings.SERVER_ERROR;
+        return res.serverError(errors);
+    }
+});
+
+exports.getDTIDetailsByCustomerId = asyncHandler(async (req, res) => {
+    try {
+        const SKUList = await filteredSKUMasterList([
+            {
+                $match: {
+                    company: ObjectId(req.user.company),
+                    isActive: "A"
+                }
+            },
+            {
+                $unwind: "$customerInfo"
+            },
+            {
+                $match: {
+                    "customerInfo.customer": ObjectId(req.params.id)
+                }
+            },
+            {
+                $lookup: {
+                    from: "SaleHSN",
+                    localField: "hsn",
+                    foreignField: "hsnCode",
+                    pipeline: [
+                        {
+                            $project: {
+                                hsnCode: 1,
+                                igst: "$igstRate",
+                                cgst: "$cgstRate",
+                                sgst: "$sgstRate",
+                                ugst: "$ugstRate"
+                            }
+                        }
+                    ],
+                    as: "salesHSN"
+                }
+            },
+            {$unwind: "$salesHSN"},
+            {
+                $project: {
+                    salesInvoiceLineNumber: {$literal: 0},
+                    SONumber: {$literal: 0},
+                    SOId: ObjectId("000000000000000000000000"),
+                    SPLineNumber: {$literal: 0},
+                    batchId: ObjectId("000000000000000000000000"),
+                    batchDate: new Date(),
+                    tBatchNo: "-",
+                    SKU: "$_id",
+                    SKUNo: "$SKUNo",
+                    SKUName: "$SKUName",
+                    SKUDescription: "$SKUDescription",
+                    dispatchQty: {$literal: 0},
+                    invoicedQty: {$literal: 0},
+                    discount: {$literal: 0},
+                    purchaseRate: "$customerInfo.standardSellingRate",
+                    unit: "$primaryUnit",
+                    salesInvoiceUnitRate: {$literal: 0},
+                    salesInvoiceLineValue: {$literal: 0},
+                    HSN: "$salesHSN._id",
+                    HSNCode: "$salesHSN.hsnCode",
+                    igst: "$salesHSN.igst",
+                    cgst: "$salesHSN.cgst",
+                    sgst: "$salesHSN.sgst",
+                    ugst: "$salesHSN.ugst",
+                    IgstAmt: {$literal: 0},
+                    CgstAmt: {$literal: 0},
+                    SgstAmt: {$literal: 0}
+                }
+            }
+        ]);
+        return res.success(SKUList);
+    } catch (error) {
+        console.error("getAllDTIMasterData SalesInvoice", error);
         const errors = MESSAGES.apiErrorStrings.SERVER_ERROR;
         return res.serverError(errors);
     }

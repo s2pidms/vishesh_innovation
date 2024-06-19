@@ -1,41 +1,26 @@
 const asyncHandler = require("express-async-handler");
-const Model = require("../../../../models/settings/labelMasterModel");
 const MESSAGES = require("../../../../helpers/messages.options");
-const {outputData, getAllAggregationFooter} = require("../../../../helpers/utility");
-const {generateCreateData, getMatchData} = require("../../../../helpers/global.options");
 const {default: mongoose} = require("mongoose");
 const {getAllLabelMasterAttributes} = require("../../../../models/settings/helpers/labelMasterHelper");
 const memoryCacheHandler = require("../../../../utilities/memoryCacheHandler");
+const LabelMasterRepository = require("../../../../models/settings/repository/labelMasterRepository");
 const ObjectId = mongoose.Types.ObjectId;
+
 exports.getAll = asyncHandler(async (req, res) => {
     try {
-        const {
-            search = null,
-            excel = "false",
-            page = 1,
-            pageSize = 10,
-            column = "createdAt",
-            direction = -1,
-            menuItemId = null
-        } = req.query;
-        let skip = Math.max(0, page - 1) * pageSize;
+        const {menuItemId = null} = req.query;
         let project = getAllLabelMasterAttributes();
-        let match = await getMatchData(project, search);
-        let pagination = [];
-        if (excel == "false") {
-            pagination = [{$skip: +skip}, {$limit: +pageSize}];
-        }
-        let rows = await Model.aggregate([
+        let pipeline = [
             {
                 $match: {
                     company: ObjectId(req.user.company),
                     menuItemId: ObjectId(menuItemId)
                 }
-            },
-            ...getAllAggregationFooter(project, match, column, direction, pagination)
-        ]);
+            }
+        ];
+        let rows = await LabelMasterRepository.getAllPaginate({pipeline, project, queryParams: req.query});
         return res.success({
-            ...outputData(rows)
+            ...rows
         });
     } catch (e) {
         const errors = MESSAGES.apiErrorStrings.SERVER_ERROR;
@@ -51,8 +36,7 @@ exports.create = asyncHandler(async (req, res) => {
             updatedBy: req.user.sub,
             ...req.body
         };
-        const saveObj = new Model(createdObj);
-        const itemDetails = await saveObj.save();
+        const itemDetails = await LabelMasterRepository.createDoc(createdObj);
         if (itemDetails) {
             res.success({
                 message: MESSAGES.apiSuccessStrings.ADDED("Label Master")
@@ -70,13 +54,12 @@ exports.create = asyncHandler(async (req, res) => {
 });
 exports.update = asyncHandler(async (req, res) => {
     try {
-        let itemDetails = await Model.findById(req.params.id);
+        let itemDetails = await LabelMasterRepository.getDocById(req.params.id);
         if (!itemDetails) {
             const errors = MESSAGES.apiErrorStrings.INVALID_REQUEST;
             return res.preconditionFailed(errors);
         }
-        itemDetails = await generateCreateData(itemDetails, req.body);
-        itemDetails = await itemDetails.save();
+        itemDetails = await LabelMasterRepository.updateDoc(itemDetails, req.body);
         res.success({
             message: MESSAGES.apiSuccessStrings.UPDATE("Label Master has been")
         });
@@ -89,9 +72,8 @@ exports.update = asyncHandler(async (req, res) => {
 });
 exports.deleteById = asyncHandler(async (req, res) => {
     try {
-        const deleteItem = await Model.findById(req.params.id);
+        const deleteItem = await LabelMasterRepository.deleteDoc({_id: req.params.id});
         if (deleteItem) {
-            await deleteItem.remove();
             return res.success({
                 message: MESSAGES.apiSuccessStrings.DELETED("Label Master")
             });
@@ -107,7 +89,7 @@ exports.deleteById = asyncHandler(async (req, res) => {
 });
 exports.getById = asyncHandler(async (req, res) => {
     try {
-        let existing = await Model.findById(req.params.id);
+        let existing = await LabelMasterRepository.getDocById(req.params.id);
         if (!existing) {
             let errors = MESSAGES.apiSuccessStrings.DATA_NOT_EXISTS("Label Master");
             return res.unprocessableEntity(errors);
@@ -136,19 +118,23 @@ exports.getAllLabelJSON = async company => {
 
 exports.updateCacheGlobalLabel = async company => {
     try {
-        let rows = await Model.find(
+        let rows = await LabelMasterRepository.filteredLabelList([
             {
-                company: company
+                $match: {
+                    company: ObjectId(company)
+                }
             },
             {
-                menuItemId: 1,
-                labelName: 1,
-                displayLabelName: 1
+                $project: {
+                    menuItemId: 1,
+                    labelName: 1,
+                    displayLabelName: 1
+                }
             }
-        );
+        ]);
         memoryCacheHandler.put("labelMaster", rows);
         return rows;
     } catch (error) {
-        console.error(e);
+        console.error(error);
     }
 };

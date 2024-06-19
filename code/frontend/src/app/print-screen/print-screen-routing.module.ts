@@ -33,6 +33,13 @@ const routes: Routes = [
             )
     },
     {
+        path: "dti_preview_print",
+        loadChildren: () =>
+            import("./dti-preview-print-screen/dti-preview-print-screen.module").then(
+                m => m.DTIPreviewPrintScreenModule
+            )
+    },
+    {
         path: "preview_tax_invoice",
         loadChildren: () =>
             import("./preview-tax-invoice-print-screen/preview-tax-invoice-print-screen.module").then(
@@ -194,6 +201,13 @@ const routes: Routes = [
         loadChildren: () =>
             import("./job-worker-challan-print-screen/job-worker-challan-print-screen.module").then(
                 m => m.JobWorkChallanPrintScreenModule
+            )
+    },
+    {
+        path: "job_work_order_print",
+        loadChildren: () =>
+            import("./job-work-order-print-screen/job-work-order-print-screen.module").then(
+                m => m.JobWorkOrderPrintScreenModule
             )
     }
 ];

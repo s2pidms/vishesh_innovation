@@ -217,7 +217,6 @@ export class SampleJcCreationFormComponent implements OnInit {
                     } else {
                         this.itemDetailsList = [];
                     }
-                    // }
                     success.status = this.statusArr[this.action];
 
                     this.getCustomerOptions(success.stage, success.customerCategory, success);
@@ -247,8 +246,6 @@ export class SampleJcCreationFormComponent implements OnInit {
         this.sampleJCCreationService.getSampleJCDetailsByCustomerId({customerId: customer}).subscribe(success => {
             this.SKUDetailsOfJC = success;
             this.collection = this.SKUDetailsOfJC.length;
-
-            // this.customerOptions = success;
             this.spinner.hide();
         });
     }
@@ -266,8 +263,6 @@ export class SampleJcCreationFormComponent implements OnInit {
         this.sampleJCCreationService.getSampleJCDetailsByCustomerId({customerId: customer}).subscribe(success => {
             this.SKUDetailsOfJC = success;
             this.collection = this.SKUDetailsOfJC.length;
-
-            // this.customerOptions = success;
             this.spinner.hide();
         });
     }

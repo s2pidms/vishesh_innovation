@@ -3,6 +3,7 @@ import {ActivatedRoute} from "@angular/router";
 import {LIST_DEFAULT_PERMISSION_ACTIONS} from "@mocks/constant";
 import {SpinnerService} from "@core/services";
 import {SaleDebitNoteService} from "@services/sales";
+import {ISalesDebit} from "@mocks/models/print-screen/salesDebitNotePrint";
 
 @Component({
     selector: "app-sale-debit-note-print",
@@ -10,7 +11,120 @@ import {SaleDebitNoteService} from "@services/sales";
     styleUrls: ["./sale-debit-note-print.component.scss"]
 })
 export class SaleDebitNotePrintComponent implements OnInit {
-    tableData: any = {};
+    tableData: ISalesDebit = {
+        _id: "",
+        salesCategory: "",
+        company: {
+            _id: "",
+            companyBankName: "",
+            companyAccountNumber: "",
+            companyBankIFSCCode: "",
+            companyName: "",
+            GSTIN: "",
+            companyBankBranch: "",
+            companyBankMICRCode: "",
+            companyBefName: "",
+            companyBillingAddress: {
+                addressLine1: "",
+                addressLine2: "",
+                addressLine3: "",
+                addressLine4: "",
+                addressType: "",
+                city: "",
+                country: "",
+                district: "",
+                pinCode: "",
+                state: ""
+            },
+            contactInfo: [
+                {
+                    department: "",
+                    contactPersonName: "",
+                    designation: "",
+                    companyContactPersonNumber: "",
+                    companyContactPersonEmail: "",
+                    _id: ""
+                }
+            ],
+            companySignatureUrl: "",
+            companyPdfHeaderUrl: "",
+            companyContactPersonNumber: 0,
+            companyContactPersonEmail: ""
+        },
+        DNNumber: "",
+        DNDate: "",
+        customer: {
+            _id: "",
+            customerCode: "",
+            customerName: "",
+            GSTIN: "",
+            customerBillingAddress: {
+                line1: "",
+                line2: "",
+                line3: "",
+                line4: "",
+                state: "",
+                city: "",
+                district: "",
+                pinCode: "",
+                country: "",
+                _id: ""
+            },
+            customerContactInfo: {
+                contactPersonNumber: "",
+                contactPersonEmail: "",
+                _id: ""
+            }
+        },
+        customerName: "",
+        invoiceNo: "",
+        invoiceDate: "",
+        currency: "",
+        DNDetails: [
+            {
+                SKUNo: "",
+                SKUName: "",
+                SKUDescription: "",
+                UOM: "",
+                primaryUnit: "",
+                returnQty: 0,
+                purchaseRate: 0,
+                lineValue: 0,
+                hsn: "",
+                _id: ""
+            }
+        ],
+        reasonForDN: "",
+        otherCharges: {
+            totalAmount: 0
+        },
+        GSTDetails: [
+            {
+                hsn: "",
+                taxableValue: 0,
+                igstRate: 0,
+                igstAmount: 0,
+                cgstRate: 0,
+                cgstAmount: 0,
+                sgstRate: 0,
+                sgstAmount: 0,
+                ugstRate: 0,
+                ugstAmount: 0,
+                totalTaxableValue: ""
+            }
+        ],
+        totalCGSTAmount: 0,
+        totalSGSTAmount: 0,
+        totalIGSTAmount: 0,
+        totalUGSTAmount: 0,
+        totalTaxAmount: 0,
+        totalAmount: 0,
+        totalAmountWithTax: 0,
+        roundedOff: 0,
+        summaryRowRepeat: [],
+        rowRepeat: []
+    };
+
     pdfAction: any = "";
     isDomestic: boolean = false;
     buttonCondition: any = "true";

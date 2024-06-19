@@ -1,8 +1,5 @@
 const asyncHandler = require("express-async-handler");
-const Model = require("../../../../models/sales/saleHSNModel");
 const MESSAGES = require("../../../../helpers/messages.options");
-const {outputData, getAllAggregationFooter} = require("../../../../helpers/utility");
-const {generateCreateData, getMatchData} = require("../../../../helpers/global.options");
 const {
     getAllSaleHSNAttributes,
     getAllSaleHSNExcelAttributes
@@ -10,7 +7,6 @@ const {
 const {default: mongoose} = require("mongoose");
 const {SALES_HSN} = require("../../../../mocks/schemasConstant/salesConstant");
 const {getAndSetAutoIncrementNo} = require("../../settings/autoIncrement/autoIncrement");
-const {getAllSaleHSNAggregate} = require("../../../../models/sales/repository/salesHSNRepository");
 const SalesHSNRepository = require("../../../../models/sales/repository/salesHSNRepository");
 const validationJson = require("../../../../mocks/excelUploadColumn/validation.json");
 
@@ -45,7 +41,7 @@ exports.getAll = asyncHandler(async (req, res) => {
                 }
             }
         ];
-        let rows = await getAllSaleHSNAggregate({pipeline, project, queryParams: req.query});
+        let rows = await SalesHSNRepository.getAllPaginate({pipeline, project, queryParams: req.query});
         return res.success(rows);
     } catch (e) {
         console.error("getAllHSN", e);
@@ -56,7 +52,7 @@ exports.getAll = asyncHandler(async (req, res) => {
 
 exports.create = asyncHandler(async (req, res) => {
     try {
-        let existing = await Model.findOne(
+        let existing = await SalesHSNRepository.findOneDoc(
             {
                 hsnCode: req.body.hsnCode
             },
@@ -72,9 +68,7 @@ exports.create = asyncHandler(async (req, res) => {
             updatedBy: req.user.sub,
             ...req.body
         };
-        const saveObj = new Model(createdObj);
-
-        const itemDetails = await saveObj.save();
+        const itemDetails = await SalesHSNRepository.createDoc(createdObj);
         if (itemDetails) {
             return res.success({
                 message: MESSAGES.apiSuccessStrings.ADDED("HSN")
@@ -92,16 +86,13 @@ exports.create = asyncHandler(async (req, res) => {
 
 exports.update = asyncHandler(async (req, res) => {
     try {
-        let itemDetails = await Model.findById(req.params.id);
+        let itemDetails = await SalesHSNRepository.getDocById(req.params.id);
         if (!itemDetails) {
             const errors = MESSAGES.apiErrorStrings.INVALID_REQUEST;
             return res.preconditionFailed(errors);
         }
         itemDetails.updatedBy = req.user.sub;
-        itemDetails = await generateCreateData(itemDetails, req.body);
-
-        itemDetails = await itemDetails.save();
-
+        itemDetails = await SalesHSNRepository.updateDoc(itemDetails, req.body);
         return res.success({
             message: MESSAGES.apiSuccessStrings.UPDATE("HSN has been")
         });
@@ -116,9 +107,8 @@ exports.update = asyncHandler(async (req, res) => {
 // @route   PUT /sales/SKU/delete/:id
 exports.deleteById = asyncHandler(async (req, res) => {
     try {
-        const deleteItem = await Model.findById(req.params.id);
+        const deleteItem = await SalesHSNRepository.deleteDoc({_id: req.params.id});
         if (deleteItem) {
-            await deleteItem.remove();
             return res.success({
                 message: MESSAGES.apiSuccessStrings.DELETED("HSN")
             });
@@ -137,7 +127,7 @@ exports.deleteById = asyncHandler(async (req, res) => {
 // @route   GET /sales/SKU/getById/:id
 exports.getById = asyncHandler(async (req, res) => {
     try {
-        let existing = await Model.findById(req.params.id);
+        let existing = await SalesHSNRepository.getDocById(req.params.id);
         if (!existing) {
             let errors = MESSAGES.apiSuccessStrings.DATA_NOT_EXISTS("HSN");
             return res.unprocessableEntity(errors);
@@ -163,25 +153,12 @@ exports.getAllMasterData = asyncHandler(async (req, res) => {
     }
 });
 
-// @desc    getAllSalesHSNs SKU Record
-exports.getAllSalesHSNs = asyncHandler(async company => {
-    try {
-        let rows = await Model.find({
-            isActive: "Y",
-            company: company
-        }).sort({createdAt: -1});
-        return rows;
-    } catch (e) {
-        console.error("getAllSalesHSNs", e);
-    }
-});
-
 exports.getSalesHSNByCode = async hsnCode => {
     try {
-        let existing = await Model.findOne({hsnCode: hsnCode});
+        let existing = await SalesHSNRepository.findOneDoc({hsnCode: hsnCode});
         return existing;
     } catch (e) {
-        console.error("getById HSN", e);
+        console.error("getSalesHSNByCode HSN", e);
     }
 };
 
@@ -256,7 +233,7 @@ exports.bulkInsertSalesHSNMasterByCSV = async (jsonData, {company, createdBy, up
             return rest;
         });
         for await (const item of salesHSNData) {
-            await SalesHSNRepository.createSaleHSN(item);
+            await SalesHSNRepository.createDoc(item);
         }
         return {message: "Uploaded successfully!"};
     } catch (error) {

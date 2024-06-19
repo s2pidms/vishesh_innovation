@@ -48,5 +48,25 @@
         "menuItemId": "64a6c1e33339d4dc9d8141a2",
         "labelName": "Item Cost",
         "displayLabelName": "Item Cost"
+    },
+    {
+        "menuItemId": "64a6c1e33339d4dc9d8141a2",
+        "labelName": "Engineering Drawing",
+        "displayLabelName": "Engineering Drawing"
+    },
+    {
+        "menuItemId": "64a6c1e33339d4dc9d8141a2",
+        "labelName": "Product Specification",
+        "displayLabelName": "Product Specification"
+    },
+    {
+        "menuItemId": "64a6c1e33339d4dc9d8141a2",
+        "labelName": "Design mock-up file",
+        "displayLabelName": "Design mock-up file"
+    },
+    {
+        "menuItemId": "64a6c1e33339d4dc9d8141a2",
+        "labelName": "Artwork for processing [Ai/CDR]",
+        "displayLabelName": "Artwork for processing [Ai/CDR]"
     }
 ]

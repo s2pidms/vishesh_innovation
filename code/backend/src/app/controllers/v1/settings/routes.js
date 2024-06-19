@@ -1,7 +1,6 @@
 const router = require("express").Router();
 const user = require("./user/routes");
 const role = require("./role/routes");
-const message = require("./message/routes");
 const appParameter = require("./appParameter/routes");
 const autoIncrement = require("./autoIncrement/routes");
 const company = require("./company/routes");
@@ -35,7 +34,6 @@ router.use("/user", user);
 router.use("/role", role);
 router.use("/appParameter", appParameter);
 router.use("/autoIncrement", autoIncrement);
-router.use("/message", message);
 router.use("/company", company);
 router.use("/menuItem", menuItem);
 router.use("/professionalTax", professionalTax);

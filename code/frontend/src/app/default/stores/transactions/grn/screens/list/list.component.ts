@@ -24,7 +24,7 @@ export class ListComponent implements OnInit, OnDestroy {
     direction: number = -1;
     search: string = "";
     tableData: StoreGRN[] = [];
-    statusArray: any = ["Report Generated", "Closed", "Cancelled"];
+    statusArray: any = ["Report Generated", "Closed", "Cancelled", "Deleted"];
     rolePermissionActions: any = LIST_DEFAULT_PERMISSION_ACTIONS;
     subscription!: Subscription;
     constructor(

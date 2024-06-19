@@ -27,6 +27,8 @@ import TABLE_HEADERS_FOR_PURCHASE_REGISTER_ENTRY from "../tableHeaders/tableHead
 import TABLE_HEADERS_FOR_JOB_WORK_ITEM_MASTER from "../tableHeaders/tableHeadersForJobWorkItemMaster";
 import TABLE_HEADERS_FOR_JOB_WORKER_MASTER from "../tableHeaders/tableHeadersForJobWorkerMaster";
 import TABLE_HEADERS_FOR_PPIC_INVENTORY from "../tableHeaders/tableHeadersForPPICInventory";
+import TABLE_HEADERS_FOR_RM_SPECIFICATION from "../tableHeaders/tableHeadersForRMSpecification";
+import TABLE_HEADERS_FOR_PRODUCT_SPECIFICATION from "../tableHeaders/tableHeadersForProductSpecification";
 
 @Component({
     selector: "app-custom-upload-data",
@@ -71,7 +73,9 @@ export class CustomUploadDataComponent implements OnInit {
             JobWorkerMaster: TABLE_HEADERS_FOR_JOB_WORKER_MASTER,
             PurchaseRegisterEntry: TABLE_HEADERS_FOR_PURCHASE_REGISTER_ENTRY,
             JobWorkItemMaster: TABLE_HEADERS_FOR_JOB_WORK_ITEM_MASTER,
-            PPICInventoryCorrection: TABLE_HEADERS_FOR_PPIC_INVENTORY
+            PPICInventoryCorrection: TABLE_HEADERS_FOR_PPIC_INVENTORY,
+            RMSpecification: TABLE_HEADERS_FOR_RM_SPECIFICATION,
+            ProductSpecification: TABLE_HEADERS_FOR_PRODUCT_SPECIFICATION
         };
         this.tableHead = tableHeadersMapping[this.type] || null;
     }
@@ -169,6 +173,14 @@ export class CustomUploadDataComponent implements OnInit {
             PPICInventoryCorrection: {
                 path: "./assets/upload-data-excel-csv/PPICInventory.csv",
                 filename: "Upload PPIC Inventory"
+            },
+            RMSpecification: {
+                path: "./assets/upload-data-excel-csv/RMSpecification.csv",
+                filename: "Upload RM Specification Master"
+            },
+            ProductSpecification: {
+                path: "./assets/upload-data-excel-csv/ProdSpecification.csv",
+                filename: "Upload Product Specification Master"
             }
         };
 

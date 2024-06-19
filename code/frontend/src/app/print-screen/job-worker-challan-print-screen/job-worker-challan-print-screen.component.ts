@@ -1,16 +1,102 @@
 import {Component, ElementRef, HostListener, OnInit} from "@angular/core";
 import {ActivatedRoute, Router} from "@angular/router";
 import {JobWorkChallanService} from "@services/purchase";
-
 import {LIST_DEFAULT_PERMISSION_ACTIONS} from "@mocks/constant";
 import {SpinnerService} from "@core/services";
+import {IJobWorkChallanPrintScreen} from "@mocks/models/print-screen";
 @Component({
     selector: "app-job-worker-challan-print-screen",
     templateUrl: "./job-worker-challan-print-screen.component.html",
     styleUrls: ["./job-worker-challan-print-screen.component.scss"]
 })
 export class JobWorkerChallanPrintScreenComponent implements OnInit {
-    tableData: any = [];
+    tableData: IJobWorkChallanPrintScreen = {
+        _id: "",
+        rowRepeat: [],
+        company: {
+            _id: "",
+            companyName: "",
+            GSTIN: "",
+            companyBillingAddress: {
+                addressLine1: "",
+                addressLine2: "",
+                addressLine3: "",
+                addressLine4: "",
+                addressType: "",
+                city: "",
+                country: "",
+                district: "",
+                pinCode: "",
+                state: ""
+            },
+            companySignatureUrl: ""
+        },
+        JWChallanNo: "",
+        JWChallanDate: "",
+        jobWorkerName: "",
+        currency: "",
+        addressType: "",
+        GSTINNo: "",
+        primaryAddress: {
+            country: "",
+            state: "",
+            cityOrDistrict: "",
+            pinCode: "",
+            line1: "",
+            line2: "",
+            line3: "",
+            line4: ""
+        },
+        shipToAddress: {
+            country: "",
+            state: "",
+            cityOrDistrict: "",
+            pinCode: "",
+            line1: "",
+            line2: "",
+            line3: "",
+            line4: ""
+        },
+        placeOfSupply: "",
+        JWChallanDetails: [
+            {
+                itemName: "",
+                itemDescription: "",
+                UOM: "",
+                currency: "",
+                HSNCode: 0,
+                igst: 0,
+                cgst: 0,
+                sgst: 0,
+                unitRate: 0,
+                quantity: 0,
+                taxableAmt: 0,
+                _id: "",
+                lineValueWithTax: 0,
+                IGSTAmt: 0,
+                CGSTAmt: 0,
+                SGSTAmt: 0
+            }
+        ],
+        totalTaxableAmt: 0,
+        freightTermsInfo: {
+            modeOfTransport: "",
+            transporterName: "",
+            vehicleNo: "",
+            freightTerms: "",
+            destination: ""
+        },
+        jobWorkDetails: {
+            descriptionOfService: "",
+            partNo: "",
+            partName: ""
+        },
+        totalCGSTAmt: 0,
+        totalIGSTAmt: 0,
+        totalSGSTAmt: 0,
+        totalAmtWithTax: 0
+    };
+
     collection: any;
     pdfAction: any = "";
     buttonCondition: any = "true";

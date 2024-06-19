@@ -20,7 +20,7 @@
             <tr>
               <td colspan="12">
                 <div class="text-center">
-                  <img src="{{ tableData?.company?.logoUrl }}" width="200px" />
+                  <img src="{{ tableData.company.logoUrl }}" width="200px" />
                 </div>
               </td>
             </tr>
@@ -32,46 +32,46 @@
             </tr>
             <tr class="head-row">
               <td colspan="6" class="text-center">
-                Customer: {{ tableData?.customerName }}
+                Customer: {{ tableData.customerName }}
               </td>
               <td colspan="6" class="text-center">
-                Transporter: {{ tableData?.transporter }}
+                Transporter: {{ tableData.transporter }}
               </td>
             </tr>
             <tr class="head-row">
               <th colspan="6" class="text-center">
-                ASN #: {{ tableData?.ASNNumber }}
+                ASN #: {{ tableData.ASNNumber }}
               </th>
               <th colspan="6" class="text-center">
                 ASN Date:
-                {{ tableData?.salesInvoiceDate | date : "dd-MM-YYYY" }}
+                {{ tableData.salesInvoiceDate | date : "dd-MM-YYYY" }}
               </th>
             </tr>
             <tr class="head-row">
               <td colspan="6" class="text-center">
-                State of Supply: {{ tableData?.stateOfSupply }}
+                State of Supply: {{ tableData.stateOfSupply }}
               </td>
               <td colspan="6" class="text-center">
-                Docket/LR No.: {{ tableData?.docketLR }}
+                Docket/LR No.: {{ tableData.docketLR }}
               </td>
             </tr>
             <tr class="head-row">
               <th colspan="6" class="text-center">
                 Ref. Invoice No.:
-                {{ tableData?.salesInvoice?.salesInvoiceNumber }}
+                {{ tableData.salesInvoice.salesInvoiceNumber }}
               </th>
               <th colspan="6" class="text-center">
                 Docket/LR Date:
-                {{ tableData?.docketLRDate | date : "dd-MM-YYYY" }}
+                {{ tableData.docketLRDate | date : "dd-MM-YYYY" }}
               </th>
             </tr>
             <tr class="head-row">
               <td colspan="6" class="text-center">
                 Ref. Invoice Date:
-                {{ tableData?.salesInvoiceDate | date : "dd-MM-YYYY" }}
+                {{ tableData.salesInvoiceDate | date : "dd-MM-YYYY" }}
               </td>
               <td colspan="6" class="text-center">
-                Mode of Transport: {{ tableData?.modeOfTransport }}
+                Mode of Transport: {{ tableData.modeOfTransport }}
               </td>
             </tr>
             <tr>
@@ -90,36 +90,36 @@
             </tr>
             <tr
               class="text-wrap"
-              *ngFor="let s of tableData?.salesInvoiceDetails; let i = index"
+              *ngFor="let s of tableData.salesInvoiceDetails; let i = index"
             >
               <td colspan="1" class="text-center">
                 {{ i + 1 }}
               </td>
               <td colspan="5" class="text-start">
-                <p>{{ "SKU Name" | labelTranslate }}: {{ s?.SKU?.SKUName }}</p>
+                <p>{{ "SKU Name" | labelTranslate }}: {{ s.SKUName }}</p>
                 <p>
                   {{ "SKU Description" | labelTranslate }}:
-                  {{ s?.SKU?.SKUDescription }}
+                  {{ s.SKUDescription }}
                 </p>
               </td>
 
               <td colspan="1" class="text-center">
-                {{ s?.dispatchQty }}
+                {{ s.dispatchQty }}
               </td>
               <td colspan="2" class="text-center">
-                {{ s?.batchDate ? (s?.batchDate | date : "dd-MM-YYYY") : "-" }}
+                {{ s.batchDate ? (s.batchDate | date : "dd-MM-YYYY") : "-" }}
               </td>
               <td colspan="2" class="text-center">
-                {{ s?.PONumber }}
+                {{ s.PONumber }}
               </td>
               <td colspan="1" class="text-center">
-                {{ s?.boxNos }}
+                {{ s.boxNos }}
               </td>
             </tr>
             <tr *ngFor="let d of tableData.rowRepeat; let j = index">
               <td colspan="1" class="text-center">
                 <p class="py-3">
-                  {{ tableData?.salesInvoiceDetails?.length + j + 1 }}
+                  {{ tableData.salesInvoiceDetails.length + j + 1 }}
                 </p>
               </td>
               <td colspan="5" class="text-center"></td>
@@ -141,7 +141,7 @@
               <td colspan="6" class="text-center">
                 <p>
                   Total No. of Boxes:
-                  {{ tableData?.totalNoOfBoxes }}
+                  {{ tableData.totalNoOfBoxes }}
                 </p>
               </td>
               <td colspan="6" rowspan="2" class="text-center">
@@ -150,8 +150,8 @@
                   <br />contact our Sales Representative.<br />
                   E-mail:
                   {{
-                    tableData?.company?.contactInfo[0]
-                      ?.companyContactPersonEmail
+                    tableData.company.contactInfo
+                      .companyContactPersonEmail
                   }}
                 </p>
               </td>
@@ -160,7 +160,7 @@
               <th colspan="6" class="text-center">
                 <p>
                   Total Gross weight of shipment:
-                  {{ tableData?.totalGrossWeight }} kgs
+                  {{ tableData.totalGrossWeight }} kgs
                 </p>
               </th>
             </tr>

@@ -103,6 +103,10 @@ const routes: Routes = [
     {
         path: "sales_order_status_report",
         loadChildren: () => import("./sales-order-status/sales-order-status.module").then(m => m.SalesOrderStatusModule)
+    },
+    {
+        path: "dispatch_list",
+        loadChildren: () => import("./dispatch-list/dispatch-list.module").then(m => m.DispatchListModule)
     }
 ];
 

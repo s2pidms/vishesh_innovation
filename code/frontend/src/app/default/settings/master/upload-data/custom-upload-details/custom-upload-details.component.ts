@@ -21,7 +21,9 @@ import {
     UPLOAD_DATA_FOR_SKU_DIMENSION_MASTER,
     UPLOAD_DATA_FOR_ASSET_MASTER,
     UPLOAD_DATA_FOR_FGIN,
-    UPLOAD_DATA_FOR_EMPLOYEE_MASTER
+    UPLOAD_DATA_FOR_EMPLOYEE_MASTER,
+    UPLOAD_DATA_FOR_RM_SPECIFICATION,
+    UPLOAD_DATA_FOR_PRODUCT_SPECIFICATION
 } from "@mocks/export-data/settings/masters";
 import {ExportExcelService} from "@core/services";
 
@@ -76,7 +78,9 @@ export class CustomUploadDetailsComponent implements OnInit {
                     SKUDimensions: this.excelDownloadForSKUDimensionMaster,
                     Asset: this.excelDownloadForAssetMaster,
                     FGIN: this.excelDownloadForFGIN,
-                    Employee: this.excelDownloadForEmployeeMaster
+                    Employee: this.excelDownloadForEmployeeMaster,
+                    RMSpecification: this.excelDownloadForRMSpecification,
+                    ProductSpecification: this.excelDownloadForProductSpecification
                 };
 
                 const downloadFunction = downloadFunctions[this.type];
@@ -100,6 +104,12 @@ export class CustomUploadDetailsComponent implements OnInit {
     }
     excelDownloadForItem() {
         this.exportExcelService.exportExcel(UPLOAD_DATA_FOR_ITEM_INVENTORY(this.inValidRecords));
+    }
+    excelDownloadForProductSpecification() {
+        this.exportExcelService.exportExcel(UPLOAD_DATA_FOR_PRODUCT_SPECIFICATION(this.inValidRecords));
+    }
+    excelDownloadForRMSpecification() {
+        this.exportExcelService.exportExcel(UPLOAD_DATA_FOR_RM_SPECIFICATION(this.inValidRecords));
     }
     excelDownloadForCustomer() {
         this.exportExcelService.exportExcel(UPLOAD_DATA_FOR_CUSTOMER_INVENTORY(this.inValidRecords));

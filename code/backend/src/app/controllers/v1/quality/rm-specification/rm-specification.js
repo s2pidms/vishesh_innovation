@@ -6,11 +6,12 @@ const {getAllItemCategory} = require("../../purchase/itemCategoryMaster/itemCate
 const {getAllRMSpecificationAttributes} = require("../../../../models/quality/helpers/rmSpecificationHelper");
 const {default: mongoose} = require("mongoose");
 const {RM_SPECIFICATION} = require("../../../../mocks/schemasConstant/qualityConstant");
-const {getAndSetAutoIncrementNo} = require("../../settings/autoIncrement/autoIncrement");
+const {getAndSetAutoIncrementNo, getNextAutoIncrementNo} = require("../../settings/autoIncrement/autoIncrement");
 const {filteredSpecificationList} = require("../../../../models/quality/repository/specificationRepository");
 const RMSpecificationRepository = require("../../../../models/quality/repository/rmSpecificationRepository");
 const ItemRepository = require("../../../../models/purchase/repository/itemRepository");
 const {filteredSupplierList} = require("../../../../models/purchase/repository/supplierRepository");
+const AutoIncrementRepository = require("../../../../models/settings/repository/autoIncrementRepository");
 const ObjectId = mongoose.Types.ObjectId;
 
 exports.getAll = asyncHandler(async (req, res) => {
@@ -247,8 +248,19 @@ exports.getById = asyncHandler(async (req, res) => {
 // @route   GET /quality/inspectionParameter/getAllMasterData
 exports.getAllMasterData = asyncHandler(async (req, res) => {
     try {
+        const options = await dropDownOptions(req.user.company);
+        let autoIncrementNo = await getAndSetAutoIncrementNo(RM_SPECIFICATION.AUTO_INCREMENT_DATA(), req.user.company);
+        return res.success({autoIncrementNo, ...options});
+    } catch (error) {
+        console.error("getAllMasterData RM Specification", error);
+        const errors = MESSAGES.apiErrorStrings.SERVER_ERROR;
+        return res.serverError(errors);
+    }
+});
+const dropDownOptions = async company => {
+    try {
         const specificationList = await filteredSpecificationList([
-            {$match: {company: ObjectId(req.user.company), status: OPTIONS.defaultStatus.ACTIVE}},
+            {$match: {company: ObjectId(company), status: OPTIONS.defaultStatus.ACTIVE}},
             {$sort: {createdAt: -1}},
             {
                 $project: {
@@ -266,7 +278,7 @@ exports.getAllMasterData = asyncHandler(async (req, res) => {
             }
         ]);
         const itemsListOptions = await ItemRepository.filteredItemList([
-            {$match: {company: ObjectId(req.user.company), isActive: "A"}},
+            {$match: {company: ObjectId(company), isActive: "A"}},
             {$sort: {itemCode: -1}},
             {
                 $project: {
@@ -279,27 +291,12 @@ exports.getAllMasterData = asyncHandler(async (req, res) => {
                 }
             }
         ]);
-        const itemCategoryListOptions = await getAllItemCategory(req.user.company, {category: 1});
-        let autoIncrementNo = await getAndSetAutoIncrementNo(RM_SPECIFICATION.AUTO_INCREMENT_DATA(), req.user.company);
-        return res.success({autoIncrementNo, specificationList, itemCategoryListOptions, itemsListOptions});
+        const itemCategoryListOptions = await getAllItemCategory(company, {category: 1});
+        return {specificationList, itemCategoryListOptions, itemsListOptions};
     } catch (error) {
-        console.error("getAllMasterData RM Specification", error);
-        const errors = MESSAGES.apiErrorStrings.SERVER_ERROR;
-        return res.serverError(errors);
+        console.error(error);
     }
-});
-
-exports.getAllRMSpecification = asyncHandler(async company => {
-    try {
-        let rows = await Model.find({
-            status: OPTIONS.defaultStatus.ACTIVE,
-            company: company
-        }).sort({createdAt: -1});
-        return rows;
-    } catch (e) {
-        console.error("getAllRM Specification", e);
-    }
-});
+};
 exports.getAllRMSpecificationByItemId = async (company, itemId) => {
     try {
         let rows = await Model.findOne(
@@ -313,5 +310,189 @@ exports.getAllRMSpecificationByItemId = async (company, itemId) => {
         return rows;
     } catch (e) {
         console.error("getAllRM Specification", e);
+    }
+};
+
+exports.checkRMSpecificationValidation = async (data, column, company) => {
+    try {
+        const RMOptions = await RMSpecificationRepository.filteredRMSpecificationList([
+            {$match: {company: ObjectId(company), status: OPTIONS.defaultStatus.ACTIVE}},
+            {
+                $lookup: {
+                    from: "Items",
+                    localField: "item",
+                    foreignField: "_id",
+                    pipeline: [{$project: {itemCode: 1}}],
+                    as: "item"
+                }
+            },
+            {$unwind: "$item"},
+            {$project: {itemCode: "$item.itemCode"}}
+        ]);
+        const requiredFields = [
+            "itemCategory",
+            "itemCode",
+            "seq",
+            "specificationCode",
+            "specValue",
+            "tolerance",
+            "LTL",
+            "UTL"
+        ];
+        const falseArr = OPTIONS.falsyArray;
+        let {specificationList, itemCategoryListOptions, itemsListOptions} = await dropDownOptions(company);
+        let dropdownCheck = [
+            {
+                key: "specificationCode",
+                options: specificationList.map(x => {
+                    return {
+                        label: x.specificationCode,
+                        value: x.specificationCode
+                    };
+                })
+            },
+            {
+                key: "itemCategory",
+                options: itemCategoryListOptions.map(x => {
+                    return {
+                        label: x.category,
+                        value: x.category
+                    };
+                })
+            },
+            {
+                key: "itemCode",
+                options: itemsListOptions.map(x => {
+                    return {
+                        label: x.itemCode,
+                        value: x.itemCode
+                    };
+                })
+            }
+        ];
+        let unique = [];
+        for await (const x of data) {
+            x.isValid = true;
+            x.message = null;
+            if (unique.includes(x["itemCode"])) {
+                x.isValid = false;
+                x.message = `${x["itemCode"]} duplicate Entry`;
+                break;
+            }
+            unique.push(x["itemCode"]);
+            for (const ele of Object.values(column)) {
+                if (requiredFields.includes(ele) && falseArr.includes(x[ele])) {
+                    x.isValid = false;
+                    x.message = validationJson[ele] ?? `${ele} is Required`;
+                    break;
+                }
+                for (const dd of dropdownCheck) {
+                    if (ele == dd.key && !dd.options.map(values => values.value).includes(x[ele])) {
+                        x.isValid = false;
+                        x.message = `${ele} is Invalid Value & Value Must be ${dd.options.map(values => values.value)}`;
+                        break;
+                    }
+                }
+                for (const option of RMOptions) {
+                    if (option.itemCode == x["itemCode"]) {
+                        x.isValid = false;
+                        x.message = `${x["itemCode"]} already exists`;
+                        break;
+                    }
+                }
+            }
+        }
+        const inValidRecords = data.filter(x => !x.isValid);
+        const validRecords = data.filter(x => x.isValid);
+        return {inValidRecords, validRecords};
+    } catch (error) {
+        console.error(error);
+    }
+};
+
+exports.bulkInsertRMSpecificationByCSV = async (jsonData, {company, createdBy, updatedBy}) => {
+    try {
+        const specificationList = await filteredSpecificationList([
+            {$match: {company: ObjectId(company), status: OPTIONS.defaultStatus.ACTIVE}},
+            {$sort: {createdAt: -1}},
+            {
+                $project: {
+                    seq: null,
+                    specValue: null,
+                    tolerance: null,
+                    LTL: null,
+                    UTL: null,
+                    specificationCode: 1,
+                    characteristic: 1,
+                    UOM: 1,
+                    testStandard: 1,
+                    measuringInstrument: 1
+                }
+            }
+        ]);
+        const itemsListOptions = await ItemRepository.filteredItemList([
+            {$match: {company: ObjectId(company), isActive: "A"}},
+            {$sort: {itemCode: -1}},
+            {
+                $project: {
+                    itemType: 1,
+                    itemCode: 1,
+                    itemName: 1,
+                    itemDescription: 1,
+                    orderInfoUOM: 1,
+                    _id: 1
+                }
+            }
+        ]);
+        let autoIncrementObj = await getNextAutoIncrementNo({
+            ...RM_SPECIFICATION.AUTO_INCREMENT_DATA(),
+            company: company
+        });
+        let data = jsonData.map(x => {
+            const {seq, specificationCode, specValue, LTL, UTL, ...rest} = x;
+            let itemWiseData = jsonData.filter(y => y.itemCode == rest.itemCode);
+            if (itemWiseData.length) {
+                itemWiseData = itemWiseData.map(item => {
+                    let specificationObj = new Map(specificationList.map(ele => [ele.specificationCode, ele])).get(
+                        item.specificationCode
+                    );
+                    return {
+                        seq: item.seq,
+                        specificationCode: item.specificationCode,
+                        characteristic: specificationObj?.characteristic,
+                        UOM: specificationObj?.UOM,
+                        testStandard: specificationObj?.testStandard,
+                        measuringInstrument: specificationObj?.measuringInstrument,
+                        specValue: item.specValue,
+                        LTL: item.LTL,
+                        UTL: item.UTL
+                    };
+                });
+            }
+            rest.item = new Map(itemsListOptions.map(ele => [ele.itemCode, ele._id])).get(rest.itemCode);
+            rest.specificationInfo = itemWiseData;
+            rest.rmSpecificationCode = getIncrementNumWithPrefix(autoIncrementObj);
+            rest.company = company;
+            rest.createdBy = createdBy;
+            rest.updatedBy = updatedBy;
+            jsonData = jsonData.filter(data => data.itemCode != rest.itemCode);
+            autoIncrementObj.autoIncrementValue++;
+            return rest;
+        });
+        await RMSpecificationRepository.insertManyDoc(data);
+        await AutoIncrementRepository.findAndUpdateDoc(
+            {
+                module: RM_SPECIFICATION.MODULE,
+                company: company
+            },
+            {
+                $set: {
+                    autoIncrementValue: autoIncrementObj.autoIncrementValue
+                }
+            }
+        );
+        return {message: "Uploaded successfully!"};
+    } catch (error) {
+        console.error(error);
     }
 };

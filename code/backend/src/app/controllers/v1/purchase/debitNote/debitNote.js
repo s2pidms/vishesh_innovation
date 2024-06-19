@@ -2,7 +2,7 @@ const asyncHandler = require("express-async-handler");
 const Model = require("../../../../models/purchase/debitNoteModel");
 const RejectQtyModel = require("../../../../models/quality/rejectedQtyMgntModel");
 const MESSAGES = require("../../../../helpers/messages.options");
-const {generateCreateData, OPTIONS} = require("../../../../helpers/global.options");
+const {OPTIONS} = require("../../../../helpers/global.options");
 const {default: mongoose} = require("mongoose");
 const {getAllSuppliers} = require("../suppliers/suppliers");
 const {findAppParameterValue} = require("../../settings/appParameter/appParameter");
@@ -27,6 +27,7 @@ const DebitNoteRepository = require("../../../../models/purchase/repository/debi
 const ObjectId = mongoose.Types.ObjectId;
 const MailTriggerRepository = require("../../../../models/settings/repository/mailTriggerRepository");
 const {PURCHASE_MAIL_CONST} = require("../../../../mocks/mailTriggerConstants");
+const {COMPANY_DEPARTMENTS} = require("../../../../mocks/constantData");
 
 // @route   GET /purchase/Debit Note/getAll
 exports.getAll = asyncHandler(async (req, res) => {
@@ -69,9 +70,7 @@ exports.create = asyncHandler(async (req, res) => {
             updatedBy: req.user.sub,
             ...req.body
         };
-        const saveObj = new Model(createdObj);
-
-        const itemDetails = await saveObj.save();
+        const itemDetails = await DebitNoteRepository.createDoc(createdObj);
         await updateRejectQtyModel(itemDetails, "created");
         if (itemDetails) {
             res.success({
@@ -109,15 +108,13 @@ exports.create = asyncHandler(async (req, res) => {
 // @route   PUT /purchase/Debit Note/update/:id
 exports.update = asyncHandler(async (req, res) => {
     try {
-        let itemDetails = await Model.findById(req.params.id);
+        let itemDetails = await DebitNoteRepository.getDocById(req.params.id);
         if (!itemDetails) {
             const errors = MESSAGES.apiErrorStrings.INVALID_REQUEST;
             return res.preconditionFailed(errors);
         }
         itemDetails.updatedBy = req.user.sub;
-        itemDetails = await generateCreateData(itemDetails, req.body);
-        itemDetails = await itemDetails.save();
-
+        itemDetails = await DebitNoteRepository.updateDoc(itemDetails, req.body);
         if (itemDetails.DNStatus == "Rejected" || itemDetails.DNStatus == "Awaiting Approval") {
             await updateRejectQtyModel(itemDetails, "updated");
         }
@@ -166,9 +163,8 @@ exports.update = asyncHandler(async (req, res) => {
 // @route   PUT /purchase/Debit Note/delete/:id
 exports.deleteById = asyncHandler(async (req, res) => {
     try {
-        const deleteItem = await Model.findById(req.params.id);
+        const deleteItem = await DebitNoteRepository.deleteDoc({_id: req.params.id});
         if (deleteItem) {
-            await deleteItem.remove();
             return res.success({
                 message: MESSAGES.apiSuccessStrings.DELETED("Debit Note")
             });
@@ -215,6 +211,140 @@ exports.getById = asyncHandler(async (req, res) => {
         if (!existing) {
             let errors = MESSAGES.apiSuccessStrings.DATA_NOT_EXISTS("Debit Note");
             return res.unprocessableEntity(errors);
+        }
+        return res.success(existing);
+    } catch (e) {
+        console.error("getById Debit Note", e);
+        const errors = MESSAGES.apiErrorStrings.SERVER_ERROR;
+        return res.serverError(errors);
+    }
+});
+exports.getDNDetailsById = asyncHandler(async (req, res) => {
+    try {
+        let existing = await DebitNoteRepository.filteredDebitNoteList([
+            {
+                $match: {
+                    _id: ObjectId(req.params.id)
+                }
+            },
+            {
+                $lookup: {
+                    from: "Supplier",
+                    localField: "supplier",
+                    foreignField: "_id",
+                    pipeline: [
+                        {
+                            $project: {
+                                supplierCode: 1,
+                                supplierName: 1,
+                                supplierGST: 1,
+                                supplierBillingAddress: 1,
+                                supplierShippingAddress: 1,
+                                supplierContactMatrix: 1
+                            }
+                        }
+                    ],
+                    as: "supplier"
+                }
+            },
+            {$unwind: "$supplier"},
+            {
+                $lookup: {
+                    from: "Items",
+                    localField: "DNDetails.item",
+                    foreignField: "_id",
+                    pipeline: [
+                        {
+                            $project: {
+                                itemCode: 1,
+                                itemName: 1,
+                                itemDescription: 1
+                            }
+                        }
+                    ],
+                    as: "itemInfo"
+                }
+            },
+            {
+                $addFields: {
+                    DNDetails: {
+                        $map: {
+                            input: "$DNDetails",
+                            as: "detail",
+                            in: {
+                                $mergeObjects: [
+                                    "$$detail",
+                                    {
+                                        item: {
+                                            $arrayElemAt: [
+                                                {
+                                                    $filter: {
+                                                        input: "$itemInfo",
+                                                        as: "item",
+                                                        cond: {$eq: ["$$item._id", "$$detail.item"]}
+                                                    }
+                                                },
+                                                0
+                                            ]
+                                        }
+                                    }
+                                ]
+                            }
+                        }
+                    }
+                }
+            },
+            {
+                $lookup: {
+                    from: "Company",
+                    localField: "company",
+                    foreignField: "_id",
+                    pipeline: [
+                        {
+                            $addFields: {
+                                contactInfo: {
+                                    $arrayElemAt: [
+                                        {
+                                            $filter: {
+                                                input: "$contactInfo",
+                                                as: "info",
+                                                cond: {$eq: ["$$info.department", COMPANY_DEPARTMENTS.PURCHASE]}
+                                            }
+                                        },
+                                        0
+                                    ]
+                                }
+                            }
+                        },
+                        {
+                            $project: {
+                                companyBankName: 1,
+                                companyAccountNumber: 1,
+                                companyBankIFSCCode: 1,
+                                companyName: 1,
+                                GSTIN: 1,
+                                companyBankBranch: 1,
+                                companyBankMICRCode: 1,
+                                companyBefName: 1,
+                                companyBillingAddress: 1,
+                                contactInfo: 1,
+                                companyContactPersonNumber: "$contactInfo.companyContactPersonNumber",
+                                companyContactPersonEmail: "$contactInfo.companyContactPersonEmail",
+                                companySignatureUrl: {$concat: [`${CONSTANTS.domainUrl}company/`, "$companySignature"]},
+                                companyPdfHeaderUrl: {$concat: [`${CONSTANTS.domainUrl}company/`, "$companyPdfHeader"]}
+                            }
+                        }
+                    ],
+                    as: "company"
+                }
+            },
+            {$unwind: "$company"}
+        ]);
+        if (!existing.length) {
+            let errors = MESSAGES.apiSuccessStrings.DATA_NOT_EXISTS("Debit Note");
+            return res.unprocessableEntity(errors);
+        } else {
+            existing = await getDataPDF(existing[0]);
         }
         return res.success(existing);
     } catch (e) {
@@ -470,13 +600,13 @@ exports.getNetDebitNote = async company => {
 
 async function getDataPDF(existing) {
     try {
-        if (existing.supplier.supplierContactMatrix.length) {
+        if (existing?.supplier?.supplierContactMatrix?.length) {
             existing.supplier.supplierContactMatrix = existing.supplier.supplierContactMatrix[0];
         }
-        if (existing.supplier.supplierBillingAddress.length) {
+        if (existing?.supplier?.supplierBillingAddress?.length) {
             existing.supplier.supplierBillingAddress = existing.supplier.supplierBillingAddress[0];
         }
-        if (existing.supplier.supplierShippingAddress.length) {
+        if (existing?.supplier?.supplierShippingAddress?.length) {
             existing.supplier.supplierShippingAddress = existing.supplier.supplierShippingAddress[0];
         }
 

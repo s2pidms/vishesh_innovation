@@ -5,13 +5,15 @@ import {ItemsListComponent} from "./screens/items-list/items-list.component";
 import {ItemsFormComponent} from "./screens/items-form/items-form.component";
 import {SharedModule} from "@shared/shared.module";
 import {FormScreenResolver} from "@core/guards/FormScreenResolver";
-import {ItemDocsUploadComponent} from "./screens/item-docs-upload/item-docs-upload.component";
-import {GenSpecsComponent} from "./screens/gen-specs/gen-specs.component";
-import {ItemAttributesComponent} from "./screens/item-attributes/item-attributes.component";
-import {ItemTechSpecsComponent} from "./screens/item-tech-specs/item-tech-specs.component";
-import {ItemRemarksComponent} from "./screens/item-remarks/item-remarks.component";
-import {QCLevelComponent} from "./screens/qc-level/qc-level.component";
 import {UnsavedChangesGuard} from "@core/guards";
+import {
+    GenSpecsComponent,
+    ItemAttributesComponent,
+    ItemDocsUploadComponent,
+    ItemRemarksComponent,
+    ItemTechSpecsComponent,
+    QCLevelComponent
+} from "./screens/components";
 
 const routes: Routes = [
     {path: "", redirectTo: "list", pathMatch: "full"},

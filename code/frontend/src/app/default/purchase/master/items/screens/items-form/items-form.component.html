@@ -120,7 +120,9 @@
         </div>
         <hr class="row line-border mb-4" />
         <div class="row mb-4">
-            <div [ngClass]="(masterData.stockLevelButtonCondition | titlecase) == 'Yes' ? 'col-6 pe-0' : 'col-4 pe-0'">
+            <div
+                [ngClass]="(masterData.stockLevelButtonCondition | titlecase) == 'Yes' ? 'col-6 pe-0' : 'col-auto pe-0'"
+            >
                 <button
                     *ngIf="(masterData.stockLevelButtonCondition | titlecase) == 'Yes'"
                     [disabled]="!this.f['orderInfoUOM'].value"
@@ -184,7 +186,7 @@
             </div>
             <div
                 [ngClass]="
-                    (masterData.stockLevelButtonCondition | titlecase) == 'Yes' ? 'col-3 text-end' : 'col-5 text-end'
+                    (masterData.stockLevelButtonCondition | titlecase) == 'Yes' ? 'col text-end' : 'col text-end'
                 "
                 *ngIf="action != 'view'"
             >

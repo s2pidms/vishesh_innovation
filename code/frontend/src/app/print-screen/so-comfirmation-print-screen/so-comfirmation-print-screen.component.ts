@@ -4,7 +4,7 @@ import {SalesOrderService} from "@services/sales";
 import {AppParameterService} from "@services/settings";
 
 import {SO_ORDER_TYPE} from "@mocks/constant";
-import {SpinnerService} from "@core/services";
+import {SpinnerService, UtilityService} from "@core/services";
 
 @Component({
     selector: "app-so-comfirmation-print-screen",
@@ -25,7 +25,8 @@ export class SoComfirmationPrintScreenComponent implements OnInit {
         private activatedRoute: ActivatedRoute,
         private spinner: SpinnerService,
         private elementRef: ElementRef,
-        private appParameterService: AppParameterService
+        private appParameterService: AppParameterService,
+        private utilityService: UtilityService
     ) {}
 
     ngOnInit(): void {
@@ -53,22 +54,10 @@ export class SoComfirmationPrintScreenComponent implements OnInit {
             this.status = success.SOStatus;
 
             this.tableData = success;
-            this.isDomestic = success.salesCategory.includes("Domestic");
-
+            this.isDomestic = this.utilityService.checkDomesticCustomer(success.salesCategory);
             if (success.customer.GSTClassification == "SEZ") {
                 this.isDomestic = false;
             }
-
-            if (this.tableData?.otherCharges?.totalAmount > 0) {
-                this.tableData.igst1 = this.tableData?.otherCharges?.totalAmount * 0.18;
-                this.tableData.sgst1 = this.tableData?.otherCharges?.totalAmount * 0.09;
-                this.tableData.cgst1 = this.tableData?.otherCharges?.totalAmount * 0.09;
-                this.tableData.TLVForOther = this.tableData?.otherCharges?.totalAmount + this.tableData.igst1;
-                this.tableData.totalAmount += this.tableData.TLVForOther;
-            }
-            let contactDetails = success.company.contactInfo.find((ele: any) => ele.department == "Sales");
-            this.tableData.company.companyContactPersonNumber = contactDetails.companyContactPersonNumber;
-            this.tableData.company.companyContactPersonEmail = contactDetails.companyContactPersonEmail;
             this.tableData.totalAmount = Math.round(+this.tableData.totalAmount);
             this.tableData.supplierGST = this.tableData?.supplier?.supplierGST.slice(0, 2);
             this.tableData.summaryRowRepeat = [];

@@ -1,5 +1,5 @@
 import {Component, OnInit} from "@angular/core";
-import {FormArray, FormBuilder, FormGroup, UntypedFormGroup, Validators} from "@angular/forms";
+import {FormBuilder, FormGroup, UntypedFormGroup, Validators} from "@angular/forms";
 import {JobWorkerService} from "@services/purchase";
 import {ActivatedRoute} from "@angular/router";
 import {Location} from "@angular/common";
@@ -7,7 +7,6 @@ import {mergeMap, of} from "rxjs";
 import {NgbModal} from "@ng-bootstrap/ng-bootstrap";
 import {BankDetails} from "@interfaces/bankDetails";
 import {ValidationService} from "@core/components";
-import {AddSuppliersAddressComponent} from "src/app/default/purchase/modals/add-suppliers-address/add-suppliers-address.component";
 import {STATES_LIST} from "@mocks/states.constant";
 import {ToastService, SpinnerService, UtilityService} from "@core/services";
 import {Address} from "@shared/interfaces";
@@ -74,12 +73,12 @@ export class JobWorkerMasterFormComponent implements OnInit {
         GSTClassification: [null],
         GSTINNo: [null],
         PANNo: [null],
-        currency: [null],
+        currency: ["INR"],
         paymentTerms: [null],
         MSMEClassification: [null],
         status: ["Active"],
         primaryAddress: this.fb.group({
-            country: [null],
+            country: ["India"],
             state: [null],
             cityOrDistrict: [null],
             pinCode: [null],

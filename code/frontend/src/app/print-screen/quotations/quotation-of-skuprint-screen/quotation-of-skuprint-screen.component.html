@@ -16,7 +16,7 @@
                                         <tr>
                                             <td colspan="12">
                                                 <div class="text-center">
-                                                    <img src="{{ tableData?.SOPdfHeaderUrl }}" class="img-pdfHeader" />
+                                                    <img src="{{ tableData.SOPdfHeaderUrl }}" class="img-pdfHeader" />
                                                 </div>
                                             </td>
                                         </tr>
@@ -37,43 +37,43 @@
                                         <tr>
                                             <td colspan="6" rowspan="2">
                                                 <p class="">
-                                                    {{ tableData?.customerBillingAddress?.contactPersonName }}
+                                                    {{ tableData.customerBillingAddress.contactPersonName }}
                                                 </p>
                                                 <p>
-                                                    {{ tableData?.customerBillingAddress?.line1 }}
+                                                    {{ tableData.customerBillingAddress.line1 }}
                                                 </p>
                                                 <p>
-                                                    {{ tableData?.customerBillingAddress?.line2 }}
+                                                    {{ tableData.customerBillingAddress.line2 }}
                                                 </p>
                                                 <p>
-                                                    {{ tableData?.customerBillingAddress?.line3 }}
+                                                    {{ tableData.customerBillingAddress.line3 }}
                                                 </p>
                                                 <p>
-                                                    {{ tableData?.customerBillingAddress?.city }}
+                                                    {{ tableData.customerBillingAddress.city }}
                                                     ,
-                                                    {{ tableData?.customerBillingAddress?.state }}
+                                                    {{ tableData.customerBillingAddress.state }}
                                                     ,
-                                                    {{ tableData?.customerBillingAddress?.pinCode }}
+                                                    {{ tableData.customerBillingAddress.pinCode }}
                                                 </p>
-                                                <p>{{ tableData?.customerBillingAddress?.country }}</p>
+                                                <p>{{ tableData.customerBillingAddress.country }}</p>
                                             </td>
                                             <td colspan="6">
-                                                <p class="">Quotation Number: {{ tableData?.quotationNo }}</p>
+                                                <p class="">Quotation Number: {{ tableData.quotationNo }}</p>
                                                 <p class="">
                                                     Quotation Date:
-                                                    {{ tableData?.quotationDate }}
+                                                    {{ tableData.quotationDate }}
                                                 </p>
-                                                <p class="">RFQ Reference: {{ tableData?.RFQReference }}</p>
+                                                <p class="">RFQ Reference: {{ tableData.RFQReference }}</p>
                                             </td>
                                         </tr>
                                         <tr>
                                             <td colspan="6">
                                                 <p class="">
                                                     Category:
-                                                    <span class="text-primary">{{ tableData?.customerCategory }}</span>
+                                                    <span class="text-primary">{{ tableData.customerCategory }}</span>
                                                 </p>
                                                 <p class="">
-                                                    Currency: <b class="text-primary"> {{ tableData?.currency }}</b>
+                                                    Currency: <b class="text-primary"> {{ tableData.currency }}</b>
                                                 </p>
                                             </td>
                                         </tr>
@@ -83,7 +83,7 @@
                                                     <div class="col-12">
                                                         <p class="fs-3">
                                                             Kind Attn:
-                                                            {{ tableData?.contactPersonName }}
+                                                            {{ tableData.contactPersonName }}
                                                         </p>
                                                         <p class="sub-text">Dear Sir/Madam,</p>
                                                         <p class="sub-text">
@@ -104,7 +104,7 @@
                                         </tr>
                                         <tr
                                             class="text-wrap"
-                                            *ngFor="let p of tableData?.quotationDetails; let i = index"
+                                            *ngFor="let p of tableData.quotationDetails; let i = index"
                                         >
                                             <td colspan="1" class="text-center">
                                                 <label>{{ i + 1 }}</label>
@@ -112,15 +112,15 @@
                                             <td colspan="5">
                                                 <p>
                                                     Part No.:
-                                                    {{ p?.partNo }}
+                                                    {{ p.partNo }}
                                                 </p>
                                                 <p>
                                                     Part Name:
-                                                    {{ p?.SKUName }}
+                                                    {{ p.SKUName }}
                                                 </p>
                                                 <p>
                                                     Part Description/Size:
-                                                    {{ p?.SKUDescription }}
+                                                    {{ p.SKUDescription }}
                                                 </p>
                                                 <br />
                                                 <p>Development Cost:</p>
@@ -128,17 +128,17 @@
 
                                             <td colspan="2" class="text-center">
                                                 <div class="h-100 d-flex align-items-start justify-content-center">
-                                                    {{ p?.drawingRef }}
+                                                    {{ p.drawingRef }}
                                                 </div>
                                             </td>
                                             <td colspan="1" class="text-center">
                                                 <div class="h-100 d-flex align-items-start justify-content-center">
-                                                    {{ p?.UOM }}
+                                                    {{ p.UOM }}
                                                 </div>
                                             </td>
                                             <td colspan="1">
                                                 <div class="h-100 d-flex align-items-start justify-content-center">
-                                                    {{ p?.MOQ | number : "1.2-2" }}
+                                                    {{ p.MOQ | number : "1.2-2" }}
                                                 </div>
                                             </td>
                                             <td colspan="2">
@@ -146,10 +146,10 @@
                                                     class="h-100 d-flex flex-column justify-content-between align-items-center"
                                                 >
                                                     <div>
-                                                        {{ p?.QPrice | number : "1.2-2" }}
+                                                        {{ p.QPrice | number : "1.2-2" }}
                                                     </div>
                                                     <div>
-                                                        {{ p?.developmentCost }}
+                                                        {{ p.developmentCost }}
                                                     </div>
                                                 </div>
                                             </td>
@@ -163,7 +163,7 @@
                                                             Note: We have considered the costing based on an exchange
                                                             rate of
                                                             <span class="text-primary">
-                                                                {{ tableData?.exchangeRate }}
+                                                                {{ tableData.exchangeRate }}
                                                             </span>
                                                             INR to USD, and the cost will be subject to change in the
                                                             event of any variation in the Dollar price trend
@@ -184,7 +184,7 @@
                                                 <div class="row justify-content-between my-4">
                                                     <div class="col-4">
                                                         <img
-                                                            src="{{ tableData?.SOSignatureUrl }}"
+                                                            src="{{ tableData.SOSignatureUrl }}"
                                                             class="img-sign"
                                                             alt="Signature"
                                                         />

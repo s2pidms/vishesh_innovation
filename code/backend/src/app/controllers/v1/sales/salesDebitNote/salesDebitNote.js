@@ -31,9 +31,9 @@ const {getSalesHSNByCode} = require("../salesHSN/salesHSN");
 const {getAndSetAutoIncrementNo} = require("../../settings/autoIncrement/autoIncrement");
 const {SALES_DEBIT_NOTE} = require("../../../../mocks/schemasConstant/salesConstant");
 const {filteredCustomerList} = require("../../../../models/sales/repository/customerRepository");
-const {getAllSalesDebitNoteAggregate} = require("../../../../models/sales/repository/salesDebitNoteRepository");
 const MailTriggerRepository = require("../../../../models/settings/repository/mailTriggerRepository");
 const {SALES_MAIL_CONST} = require("../../../../mocks/mailTriggerConstants");
+const SalesDebitNoteRepository = require("../../../../models/sales/repository/salesDebitNoteRepository");
 const ObjectId = mongoose.Types.ObjectId;
 
 // @route   GET /purchase/Debit Note/getAll
@@ -60,7 +60,7 @@ exports.getAll = asyncHandler(async (req, res) => {
             },
             {$unwind: "$customer"}
         ];
-        let rows = await getAllSalesDebitNoteAggregate({pipeline, project, queryParams: req.query});
+        let rows = await SalesDebitNoteRepository.getAllPaginate({pipeline, project, queryParams: req.query});
         return res.success(rows);
     } catch (e) {
         console.error("getAllSalesDN", e);
@@ -77,8 +77,7 @@ exports.create = asyncHandler(async (req, res) => {
             updatedBy: req.user.sub,
             ...req.body
         };
-        const saveObj = new Model(createdObj);
-        const itemDetails = await saveObj.save();
+        const itemDetails = await SalesDebitNoteRepository.createDoc(createdObj);
         await updateRejectQtyModel(itemDetails, "created");
         if (itemDetails) {
             res.success({
@@ -116,15 +115,13 @@ exports.create = asyncHandler(async (req, res) => {
 
 exports.update = asyncHandler(async (req, res) => {
     try {
-        let itemDetails = await Model.findById(req.params.id);
+        let itemDetails = await SalesDebitNoteRepository.getDocById(req.params.id);
         if (!itemDetails) {
             const errors = MESSAGES.apiErrorStrings.INVALID_REQUEST;
             return res.preconditionFailed(errors);
         }
         itemDetails.updatedBy = req.user.sub;
-        itemDetails = await generateCreateData(itemDetails, req.body);
-        itemDetails = await itemDetails.save();
-
+        itemDetails = await SalesDebitNoteRepository.updateDoc(itemDetails, req.body);
         if (itemDetails.DNStatus == "Rejected" || itemDetails.DNStatus == "Awaiting Approval") {
             await updateRejectQtyModel(itemDetails, "updated");
         }
@@ -169,9 +166,8 @@ exports.update = asyncHandler(async (req, res) => {
 
 exports.deleteById = asyncHandler(async (req, res) => {
     try {
-        const deleteItem = await Model.findById(req.params.id);
+        const deleteItem = await SalesDebitNoteRepository.deleteDoc({_id: req.params.id});
         if (deleteItem) {
-            await deleteItem.remove();
             return res.success({
                 message: MESSAGES.apiSuccessStrings.DELETED("Sales Debit Note")
             });
@@ -224,6 +220,153 @@ exports.getById = asyncHandler(async (req, res) => {
         return res.success(existing);
     } catch (e) {
         console.error("getById Debit Note", e);
+        const errors = MESSAGES.apiErrorStrings.SERVER_ERROR;
+        return res.serverError(errors);
+    }
+});
+exports.getDNDetailsById = asyncHandler(async (req, res) => {
+    try {
+        let existing = await SalesDebitNoteRepository.filteredSalesDebitNoteList([
+            {
+                $match: {
+                    _id: ObjectId(req.params.id)
+                }
+            },
+            {
+                $lookup: {
+                    from: "Customer",
+                    localField: "customer",
+                    foreignField: "_id",
+                    pipeline: [
+                        {
+                            $project: {
+                                GSTIN: 1,
+                                customerCode: 1,
+                                customerBillingAddress: 1,
+                                customerShippingAddress: 1,
+                                customerContactInfo: 1
+                            }
+                        }
+                    ],
+
+                    as: "customer"
+                }
+            },
+            {
+                $unwind: "$customer"
+            },
+            {
+                $lookup: {
+                    from: "Company",
+                    localField: "company",
+                    foreignField: "_id",
+                    pipeline: [
+                        {
+                            $project: {
+                                companyName: 1,
+                                GSTIN: 1,
+                                companyBillingAddress: 1,
+                                contactInfo: 1,
+                                swiftCode: 1,
+                                companyBankMICRCode: 1,
+                                intermediaryBank: 1,
+                                companyBefName: 1,
+                                companyBankName: 1,
+                                companyAccountNumber: 1,
+                                companyBankIFSCCode: 1,
+                                companyBankBranch: 1,
+                                intermediaryBankSwiftCode: 1,
+                                companySignatureUrl: {$concat: [`${CONSTANTS.domainUrl}company/`, "$companySignature"]},
+                                companyPdfHeaderUrl: {$concat: [`${CONSTANTS.domainUrl}company/`, "$companyPdfHeader"]}
+                            }
+                        }
+                    ],
+                    as: "company"
+                }
+            },
+            {$unwind: "$company"},
+            {
+                $lookup: {
+                    from: "SKUMaster",
+                    localField: "DNDetails.SKU",
+                    foreignField: "_id",
+                    pipeline: [
+                        {
+                            $project: {
+                                SKUNo: 1,
+                                SKUName: 1,
+                                SKUDescription: 1
+                            }
+                        }
+                    ],
+                    as: "SKUInfo"
+                }
+            },
+            {
+                $addFields: {
+                    DNDetails: {
+                        $map: {
+                            input: "$DNDetails",
+                            as: "detail",
+                            in: {
+                                $mergeObjects: [
+                                    "$$detail",
+                                    {
+                                        $arrayElemAt: [
+                                            {
+                                                $filter: {
+                                                    input: "$SKUInfo",
+                                                    as: "sku",
+                                                    cond: {$eq: ["$$sku._id", "$$detail.SKU"]}
+                                                }
+                                            },
+                                            0
+                                        ]
+                                    }
+                                ]
+                            }
+                        }
+                    }
+                }
+            },
+            {
+                $project: {
+                    company: 1,
+                    DNNumber: 1,
+                    DNDate: 1,
+                    salesCategory: 1,
+                    customer: 1,
+                    customerName: 1,
+                    invoiceNo: 1,
+                    invoiceDate: 1,
+                    currency: 1,
+                    DNDetails: 1,
+                    reasonForDN: 1,
+                    remarks: 1,
+                    netDNValue: 1,
+                    otherCharges: 1,
+                    DNStatus: 1,
+                    GSTDetails: 1,
+                    totalCGSTAmount: 1,
+                    totalSGSTAmount: 1,
+                    totalIGSTAmount: 1,
+                    totalUGSTAmount: 1,
+                    totalTaxAmount: 1,
+                    totalAmount: 1,
+                    totalAmountWithTax: 1,
+                    roundedOff: 1
+                }
+            }
+        ]);
+        if (!existing.length) {
+            let errors = MESSAGES.apiSuccessStrings.DATA_NOT_EXISTS("Debit Note");
+            return res.unprocessableEntity(errors);
+        } else {
+            existing = await getDataPDF(existing[0]);
+        }
+        return res.success(existing);
+    } catch (e) {
+        console.error("getDNDetailsById Debit Note", e);
         const errors = MESSAGES.apiErrorStrings.SERVER_ERROR;
         return res.serverError(errors);
     }

@@ -19,7 +19,7 @@
                         <tr>
                             <td colspan="12">
                                 <div class="text-center">
-                                    <img src="{{ tableData?.company?.companyPdfHeaderUrl }}" class="img-pdfHeader" />
+                                    <img src="{{ tableData.company.companyPdfHeaderUrl }}" class="img-pdfHeader" />
                                 </div>
                             </td>
                         </tr>
@@ -43,54 +43,54 @@
                         <tr>
                             <td colspan="4" rowspan="2">
                                 <p class="">
-                                    {{ tableData?.supplier?.supplierName }}
+                                    {{ tableData.supplier.supplierName }}
                                 </p>
                                 <p>
-                                    {{ tableData?.supplier?.supplierBillingAddress?.line1 }}
+                                    {{ tableData.supplier.supplierBillingAddress.line1 }}
                                 </p>
-                                <p>{{ tableData?.supplier?.supplierBillingAddress?.line2 }}</p>
-                                <p>{{ tableData?.supplier?.supplierBillingAddress?.line3 }}</p>
+                                <p>{{ tableData.supplier.supplierBillingAddress.line2 }}</p>
+                                <p>{{ tableData.supplier.supplierBillingAddress.line3 }}</p>
                                 <p>
-                                    {{ tableData?.supplier?.supplierBillingAddress?.city }} ,
-                                    {{ tableData?.supplier?.supplierBillingAddress?.state }}
-                                    , {{ tableData?.supplier?.supplierBillingAddress?.pinCode }}
-                                    {{ tableData?.supplier?.supplierBillingAddress?.country }}
+                                    {{ tableData.supplier.supplierBillingAddress.city }} ,
+                                    {{ tableData.supplier.supplierBillingAddress.state }}
+                                    , {{ tableData.supplier.supplierBillingAddress.pinCode }}
+                                    {{ tableData.supplier.supplierBillingAddress.country }}
                                 </p>
-                                <p>GSTIN.: {{ tableData?.supplier?.supplierGST }}</p>
+                                <p>GSTIN.: {{ tableData.supplier.supplierGST }}</p>
                             </td>
                             <td colspan="4" rowspan="2">
-                                <p>{{ tableData?.company?.companyName }}</p>
+                                <p>{{ tableData.company.companyName }}</p>
                                 <p>
-                                    {{ tableData?.company?.companyBillingAddress?.addressLine1 }}
+                                    {{ tableData.company.companyBillingAddress.addressLine1 }}
                                 </p>
                                 <p>
-                                    {{ tableData?.company?.companyBillingAddress?.addressLine2 }}
+                                    {{ tableData.company.companyBillingAddress.addressLine2 }}
                                 </p>
                                 <p>
-                                    {{ tableData?.company?.companyBillingAddress?.addressLine3 }}
+                                    {{ tableData.company.companyBillingAddress.addressLine3 }}
                                 </p>
                                 <p>
-                                    {{ tableData?.company?.companyBillingAddress?.city }},
-                                    {{ tableData?.company?.companyBillingAddress?.state }} ,
-                                    {{ tableData?.company?.companyBillingAddress?.pinCode }},
-                                    {{ tableData?.company?.companyBillingAddress?.country }}
+                                    {{ tableData.company.companyBillingAddress.city }},
+                                    {{ tableData.company.companyBillingAddress.state }} ,
+                                    {{ tableData.company.companyBillingAddress.pinCode }},
+                                    {{ tableData.company.companyBillingAddress.country }}
                                 </p>
-                                <p>GSTIN: {{ tableData?.company?.GSTIN }}</p>
+                                <p>GSTIN: {{ tableData.company.GSTIN }}</p>
                             </td>
                             <td colspan="4">
-                                <p class="">Debit Note No.: {{ tableData?.DNNumber }}</p>
+                                <p class="">Debit Note No.: {{ tableData.DNNumber }}</p>
                                 <p class="">
                                     Debit Note Date:
-                                    {{ tableData?.DNDate | date : "dd-MM-YYYY" }}
+                                    {{ tableData.DNDate | date : "dd-MM-YYYY" }}
                                 </p>
                             </td>
                         </tr>
                         <tr>
                             <td colspan="4">
-                                <p class="">Your Tax Invoice No.: {{ tableData?.invoiceNo }}</p>
+                                <p class="">Your Tax Invoice No.: {{ tableData.invoiceNo }}</p>
                                 <p class="">
                                     Your Tax Invoice Date:
-                                    {{ tableData?.invoiceDate | date : "dd-MM-YYYY" }}
+                                    {{ tableData.invoiceDate | date : "dd-MM-YYYY" }}
                                 </p>
                             </td>
                         </tr>
@@ -98,25 +98,25 @@
                             <td colspan="4">
                                 <p class="sub-text">
                                     Mobile No.:
-                                    {{ tableData?.supplier?.supplierContactMatrix?.supplierContactPersonNumber }}
+                                    {{ tableData.supplier.supplierContactMatrix.supplierContactPersonNumber }}
                                 </p>
                                 <p class="sub-text">
                                     E-mail:
-                                    {{ tableData?.supplier?.supplierContactMatrix?.supplierContactPersonEmail }}
+                                    {{ tableData.supplier.supplierContactMatrix.supplierContactPersonEmail }}
                                 </p>
                             </td>
                             <td colspan="4">
                                 <p class="sub-text">
                                     Mobile No.:
-                                    {{ tableData?.company?.companyContactPersonNumber }}
+                                    {{ tableData.company.companyContactPersonNumber }}
                                 </p>
                                 <p class="sub-text">
                                     E-mail:
-                                    {{ tableData?.company?.companyContactPersonEmail }}
+                                    {{ tableData.company.companyContactPersonEmail }}
                                 </p>
                             </td>
                             <td colspan="4">
-                                <p class="sub-text">Currency: {{ tableData?.currency }}</p>
+                                <p class="sub-text">Currency: {{ tableData.currency }}</p>
                             </td>
                         </tr>
                         <tr>
@@ -131,7 +131,7 @@
                                     agreed terms of business.
                                 </p>
                                 <p class="sub-text">
-                                    <b class="sub-text"> Reason for Debit Note: “{{ tableData?.reasonForDN }}” </b>
+                                    <b class="sub-text"> Reason for Debit Note: “{{ tableData.reasonForDN }}” </b>
                                 </p>
                             </td>
                         </tr>
@@ -150,26 +150,26 @@
                             </td>
                             <td colspan="3">
                                 <p>
-                                    Item Code: {{ p?.item?.itemCode }} | Supplier's Code:
-                                    {{ tableData?.supplier?.supplierCode }}
+                                    Item Code: {{ p.item.itemCode }} | Supplier's Code:
+                                    {{ tableData.supplier.supplierCode }}
                                 </p>
-                                <p>Item Name: {{ p?.item?.itemName }}</p>
-                                <p>Item Description: {{ p?.item?.itemDescription }}</p>
+                                <p>Item Name: {{ p.item.itemName }}</p>
+                                <p>Item Description: {{ p.item.itemDescription }}</p>
                             </td>
                             <td colspan="2" class="text-center">
-                                {{ p?.hsn }}
+                                {{ p.hsn }}
                             </td>
                             <td colspan="1" class="text-center">
-                                {{ p?.UOM ? p?.UOM : p.primaryUnit }}
+                                {{ p.UOM ? p.UOM : p.primaryUnit }}
                             </td>
                             <td colspan="1" class="text-center">
-                                {{ p?.returnQty | number : "1.2-2" }}
+                                {{ p.returnQty | number : "1.2-2" }}
                             </td>
                             <td colspan="1" class="text-center">
-                                {{ p?.purchaseRate | number : "1.2-2" }}
+                                {{ p.purchaseRate | number : "1.2-2" }}
                             </td>
                             <td colspan="3" class="text-center">
-                                {{ p?.lineValue | number : "1.2-2" }}
+                                {{ p.lineValue | number : "1.2-2" }}
                             </td>
                         </tr>
                         <tr *ngFor="let d of tableData.rowRepeat; let j = index">
@@ -192,8 +192,8 @@
                             <td colspan="1" class="text-center">
                                 <span class="sub-text">
                                     {{
-                                        tableData?.otherCharges?.totalAmount
-                                            ? (tableData?.otherCharges?.totalAmount | number : "1.2-2")
+                                        tableData.otherCharges.totalAmount
+                                            ? (tableData.otherCharges.totalAmount | number : "1.2-2")
                                             : 0
                                     }}
                                 </span>
@@ -204,10 +204,10 @@
                                 <p>Total Taxable Amount</p>
                             </th>
                             <th *ngIf="isDomestic" colspan="1" class="text-center">
-                                {{ tableData?.totalAmount | number : "1.2-2" }}
+                                {{ tableData.totalAmount | number : "1.2-2" }}
                             </th>
                             <th *ngIf="!isDomestic" colspan="1" class="text-center">
-                                {{ tableData?.totalAmount | number : "1.2-2" }}
+                                {{ tableData.totalAmount | number : "1.2-2" }}
                             </th>
                         </tr>
 
@@ -215,7 +215,7 @@
                             <td colspan="12 " class="py-4">
                                 <div class="row justify-content-between">
                                     <div class="col-9 h-100 p-0 pe-4">
-                                        <h4 class="py-2">GST Summary | Currency {{ tableData?.currency }}</h4>
+                                        <h4 class="py-2">GST Summary | Currency {{ tableData.currency }}</h4>
                                         <table class="table table-sm">
                                             <tr>
                                                 <th class="text-center">HSN/SAC</th>
@@ -228,47 +228,47 @@
                                                 <th class="text-center">IGST Amt.</th>
                                                 <th class="text-center">Total Tax</th>
                                             </tr>
-                                            <tr *ngFor="let s of tableData?.GSTDetails">
+                                            <tr *ngFor="let s of tableData.GSTDetails">
                                                 <td class="text-center">
                                                     <span class="sub-text" *ngIf="isDomestic; else hashBlock">
-                                                        {{ s?.hsn }}</span
+                                                        {{ s.hsn }}</span
                                                     >
                                                 </td>
                                                 <td class="text-center">
                                                     <span class="sub-text" *ngIf="isDomestic; else hashBlock"
-                                                        >{{ s?.taxableValue ? s?.taxableValue : "-" }}
+                                                        >{{ s.taxableValue ? s.taxableValue : "-" }}
                                                     </span>
                                                 </td>
 
                                                 <td class="text-center sub-text">
-                                                    {{ s?.sgstRate ? s?.sgstRate : "-" }}
+                                                    {{ s.sgstRate ? s.sgstRate : "-" }}
                                                 </td>
                                                 <td class="text-center sub-text">
-                                                    {{ s?.sgstAmount ? (s?.sgstAmount | number : "1.2-2") : "-" }}
+                                                    {{ s.sgstAmount ? (s.sgstAmount | number : "1.2-2") : "-" }}
                                                 </td>
 
                                                 <td class="text-center sub-text">
-                                                    {{ s?.cgstRate ? (s?.cgstRate | number : "1.2-2") : "-" }}
+                                                    {{ s.cgstRate ? (s.cgstRate | number : "1.2-2") : "-" }}
                                                 </td>
                                                 <td class="text-center sub-text">
-                                                    {{ s?.cgstAmount ? s?.cgstAmount : "-" }}
+                                                    {{ s.cgstAmount ? s.cgstAmount : "-" }}
                                                 </td>
 
                                                 <td class="text-center">
                                                     <span class="sub-text" *ngIf="isDomestic; else hashBlock">{{
-                                                        s?.igstRate ? (s?.igstRate | number : "1.2-2") : "-"
+                                                        s.igstRate ? (s.igstRate | number : "1.2-2") : "-"
                                                     }}</span>
                                                 </td>
                                                 <td class="text-center">
                                                     <span class="sub-text" *ngIf="isDomestic; else hashBlock">{{
-                                                        s?.igstAmount ? (s?.igstAmount | number : "1.2-2") : "-"
+                                                        s.igstAmount ? (s.igstAmount | number : "1.2-2") : "-"
                                                     }}</span>
                                                 </td>
 
                                                 <td class="text-center">
                                                     <span class="sub-text" *ngIf="isDomestic; else hashBlock">
                                                         {{
-                                                            +s?.cgstAmount + +s?.sgstAmount + +s?.igstAmount
+                                                            +s.cgstAmount + +s.sgstAmount + +s.igstAmount
                                                                 | number : "1.2-2"
                                                         }}
                                                     </span>
@@ -289,32 +289,32 @@
                                                 <th class="text-center">Total >></th>
                                                 <th class="text-center">
                                                     <span *ngIf="isDomestic; else hashBlock">
-                                                        {{ tableData?.totalAmount | number : "1.2-2" }}
+                                                        {{ tableData.totalAmount | number : "1.2-2" }}
                                                     </span>
                                                 </th>
                                                 <th class="text-center">-</th>
                                                 <th class="text-center">
                                                     <span *ngIf="isDomestic; else hashBlock">
-                                                        {{ tableData?.totalSGSTAmount | number : "1.2-2" }}</span
+                                                        {{ tableData.totalSGSTAmount | number : "1.2-2" }}</span
                                                     >
                                                 </th>
 
                                                 <th class="text-center">-</th>
                                                 <th class="text-center">
                                                     <span *ngIf="isDomestic; else hashBlock">
-                                                        {{ tableData?.totalCGSTAmount | number : "1.2-2" }}</span
+                                                        {{ tableData.totalCGSTAmount | number : "1.2-2" }}</span
                                                     >
                                                 </th>
 
                                                 <th class="text-center">-</th>
                                                 <th class="text-center">
                                                     <span *ngIf="isDomestic; else hashBlock">
-                                                        {{ tableData?.totalIGSTAmount | number : "1.2-2" }}
+                                                        {{ tableData.totalIGSTAmount | number : "1.2-2" }}
                                                     </span>
                                                 </th>
                                                 <th class="text-center">
                                                     <span *ngIf="isDomestic; else hashBlock">
-                                                        {{ tableData?.totalTaxAmount | number : "1.2-2" }}
+                                                        {{ tableData.totalTaxAmount | number : "1.2-2" }}
                                                     </span>
                                                 </th>
                                             </tr>
@@ -323,23 +323,23 @@
                                     <div class="col-3 h-100 p-0">
                                         <h4 class="py-2">
                                             Debit Note Summary I Currency
-                                            {{ tableData?.currency }}
+                                            {{ tableData.currency }}
                                         </h4>
                                         <table class="table">
                                             <tr>
                                                 <th>Total Taxable Amount</th>
                                                 <th *ngIf="isDomestic" class="text-center">
-                                                    {{ tableData?.totalAmount | number : "1.2-2" }}
+                                                    {{ tableData.totalAmount | number : "1.2-2" }}
                                                 </th>
                                                 <th *ngIf="!isDomestic" class="text-center">
-                                                    {{ tableData?.totalAmount | number : "1.2-2" }}
+                                                    {{ tableData.totalAmount | number : "1.2-2" }}
                                                 </th>
                                             </tr>
                                             <tr>
                                                 <td class="sub-text">S-GST</td>
                                                 <td colspan="2" class="text-center">
                                                     <span class="sub-text" *ngIf="isDomestic; else hashBlock">
-                                                        {{ tableData?.totalSGSTAmount | number : ".2-2" }}
+                                                        {{ tableData.totalSGSTAmount | number : ".2-2" }}
                                                     </span>
                                                 </td>
                                             </tr>
@@ -347,7 +347,7 @@
                                                 <td class="sub-text">C-GST</td>
                                                 <td class="text-center">
                                                     <span class="sub-text" *ngIf="isDomestic; else hashBlock">
-                                                        {{ tableData?.totalCGSTAmount | number : ".2-2" }}
+                                                        {{ tableData.totalCGSTAmount | number : ".2-2" }}
                                                     </span>
                                                 </td>
                                             </tr>
@@ -356,7 +356,7 @@
                                                 <td class="sub-text">I-GST</td>
                                                 <td class="text-center">
                                                     <span class="sub-text" *ngIf="isDomestic; else hashBlock">
-                                                        {{ tableData?.totalIGSTAmount | number : ".2-2" }}
+                                                        {{ tableData.totalIGSTAmount | number : ".2-2" }}
                                                     </span>
                                                 </td>
                                             </tr>
@@ -364,7 +364,7 @@
                                                 <td class="sub-text">Rounded off [+/-]</td>
                                                 <td class="text-center">
                                                     <span class="sub-text" *ngIf="isDomestic; else hashBlock">
-                                                        {{ tableData?.roundedOff | number : "1.2-2" }}
+                                                        {{ tableData.roundedOff | number : "1.2-2" }}
                                                     </span>
                                                 </td>
                                             </tr>
@@ -372,11 +372,11 @@
                                                 <th>Total Debit Note Amount</th>
                                                 <th class="text-center">
                                                     <span *ngIf="isDomestic">
-                                                        {{ tableData?.totalAmountWithTax | number : ".2-2" }}
+                                                        {{ tableData.totalAmountWithTax | number : ".2-2" }}
                                                     </span>
 
                                                     <span *ngIf="!isDomestic">
-                                                        {{ tableData?.totalAmount | number : "1.2-2" }}
+                                                        {{ tableData.totalAmount | number : "1.2-2" }}
                                                     </span>
                                                 </th>
                                             </tr>
@@ -397,37 +397,37 @@
                                             <tr>
                                                 <td colspan="6">Beneficiary Name</td>
                                                 <td colspan="6">
-                                                    {{ tableData?.company?.companyBefName }}
+                                                    {{ tableData.company.companyBefName }}
                                                 </td>
                                             </tr>
                                             <tr>
                                                 <td colspan="6">Bank Name</td>
                                                 <td colspan="6">
-                                                    {{ tableData?.company?.companyBankName }}
+                                                    {{ tableData.company.companyBankName }}
                                                 </td>
                                             </tr>
                                             <tr>
                                                 <td colspan="6">Account No.</td>
                                                 <td colspan="6">
-                                                    {{ tableData?.company?.companyAccountNumber }}
+                                                    {{ tableData.company.companyAccountNumber }}
                                                 </td>
                                             </tr>
                                             <tr>
                                                 <td colspan="6">MICR Code</td>
                                                 <td colspan="6">
-                                                    {{ tableData?.company?.companyBankMICRCode }}
+                                                    {{ tableData.company.companyBankMICRCode }}
                                                 </td>
                                             </tr>
                                             <tr>
                                                 <td colspan="6">IFS Code (NEFT/RTGS)</td>
                                                 <td colspan="6">
-                                                    {{ tableData?.company?.companyBankIFSCCode }}
+                                                    {{ tableData.company.companyBankIFSCCode }}
                                                 </td>
                                             </tr>
                                             <tr>
                                                 <td colspan="6">Bank/Branch Address</td>
                                                 <td colspan="6">
-                                                    {{ tableData?.company?.companyBankBranch }}
+                                                    {{ tableData.company.companyBankBranch }}
                                                 </td>
                                             </tr>
                                         </table>
@@ -437,7 +437,7 @@
                                             <tr>
                                                 <td colspan="12" class="text-center">
                                                     <img
-                                                        src="{{ tableData?.company?.companySignatureUrl }}"
+                                                        src="{{ tableData.company.companySignatureUrl }}"
                                                         class="img-sign"
                                                     />
                                                 </td>

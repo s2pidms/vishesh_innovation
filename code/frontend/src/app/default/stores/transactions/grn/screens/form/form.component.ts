@@ -52,7 +52,8 @@ export class FormComponent implements OnInit {
         edit: "Awaiting Approval",
         approve: "Approved",
         generate: "Report Generated",
-        cancel: "Cancelled"
+        cancel: "Cancelled",
+        
     };
     form = new UntypedFormGroup({
         _id: new UntypedFormControl(null),
@@ -214,6 +215,7 @@ export class FormComponent implements OnInit {
                             UOM: ele.UOM ? ele.UOM : ele.primaryUnit,
                             POQty: ele?.POQty,
                             GRNQty: ele?.GRNQty,
+                            balancedMRNQty: ele?.balancedMRNQty,
                             invoicedQty: ele?.invoicedQty,
                             balancedQty: ele?.balancedQty,
                             receivedQty: ele?.receivedQty,
@@ -369,6 +371,7 @@ export class FormComponent implements OnInit {
     grnQtyChange(ev: any, GRNLineNumber: number) {
         let index: number = this.GRNDetailsArray.map((x: any) => x.GRNLineNumber).indexOf(GRNLineNumber);
         this.GRNDetailsArray[index].GRNQty = Math.abs(ev);
+        this.GRNDetailsArray[index].balancedMRNQty = Math.abs(ev);
     }
 
     setConversionOfUnit(item: any) {

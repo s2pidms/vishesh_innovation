@@ -1,0 +1,276 @@
+<div class="container-fluid printScreen">
+    <div class="row">
+        <div class="col-12 text-center px-0">
+            <div *ngIf="buttonCondition == 'true'" class="">
+                <button
+                    appAccessControl
+                    [accessType]="rolePermissionActions.downloadAction"
+                    class="btn btn-primary mt-4"
+                    type="button"
+                    (click)="windowPrint()"
+                    *ngIf="pdfAction != 'pdf'"
+                >
+                    <img src="/assets/images/print.png" width="20px" height="14px" class="mb-2" />&nbsp;&nbsp; Print
+                </button>
+            </div>
+
+            <div class="page py-3">
+                <div class="table-responsive shadow">
+                    <table class="table">
+                        <tr>
+                            <td colspan="12">
+                                <h2 class="page-title">Work Order for Job Work</h2>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan="6">
+                                <p class="sub-text">Work Order No.:</p>
+                                <p class="sub-text">Work Order Date:</p>
+                            </td>
+                            <td colspan="6">
+                                <p class="sub-text">Order Reference:</p>
+                                <p class="sub-text">Place of Supply:</p>
+                            </td>
+                        </tr>
+                        <tr class="head-row">
+                            <th colspan="6" class="bg-grey">
+                                <label class="heading sub-text">Details of the Principal (Bill To)</label>
+                            </th>
+                            <th colspan="6" class="bg-grey">
+                                <label class="heading sub-text">Details of the Principal (Ship To)</label>
+                            </th>
+                        </tr>
+                        <tr>
+                            <td colspan="6">
+                                <div class="font_le">
+                                    <p class="fw-bold">{{ tableData.company.companyName }}</p>
+                                    <p>
+                                        {{ tableData.company.companyBillingAddress.addressLine1 }}
+                                    </p>
+                                    <p>{{ tableData.company.companyBillingAddress.addressLine2 }}</p>
+                                    <p>{{ tableData.company.companyBillingAddress.addressLine3 }}</p>
+                                    <p>
+                                        {{ tableData.company.companyBillingAddress.addressLine4 }},
+                                        {{ tableData.company.companyBillingAddress.city }}
+                                        -
+                                        {{ tableData.company.companyBillingAddress.pinCode }}
+                                    </p>
+                                    <p>
+                                        {{ tableData.company.companyBillingAddress.state }},
+                                        {{ tableData.company.companyBillingAddress.country }}
+                                    </p>
+                                    <p class="sub-text">GSTIN: {{ tableData.company.GSTIN }}</p>
+                                </div>
+                            </td>
+                            <td colspan="6">
+                                <div class="font_le">
+                                    <p class="fw-bold">{{ tableData.company.companyName }}</p>
+                                    <p>
+                                        {{ tableData.company.companyBillingAddress.addressLine1 }}
+                                    </p>
+                                    <p>{{ tableData.company.companyBillingAddress.addressLine2 }}</p>
+                                    <p>{{ tableData.company.companyBillingAddress.addressLine3 }}</p>
+                                    <p>
+                                        {{ tableData.company.companyBillingAddress.addressLine4 }},
+                                        {{ tableData.company.companyBillingAddress.city }}
+                                        -
+                                        {{ tableData.company.companyBillingAddress.pinCode }}
+                                    </p>
+                                    <p>
+                                        {{ tableData.company.companyBillingAddress.state }},
+                                        {{ tableData.company.companyBillingAddress.country }}
+                                    </p>
+                                    <p class="sub-text">GSTIN: {{ tableData.company.GSTIN }}</p>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr class="head-row">
+                            <th colspan="6">
+                                <label class="sub-text">Details of the Job Worker (Bill From)</label>
+                            </th>
+                            <th colspan="6">
+                                <label class="sub-text">Details of the Job Worker (Ship From)</label>
+                            </th>
+                        </tr>
+                        <tr>
+                            <td colspan="6">
+                                <p class="fw-bold">
+                                    <!-- {{ tableData.supplier.supplierName }} -->
+                                    {{ tableData.jobWorkerName }}
+                                </p>
+                                <p>{{ tableData.primaryAddress.line1 }}</p>
+                                <p>{{ tableData.primaryAddress.line2 }}</p>
+                                <p>{{ tableData.primaryAddress.line3 }}</p>
+                                <p>
+                                    {{ tableData.primaryAddress.line4 }},
+                                    {{ tableData.primaryAddress.cityOrDistrict }} -
+                                    {{ tableData.primaryAddress.pinCode }}
+                                </p>
+                                <p>{{ tableData.primaryAddress.state }}, {{ tableData.primaryAddress.country }}</p>
+                                <p class="sub-text">GSTIN: {{ tableData.GSTINNo }}</p>
+                            </td>
+                            <td colspan="6">
+                                <p class="fw-bold">
+                                    <!-- {{ tableData.shipToAddress.companyName }}</p> -->
+                                    {{ tableData.jobWorkerName }}
+                                </p>
+                                <p>
+                                    {{ tableData.shipToAddress.line1 }}
+                                </p>
+                                <p>{{ tableData.shipToAddress.line2 }}</p>
+                                <p>{{ tableData.shipToAddress.line3 }}</p>
+                                <p>
+                                    {{ tableData.shipToAddress.line4 }}, {{ tableData.shipToAddress.cityOrDistrict }} -
+                                    {{ tableData.shipToAddress.pinCode }}
+                                </p>
+                                <p>{{ tableData.shipToAddress.state }}, {{ tableData.shipToAddress.country }}</p>
+
+                                <p class="sub-text">GSTIN: {{ tableData.GSTINNo }}</p>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan="12">
+                                <p class="sub-text">
+                                    Dear Sir/Madam,<br />
+                                    Please supply following processed goods/material in accordance with agreed terms and
+                                    conditions or job work agreement.<br />
+                                    Please mention our Item code & Work Order number on your tax invoice without which
+                                    invoice will not be processed.<br />
+                                    Please send the material along with valid Test Report
+                                </p>
+                            </td>
+                        </tr>
+                        <ng-container *ngFor="let p of tableData.JWChallanDetails; let i = index">
+                            <tr class="head-row text-center">
+                                <th colspan="1" class="text-center set-SN-width">SN</th>
+                                <th colspan="11">Description of Job Work</th>
+                            </tr>
+                            <tr>
+                                <td rowspan="10" class="text-center">
+                                    {{ i + 1 }}
+                                </td>
+                                <td colspan="3">Nature of Job Work</td>
+                                <td colspan="8">{{ tableData.freightTermsInfo.modeOfTransport }}</td>
+                            </tr>
+                            <tr>
+                                <td colspan="3">SAC Code</td>
+                                <td colspan="8">{{ tableData.freightTermsInfo.modeOfTransport }}</td>
+                            </tr>
+                            <tr>
+                                <td colspan="3">GST Rate</td>
+                                <td colspan="8">{{ tableData.freightTermsInfo.modeOfTransport }}</td>
+                            </tr>
+                            <tr>
+                                <th colspan="11" class="text-start">Details of Part to be Manufactured/Processed</th>
+                            </tr>
+                            <tr>
+                                <td colspan="3">JW Item Code</td>
+                                <td colspan="4">{{ tableData.freightTermsInfo.modeOfTransport }}</td>
+                                <td colspan="2">Quantity</td>
+                                <td colspan="2">{{ tableData.freightTermsInfo.modeOfTransport }}</td>
+                            </tr>
+                            <tr>
+                                <td colspan="3">JW Item Name</td>
+                                <td colspan="4">{{ tableData.freightTermsInfo.modeOfTransport }}</td>
+                                <td colspan="2">Process Rate/Unit</td>
+                                <td colspan="2">{{ tableData.freightTermsInfo.modeOfTransport }}</td>
+                            </tr>
+                            <tr>
+                                <td colspan="3">JW Item Description</td>
+                                <td colspan="4">{{ tableData.freightTermsInfo.modeOfTransport }}</td>
+                                <td colspan="2">Discount %</td>
+                                <td colspan="2">{{ tableData.freightTermsInfo.modeOfTransport }}</td>
+                            </tr>
+                            <tr>
+                                <td colspan="3">Drawing No.</td>
+                                <td colspan="4">{{ tableData.freightTermsInfo.modeOfTransport }}</td>
+                                <td colspan="2">Net Rate/Unit</td>
+                                <td colspan="2">{{ tableData.freightTermsInfo.modeOfTransport }}</td>
+                            </tr>
+                            <tr>
+                                <td colspan="3">HSN Code</td>
+                                <td colspan="4">{{ tableData.freightTermsInfo.modeOfTransport }}</td>
+                                <td colspan="2">Taxable Value</td>
+                                <td colspan="2">{{ tableData.freightTermsInfo.modeOfTransport }}</td>
+                            </tr>
+                            <tr>
+                                <td colspan="3">UoM</td>
+                                <td colspan="4">{{ tableData.freightTermsInfo.modeOfTransport }}</td>
+                                <td colspan="2">Delivery Date</td>
+                                <td colspan="2">{{ tableData.freightTermsInfo.modeOfTransport }}</td>
+                            </tr>
+                        </ng-container>
+
+                        <tr>
+                            <td colspan="12" style="height: 2rem"></td>
+                        </tr>
+
+                        <!-- <tr>
+                            <th colspan="6"><label>General Terms & Conditions</label></th>
+                            <td colspan="6" rowspan="6" class="text-center">
+                                <div>
+                                    <img src="{{ tableData.company.companySignatureUrl }}" class="img-sign" />
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan="2">Payment Terms</td>
+                            <td colspan="4">{{ tableData.freightTermsInfo.modeOfTransport }}</td>
+                        </tr>
+                        <tr>
+                            <td colspan="2">Freight Terms</td>
+                            <td colspan="4">{{ tableData.freightTermsInfo.freightTerms }}</td>
+                        </tr>
+                        <tr>
+                            <td colspan="2">WO Remarks</td>
+                            <td colspan="4">{{ tableData.freightTermsInfo.destination }}</td>
+                        </tr> -->
+                        <tr class="py-1">
+                            <td colspan="12">
+                                <div class="row justify-content-between my-3">
+                                    <div class="col-6 p-0 pe-4">
+                                        <table class="table">
+                                            <tr>
+                                                <th colspan="12">General Terms & Conditions</th>
+                                            </tr>
+                                            <tr>
+                                                <td colspan="6">Payment Terms</td>
+                                                <td colspan="6">
+                                                    {{ tableData.freightTermsInfo.modeOfTransport }}
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td colspan="6">Freight Terms</td>
+                                                <td colspan="6">
+                                                    {{ tableData.freightTermsInfo.freightTerms }}
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td colspan="6">WO Remarks</td>
+                                                <td colspan="6">
+                                                    {{ tableData.freightTermsInfo.destination }}
+                                                </td>
+                                            </tr>
+                                        </table>
+                                    </div>
+                                    <div class="col-6 text-center p-0">
+                                        <table class="table">
+                                            <tr>
+                                                <td rowspan="4" class="text-center">
+                                                    <img
+                                                        src="{{ tableData.company.companySignatureUrl }}"
+                                                        class="img-sign"
+                                                    />
+                                                </td>
+                                            </tr>
+                                        </table>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

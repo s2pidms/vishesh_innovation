@@ -14,3 +14,4 @@ export * from "./debitNoteDetailsArray";
 export * from "./purchaseIndentMasterData";
 export * from "./jobWorkChallanMasterData";
 export * from "./jobWorkChallan";
+export * from "./jobWorkOrderInterface";

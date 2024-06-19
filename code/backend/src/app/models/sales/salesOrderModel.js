@@ -1,5 +1,4 @@
 const mongoose = require("mongoose");
-const {findAppParameterValue} = require("../../controllers/v1/settings/appParameter/appParameter");
 const Audit = require("../../controllers/v1/settings/audit/audit");
 const {OPTIONS} = require("../../helpers/global.options");
 const {SALES_ORDER: SCHEMA_CONST} = require("../../mocks/schemasConstant/salesConstant");
@@ -144,7 +143,6 @@ const salesOrderSchema = mongoose.Schema(
                     },
                     required: true,
                     default: 0
-
                 },
                 netRate: {
                     // standardRate - (standardRate * discount)

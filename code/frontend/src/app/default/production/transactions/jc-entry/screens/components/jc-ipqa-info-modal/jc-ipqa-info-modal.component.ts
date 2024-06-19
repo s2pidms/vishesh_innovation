@@ -19,11 +19,15 @@ export class JcIPQAInfoModalComponent implements OnInit {
 
     constructor(public activeModal: NgbActiveModal, private utilityService: UtilityService) {}
     ngOnInit(): void {
+        let prodInfoObj = new Map(
+            this.IPQADetails.production.prodInfo.map((ele: any) => [ele.subProcessName, ele.prodEndDate])
+        );
         if (this.IPQADetails?.IPQA?.IPQAInfo?.length > 0) {
             this.prodInfoList = JSON.parse(JSON.stringify(this.IPQADetails?.IPQA?.IPQAInfo))?.map((x: any) => {
                 if (x.releasedDate) {
                     x.releasedDate = this.utilityService.getFormatDate(x.releasedDate, "YYYY-MM-DD");
                 }
+                x.offerDate = prodInfoObj.get(x.subProcessName);
                 return x;
             });
         } else {
@@ -32,6 +36,7 @@ export class JcIPQAInfoModalComponent implements OnInit {
                     seq: null,
                     subProcessName: "",
                     inspectedBy: "",
+                    offerDate: this.utilityService.getTodayDate("YYYY-MM-DD"),
                     releasedDate: this.utilityService.getTodayDate("YYYY-MM-DD"),
                     releaseStatus: null,
                     IPQAStatus: false
@@ -51,6 +56,7 @@ export class JcIPQAInfoModalComponent implements OnInit {
                 seq: null,
                 subProcessName: "",
                 inspectedBy: "",
+                offerDate: "",
                 releasedDate: this.utilityService.getTodayDate("YYYY-MM-DD"),
                 releaseStatus: null,
                 IPQAStatus: false

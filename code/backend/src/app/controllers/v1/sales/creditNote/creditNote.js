@@ -16,7 +16,7 @@ const {
 const {getSalesHSNByCode} = require("../salesHSN/salesHSN");
 const {CONSTANTS} = require("../../../../../config/config");
 const {getEndDateTime, getStartDateTime, dateToAnyFormat} = require("../../../../helpers/dateTime");
-const {SALES_CATEGORY} = require("../../../../mocks/constantData");
+const {SALES_CATEGORY, COMPANY_DEPARTMENTS} = require("../../../../mocks/constantData");
 const {
     getAllCreditNoteAttributes,
     getAllCreditNoteExcelAttributes,
@@ -204,38 +204,123 @@ exports.getById = asyncHandler(async (req, res) => {
 // @route   GET /sales/credit Note/getCNDetailsById/:id
 exports.getCNDetailsById = asyncHandler(async (req, res) => {
     try {
-        let existing = await Model.findById(req.params.id)
-            .populate("customer")
-            .populate("CNDetails.SKU")
-            .populate("CNDetails.SKU", "_id SKUNo SKUName SKUDescription customerInfo hsn")
-            .populate({
-                path: "company",
-                model: "Company",
-                select: {
-                    companyName: 1,
-                    GSTIN: 1,
-                    companyBillingAddress: 1,
-                    contactInfo: 1,
-                    swiftCode: 1,
-                    companyBankMICRCode: 1,
-                    intermediaryBank: 1,
-                    companyBefName: 1,
-                    companyBankName: 1,
-                    companyAccountNumber: 1,
-                    companyBankIFSCCode: 1,
-                    companyBankBranch: 1,
-                    intermediaryBankSwiftCode: 1,
-                    companySignatureUrl: {$concat: [`${CONSTANTS.domainUrl}company/`, "$companySignature"]},
-                    companyPdfHeaderUrl: {$concat: [`${CONSTANTS.domainUrl}company/`, "$companyPdfHeader"]},
-                    SOPdfHeaderUrl: {$concat: [`${CONSTANTS.domainUrl}company/`, "$SOPdfHeader"]}
+        let existing = await CreditNoteRepository.filteredCreditNoteList([
+            {
+                $match: {
+                    _id: ObjectId(req.params.id)
                 }
-            })
-
-            .lean();
-        existing = await getDataPDF(existing);
-        if (!existing) {
+            },
+            {
+                $lookup: {
+                    from: "Customer",
+                    localField: "customer",
+                    foreignField: "_id",
+                    pipeline: [
+                        {
+                            $project: {
+                                customerName: 1,
+                                GSTIN: 1,
+                                customerBillingAddress: 1,
+                                customerContactInfo: 1
+                            }
+                        }
+                    ],
+                    as: "customer"
+                }
+            },
+            {$unwind: "$customer"},
+            {
+                $lookup: {
+                    from: "SKUMaster",
+                    localField: "CNDetails.SKU",
+                    foreignField: "_id",
+                    pipeline: [
+                        {
+                            $project: {
+                                SKUNo: 1,
+                                SKUName: 1,
+                                SKUDescription: 1,
+                                customerInfo: 1,
+                                hsn: 1
+                            }
+                        }
+                    ],
+                    as: "SKUInfo"
+                }
+            },
+            {
+                $addFields: {
+                    CNDetails: {
+                        $map: {
+                            input: "$CNDetails",
+                            as: "detail",
+                            in: {
+                                $mergeObjects: [
+                                    "$$detail",
+                                    {
+                                        SKU: {
+                                            $arrayElemAt: [
+                                                {
+                                                    $filter: {
+                                                        input: "$SKUInfo",
+                                                        as: "sku",
+                                                        cond: {$eq: ["$$sku._id", "$$detail.SKU"]}
+                                                    }
+                                                },
+                                                0
+                                            ]
+                                        }
+                                    }
+                                ]
+                            }
+                        }
+                    }
+                }
+            },
+            {
+                $lookup: {
+                    from: "Company",
+                    localField: "company",
+                    foreignField: "_id",
+                    pipeline: [
+                        {
+                            $addFields: {
+                                contactInfo: {
+                                    $arrayElemAt: [
+                                        {
+                                            $filter: {
+                                                input: "$contactInfo",
+                                                as: "info",
+                                                cond: {$eq: ["$$info.department", COMPANY_DEPARTMENTS.SALES]}
+                                            }
+                                        },
+                                        0
+                                    ]
+                                }
+                            }
+                        },
+                        {
+                            $project: {
+                                companyName: 1,
+                                GSTIN: 1,
+                                companyBillingAddress: 1,
+                                companySignatureUrl: {$concat: [`${CONSTANTS.domainUrl}company/`, "$companySignature"]},
+                                SOPdfHeaderUrl: {$concat: [`${CONSTANTS.domainUrl}company/`, "$SOPdfHeader"]},
+                                companyContactPersonNumber: "$contactInfo.companyContactPersonNumber",
+                                companyContactPersonEmail: "$contactInfo.companyContactPersonEmail"
+                            }
+                        }
+                    ],
+                    as: "company"
+                }
+            },
+            {$unwind: "$company"}
+        ]);
+        if (!existing.length) {
             let errors = MESSAGES.apiSuccessStrings.DATA_NOT_EXISTS("Credit Note");
             return res.unprocessableEntity(errors);
+        } else {
+            existing = await getDataPDF(existing[0]);
         }
         return res.success(existing);
     } catch (e) {
@@ -392,13 +477,13 @@ exports.getAllReports = asyncHandler(async (req, res) => {
 });
 async function getDataPDF(existing) {
     try {
-        if (existing.customer.customerContactInfo.length) {
+        if (existing.customer?.customerContactInfo?.length) {
             existing.customer.customerContactInfo = existing.customer.customerContactInfo[0];
         }
-        if (existing.customer.customerBillingAddress.length) {
+        if (existing.customer?.customerBillingAddress?.length) {
             existing.customer.customerBillingAddress = existing.customer.customerBillingAddress[0];
         }
-        if (existing.customer.customerShippingAddress.length) {
+        if (existing.customer?.customerShippingAddress?.length) {
             existing.customer.customerShippingAddress = existing.customer.customerShippingAddress[0];
         }
         if (existing.CNDetails.length) {

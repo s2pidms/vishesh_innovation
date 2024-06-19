@@ -32,20 +32,30 @@ export class DynamicLabelCardComponent implements OnInit, OnDestroy {
     module: any = "";
     labelData: any = [];
     existingRoles: any = [];
+    menuItemId: any = "";
 
     ngOnInit(): void {
         this.activatedRoute.queryParams.subscribe((success: any) => {
             if (success.id) {
+                this.menuItemId = success.id;
                 this.getAll(success.id);
             }
         });
     }
 
     getAll(id: any) {
+        let payload = {
+            page: this.page,
+            pageSize: this.pageSize,
+            search: this.search,
+            column: this.column,
+            direction: this.direction,
+            menuItemId: id
+        };
         if (this.subscription) this.subscription.unsubscribe();
-        this.subscription = this.labelMasterService.getAll({menuItemId: id}).subscribe(success => {
+        this.subscription = this.labelMasterService.getAll(payload).subscribe(success => {
             this.labelData = success.rows;
-            this.collection = this.labelData.length;
+            this.collection = success.count;
         });
     }
     ngOnDestroy(): void {
@@ -59,11 +69,13 @@ export class DynamicLabelCardComponent implements OnInit, OnDestroy {
         switch (event.key) {
             case "SEARCH":
                 this.search = event.value;
+                this.getAll(this.menuItemId);
                 break;
             case "EXCEL":
                 break;
             case "PAGE":
                 this.page = event.value;
+                this.getAll(this.menuItemId);
                 break;
             default:
                 break;

@@ -12,7 +12,5 @@ export class DomesticsPOPrintScreenComponent implements OnInit {
     POTypeObj: any = PURCHASE_ORDER_TYPE;
     constructor() {}
 
-    ngOnInit(): void {
-        console.log("tableData   serviceChargesInfo", this.tableData);
-    }
+    ngOnInit(): void {}
 }

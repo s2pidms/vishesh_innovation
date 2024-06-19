@@ -1,23 +1,29 @@
 const Model = require("../serviceMasterModel");
-module.exports = {
-    createServiceMaster: async obj => {
+const ServiceMasterRepository = {
+    createDoc: async obj => {
         return await Model.create(obj);
     },
-    findOneServiceMaster: async (match, project = {}) => {
+    findOneDoc: async (match, project = {}) => {
         return await Model.findOne(match, project);
     },
-    getAllPaginate: async ({pipeline, project, queryParams}) => {
-        const rows = await Model.paginate({pipeline, project, queryParams});
-        return rows;
+    findAndUpdateDoc: async (match, update) => {
+        return await Model.updateOne(match, update);
     },
-    updateServiceMaster: async (existing, updateBody) => {
+    getDocById: async (_id, project = {}) => {
+        return await Model.findById(_id, project);
+    },
+    getAllPaginate: async ({pipeline, project, queryParams}) => {
+        return await Model.paginate({pipeline, project, queryParams});
+    },
+    updateDoc: async (existing, updateBody) => {
         Object.assign(existing, updateBody);
         return existing.save();
     },
-    deleteServiceMaster: async match => {
+    deleteDoc: async match => {
         return await Model.deleteOne(match);
     },
     filteredServiceMasterList: async pipeline => {
         return await Model.aggregate(pipeline);
     }
 };
+module.exports = ServiceMasterRepository;

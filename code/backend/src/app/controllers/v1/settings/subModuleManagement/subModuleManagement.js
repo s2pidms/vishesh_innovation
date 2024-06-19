@@ -155,6 +155,7 @@ exports.getById = asyncHandler(async (req, res) => {
 
 exports.getAllSubModuleForPermissions = async data => {
     let menuItemRoles = await MenuItem.getAllMenuItemsRolesForPermissions(data.menuItemId);
+    menuItemRoles = JSON.parse(JSON.stringify(menuItemRoles));
     let roleExists = false;
     if (data.role == SUPER_ADMIN_ID) {
         roleExists = true;

@@ -1,0 +1,196 @@
+<div class="modelPage">
+    <div class="modal-header">
+        <div class="heading">Add Other Charges</div>
+        <div>
+            <button type="button" class="btn btn-cross btn-sm" aria-label="Close" (click)="this.activeModal.close()">
+                <i class="fa fa-times-circle" aria-hidden="true"></i>
+            </button>
+        </div>
+    </div>
+    <div class="pt-4 pb-2">
+        <div class="mb-4 row justify-content-center">
+            <div class="col-8">
+                <div class="row">
+                    <div class="col-4">
+                        <div class="col-form-label text-nowrap pe-1 pt-0">Total Product Value</div>
+                    </div>
+                    <div class="col-1">
+                        <i class="fa fa-caret-right text-secondary pt-1"></i>
+                    </div>
+                    <div class="col-7">
+                        <div class="d-flex justify-content-center">
+                            <button type="button" class="btn btn-info py-1 ms-2 me-1">
+                                {{ "INR" | companyCurrency }}
+                            </button>
+                            <input
+                                class="form-control"
+                                type="number"
+                                [(ngModel)]="otherCharges.totalProductValue"
+                                (input)="updateTotalAmount()"
+                                readonly
+                            />
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="mb-4 row justify-content-center">
+            <div class="col-8">
+                <div class="row">
+                    <div class="col-4">
+                        <div class="col-form-label text-nowrap pe-1 pt-0">+ &nbsp; Packing & Forwarding</div>
+                    </div>
+                    <div class="col-1">
+                        <i class="fa fa-caret-right text-secondary pt-1"></i>
+                    </div>
+                    <div class="col-7">
+                        <div class="d-flex justify-content-center">
+                            <button type="button" class="btn btn-info py-1 ms-2 me-1">
+                                {{ "INR" | companyCurrency }}
+                            </button>
+
+                            <input
+                                class="form-control"
+                                type="number"
+                                [(ngModel)]="otherCharges.packagingAndForwarding"
+                                (input)="updateTotalAmount()"
+                            />
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="mb-4 row justify-content-center">
+            <div class="col-8">
+                <div class="row">
+                    <div class="col-4">
+                        <div class="col-form-label text-nowrap pe-1 pt-0">+ &nbsp; Freight Charges</div>
+                    </div>
+                    <div class="col-1">
+                        <i class="fa fa-caret-right text-secondary pt-1"></i>
+                    </div>
+                    <div class="col-7">
+                        <div class="d-flex justify-content-center">
+                            <button type="button" class="btn btn-info py-1 ms-2 me-1">
+                                {{ "INR" | companyCurrency }}
+                            </button>
+                            <input
+                                class="form-control"
+                                type="number"
+                                [(ngModel)]="otherCharges.freight"
+                                (input)="updateTotalAmount()"
+                            />
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="mb-4 row justify-content-center">
+            <div class="col-8">
+                <div class="row">
+                    <div class="col-4">
+                        <div class="col-form-label text-nowrap pe-1 pt-0">+ &nbsp; Insurance</div>
+                    </div>
+                    <div class="col-1">
+                        <i class="fa fa-caret-right text-secondary pt-1"></i>
+                    </div>
+                    <div class="col-7">
+                        <div class="d-flex justify-content-center">
+                            <button type="button" class="btn btn-info py-1 ms-2 me-1">
+                                {{ "INR" | companyCurrency }}
+                            </button>
+                            <input
+                                class="form-control"
+                                type="number"
+                                [(ngModel)]="otherCharges.insurance"
+                                (input)="updateTotalAmount()"
+                            />
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="mb-4 row justify-content-center">
+            <div class="col-8">
+                <div class="row">
+                    <div class="col-4">
+                        <div class="col-form-label text-nowrap pe-1 pt-0">+ &nbsp; Loading & Unloading</div>
+                    </div>
+                    <div class="col-1">
+                        <i class="fa fa-caret-right text-secondary pt-1"></i>
+                    </div>
+                    <div class="col-7">
+                        <div class="d-flex justify-content-center">
+                            <button type="button" class="btn btn-info py-1 ms-2 me-1">
+                                {{ "INR" | companyCurrency }}
+                            </button>
+                            <input
+                                class="form-control"
+                                type="number"
+                                [(ngModel)]="otherCharges.loadingAndUnloading"
+                                (input)="updateTotalAmount()"
+                            />
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="mb-4 row justify-content-center">
+            <div class="col-8">
+                <div class="row">
+                    <div class="col-4">
+                        <div class="col-form-label text-nowrap pe-1 pt-0">+ &nbsp; Miscellaneous</div>
+                    </div>
+                    <div class="col-1">
+                        <i class="fa fa-caret-right text-secondary pt-1"></i>
+                    </div>
+                    <div class="col-7">
+                        <div class="d-flex justify-content-center">
+                            <button type="button" class="btn btn-info py-1 ms-2 me-1">
+                                {{ "INR" | companyCurrency }}
+                            </button>
+                            <input
+                                class="form-control"
+                                type="number"
+                                [(ngModel)]="otherCharges.miscellaneous"
+                                (input)="updateTotalAmount()"
+                            />
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="mb-4 row justify-content-center">
+            <div class="col-8">
+                <div class="row">
+                    <div class="col-4">
+                        <div class="col-form-label text-nowrap pe-1 pt-0">Total Tax Invoice Value</div>
+                    </div>
+                    <div class="col-1">
+                        <i class="fa fa-caret-right text-secondary pt-1"></i>
+                    </div>
+                    <div class="col-7">
+                        <div class="d-flex justify-content-center">
+                            <button type="button" class="btn btn-info py-1 ms-2 me-1">
+                                {{ "INR" | companyCurrency }}
+                            </button>
+                            <input
+                                class="form-control"
+                                type="number"
+                                [(ngModel)]="otherCharges.totalTaxInvoiceValue"
+                                readOnly
+                            />
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <hr class="line-border mt-5" />
+        <div>
+            <div class="d-grid gap-2 d-flex justify-content-center">
+                <button type="button" class="btn btn-primary mt-2 mb-3 px-5" (click)="dismissModel()">Save</button>
+            </div>
+        </div>
+    </div>
+</div>

@@ -6,8 +6,6 @@ export interface IJobWorkChallanMasterData {
     jobWorkerOptions: JobWorkerOption[];
     transporterOptions: ICommonData[];
     SACOptions: ICommonData[];
-    jobWorkItemOptions: ICommonData[];
-    purchaseCategoryOptions: ICommonData[];
     modeOfTransportOptions: ICommonData[];
     freightTermsOptions: IParameterICommonData[];
 }

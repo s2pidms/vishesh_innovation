@@ -1,0 +1,52 @@
+<div class="container-fluid px-0">
+    <form [formGroup]="form" class="p-0">
+        <div style="min-height: 33.8rem" class="row">
+            <div class="col-12">
+                <div class="row mt-4">
+                    <div class="col-3"></div>
+                    <div class="col-6">
+                        <app-file-upload
+                            [fileName]="form.controls['tdsFile'].value"
+                            [url]="form.controls['tdsFileUrl'].value"
+                            [label]="'Technical Data Sheet'"
+                            [(file)]="TDSFile"
+                        ></app-file-upload>
+                    </div>
+                    <div class="col-3"></div>
+                </div>
+                <div class="row mt-5">
+                    <div class="col-3"></div>
+                    <div class="col-6">
+                        <app-file-upload
+                            [fileName]="form.controls['msdsFile'].value"
+                            [url]="form.controls['msdsFileUrl'].value"
+                            [label]="'Material Safety Data Sheet'"
+                            [(file)]="MSDSFile"
+                        ></app-file-upload>
+                    </div>
+                    <div class="col-3"></div>
+                </div>
+                <div class="row mt-5">
+                    <div class="col-3"></div>
+                    <div class="col-6">
+                        <app-file-upload
+                            [fileName]="form.controls['drawing'].value"
+                            [url]="form.controls['drawingUrl'].value"
+                            [label]="'Drawing/Artwork/Image'"
+                            [(file)]="drawingFile"
+                        ></app-file-upload>
+                    </div>
+                    <div class="col-3"></div>
+                </div>
+            </div>
+        </div>
+    </form>
+
+    <hr *ngIf="!['view'].includes(action)" class="line-border mt-5 px-05" />
+
+    <div class="row justify-content-center">
+        <div *ngIf="!['view'].includes(action)" class="col-12 text-center">
+            <button type="button" class="btn bg-primary px-5" (click)="dismissModel()">Save</button>
+        </div>
+    </div>
+</div>

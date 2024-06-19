@@ -69,11 +69,11 @@
                                 <span class="pointer d-flex align-items-center">
                                     <div
                                         (click)="setConversionOfUnit(i)"
-                                        *ngIf="i.primaryUnit && i.secondaryUnit != '-'"
+                                        *ngIf="i.primaryUnit && i.secondaryUnit && i.secondaryUnit != '-'"
                                         class="unit-switch-rev"
                                     ></div>
                                     <div
-                                        *ngIf="!(i.primaryUnit && i.secondaryUnit != '-')"
+                                        *ngIf="!(i.primaryUnit && i.secondaryUnit && i.secondaryUnit != '-')"
                                         class="unit-switch-gray"
                                     ></div>
                                 </span>

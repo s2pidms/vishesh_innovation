@@ -108,7 +108,6 @@ export class ASNBoxLabelPrintScreenComponent implements OnInit {
         });
         this.companyName = this.storageService.get("IDMSAUser")?.companyName;
         this.QRCodeData = `${window.location.href}&QRCode=QRCode`;
-        console.log("QRCodeData", this.QRCodeData);
     }
 
     getDetailsById(id: any) {

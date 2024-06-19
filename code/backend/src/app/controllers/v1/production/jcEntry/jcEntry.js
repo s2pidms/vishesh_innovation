@@ -82,8 +82,8 @@ exports.update = asyncHandler(async (req, res) => {
                 SKUDescription: itemDetails.SKUDescription,
                 UOM: itemDetails.UOM,
                 partNo: SKUDetails?.customerInfo[0].customerPartNo,
-                FGINDate: itemDetails.approvedDate,
-                manufacturingDate: itemDetails.approvedDate,
+                FGINDate: itemDetails?.approvedDate ?? new Date(),
+                manufacturingDate: itemDetails?.approvedDate ?? new Date(),
                 expiryDate: getExpiryDate(SKUDetails?.shelfLife, new Date()),
                 FGINQuantity: itemDetails.batchOutputQty,
                 previousDRNQty: 0,
@@ -186,6 +186,7 @@ exports.getAllMasterData = asyncHandler(async (req, res) => {
                                             seq: "$$details.order",
                                             subProcessName: "$$details.subProcessName",
                                             inspectedBy: null,
+                                            offerDate: new Date(),
                                             releasedDate: new Date(),
                                             releaseStatus: null,
                                             IPQAStatus: {$literal: false}
@@ -298,6 +299,7 @@ exports.getAllMasterData = asyncHandler(async (req, res) => {
             }
         ]);
         const releaseStatusOptions = [
+            OPTIONS.defaultStatus.NA,
             OPTIONS.defaultStatus.RELEASED,
             OPTIONS.defaultStatus.ON_HOLD,
             OPTIONS.defaultStatus.REJECTED

@@ -1,12 +1,12 @@
 <div class="listCard card">
     <div class="table-header">
-        <label class="heading">Tax Invoice Summary</label>
+        <label class="heading">Direct Tax Invoice Summary</label>
     </div>
 
     <div class="text-center">
+        <button class="plusIconSvg btn btn-primary me-1"></button>
         <button class="btn btn-primary btn-add" type="button" (click)="navigateTo('../form', {}, 'create')">
-            <i class="fa fa-plus-square fa-lg me-2" aria-hidden="true"></i>
-            Generate Tax Invoice
+            Direct Tax Invoice
         </button>
     </div>
 
@@ -17,33 +17,42 @@
         <table class="table table-bordered">
             <thead class="bg-primary">
                 <tr class="text-white">
-                    <th sortable="DTINumber" (sort)="onSort($event)">Invoice #</th>
-                    <th sortable="salesInvoiceDateS" (sort)="onSort($event)">Invoice Date</th>
-                    <th sortable="DTIValue" (sort)="onSort($event)">Invoice Value</th>
+                    <th sortable="DTICode" (sort)="onSort($event)">Invoice #</th>
+                    <th sortable="salesInvoiceDate" (sort)="onSort($event)">Invoice Date</th>
+                    <th sortable="salesInvoiceTotalAmount" (sort)="onSort($event)">Invoice Value</th>
                     <th class="text-start" sortable="customerName" (sort)="onSort($event)">Customer Name</th>
-                    <th sortable="status" (sort)="onSort($event)">Action</th>
+                    <th sortable="DTIStatus" (sort)="onSort($event)">Status</th>
+                    <th>Action</th>
                 </tr>
             </thead>
 
             <tbody>
                 <tr *ngFor="let u of tableData; trackBy: trackByFn">
-                    <td>{{ u?.DTINumber }}</td>
-                    <td>{{ u?.salesInvoiceDateS }}</td>
-                    <td>{{ u?.DTIValue }}</td>
+                    <td>{{ u?.DTICode }}</td>
+                    <td>{{ u?.salesInvoiceDate }}</td>
+                    <td>{{ u?.salesInvoiceTotalAmount }}</td>
                     <td class="text-start" [style.width]="customerName.clientWidth" #customerName>
                         <span class="pointer" [positionTarget]="customerName" [ngbTooltip]="u.customerName">
                             {{ u.customerName }}
                         </span>
                     </td>
+                    <td>{{ u?.DTIStatus }}</td>
                     <td>
                         <div class="dropdown">
                             <button class="dropbtn"></button>
                             <div class="dropdown-content">
-                                <a href="javascript:void(0)" (click)="navigateTo('../form', u, 'view')">
+                                <a
+                                    appAccessControl
+                                    [accessType]="rolePermissionActions.viewAction"
+                                    href="javascript:void(0)"
+                                    (click)="navigateTo('../form', u, 'view')"
+                                >
                                     <i class="fa fa-eye fa-lg me-2 text-primary" aria-hidden="true"></i>
                                     View
                                 </a>
                                 <a
+                                    appAccessControl
+                                    [accessType]="rolePermissionActions.editAction"
                                     [class.disable]="u?.DTIStatus === 'Approved' || u?.DTIStatus === 'Rejected'"
                                     href="javascript:void(0)"
                                     (click)="navigateTo('../form', u, 'edit')"
@@ -52,6 +61,8 @@
                                     Edit
                                 </a>
                                 <a
+                                    appAccessControl
+                                    [accessType]="rolePermissionActions.rejectAction"
                                     href="javascript:void(0)"
                                     [class.disable]="u?.DTIStatus === 'Approved' || u?.DTIStatus === 'Rejected'"
                                     (click)="navigateTo('../form', u, 'rejection')"
@@ -60,6 +71,8 @@
                                     Reject
                                 </a>
                                 <a
+                                    appAccessControl
+                                    [accessType]="rolePermissionActions.approveAction"
                                     [class.disable]="u?.DTIStatus === 'Approved' || u?.DTIStatus === 'Rejected'"
                                     href="javascript:void(0)"
                                     (click)="navigateTo('../form', u, 'approval')"
@@ -68,12 +81,25 @@
                                     Approve
                                 </a>
                                 <a
-                                    [class.disable]="u?.DTIStatus === 'Awaiting Approval'"
+                                    appAccessControl
+                                    [accessType]="rolePermissionActions.generateReportAction"
+                                    [class.disable]="
+                                        u?.DTIStatus === 'Awaiting Approval' || u?.DTIStatus === 'Rejected'
+                                    "
                                     href="javascript:void(0)"
                                     (click)="update(u, 'Report Generated')"
                                 >
                                     <img src="./assets/images/new.svg" width="14" class="me-3" />
                                     Generate Report
+                                </a>
+                                <a
+                                    appAccessControl
+                                    [accessType]="rolePermissionActions.createAction"
+                                    href="javascript:void(0)"
+                                    (click)="navigateToPrint('/#/print/dti_preview_print', u, 'print', 'previewDTI')"
+                                >
+                                    <i class="fa fa-print fa-lg me-3 text-primary" aria-hidden="true"></i>
+                                    Preview
                                 </a>
                             </div>
                         </div>

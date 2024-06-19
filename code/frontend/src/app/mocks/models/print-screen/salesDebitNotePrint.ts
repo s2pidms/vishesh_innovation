@@ -1,21 +1,18 @@
 export interface ISalesDebit {
-    _id: string;
+    _id?: string;
+    salesCategory?: string;
     company: Company;
     DNNumber: string;
     DNDate: string;
-    salesCategory: string;
     customer: Customer;
-    customerName: string;
+    customerName?: string;
     invoiceNo: string;
     invoiceDate: string;
     currency: string;
-    DNDetails: IDndetail[];
+    DNDetails: IDNDetail[];
     reasonForDN: string;
-    remarks: any;
-    netDNValue: number;
     otherCharges: OtherCharges;
-    DNStatus: string;
-    GSTDetails: Gstdetail[];
+    GSTDetails: IGSTDetail[] | any;
     totalCGSTAmount: number;
     totalSGSTAmount: number;
     totalIGSTAmount: number;
@@ -24,6 +21,8 @@ export interface ISalesDebit {
     totalAmount: number;
     totalAmountWithTax: number;
     roundedOff: number;
+    summaryRowRepeat?: any[];
+    rowRepeat?: any[];
 }
 
 export interface Company {
@@ -37,11 +36,21 @@ export interface Company {
     companyBankMICRCode: string;
     companyBefName: string;
     companyBillingAddress: CompanyBillingAddress;
-    contactInfo: ContactInfo[];
     companySignatureUrl: string;
     companyPdfHeaderUrl: string;
+    companyContactPersonNumber?: number;
+    companyContactPersonEmail?: string;
+    contactInfo: ContactInfo[];
 }
 
+export interface ContactInfo {
+    department: string;
+    contactPersonName: string;
+    designation: string;
+    companyContactPersonNumber: string;
+    companyContactPersonEmail: string;
+    _id: string;
+}
 export interface CompanyBillingAddress {
     addressLine1: string;
     addressLine2: string;
@@ -55,21 +64,12 @@ export interface CompanyBillingAddress {
     state: string;
 }
 
-export interface ContactInfo {
-    department: string;
-    contactPersonName: string;
-    designation: string;
-    companyContactPersonNumber: string;
-    companyContactPersonEmail: string;
-    _id: string;
-}
-
 export interface Customer {
     _id: string;
     customerCode: string;
+    customerName?: string;
     GSTIN: string;
     customerBillingAddress: CustomerBillingAddress;
-    customerShippingAddress: CustomerShippingAddress;
     customerContactInfo: CustomerContactInfo;
 }
 
@@ -83,77 +83,42 @@ export interface CustomerBillingAddress {
     district: string;
     pinCode: string;
     country: string;
-    contactPersonName: string;
-    contactPersonNumber: string;
-    _id: string;
-}
-
-export interface CustomerShippingAddress {
-    line1: string;
-    line2: string;
-    line3: string;
-    state: string;
-    city: string;
-    district: string;
-    pinCode: string;
-    country: string;
-    contactPersonName: string;
-    contactPersonNumber: string;
     _id: string;
 }
 
 export interface CustomerContactInfo {
-    contactPersonName: string;
-    contactPersonDesignation: string;
-    contactPersonDepartment: string;
     contactPersonNumber: string;
     contactPersonEmail: string;
     _id: string;
 }
 
-export interface IDndetail {
-    DNLineNumber: number;
-    SKU: Sku;
+export interface IDNDetail {
+    SKUNo: string;
+    SKUName: string;
+    SKUDescription: string;
     UOM: string;
     primaryUnit: string;
     returnQty: number;
-    standardRate: number;
     purchaseRate: number;
     lineValue: number;
     hsn: string;
     _id: string;
-    igst: number;
-    cgst: number;
-    sgst: number;
-    ugst: number;
-}
-
-export interface Sku {
-    _id: string;
-    SKUNo: string;
-    SKUName: string;
-    SKUDescription: string;
 }
 
 export interface OtherCharges {
-    packagingAndForwarding: number;
-    freight: number;
-    insurance: number;
-    loadingAndUnloading: number;
-    miscellaneous: number;
     totalAmount: number;
 }
 
-export interface Gstdetail {
+export interface IGSTDetail {
     hsn: string;
     taxableValue: number;
     igstRate: number;
-    igstAmount: number;
+    igstAmount?: number;
     cgstRate: number;
-    cgstAmount: number;
+    cgstAmount?: number;
     sgstRate: number;
-    sgstAmount: number;
+    sgstAmount?: number;
     ugstRate: number;
-    ugstAmount: number;
+    ugstAmount?: number;
     totalTaxableValue: string;
 }

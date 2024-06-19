@@ -56,6 +56,13 @@ const routes: Routes = [
                     import("./sps-inventory-reconciliation/sps-inventory-reconciliation.module").then(
                         m => m.SpsInventoryReconciliationModule
                     )
+            },
+            {
+                path: "production_processes",
+                loadChildren: () =>
+                    import("../../production/transactions/production-processes/production-processes.module").then(
+                        m => m.ProductionProcessesModule
+                    )
             }
         ]
     }

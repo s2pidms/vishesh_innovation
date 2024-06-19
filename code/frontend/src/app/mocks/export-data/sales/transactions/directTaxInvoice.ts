@@ -14,25 +14,26 @@ let headers: any = [
         ...EXCEL_STYLE
     },
     {
-        header: "Customer Category",
-        key: "salesCategory",
+        header: "Invoice Value",
+        key: "DTIValue",
         ...EXCEL_STYLE
     },
+    // {
+    //     header: "Customer Category",
+    //     key: "salesCategory",
+    //     ...EXCEL_STYLE
+    // },
     {
         header: "Customer Name",
         key: "customerName",
         ...EXCEL_STYLE
     },
-    {
-        header: "Product Value",
-        key: "DTITotalAmount",
-        ...EXCEL_STYLE
-    },
-    {
-        header: "Invoice Value",
-        key: "DTIValue",
-        ...EXCEL_STYLE
-    },
+    // {
+    //     header: "Product Value",
+    //     key: "DTITotalAmount",
+    //     ...EXCEL_STYLE
+    // },
+
     {
         header: "Status",
         key: "DTIStatus",

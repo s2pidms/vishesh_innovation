@@ -114,7 +114,7 @@
                             <div class="row">
                                 <div class="col">
                                     <label class="form-label"> Country <span class="text-danger">*</span> </label>
-                                    <select class="form-select" formControlName="country">
+                                    <!-- <select class="form-select" formControlName="country">
                                         <option [value]="null" selected disabled>Select Country</option>
                                         <option
                                             *ngFor="let item of masterData?.purchaseCountryOptions"
@@ -122,16 +122,16 @@
                                         >
                                             {{ item.parameterLabel }}
                                         </option>
-                                    </select>
-                                    <!-- <input
-                                        *ngIf="
+                                    </select> -->
+                                        <!-- *ngIf="
                                             !this.form.controls['supplierPurchaseType'].value ||
                                             this.form.controls['supplierPurchaseType'].value == 'Domestic'
-                                        "
+                                        " -->
+                                    <input
                                         type="text"
                                         class="form-control"
                                         formControlName="country"
-                                    /> -->
+                                    />
                                 </div>
                                 <div class="col">
                                     <label class="form-label">

@@ -111,7 +111,6 @@
         "items": [],
         "roles": []
     },
-
     {
         "_id": "650143cf3302e4c647865f7f",
         "menuItemId": "64a6c1e33339d4dc9d8141a5",
@@ -137,6 +136,20 @@
         "displayName": "Job Work Challan",
         "disabled": false,
         "url": "/default/purchase/transactions/job_work_challan/list",
+        "items": [],
+        "roles": []
+    },
+    {
+        "_id": "667278958470f0917557b15f",
+        "menuItemId": "64a6c1e33339d4dc9d8141a5",
+        "module": "Purchase",
+        "type": "TRANSACTION",
+        "order": 11,
+        "isDisplay": false,
+        "title": "Job Work Order",
+        "displayName": "Job Work Order",
+        "disabled": false,
+        "url": "/default/purchase/transactions/job_work_order/list",
         "items": [],
         "roles": []
     }

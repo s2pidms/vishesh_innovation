@@ -57,20 +57,13 @@ export class SampleRequestReportComponent implements OnInit, OnDestroy {
 
     ngOnInit(): void {
         this.page = Number(this.activatedRoute.snapshot.queryParamMap.get("page") ?? 1);
-        // this.getFiscalDate();
         this.getAll();
     }
-
-    // getFiscalDate() {
-    //     let monthDates = this.utilityService.getCurrentMonthDates();
-    //     this.toDate = monthDates.toDate;
-    // }
 
     trackByFn(index: number, item: any) {
         return item?._id;
     }
     reset() {
-        // this.getFiscalDate();
         this.fromDate = this.utilityService.getCurrentMonthDates().fromDate;
         this.toDate = this.utilityService.getCurrentMonthDates().toDate;
         this.reportName = this.reportNameObj.aodBalanceSalesOrder;

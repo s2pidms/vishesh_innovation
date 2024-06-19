@@ -92,7 +92,7 @@
                                 <p>RCM Applicable: No</p>
                                 <p>
                                     Currency:
-                                    {{ tableData?.salesInvoiceDetails[0]?.SOId?.currency }}
+                                    {{ tableData?.customer?.customerCurrency ?? "INR" }}
                                 </p>
                             </td>
                         </tr>
@@ -235,7 +235,7 @@
                                     <div class="col-9 h-100 p-0 pe-4">
                                         <h4 class="my-2">
                                             GST Summary | Currency
-                                            {{ tableData?.salesInvoiceDetails[0]?.SOId?.currency }}
+                                            {{ tableData?.customer?.customerCurrency }}
                                         </h4>
                                         <table class="table table-sm">
                                             <tr>
@@ -355,7 +355,7 @@
                                             <tr>
                                                 <th colspan="9" class="text-start">
                                                     Total Tax Amount (In words):
-                                                    {{ tableData?.salesInvoiceDetails[0]?.SOId?.currency }}
+                                                    {{ tableData?.customer?.customerCurrency }}
                                                     {{ tableData.salesInvoiceTotalTaxAmount ?? 0 | toWords }}
                                                 </th>
                                             </tr>
@@ -366,7 +366,7 @@
                                                 <th>
                                                     <b
                                                         >Total Invoice Amount (In words):
-                                                        {{ tableData?.salesInvoiceDetails[0]?.SOId?.currency }}</b
+                                                        {{ tableData?.customer?.customerCurrency }}</b
                                                     >
                                                     {{ tableData.salesInvoiceTotalAmountWithTax ?? 0 | toWords }}
                                                 </th>
@@ -377,7 +377,7 @@
                                     <div class="col-3 h-100 p-0">
                                         <h4 class="my-2">
                                             Tax Invoice Summary | Currency
-                                            {{ tableData?.salesInvoiceDetails[0]?.SOId?.currency }}
+                                            {{ tableData?.customer?.customerCurrency }}
                                         </h4>
                                         <table class="table">
                                             <tr>

@@ -10,13 +10,14 @@ const {
     getAllSalesDebitNoteByCustomerId,
     getAllReports,
     getAllSalesDNDetailsReports,
-    getAllSalesDNSummaryReports
+    getAllSalesDNSummaryReports,
+    getDNDetailsById
 } = require("./salesDebitNote");
 
 app.post("/create", create);
 app.get("/getAll", getAll);
 app.get("/getById/:id", validate("checkParamId"), getById);
-app.get("/getDNDetailsById/:id", validate("checkParamId"), getById);
+app.get("/getDNDetailsById/:id", validate("checkParamId"), getDNDetailsById);
 app.get("/getAllSalesDebitNoteByCustomerId/:id", validate("checkParamId"), getAllSalesDebitNoteByCustomerId);
 app.put("/update/:id", validate("checkParamId"), update);
 app.delete("/delete/:id", validate("checkParamId"), deleteById);

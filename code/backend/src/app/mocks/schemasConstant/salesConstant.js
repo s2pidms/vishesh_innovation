@@ -31,17 +31,7 @@ exports.B2B_CUSTOMER = {
         return {moduleName: this.MODULE_NAME, module: this.MODULE, company: null, modulePrefix: this.MODULE_PREFIX};
     }
 };
-exports.DIRECT_TAX_INVOICE = {
-    COLLECTION_NAME: "DirectTaxInvoice",
-    ADDED_ACTION: "Direct Tax Invoice created",
-    UPDATED_ACTION: "Direct Tax Invoice updated",
-    MODULE_NAME: "Direct Tax Invoice",
-    MODULE: "DTI",
-    MODULE_PREFIX: "DTI",
-    AUTO_INCREMENT_DATA: function () {
-        return {moduleName: this.MODULE_NAME, module: this.MODULE, company: null, modulePrefix: this.MODULE_PREFIX};
-    }
-};
+
 exports.DISPATCH_REQUEST_NOTE = {
     COLLECTION_NAME: "DispatchRequestNote",
     ADDED_ACTION: "DRN created",
@@ -240,3 +230,20 @@ exports.CUSTOMER_DISCOUNT_MANAGEMENT = {
         };
     }
 };
+
+exports.DIRECT_TAX_INVOICE = {
+    COLLECTION_NAME: "DirectTaxInvoice",
+    ADDED_ACTION: "Direct Tax Invoice created",
+    UPDATED_ACTION: "Direct Tax Invoice updated",
+    MODULE_NAME: "Direct Tax Invoice",
+    MODULE: "DirectTaxInvoice",
+    MODULE_PREFIX: "DTI/",
+    AUTO_INCREMENT_DATA: function () {
+        return {
+            moduleName: this.MODULE_NAME,
+            module: this.MODULE,
+            company: null,
+            modulePrefix: this.MODULE_PREFIX
+        };
+    }
+}

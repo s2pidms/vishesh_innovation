@@ -267,5 +267,19 @@
         "url": "/default/sales/reports/Sales_Cost_Analysis",
         "items": [],
         "roles": []
+    },
+    {
+        "_id": "6669784c241225026e17521c",
+        "menuItemId": "64a6c1e33339d4dc9d8141a3",
+        "module": "Sales",
+        "type": "REPORT",
+        "order": 20,
+        "isDisplay": false,
+        "title": "Dispatch List",
+        "displayName": "Dispatch List",
+        "disabled": false,
+        "url": "/default/sales/reports/dispatch_list",
+        "items": [],
+        "roles": []
     }
 ]

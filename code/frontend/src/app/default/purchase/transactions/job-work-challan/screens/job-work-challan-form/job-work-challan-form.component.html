@@ -191,13 +191,23 @@
                                     <div
                                         (click)="setConversionOfUnit(u)"
                                         *ngIf="
-                                            u.stdCostUom2 && u.stdCostUom1 && u.primaryUnit && u.secondaryUnit != '-'
+                                            u.stdCostUom2 &&
+                                            u.stdCostUom1 &&
+                                            u.primaryUnit &&
+                                            u.secondaryUnit &&
+                                            u.secondaryUnit != '-'
                                         "
                                         class="unit-switch-rev"
                                     ></div>
                                     <div
                                         *ngIf="
-                                            !(u.stdCostUom2 && u.stdCostUom1 && u.primaryUnit && u.secondaryUnit != '-')
+                                            !(
+                                                u.stdCostUom2 &&
+                                                u.stdCostUom1 &&
+                                                u.primaryUnit &&
+                                                u.secondaryUnit &&
+                                                u.secondaryUnit != '-'
+                                            )
                                         "
                                         class="unit-switch-gray"
                                     ></div>

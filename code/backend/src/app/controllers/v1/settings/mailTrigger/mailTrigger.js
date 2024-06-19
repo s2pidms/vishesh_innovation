@@ -10,7 +10,6 @@ const {sendDebitNoteMail} = require("../../purchase/debitNote/debitNoteMail");
 const {sendPOMail} = require("../../purchase/purchaseOrder/purchaseOrderMail");
 const {sendMRNMail} = require("../../quality/Mrn/MrnMail");
 const {sendCreditNoteMail} = require("../../sales/creditNote/creditNoteMail");
-const {sendDirectTaxInvMail} = require("../../sales/directTaxInvoice/directTaxInvoiceMail");
 const {sendProformaInvMail} = require("../../sales/proformaInvoice/proformaInvoiceMail");
 const {sendSalesDNMail} = require("../../sales/salesDebitNote/salesDebitNoteMail");
 const {sendSalesMail} = require("../../sales/salesOrder/salesOrderMail");
@@ -31,7 +30,6 @@ const mailTriggerFunctions = {
 
     // Sales
     CreditNote: sendCreditNoteMail,
-    DirectTaxInvoice: sendDirectTaxInvMail,
     ProformaInvoice: sendProformaInvMail,
     SalesDebitNote: sendSalesDNMail,
     SalesOrder: sendSalesMail,

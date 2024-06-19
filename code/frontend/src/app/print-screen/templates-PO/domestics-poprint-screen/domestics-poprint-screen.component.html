@@ -215,13 +215,10 @@
                     <p class="sub-text">
                         SAC {{ service?.SACCode }}
                         {{ service?.description }}
-                        <!--  996511 -
-                        {{ tableData.SACDescription ? tableData.SACDescription : "Add Freight & Forwarding Charges" }} -->
                     </p>
                 </td>
                 <td colspan="1" class="text-center sub-text">
                     {{ service?.serviceCharges | number : ".2-2" }}
-                    <!-- {{ tableData?.otherCharges?.totalAmount | number : ".2-2" }} -->
                 </td>
             </tr>
         </ng-container>

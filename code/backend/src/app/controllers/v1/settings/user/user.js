@@ -120,11 +120,11 @@ exports.login = asyncHandler(async (req, res) => {
                 "_id companyName isCompanyActive companyNickName companyAddress accountsDetails.currencySymbol"
             )
             .populate("role", "roleName displayRoleName");
-        const employee = await Employee.findOne({
-            userId: existingUser._id
-        });
 
         if (existingUser && (await existingUser.matchPassword(req.body.password))) {
+            const employee = await Employee.findOne({
+                userId: existingUser?._id
+            });
             let deviceName = req.device.type.toUpperCase();
             const userIPUpdate = await updateUserOnLogin(
                 existingUser._id,

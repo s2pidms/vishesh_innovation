@@ -129,6 +129,10 @@ const jcEntrySchema = mongoose.Schema(
                                 type: String,
                                 required: false
                             },
+                            offerDate: {
+                                type: Date,
+                                required: false
+                            },
                             releasedDate: {
                                 type: Date,
                                 required: false
@@ -136,11 +140,11 @@ const jcEntrySchema = mongoose.Schema(
                             releaseStatus: {
                                 type: String,
                                 required: false,
-                                enum: [
-                                    OPTIONS.defaultStatus.RELEASED,
-                                    OPTIONS.defaultStatus.ON_HOLD,
-                                    OPTIONS.defaultStatus.REJECTED
-                                ],
+                                // enum: [
+                                //     OPTIONS.defaultStatus.RELEASED,
+                                //     OPTIONS.defaultStatus.ON_HOLD,
+                                //     OPTIONS.defaultStatus.REJECTED
+                                // ],
                                 default: OPTIONS.defaultStatus.ON_HOLD
                             },
                             IPQAStatus: {

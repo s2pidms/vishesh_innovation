@@ -20,7 +20,7 @@ module.exports = {
     deleteDoc: async match => {
         return await Model.deleteOne(match);
     },
-    filteredFGINList: async pipeline => {
+    filteredMenuItemList: async pipeline => {
         return await Model.aggregate(pipeline);
     },
     insertManyDoc: async arr => {
