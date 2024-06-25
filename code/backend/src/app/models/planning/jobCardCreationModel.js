@@ -289,7 +289,8 @@ const jobCardCreationSchema = mongoose.Schema(
                 OPTIONS.defaultStatus.AWAITING_APPROVAL,
                 OPTIONS.defaultStatus.APPROVED,
                 OPTIONS.defaultStatus.CANCELLED,
-                OPTIONS.defaultStatus.REPORT_GENERATED
+                OPTIONS.defaultStatus.REPORT_GENERATED,
+                OPTIONS.defaultStatus.CLOSED
             ]
         }
     },

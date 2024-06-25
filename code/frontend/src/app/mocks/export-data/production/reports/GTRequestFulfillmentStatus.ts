@@ -34,6 +34,16 @@ let headers: any = [
         ...EXCEL_STYLE
     },
     {
+        header: "Issued By",
+        key: "fromDepartment",
+        ...EXCEL_STYLE
+    },
+    {
+        header: "Issued To",
+        key: "toDepartment",
+        ...EXCEL_STYLE
+    },
+    {
         header: "GTR Qty",
         key: "GTRequestQty",
         ...EXCEL_STYLE

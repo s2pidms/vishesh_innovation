@@ -1,0 +1,86 @@
+@page {
+  size: B5;
+  margin: 0;
+}
+
+.set-SN-width {
+  width: 6rem;
+}
+.value-in-same-line {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  justify-content: flex-start;
+  margin-top: 0.8rem;
+}
+.sub-text {
+  font-size: 1.6rem !important;
+  font-weight: 600 !important;
+  margin: 0;
+  font-family: Arial, Helvetica, sans-serif !important;
+}
+@media print {
+  button {
+      display: none !important;
+  }
+  * {
+      font-size: 1.7rem !important;
+      font-weight: 600 !important;
+      margin: 0;
+      font-family: Arial, Helvetica, sans-serif !important;
+      line-height: 1.9rem;
+      color: #000000 !important;
+  }
+  .sub-text {
+      font-size: 1.6rem !important;
+      font-weight: 600 !important;
+      margin: 0;
+      font-family: Arial, Helvetica, sans-serif !important;
+  }
+  .table-responsive .table th {
+      background: #e6e6e6 !important;
+      font-size: 1.8rem !important;
+  }
+
+  .table > :not(caption) > * > * {
+      padding: 0 !important;
+  }
+  .page {
+      margin: 0;
+      border: initial;
+      border-radius: initial;
+      width: initial;
+      min-height: initial;
+      box-shadow: initial;
+      background: initial;
+      page-break-after: always;
+  }
+  @page {
+      size: Letter !important;
+      margin: 0;
+  }
+  .table-responsive {
+      th,
+      td {
+          padding: 0.6rem !important;
+          .page-title {
+              font-size: 2.2rem !important;
+              font-weight: bolder;
+          }
+      }
+  }
+  .value-in-same-line {
+      display: flex;
+      flex-direction: column;
+      height: 100%;
+      justify-content: flex-start;
+      margin-top: 0.8rem;
+  }
+  .set-SN-width {
+      width: 6rem;
+  }
+}
+.img-sign {
+  width: auto !important;
+  height: 10.7rem !important;
+}

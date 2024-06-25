@@ -45,6 +45,16 @@ const routes: Routes = [
                     import("./../../production/transactions/jc-production-entry/jc-production-entry.module").then(
                         m => m.JcProductionEntryModule
                     )
+            },
+            {
+                path: "rejection_summary",
+                loadChildren: () =>
+                    import("./rejection-summary/rejection-summary.module").then(m => m.RejectionSummaryModule)
+            },
+            {
+                path: "goods_transfer_request",
+                loadChildren: () =>
+                    import("./../../production/transactions/gt-request/gt-request.module").then(m => m.GTRequestModule)
             }
         ]
     }

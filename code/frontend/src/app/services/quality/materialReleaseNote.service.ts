@@ -15,6 +15,7 @@ export class MaterialReleaseNoteService {
         getAllReportsPath: "/quality/mrn/getAllReports",
         getAllSupplierWiseReportsPath: "/quality/mrn/getAllSupplierWiseReports",
         getAllItemWiseReportsPath: "/quality/mrn/getAllItemWiseReports",
+        getAllMRNDetailsReportsPath: "/quality/mrn/getAllMRNDetailsReports",
         getAllRawMaterialInspectionReportsPath: "/quality/mrn/getAllRawMaterialInspectionReports",
         getByMRNIdForRMInspectionPath: "/quality/mrn/getByMRNIdForRMInspection",
         updatePath: (id: string) => `/quality/mrn/update/${id}`,
@@ -45,6 +46,9 @@ export class MaterialReleaseNoteService {
     }
     getAllItemWiseReports(params: any) {
         return this.http.get(this.routes.getAllItemWiseReportsPath, params).pipe(map((res: any) => res));
+    }
+    getAllMRNDetailsReports(params: any) {
+        return this.http.get(this.routes.getAllMRNDetailsReportsPath, params).pipe(map((res: any) => res));
     }
     getAllMasterData(params: any) {
         return this.http.get(this.routes.getAllMasterDataPath, params).pipe(map((res: any) => res));

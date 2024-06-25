@@ -2,7 +2,7 @@
     <div class="set-remaining-margin">
         <div class="row form-header">
             <div class="col heading">
-                <label>Job Worker Details</label>
+                <label>Job Work Order ({{ action | titlecase }}) </label>
             </div>
         </div>
         <div class="form-body">
@@ -11,24 +11,23 @@
                     <div class="row">
                         <div class="col-6 pe-0">
                             <label class="form-label"> WO No.<span class="text-danger">*</span></label>
-                            <input class="form-control" type="text" formControlName="WONo" readonly />
+                            <input class="form-control bg-white-smoke" type="text" formControlName="WONo" readonly />
                         </div>
                         <div class="col-6 px-3">
                             <label class="form-label"> WO Date <span class="text-danger">*</span></label>
-                            <input class="form-control" type="date" formControlName="WODate" readonly />
+                            <input class="form-control bg-white-smoke" type="date" formControlName="WODate" readonly />
                         </div>
                     </div>
                 </div>
-                <div class="col-3 pe-0">
-                    <label class="form-label mb-1">
+                <div class="col-3 pe-5">
+                    <label class="form-label">
                         Job Worker Name <span class="text-danger">*</span>
-                        <span></span>
-                        <span></span>
-                        <span></span>
-                        <span></span>
-                        <span></span>
-                        <span></span>
-                        <button (click)="openAddressModal()" type="button" class="btn btn-primary form-btn-sm py-0">
+
+                        <button
+                            (click)="openAddressModal()"
+                            type="button"
+                            class="btn btn-primary form-btn-sm py-0 ms-2"
+                        >
                             Address
                         </button>
                     </label>
@@ -55,28 +54,28 @@
                     </div>
                 </div>
                 <div class="col-3">
-                    <label class="form-label"> Order Reference<span class="text-danger">*</span> </label>
+                    <label class="form-label"> Order Reference<span class="text-danger"></span> </label>
                     <input class="form-control" type="text" formControlName="orderReference" />
                 </div>
                 <div class="col-3">
                     <label class="form-label"> Place Of Supply<span class="text-danger">*</span> </label>
-                    <input class="form-control" type="text" formControlName="placeOfSupply" readonly />
+                    <input class="form-control bg-white-smoke" type="text" formControlName="placeOfSupply" readonly />
                 </div>
             </div>
 
             <hr class="row line-border mb-0" />
             <ul ngbNav #nav="ngbNav" [(activeId)]="active" class="nav-tabs tabs-card">
-                <li *ngFor="let id of jobWODetails; let j = index" [ngbNavItem]="j">
+                <li *ngFor="let item of jobWODetails; let j = index" [ngbNavItem]="j">
                     <button ngbNavLink>
                         WO Line {{ j + 1 }}
                         <span class="" *ngIf="j != 0">
-                            <i (click)="removePlace(j)" class="fa fa-minus-circle pe-0" aria-hidden="true"></i>
+                            <i (click)="openConfirmModal(j)" class="fa fa-minus-circle pe-0" aria-hidden="true"></i>
                         </span>
                     </button>
                     <ng-template ngbNavContent>
                         <ng-container formGroupName="WODetails">
                             <div class="row">
-                                <div class="col-3">
+                                <div class="col-3 pe-5">
                                     <label class="form-label text-nowrap"
                                         >Job Work Service Code <span class="text-danger"> *</span></label
                                     >
@@ -87,9 +86,10 @@
                                                 bindLabel="serviceCode"
                                                 bindValue="_id"
                                                 [clearable]="false"
-                                                [(ngModel)]="id.jobWorkService"
+                                                [(ngModel)]="item.jobWorkService"
                                                 [ngModelOptions]="{standalone: true}"
                                                 (change)="setServiceInfo($event, j)"
+                                                [disabled]="['view', 'approve', 'reject'].includes(action)"
                                             >
                                             </ng-select>
                                         </div>
@@ -97,60 +97,73 @@
                                             style="height: 2.9rem"
                                             class="set-input-group-text input-group-text bg-primary pointer col-auto fa-font-size"
                                             id="basic-addon1"
-                                            (click)="openJobWorkServiceMasterDetailsModal()"
+                                            (click)="openJobWorkServiceMasterDetailsModal(item.jobWorkService, j)"
                                         >
                                             <i class="fa fa-search text-white" aria-hidden="true"></i>
                                         </div>
                                     </div>
                                 </div>
                                 <div class="col-3">
-                                    <label class="form-label mb-1">
+                                    <label class="form-label">
                                         Nature of Job Work<span class="text-danger">*</span>
                                     </label>
-                                    <input
+                                    <!-- <input
                                         type="text"
                                         class="form-control"
-                                        [(ngModel)]="id.SACInfo.natureOfJobWork"
+                                        [(ngModel)]="item.SACInfo.natureOfJobWork"
+                                        [ngModelOptions]="{standalone: true}"
+                                        readonly
+                                    /> -->
+
+                                    <ng-select
+                                        [items]="masterData.serviceMastersOptions"
+                                        bindLabel="serviceDescription"
+                                        bindValue="serviceDescription"
+                                        [clearable]="false"
+                                        [(ngModel)]="item.SACInfo.natureOfJobWork"
+                                        [ngModelOptions]="{standalone: true}"
+                                        (change)="setServiceInfo($event, j)"
+                                        [disabled]="['view', 'approve', 'reject'].includes(action)"
+                                    >
+                                    </ng-select>
+                                </div>
+                                <div class="col-3">
+                                    <label class="form-label"> SAC Code <span class="text-danger"></span> </label>
+                                    <input
+                                        type="text"
+                                        class="form-control bg-white-smoke"
+                                        [(ngModel)]="item.SACInfo.SACCode"
                                         [ngModelOptions]="{standalone: true}"
                                         readonly
                                     />
                                 </div>
                                 <div class="col-3">
-                                    <label class="form-label"> SAC Code <span class="text-danger">*</span> </label>
+                                    <label class="form-label"> GST Rate % <span class="text-danger"></span> </label>
                                     <input
                                         type="text"
-                                        class="form-control"
-                                        [(ngModel)]="id.SACInfo.SACCode"
-                                        [ngModelOptions]="{standalone: true}"
-                                        readonly
-                                    />
-                                </div>
-                                <div class="col-3">
-                                    <label class="form-label"> GST Rate % <span class="text-danger">*</span> </label>
-                                    <input
-                                        type="text"
-                                        class="form-control"
-                                        [(ngModel)]="id.SACInfo.gstRate"
+                                        class="form-control bg-white-smoke"
+                                        [(ngModel)]="item.SACInfo.gstRate"
                                         [ngModelOptions]="{standalone: true}"
                                         readonly
                                     />
                                 </div>
                             </div>
                             <div class="row mt-4">
-                                <div class="col-3">
+                                <div class="col-3 pe-5">
                                     <label class="form-label text-nowrap"
-                                        >Job Work Item Code <span class="text-danger"> *</span></label
+                                        >JW Item Code <span class="text-danger"> *</span></label
                                     >
                                     <div class="d-flex align-items-center">
                                         <div class="col-11">
                                             <ng-select
                                                 [items]="jobWorkerItemsOptions"
-                                                bindLabel="jobWorkItemName"
+                                                bindLabel="jobWorkItemCode"
                                                 bindValue="_id"
                                                 [clearable]="false"
-                                                [(ngModel)]="id.jobWorkItem"
+                                                [(ngModel)]="item.jobWorkItem"
                                                 [ngModelOptions]="{standalone: true}"
                                                 (change)="setJobWorkItemInfo($event, j)"
+                                                [disabled]="['view', 'approve', 'reject'].includes(action)"
                                             >
                                             </ng-select>
                                         </div>
@@ -158,93 +171,109 @@
                                             style="height: 2.9rem"
                                             class="set-input-group-text input-group-text bg-primary pointer col-auto fa-font-size"
                                             id="basic-addon1"
-                                            (click)="openJobWorkDetailsModal()"
+                                            (click)="openJobWorkItemDetailsModal(item.jobWorkItem, j)"
                                         >
                                             <i class="fa fa-search text-white" aria-hidden="true"></i>
                                         </div>
                                     </div>
                                 </div>
                                 <div class="col-3">
-                                    <label class="form-label mb-1">
-                                        JW Item Name<span class="text-danger">*</span>
-                                    </label>
-                                    <input
+                                    <label class="form-label"> JW Item Name<span class="text-danger">*</span> </label>
+                                    <ng-select
+                                        [items]="jobWorkerItemsOptions"
+                                        bindLabel="jobWorkItemName"
+                                        bindValue="jobWorkItemName"
+                                        [clearable]="false"
+                                        [(ngModel)]="item.jobWorkItemName"
+                                        [ngModelOptions]="{standalone: true}"
+                                        (change)="setJobWorkItemInfo($event, j)"
+                                        [disabled]="['view', 'approve', 'reject'].includes(action)"
+                                    >
+                                    </ng-select>
+                                    <!-- <input
                                         type="text"
                                         class="form-control"
-                                        [(ngModel)]="id.jobWorkItemName"
+                                        [(ngModel)]="item.jobWorkItemName"
                                         [ngModelOptions]="{standalone: true}"
                                         readonly
-                                    />
+                                    /> -->
                                 </div>
                                 <div class="col-3">
                                     <label class="form-label">
-                                        JW Item Description <span class="text-danger">*</span>
+                                        JW Item Description <span class="text-danger"></span>
                                     </label>
                                     <input
                                         type="text"
-                                        class="form-control"
-                                        [(ngModel)]="id.jobWorkItemDescription"
+                                        class="form-control bg-white-smoke"
+                                        [(ngModel)]="item.jobWorkItemDescription"
                                         [ngModelOptions]="{standalone: true}"
                                         readonly
                                     />
                                 </div>
                                 <div class="col-3">
-                                    <label class="form-label"> Drawing No. <span class="text-danger">*</span> </label>
+                                    <label class="form-label"> Drawing No. <span class="text-danger"></span> </label>
                                     <input
                                         type="text"
-                                        class="form-control"
-                                        [(ngModel)]="id.drawingNo"
+                                        class="form-control bg-white-smoke"
+                                        [(ngModel)]="item.drawingNo"
                                         [ngModelOptions]="{standalone: true}"
-                                        [disabled]="action == 'view'"
+                                        [disabled]="['view', 'approve', 'reject'].includes(action)"
+                                        readonly
                                     />
                                 </div>
                             </div>
                             <div class="row mt-4">
                                 <div class="col-3">
-                                    <label class="form-label"> HSN Code <span class="text-danger">*</span> </label>
+                                    <label class="form-label"> HSN Code <span class="text-danger"></span> </label>
                                     <input
                                         type="text"
-                                        class="form-control"
-                                        [(ngModel)]="id.HSNCode"
+                                        class="form-control bg-white-smoke"
+                                        [(ngModel)]="item.HSNInfo.HSNCode"
                                         [ngModelOptions]="{standalone: true}"
-                                        [disabled]="action == 'view'"
+                                        [disabled]="['view', 'approve', 'reject'].includes(action)"
+                                        readonly
                                     />
                                 </div>
                                 <div class="col-3">
-                                    <label class="form-label"> UOM <span class="text-danger">*</span> </label>
+                                    <label class="form-label"> UOM <span class="text-danger"> </span> </label>
                                     <input
                                         type="text"
-                                        class="form-control"
-                                        [(ngModel)]="id.UOM"
+                                        class="form-control bg-white-smoke"
+                                        [(ngModel)]="item.UOM"
                                         [ngModelOptions]="{standalone: true}"
-                                        [disabled]="action == 'view'"
+                                        [disabled]="['view', 'approve', 'reject'].includes(action)"
+                                        readonly
                                     />
                                 </div>
                                 <div class="col-3">
                                     <label class="form-label">
-                                        Process Rate Unit <span class="text-danger">*</span>
+                                        Process Rate Unit <span class="text-danger"></span>
                                     </label>
                                     <div class="d-flex">
-                                        <span class="input-group-text text-secondary combine-INR">
+                                        <span class="input-group-text text-secondary combine-INR bg-white-smoke">
                                             {{ "INR" | companyCurrency }}
                                             <div class="vr ms-3"></div>
                                         </span>
                                         <input
-                                            class="form-control border-start-0 ps-1"
+                                            class="form-control border-start-0 ps-1 bg-white-smoke"
                                             type="number"
-                                            [(ngModel)]="id.processRatePerUnit"
+                                            [(ngModel)]="item.processRatePerUnit"
                                             [ngModelOptions]="{standalone: true}"
-                                            [disabled]="action == 'view'"
+                                            [disabled]="['view', 'approve', 'reject'].includes(action)"
                                             readonly
                                         />
                                     </div>
                                     <!-- <input type="text" class="form-control" formControlName="cityOrDistrict" /> -->
                                 </div>
                                 <div class="col-3">
-                                    <label class="form-label mb-1">
-                                        Discount %<span class="text-danger">*</span>
-                                    </label>
-                                    <select class="form-select" type="text" formControlName="discountPercent">
+                                    <label class="form-label"> Discount %<span class="text-danger"></span> </label>
+                                    <!-- <select
+                                        class="form-select"
+                                        type="text"
+                                        [(ngModel)]="item.discountPercent"
+                                        [ngModelOptions]="{standalone: true}"
+                                        (change)="setNetRate()"
+                                    >
                                         <option [value]="null" selected disabled>Select Location</option>
                                         <option
                                             [value]="j.parameterName"
@@ -252,7 +281,19 @@
                                         >
                                             {{ j.parameterLabel }}
                                         </option>
-                                    </select>
+                                    </select> -->
+
+                                    <ng-select
+                                        [items]="masterData.jobWODiscountOptions"
+                                        bindLabel="parameterName"
+                                        bindValue="parameterLabel"
+                                        [clearable]="false"
+                                        [(ngModel)]="item.discountPercent"
+                                        [ngModelOptions]="{standalone: true}"
+                                        (change)="setNetRate($event, j)"
+                                        [disabled]="['view', 'approve', 'reject'].includes(action)"
+                                    >
+                                    </ng-select>
                                 </div>
                             </div>
                             <div class="row mt-4">
@@ -267,10 +308,10 @@
                                         </span>
                                         <input
                                             class="form-control bg-mix-pink-color border-start-0 ps-1"
-                                            type="number"
-                                            [(ngModel)]="id.netRatePerUnit"
+                                            type="text"
+                                            [(ngModel)]="item.netRatePerUnit"
                                             [ngModelOptions]="{standalone: true}"
-                                            [disabled]="action == 'view'"
+                                            [disabled]="['view', 'approve', 'reject'].includes(action)"
                                             readonly
                                         />
                                     </div>
@@ -281,13 +322,14 @@
                                     <input
                                         type="number"
                                         class="form-control"
-                                        [(ngModel)]="id.quantity"
+                                        [(ngModel)]="item.quantity"
                                         [ngModelOptions]="{standalone: true}"
-                                        [disabled]="action == 'view'"
+                                        [disabled]="['view', 'approve', 'reject'].includes(action)"
+                                        (input)="setTaxableValue(j)"
                                     />
                                 </div>
                                 <div class="col-3">
-                                    <label class="form-label"> Taxable Value <span class="text-danger">*</span> </label>
+                                    <label class="form-label"> Taxable Value <span class="text-danger"></span> </label>
                                     <div class="d-flex">
                                         <span class="input-group-text text-secondary combine-INR bg-mix-pink-color">
                                             {{ "INR" | companyCurrency }}
@@ -296,7 +338,7 @@
                                         <input
                                             class="form-control bg-mix-pink-color border-start-0 ps-1"
                                             type="number"
-                                            [(ngModel)]="id.taxableValue"
+                                            [(ngModel)]="item.taxableValue"
                                             [ngModelOptions]="{standalone: true}"
                                             readonly
                                         />
@@ -305,13 +347,33 @@
                                 </div>
                                 <div class="col-3">
                                     <label class="form-label"> Delivery Date <span class="text-danger">*</span> </label>
-                                    <input
+
+                                    <div class="d-flex">
+                                        <input
+                                            class="form-control"
+                                            type="text"
+                                            [value]="
+                                                item.deliveryDate == 'Refer Schedule'
+                                                    ? 'Refer Schedule'
+                                                    : (item.deliveryDate | date : 'dd-MM-YYYY')
+                                            "
+                                            [disabled]="['view', 'approve', 'reject'].includes(action)"
+                                            readonly
+                                        />
+                                        <span class="input-group-text text-secondary combine-INR border border-end-1">
+                                            <div
+                                                (click)="openJWScheduleModal(item, j)"
+                                                class="assetCalendarTD pointer"
+                                            ></div>
+                                        </span>
+                                    </div>
+                                    <!-- <input
                                         type="date"
                                         class="form-control"
-                                        [(ngModel)]="id.deliveryDate"
+                                        [(ngModel)]="item.deliveryDate"
                                         [ngModelOptions]="{standalone: true}"
-                                        [disabled]="action == 'view'"
-                                    />
+                                        [disabled]="['view','approve','reject'].includes(action)"
+                                    /> -->
                                 </div>
                             </div>
                         </ng-container>
@@ -322,7 +384,6 @@
                     <!-- <button type="button" class="nav-link" (click)="addPlace()">+</button> -->
                     <button
                         (click)="addPlace()"
-                        [ngbTooltip]="'Additional places of business'"
                         class="plusSmallIconSvg btn btn-primary add-address"
                         type="button"
                     ></button>
@@ -334,27 +395,49 @@
 
         <hr class="row line-border" />
 
-        <div class="row mb-4">
-            <div class="col-3">
-                <button class="plusIconSvg btn btn-primary me-1"></button>
+        <div class="row mb-3">
+            <div class="col-2">
+                <!-- <button class="plusIconSvg btn btn-primary me-1"></button> -->
                 <button (click)="openWOReviewTermsModal()" class="btn bg-primary me-4" type="button">
                     Review WO Terms
                 </button>
             </div>
-            <div class="col-3 ps-0 pe-5">
-                <div class="d-flex">
-                    <div class="col-form-label text-nowrap">
-                        WO Taxable Value <span class="text-danger pe-2">*</span>
-                        <i class="fa fa-caret-right fa-5x mx-1"></i>
+
+            <div class="col-4 ps-0 pe-5">
+                <div class="d-flex justify-content-center">
+                    <div class="col-form-label text-nowrap pe-1 pt-1">
+                        WO Taxable Value <span class="ms-1 me-2">&#9654;</span>
                     </div>
-                    <input class="form-control" type="number" formControlName="WOTaxableValue" />
+                    <div class="d-flex">
+                        <span class="input-group-text combine-INR text-secondary">
+                            {{ "INR" | companyCurrency }}
+                            <div class="vr ms-3"></div>
+                        </span>
+                        <input
+                            class="form-control border-start-0 ps-0"
+                            type="number"
+                            formControlName="WOTaxableValue"
+                            readonly
+                        />
+                    </div>
                 </div>
             </div>
-            <div class="col-2"></div>
+            <div *ngIf="action == 'reject'" class="col-4 px-0">
+                <div class="d-flex justify-content-start align-items-start">
+                    <div class="col-form-label text-nowrap">Rejection Remarks</div>
+                    <input class="form-control mx-2" type="text" formControlName="remarks" />
+                </div>
+            </div>
 
-            <div *ngIf="action != 'view'" class="col-4 text-end">
+            <div *ngIf="['create', 'edit'].includes(action)" class="col-6 text-end">
                 <button class="btn btn-primary px-5 me-3" type="button" (click)="reset()">Reset</button>
                 <button class="btn btn-primary px-5" type="button" (click)="submit()">Save</button>
+            </div>
+            <div *ngIf="action == 'reject'" class="col-2 text-end">
+                <button type="button" class="btn btn-primary px-5" (click)="submit()">Reject</button>
+            </div>
+            <div *ngIf="action == 'approve'" class="col-6 d-flex justify-content-end">
+                <button type="button" class="btn btn-primary px-5" (click)="submit()">Approve</button>
             </div>
         </div>
     </div>

@@ -1,5 +1,5 @@
 const Model = require("../salesOrderModel");
-module.exports = {
+const SORepository = {
     createDoc: async obj => {
         return await Model.create(obj);
     },
@@ -31,3 +31,4 @@ module.exports = {
         return rows;
     }
 };
+module.exports = SORepository;

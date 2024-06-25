@@ -10,7 +10,23 @@ class FileHandler {
             throw error;
         }
     }
-
+    async readDir(dirPath, options) {
+        try {
+            const entries = await fs.readdir(dirPath, options);
+            return entries;
+        } catch (err) {
+            console.error(`Error reading directory ${dirPath}:`, err);
+            throw err;
+        }
+    }
+    async fileExists(filePath) {
+        try {
+            await fs.access(filePath);
+            return true;
+        } catch {
+            return false;
+        }
+    }
     async writeFile(filePath, data) {
         try {
             await fs.writeFile(filePath, data, "utf-8");

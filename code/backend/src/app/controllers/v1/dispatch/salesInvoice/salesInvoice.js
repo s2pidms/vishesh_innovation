@@ -14,7 +14,7 @@ const {getB2BCustomerById, getAllCustomers} = require("../../sales/customerMaste
 const {getCompanyById, getCompanyLocationsWithGST, getCompanyLocations} = require("../../settings/company/company");
 const {getSubtractedDate, getEndDateTime, getStartDateTime, dateToAnyFormat} = require("../../../../helpers/dateTime");
 const {getSalesHSNByCode} = require("../../sales/salesHSN/salesHSN");
-const {SALES_CATEGORY, BOOLEAN_VALUES} = require("../../../../mocks/constantData");
+const {SALES_CATEGORY, BOOLEAN_VALUES, GST_CLASSIFICATION} = require("../../../../mocks/constantData");
 // const {getSIMailConfig} = require("./salesInvoiceMail");
 const {
     getAllSalesInvoiceAttributes,
@@ -29,7 +29,6 @@ const {DISPATCH_MAIL_CONST} = require("../../../../mocks/mailTriggerConstants");
 const AutoIncrementRepository = require("../../../../models/settings/repository/autoIncrementRepository");
 const TransporterRepository = require("../../../../models/sales/repository/transporterMasterRepository");
 const {salesUOMPipe} = require("../../settings/SalesUOMUnitMaster/SalesUOMUnitMaster");
-const {filteredCustomerList} = require("../../../../models/sales/repository/customerRepository");
 
 exports.getAll = asyncHandler(async (req, res) => {
     try {
@@ -482,7 +481,13 @@ async function getDataPDF(req) {
         if (customer && customer.company && customer.company.placesOfBusiness.length > 0 && customerCategoryCondition) {
             for (const ele of customer.company.placesOfBusiness) {
                 if (createdObj.billFromLocation == ele.locationID) {
-                    condition = customer.GSTIN.substring(0, 2) != ele.GSTINForAdditionalPlace.substring(0, 2);
+                    if (customer.GSTClassification == GST_CLASSIFICATION.UNREGISTER_DEALER) {
+                        condition =
+                            createdObj?.customerBillingAddress?.state?.trim()?.toLowerCase() !=
+                            ele?.state?.trim()?.toLowerCase();
+                    } else {
+                        condition = customer.GSTIN.substring(0, 2) != ele.GSTINForAdditionalPlace.substring(0, 2);
+                    }
                 }
             }
         }
@@ -1002,7 +1007,14 @@ exports.getSalesInvoiceByIdForPDF = asyncHandler(async (req, res) => {
         ) {
             for (const ele of existing.company.placesOfBusiness) {
                 if (existing.billFromLocation == ele.locationID) {
-                    condition = existing.customer.GSTIN.substring(0, 2) != ele.GSTINForAdditionalPlace.substring(0, 2);
+                    if (existing.customer.GSTClassification == GST_CLASSIFICATION.UNREGISTER_DEALER) {
+                        condition =
+                            existing?.customer?.customerBillingAddress?.state?.trim()?.toLowerCase() !=
+                            ele?.state?.trim()?.toLowerCase();
+                    } else {
+                        condition =
+                            existing.customer.GSTIN.substring(0, 2) != ele.GSTINForAdditionalPlace.substring(0, 2);
+                    }
                 }
             }
         }

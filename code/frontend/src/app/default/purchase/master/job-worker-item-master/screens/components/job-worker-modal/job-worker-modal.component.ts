@@ -53,7 +53,7 @@ export class JobWorkerModalComponent implements OnInit {
     ngOnInit(): void {
         this.collection = this.jobWorkerDetails.length;
 
-        if (!this.secondaryUnit) {
+        if (!this.secondaryUnit || this.secondaryUnit == "-") {
             this.form.controls["uom2"].disable();
             this.form.controls["stdCostUom2"].disable();
         }

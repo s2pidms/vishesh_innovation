@@ -73,7 +73,8 @@ const OPTIONS = {
         MARK_AS_COMPLETED: "Mark As Completed",
         SKIP_INTEGRATION: "Skip Integration",
         REWORKED: "Reworked",
-        DEVIATION: "Deviation ",
+        DEVIATION: "Deviation",
+        ACCEPTED: "Accepted",
         getAllStatusAsArray: function () {
             return [
                 OPTIONS.defaultStatus.ACTIVE,

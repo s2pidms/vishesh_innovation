@@ -140,4 +140,12 @@ export class SACFormComponent implements OnInit {
                 });
         });
     }
+    setRates(ev: any) {
+        if (this.action == "create") {
+            this.form.controls["igstRate"].setValue(ev.target.value);
+            this.form.controls["ugstRate"].setValue(ev.target.value / 2);
+            this.form.controls["sgstRate"].setValue(ev.target.value / 2);
+            this.form.controls["cgstRate"].setValue(ev.target.value / 2);
+        }
+    }
 }

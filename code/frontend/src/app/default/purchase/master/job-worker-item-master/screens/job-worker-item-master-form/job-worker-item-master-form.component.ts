@@ -335,6 +335,9 @@ export class JobWorkerItemMasterFormComponent implements OnInit {
         // }
 
         this.form.controls["primaryUnit"].setValue(event.target.value);
+        if (!this.form.controls["secondaryUnit"].value) {
+            this.form.controls["secondaryUnit"].setValue("-");
+        }
     }
     setGST() {
         let hsn = this.masterData?.HSNCodesList.find((x: any) => x.value == this.f["HSNCode"].value.trim());
@@ -416,7 +419,7 @@ export class JobWorkerItemMasterFormComponent implements OnInit {
         modalRef.componentInstance.WXLDimensionsUnit = this.masterData?.WXLDimensionsUnit;
         modalRef.componentInstance.dualUnits = {
             primaryUnit: this.form.value.primaryUnit,
-            secondaryUnit: this.form.value.secondaryUnit,
+            secondaryUnit: this.form.value.secondaryUnit ?? "-",
             unitConversionFlag: this.form.value.unitConversionFlag,
             primaryConversion: this.form.value.primaryConversion,
             secondaryConversion: this.form.value.secondaryConversion,

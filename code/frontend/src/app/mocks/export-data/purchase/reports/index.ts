@@ -18,3 +18,4 @@ export * from "./supplierEvaluationMonths";
 export * from "./purchaseRateAnalysis";
 export * from "./itemConsumption";
 export * from "./jobWorkChallanReports";
+export * from "./JobWorkOrder";

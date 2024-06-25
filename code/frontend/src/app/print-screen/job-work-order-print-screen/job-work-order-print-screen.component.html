@@ -14,22 +14,50 @@
                 </button>
             </div>
 
-            <div class="page py-3">
+            <div
+                class="page py-3"
+                [ngStyle]="
+                    previewDraft == 'previewDraf'
+                        ? {
+                              background: 'url(./assets/new_icons/draft-stamp.svg)',
+                              'background-size': '100% 100%',
+                              'background-color': 'transparent'
+                          }
+                        : {}
+                "
+            >
                 <div class="table-responsive shadow">
                     <table class="table">
                         <tr>
                             <td colspan="12">
-                                <h2 class="page-title">Work Order for Job Work</h2>
+                                <div class="row d-flex justify-content-between">
+                                    <div class="text-start col-4">
+                                        <img src="{{ tableData.company.logoUrl }}" width="150px" />
+                                    </div>
+                                    <div class="col-4 d-flex align-items-center justify-content-center">
+                                        <h2 class="page-title">Work Order for Job Work</h2>
+                                    </div>
+                                    <div class="col-4"></div>
+                                </div>
                             </td>
+                            <!-- <td colspan="4" class="border-end-0">
+                                <div class="text-start">
+                                    <img src="{{ tableData.company.logoUrl }}" width="150px" />
+                                </div>
+                            </td>
+
+                            <td colspan="8" class="border-start-0">
+                                <h2 class="page-title d-flex align-items-center">Work Order for Job Work</h2>
+                            </td> -->
                         </tr>
                         <tr>
                             <td colspan="6">
-                                <p class="sub-text">Work Order No.:</p>
-                                <p class="sub-text">Work Order Date:</p>
+                                <p class="sub-text">Work Order No.:{{ tableData.WONo }}</p>
+                                <p class="sub-text">Work Order Date:{{ tableData.WODate | date : "dd-MM-YYYY" }}</p>
                             </td>
                             <td colspan="6">
-                                <p class="sub-text">Order Reference:</p>
-                                <p class="sub-text">Place of Supply:</p>
+                                <p class="sub-text">Order Reference:{{ tableData.orderReference }}</p>
+                                <p class="sub-text">Place of Supply:{{ tableData.placeOfSupply }}</p>
                             </td>
                         </tr>
                         <tr class="head-row">
@@ -43,44 +71,50 @@
                         <tr>
                             <td colspan="6">
                                 <div class="font_le">
-                                    <p class="fw-bold">{{ tableData.company.companyName }}</p>
-                                    <p>
-                                        {{ tableData.company.companyBillingAddress.addressLine1 }}
-                                    </p>
-                                    <p>{{ tableData.company.companyBillingAddress.addressLine2 }}</p>
-                                    <p>{{ tableData.company.companyBillingAddress.addressLine3 }}</p>
-                                    <p>
-                                        {{ tableData.company.companyBillingAddress.addressLine4 }},
-                                        {{ tableData.company.companyBillingAddress.city }}
-                                        -
-                                        {{ tableData.company.companyBillingAddress.pinCode }}
+                                    <p class="fw-bold">
+                                        {{ tableData.billToCompany.companyName }}
                                     </p>
                                     <p>
-                                        {{ tableData.company.companyBillingAddress.state }},
-                                        {{ tableData.company.companyBillingAddress.country }}
+                                        {{ tableData.billToCompany.line1 }}
                                     </p>
-                                    <p class="sub-text">GSTIN: {{ tableData.company.GSTIN }}</p>
+                                    <p>{{ tableData.billToCompany.line2 }}</p>
+                                    <p>{{ tableData.billToCompany.line3 }}</p>
+                                    <p>
+                                        {{ tableData.billToCompany.line4 }},
+                                        {{ tableData.billToCompany.city }}
+                                    </p>
+                                    <p>
+                                        {{ tableData.billToCompany.state }} - {{ tableData.billToCompany.pinCode }},
+                                        {{ tableData.billToCompany.country }}
+                                    </p>
+                                    <p class="sub-text">
+                                        GSTIN:
+                                        {{ tableData.billToCompany.GSTIN }}
+                                    </p>
                                 </div>
                             </td>
                             <td colspan="6">
                                 <div class="font_le">
-                                    <p class="fw-bold">{{ tableData.company.companyName }}</p>
-                                    <p>
-                                        {{ tableData.company.companyBillingAddress.addressLine1 }}
-                                    </p>
-                                    <p>{{ tableData.company.companyBillingAddress.addressLine2 }}</p>
-                                    <p>{{ tableData.company.companyBillingAddress.addressLine3 }}</p>
-                                    <p>
-                                        {{ tableData.company.companyBillingAddress.addressLine4 }},
-                                        {{ tableData.company.companyBillingAddress.city }}
-                                        -
-                                        {{ tableData.company.companyBillingAddress.pinCode }}
+                                    <p class="fw-bold">
+                                        {{ tableData.shipToCompany.companyName }}
                                     </p>
                                     <p>
-                                        {{ tableData.company.companyBillingAddress.state }},
-                                        {{ tableData.company.companyBillingAddress.country }}
+                                        {{ tableData.shipToCompany.city }}
                                     </p>
-                                    <p class="sub-text">GSTIN: {{ tableData.company.GSTIN }}</p>
+                                    <p>{{ tableData.shipToCompany.line1 }}</p>
+                                    <p>{{ tableData.shipToCompany.line2 }}</p>
+                                    <p>
+                                        {{ tableData.shipToCompany.line3 }},
+                                        {{ tableData.shipToCompany.line4 }}
+                                    </p>
+                                    <p>
+                                        {{ tableData.shipToCompany.state }} - {{ tableData.shipToCompany.pinCode }},
+                                        {{ tableData.shipToCompany.country }}
+                                    </p>
+                                    <p class="sub-text">
+                                        GSTIN:
+                                        {{ tableData.shipToCompany.GSTIN }}
+                                    </p>
                                 </div>
                             </td>
                         </tr>
@@ -95,37 +129,46 @@
                         <tr>
                             <td colspan="6">
                                 <p class="fw-bold">
-                                    <!-- {{ tableData.supplier.supplierName }} -->
                                     {{ tableData.jobWorkerName }}
                                 </p>
-                                <p>{{ tableData.primaryAddress.line1 }}</p>
-                                <p>{{ tableData.primaryAddress.line2 }}</p>
-                                <p>{{ tableData.primaryAddress.line3 }}</p>
+                                <p>{{ tableData.billFromJobWorker.line1 }}</p>
+                                <p>{{ tableData.billFromJobWorker.line2 }}</p>
+                                <p>{{ tableData.billFromJobWorker.line3 }}</p>
                                 <p>
-                                    {{ tableData.primaryAddress.line4 }},
-                                    {{ tableData.primaryAddress.cityOrDistrict }} -
-                                    {{ tableData.primaryAddress.pinCode }}
+                                    {{ tableData.billFromJobWorker.line4 }},
+                                    {{ tableData.billFromJobWorker.city }}
                                 </p>
-                                <p>{{ tableData.primaryAddress.state }}, {{ tableData.primaryAddress.country }}</p>
-                                <p class="sub-text">GSTIN: {{ tableData.GSTINNo }}</p>
+                                <p>
+                                    {{ tableData.billFromJobWorker.state }}- {{ tableData.billFromJobWorker.pinCode }},
+                                    {{ tableData.billFromJobWorker.country }}
+                                </p>
+                                <p class="sub-text">
+                                    GSTIN:
+                                    {{ tableData.GSTINNo }}
+                                </p>
                             </td>
                             <td colspan="6">
                                 <p class="fw-bold">
-                                    <!-- {{ tableData.shipToAddress.companyName }}</p> -->
                                     {{ tableData.jobWorkerName }}
                                 </p>
                                 <p>
-                                    {{ tableData.shipToAddress.line1 }}
+                                    {{ tableData.shipFromJobWorker.line1 }}
                                 </p>
-                                <p>{{ tableData.shipToAddress.line2 }}</p>
-                                <p>{{ tableData.shipToAddress.line3 }}</p>
+                                <p>{{ tableData.shipFromJobWorker.line2 }}</p>
+                                <p>{{ tableData.shipFromJobWorker.line3 }}</p>
                                 <p>
-                                    {{ tableData.shipToAddress.line4 }}, {{ tableData.shipToAddress.cityOrDistrict }} -
-                                    {{ tableData.shipToAddress.pinCode }}
+                                    {{ tableData.shipFromJobWorker.line4 }},
+                                    {{ tableData.shipFromJobWorker.city }}
                                 </p>
-                                <p>{{ tableData.shipToAddress.state }}, {{ tableData.shipToAddress.country }}</p>
+                                <p>
+                                    {{ tableData.shipFromJobWorker.state }} - {{ tableData.shipFromJobWorker.pinCode }},
+                                    {{ tableData.shipFromJobWorker.country }}
+                                </p>
 
-                                <p class="sub-text">GSTIN: {{ tableData.GSTINNo }}</p>
+                                <p class="sub-text">
+                                    GSTIN:
+                                    {{ tableData.GSTINNo }}
+                                </p>
                             </td>
                         </tr>
                         <tr>
@@ -140,7 +183,7 @@
                                 </p>
                             </td>
                         </tr>
-                        <ng-container *ngFor="let p of tableData.JWChallanDetails; let i = index">
+                        <ng-container *ngFor="let p of tableData.WODetails; let i = index">
                             <tr class="head-row text-center">
                                 <th colspan="1" class="text-center set-SN-width">SN</th>
                                 <th colspan="11">Description of Job Work</th>
@@ -150,54 +193,60 @@
                                     {{ i + 1 }}
                                 </td>
                                 <td colspan="3">Nature of Job Work</td>
-                                <td colspan="8">{{ tableData.freightTermsInfo.modeOfTransport }}</td>
+                                <td colspan="8">{{ p.SACInfo.natureOfJobWork }}</td>
                             </tr>
                             <tr>
                                 <td colspan="3">SAC Code</td>
-                                <td colspan="8">{{ tableData.freightTermsInfo.modeOfTransport }}</td>
+                                <td colspan="8">{{ p.SACInfo.SACCode }}</td>
                             </tr>
                             <tr>
                                 <td colspan="3">GST Rate</td>
-                                <td colspan="8">{{ tableData.freightTermsInfo.modeOfTransport }}</td>
+                                <td colspan="8">{{ p.SACInfo.gstRate }}</td>
                             </tr>
                             <tr>
                                 <th colspan="11" class="text-start">Details of Part to be Manufactured/Processed</th>
                             </tr>
                             <tr>
                                 <td colspan="3">JW Item Code</td>
-                                <td colspan="4">{{ tableData.freightTermsInfo.modeOfTransport }}</td>
+                                <td colspan="4">{{ p.jobWorkItemCode }}</td>
                                 <td colspan="2">Quantity</td>
-                                <td colspan="2">{{ tableData.freightTermsInfo.modeOfTransport }}</td>
+                                <td colspan="2">{{ p.quantity }}</td>
                             </tr>
                             <tr>
                                 <td colspan="3">JW Item Name</td>
-                                <td colspan="4">{{ tableData.freightTermsInfo.modeOfTransport }}</td>
+                                <td colspan="4">{{ p.jobWorkItemName }}</td>
                                 <td colspan="2">Process Rate/Unit</td>
-                                <td colspan="2">{{ tableData.freightTermsInfo.modeOfTransport }}</td>
+                                <td colspan="2">{{ p.processRatePerUnit }}</td>
                             </tr>
                             <tr>
                                 <td colspan="3">JW Item Description</td>
-                                <td colspan="4">{{ tableData.freightTermsInfo.modeOfTransport }}</td>
+                                <td colspan="4">{{ p.jobWorkItemDescription }}</td>
                                 <td colspan="2">Discount %</td>
-                                <td colspan="2">{{ tableData.freightTermsInfo.modeOfTransport }}</td>
+                                <td colspan="2">{{ p.discountPercent }}</td>
                             </tr>
                             <tr>
                                 <td colspan="3">Drawing No.</td>
-                                <td colspan="4">{{ tableData.freightTermsInfo.modeOfTransport }}</td>
+                                <td colspan="4">{{ p.drawingNo }}</td>
                                 <td colspan="2">Net Rate/Unit</td>
-                                <td colspan="2">{{ tableData.freightTermsInfo.modeOfTransport }}</td>
+                                <td colspan="2">{{ p.netRatePerUnit }}</td>
                             </tr>
                             <tr>
                                 <td colspan="3">HSN Code</td>
-                                <td colspan="4">{{ tableData.freightTermsInfo.modeOfTransport }}</td>
+                                <td colspan="4">{{ p.HSNInfo.HSNCode }}</td>
                                 <td colspan="2">Taxable Value</td>
-                                <td colspan="2">{{ tableData.freightTermsInfo.modeOfTransport }}</td>
+                                <td colspan="2">{{ p.taxableValue }}</td>
                             </tr>
                             <tr>
                                 <td colspan="3">UoM</td>
-                                <td colspan="4">{{ tableData.freightTermsInfo.modeOfTransport }}</td>
+                                <td colspan="4">{{ p.UOM }}</td>
                                 <td colspan="2">Delivery Date</td>
-                                <td colspan="2">{{ tableData.freightTermsInfo.modeOfTransport }}</td>
+                                <td colspan="2">
+                                    {{
+                                        p.deliveryDate == "Refer Schedule"
+                                            ? "Refer Schedule"
+                                            : (p.deliveryDate | date : "dd-MM-YYYY")
+                                    }}
+                                </td>
                             </tr>
                         </ng-container>
 
@@ -205,50 +254,30 @@
                             <td colspan="12" style="height: 2rem"></td>
                         </tr>
 
-                        <!-- <tr>
-                            <th colspan="6"><label>General Terms & Conditions</label></th>
-                            <td colspan="6" rowspan="6" class="text-center">
-                                <div>
-                                    <img src="{{ tableData.company.companySignatureUrl }}" class="img-sign" />
-                                </div>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td colspan="2">Payment Terms</td>
-                            <td colspan="4">{{ tableData.freightTermsInfo.modeOfTransport }}</td>
-                        </tr>
-                        <tr>
-                            <td colspan="2">Freight Terms</td>
-                            <td colspan="4">{{ tableData.freightTermsInfo.freightTerms }}</td>
-                        </tr>
-                        <tr>
-                            <td colspan="2">WO Remarks</td>
-                            <td colspan="4">{{ tableData.freightTermsInfo.destination }}</td>
-                        </tr> -->
                         <tr class="py-1">
                             <td colspan="12">
                                 <div class="row justify-content-between my-3">
                                     <div class="col-6 p-0 pe-4">
                                         <table class="table">
                                             <tr>
-                                                <th colspan="12">General Terms & Conditions</th>
+                                                <th colspan="12" class="py-2">General Terms & Conditions</th>
                                             </tr>
                                             <tr>
-                                                <td colspan="6">Payment Terms</td>
-                                                <td colspan="6">
-                                                    {{ tableData.freightTermsInfo.modeOfTransport }}
+                                                <td colspan="6" class="py-2">Payment Terms</td>
+                                                <td colspan="6" class="py-2">
+                                                    {{ tableData.paymentTerms }}
                                                 </td>
                                             </tr>
                                             <tr>
-                                                <td colspan="6">Freight Terms</td>
-                                                <td colspan="6">
-                                                    {{ tableData.freightTermsInfo.freightTerms }}
+                                                <td colspan="6" class="py-2">Freight Terms</td>
+                                                <td colspan="6" class="py-2">
+                                                    {{ tableData.freightTerms }}
                                                 </td>
                                             </tr>
                                             <tr>
-                                                <td colspan="6">WO Remarks</td>
-                                                <td colspan="6">
-                                                    {{ tableData.freightTermsInfo.destination }}
+                                                <td colspan="6" class="py-2">WO Remarks</td>
+                                                <td colspan="6" class="py-2">
+                                                    {{ tableData.WORemarks }}
                                                 </td>
                                             </tr>
                                         </table>
@@ -266,11 +295,20 @@
                                         </table>
                                     </div>
                                 </div>
+
+                                <!-- <app-jw-order-schedule-print-screen
+                                    class="px-0"
+                                    [tableData]="tableData"
+                                ></app-jw-order-schedule-print-screen> -->
                             </td>
                         </tr>
                     </table>
                 </div>
             </div>
+            <app-jw-order-schedule-print-screen
+                class="page-break px-0"
+                [tableData]="tableData"
+            ></app-jw-order-schedule-print-screen>
         </div>
     </div>
 </div>

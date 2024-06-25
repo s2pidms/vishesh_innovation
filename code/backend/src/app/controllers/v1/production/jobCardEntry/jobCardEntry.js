@@ -1,13 +1,16 @@
 const asyncHandler = require("express-async-handler");
 const MESSAGES = require("../../../../helpers/messages.options");
-const {getAllJobCardEntryAttributes} = require("../../../../models/production/helpers/jobCardEntryHelper");
+const {
+    getAllJobCardEntryAttributes,
+    getAllJobCardEntryRejectAttributes
+} = require("../../../../models/production/helpers/jobCardEntryHelper");
 const {getAndSetAutoIncrementNo} = require("../../settings/autoIncrement/autoIncrement");
 const {JOB_CARD_ENTRY} = require("../../../../mocks/schemasConstant/productionConstant");
 const JobCardEntryRepository = require("../../../../models/production/repository/jobCardEntryRepository");
 const {OPTIONS} = require("../../../../helpers/global.options");
 const {filteredJobCardList} = require("../../../../models/planning/repository/jobCardRepository");
 const {filteredDirectCostList} = require("../../../../models/planning/repository/directCostRepository");
-const {JOB_ORDER_TYPE} = require("../../../../mocks/constantData");
+const {JOB_ORDER_TYPE, DEFECT_TYPES} = require("../../../../mocks/constantData");
 const {filteredDirectCostDSKUList} = require("../../../../models/businessLeads/repository/directCostDSKURepository");
 const {ObjectId} = require("../../../../../config/mongoose");
 const {getAllModuleMaster} = require("../../settings/module-master/module-master");
@@ -17,6 +20,8 @@ const {getExpiryDate} = require("../../../../helpers/dateTime");
 const FGINRepository = require("../../../../models/stores/repository/FGINRepository");
 const {filteredSKUProcessFlowList} = require("../../../../models/businessLeads/repository/SKUProcessFlowRepository");
 const {filteredStockPreparationList} = require("../../../../models/planning/repository/stockPreparationRepository");
+const JobCardRepository = require("../../../../models/planning/repository/jobCardRepository");
+const {filteredDefectListConfigList} = require("../../../../models/settings/repository/defectListConfigRepository");
 
 exports.getAll = asyncHandler(async (req, res) => {
     try {
@@ -54,12 +59,22 @@ exports.createOrUpdate = asyncHandler(async (req, res) => {
             };
             existing = await JobCardEntryRepository.createDoc(createdObj);
         }
+        if (existing.generateReport.checkoutStatus == OPTIONS.defaultStatus.MARK_AS_COMPLETED) {
+            await JobCardRepository.findAndUpdateDoc(
+                {
+                    _id: existing.jobCard
+                },
+                {
+                    $set: {status: OPTIONS.defaultStatus.CLOSED}
+                }
+            );
+        }
         if (
             [OPTIONS.defaultStatus.MARK_AS_COMPLETED, OPTIONS.defaultStatus.SKIP_INTEGRATION].includes(
                 existing.generateReport.checkoutStatus
             )
         ) {
-            createFGIN(existing._id, req.user);
+            await createFGIN(existing._id, req.user);
         }
         res.success({
             message: MESSAGES.apiSuccessStrings.ADDED("Job Card Entry")
@@ -270,6 +285,26 @@ exports.getAllMasterData = asyncHandler(async (req, res) => {
         // ]);
         const billFromLocationOptions = await getCompanyLocations(req.user.company);
         const shiftOptions = await getAllModuleMaster(req.user.company, "PRODUCTION_SHIFT");
+        const defectList = await filteredDefectListConfigList([
+            {
+                $match: {
+                    company: ObjectId(req.user.company),
+                    docType: DEFECT_TYPES.DEFECT
+                }
+            },
+            {
+                $sort: {
+                    SN: 1
+                }
+            },
+            {
+                $project: {
+                    SN: 1,
+                    defectName: 1,
+                    rejectionType: "$defectName"
+                }
+            }
+        ]);
         return res.success({
             autoIncrementNo,
             JCOptions,
@@ -280,7 +315,8 @@ exports.getAllMasterData = asyncHandler(async (req, res) => {
                     label: x,
                     value: x
                 };
-            })
+            }),
+            defectList
         });
     } catch (error) {
         console.error("getAllMasterData Job Card Entry", error);
@@ -596,6 +632,69 @@ exports.getById = asyncHandler(async (req, res) => {
         return res.success(existing);
     } catch (e) {
         console.error("getById Job Card Entry", e);
+        const errors = MESSAGES.apiErrorStrings.SERVER_ERROR;
+        return res.serverError(errors);
+    }
+});
+
+exports.getAllForRejection = asyncHandler(async (req, res) => {
+    try {
+        const {status = null} = req.query;
+        let project = getAllJobCardEntryRejectAttributes();
+        let pipeline = [
+            {
+                $addFields: {
+                    status: {
+                        $cond: [
+                            {$gt: ["$rejectedTotalQty", 0]},
+                            OPTIONS.defaultStatus.INACTIVE,
+                            OPTIONS.defaultStatus.ACTIVE
+                        ]
+                    }
+                }
+            },
+            {
+                $match: {
+                    company: ObjectId(req.user.company),
+                    ...(!!status && {status: status}),
+                    rejectStatus: {$nin: [OPTIONS.defaultStatus.ACCEPTED]},
+                    "generateReport.checkoutStatus": {
+                        $in: [OPTIONS.defaultStatus.MARK_AS_COMPLETED, OPTIONS.defaultStatus.SKIP_INTEGRATION]
+                    }
+                }
+            }
+        ];
+
+        let rows = await JobCardEntryRepository.getAllReportsPaginate({
+            pipeline,
+            project,
+            queryParams: req.query,
+            groupValues: [
+                {
+                    $group: {
+                        _id: null,
+                        totalEntry: {$sum: 1},
+                        rejectedEntry: {$sum: {$cond: [{$gt: ["$batchRejQty", 0]}, 1, 0]}}
+                    }
+                },
+                {
+                    $project: {
+                        totalEntry: {$round: ["$totalEntry", 2]},
+                        rejectedEntry: {$round: ["$rejectedEntry", 2]},
+                        _id: 0
+                    }
+                }
+            ]
+        });
+        return res.success({
+            ...rows,
+            statusOptions: [
+                {label: "Report by Status - Green", value: OPTIONS.defaultStatus.ACTIVE},
+                {label: "Report by Status - Red", value: OPTIONS.defaultStatus.INACTIVE}
+            ]
+        });
+    } catch (e) {
+        console.error("getAllForRejection", e);
         const errors = MESSAGES.apiErrorStrings.SERVER_ERROR;
         return res.serverError(errors);
     }

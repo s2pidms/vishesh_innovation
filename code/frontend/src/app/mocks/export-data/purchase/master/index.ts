@@ -11,3 +11,4 @@ export * from "./transporterMaster";
 export * from "./channelPartner";
 export * from "./jobWorkerMaster";
 export * from "./jobWorkerItemMaster";
+export * from "./jobWorkOrder";

@@ -13,6 +13,7 @@ import {IDSKUDetailsOfJC, IJobCardMasterData, ISKUDetailsOfJC} from "@mocks/mode
 import {BatchInfoModalComponent, JobCardMRPModalComponent} from "../components";
 import {JOB_CARD_FORM_ERRORS} from "@mocks/validations/planning";
 import {CancelPoComponent} from "@shared/modals";
+import {COMPANY_TYPE_PRINTING_INDUSTRY} from "@mocks/constant";
 
 @Component({
     selector: "app-job-card-form",
@@ -34,6 +35,7 @@ export class JobCardFormComponent implements OnInit {
     customerOptions: any = [];
     submitted = false;
     isPreview = false;
+    companyTypePrintingIndustry = COMPANY_TYPE_PRINTING_INDUSTRY;
     action: string = "create";
     statusArr: any = {
         create: "Awaiting Approval",
@@ -378,7 +380,6 @@ export class JobCardFormComponent implements OnInit {
             this.spinner.hide();
         });
     }
-
 
     preview() {
         this.search = "";

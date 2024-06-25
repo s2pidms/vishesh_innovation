@@ -46,6 +46,10 @@ const routes: Routes = [
                     import("./../../sales/reports/sales-register-wo-tax/sales-register-wo-tax.module").then(
                         m => m.SalesRegisterWOTaxModule
                     )
+            },
+            {
+                path: "MRN_details_report",
+                loadChildren: () => import("./mrn-details/mrn-details.module").then(m => m.MRNDetailsModule)
             }
         ]
     }

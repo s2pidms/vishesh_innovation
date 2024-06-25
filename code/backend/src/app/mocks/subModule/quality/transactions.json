@@ -82,5 +82,33 @@
         "url": "/default/quality/transactions/job_card_output/list",
         "items": [],
         "roles": []
+    },
+    {
+        "_id": "6676a269d8181344d929bfb6",
+        "menuItemId": "64a6c1e33339d4dc9d8141a9",
+        "module": "Quality",
+        "type": "TRANSACTION",
+        "order": 7,
+        "isDisplay": false,
+        "title": "Rejection Summary",
+        "displayName": "Rejection Summary",
+        "disabled": false,
+        "url": "/default/quality/transactions/rejection_summary/list",
+        "items": [],
+        "roles": []
+    },
+    {
+        "_id": "66790f3721b12675329a5b4a",
+        "menuItemId": "64a6c1e33339d4dc9d8141a9",
+        "module": "Quality",
+        "type": "TRANSACTION",
+        "order": 8,
+        "isDisplay": false,
+        "title": "Goods Transfer Request (Intra)",
+        "displayName": "Goods Transfer Request (Intra)",
+        "disabled": false,
+        "url": "/default/quality/transactions/goods_transfer_request/list",
+        "items": [],
+        "roles": []
     }
 ]

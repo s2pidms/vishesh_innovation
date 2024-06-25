@@ -1,0 +1,99 @@
+<div class="modelPage">
+    <div class="modal-header">
+        <div class="heading">Remarks</div>
+        <div>
+            <button type="button" class="btn btn-cross btn-sm" aria-label="Close" (click)="this.activeModal.close()">
+                <i class="fa fa-times-circle" aria-hidden="true"></i>
+            </button>
+        </div>
+    </div>
+    <div class="container-fluid mt-4 px-0">
+        <div class="row mx-4 px-3">
+            <div class="col-3 pe-0">
+                <div class="row">
+                    <div class="col pe-4"><label class="form-label">Defects</label></div>
+                </div>
+            </div>
+            <div class="col-7 pe-1 ps-1">
+                <label class="form-label" type="text">
+                    Remarks/Observation/Analysis <span class="text-primary span"></span>
+                </label>
+            </div>
+            <div class="col-2 ps-0"><label class="form-label" type="text">Remarks by</label></div>
+        </div>
+        <div *ngFor="let item of rejectRemarks; let i = index" class="row mx-4 px-3 mb-2">
+            <div class="col-3 pe-0">
+                <input
+                    class="form-control"
+                    type="text"
+                    [(ngModel)]="item.defect"
+                    [disabled]="['view'].includes(action)"
+                />
+            </div>
+            <div class="col-7 pe-1 ps-1">
+                <input
+                    class="form-control"
+                    type="text"
+                    [(ngModel)]="item.remarks"
+                    [disabled]="['view'].includes(action)"
+                />
+            </div>
+            <div class="col-2 ps-0">
+                <input
+                    class="form-control"
+                    type="text"
+                    [(ngModel)]="item.remarksBy"
+                    [disabled]="['view'].includes(action)"
+                />
+            </div>
+        </div>
+
+        <div class="row mt-4 mb-2 px-5 mx-1">
+            <div class="col-12 set-image px-0 seperate-row">
+                <div class="minus-icon">
+                    <img
+                        data-tip
+                        data-for="infoTip"
+                        (click)="deleteTableRow()"
+                        class="pointer"
+                        src="./assets/new_icons/delete_row.svg"
+                        width="14"
+                        alt=""
+                    />
+                </div>
+                <hr class="line-border" />
+                <!-- <img class="" src="./assets/new_icons/separator_row.svg" alt="" /> -->
+
+                <div class="add-icon">
+                    <img
+                        data-tip
+                        data-for="infoTip"
+                        (click)="addTableRow()"
+                        class="pointer"
+                        src="./assets/new_icons/add_row.svg"
+                        width="14"
+                        alt=""
+                    />
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col mt-1">
+                <hr class="line-border" />
+            </div>
+        </div>
+
+        <div class="row mb-4 mt-2 mx-4 px-3">
+            <div class="cold-flex justify-content-center text-center">
+                <button
+                    [disabled]="['view'].includes(action)"
+                    type="button"
+                    class="btn btn-primary px-4"
+                    (click)="dismissModel()"
+                >
+                    Save & Close
+                </button>
+            </div>
+        </div>
+    </div>
+</div>

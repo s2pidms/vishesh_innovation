@@ -9,6 +9,7 @@ import {JobCardDispModalComponent} from "../job-card-disp-modal/job-card-disp-mo
 import {ActivatedRoute, Router} from "@angular/router";
 import {ViewSkuDimensionComponent} from "../view-sku-dimension/view-sku-dimension.component";
 import {JobCardCreationService} from "@services/planning";
+import {COMPANY_TYPE_PRINTING_INDUSTRY} from "@mocks/constant";
 
 @Component({
     selector: "app-job-card-sku-details-table",
@@ -33,6 +34,7 @@ export class JobCardSOAndFCTableComponent implements OnInit {
     @Input() orderType: any = null;
     @Input() collection: any = 0;
     @Input() SKUDetailsOfJC: ISKUDetailsOfJC[] = [];
+    @Input() companyType: string = "";
 
     btnDisable = false;
     page: number = 1;
@@ -44,6 +46,7 @@ export class JobCardSOAndFCTableComponent implements OnInit {
     dimensionsDetails: any = {};
     SODetailsArray: any = [];
     selectDSKU: any = null;
+    companyTypePrintingIndustry = COMPANY_TYPE_PRINTING_INDUSTRY;
     @Output() saveData = new EventEmitter<any>();
     @Input() customerContactInfoArray: ContactMatrix[] = [];
     constructor(

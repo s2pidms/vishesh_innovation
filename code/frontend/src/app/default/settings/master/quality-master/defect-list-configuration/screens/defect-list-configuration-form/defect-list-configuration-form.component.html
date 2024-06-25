@@ -1,0 +1,218 @@
+<div class="formCard card">
+    <div class="set-remaining-margin">
+        <div class="row form-header">
+            <div class="col heading">
+                <label>{{ type }} List Configuration </label>
+            </div>
+        </div>
+        <div class="form-body pt-0">
+            <div class="row mb-0">
+                <div class="col-4 border border-start-1 pt-4 pe-5">
+                    <div class="row pe-4 mt-4">
+                        <div class="col-12 pe-0">
+                            <select class="form-select" [(ngModel)]="usePresetsAndNewCreate">
+                                <option [value]="'Use Presets'">Use Presets</option>
+                                <option [value]="'Create New'">Create New</option>
+                            </select>
+                        </div>
+                    </div>
+                    <form class="mt-5" (submit)="addDescription()">
+                        <div class="row pe-4 mt-4">
+                            <div class="col-11 pe-0">
+                                <input
+                                    class="form-control"
+                                    type="text"
+                                    placeholder="Add description to list"
+                                    [(ngModel)]="description"
+                                    [ngModelOptions]="{standalone: true}"
+                                />
+                            </div>
+                            <div class="col-1 d-flex align-items-end ps-0">
+                                <button class="plusIconSvg btn btn-primary" type="submit"></button>
+                            </div>
+                        </div>
+                    </form>
+                    <div class="row mt-5">
+                        <div class="d-flex align-items-center pe-4">
+                            <div class="text-nowrap">
+                                <span style="font-size: 1.3rem" class="text-black">Total number of rows in a list</span>
+                                <!-- <i class="fa fa-caret-right fs-3 mx-2"></i> -->
+                                <span class="text-secondary mx-2">&#9654;</span>
+                            </div>
+                            <input
+                                type="number"
+                                class="form-control bg-white-smoke"
+                                [(ngModel)]="totalNoOfRows"
+                                [disabled]="action == 'view'"
+                                readonly
+                            />
+                        </div>
+                    </div>
+
+                    <div class="row d-flex justify-content-center mt-5">
+                        <div class="col-12">
+                            <button type="button" class="btn btn-primary px-5" (click)="reset()">Reset</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-8 border border-start-1">
+                    <div class="row px-5 mt-4">
+                        <div class="row justify-content-between">
+                            <div class="col-4"></div>
+                            <div class="col-4 d-flex justify-content-center">
+                                <ngb-pagination
+                                    *ngIf="defectListDetails.length > 0"
+                                    [collectionSize]="defectListDetails.length"
+                                    [(page)]="page"
+                                    [pageSize]="pageSize"
+                                    [boundaryLinks]="false"
+                                >
+                                    <ng-template ngbPaginationPrevious>
+                                        <img src="./assets/new_icons/pagination_prev.svg" width="20rem" />
+                                    </ng-template>
+                                    <ng-template ngbPaginationNext>
+                                        <img src="./assets/new_icons/pagination_next.svg" width="20rem" />
+                                    </ng-template>
+                                    <ng-template ngbPaginationPages let-page let-pages="pages">
+                                        <li class="ngb-custom-pages-item align-self-center" *ngIf="pages.length > 0">
+                                            <span class="page-label me-2 ms-1">
+                                                Page {{ page }} of {{ pages[pages.length - 1] }}
+                                            </span>
+                                        </li>
+                                    </ng-template>
+                                </ngb-pagination>
+                            </div>
+                            <div class="col-4"></div>
+                        </div>
+                        <div style="min-height: 30rem" class="table-responsive">
+                            <table class="table table-bordered table-sticky mb-0">
+                                <thead class="bg-primary">
+                                    <tr class="text-white">
+                                        <th>SN</th>
+                                        <th class="text-start">{{ type }} Name</th>
+                                        <!-- <th>Select</th> -->
+                                        <th>Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr
+                                        *ngFor="
+                                            let u of defectListDetails
+                                                | searchFi1ter : search
+                                                | slice : (page - 1) * pageSize : (page - 1) * pageSize + pageSize;
+                                            trackBy: trackByFn;
+                                            let i = index
+                                        "
+                                    >
+                                        <td>{{ i + 1 + (page - 1) * pageSize }}</td>
+
+                                        <td class="text-start">{{ u?.defectName }}</td>
+
+                                        <!-- <td> 
+                                            <input
+                                                class="form-check-input pointer"
+                                                type="radio"
+                                                name="formValue{{ defectListDetails[i] }}"
+                                                [checked]="u.isChecked"
+                                                (change)="changeDefectName(u, i + (page - 1) * pageSize)"
+                                            />
+                                        </td> -->
+                                        <!-- <td>
+                                            <div class="d-flex justify-content-center">
+                                                <a
+                                                    [class.disable]="this.action == 'view'"
+                                                    href="javascript:void(0)"
+                                                    (click)="deleteItem(u.SN)"
+                                                >
+                                                    <i class="fa fa-trash ms-3 text-primary" aria-hidden="true"></i>
+                                                </a>
+                                            </div> 
+                                        </td> -->
+                                        <td>
+                                            <div class="dropdown">
+                                                <button class="dropbtn"></button>
+                                                <div class="dropdown-content">
+                                                    <a href="javascript:void(0)" (click)="setRename(u)">
+                                                        <div class="d-flex">
+                                                            <div class="rename-btn set-action me-3 pointer"></div>
+                                                            Rename
+                                                        </div>
+                                                    </a>
+                                                    <a
+                                                        href="javascript:void(0)"
+                                                        (click)="moveUp(i + (page - 1) * pageSize)"
+                                                        [class.disable]="i == 0"
+                                                    >
+                                                        <div class="d-flex">
+                                                            <div class="move-up-btn set-action me-3 pointer"></div>
+                                                            Move Up
+                                                        </div>
+                                                    </a>
+                                                    <a
+                                                        href="javascript:void(0)"
+                                                        (click)="moveDown(i + (page - 1) * pageSize)"
+                                                        [class.disable]="
+                                                            i + (page - 1) * pageSize >=
+                                                            this.defectListDetails.length - 1
+                                                        "
+                                                    >
+                                                        <div class="d-flex">
+                                                            <div class="move-down-btn set-action me-3 pointer"></div>
+                                                            Move Down
+                                                        </div>
+                                                    </a>
+                                                    <a href="javascript:void(0)" (click)="deleteItem(u.SN)">
+                                                        <div class="d-flex">
+                                                            <div class="delete-btn set-action me-3 pointer"></div>
+                                                            Delete
+                                                        </div>
+                                                    </a>
+                                                    <!-- <a href="javascript:void(0)">
+                                                        <i
+                                                            class="fa fa-pencil-square-o fa-lg me-2 text-primary"
+                                                            aria-hidden="true"
+                                                        ></i>
+                                                        Edit
+                                                    </a> -->
+                                                </div>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <!-- <div class="row d-flex justify-content-center mb-3">
+                        <div class="col-12 d-flex justify-content-center">
+                            <button type="button" class="btn btn-primary px-4 me-3" (click)="setRename()">
+                                Rename
+                            </button>
+                            <button
+                                [disabled]="moveUpDisable"
+                                type="button"
+                                class="btn btn-primary me-3"
+                                (click)="moveUp()"
+                            >
+                                Move Up
+                            </button>
+                            <button
+                                [disabled]="moveDownDisable"
+                                type="button"
+                                class="btn btn-primary"
+                                (click)="moveDown()"
+                            >
+                                Move Down
+                            </button>
+                        </div> 
+                    </div> -->
+                    <hr class="row line-border" />
+                    <div class="row d-flex justify-content-center">
+                        <div class="col-12 d-flex justify-content-center">
+                            <button type="button" class="btn btn-primary px-5" (click)="submit()">Save</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

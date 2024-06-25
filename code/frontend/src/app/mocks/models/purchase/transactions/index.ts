@@ -15,3 +15,4 @@ export * from "./purchaseIndentMasterData";
 export * from "./jobWorkChallanMasterData";
 export * from "./jobWorkChallan";
 export * from "./jobWorkOrderInterface";
+export * from "./jobWorkOrder";

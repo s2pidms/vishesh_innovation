@@ -11,6 +11,7 @@ export class MouldInfoModalComponent implements OnInit {
     @ViewChildren(NgbdSortableHeader) headers: QueryList<NgbdSortableHeader> | any;
     @Input() action: string = "print";
     @Input() mouldInfo: any = [];
+    @Input() ESCPreviewArr: any = [];
     selectedMRNDetails: any = {};
     isPreview = false;
     btnDisable = false;
@@ -21,7 +22,6 @@ export class MouldInfoModalComponent implements OnInit {
     column: string = "createdAt";
     direction: number = -1;
     menuTitleData: any = {};
-    ESCPreviewArr: any = [];
     oldMouldInfo: any = [];
     isESCPreview = false;
     constructor(public activeModal: NgbActiveModal, private toastService: ToastService) {}
@@ -29,6 +29,14 @@ export class MouldInfoModalComponent implements OnInit {
     ngOnInit(): void {
         this.collection = this.mouldInfo.length;
         this.oldMouldInfo = structuredClone(this.mouldInfo);
+
+        this.isESCPreview = true;
+        if (this.action != "create") {
+            // this.isConditionPreview = true;
+            this.isPreview = true;
+        } else {
+            this.ESCPreviewArr = structuredClone(this.mouldInfo);
+        }
     }
 
     reset() {

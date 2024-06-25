@@ -23,7 +23,7 @@ export class SalesProductMasterFormComponent implements OnInit {
     submitted = false;
     action: string = "create";
     productSourceOfMFGObj: any = PRODUCT_MASTER_SOURCE_OF_MFG;
-
+    ESCPreviewArr: any = [];
     masterData: ISalesProductMasterData = {
         // autoIncrementNo: "",
         productCategories: [],
@@ -145,7 +145,21 @@ export class SalesProductMasterFormComponent implements OnInit {
                         return;
                     }
                     success.status = success.status;
-                    this.masterData.mouldList = success.mouldInfo;
+                    // this.masterData.mouldList = success.mouldInfo;
+
+                    if (success.mouldInfo.length == 0) {
+                        this.ESCPreviewArr = this.masterData.mouldList;
+                    } else {
+                        success.mouldInfo = success.mouldInfo;
+                        let assetDetails = this.masterData?.mouldList;
+                        this.masterData.mouldList = success.mouldInfo;
+
+                        for (const ele of success.mouldInfo) {
+                            assetDetails = assetDetails.filter((x: any) => x.mouldNo != ele.mouldNo);
+                            this.ESCPreviewArr = [...success.mouldInfo, ...assetDetails];
+                        }
+                    }
+
                     this.form.patchValue(success);
                     this.form.controls["productCategory"].disable();
                     if (this.action != "edit") {
@@ -182,6 +196,7 @@ export class SalesProductMasterFormComponent implements OnInit {
         });
         modalRef.componentInstance.action = this.action;
         modalRef.componentInstance.mouldInfo = this.masterData?.mouldList;
+        modalRef.componentInstance.ESCPreviewArr = this.ESCPreviewArr;
         // modalRef.componentInstance.productCategory = this.form.controls["productCategory"].value;
         modalRef.result.then(
             (success: any) => {

@@ -15,6 +15,10 @@ const JobWorkOrderRepository = {
     getAllPaginate: async ({pipeline, project, queryParams}) => {
         return await Model.paginate({pipeline, project, queryParams});
     },
+    getAllReportsPaginate: async reportAggregateObj => {
+        const rows = await Model.reportPaginate(reportAggregateObj);
+        return rows;
+    },
     updateDoc: async (existing, updateBody) => {
         Object.assign(existing, updateBody);
         return existing.save();

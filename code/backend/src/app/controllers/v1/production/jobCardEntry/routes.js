@@ -7,7 +7,8 @@ const {
     getAllMasterData,
     getProcessFromDirectCostBySKUId,
     getJCEntryDataByJobCardId,
-    getById
+    getById,
+    getAllForRejection
 } = require("./jobCardEntry");
 
 app.post("/createOrUpdate", createOrUpdate);
@@ -16,5 +17,6 @@ app.get("/getById/:id", validate("checkParamId"), getById);
 app.get("/getAllMasterData", getAllMasterData);
 app.get("/getProcessFromDirectCostBySKUId", getProcessFromDirectCostBySKUId);
 app.get("/getJCEntryDataByJobCardId", getJCEntryDataByJobCardId);
+app.get("/getAllForRejection", getAllForRejection);
 
 module.exports = app;

@@ -35,7 +35,7 @@ exports.getAll = asyncHandler(async (req, res) => {
             {
                 $match: {
                     company: ObjectId(req.user.company),
-                    status: {$nin: [OPTIONS.defaultStatus.REPORT_GENERATED]},
+                    status: {$nin: [OPTIONS.defaultStatus.REPORT_GENERATED, OPTIONS.defaultStatus.CLOSED]},
                     ...(!!orderType && {orderType: orderType})
                     // $or: [
                     //     {status: {$ne: OPTIONS.defaultStatus.REPORT_GENERATED}},

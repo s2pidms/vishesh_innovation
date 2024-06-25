@@ -326,6 +326,10 @@ export class QuotationOfSkuFormComponent implements OnInit {
             (reason: any) => {}
         );
     }
+    setLineValue(item: any) {
+        item.lineValue = +(item.MOQ * +item.QPrice + +item.developmentCost).toFixed(2);
+        return item;
+    }
     openTermsAndCondModal() {
         const modalRef = this.modalService.open(QuotationTermsAndCondComponent, {
             centered: true,

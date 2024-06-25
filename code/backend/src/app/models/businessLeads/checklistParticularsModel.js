@@ -1,12 +1,39 @@
 const mongoose = require("mongoose");
 const Audit = require("../../controllers/v1/settings/audit/audit");
 const {CHECKLIST_PARTICULARS: SCHEMA_CONST} = require("../../mocks/schemasConstant/businessLeadsConstant");
-const {SCHEMA} = require("./schemas/checklistParticularsSchema");
 const {paginatePlugin} = require("../plugins/paginatePlugin");
-const checklistParticularsSchema = mongoose.Schema(SCHEMA, {
-    timestamps: true,
-    collection: SCHEMA_CONST.COLLECTION_NAME
-});
+const {OPTIONS} = require("../../helpers/global.options");
+const checklistParticularsSchema = mongoose.Schema(
+    {
+        company: {
+            type: mongoose.Schema.Types.ObjectId,
+            required: false,
+            ref: "Company"
+        },
+        order: {
+            type: Number,
+            set: value => {
+                if (![undefined, null, "NaN"].includes(value) && typeof +value == "number") {
+                    return parseFloat(value).toFixed(2);
+                }
+            },
+            required: false
+        },
+        name: {
+            type: String,
+            required: false
+        },
+        status: {
+            type: String,
+            required: false,
+            default: OPTIONS.defaultStatus.ACTIVE
+        }
+    },
+    {
+        timestamps: true,
+        collection: SCHEMA_CONST.COLLECTION_NAME
+    }
+);
 
 checklistParticularsSchema.pre("save", async function (next) {
     const {isNew, isModified} = this;

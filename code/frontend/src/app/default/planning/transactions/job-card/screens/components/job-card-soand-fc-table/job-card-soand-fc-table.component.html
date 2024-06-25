@@ -43,7 +43,7 @@
                     {{ "SKU Description" | labelTranslate }}
                 </th>
                 <!-- *ngIf="['All', 'SO'].includes(orderType)" -->
-                <th>View Dim</th>
+                <th *ngIf="companyType == companyTypePrintingIndustry">View Dim</th>
                 <th>DWG</th>
                 <th sortable="UOM" (sort)="onSort($event)">UoM</th>
                 <th sortable="balQty" (sort)="onSort($event)">
@@ -96,7 +96,7 @@
                         {{ u?.SKUDescription }}
                     </span>
                 </td>
-                <td>
+                <td *ngIf="companyType == companyTypePrintingIndustry">
                     <i
                         (click)="getSKUDimensionData(u)"
                         class="fa fa-eye fa-lg me-2 text-primary pointer"

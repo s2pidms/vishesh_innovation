@@ -10,6 +10,7 @@ import {ActivatedRoute, Router} from "@angular/router";
 import {JOB_WORKER_MASTER_PDF_DATA, JOB_WORKER_MASTER_REPORT_DATA} from "@mocks/export-data/purchase/master";
 import {IJobWorkerMaster} from "@mocks/models/purchase/masters/jobWorkerMaster";
 import {JobWorkOrderService} from "@services/purchase/jobWorkOrder.service";
+import { JOB_WORK_ORDER_MASTER_PDF_DATA, JOB_WORK_ORDER_REPORT_DATA } from "@mocks/export-data/purchase/master/jobWorkOrder";
 
 @Component({
     selector: "app-job-work-order-list",
@@ -21,10 +22,11 @@ export class JobWorkOrderListComponent implements OnInit, OnDestroy {
     page: number = 1;
     pageSize: number = 8;
     collection: number = 0;
-    column: string = "jobWorkerCode";
+    column: string = "WONo";
     direction: number = -1;
     search: string = "";
     tableData: any = [];
+    // tableData: IJobWorkOrder[] = [];
     tableDataObject: any = {};
     superAdminId: any = superAdminId;
     user: any = "";
@@ -48,8 +50,35 @@ export class JobWorkOrderListComponent implements OnInit, OnDestroy {
         this.getAll();
     }
 
-    navigateTo(path: string, id: any, action: string) {
-        this.router.navigate([path], {relativeTo: this.activatedRoute, queryParams: {id, action}});
+    navigateTo(path: string, u: any, action: string) {
+        if (
+            (u.status == "Awaiting Approval" && action == "view") ||
+            (u.status == "Awaiting Approval" && action == "edit") ||
+            (u.status == "Awaiting Approval" && action == "approve") ||
+            (u.status == "Awaiting Approval" && action == "reject") ||
+            (u.status == "Approved" && action == "view") ||
+            (u.status == "Approved" && action == "generate") ||
+            (u.status == "Rejected" && action == "view") ||
+            action == "create"
+        ) {
+            this.router.navigate([path], {
+                relativeTo: this.activatedRoute,
+                queryParams: {id: u?._id, action}
+            });
+            return;
+        } else {
+            return null;
+        }
+
+        // this.router.navigate([path], {
+        //     relativeTo: this.activatedRoute,
+        //     queryParams: {id: u?._id, action}
+        // });
+        // return;
+    }
+
+    navigateToPrint(path: string, u: any, action: string, preview: string) {
+        window.open(`${window.location.origin}${path}?id=${u?._id}&action=${action}&preview=${preview}`, "_blank");
     }
 
     open(u: any) {
@@ -98,28 +127,39 @@ export class JobWorkOrderListComponent implements OnInit, OnDestroy {
         }
     }
     getAll(excel = false, flag = "") {
-        // this.spinner.show();
-        // let payload = {
-        //     page: this.page,
-        //     pageSize: this.pageSize,
-        //     search: this.search,
-        //     column: this.column,
-        //     direction: this.direction,
-        //     excel: excel
-        // };
-        // if (this.subscription) this.subscription.unsubscribe();
-        // this.subscription = this.jobWorkOrderService.getAll(payload).subscribe(success => {
-        //     if (flag == "EXCEL") {
-        //         this.excelDownload(success.rows);
-        //     } else if (flag == "PDF") {
-        //         this.pdfDownload(success.rows);
-        //     } else {
-        //         this.tableData = success.rows;
-        //         this.tableDataObject = JSON.stringify(Object.assign({}, success.rows));
-        //         this.collection = success.count;
-        //     }
-        //     this.spinner.hide();
-        // });
+        this.spinner.show();
+        let payload = {
+            page: this.page,
+            pageSize: this.pageSize,
+            search: this.search,
+            column: this.column,
+            direction: this.direction,
+            excel: excel
+        };
+        if (this.subscription) this.subscription.unsubscribe();
+        this.subscription = this.jobWorkOrderService.getAll(payload).subscribe(success => {
+            if (flag == "EXCEL") {
+                this.excelDownload(success.rows);
+            } else if (flag == "PDF") {
+                this.pdfDownload(success.rows);
+            } else {
+                this.tableData = success.rows;
+                this.tableDataObject = JSON.stringify(Object.assign({}, success.rows));
+                this.collection = success.count;
+            }
+            this.spinner.hide();
+        });
+    }
+
+    update(u: any, action: string) {
+        if (u?.status === "Approved") {
+            this.spinner.show();
+            this.jobWorkOrderService.update(u._id, {status: action}).subscribe(success => {
+                this.toastService.success(success.message);
+                this.getAll();
+                this.spinner.hide();
+            });
+        }
     }
     delete(id: any) {
         this.spinner.show();
@@ -154,11 +194,11 @@ export class JobWorkOrderListComponent implements OnInit, OnDestroy {
     }
 
     excelDownload(data: any) {
-        this.exportExcelService.exportExcel(JOB_WORKER_MASTER_REPORT_DATA(data));
+        this.exportExcelService.exportExcel(JOB_WORK_ORDER_REPORT_DATA(data));
     }
 
     pdfDownload(data: any) {
-        let output = JOB_WORKER_MASTER_PDF_DATA(data);
+        let output = JOB_WORK_ORDER_MASTER_PDF_DATA(data);
         this.exportToPDFService.generatePdf(output.tableData, output.title);
     }
 

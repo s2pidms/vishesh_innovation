@@ -305,25 +305,24 @@ exports.update = asyncHandler(async (req, res) => {
         if (req.body.accountsDetails) {
             req.body.accountsDetails = JSON.parse(req.body.accountsDetails);
         }
-        itemDetails = await CompanyRepository.updateDoc(itemDetails, req.body);
         if (req.files) {
             if (req.files.companyPdfHeaderFile && req.files.companyPdfHeaderFile.length > 0) {
                 if (itemDetails.companyPdfHeader) {
                     removeFile(`${req.files.companyPdfHeaderFile[0].destination}/${itemDetails.companyPdfHeader}`);
                 }
-                itemDetails.companyPdfHeader = req.files.companyPdfHeaderFile[0].filename;
+                req.body.companyPdfHeader = req.files.companyPdfHeaderFile[0].filename;
             }
             if (req.files.LUTDocumentFile && req.files.LUTDocumentFile.length > 0) {
                 if (itemDetails.exportsDetails.LUTDocument) {
                     removeFile(`${req.files.LUTDocumentFile[0].destination}/${itemDetails.exportsDetails.LUTDocument}`);
                 }
-                itemDetails.exportsDetails.LUTDocument = req.files.LUTDocumentFile[0].filename;
+                req.body.exportsDetails.LUTDocument = req.files.LUTDocumentFile[0].filename;
             }
             if (req.files.SOPdfHeaderFile && req.files.SOPdfHeaderFile.length > 0) {
                 if (itemDetails.SOPdfHeader) {
                     removeFile(`${req.files.SOPdfHeaderFile[0].destination}/${itemDetails.SOPdfHeader}`);
                 }
-                itemDetails.SOPdfHeader = req.files.SOPdfHeaderFile[0].filename;
+                req.body.SOPdfHeader = req.files.SOPdfHeaderFile[0].filename;
             }
             if (req.files.registerOfficePOHeaderFile && req.files.registerOfficePOHeaderFile.length > 0) {
                 if (itemDetails.registerOfficePOHeader) {
@@ -331,7 +330,7 @@ exports.update = asyncHandler(async (req, res) => {
                         `${req.files.registerOfficePOHeaderFile[0].destination}/${itemDetails.registerOfficePOHeader}`
                     );
                 }
-                itemDetails.registerOfficePOHeader = req.files.registerOfficePOHeaderFile[0].filename;
+                req.body.registerOfficePOHeader = req.files.registerOfficePOHeaderFile[0].filename;
             }
             if (req.files.registerOfficeSOHeaderFile && req.files.registerOfficeSOHeaderFile.length > 0) {
                 if (itemDetails.registerOfficeSOHeader) {
@@ -339,51 +338,53 @@ exports.update = asyncHandler(async (req, res) => {
                         `${req.files.registerOfficeSOHeaderFile[0].destination}/${itemDetails.registerOfficeSOHeader}`
                     );
                 }
-                itemDetails.registerOfficeSOHeader = req.files.registerOfficeSOHeaderFile[0].filename;
+                req.body.registerOfficeSOHeader = req.files.registerOfficeSOHeaderFile[0].filename;
             }
             if (req.files.factoryPOHeaderFile && req.files.factoryPOHeaderFile.length > 0) {
                 if (itemDetails.factoryPOHeader) {
                     removeFile(`${req.files.factoryPOHeaderFile[0].destination}/${itemDetails.factoryPOHeader}`);
                 }
-                itemDetails.factoryPOHeader = req.files.factoryPOHeaderFile[0].filename;
+                req.body.factoryPOHeader = req.files.factoryPOHeaderFile[0].filename;
             }
             if (req.files.factorySOHeaderFile && req.files.factorySOHeaderFile.length > 0) {
                 if (itemDetails.factorySOHeader) {
                     removeFile(`${req.files.factorySOHeaderFile[0].destination}/${itemDetails.factorySOHeader}`);
                 }
-                itemDetails.factorySOHeader = req.files.factorySOHeaderFile[0].filename;
+                req.body.factorySOHeader = req.files.factorySOHeaderFile[0].filename;
             }
             if (req.files.companySignatureFile && req.files.companySignatureFile.length > 0) {
                 if (itemDetails.companySignature) {
                     removeFile(`${req.files.companySignatureFile[0].destination}/${itemDetails.companySignature}`);
                 }
-                itemDetails.companySignature = req.files.companySignatureFile[0].filename;
+                req.body.companySignature = req.files.companySignatureFile[0].filename;
             }
             if (req.files.SOSignatureFile && req.files.SOSignatureFile.length > 0) {
                 if (itemDetails.SOSignature) {
                     removeFile(`${req.files.SOSignatureFile[0].destination}/${itemDetails.SOSignature}`);
                 }
-                itemDetails.SOSignature = req.files.SOSignatureFile[0].filename;
+                req.body.SOSignature = req.files.SOSignatureFile[0].filename;
             }
             if (req.files.logoFile && req.files.logoFile.length > 0) {
                 if (itemDetails.logo) {
                     removeFile(`${req.files.logoFile[0].destination}/${itemDetails.logo}`);
                 }
-                itemDetails.logo = req.files.logoFile[0].filename;
+                req.body.logo = req.files.logoFile[0].filename;
             }
             if (req.files.landingPageHeaderFile && req.files.landingPageHeaderFile.length > 0) {
                 if (itemDetails.landingPageHeader) {
                     removeFile(`${req.files.landingPageHeaderFile[0].destination}/${itemDetails.landingPageHeader}`);
                 }
-                itemDetails.landingPageHeader = req.files.landingPageHeaderFile[0].filename;
+                req.body.landingPageHeader = req.files.landingPageHeaderFile[0].filename;
             }
             if (req.files.welcomeInfoFile && req.files.welcomeInfoFile.length > 0) {
                 if (itemDetails.welcomeInfo) {
                     removeFile(`${req.files.welcomeInfoFile[0].destination}/${itemDetails.welcomeInfo}`);
                 }
-                itemDetails.welcomeInfo = req.files.welcomeInfoFile[0].filename;
+                req.body.welcomeInfo = req.files.welcomeInfoFile[0].filename;
             }
         }
+        itemDetails = await CompanyRepository.updateDoc(itemDetails, req.body);
+
         return res.success({
             message: MESSAGES.apiSuccessStrings.UPDATE("Company has been")
         });

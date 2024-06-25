@@ -5,7 +5,7 @@
 
     <div appAccessControl [accessType]="rolePermissionActions.createAction" class="text-center">
         <button class="plusIconSvg btn btn-primary me-1"></button>
-        <button class="btn btn-primary btn-add" type="button" (click)="navigateTo('../form', null, 'create')">
+        <button class="btn btn-primary btn-add" type="button" (click)="navigateTo('../form', {}, 'create')">
             Job Work Order
         </button>
     </div>
@@ -18,34 +18,27 @@
         <table class="table table-bordered">
             <thead class="bg-primary">
                 <tr class="text-white">
-                    <th sortable="jobWorkerCode" (sort)="onSort($event)">JW Code</th>
-                    <th class="text-start" sortable="jobWorkerName" (sort)="onSort($event)">Job Work Name</th>
-                    <th sortable="country" (sort)="onSort($event)">Country</th>
-                    <th sortable="state" (sort)="onSort($event)">State/Province</th>
-                    <th sortable="GSTINNo" (sort)="onSort($event)">GSTIN</th>
-                    <th sortable="currency" (sort)="onSort($event)">Currency</th>
+                    <th sortable="WONo" (sort)="onSort($event)">WO No.</th>
+                    <th sortable="WODate" (sort)="onSort($event)">WO Date</th>
+                    <th class="text-start" sortable="jobWorkerName" (sort)="onSort($event)">Job Worker Name</th>
+                    <th sortable="orderReference" (sort)="onSort($event)">Order Reference</th>
+                    <th sortable="placeOfSupply" (sort)="onSort($event)">Place Of Supply</th>
                     <th sortable="status" (sort)="onSort($event)">Status</th>
                     <th>Action</th>
                 </tr>
             </thead>
             <tbody>
                 <tr *ngFor="let u of tableData; trackBy: trackByFn; let i = index">
-                    <td>{{ u?.jobWorkerCode }}</td>
+                    <td>{{ u?.WONo }}</td>
+                    <td>{{ u?.WODate }}</td>
                     <td class="text-start" [style.width]="jobWorkerName.clientWidth" #jobWorkerName>
                         <span class="pointer" [positionTarget]="jobWorkerName" [ngbTooltip]="u.jobWorkerName">
                             {{ u.jobWorkerName }}
                         </span>
                     </td>
-                    <td>{{ u?.country }}</td>
-                    <td>{{ u?.state }}</td>
-                    <td>{{ u?.GSTINNo }}</td>
-                    <td>{{ u?.currency }}</td>
-                    <td>
-                        <span class="d-flex justify-content-center">
-                            <div *ngIf="u.status == 'Active'" class="statusActive"></div>
-                            <div *ngIf="u.status == 'Inactive'" class="statusInActive"></div>
-                        </span>
-                    </td>
+                    <td>{{ u?.orderReference }}</td>
+                    <td>{{ u?.placeOfSupply }}</td>
+                    <td>{{ u?.status }}</td>
                     <td>
                         <div class="dropdown">
                             <button class="dropbtn"></button>
@@ -54,27 +47,60 @@
                                     appAccessControl
                                     [accessType]="rolePermissionActions.viewAction"
                                     href="javascript:void(0)"
-                                    (click)="navigateTo('../form', u?._id, 'view')"
+                                    (click)="navigateTo('../form', u, 'view')"
                                 >
-                                    <i class="fa fa-eye fa-lg me-2 text-primary" aria-hidden="true"></i>
+                                    <i class="fa fa-eye fa-lg text-primary" aria-hidden="true"></i>
                                     View
                                 </a>
                                 <a
                                     appAccessControl
                                     [accessType]="rolePermissionActions.editAction"
                                     href="javascript:void(0)"
-                                    (click)="navigateTo('../form', u?._id, 'edit')"
+                                    [class.disable]="u?.status === 'Approved' || u?.status === 'Rejected'"
+                                    (click)="navigateTo('../form', u, 'edit')"
                                 >
                                     <i class="fa fa-pencil-square-o fa-lg me-2 text-primary" aria-hidden="true"></i>
                                     Edit
                                 </a>
                                 <a
-                                    *ngIf="this.user == superAdminId"
+                                    appAccessControl
+                                    [accessType]="rolePermissionActions.approveAction"
                                     href="javascript:void(0)"
-                                    (click)="openConfirmModal(u?._id, u?.jobWorkerCode)"
+                                    [class.disable]="u?.status === 'Approved' || u?.status === 'Rejected'"
+                                    (click)="navigateTo('../form', u, 'approve')"
                                 >
-                                    <i class="fa fa-trash text-primary" aria-hidden="true"></i>
-                                    Delete
+                                    <i class="fa fa-check fa-lg text-success" aria-hidden="true"></i>
+                                    Approve
+                                </a>
+                                <a
+                                    appAccessControl
+                                    [accessType]="rolePermissionActions.approveAction"
+                                    href="javascript:void(0)"
+                                    [class.disable]="u?.status === 'Approved' || u?.status === 'Rejected'"
+                                    (click)="navigateTo('../form', u, 'reject')"
+                                >
+                                    <i class="fa fa-close fa-lg text-primary" aria-hidden="true"></i>
+                                    Reject
+                                </a>
+                                <a
+                                    appAccessControl
+                                    [accessType]="rolePermissionActions.generateReportAction"
+                                    href="javascript:void(0)"
+                                    [class.disable]="u?.status === 'Awaiting Approval' || u?.status === 'Rejected'"
+                                    (click)="update(u, 'Report Generated')"
+                                >
+                                    <img src="./assets/images/new.svg" width="14" class="me-3" />
+
+                                    Generate Report
+                                </a>
+                                <a
+                                    appAccessControl
+                                    [accessType]="rolePermissionActions.createAction"
+                                    href="javascript:void(0)"
+                                    (click)="navigateToPrint('/#/print/job_work_order_print', u, 'print', 'previewDraft')"
+                                >
+                                    <i class="fa fa-print fa-lg me-3 text-primary" aria-hidden="true"></i>
+                                    Preview WO
                                 </a>
                             </div>
                         </div>

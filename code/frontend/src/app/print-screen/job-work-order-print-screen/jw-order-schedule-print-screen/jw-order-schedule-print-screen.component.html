@@ -1,0 +1,74 @@
+<div class="table-responsive shadow my-5 page-break">
+    <table class="table">
+        <tr>
+            <td colspan="12">
+                <div class="text-center">
+                    <img src="{{ tableData?.company?.companyPdfHeaderUrl }}" class="img-pdfHeader" />
+                </div>
+            </td>
+        </tr>
+
+        <tr class="head-row">
+            <td colspan="12" class="text-center">
+                <h1 class="fs-2">
+                    Job Work Order Schedule: Please supply the material according to the following schedule.
+                </h1>
+            </td>
+        </tr>
+
+        <tr class="border-btm border-0">
+            <td colspan="12" class="py-4">
+                <div style="min-height: 120rem" class="row justify-content-center mt-5">
+                    <div class="col-10 h-100 p-0 pe-4">
+                        <table *ngFor="let p of tableData.WODetails; let i = index" class="table table-sm mb-5">
+                            <tr *ngIf="p.deliverySchedule.length > 0" class="head-row text-center w-100 text-nowrap">
+                                <th colspan="1" class="text-center">#</th>
+                                <th colspan="3" class="text-start">Item Description</th>
+                                <th colspan="2" class="text-center">SCH #</th>
+                                <th colspan="2" class="text-center">Quantity</th>
+                                <th colspan="2" class="text-center">Delivery Date</th>
+                            </tr>
+                            <tr *ngIf="p.deliverySchedule.length > 0" class="text-wrap">
+                                <td colspan="1" class="text-center">
+                                    <p class="">{{ i + 1 }}</p>
+                                </td>
+                                <td colspan="3">
+                                    <p>
+                                        JW Item Code:
+                                        {{ p?.jobWorkItemCode }}
+                                    </p>
+                                    <p>JW Item Name: {{ p?.jobWorkItemName }}</p>
+                                    <p>JW Item Description: {{ p?.jobWorkItemDescription }}</p>
+                                    <p>Total Quantity: {{ p?.quantity }}</p>
+                                    <p>Unit of Measurement [UoM]: {{ p?.UOM | UOMUnitsMaster }}</p>
+                                </td>
+                                <td colspan="2" class="text-center">
+                                    <p *ngFor="let d of p.deliverySchedule">
+                                        {{ d?.scheduleNo }}
+                                    </p>
+                                </td>
+                                <td colspan="2" class="text-center">
+                                    <p *ngFor="let d of p.deliverySchedule">
+                                        {{ d?.quantity }}
+                                    </p>
+                                </td>
+                                <td colspan="2" class="text-center">
+                                    <p *ngFor="let d of p.deliverySchedule">
+                                        {{ d?.deliveryDate | date : "dd-MM-YYYY" }}
+                                    </p>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+                <div class="row justify-content-center">
+                    <div class="col-10">
+                        <h6 class="fs-4 text-center">
+                            This is a system-generated document, and hence no signature required.
+                        </h6>
+                    </div>
+                </div>
+            </td>
+        </tr>
+    </table>
+</div>

@@ -14,6 +14,13 @@ const routes: Routes = [
     {
         path: "map_process_name",
         loadChildren: () => import("./map-process-name/map-process-name.module").then(m => m.MapProcessNameModule)
+    },
+    {
+        path: "defect_list_configuration",
+        loadChildren: () =>
+            import("./../quality-master/defect-list-configuration/defect-list-configuration.module").then(
+                m => m.DefectListConfigurationModule
+            )
     }
 ];
 

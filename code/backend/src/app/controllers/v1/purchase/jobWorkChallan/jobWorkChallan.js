@@ -20,6 +20,7 @@ const {getStartDateTime, getEndDateTime} = require("../../../../helpers/dateTime
 const {filteredItemList} = require("../../../../models/purchase/repository/itemRepository");
 const {getAllCheckedItemCategoriesList} = require("../itemCategoryMaster/itemCategoryMaster");
 const {purchaseUOMPipe} = require("../../settings/UOMUnitMaster/UOMUnitMaster");
+const {filteredChildItemList} = require("../../../../models/planning/repository/childItemRepository");
 
 exports.getAll = asyncHandler(async (req, res) => {
     try {
@@ -360,6 +361,7 @@ exports.getAllJobWorkerItemsOptions = asyncHandler(async (req, res) => {
                     _id: 0,
                     JWLChallanLineNo: {$literal: 0},
                     item: "$_id",
+                    referenceModel: "Items",
                     itemCode: "$itemCode",
                     itemName: "$itemName",
                     itemDescription: "$itemDescription",
@@ -384,8 +386,77 @@ exports.getAllJobWorkerItemsOptions = asyncHandler(async (req, res) => {
             },
             {$sort: {itemCode: 1}}
         ]);
+        const childItemsList = await filteredChildItemList([
+            {
+                $match: {
+                    company: ObjectId(req.user.company),
+                    status: OPTIONS.defaultStatus.ACTIVE
+                }
+            },
+            {
+                $addFields: {
+                    supplierDetails: {$first: "$supplierDetails"}
+                }
+            },
+            {
+                $unwind: {
+                    path: "$supplierDetails",
+                    preserveNullAndEmptyArrays: true
+                }
+            },
+            {
+                $lookup: {
+                    from: "HSN",
+                    localField: "HSN",
+                    foreignField: "_id",
+                    pipeline: [
+                        {
+                            $project: {
+                                _id: 1,
+                                gstRate: 1,
+                                igstRate: 1,
+                                sgstRate: 1,
+                                cgstRate: 1,
+                                ugstRate: 1
+                            }
+                        }
+                    ],
+                    as: "HSN"
+                }
+            },
+            {$unwind: "$HSN"},
+            {
+                $project: {
+                    _id: 0,
+                    JWLChallanLineNo: {$literal: 0},
+                    item: "$_id",
+                    referenceModel: "ChildItem",
+                    itemCode: "$itemCode",
+                    itemName: "$itemName",
+                    itemDescription: "$itemDescription",
+                    UOM: "$unitOfMeasurement",
+                    primaryToSecondaryConversion: 1,
+                    primaryUnit: 1,
+                    secondaryUnit: 1,
+                    conversionOfUnits: 1,
+                    currency: "$supplierDetails.currency",
+                    HSNCode: "$HSNCode",
+                    gst: "$HSN.gstRate",
+                    igst: "$HSN.igstRate",
+                    cgst: "$HSN.sgstRate",
+                    sgst: "$HSN.cgstRate",
+                    ugst: "$HSN.ugstRate",
+                    unitRate: "$supplierDetails.stdCostUom1",
+                    stdCostUom1: "$supplierDetails.stdCostUom1",
+                    stdCostUom2: "$supplierDetails.stdCostUom2",
+                    quantity: {$literal: 0},
+                    taxableAmt: {$literal: 0}
+                }
+            },
+            {$sort: {itemCode: 1}}
+        ]);
 
-        return res.success({JWItemsOptions, JWItemsList});
+        return res.success({JWItemsOptions, mergedItems: [...JWItemsList, ...childItemsList]});
     } catch (error) {
         console.error("getAllMasterData Job Work Challan", error);
         const errors = MESSAGES.apiErrorStrings.SERVER_ERROR;

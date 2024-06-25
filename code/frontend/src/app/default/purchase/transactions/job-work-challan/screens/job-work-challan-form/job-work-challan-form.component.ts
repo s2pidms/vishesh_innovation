@@ -330,7 +330,7 @@ export class JobWorkChallanFormComponent implements OnInit {
         this.spinner.show();
         this.jobWorkChallanService.getAllJobWorkerItemsOptions({jobWorkerId: ev.jobWorker}).subscribe(success => {
             this.JWItemsOptions = success?.JWItemsOptions;
-            this.JWChallanDetailsArray = success?.JWItemsList?.map((ele: any, index: any) => {
+            this.JWChallanDetailsArray = success?.mergedItems?.map((ele: any, index: any) => {
                 ele.JWLChallanLineNo = index + 1;
                 ele.currency = ev?.currency;
                 return ele;

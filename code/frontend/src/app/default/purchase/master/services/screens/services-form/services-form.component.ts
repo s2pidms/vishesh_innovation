@@ -118,7 +118,7 @@ export class ServicesFormComponent implements OnInit {
                         return;
                     }
 
-                    if (success.sacId._id) {
+                    if (success?.sacId?._id) {
                         success.sacId = success.sacId._id;
                     }
                     this.form.patchValue(success);
@@ -131,8 +131,8 @@ export class ServicesFormComponent implements OnInit {
 
     setSAC() {
         let sm: any = this.masterData?.SACs?.find((x: any) => x._id == this.f["sacId"].value);
-
         this.form.enable();
+        this.f["sacCode"].setValue(sm.sacCode ?? "");
         this.f["gst"].setValue(sm.gstRate ?? 0);
         this.f["igst"].setValue(sm.igstRate ?? 0);
         this.f["cgst"].setValue(sm.cgstRate ?? 0);

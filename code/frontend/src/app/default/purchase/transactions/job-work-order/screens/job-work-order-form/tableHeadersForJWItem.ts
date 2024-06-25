@@ -1,37 +1,32 @@
 export default [
     {
-        label: "JW Code",
-        value: "jobWorkerCode",
+        label: "JW Item Code",
+        value: "jobWorkItemCode",
         class: ""
     },
     {
-        label: "Job Worker Name",
-        value: "label",
+        label: "JW Item Name",
+        value: "jobWorkItemName",
+        class: "text-start"
+    },
+    {
+        label: "JW Item Description",
+        value: "jobWorkItemDescription",
+        class: "text-start"
+    },
+    {
+        label: "UoM",
+        value: "orderInfoUOM",
         class: ""
     },
     {
-        label: "Currency",
-        value: "currency",
-        class: ""
-    },
-    {
-        label: "State/Province",
-        value: "state",
-        class: ""
-    },
-    {
-        label: "city/District",
-        value: "cityOrDistrict",
-        class: ""
-    },
-    {
-        label: "PinCode",
-        value: "pinCode",
+        label: "HSN Code",
+        value: "HSNCode",
         class: ""
     }
     // {
-    //     value: false,
-    //     label: "Select",
+    //     label: "PinCode",
+    //     value: "pinCode",
     //     class: ""
     // }
 ];

@@ -27,7 +27,6 @@
         "items": [],
         "roles": []
     },
-
     {
         "_id": "655de980dca2cb995d473382",
         "menuItemId": "64a6c1e33339d4dc9d8141a9",
@@ -95,6 +94,20 @@
         "displayName": "Supplier Evaluation",
         "disabled": false,
         "url": "/default/quality/reports/supplier-evaluationR",
+        "items": [],
+        "roles": []
+    },
+    {
+        "_id": "667669f5d8181344d929bfb4",
+        "menuItemId": "64a6c1e33339d4dc9d8141a9",
+        "module": "Quality",
+        "type": "REPORT",
+        "order": 8,
+        "isDisplay": false,
+        "title": "MRN Details",
+        "displayName": "MRN Details",
+        "disabled": false,
+        "url": "/default/quality/reports/MRN_details_report",
         "items": [],
         "roles": []
     }

@@ -24,6 +24,7 @@ export class ProcessMasterFormComponent implements OnInit {
     masterData: IProcessMasterData = {
         autoIncrementNo: "",
         labourList: [],
+        processList: [],
         assetMasterList: []
     };
     skilledLabour: any = {};
@@ -147,6 +148,9 @@ export class ProcessMasterFormComponent implements OnInit {
         } else {
             this.form.enable();
 
+            if (this.action == "edit") {
+                this.f["processName"].disable();
+            }
             this.f["skilledRatePerHr"].setValue(this.skilledLabour?.salaryPerHour);
             this.f["semiSkilledRatePerHr"].setValue(this.semiSkilledLabour?.salaryPerHour);
             this.f["unSkilledRatePerHr"].setValue(this.unSkilledLabour?.salaryPerHour);
@@ -199,6 +203,9 @@ export class ProcessMasterFormComponent implements OnInit {
                     this.setSourceOfManufacturing();
                     if (this.action == "view") {
                         this.form.disable();
+                    }
+                    if (this.action == "edit") {
+                        this.f["processName"].disable();
                     }
                 });
         });

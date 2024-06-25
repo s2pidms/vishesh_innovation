@@ -86,7 +86,7 @@ const routes: Routes = [
                     import("./uom-units-master/uom-units-master.module").then(m => m.UOMUnitsMasterModule)
             }
         ]
-    }
+    },
 ];
 @NgModule({
     declarations: [MasterComponent],

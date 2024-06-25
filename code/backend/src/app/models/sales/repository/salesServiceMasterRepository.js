@@ -1,20 +1,25 @@
 const Model = require("../salesServiceMasterModel");
 module.exports = {
-    createSalesServiceMaster: async obj => {
+    createDoc: async obj => {
         return await Model.create(obj);
     },
-    findOneSalesServiceMaster: async (match, project = {}) => {
+    findOneDoc: async (match, project = {}) => {
         return await Model.findOne(match, project);
     },
-    getAllSalesServiceMasterAggregate: async ({pipeline, project, queryParams}) => {
-        const rows = await Model.paginate({pipeline, project, queryParams});
-        return rows;
+    findAndUpdateDoc: async (match, update) => {
+        return await Model.updateOne(match, update);
     },
-    updateSalesServiceMaster: async (existing, updateBody) => {
+    getDocById: async (_id, project = {}) => {
+        return await Model.findById(_id, project);
+    },
+    getAllPaginate: async ({pipeline, project, queryParams}) => {
+        return await Model.paginate({pipeline, project, queryParams});
+    },
+    updateDoc: async (existing, updateBody) => {
         Object.assign(existing, updateBody);
         return existing.save();
     },
-    deleteSalesServiceMaster: async match => {
+    deleteDoc: async match => {
         return await Model.deleteOne(match);
     },
     filteredSalesServiceMasterList: async pipeline => {

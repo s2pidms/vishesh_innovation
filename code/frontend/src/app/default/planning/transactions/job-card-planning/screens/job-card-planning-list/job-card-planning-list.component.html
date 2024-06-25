@@ -1,0 +1,252 @@
+<div class="listCard card">
+    <div class="table-header">
+        <label class="heading">Job Card Planning</label>
+    </div>
+    <hr class="line-border mt-1" />
+    <div class="table-responsive" style="min-height: 37rem">
+        <app-setting-header
+            [data]="{page,pageSize,collection,search,type: 'list',excelDisplay : 'none'}"
+            (dataChange)="eventHeader($event)"
+        >
+        </app-setting-header>
+        <table class="table table-bordered">
+            <thead class="bg-primary">
+                <tr class="text-white">
+                    <th sortable="SONumber" (sort)="onSort($event)">SO No.</th>
+                    <th sortable="SODate" (sort)="onSort($event)">SO Date</th>
+                    <th sortable="SKUNo" (sort)="onSort($event)">SKU Code</th>
+                    <th class="text-start" sortable="SKUName" (sort)="onSort($event)">
+                        {{ "SKU Name" | labelTranslate }}
+                    </th>
+                    <th class="text-start" sortable="SKUDescription" (sort)="onSort($event)">
+                        {{ "SKU Description" | labelTranslate }}
+                    </th>
+                    <th>DWG</th>
+                    <th sortable="UOM" (sort)="onSort($event)">UoM</th>
+                    <th class="text-start" sortable="balanceQty" (sort)="onSort($event)">Bal SO Qty</th>
+                    <th class="text-start" sortable="customerName" (sort)="onSort($event)">Customer Nick Name</th>
+                    <th sortable="status" (sort)="onSort($event)">Status</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let u of tableData; trackBy: trackByFn">
+                    <td>{{ u?.SONumber }}</td>
+                    <td>{{ u?.SODate }}</td>
+                    <td>{{ u?.SKUNo }}</td>
+                    <td class="text-start" [style.width]="SKUName.clientWidth" #SKUName>
+                        <span class="pointer" [ngbTooltip]="u.SKUName" [positionTarget]="SKUName">
+                            {{ u?.SKUName }}
+                        </span>
+                    </td>
+                    <td class="text-start" [style.width]="SKUDescription.clientWidth" #SKUDescription>
+                        <span class="pointer" [ngbTooltip]="u.SKUDescription" [positionTarget]="SKUDescription">
+                            {{ u?.SKUDescription }}
+                        </span>
+                    </td>
+                    <td>
+                        <span class="d-flex justify-content-center pointer">
+                            <div (click)="openDrawing(u.drawing)" class="drawingIcon"></div>
+                        </span>
+                        <!-- {{ u?.primaryUnit | SalesUOMUnitMaster }} -->
+                    </td>
+                    <td>{{ u?.UOM | SalesUOMUnitMaster }}</td>
+
+                    <td>{{ u?.balanceQty }}</td>
+                    <td class="text-start" [style.width]="customerName.clientWidth" #customerName>
+                        <span class="pointer" [ngbTooltip]="u.customerName" [positionTarget]="customerName">
+                            {{ u?.customerName }}
+                        </span>
+                    </td>
+                    <td>
+                        <span class="d-flex justify-content-center">
+                            <div
+                                [ngbTooltip]="'JC to be Created'"
+                                *ngIf="u.status == 'Inactive'"
+                                class="add-grey pointer"
+                            ></div>
+                            <div
+                                [ngbTooltip]="'JC Created, Awaiting Approval'"
+                                *ngIf="u.status == 'Awaiting Approval'"
+                                class="add-blue pointer"
+                            ></div>
+                            <div
+                                [ngbTooltip]="'Inprocess/Active Job Card'"
+                                *ngIf="u.status == 'In Progress'"
+                                class="statusOrange pointer"
+                            ></div>
+                        </span>
+                    </td>
+                    <td>
+                        <div class="dropdown">
+                            <button class="dropbtn"></button>
+                            <div class="dropdown-content">
+                                <a
+                                    *ngIf="['Inactive'].includes(u.status)"
+                                    appAccessControl
+                                    [accessType]="rolePermissionActions.editAction"
+                                    href="javascript:void(0)"
+                                    (click)="setSmartPlanning(u, 'Create JC')"
+                                >
+                                    <i class="fa fa-pencil-square-o fa-lg me-2 text-primary" aria-hidden="true"></i>
+                                    + Create JC
+                                </a>
+                                <a
+                                    *ngIf="['In Progress', 'Awaiting Approval'].includes(u.status)"
+                                    appAccessControl
+                                    [accessType]="rolePermissionActions.viewAction"
+                                    href="javascript:void(0)"
+                                    (click)="navigateTo('../form', u, 'view')"
+                                >
+                                    <i class="fa fa-eye fa-lg me-2 text-primary" aria-hidden="true"></i>
+                                    View
+                                </a>
+                                <a
+                                    *ngIf="['Awaiting Approval'].includes(u.status)"
+                                    appAccessControl
+                                    [accessType]="rolePermissionActions.editAction"
+                                    href="javascript:void(0)"
+                                    (click)="navigateTo('../form', u, 'edit')"
+                                >
+                                    <i class="fa fa-pencil-square-o fa-lg me-2 text-primary" aria-hidden="true"></i>
+                                    Edit
+                                </a>
+                                <!-- <a
+                                    [class.disable]="['Inactive'].includes(u.status)"
+                                    appAccessControl
+                                    [accessType]="rolePermissionActions.editAction"
+                                    href="javascript:void(0)"
+                                    (click)="navigateTo('../form', u, 'edit')"
+                                >
+                                    <i class="fa fa-close fa-lg text-primary" aria-hidden="true"></i>
+                                    Cancel
+                                </a> -->
+                                <a
+                                    *ngIf="['Awaiting Approval'].includes(u.status)"
+                                    appAccessControl
+                                    [accessType]="rolePermissionActions.editAction"
+                                    href="javascript:void(0)"
+                                    (click)="navigateTo('../form', u, 'approve')"
+                                >
+                                    <i class="fa fa-check fa-lg text-success" aria-hidden="true"></i>
+                                    Approve
+                                </a>
+                                <a
+                                    *ngIf="['Awaiting Approval'].includes(u.status)"
+                                    appAccessControl
+                                    [accessType]="rolePermissionActions.editAction"
+                                    href="javascript:void(0)"
+                                    (click)="update(u, 'Generate Report')"
+                                >
+                                    <img src="./assets/images/new.svg" width="14" class="me-3" />
+                                    <!-- <i class="fa fa-clone fa-lg me-2 text-primary" aria-hidden="true"></i> -->
+                                    Generate Report
+                                </a>
+                                <a
+                                    *ngIf="['Inactive'].includes(u.status)"
+                                    appAccessControl
+                                    [accessType]="rolePermissionActions.editAction"
+                                    href="javascript:void(0)"
+                                    (click)="setSmartPlanning(u, 'Smart Planning')"
+                                >
+                                    <i class="fa fa-pencil-square-o fa-lg me-2 text-primary" aria-hidden="true"></i>
+                                    * Smart Planning
+                                </a>
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <!-- <hr class="line-border" />
+    <div class="row mt-3 ms-1">
+        <div class="col-12">
+            <button class="btn btn-primary px-4" type="button" (click)="openStatusSummaryModal()">
+                Status Summary
+            </button>
+        </div>
+    </div> -->
+
+    <div *ngIf="search">
+        <hr class="row line-border" />
+        <div class="row align-items-center justify-content-end mt-3 px-5">
+            <div class="col-9 ps-3 pe-0">
+                <div class="row">
+                    <div class="col-3 separate-row pe-0">
+                        <div class="d-flex justify-content-center">
+                            <div class="col-form-label text-nowrap pe-1 pt-1">Total Bal SO Qty</div>
+                            <span class="ms-1 me-2 text-secondary d-flex align-items-center">&#9654;</span>
+                            <div class="">
+                                <input
+                                    [value]="totalBalSOQty"
+                                    class="form-control bg-white-smoke bg-honey-dew-color"
+                                    type="number"
+                                    readonly
+                                />
+                            </div>
+                        </div>
+                        <span class="set-position text-primary fs-3"> - </span>
+                    </div>
+                    <div class="col-3 separate-row ps-5 pe-0">
+                        <div class="d-flex justify-content-center">
+                            <div class="col-form-label text-nowrap pe-1 pt-1">Total FG Inv</div>
+                            <span class="ms-1 me-2 text-secondary d-flex align-items-center">&#9654;</span>
+                            <div class="">
+                                <input
+                                    [value]="totalFGInv"
+                                    class="form-control bg-white-smoke bg-honey-dew-color"
+                                    type="number"
+                                    readonly
+                                />
+                            </div>
+                        </div>
+                        <span class="set-position text-primary fs-3"> - </span>
+                    </div>
+                    <div class="col-3 separate-row ps-5 pe-0">
+                        <div class="d-flex justify-content-center">
+                            <div class="col-form-label text-nowrap pe-1 pt-1">Inprocess Qty</div>
+                            <span class="ms-1 me-2 text-secondary d-flex align-items-center">&#9654;</span>
+                            <div class="">
+                                <input
+                                    [value]="inprocessQty"
+                                    class="form-control bg-white-smoke bg-honey-dew-color"
+                                    type="number"
+                                    readonly
+                                />
+                            </div>
+                        </div>
+                        <span class="set-position text-primary fs-3"> = </span>
+                    </div>
+                    <div class="col-3 separate-row ps-5 pe-0">
+                        <div class="d-flex justify-content-center">
+                            <div class="col-form-label text-nowrap pe-1 pt-1">To Produce Qty</div>
+                            <span class="ms-1 me-2 text-secondary d-flex align-items-center">&#9654;</span>
+                            <div class="">
+                                <input
+                                    [value]="toProduceQty"
+                                    class="form-control bg-white-smoke bg-honey-dew-color"
+                                    type="number"
+                                    readonly
+                                />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-3 d-flex justify-content-end pe-3">
+                <button
+                    *ngIf="checkSmartPlanningFlag"
+                    (click)="navigateTo('../form', selectedSKU, 'create')"
+                    class="btn btn-primary px-5"
+                    type="button"
+                >
+                    Create Job Card
+                </button>
+                <button (click)="back()" *ngIf="!checkSmartPlanningFlag" class="btn btn-primary px-5" type="button">
+                    Back to Summary
+                </button>
+            </div>
+        </div>
+    </div>
+</div>

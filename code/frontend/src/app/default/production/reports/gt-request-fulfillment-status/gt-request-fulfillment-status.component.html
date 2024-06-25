@@ -56,6 +56,8 @@
                         <th class="text-start" sortable="itemName" (sort)="onSort($event)">Item Name</th>
                         <th class="text-start" sortable="itemDescription" (sort)="onSort($event)">Item Description</th>
                         <th sortable="UOM" (sort)="onSort($event)">UoM</th>
+                        <th sortable="fromDepartment" (sort)="onSort($event)">Issued By</th>
+                        <th sortable="toDepartment" (sort)="onSort($event)">Issued To</th>
                         <th sortable="GTRequestQty" (sort)="onSort($event)">GTR Qty</th>
                         <th sortable="GTQty" (sort)="onSort($event)">GT Qty</th>
                         <th sortable="GTStatus" (sort)="onSort($event)">GTR Status</th>
@@ -77,6 +79,8 @@
                             </span>
                         </td>
                         <td>{{ u?.UOM | UOMUnitsMaster }}</td>
+                        <td>{{ u?.fromDepartment }}</td>
+                        <td>{{ u?.toDepartment }}</td>
                         <td>{{ u?.GTRequestQty }}</td>
                         <td>{{ u?.GTQty }}</td>
                         <td>{{ u?.GTStatus }}</td>

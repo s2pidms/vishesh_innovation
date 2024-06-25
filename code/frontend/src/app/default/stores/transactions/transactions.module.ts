@@ -38,6 +38,13 @@ const routes: Routes = [
                 path: "goods_transfer_request",
                 loadChildren: () =>
                     import("./../../production/transactions/gt-request/gt-request.module").then(m => m.GTRequestModule)
+            },
+            {
+                path: "multiple_fgin",
+                loadChildren: () =>
+                    import("./../../production/transactions/multiple-fgin/multiple-fgin.module").then(
+                        m => m.MultipleFGINModule
+                    )
             }
         ]
     }

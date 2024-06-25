@@ -65,6 +65,10 @@ const SKUMasterSchema = mongoose.Schema(
             type: String,
             required: false
         },
+        additionalHyperLink: {
+            type: String,
+            required: false
+        },
         primaryUnit: {
             type: String,
             required: false

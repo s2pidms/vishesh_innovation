@@ -26,3 +26,4 @@ export * from "./assetClass.service";
 export * from "./mailConfiguration.service";
 export * from "./mailTrigger.service";
 export * from "./UOMUnitsMaster.service";
+export * from "./defectListConfig.service";

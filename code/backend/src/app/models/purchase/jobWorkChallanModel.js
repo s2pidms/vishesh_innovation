@@ -149,7 +149,12 @@ const jobWorkChallanSchema = mongoose.Schema(
                 item: {
                     type: mongoose.Schema.Types.ObjectId,
                     required: false,
-                    ref: "Items"
+                    refPath: "referenceModel"
+                },
+                referenceModel: {
+                    type: String,
+                    enum: ["ChildItem", "Items"],
+                    default: "Items"
                 },
                 itemCode: {
                     type: String,

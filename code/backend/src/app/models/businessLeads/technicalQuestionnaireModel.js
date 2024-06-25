@@ -1,12 +1,47 @@
 const mongoose = require("mongoose");
 const Audit = require("../../controllers/v1/settings/audit/audit");
 const {TECHNICAL_QUESTIONNAIRE: SCHEMA_CONST} = require("../../mocks/schemasConstant/businessLeadsConstant");
-const {SCHEMA} = require("./schemas/technicalQuestionnaireSchema");
 const {paginatePlugin} = require("../plugins/paginatePlugin");
-const technicalQuestionnaireSchema = mongoose.Schema(SCHEMA, {
-    timestamps: true,
-    collection: SCHEMA_CONST.COLLECTION_NAME
-});
+const technicalQuestionnaireSchema = mongoose.Schema(
+    {
+        company: {
+            type: mongoose.Schema.Types.ObjectId,
+            required: true,
+            ref: "Company"
+        },
+        createdBy: {
+            type: mongoose.Schema.Types.ObjectId,
+            required: false,
+            ref: "User"
+        },
+        updatedBy: {
+            type: mongoose.Schema.Types.ObjectId,
+            required: false,
+            ref: "User"
+        },
+        orderNo: {
+            type: Number,
+            set: value => {
+                if (![undefined, null, "NaN"].includes(value) && typeof +value == "number") {
+                    return parseFloat(value).toFixed(2);
+                }
+            },
+            required: false
+        },
+        type: {
+            type: String,
+            required: false
+        },
+        questionnaire: {
+            type: String,
+            required: false
+        }
+    },
+    {
+        timestamps: true,
+        collection: SCHEMA_CONST.COLLECTION_NAME
+    }
+);
 
 technicalQuestionnaireSchema.pre("save", async function (next) {
     const {isNew, isModified} = this;

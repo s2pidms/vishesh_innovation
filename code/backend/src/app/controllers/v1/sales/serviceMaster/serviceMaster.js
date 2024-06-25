@@ -1,9 +1,6 @@
 const asyncHandler = require("express-async-handler");
 const Model = require("../../../../models/sales/salesServiceMasterModel");
 const MESSAGES = require("../../../../helpers/messages.options");
-const {outputData, getAllAggregationFooter} = require("../../../../helpers/utility");
-const {generateCreateData, getMatchData} = require("../../../../helpers/global.options");
-const {findAppParameterValue} = require("../../settings/appParameter/appParameter");
 const {
     getAllSalesServiceMasterAttributes,
     getAllSalesServiceMasterExcelAttributes
@@ -12,7 +9,7 @@ const {default: mongoose} = require("mongoose");
 const {SALES_SERVICE_MASTER} = require("../../../../mocks/schemasConstant/salesConstant");
 const {getAndSetAutoIncrementNo} = require("../../settings/autoIncrement/autoIncrement");
 const {filteredSaleSACList} = require("../../../../models/sales/repository/saleSACRepository");
-const {getAllSalesServiceMasterAggregate} = require("../../../../models/sales/repository/salesServiceMasterRepository");
+const SalesServiceMasterRepository = require("../../../../models/sales/repository/salesServiceMasterRepository");
 const ObjectId = mongoose.Types.ObjectId;
 
 exports.getAll = asyncHandler(async (req, res) => {
@@ -40,7 +37,7 @@ exports.getAll = asyncHandler(async (req, res) => {
             },
             {$unwind: "$sacId"}
         ];
-        let rows = await getAllSalesServiceMasterAggregate({pipeline, project, queryParams: req.query});
+        let rows = await SalesServiceMasterRepository.getAllPaginate({pipeline, project, queryParams: req.query});
         return res.success(rows);
     } catch (e) {
         console.error("getAllServiceMaster", e);
@@ -56,8 +53,7 @@ exports.create = asyncHandler(async (req, res) => {
             updatedBy: req.user.sub,
             ...req.body
         };
-        const saveObj = new Model(createdObj);
-        const itemDetails = await saveObj.save();
+        const itemDetails = await SalesServiceMasterRepository.createDoc(createdObj);
         if (itemDetails) {
             return res.success({
                 message: MESSAGES.apiSuccessStrings.ADDED("ServiceMaster")
@@ -75,15 +71,13 @@ exports.create = asyncHandler(async (req, res) => {
 
 exports.update = asyncHandler(async (req, res) => {
     try {
-        let itemDetails = await Model.findById(req.params.id);
+        let itemDetails = await SalesServiceMasterRepository.getDocById(req.params.id);
         if (!itemDetails) {
             const errors = MESSAGES.apiErrorStrings.INVALID_REQUEST;
             return res.preconditionFailed(errors);
         }
         itemDetails.updatedBy = req.user.sub;
-        itemDetails = await generateCreateData(itemDetails, req.body);
-        itemDetails = await itemDetails.save();
-
+        itemDetails = await SalesServiceMasterRepository.updateDoc(itemDetails, req.body);
         return res.success({
             message: MESSAGES.apiSuccessStrings.UPDATE("Service Master has been")
         });
@@ -96,9 +90,8 @@ exports.update = asyncHandler(async (req, res) => {
 
 exports.deleteById = asyncHandler(async (req, res) => {
     try {
-        const deleteItem = await Model.findById(req.params.id);
+        const deleteItem = await SalesServiceMasterRepository.deleteDoc({_id: req.params.id});
         if (deleteItem) {
-            await deleteItem.remove();
             return res.success({
                 message: MESSAGES.apiSuccessStrings.DELETED("Service Master")
             });
@@ -153,17 +146,5 @@ exports.getAllMasterData = asyncHandler(async (req, res) => {
         console.error("getAllMasterData Service Master", error);
         const errors = MESSAGES.apiErrorStrings.SERVER_ERROR;
         return res.serverError(errors);
-    }
-});
-
-exports.getAllSalesServiceMasters = asyncHandler(async company => {
-    try {
-        let rows = await Model.find({
-            isActive: "Yes",
-            company: company
-        }).sort({serviceCode: -1});
-        return rows;
-    } catch (e) {
-        console.error("getAllService Masters", e);
     }
 });

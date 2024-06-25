@@ -355,3 +355,36 @@ exports.SERVICE_CHARGES = {
         };
     }
 };
+
+exports.CURRENCY_MASTER = {
+    COLLECTION_NAME: "CurrencyMaster",
+    ADDED_ACTION: "Currency Master created",
+    UPDATED_ACTION: "Currency Master updated",
+    MODULE_NAME: "Currency Master",
+    MODULE: "CurrencyMaster",
+    MODULE_PREFIX: "C/",
+    AUTO_INCREMENT_DATA: function () {
+        return {
+            moduleName: this.MODULE_NAME,
+            module: this.MODULE,
+            company: null,
+            modulePrefix: this.MODULE_PREFIX
+        };
+    }
+};
+exports.DEFECT_LIST_CONFIGURATION = {
+    COLLECTION_NAME: "DefectListConfig",
+    ADDED_ACTION: "Defect List Config created",
+    UPDATED_ACTION: "Defect List Config updated"
+    // MODULE_NAME: "Defect List Config",
+    // MODULE: "DefectListConfig",
+    // MODULE_PREFIX: "null",
+    // AUTO_INCREMENT_DATA: function () {
+    //     return {
+    //         moduleName: this.MODULE_NAME,
+    //         module: this.MODULE,
+    //         company: null,
+    //         modulePrefix: this.MODULE_PREFIX
+    //     };
+    // }
+};

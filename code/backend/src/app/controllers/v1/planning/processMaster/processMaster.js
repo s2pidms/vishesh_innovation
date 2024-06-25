@@ -2,13 +2,14 @@ const asyncHandler = require("express-async-handler");
 const MESSAGES = require("../../../../helpers/messages.options");
 const {OPTIONS} = require("../../../../helpers/global.options");
 const {getAllProcessMasterAttributes} = require("../../../../models/planning/helpers/processMasterHelper");
-const {ASSET_CLASS_NAMES, PROCESS, IPQA} = require("../../../../mocks/constantData");
+const {ASSET_CLASS_NAMES, PROCESS, IPQA, DEFECT_TYPES} = require("../../../../mocks/constantData");
 const {getAllLabourRateMasterList} = require("../../finance/labour-rate-master/labour-rate-master");
 const {default: mongoose} = require("mongoose");
 const {PROCESS_MASTER} = require("../../../../mocks/schemasConstant/planningConstant");
 const {getAndSetAutoIncrementNo} = require("../../settings/autoIncrement/autoIncrement");
 const ProcessRepository = require("../../../../models/planning/repository/processMasterRepository");
 const {filteredAssetMasterList} = require("../../../../models/finance/repository/assetMasterRepository");
+const {filteredDefectListConfigList} = require("../../../../models/settings/repository/defectListConfigRepository");
 const ObjectId = mongoose.Types.ObjectId;
 
 exports.getAll = asyncHandler(async (req, res) => {
@@ -32,6 +33,13 @@ exports.getAll = asyncHandler(async (req, res) => {
 
 exports.create = asyncHandler(async (req, res) => {
     try {
+        let existingProcess = await ProcessRepository.findOneDoc({
+            processName: req.body.processName
+        });
+        if (existingProcess) {
+            let errors = MESSAGES.apiErrorStrings.Data_EXISTS("Process Name");
+            return res.preconditionFailed(errors);
+        }
         let createdObj = {
             company: req.user.company,
             createdBy: req.user.sub,
@@ -150,10 +158,29 @@ exports.getAllMasterData = asyncHandler(async (req, res) => {
                 }
             }
         ]);
+        const processList = await filteredDefectListConfigList([
+            {
+                $match: {
+                    company: ObjectId(req.user.company),
+                    docType: DEFECT_TYPES.PROCESS
+                }
+            },
+            {
+                $sort: {
+                    SN: 1
+                }
+            },
+            {
+                $project: {
+                    defectName: 1
+                }
+            }
+        ]);
         return res.success({
             autoIncrementNo,
             assetMasterList,
-            labourList
+            labourList,
+            processList
         });
     } catch (error) {
         console.error("getAllMasterData Process Master", error);

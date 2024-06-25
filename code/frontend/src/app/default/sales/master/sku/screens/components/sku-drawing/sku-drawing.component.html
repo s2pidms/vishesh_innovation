@@ -45,8 +45,8 @@
                 </div>
                 <div class="row mt-5">
                     <div class="col-5 text-end pe-1 d-flex align-items-center justify-content-end">
-                        <label class="form-label text-nowrap"
-                            >Drawing/ArtWork No. <span class="text-danger"></span
+                        <label class="form-label text-nowrap">
+                            {{ "Drawing/Artwork No." | labelTranslate }} <span class="text-danger"></span
                         ></label>
                     </div>
                     <div class="col-1 pe-0 d-flex align-items-center">
@@ -66,6 +66,24 @@
                     <div class="col-6 ps-0 set-hyperlink">
                         <input type="text" class="form-control" formControlName="artWorkHyperLink" />
                         <button type="button" class="btn bg-primary px-4 link-position" (click)="openHyperLink()">
+                            View
+                        </button>
+                    </div>
+                </div>
+                <div class="row mt-5">
+                    <div class="col-5 text-end pe-1 d-flex align-items-center justify-content-end">
+                        <label class="form-label">Additional ArtWork Hyperlink <span class="text-danger"></span></label>
+                    </div>
+                    <div class="col-1 pe-0 d-flex align-items-center">
+                        <i class="fa fa-caret-right text-secondary"></i>
+                    </div>
+                    <div class="col-6 ps-0 set-hyperlink">
+                        <input type="text" class="form-control" formControlName="additionalHyperLink" />
+                        <button
+                            type="button"
+                            class="btn bg-primary px-4 link-position"
+                            (click)="openAdditionalHyperLink()"
+                        >
                             View
                         </button>
                     </div>

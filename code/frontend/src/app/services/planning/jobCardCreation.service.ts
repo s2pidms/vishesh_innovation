@@ -10,6 +10,8 @@ export class JobCardCreationService {
         createPath: "/planning/jobCard/create",
         getAllPath: "/planning/jobCard/getAll",
         getAllReportsPath: "/planning/jobCard/getAllReports",
+        getAllSOForJCPath: "/planning/jobCard/getAllSOForJC",
+        getAllJCTableListPath: "/planning/jobCard/getAllJCTableList",
         getAllMasterDataPath: "/planning/jobCard/getAllMasterData",
         getCustomersByCategoryPath: "/planning/jobCard/getCustomersByCategory",
         getJCDetailsByCustomerIdPath: "/planning/jobCard/getJCDetailsByCustomerId",
@@ -33,6 +35,12 @@ export class JobCardCreationService {
     }
     getAllReports(params: any) {
         return this.http.get(this.routes.getAllReportsPath, params).pipe(map((res: any) => res));
+    }
+    getAllSOForJC(params: any) {
+        return this.http.get(this.routes.getAllSOForJCPath, params).pipe(map((res: any) => res));
+    }
+    getAllJCTableList(params: any) {
+        return this.http.get(this.routes.getAllJCTableListPath, params).pipe(map((res: any) => res));
     }
     getAllPpvReports(params: any) {
         return this.http.get(this.routes.getAllPpvReports, params).pipe(map((res: any) => res));

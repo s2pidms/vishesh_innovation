@@ -1,0 +1,110 @@
+<div class="modelPage">
+    <div class="modal-header">
+        <div class="heading">Release Schedule</div>
+        <div>
+            <button type="button" class="btn btn-cross btn-sm" aria-label="Close" (click)="dismissModel()">
+                <i class="fa fa-times-circle" aria-hidden="true"></i>
+            </button>
+        </div>
+    </div>
+    <div class="container-fluid">
+        <div class="row px-5 mt-5">
+            <div class="ps-0 col-6">
+                <div class="d-flex align-items-center">
+                    <div class="col-form-label text-nowrap">
+                        Quantity
+                        <i class="fa fa-caret-right fs-4 mx-1"></i>
+                    </div>
+                    <input type="number" class="form-control" [(ngModel)]="IOQty" readonly />
+                </div>
+            </div>
+            <div class="col-6 pe-0">
+                <div class="d-flex align-items-center">
+                    <div for="deliveryCount" class="col-form-label text-nowrap">
+                        Del. Count
+                        <i class="fa fa-caret-right fs-4 mx-1"></i>
+                    </div>
+                    <input
+                        (input)="setTable()"
+                        [disabled]="!['create', 'edit'].includes(action)"
+                        type="number"
+                        class="form-control"
+                        [(ngModel)]="deliveryCount"
+                        id="deliveryCount"
+                        name="deliveryCount"
+                        min="1"
+                        max="5"
+                    />
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-12 my-3 px-0">
+                <hr class="line-border" />
+            </div>
+        </div>
+        <div class="row px-5">
+            <div style="min-height: 25rem" class="table-responsive ps-0 pe-0">
+                <table class="table table-bordered table-sticky">
+                    <thead class="bg-primary">
+                        <tr class="text-white">
+                            <th>Schedule #</th>
+                            <th>Quantity</th>
+                            <th>UoM</th>
+                            <th>Delivery Date</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let u of deliveryScheduleArr; let i = index">
+                            <td>{{ u?.scheduleNo }}</td>
+                            <td>
+                                <div class="d-flex justify-content-center">
+                                    <span *ngIf="['approve', 'reject', 'view', 'generate', 'cancel'].includes(action)">
+                                        {{ u?.quantity | number : "1.2-2" }}
+                                    </span>
+                                    <input
+                                        type="number"
+                                        class="form-control form-control-sch w-25"
+                                        *ngIf="!['approve', 'reject', 'view', 'generate', 'cancel'].includes(action)"
+                                        [(ngModel)]="u.quantity"
+                                        [ngModelOptions]="{standalone: true}"
+                                        (input)="setQuantity(i)"
+                                    />
+                                </div>
+                            </td>
+                            <td>{{ u?.UOM | UOMUnitsMaster }}</td>
+                            <td>
+                                <div class="d-flex justify-content-center">
+                                    <span *ngIf="['approve', 'reject', 'view', 'generate', 'cancel'].includes(action)">
+                                        {{ u?.deliveryDate | date : "dd-MM-YYY" }}
+                                    </span>
+                                    <input
+                                        [min]="minDate.toISOString().split('T')[0]"
+                                        type="date"
+                                        class="form-control form-control-sm w-25"
+                                        *ngIf="!['approve', 'reject', 'view', 'generate', 'cancel'].includes(action)"
+                                        [(ngModel)]="u.deliveryDate"
+                                        [ngModelOptions]="{standalone: true}"
+                                    />
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div *ngIf="!['approve', 'reject', 'view', 'generate', 'cancel'].includes(action)" class="row">
+            <div class="col-12 px-0">
+                <hr class="line-border" />
+            </div>
+        </div>
+        <div class="row">
+            <div
+                *ngIf="!['approve', 'reject', 'view', 'generate', 'cancel'].includes(action)"
+                class="col-12 text-center pb-3"
+            >
+                <button (click)="dismissModel()" class="btn btn-primary">Save & Close</button>
+            </div>
+        </div>
+    </div>
+</div>

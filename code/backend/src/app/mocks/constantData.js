@@ -29,6 +29,7 @@ const SALES_CATEGORY = {
     EXPORTS_DEALER: "Exports – Dealer",
     EXPORTS_OEM: "Exports – OEM",
     DOMESTIC: "Domestic",
+    IMPORTS: "Imports",
     DOMESTIC_REGEX: /domestic/i,
     EXPORTS_REGEX: /exports/i,
     getAllDomesticSalesCategory: function () {
@@ -401,7 +402,14 @@ const SKU_MASTER_DIMENSIONS_UNITS = {
 const SUPER_ADMIN_ID = "64a687b4e9143bffd820fb3d";
 const COMPANY_DEPARTMENTS = {
     PURCHASE: "Purchase",
-    SALES: "Sales",
+    SALES: "Sales"
+};
+const DEFECT_TYPES = {
+    PROCESS: "Process",
+    DEFECT: "Defect"
+};
+const GST_CLASSIFICATION = {
+    UNREGISTER_DEALER: "Unregistered Dealer"
 };
 module.exports = {
     SALES_CATEGORY,
@@ -437,5 +445,7 @@ module.exports = {
     INV_FORM_TYPE,
     SKU_MASTER_DIMENSIONS_UNITS,
     SUPER_ADMIN_ID,
-    COMPANY_DEPARTMENTS
+    COMPANY_DEPARTMENTS,
+    DEFECT_TYPES,
+    GST_CLASSIFICATION
 };

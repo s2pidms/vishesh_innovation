@@ -2,12 +2,124 @@ const mongoose = require("mongoose");
 const Audit = require("../../controllers/v1/settings/audit/audit");
 const {PROSPECT_MASTER: SCHEMA_CONST} = require("../../mocks/schemasConstant/businessLeadsConstant");
 const {getAndSetAutoIncrementNo} = require("../../controllers/v1/settings/autoIncrement/autoIncrement");
-const {SCHEMA} = require("./schemas/prospectMasterSchema");
 const {paginatePlugin} = require("../plugins/paginatePlugin");
-const prospectSchema = mongoose.Schema(SCHEMA, {
-    timestamps: true,
-    collection: SCHEMA_CONST.COLLECTION_NAME
-});
+const {OPTIONS} = require("../../helpers/global.options");
+const prospectSchema = mongoose.Schema(
+    {
+        company: {
+            type: mongoose.Schema.Types.ObjectId,
+            required: true,
+            ref: "Company"
+        },
+        createdBy: {
+            type: mongoose.Schema.Types.ObjectId,
+            required: false,
+            ref: "User"
+        },
+        updatedBy: {
+            type: mongoose.Schema.Types.ObjectId,
+            required: false,
+            ref: "User"
+        },
+        prospectRegistrationCode: {
+            type: String,
+            required: false
+        },
+        prospectRegistrationDate: {
+            type: Date,
+            required: false
+        },
+        prospectName: {
+            type: String,
+            required: false
+        },
+        customerCategory: {
+            type: String,
+            required: false
+        },
+        currency: {
+            type: String,
+            required: false
+        },
+        correspondenceAddress: {
+            line1: {
+                type: String,
+                required: false,
+                trim: true
+            },
+            line2: {
+                type: String,
+                required: false,
+                trim: true
+            },
+            line3: {
+                type: String,
+                required: false,
+                trim: true
+            },
+            line4: {
+                type: String,
+                required: false,
+                trim: true
+            },
+            state: {
+                type: String,
+                required: false,
+                trim: true
+            },
+            city: {
+                type: String,
+                required: false,
+                trim: true
+            },
+            pinCode: {
+                type: String,
+                required: false,
+                trim: true
+            },
+            country: {
+                type: String,
+                required: false,
+                trim: true
+            }
+        },
+        contactDetails: [
+            {
+                contactPersonName: {
+                    type: String,
+                    required: false
+                },
+                contactPersonDepartment: {
+                    type: String,
+                    required: false,
+                    default: "Others"
+                },
+                contactPersonDesignation: {
+                    type: String,
+                    required: false
+                },
+                contactPersonNumber: {
+                    type: String,
+                    required: false
+                },
+                contactPersonEmail: {
+                    type: String,
+                    required: false
+                }
+            }
+        ],
+        status: {
+            type: String,
+            required: false,
+            //  enum: OPTIONS.defaultStatus.getCommonStatusAsArray(),
+            default: OPTIONS.defaultStatus.ACTIVE
+        }
+    },
+    {
+        timestamps: true,
+        collection: SCHEMA_CONST.COLLECTION_NAME
+    }
+);
 
 prospectSchema.pre("save", async function (next) {
     const {isNew, isModified} = this;

@@ -18,7 +18,7 @@ const {getAllPurchaseCategory} = require("../../settings/purchaseCategoryMaster/
 const {getAllPaymentTerms} = require("../../sales/paymentTerms/paymentTerms");
 const PurchaseOrderHelper = require("../../../../models/purchase/helpers/purchaseOrderHelper");
 // const {getPOMailConfig} = require("./purchaseOrderMail");
-const {OTHER_CHARGES_SAC_CODE} = require("../../../../mocks/constantData");
+const {OTHER_CHARGES_SAC_CODE, SALES_CATEGORY} = require("../../../../mocks/constantData");
 const {getSACObj} = require("../SAC/SAC");
 const {getAndSetAutoIncrementNo} = require("../../settings/autoIncrement/autoIncrement");
 const {PURCHASE_ORDER} = require("../../../../mocks/schemasConstant/purchaseConstant");
@@ -436,13 +436,17 @@ exports.getAllMasterData = asyncHandler(async (req, res) => {
 
 exports.getSupplierByCategory = asyncHandler(async (req, res) => {
     try {
+        let {purchaseCategory = SALES_CATEGORY.DOMESTIC} = req.query;
+        let domesticCheck = await checkDomesticCustomer(purchaseCategory);
+        purchaseCategory = domesticCheck ? SALES_CATEGORY.DOMESTIC : SALES_CATEGORY.IMPORTS;
+        let queryMatch = {
+            company: ObjectId(req.user.company),
+            isSupplierActive: "A",
+            supplierPurchaseType: purchaseCategory
+        };
         let supplierList = await SupplierRepository.filteredSupplierList([
             {
-                $match: {
-                    company: ObjectId(req.user.company),
-                    isSupplierActive: "A",
-                    supplierPurchaseType: req.query.purchaseCategory
-                }
+                $match: queryMatch
             },
             {$sort: {supplierName: 1}},
             {

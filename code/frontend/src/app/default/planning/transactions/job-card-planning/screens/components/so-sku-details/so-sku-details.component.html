@@ -1,0 +1,150 @@
+<div class="table-responsive">
+    <app-setting-header
+        [data]="{page,pageSize,collection,search, excelDisplay : 'none'}"
+        (dataChange)="eventHeader($event)"
+    >
+    </app-setting-header>
+
+    <table class="table table-bordered mt-0 table-sm">
+        <thead class="bg-info">
+            <tr class="text-white">
+                <th sortable="SO_FCNumber" (sort)="onSort($event)">
+                    {{
+                        orderType === "All"
+                            ? "SO/FC No."
+                            : orderType === "FC"
+                            ? "FC No."
+                            : orderType === "SO"
+                            ? "SO No."
+                            : orderType === "NPD"
+                            ? "SR No."
+                            : "SO No."
+                    }}
+                </th>
+                <th sortable="SO_FCDate" (sort)="onSort($event)">
+                    {{
+                        orderType === "All"
+                            ? "SO/FC Date"
+                            : orderType === "FC"
+                            ? "FC Date"
+                            : orderType === "SO"
+                            ? "SO Date"
+                            : orderType === "NPD"
+                            ? "SR Date"
+                            : "SO Date"
+                    }}
+                </th>
+                <th sortable="code" (sort)="onSort($event)">Code</th>
+                <th sortable="SKUNo" (sort)="onSort($event)">SKU Code</th>
+                <th class="text-start" sortable="SKUName" (sort)="onSort($event)">
+                    {{ "SKU Name" | labelTranslate }}
+                </th>
+                <th class="text-start" sortable="SKUDescription" (sort)="onSort($event)">
+                    {{ "SKU Description" | labelTranslate }}
+                </th>
+                <!-- *ngIf="['All', 'SO'].includes(orderType)" -->
+                <th>Dim</th>
+                <!-- <th>DWG</th> -->
+                <th sortable="UOM" (sort)="onSort($event)">UoM</th>
+                <th sortable="balQty" (sort)="onSort($event)">
+                    {{
+                        orderType === "All"
+                            ? "Bal SO/FC Qty"
+                            : orderType === "FC"
+                            ? "Bal FC Qty"
+                            : orderType === "SO"
+                            ? "Bal SO Qty"
+                            : orderType === "NPD"
+                            ? "Bal SR Qty"
+                            : "Bal SO Qty"
+                    }}
+                </th>
+                <th>FG Inv</th>
+                <th sortable="batchQty" (sort)="onSort($event)">Batch Qty</th>
+                <th>Disp.</th>
+            </tr>
+        </thead>
+
+        <tbody>
+            <tr
+                *ngFor="
+                    let u of SKUDetailsOfJC
+                        | searchFi1ter : search
+                        | slice : (page - 1) * pageSize : (page - 1) * pageSize + pageSize;
+                    trackBy: trackByFn
+                "
+            >
+                <td>{{ u?.SO_FCNumber }}</td>
+                <td>
+                    {{ u?.SO_FCDate ? (u?.SO_FCDate | date : "dd-MM-YYYY") : null }}
+                </td>
+                <td class="text-start">
+                    <div class="box">
+                        <div [style.background-color]="u?.code"></div>
+                    </div>
+                </td>
+                <td>
+                    {{ u?.SKUNo }}
+                </td>
+                <td class="text-start" [style.width]="SKUName.clientWidth" #SKUName>
+                    <span class="pointer" [ngbTooltip]="u.SKUName" [positionTarget]="SKUName">
+                        {{ u?.SKUName }}
+                    </span>
+                </td>
+                <td class="text-start" [style.width]="SKUDescription.clientWidth" #SKUDescription>
+                    <span class="pointer" [ngbTooltip]="u.SKUDescription" [positionTarget]="SKUDescription">
+                        {{ u?.SKUDescription }}
+                    </span>
+                </td>
+                <td>
+                    <span class="d-flex justify-content-center">
+                        <i
+                            (click)="getSKUDimensionData(u)"
+                            class="fa fa-eye fa-lg ms-3 text-primary pointer"
+                            aria-hidden="true"
+                        ></i>
+                    </span>
+                </td>
+                <!-- <td #internalPartNo>
+                    <span
+                        class="d-flex justify-content-center pointer"
+                        [ngbTooltip]="u.internalPartNo"
+                        [positionTarget]="internalPartNo"
+                    >
+                        <div (click)="openDrawing(u.drawing)" class="drawingIcon"></div>
+                    </span>
+                </td> -->
+                <td>
+                    {{ u?.UOM | SalesUOMUnitMaster }}
+                </td>
+                <td>{{ u?.balQty | number : "1.2-2" }}</td>
+                <td>
+                    <span class="d-flex justify-content-center pointer">
+                        <div (click)="openFGInventoryModal(u)" class="FGMip"></div>
+                    </span>
+                </td>
+                <td>
+                    <div class="d-flex justify-content-center">
+                        <span *ngIf="['approve', 'reject', 'view', 'generate', 'cancel'].includes(action)">
+                            {{ u?.batchQty | number : "1.2-2" }}
+                        </span>
+                        <input
+                            type="number"
+                            class="form-control form-control-xs w-25"
+                            *ngIf="!['approve', 'reject', 'view', 'generate', 'cancel'].includes(action)"
+                            [(ngModel)]="u.batchQty"
+                            [ngModelOptions]="{standalone: true}"
+                            (input)="setBatchQty(u)"
+                            [disabled]="selectDSKU && selectDSKU != u.SKUNo"
+                        />
+                    </div>
+                </td>
+                <td>
+                    <span class="d-flex justify-content-center pointer">
+                        <div (click)="openSOScheduleModal(u)" class="assetCalendarTD"></div>
+                    </span>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>

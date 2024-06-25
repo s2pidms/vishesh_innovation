@@ -82,6 +82,30 @@
                 "disabled": false,
                 "url": "/default/settings/master/module_master/list/DEFAULT_UNIT_VALUE",
                 "_id": "6628cbd2bc19d3c8752d8b9e"
+            },
+            {
+                "menuItemId": "64a6c1e33339d4dc9d8141ae",
+                "module": "Settings",
+                "type": "MASTER",
+                "order": 6,
+                "isDisplay": false,
+                "title": "Currency Master",
+                "displayName": "Currency Master",
+                "disabled": false,
+                "url": "/default/settings/master/global/currency_master/list",
+                "_id": "6673f1ddb46c3cf626342c3e"
+            },
+            {
+                "menuItemId": "64a6c1e33339d4dc9d8141ae",
+                "module": "Settings",
+                "type": "MASTER",
+                "order": 7,
+                "isDisplay": false,
+                "title": "SBU",
+                "displayName": "SBU",
+                "disabled": false,
+                "url": "/default/settings/master/module_master/list/SBU",
+                "_id": "66793edd21b12675329a5b4c"
             }
         ],
         "roles": []
@@ -624,6 +648,18 @@
                 "disabled": false,
                 "url": "/default/settings/master/planning/map_process_name/list",
                 "_id": "662648030ce0b544e48ac007"
+            },
+            {
+                "menuItemId": "64a6c1e33339d4dc9d8141ae",
+                "module": "Settings",
+                "type": "MASTER",
+                "order": 6,
+                "isDisplay": false,
+                "title": "Process List Configuration",
+                "displayName": "Process List Configuration",
+                "disabled": false,
+                "url": "/default/settings/master/planning/defect_list_configuration/form/Process",
+                "_id": "667919c2b043bb7b1f166724"
             }
         ],
         "roles": []
@@ -1203,6 +1239,18 @@
                 "displayName": "Status",
                 "disabled": false,
                 "url": "/default/settings/master/module_master/list/STATUS"
+            },
+            {
+                "menuItemId": "64a6c1e33339d4dc9d8141ae",
+                "module": "Settings",
+                "type": "MASTER",
+                "order": 10,
+                "isDisplay": false,
+                "title": "Defect List Configuration",
+                "displayName": "Defect List Configuration",
+                "disabled": false,
+                "url": "/default/settings/master/quality_master/defect_list_configuration/form/Defect",
+                "_id": "66768f74d8181344d929bfb5"
             }
         ],
         "roles": []

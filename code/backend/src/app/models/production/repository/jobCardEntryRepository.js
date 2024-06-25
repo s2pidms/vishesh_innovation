@@ -24,5 +24,9 @@ module.exports = {
     },
     filteredJobCardEntryList: async pipeline => {
         return await Model.aggregate(pipeline);
+    },
+    getAllReportsPaginate: async reportAggregateObj => {
+        const rows = await Model.reportPaginate(reportAggregateObj);
+        return rows;
     }
 };

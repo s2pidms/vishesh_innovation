@@ -3,6 +3,7 @@ import {UntypedFormControl, UntypedFormGroup, Validators} from "@angular/forms";
 import {NgbActiveModal} from "@ng-bootstrap/ng-bootstrap";
 import {ValidationService} from "@core/components";
 import {DRN_REVIEW_TERMS_FORM_ERRORS} from "@mocks/validations/sales";
+import {WO_REVIEW_TERMS_ERRORS} from "@mocks/validations/purchase/wo-reviewTerms.validation";
 @Component({
     selector: "app-review-wo-terms-modal",
     templateUrl: "./review-wo-terms-modal.component.html",
@@ -27,18 +28,14 @@ import {DRN_REVIEW_TERMS_FORM_ERRORS} from "@mocks/validations/sales";
 })
 export class ReviewWoTermsModalComponent implements OnInit {
     @Input() action: any = "";
-    @Input() POTerms: any = {};
-    @Input() SOTermsArr: any = {};
-    @Input() SOTermsData: any = {};
-    @Input() otherCharges: any = {};
-    clickCount = 1;
-    showSelect = false;
+    @Input() WOTermsArr: any = {};
+    @Input() WOTermsData: any = {};
+    // clickCount = 1;
+    // showSelect = false;
     form: any = new UntypedFormGroup({
         paymentTerms: new UntypedFormControl(null, [Validators.required]),
-        frightTerms: new UntypedFormControl("FOR - Free On Road"),
-        transporter: new UntypedFormControl(null, [Validators.required]),
-        destination: new UntypedFormControl(null, [Validators.required]),
-        modeOfTransport: new UntypedFormControl(null, [Validators.required])
+        freightTerms: new UntypedFormControl(null),
+        WORemarks: new UntypedFormControl(null)
     });
 
     get f() {
@@ -47,37 +44,37 @@ export class ReviewWoTermsModalComponent implements OnInit {
     constructor(public activeModal: NgbActiveModal, private validationService: ValidationService) {}
 
     ngOnInit(): void {
-        let condition = this.SOTermsArr?.paymentTermsArr.some(
-            (x: any) => x.label == this.SOTermsData.changedPaymentTerms
-        );
+        // let condition = this.WOTermsArr?.paymentTermsArr.some(
+        //     (x: any) => x.label == this.WOTermsData.changedPaymentTerms
+        // );
 
-        if (!condition) {
-            this.showSelect = true;
-            this.clickCount = 0;
-        }
-        if (this.action == "create") {
-            this.showSelect = false;
-            this.clickCount = 1;
-        }
-        this.form.patchValue(this.SOTermsData);
-        if (["approval", "rejection", "view", "generate", "cancel"].includes(this.action)) {
+        // if (!condition) {
+        //     this.showSelect = true;
+        //     this.clickCount = 0;
+        // }
+        // if (this.action == "create") {
+        //     this.showSelect = false;
+        //     this.clickCount = 1;
+        // }
+        this.form.patchValue(this.WOTermsData);
+        if (["approve", "reject", "view", "generate", "cancel"].includes(this.action)) {
             this.form.disable();
         }
     }
 
     dismissModel() {
-        if (this.validationService.checkErrors(this.form, DRN_REVIEW_TERMS_FORM_ERRORS)) {
+        if (this.validationService.checkErrors(this.form, WO_REVIEW_TERMS_ERRORS)) {
             return;
         }
         this.activeModal.close(this.form.value);
     }
-    enablePaymentTerms() {
-        this.clickCount++;
-        this.showSelect = this.clickCount % 2 === 0;
-    }
-    enableFreightTerms() {
-        if (["create", "edit"].includes(this.action)) {
-            this.form.controls["frightTerms"].enable();
-        }
-    }
+    // enablePaymentTerms() {
+    //     this.clickCount++;
+    //     this.showSelect = this.clickCount % 2 === 0;
+    // }
+    // enableFreightTerms() {
+    //     if (["create", "edit"].includes(this.action)) {
+    //         this.form.controls["freightTerms"].enable();
+    //     }
+    // }
 }

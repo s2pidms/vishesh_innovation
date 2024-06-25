@@ -9,11 +9,13 @@ export class JobWorkOrderService {
     routes: any = {
         createPath: "/purchase/jobWorkOrder/create",
         getAllPath: "/purchase/jobWorkOrder/getAll",
+        getAllReportsPath: "/purchase/jobWorkOrder/getAllReports",
         getAllMasterDataPath: "/purchase/jobWorkOrder/getAllMasterData",
         updatePath: (id: string) => `/purchase/jobWorkOrder/update/${id}`,
         getByIdPath: (id: string) => `/purchase/jobWorkOrder/getById/${id}`,
         getJWItemsByJobWorkerPath: (id: string) => `/purchase/jobWorkOrder/getJWItemsByJobWorker/${id}`,
-        deletePath: (id: string) => `/purchase/jobWorkOrder/delete/${id}`
+        deletePath: (id: string) => `/purchase/jobWorkOrder/delete/${id}`,
+        getByIdForPDFPath: (id: string) => `/purchase/jobWorkOrder/getByIdForPDF/${id}`
     };
     constructor(private http: ApiService) {}
 
@@ -22,6 +24,9 @@ export class JobWorkOrderService {
     }
     getAll(params: any) {
         return this.http.get(this.routes.getAllPath, params).pipe(map((res: any) => res));
+    }
+    getAllReports(params: any) {
+        return this.http.get(this.routes.getAllReportsPath, params).pipe(map((res: any) => res));
     }
     getAllMasterData(params: any) {
         return this.http.get(this.routes.getAllMasterDataPath, params).pipe(map((res: any) => res));
@@ -37,5 +42,8 @@ export class JobWorkOrderService {
     }
     getJWItemsByJobWorker(id: string) {
         return this.http.get(this.routes.getJWItemsByJobWorkerPath(id)).pipe(map((res: any) => res));
+    }
+    getByIdForPDF(id: string) {
+        return this.http.get(this.routes.getByIdForPDFPath(id)).pipe(map((res: any) => res));
     }
 }

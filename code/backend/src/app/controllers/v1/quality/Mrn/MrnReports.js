@@ -228,3 +228,90 @@ exports.getAllRawMaterialInspectionReports = asyncHandler(async (req, res) => {
         return res.serverError(errors);
     }
 });
+
+exports.getAllMRNDetailsReports = asyncHandler(async (req, res) => {
+    try {
+        const suppliersOptions = await getAllSuppliers(req.user.company, {supplierName: 1});
+        const {supplier = null, toDate = null, fromDate = null} = req.query;
+        let query = {
+            company: ObjectId(req.user.company),
+            ...(!!supplier && {
+                supplier: ObjectId(supplier)
+            }),
+            MRNStatus: {$in: ["Report Generated", "Closed"]},
+            ...(!!toDate &&
+                !!fromDate && {
+                    MRNDate: {
+                        $lte: getEndDateTime(toDate),
+                        $gte: getStartDateTime(fromDate)
+                    }
+                })
+        };
+        let project = MRNHelper.getAllMRNDetailsReportsAttributes();
+        let pipeline = [
+            {
+                $match: query
+            },
+            {
+                $lookup: {
+                    from: "GRN",
+                    localField: "GRNNumber",
+                    foreignField: "_id",
+                    pipeline: [{$project: {GRNNumber: 1, GRNDate: 1, _id: 1}}],
+                    as: "GRNNumber"
+                }
+            },
+            {$unwind: "$GRNNumber"},
+
+            {
+                $lookup: {
+                    from: "Supplier",
+                    localField: "supplier",
+                    foreignField: "_id",
+                    pipeline: [{$project: {supplierName: 1, id: 1}}],
+                    as: "supplier"
+                }
+            },
+            {$unwind: "$supplier"},
+            {$unwind: "$MRNDetails"},
+            {
+                $lookup: {
+                    from: "Items",
+                    localField: "MRNDetails.item",
+                    foreignField: "_id",
+                    pipeline: [
+                        {
+                            $project: {
+                                itemName: 1,
+                                UOM: 1,
+                                GRNQty: 1
+                            }
+                        }
+                    ],
+                    as: "MRNDetails.item"
+                }
+            },
+            {$unwind: "$MRNDetails.item"}
+            // {
+            //     $match: {
+            //         ...(!!item && {
+            //             "MRNDetails.item._id": ObjectId(item)
+            //         })
+            //     }
+            // }
+        ];
+        let rows = await MRNRepository.getAllPaginate({
+            pipeline,
+            project,
+            queryParams: req.query
+        });
+        return res.success({
+            suppliersOptions,
+            ...rows
+        });
+    } catch (e) {
+        console.error("getAllMRNDetailsReports", e);
+        const errors = MESSAGES.apiErrorStrings.SERVER_ERROR;
+        return res.serverError(errors);
+    }
+});

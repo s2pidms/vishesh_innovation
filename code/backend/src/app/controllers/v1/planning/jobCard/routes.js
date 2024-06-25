@@ -15,6 +15,7 @@ const {
     getByIdForPDF,
     getDimBySKU
 } = require("./jobCard");
+const {getAllSOForJC, getAllJCTableList} = require("./jobCardPlanning");
 
 app.post("/create", create);
 app.get("/getAll", getAll);
@@ -29,5 +30,10 @@ app.get("/getCustomersByCategory", getCustomersByCategory);
 app.get("/getJCDetailsByCustomerId", getJCDetailsByCustomerId);
 app.get("/getAllReports", getAllReports);
 app.get("/getBOMBySKUOrDSKU", getBOMBySKUOrDSKU);
+
+// Job Card Planning API
+
+app.get("/getAllSOForJC", getAllSOForJC);
+app.get("/getAllJCTableList", getAllJCTableList);
 
 module.exports = app;

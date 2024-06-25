@@ -264,5 +264,19 @@
         "url": "/default/purchase/reports/gr_fulfillment_status_report",
         "items": [],
         "roles": []
+    },
+    {
+        "_id": "66753e409c3f896fce04fb56",
+        "menuItemId": "64a6c1e33339d4dc9d8141a5",
+        "module": "Purchase",
+        "type": "REPORT",
+        "order": 20,
+        "isDisplay": false,
+        "title": "Job Work Order",
+        "displayName": "Job Work Order",
+        "disabled": false,
+        "url": "/default/purchase/reports/jw_order",
+        "items": [],
+        "roles": []
     }
 ]

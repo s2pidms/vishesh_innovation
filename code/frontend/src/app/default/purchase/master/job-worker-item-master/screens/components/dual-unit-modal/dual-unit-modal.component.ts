@@ -56,7 +56,6 @@ export class DualUnitModalComponent implements OnInit {
     ) {}
 
     ngOnInit(): void {
-        console.log("WXLDimensionsUnit", this.WXLDimensionsUnit);
         this.setSecondaryValue();
         this.form.patchValue(this.dualUnits);
         if (this.dimensionData) {
@@ -282,10 +281,13 @@ export class DualUnitModalComponent implements OnInit {
             this.f["primaryConversion"].setValue(null);
             this.f["secondaryConversion"].setValue(null);
             this.f["primaryToSecondaryConversion"].setValue(null);
-            this.f["secondaryToPrimaryConversion"].setValue(null); 
+            this.f["secondaryToPrimaryConversion"].setValue(null);
             this.f["unitConversionFlag"].disable();
         } else {
             this.f["unitConversionFlag"].enable();
+            this.f["unitConversionFlag"].setValue(1);
+            this.f["primaryConversion"].setValue(1);
+            this.f["secondaryConversion"].setValue(1);
         }
     }
 

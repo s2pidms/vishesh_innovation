@@ -600,6 +600,11 @@ exports.getItemByGTRequestId = asyncHandler(async (req, res) => {
                             $project: {
                                 _id: 0
                             }
+                        },
+                        {
+                            $sort: {
+                                MRNDate: 1
+                            }
                         }
                     ],
                     as: "inventory"

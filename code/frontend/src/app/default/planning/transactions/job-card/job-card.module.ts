@@ -14,7 +14,7 @@ import {
     JobCardSOAndFCTableComponent
 } from "./screens/components";
 import {NgbActiveModal} from "@ng-bootstrap/ng-bootstrap";
-import { ViewSkuDimensionComponent } from './screens/components/view-sku-dimension/view-sku-dimension.component';
+import {ViewSkuDimensionComponent} from "./screens/components/view-sku-dimension/view-sku-dimension.component";
 
 const routes: Routes = [
     {path: "", redirectTo: "list", pathMatch: "full"},

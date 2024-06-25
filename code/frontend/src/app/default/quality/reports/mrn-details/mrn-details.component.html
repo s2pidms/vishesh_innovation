@@ -1,0 +1,90 @@
+<div class="reportTablePage">
+    <div class="table-body pb-0 shadow-none">
+        <div class="row table-header">
+            <div class="col">
+                <label class="heading">MRN Details</label>
+            </div>
+        </div>
+        <div class="row my-4">
+            <div class="col-3 ps-5 separate-row">
+                <label class="form-label">Supplier Name</label>
+                <ng-select
+                    [items]="suppliersOptions"
+                    bindLabel="supplierName"
+                    bindValue="_id"
+                    [clearable]="false"
+                    [(ngModel)]="supplierId"
+                >
+                </ng-select>
+                <span class="set-position">
+                    <img src="./assets/new_icons/redstroke.svg" alt="" height="27" width="8" />
+                </span>
+            </div>
+
+            <div class="col-3">
+                <label class="form-label"> From Date <span class="text-danger">*</span> </label>
+                <input class="form-control" type="date" [(ngModel)]="fromDate" />
+            </div>
+
+            <div class="col-3">
+                <label class="form-label"> To Date <span class="text-danger">*</span> </label>
+                <input class="form-control" type="date" [(ngModel)]="toDate" />
+            </div>
+            <div class="col-3 align-self-end separate-image">
+                <span class="image-position">
+                    <img src="./assets/new_icons/redstroke.svg" alt="" height="27" width="8" />
+                </span>
+                <button type="button" class="btn btn-primary px-4 me-3" (click)="getAll()">Apply Filter</button>
+
+                <button type="button" class="btn btn-primary px-4 ms-4" (click)="reset()">Reset Filter</button>
+            </div>
+        </div>
+
+        <hr class="row line-border" />
+        <div class="table-responsive mb-0">
+            <app-setting-header
+                [data]="{page,pageSize,collection,search,type: 'list',pdfDisplay:true}"
+                (dataChange)="eventHeader($event)"
+            >
+            </app-setting-header>
+            <table class="table table-bordered">
+                <thead class="bg-primary">
+                    <tr class="text-white">
+                        <th sortable="supplierInvoice" (sort)="onSort($event)">Supplier Inv.#</th>
+                        <th sortable="supplierDate" (sort)="onSort($event)">Invoice Dt.</th>
+                        <th class="text-start" sortable="supplierName" (sort)="onSort($event)">Supplier Name</th>
+                        <th sortable="GRNDate" (sort)="onSort($event)">GRN Dt.</th>
+                        <th sortable="GRNNumber" (sort)="onSort($event)">GRN No.</th>
+                        <th sortable="MRNNumber" (sort)="onSort($event)">MRN No.</th>
+                        <th sortable="MRNDate" (sort)="onSort($event)">MRN Dt.</th>
+                        <th class="text-start" sortable="itemName" (sort)="onSort($event)">Item Name</th>
+                        <th sortable="GRNQty" (sort)="onSort($event)">GRN Qty.</th>
+                        <th sortable="UOM" (sort)="onSort($event)">UoM</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let u of tableData; trackBy: trackByFn">
+                        <td>{{ u?.supplierInvoice }}</td>
+                        <td>{{ u?.supplierDate }}</td>
+                        <td class="text-start" [style.width]="supplierName.clientWidth" #supplierName>
+                            <span class="pointer" [positionTarget]="supplierName" [ngbTooltip]="u.supplierName">
+                                {{ u?.supplierName }}
+                            </span>
+                        </td>
+                        <td>{{ u?.GRNDate }}</td>
+                        <td>{{ u?.GRNNumber }}</td>
+                        <td>{{ u?.MRNNumber }}</td>
+                        <td>{{ u?.MRNDate }}</td>
+                        <td class="text-start" [style.width]="itemName.clientWidth" #itemName>
+                            <span class="pointer" [positionTarget]="itemName" [ngbTooltip]="u.itemName">
+                                {{ u.itemName }}
+                            </span>
+                        </td>
+                        <td>{{ u?.GRNQty }}</td>
+                        <td>{{ u?.UOM | UOMUnitsMaster }}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

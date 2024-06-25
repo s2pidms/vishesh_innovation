@@ -7,6 +7,13 @@ import {JobWorkOrderAddressModalComponent} from "./screens/components/job-work-o
 import {ReviewWoTermsModalComponent} from "./screens/components/review-wo-terms-modal/review-wo-terms-modal.component";
 import {FormScreenResolver} from "@core/guards";
 import {SharedModule} from "@shared/shared.module";
+import {
+    JwBillFromComponent,
+    JwBillToComponent,
+    JwDeliveryScheduleComponent,
+    JwShipFromComponent,
+    JwShipToComponent
+} from "./screens/components";
 
 const routes: Routes = [
     {path: "", redirectTo: "list", pathMatch: "full"},
@@ -23,7 +30,12 @@ const routes: Routes = [
         JobWorkOrderFormComponent,
         JobWorkOrderListComponent,
         JobWorkOrderAddressModalComponent,
-        ReviewWoTermsModalComponent
+        ReviewWoTermsModalComponent,
+        JwBillFromComponent,
+        JwBillToComponent,
+        JwShipFromComponent,
+        JwShipToComponent,
+        JwDeliveryScheduleComponent
     ],
     imports: [CommonModule, RouterModule.forChild(routes), SharedModule]
 })

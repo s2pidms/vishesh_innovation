@@ -289,7 +289,11 @@ export class CustomerFormComponent implements OnInit {
             (reason: any) => {}
         );
     }
-
+    setGSTIN(ev: any) {
+        if (ev.target.value == "Unregistered Dealer") {
+            this.form.controls["GSTIN"].setValue("-");
+        }
+    }
     getInitialData() {
         this.spinner.show();
         this.customerService.getAllMasterData({}).subscribe(result => {

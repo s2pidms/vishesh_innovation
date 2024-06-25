@@ -1,9 +1,9 @@
 const mongoose = require("mongoose");
-const {findAppParameterValue} = require("../../controllers/v1/settings/appParameter/appParameter");
 const Audit = require("../../controllers/v1/settings/audit/audit");
 const {QUOTATION_SKU: SCHEMA_CONST} = require("../../mocks/schemasConstant/salesConstant");
 const {getAndSetAutoIncrementNo} = require("../../controllers/v1/settings/autoIncrement/autoIncrement");
 const {paginatePlugin} = require("../plugins/paginatePlugin");
+const {setTwoDecimal} = require("../../helpers/utility");
 const quotationSKUSchema = mongoose.Schema(
     {
         company: {
@@ -100,6 +100,11 @@ const quotationSKUSchema = mongoose.Schema(
                 },
                 developmentCost: {
                     type: Number,
+                    required: false
+                },
+                lineValue: {
+                    type: Number,
+                    set: value => setTwoDecimal(value),
                     required: false
                 }
             }

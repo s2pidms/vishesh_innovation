@@ -8,6 +8,8 @@ export interface jobWorkOrderInterface {
     paymentTermsOptions: ICommonData[];
     purchaseCountryOptions: IParameterICommonData[];
     jobWODiscountOptions: IParameterICommonData[];
+    companyAddress: CompanyAddress[];
+    freightTermsOptions: IParameterICommonData[];
 }
 export interface JobWorkerOption {
     _id: string;
@@ -39,4 +41,19 @@ export interface serviceMastersOptions {
     sgst: Number;
     cgst: Number;
     ugst: Number;
+}
+
+  
+export interface CompanyAddress {
+    _id: string;
+    GSTIN: string;
+    line1: string;
+    line2: string;
+    line3: string;
+    line4: string;
+    state: string;
+    city: string;
+    district: string;
+    pinCode: string;
+    country: string;
 }

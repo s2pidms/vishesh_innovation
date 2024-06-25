@@ -174,5 +174,19 @@
             }
         ],
         "roles": []
+    },
+    {
+        "_id": "66754fcb9c3f896fce04fb57",
+        "menuItemId": "64a6c1e33339d4dc9d8141a4",
+        "module": "Planning",
+        "type": "TRANSACTION",
+        "order": 11,
+        "isDisplay": false,
+        "title": "Job Card Planning",
+        "displayName": "Job Card Planning",
+        "disabled": false,
+        "url": "/default/planning/transactions/job_card_planning/list",
+        "items": [],
+        "roles": []
     }
 ]

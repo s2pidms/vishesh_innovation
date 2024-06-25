@@ -1,0 +1,276 @@
+<div class="row">
+    <div class="col-5 pe-0">
+        <form [formGroup]="form" class="formCard card mt-3">
+            <div class="container">
+                <div class="row form-header">
+                    <div class="col heading">
+                        <label class="">Job Card Details </label>
+                    </div>
+                </div>
+                <div class="form-body pb-3">
+                    <div class="row mt-4">
+                        <div class="col-4 pe-0 d-flex justify-content-between align-items-center">
+                            <label class="form-label"> Job Card No <span class="text-danger"> </span></label>
+                            <span class="text-secondary fs-5">&#9654;</span>
+                        </div>
+                        <div class="col-8 ps-3">
+                            <input
+                                type="text"
+                                class="form-control bg-white-smoke"
+                                formControlName="jobCardNo"
+                                readonly
+                            />
+                        </div>
+                    </div>
+                    <div class="row mt-4">
+                        <div class="col-4 pe-0 d-flex justify-content-between align-items-center">
+                            <label class="form-label"> Batch Date <span class="text-danger"> </span></label>
+                            <span class="text-secondary fs-5">&#9654;</span>
+                        </div>
+                        <div class="col-8 ps-3">
+                            <input
+                                type="date"
+                                class="form-control bg-white-smoke"
+                                formControlName="batchDate"
+                                readonly
+                            />
+                        </div>
+                    </div>
+                    <div class="row mt-4">
+                        <div class="col-4 pe-0 d-flex justify-content-between align-items-center">
+                            <label class="form-label"> SKU Number <span class="text-danger"> </span></label>
+                            <span class="text-secondary fs-5">&#9654;</span>
+                        </div>
+                        <div class="col-8 ps-3">
+                            <input type="text" class="form-control bg-white-smoke" formControlName="SKUNo" readonly />
+                        </div>
+                    </div>
+                    <div class="row mt-4">
+                        <div class="col-4 pe-0 d-flex justify-content-between align-items-center">
+                            <label class="form-label"> SKU Name <span class="text-danger"> </span></label>
+                            <span class="text-secondary fs-5">&#9654;</span>
+                        </div>
+                        <div class="col-8 ps-3">
+                            <input type="text" class="form-control bg-white-smoke" formControlName="SKUName" readonly />
+                        </div>
+                    </div>
+                    <div class="row mt-4">
+                        <div class="col-4 pe-0 d-flex justify-content-between align-items-center">
+                            <label class="form-label"> SKU Description <span class="text-danger"> </span></label>
+                            <span class="text-secondary fs-5">&#9654;</span>
+                        </div>
+                        <div class="col-8 ps-3">
+                            <input
+                                type="text"
+                                class="form-control bg-white-smoke"
+                                formControlName="SKUDescription"
+                                readonly
+                            />
+                        </div>
+                    </div>
+                    <div class="row mt-4">
+                        <div class="col-4 pe-0 d-flex justify-content-between align-items-center">
+                            <label class="form-label"> SKU UoM <span class="text-danger"> </span></label>
+                            <span class="text-secondary fs-5">&#9654;</span>
+                        </div>
+                        <div class="col-8 ps-3">
+                            <input
+                                type="text"
+                                class="form-control bg-white-smoke"
+                                value="{{ form.controls['UOM'].value | SalesUOMUnitMaster }}"
+                                readonly
+                            />
+                        </div>
+                    </div>
+                    <div formGroupName="generateReport" class="row mt-4">
+                        <div class="col-4 pe-0 d-flex justify-content-between align-items-center">
+                            <label class="form-label">Input Qty<span class="text-danger"> </span></label>
+                            <span class="text-secondary fs-5">&#9654;</span>
+                        </div>
+                        <div class="col-8 ps-3">
+                            <input
+                                type="text"
+                                class="form-control bg-white-smoke"
+                                formControlName="batchInputQty"
+                                readonly
+                            />
+                        </div>
+                    </div>
+                    <div formGroupName="generateReport" class="row mt-4">
+                        <div class="col-4 pe-0 d-flex justify-content-between align-items-center">
+                            <label class="form-label">Output Qty<span class="text-danger"> </span></label>
+                            <span class="text-secondary fs-5">&#9654;</span>
+                        </div>
+                        <div class="col-8 ps-3">
+                            <input
+                                type="text"
+                                class="form-control bg-white-smoke"
+                                formControlName="batchOutputQty"
+                                readonly
+                            />
+                        </div>
+                    </div>
+                    <div formGroupName="generateReport" class="row mt-4 mb-4">
+                        <div class="col-4 pe-0 d-flex justify-content-between align-items-center">
+                            <label class="form-label">Rejection Qty<span class="text-danger"> </span></label>
+                            <span class="text-secondary fs-5">&#9654;</span>
+                        </div>
+                        <div class="col-8 ps-3">
+                            <input
+                                type="text"
+                                class="form-control bg-white-smoke"
+                                formControlName="batchRejQty"
+                                readonly
+                            />
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+
+    <div class="col-7 ps-0">
+        <form [formGroup]="form" class="formCard ms-0 card mt-3">
+            <div class="container">
+                <div class="row form-header mb-2">
+                    <div class="col heading">
+                        <label class=""> Rejection Data </label>
+                    </div>
+                </div>
+                <!-- <div class="pt-1"> -->
+                <div class="row pt-2 justify-content-between">
+                    <div class="col-4"></div>
+                    <div class="col-4 d-flex justify-content-center">
+                        <ngb-pagination
+                            *ngIf="JCEntryDetailsList.length > 0"
+                            [collectionSize]="JCEntryDetailsList.length"
+                            [(page)]="page"
+                            [pageSize]="pageSize"
+                            [boundaryLinks]="false"
+                        >
+                            <ng-template ngbPaginationPrevious>
+                                <img src="./assets/new_icons/pagination_prev.svg" width="20rem" />
+                            </ng-template>
+                            <ng-template ngbPaginationNext>
+                                <img src="./assets/new_icons/pagination_next.svg" width="20rem" />
+                            </ng-template>
+                            <ng-template ngbPaginationPages let-page let-pages="pages">
+                                <li class="ngb-custom-pages-item align-self-center" *ngIf="pages.length > 0">
+                                    <span class="page-label me-2 ms-1">
+                                        Page {{ page }} of {{ pages[pages.length - 1] }}
+                                    </span>
+                                </li>
+                            </ng-template>
+                        </ngb-pagination>
+                    </div>
+                    <div class="col-4"></div>
+                </div>
+                <hr class="row line-border" />
+                <div class="table-responsive" style="min-height: 27.7rem">
+                    <table class="table table-bordered table-sticky">
+                        <thead class="bg-primary">
+                            <tr class="text-white">
+                                <th style="width: 4rem !important" sortable="SN" (sort)="onSort($event)">SN</th>
+                                <th
+                                    style="width: 18rem !important"
+                                    sortable="rejectionType"
+                                    (sort)="onSort($event)"
+                                    class="text-start"
+                                >
+                                    Rejection Type/Defect
+                                </th>
+                                <th style="width: 7rem !important" sortable="quantity">Quantity</th>
+                                <th style="width: 4rem !important" sortable="percentage">%</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr
+                                *ngFor="
+                                    let item of JCEntryDetailsList
+                                        | searchFi1ter : search
+                                        | slice : (page - 1) * pageSize : (page - 1) * pageSize + pageSize;
+                                    let i = index;
+                                    trackBy: trackByFn
+                                "
+                            >
+                                <td>
+                                    {{ i + 1 + (page - 1) * pageSize }}
+                                </td>
+                                <td class="text-start" [style.width]="rejectionType.clientWidth" #rejectionType>
+                                    <span
+                                        class="pointer"
+                                        [ngbTooltip]="item.rejectionType"
+                                        [positionTarget]="rejectionType"
+                                    >
+                                        {{ item?.rejectionType }}
+                                    </span>
+                                </td>
+                                <td>
+                                    <div class="d-flex justify-content-center">
+                                        <span *ngIf="['view', 'accept'].includes(action)">
+                                            {{ item?.quantity }}
+                                        </span>
+                                        <input
+                                            *ngIf="!['view', 'accept'].includes(action)"
+                                            class="form-control form-control-sm"
+                                            type="number"
+                                            [(ngModel)]="item.quantity"
+                                            [ngModelOptions]="{standalone: true}"
+                                            (input)="calRejectQty(item)"
+                                        />
+                                    </div>
+                                </td>
+                                <td>
+                                    {{ item?.percentage ? (item?.percentage | number : "1.2-2") : 0 }}
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <tr class=" ">
+                    <td style="width: 7.5rem !important"></td>
+                    <td style="width: 32.5rem !important">
+                        <div class="col-form-label text-nowrap pt-1 text-end">
+                            Total Count
+                            <span class="mx-2">&#9654;</span>
+                        </div>
+                    </td>
+                    <td
+                        class="border border-1 bg-mix-pink-color text-center"
+                        style="width: 14.5rem !important; border-color: #c8c8c8 !important"
+                    >
+                        <span style="font-size: 1.2rem">
+                            {{ this.f["rejectedTotalQty"].value }}
+                        </span>
+                    </td>
+                    <td
+                        class="border border-1 bg-mix-pink-color text-center"
+                        style="width: 7.3rem !important; border-color: #c8c8c8 !important"
+                    >
+                        <span style="font-size: 1.2rem">
+                            {{ this.f["rejectedPercent"].value ? this.f["rejectedPercent"].value : 0 }}
+                        </span>
+                    </td>
+                </tr>
+
+                <hr class="row line-border mt-3" />
+                <div class="row">
+                    <div class="col-6">
+                        <button class="plusIconSvg btn btn-primary me-1"></button>
+                        <button type="button" class="btn btn-primary px-4" (click)="openRemarksModal()">Remarks</button>
+                    </div>
+                    <div class="col-md-auto ms-auto d-flex align-items-end">
+                        <button
+                            *ngIf="!['reject', 'approve', 'view'].includes(action)"
+                            type="button"
+                            class="btn btn-primary px-5"
+                            (click)="submit()"
+                        >
+                            {{ action == "accept" ? "Accept" : " Save" }}
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>

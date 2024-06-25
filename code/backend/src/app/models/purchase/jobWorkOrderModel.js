@@ -2,8 +2,9 @@ const mongoose = require("mongoose");
 const Audit = require("../../controllers/v1/settings/audit/audit");
 const {JOB_WORK_ORDER: SCHEMA_CONSTANT} = require("../../mocks/schemasConstant/purchaseConstant");
 const {getAndSetAutoIncrementNo} = require("../../controllers/v1/settings/autoIncrement/autoIncrement");
-const {paginatePlugin} = require("../plugins/paginatePlugin");
+const {paginatePlugin, reportPaginatePlugin} = require("../plugins/paginatePlugin");
 const {setTwoDecimal} = require("../../helpers/utility");
+const {OPTIONS} = require("../../helpers/global.options");
 const jobWorkOrderSchema = mongoose.Schema(
     {
         company: {
@@ -42,9 +43,229 @@ const jobWorkOrderSchema = mongoose.Schema(
             type: String,
             required: false
         },
+        GSTINNo: {
+            type: String,
+            required: false
+        },
         placeOfSupply: {
             type: String,
             required: false
+        },
+        paymentTerms: {
+            type: String,
+            required: false
+        },
+        freightTerms: {
+            type: String,
+            required: false
+        },
+        WORemarks: {
+            type: String,
+            required: false
+        },
+        billFromJobWorker: {
+            addressLabel: {
+                type: String,
+                required: false,
+                trim: true
+            },
+            country: {
+                type: String,
+                required: false,
+                trim: true
+            },
+            state: {
+                type: String,
+                required: false,
+                trim: true
+            },
+            cityOrDistrict: {
+                type: String,
+                required: false,
+                trim: true
+            },
+            pinCode: {
+                type: String,
+                required: false,
+                trim: true
+            },
+            line1: {
+                type: String,
+                required: false,
+                trim: true
+            },
+            line2: {
+                type: String,
+                required: false,
+                trim: true
+            },
+            line3: {
+                type: String,
+                required: false,
+                trim: true
+            },
+            line4: {
+                type: String,
+                required: false,
+                trim: true
+            }
+        },
+        shipFromJobWorker: {
+            addressLabel: {
+                type: String,
+                required: false,
+                trim: true
+            },
+            country: {
+                type: String,
+                required: false,
+                trim: true
+            },
+            state: {
+                type: String,
+                required: false,
+                trim: true
+            },
+            cityOrDistrict: {
+                type: String,
+                required: false,
+                trim: true
+            },
+            pinCode: {
+                type: String,
+                required: false,
+                trim: true
+            },
+            line1: {
+                type: String,
+                required: false,
+                trim: true
+            },
+            line2: {
+                type: String,
+                required: false,
+                trim: true
+            },
+            line3: {
+                type: String,
+                required: false,
+                trim: true
+            },
+            line4: {
+                type: String,
+                required: false,
+                trim: true
+            }
+        },
+        billToCompany: {
+            companyName: {
+                type: String,
+                required: false
+            },
+            GSTIN: {
+                type: String,
+                required: false
+            },
+            billFromLocation: {
+                type: String,
+                required: false,
+                trim: true
+            },
+            country: {
+                type: String,
+                required: false,
+                trim: true
+            },
+            state: {
+                type: String,
+                required: false,
+                trim: true
+            },
+            city: {
+                type: String,
+                required: false,
+                trim: true
+            },
+            pinCode: {
+                type: String,
+                required: false,
+                trim: true
+            },
+            line1: {
+                type: String,
+                required: false,
+                trim: true
+            },
+            line2: {
+                type: String,
+                required: false,
+                trim: true
+            },
+            line3: {
+                type: String,
+                required: false,
+                trim: true
+            },
+            line4: {
+                type: String,
+                required: false,
+                trim: true
+            }
+        },
+        shipToCompany: {
+            companyName: {
+                type: String,
+                required: false
+            },
+            GSTIN: {
+                type: String,
+                required: false
+            },
+            billFromLocation: {
+                type: String,
+                required: false,
+                trim: true
+            },
+            country: {
+                type: String,
+                required: false,
+                trim: true
+            },
+            state: {
+                type: String,
+                required: false,
+                trim: true
+            },
+            city: {
+                type: String,
+                required: false,
+                trim: true
+            },
+            pinCode: {
+                type: String,
+                required: false,
+                trim: true
+            },
+            line1: {
+                type: String,
+                required: false,
+                trim: true
+            },
+            line2: {
+                type: String,
+                required: false,
+                trim: true
+            },
+            line3: {
+                type: String,
+                required: false,
+                trim: true
+            },
+            line4: {
+                type: String,
+                required: false,
+                trim: true
+            }
         },
         WODetails: [
             {
@@ -138,18 +359,14 @@ const jobWorkOrderSchema = mongoose.Schema(
                     type: String,
                     required: false
                 },
-                currency: {
-                    type: String,
-                    required: false
-                },
                 processRatePerUnit: {
                     type: Number,
                     set: value => setTwoDecimal(value),
                     required: false
                 },
                 discountPercent: {
-                    type: Number,
-                    set: value => setTwoDecimal(value),
+                    type: String,
+                    // set: value => setTwoDecimal(value),
                     required: false
                 },
                 netRatePerUnit: {
@@ -168,15 +385,51 @@ const jobWorkOrderSchema = mongoose.Schema(
                     required: false
                 },
                 deliveryDate: {
-                    type: Date,
+                    type: String,
                     required: false
-                }
+                },
+                deliveryCount: {
+                    type: Number,
+                    required: false
+                },
+                deliverySchedule: [
+                    {
+                        scheduleNo: {
+                            type: Number,
+                            required: false
+                        },
+                        quantity: {
+                            type: Number,
+                            set: value => setTwoDecimal(value),
+                            required: false
+                        },
+                        deliveryDate: {
+                            type: Date,
+                            required: false
+                        }
+                    }
+                ]
             }
         ],
         WOTaxableValue: {
             type: Number,
             set: value => setTwoDecimal(value),
             required: false
+        },
+        remarks: {
+            type: String,
+            required: false
+        },
+        status: {
+            type: String,
+            required: false,
+            enum: [
+                OPTIONS.defaultStatus.AWAITING_APPROVAL,
+                OPTIONS.defaultStatus.APPROVED,
+                OPTIONS.defaultStatus.REPORT_GENERATED,
+                OPTIONS.defaultStatus.REJECTED
+            ],
+            default: OPTIONS.defaultStatus.AWAITING_APPROVAL
         }
     },
     {
@@ -194,6 +447,7 @@ jobWorkOrderSchema.pre("save", async function (next) {
     next();
 });
 jobWorkOrderSchema.plugin(paginatePlugin);
+jobWorkOrderSchema.plugin(reportPaginatePlugin);
 const jobWorkOrder = mongoose.model(SCHEMA_CONSTANT.COLLECTION_NAME, jobWorkOrderSchema);
 
 module.exports = jobWorkOrder;

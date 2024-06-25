@@ -1,0 +1,129 @@
+<div class="listCard card">
+    <div class="table-header">
+        <label class="heading">Rejection Summary</label>
+    </div>
+    <div class="row my-4">
+        <div class="col-3 ps-5 m-2 separate-row">
+            <ng-select
+                [items]="statusOptions"
+                bindLabel="label"
+                bindValue="value"
+                [(ngModel)]="status"
+                [clearable]="false"
+            >
+            </ng-select>
+        </div>
+        <div class="col-3 mt-1 separate-image">
+            <span class="image-position">
+                <img src="./assets/new_icons/redstroke.svg" alt="" height="27" width="8" />
+            </span>
+            <button type="button" class="btn btn-primary px-4 me-3" (click)="getAll()">Apply Filter</button>
+            <button type="button" class="btn btn-primary px-4" (click)="reset()">Clear Filter</button>
+        </div>
+        <div class="col text-end mt-1">
+            <button type="button" (click)="openRejectionStatusSummaryModal()" class="btn btn-primary px-4 me-3">
+                Status Summary
+            </button>
+        </div>
+    </div>
+    <hr class="line-border" />
+    <div class="table-responsive">
+        <app-setting-header [data]="{page,pageSize,collection,search,type: 'list'}" (dataChange)="eventHeader($event)">
+        </app-setting-header>
+        <table class="table table-bordered">
+            <thead class="bg-primary">
+                <tr class="text-white">
+                    <th sortable="jobCardNo" (sort)="onSort($event)">JC No.</th>
+                    <th sortable="batchDate" (sort)="onSort($event)">Batch Date</th>
+                    <th sortable="SKUNo" (sort)="onSort($event)">SKU No.</th>
+                    <th sortable="SKUName" class="text-start" (sort)="onSort($event)">
+                        {{ "SKU Name" | labelTranslate }}
+                    </th>
+                    <th sortable="SKUDescription" class="text-start" (sort)="onSort($event)">
+                        {{ "SKU Description" | labelTranslate }}
+                    </th>
+                    <th sortable="UOM" (sort)="onSort($event)">UoM</th>
+                    <th sortable="batchInputQty" (sort)="onSort($event)">Input Qty</th>
+                    <th sortable="batchOutputQty" (sort)="onSort($event)">Output Qty</th>
+                    <th sortable="batchRejQty" (sort)="onSort($event)">Rej. Qty</th>
+                    <th sortable="status" (sort)="onSort($event)">Status</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let u of tableData; trackBy: trackByFn">
+                    <td>{{ u?.jobCardNo }}</td>
+                    <td>{{ u?.batchDate }}</td>
+                    <td>{{ u?.SKUNo }}</td>
+                    <td class="text-start" [style.width]="SKUName.clientWidth" #SKUName>
+                        <span class="pointer" [ngbTooltip]="u.SKUName" [positionTarget]="SKUName">
+                            {{ u.SKUName }}
+                        </span>
+                    </td>
+                    <td class="text-start" [style.width]="SKUDescription.clientWidth" #SKUDescription>
+                        <span class="pointer" [ngbTooltip]="u.SKUDescription" [positionTarget]="SKUDescription">
+                            {{ u.SKUDescription }}
+                        </span>
+                    </td>
+                    <td>{{ u?.UOM | SalesUOMUnitMaster }}</td>
+                    <td>{{ u?.batchInputQty }}</td>
+                    <td>{{ u.batchOutputQty }}</td>
+                    <td>{{ u.batchRejQty }}</td>
+                    <td>
+                        <span class="d-flex justify-content-center">
+                            <div *ngIf="u.status == 'Active'" class="statusActive"></div>
+                            <div *ngIf="u.status == 'Inactive'" class="statusInActive"></div>
+                        </span>
+                    </td>
+                    <td>
+                        <div class="dropdown">
+                            <button class="dropbtn"></button>
+                            <div class="dropdown-content">
+                                <a
+                                    [class.disable]="u.status === 'Inactive'"
+                                    appAccessControl
+                                    [accessType]="rolePermissionActions.editAction"
+                                    href="javascript:void(0)"
+                                    (click)="navigateTo('../form', u, 'rejectionData')"
+                                >
+                                    <i class="fa fa-pencil-square-o fa-lg me-2 text-primary" aria-hidden="true"></i>
+                                    + Rejection Data
+                                </a>
+                                <a
+                                    [class.disable]="u.status === 'Active'"
+                                    appAccessControl
+                                    [accessType]="rolePermissionActions.viewAction"
+                                    href="javascript:void(0)"
+                                    (click)="navigateTo('../form', u, 'view')"
+                                >
+                                    <i class="fa fa-eye fa-lg me-2 text-primary" aria-hidden="true"></i>
+                                    View
+                                </a>
+                                <a
+                                    appAccessControl
+                                    [accessType]="rolePermissionActions.editAction"
+                                    href="javascript:void(0)"
+                                    [class.disable]="u.status === 'Active'"
+                                    (click)="navigateTo('../form', u, 'edit')"
+                                >
+                                    <i class="fa fa-pencil-square-o fa-lg me-2 text-primary" aria-hidden="true"></i>
+                                    Edit
+                                </a>
+                                <a
+                                    appAccessControl
+                                    [accessType]="rolePermissionActions.editAction"
+                                    href="javascript:void(0)"
+                                    [class.disable]="u.status === 'Active'"
+                                    (click)="navigateTo('../form', u, 'accept')"
+                                >
+                                    <i class="fa fa-pencil-square-o fa-lg me-2 text-primary" aria-hidden="true"></i>
+                                    Accept
+                                </a>
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>

@@ -1,3 +1,5 @@
+const {OPTIONS} = require("../../../helpers/global.options");
+
 exports.getAllJobCardAttributes = () => {
     return {
         jobCardNo: 1,
@@ -26,5 +28,43 @@ exports.getAllJobCardReportAttributes = () => {
         UOM: 1,
         status: 1,
         orderType: 1
+    };
+};
+exports.getAllSOForJCAttributes = () => {
+    return {
+        SONumber: 1,
+        customerId: "$customer._id",
+        SOId: "$_id",
+        SODate: {$dateToString: {format: "%d-%m-%Y", date: "$SODate"}},
+        SKUId: "$SODetails.SKU._id",
+        SKUName: "$SODetails.SKU.SKUName",
+        SKUNo: "$SODetails.SKU.SKUNo",
+        drawing: "$SODetails.SKU.drawing",
+        SKUDescription: "$SODetails.SKU.SKUDescription",
+        UOM: "$SODetails.UOM",
+        customerName: {
+            $cond: [
+                {$and: ["$customer.customerNickName", {$ne: ["$customer.customerNickName", ""]}]},
+                "$customer.customerNickName",
+                "$customer.customerName"
+            ]
+        },
+        balanceQty: "$SODetails.JCCQty",
+        FGINQty: {$ifNull: ["$FGIN.FGINQuantity", 0]},
+        inProcessQty: {$ifNull: ["$jobCardCreation.inProcessQty", 0]},
+        jobCardCreation: 1,
+        status: {
+            $cond: [
+                "$jobCardCreation.status",
+                {
+                    $cond: [
+                        {$eq: ["$jobCardCreation.status", OPTIONS.defaultStatus.REPORT_GENERATED]},
+                        OPTIONS.defaultStatus.IN_PROGRESS,
+                        OPTIONS.defaultStatus.AWAITING_APPROVAL
+                    ]
+                },
+                OPTIONS.defaultStatus.INACTIVE
+            ]
+        }
     };
 };

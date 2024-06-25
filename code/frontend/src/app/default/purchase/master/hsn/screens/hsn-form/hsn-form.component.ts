@@ -150,7 +150,14 @@ export class HSNFormComponent implements OnInit {
         let sgstRate = this.form.controls["sgstRate"].value;
         this.form.controls["ugstRate"].setValue(sgstRate);
     }
-
+    setRates(ev: any) {
+        if (this.action == "create") {
+            this.form.controls["igstRate"].setValue(ev.target.value);
+            this.form.controls["ugstRate"].setValue(ev.target.value / 2);
+            this.form.controls["sgstRate"].setValue(ev.target.value / 2);
+            this.form.controls["cgstRate"].setValue(ev.target.value / 2);
+        }
+    }
     openCancelModal() {
         const modalRef = this.modalService.open(CancelPoComponent, {
             centered: true,

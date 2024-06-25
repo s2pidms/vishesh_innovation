@@ -88,6 +88,7 @@
             <!-- *ngIf="['All', 'SO', 'FC', null].includes(this.f['orderType'].value)" -->
             <app-job-card-sku-details-table
                 [SKUDetailsOfJC]="SKUDetailsOfJC"
+                [companyType]="masterData.companyType"
                 [action]="action"
                 [collection]="collection"
                 [orderType]="this.f['orderType'].value"

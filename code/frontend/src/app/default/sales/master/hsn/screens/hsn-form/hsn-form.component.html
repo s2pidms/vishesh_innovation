@@ -29,7 +29,7 @@
                 </div>
                 <div class="col-md-4">
                     <label class="form-label">GST Rate % <span class="text-danger">*</span></label>
-                    <input class="form-control" type="number" formControlName="gstRate" />
+                    <input class="form-control" type="number" formControlName="gstRate" (input)="setRates($event)" />
                     <validation-messages class="error-left" [control]="form.controls['gstRate']"> </validation-messages>
                 </div>
             </div>

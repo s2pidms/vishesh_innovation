@@ -91,6 +91,7 @@ export class SKUFormComponent implements OnInit, CanComponentDeactivate {
         internalPartNo: new UntypedFormControl(null),
         artWorkNo: new UntypedFormControl(null),
         artWorkHyperLink: new UntypedFormControl(null),
+        additionalHyperLink: new UntypedFormControl(null),
         shelfLife: new UntypedFormControl(null),
         storageTemp: new UntypedFormControl(null),
         storageHumidity: new UntypedFormControl(null),
@@ -573,7 +574,8 @@ export class SKUFormComponent implements OnInit, CanComponentDeactivate {
         modalRef.componentInstance.drawingArtWork = {
             internalPartNo: this.form.value.internalPartNo,
             artWorkNo: this.form.value.artWorkNo,
-            artWorkHyperLink: this.form.value.artWorkHyperLink
+            artWorkHyperLink: this.form.value.artWorkHyperLink,
+            additionalHyperLink: this.form.value.additionalHyperLink
             // productionLayoutFile: this.form.value.productionLayoutFile,
             // productionLayoutFileUrl: this.form.value.productionLayoutFileUrl
         };
@@ -602,6 +604,7 @@ export class SKUFormComponent implements OnInit, CanComponentDeactivate {
                     this.f["artWorkNo"].setValue(success?.drawingArtWork?.artWorkNo);
                     this.f["internalPartNo"].setValue(success?.drawingArtWork?.internalPartNo);
                     this.f["artWorkHyperLink"].setValue(success?.drawingArtWork?.artWorkHyperLink);
+                    this.f["additionalHyperLink"].setValue(success?.drawingArtWork?.additionalHyperLink);
                     this.toolInfoData.patchValue(success?.toolInfo);
                     this.specsAttributeData.patchValue(success?.specsAttribute);
                     this.mouldsIDAttributeData.patchValue(success?.mouldsIDAttribute);

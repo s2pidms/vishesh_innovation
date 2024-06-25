@@ -15,7 +15,15 @@
                         </div>
                         <div class="col-6 ps-5 pe-4">
                             <label class="form-label"> Process Name <span class="text-danger">*</span> </label>
-                            <input class="form-control" type="text" formControlName="processName" />
+                            <ng-select
+                                [items]="masterData.processList"
+                                bindLabel="defectName"
+                                bindValue="defectName"
+                                formControlName="processName"
+                                [clearable]="false"
+                            >
+                            </ng-select>
+                            <!-- <input class="form-control" type="text" formControlName="processName" /> -->
                         </div>
                         <div class="col-4 ps-4 pe-2">
                             <label class="form-label"> Source <span class="text-danger">*</span> </label>

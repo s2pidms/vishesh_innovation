@@ -83,7 +83,7 @@
                         <span class="text-danger">*</span>
                     </label>
 
-                    <select class="form-select" formControlName="GSTClassification">
+                    <select class="form-select" formControlName="GSTClassification" (change)="setGSTIN($event)">
                         <option [value]="null" selected disabled>GST Classification</option>
                         <option *ngFor="let g of masterData?.gstClassifications" [value]="g.value">
                             {{ g.label }}

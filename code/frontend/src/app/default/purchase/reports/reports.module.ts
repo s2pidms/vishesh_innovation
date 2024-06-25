@@ -110,6 +110,10 @@ const routes: Routes = [
                 path: "job_work_challan",
                 loadChildren: () =>
                     import("./job-work-challan/job-work-challan.module").then(m => m.JobWorkChallanModule)
+            },
+            {
+                path: "jw_order",
+                loadChildren: () => import("./jw-order/jw-order.module").then(m => m.JwOrderModule)
             }
         ]
     }

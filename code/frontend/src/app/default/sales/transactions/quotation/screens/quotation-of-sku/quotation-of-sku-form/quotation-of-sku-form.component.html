@@ -102,6 +102,7 @@
                         <th sortable="MOQ" (sort)="onSort($event)">MOQ</th>
                         <th sortable="QPrice" (sort)="onSort($event)">Q-Price</th>
                         <th sortable="developmentCost" (sort)="onSort($event)">Development Cost</th>
+                        <th sortable="lineValue" (sort)="onSort($event)">Line Value</th>
                     </tr>
                 </thead>
 
@@ -150,6 +151,7 @@
                                     *ngIf="!['approve', 'view', 'generate'].includes(action)"
                                     type="number"
                                     class="form-control text-center form-control-size-lg"
+                                    (input)="setLineValue(u)"
                                     [(ngModel)]="u.MOQ"
                                     [ngModelOptions]="{standalone: true}"
                                 />
@@ -167,6 +169,7 @@
                                 <input
                                     *ngIf="!['approve', 'view', 'generate'].includes(action)"
                                     class="form-control px-2 form-control-sm"
+                                    (input)="setLineValue(u)"
                                     [(ngModel)]="u.QPrice"
                                     [ngModelOptions]="{standalone: true}"
                                     type="number"
@@ -185,12 +188,14 @@
                                 <input
                                     *ngIf="!['approve', 'view', 'generate'].includes(action)"
                                     class="form-control px-2 text-center form-control-size-lg"
+                                    (input)="setLineValue(u)"
                                     [(ngModel)]="u.developmentCost"
                                     [ngModelOptions]="{standalone: true}"
                                     type="number"
                                 />
                             </div>
                         </td>
+                        <td>{{ u?.lineValue }}</td>
                     </tr>
                 </tbody>
             </table>

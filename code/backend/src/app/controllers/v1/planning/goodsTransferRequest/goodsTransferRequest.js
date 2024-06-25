@@ -290,6 +290,8 @@ exports.getAllGtRequestFulfillmentReports = asyncHandler(async (req, res) => {
         const {fromDate = null, toDate = null, status = null} = req.query;
         let project = {
             GTRequestNo: 1,
+            fromDepartment: 1,
+            toDepartment: 1,
             GTRequestDate: {$dateToString: {format: "%d-%m-%Y", date: "$GTRequestDate"}},
             itemCode: "$GTRequestDetails.itemCode",
             itemName: "$GTRequestDetails.itemName",

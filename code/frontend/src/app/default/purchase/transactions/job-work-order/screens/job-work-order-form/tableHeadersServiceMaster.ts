@@ -10,6 +10,11 @@ export default [
         class: ""
     },
     {
+        label: "SAC Code",
+        value: "sacCode",
+        class: ""
+    },
+    {
         label: "GST",
         value: "gst",
         class: ""

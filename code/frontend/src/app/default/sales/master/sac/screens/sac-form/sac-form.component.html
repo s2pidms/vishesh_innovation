@@ -17,7 +17,7 @@
                 </div>
                 <div class="col-md-4">
                     <label class="form-label">GST Rate % <span class="text-danger">*</span></label>
-                    <input class="form-control" type="number" formControlName="gstRate" />
+                    <input class="form-control" type="number" formControlName="gstRate" (input)="setRates($event)" />
                 </div>
             </div>
             <div class="row">

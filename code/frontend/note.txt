@@ -61,6 +61,7 @@ ng g c default/purchase/transactions/short-po-closing/Cancel-po-line
 
 
 ng g m default/purchase/reports/purchase-order --route purchase_order --module=reports.module
+ng g m default/purchase/reports/jw-order --route jw_order --module=reports.module
 ng g m default/purchase/reports/service-purchase-order --route service_purchase_order --module=reports.module
 ng g m default/purchase/reports/PPV --route PPV --module=reports.module
 ng g m default/purchase/reports/supplier-evaluationR --route supplier-evaluationR --module=reports.module
@@ -590,10 +591,13 @@ ng g c default/quality/transactions/mrn/screens/components/mrn-remarks-modal
 ng g c default/quality/transactions/mrn/screens/components/grn-remarks-modal
 ng g c default/quality/transactions/mrn/screens/components/mrn-grn-remarks
 
-
+ng g c default/planning/transactions/job-card-planning/screens/components/so-sku-details
 ng g m default/planning/transactions/job-card --route job_card --module=transactions.module
 ng g c default/planning/transactions/job-card/screens/job-card-list
 ng g c default/planning/transactions/job-card/screens/job-card-form
+ng g m default/planning/transactions/job-card-planning --route job_card_planning --module=transactions.module
+ng g c default/planning/transactions/job-card-planning/screens/job-card-planning-list
+ng g c default/planning/transactions/job-card-planning/screens/job-card-planning-form
 ng g c default/planning/transactions/job-card/screens/components/job-card-NPD-table
 ng g c default/planning/transactions/gi-ppic-to-production/screens/job-card-details-Modal
 ng g c default/planning/transactions/job-card/screens/components/view-sku-dimension
@@ -704,7 +708,9 @@ ng g m default/settings/master/sales/product-category --route product_category -
 ng g c default/settings/master/sales/product-category/screens/product_category-list
 ng g c default/settings/master/sales/product-category/screens/product_category-form
 
-
+ng g m default/settings/master/global/currency-master --route currency_master --module=global.module
+ng g c default/settings/master/global/currency-master/screens/currency-master-list
+ng g c default/settings/master/global/currency-master/screens/currency-master-form
 
 ng g m default/sales/reports/sales-order-status --route sales_order_status --module=reports.module
 
@@ -872,5 +878,26 @@ ng g c default/purchase/transactions/job-work-order/screens/components/job-work-
 ng g c default/purchase/transactions/job-work-order/screens/components/review-wo-terms-modal
 
 
+ng g c default/purchase/transactions/job-work-order/screens/components/jw-bill-from
+ng g c default/purchase/transactions/job-work-order/screens/components/jw-bill-to
+ng g c default/purchase/transactions/job-work-order/screens/components/jw-ship-from
+ng g c default/purchase/transactions/job-work-order/screens/components/jw-ship-to
+ng g c default/purchase/transactions/job-work-order/screens/components/jw-delivery-schedule
+
 ng g c print-screen/job-work-order-print-screen
+ng g c print-screen/job-work-order-print-screen/jw-order-schedule-print-screen
 ng g c print-screen/job-work-order-print-screen --module=print-screen-routing.module
+
+
+ng g m default/quality/reports/MRN-details --route MRN_details_report --module=reports.module
+
+
+ng g m default/quality/transactions/rejection-summary --route rejection_summary --module=transactions.module
+ng g c default/quality/transactions/rejection-summary/screens/rejection-summary-form
+ng g c default/quality/transactions/rejection-summary/screens/rejection-summary-list
+ng g c default/quality/transactions/rejection-summary/screens/components/remarks-modal
+ng g c default/quality/transactions/rejection-summary/screens/components/status-summary
+
+
+ng g m default/settings/master/quality-master/defect-list-configuration --route defect_list_configuration --module=master.module
+ng g c default/settings/master/quality-master/defect-list-configuration/screens/defect-list-configuration-form

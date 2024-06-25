@@ -8,6 +8,19 @@
         <div class="form-body">
             <div class="row">
                 <div class="col">
+                    <label class="form-label"> Supplier Category<span class="text-danger">*</span> </label>
+                    <select
+                        class="form-select"
+                        formControlName="supplierPurchaseType"
+                        (change)="supplierCategoryImports()"
+                    >
+                        <option [value]="null" selected disabled>Select Category</option>
+                        <option *ngFor="let p of masterData?.purchaseTypesOptions" [value]="p?.value">
+                            {{ p?.label }}
+                        </option>
+                    </select>
+                </div>
+                <div class="col">
                     <label class="form-label"> Supplier Code </label>
                     <input class="form-control" type="text" formControlName="supplierCode" readonly />
                 </div>
@@ -21,19 +34,6 @@
                 <div class="col">
                     <label class="form-label"> Supplier Nick Name </label>
                     <input class="form-control" type="text" formControlName="supplierNickName" />
-                </div>
-                <div class="col">
-                    <label class="form-label"> Supplier Category<span class="text-danger">*</span> </label>
-                    <select
-                        class="form-select"
-                        formControlName="supplierPurchaseType"
-                        (change)="supplierCategoryImports()"
-                    >
-                        <option [value]="null" selected disabled>Select Category</option>
-                        <option *ngFor="let p of masterData?.purchaseTypesOptions" [value]="p?.value">
-                            {{ p?.label }}
-                        </option>
-                    </select>
                 </div>
             </div>
 

@@ -79,3 +79,19 @@ exports.getAllRawMaterialInspectionReportsAttributes = () => {
         MRNStatus: 1
     };
 };
+
+exports.getAllMRNDetailsReportsAttributes = () => {
+    return {
+        supplierInvoice: 1,
+        supplierDate: {$dateToString: {format: "%d-%m-%Y", date: "$supplierDate"}},
+        supplierName: "$supplier.supplierName",
+        GRNDate: {$dateToString: {format: "%d-%m-%Y", date: "$GRNNumber.GRNDate"}},
+        GRNNumber: "$GRNNumber.GRNNumber",
+        MRNNumber: 1,
+        MRNDate: {$dateToString: {format: "%d-%m-%Y", date: "$MRNDate"}},
+        itemName: "$MRNDetails.item.itemName",
+        GRNQty: "$MRNDetails.GRNQty",
+        UOM: "$MRNDetails.UOM",
+        MRNStatus:1
+    };
+};

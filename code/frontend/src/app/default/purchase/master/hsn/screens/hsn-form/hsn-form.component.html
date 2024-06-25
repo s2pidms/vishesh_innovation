@@ -32,7 +32,13 @@
                 </div>
                 <div class="col-md-4">
                     <label class="form-label">GST Rate % <span class="text-danger">*</span></label>
-                    <input class="form-control" type="number" formControlName="gstRate" placeholder="0" />
+                    <input
+                        class="form-control"
+                        type="number"
+                        formControlName="gstRate"
+                        placeholder="0"
+                        (input)="setRates($event)"
+                    />
                     <validation-messages class="error-left" [control]="form.controls['gstRate']"> </validation-messages>
                 </div>
             </div>
@@ -51,7 +57,13 @@
                 </div>
                 <div class="col-md-4">
                     <label class="form-label">SGST Rate % <span class="text-danger">*</span></label>
-                    <input class="form-control" type="number" formControlName="sgstRate" placeholder="0" (input)="setUTGSTValue()" />
+                    <input
+                        class="form-control"
+                        type="number"
+                        formControlName="sgstRate"
+                        placeholder="0"
+                        (input)="setUTGSTValue()"
+                    />
                     <validation-messages class="error-left" [control]="form.controls['sgstRate']">
                     </validation-messages>
                 </div>

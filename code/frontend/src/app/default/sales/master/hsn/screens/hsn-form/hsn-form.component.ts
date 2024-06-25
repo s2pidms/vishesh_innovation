@@ -158,7 +158,7 @@ export class HSNFormComponent implements OnInit {
         modalRef.componentInstance.action = this.action;
         modalRef.componentInstance.HSNFlag = true;
         modalRef.componentInstance.heading = "HSN Master";
-        modalRef.componentInstance.cancelText = `changes to the HSN master won't automatically reflect in existing purchase orders.`;
+        modalRef.componentInstance.cancelText = `Any changes to the HSN master won't automatically reflect in existing purchase orders.`;
         modalRef.componentInstance.cancelTextTwo = `Please cancel old purchase orders and create new ones with updated HSN values if necessary.`;
         modalRef.result.then(
             (success: any) => {
@@ -175,6 +175,14 @@ export class HSNFormComponent implements OnInit {
             this.openCancelModal();
         } else {
             this.submit();
+        }
+    }
+    setRates(ev: any) {
+        if (this.action == "create") {
+            this.form.controls["igstRate"].setValue(ev.target.value);
+            this.form.controls["ugstRate"].setValue(ev.target.value / 2);
+            this.form.controls["sgstRate"].setValue(ev.target.value / 2);
+            this.form.controls["cgstRate"].setValue(ev.target.value / 2);
         }
     }
 }

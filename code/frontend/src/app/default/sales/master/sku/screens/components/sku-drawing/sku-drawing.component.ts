@@ -33,7 +33,8 @@ export class SkuDrawingComponent implements OnInit {
     form: any = new UntypedFormGroup({
         internalPartNo: new UntypedFormControl(null),
         artWorkNo: new UntypedFormControl(null),
-        artWorkHyperLink: new UntypedFormControl(null)
+        artWorkHyperLink: new UntypedFormControl(null),
+        additionalHyperLink: new UntypedFormControl(null)
         // drawingArtWorkFile: new UntypedFormControl(null),
         // drawingArtWorkFileUrl: new UntypedFormControl(null),
         // productionLayoutFile: new UntypedFormControl(null),
@@ -62,6 +63,12 @@ export class SkuDrawingComponent implements OnInit {
         let artWorkHyperLink = this.form.controls["artWorkHyperLink"].value;
         if (artWorkHyperLink) {
             window.open(artWorkHyperLink);
+        }
+    }
+    openAdditionalHyperLink() {
+        let additionalHyperLink = this.form.controls["additionalHyperLink"].value;
+        if (additionalHyperLink) {
+            window.open(additionalHyperLink);
         }
     }
 }

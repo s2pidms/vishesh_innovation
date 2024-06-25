@@ -89,7 +89,15 @@ const routes: Routes = [
                         m => m.GenerateExportEWayBillsModule
                     )
             },
-            {path: "quotation", loadChildren: () => import("./quotation/quotation.module").then(m => m.QuotationModule)}
+            {
+                path: "quotation",
+                loadChildren: () => import("./quotation/quotation.module").then(m => m.QuotationModule)
+            },
+            {
+                path: "job_card",
+                loadChildren: () =>
+                    import("./../../planning/transactions/job-card/job-card.module").then(m => m.JobCardModule)
+            }
         ]
     }
 ];

@@ -13,6 +13,7 @@ export class JobCardEntryService {
         getAllMasterDataPath: "/production/jobCardEntry/getAllMasterData",
         getProcessFromDirectCostBySKUIdPath: "/production/jobCardEntry/getProcessFromDirectCostBySKUId",
         getJCEntryDataByJobCardIdPath: "/production/jobCardEntry/getJCEntryDataByJobCardId",
+        getAllForRejectionPath: "/production/jobCardEntry/getAllForRejection",
         updatePath: (id: string) => `/production/jobCardEntry/update/${id}`,
         getByIdPath: (id: string) => `/production/jobCardEntry/getById/${id}`,
         deletePath: (id: string) => `/production/jobCardEntry/delete/${id}`
@@ -44,5 +45,8 @@ export class JobCardEntryService {
     }
     delete(id: string) {
         return this.http.delete(this.routes.deletePath(id)).pipe(map((res: any) => res));
+    }
+    getAllForRejectionData(payload: any) {
+        return this.http.get(this.routes.getAllForRejectionPath, payload).pipe(map((res: any) => res));
     }
 }

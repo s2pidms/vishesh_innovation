@@ -57,6 +57,31 @@
         <div class="row">
             <hr class="line-border my-3" />
         </div>
+        <div class="row pt-2 justify-content-between">
+            <div class="col-4"></div>
+            <div class="col-4 d-flex justify-content-center">
+                <ngb-pagination
+                    *ngIf="FIFODetails.FIFO.length > 0"
+                    [collectionSize]="FIFODetails.FIFO.length"
+                    [(page)]="page"
+                    [pageSize]="pageSize"
+                    [boundaryLinks]="false"
+                >
+                    <ng-template ngbPaginationPrevious>
+                        <img src="./assets/new_icons/pagination_prev.svg" width="20rem" />
+                    </ng-template>
+                    <ng-template ngbPaginationNext>
+                        <img src="./assets/new_icons/pagination_next.svg" width="20rem" />
+                    </ng-template>
+                    <ng-template ngbPaginationPages let-page let-pages="pages">
+                        <li class="ngb-custom-pages-item align-self-center" *ngIf="pages.length > 0">
+                            <span class="page-label me-2 ms-1"> Page {{ page }} of {{ pages[pages.length - 1] }} </span>
+                        </li>
+                    </ng-template>
+                </ngb-pagination>
+            </div>
+            <div class="col-4"></div>
+        </div>
         <div class="row justify-content-center px-5">
             <div class="col-10 my-3">
                 <div class="table-responsive" style="min-height: 19rem">
@@ -71,7 +96,15 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <tr *ngFor="let f of FIFODetails.FIFO; let i = index">
+                            <tr
+                                *ngFor="
+                                    let f of FIFODetails.FIFO
+                                        | searchFi1ter : search
+                                        | slice : (page - 1) * pageSize : (page - 1) * pageSize + pageSize;
+                                    let i = index;
+                                    trackBy: trackByFn
+                                "
+                            >
                                 <td>{{ f?.MRNNo }}</td>
                                 <td>{{ f?.MRNDate | date : "dd-MM-YYYY" }}</td>
                                 <td>
@@ -92,7 +125,7 @@
                                             class="form-control form-control-sm w-25"
                                             *ngIf="!['approve', 'reject', 'view'].includes(action)"
                                             [(ngModel)]="f.GTQty"
-                                            (input)="checkGTQty(f, i)"
+                                            (input)="checkGTQty(f)"
                                         />
                                     </div>
                                 </td>

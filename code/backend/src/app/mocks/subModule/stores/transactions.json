@@ -110,5 +110,19 @@
         "url": "/default/stores/transactions/gie_direct",
         "items": [],
         "roles": []
+    },
+    {
+        "_id": "6673fbe5b46c3cf626342c3f",
+        "menuItemId": "64a6c1e33339d4dc9d8141a6",
+        "module": "Stores",
+        "type": "TRANSACTION",
+        "order": 9,
+        "isDisplay": false,
+        "title": "Finished Goods Inward",
+        "displayName": "Finished Goods Inward",
+        "disabled": false,
+        "url": "/default/stores/transactions/multiple_fgin/form",
+        "items": [],
+        "roles": []
     }
 ]

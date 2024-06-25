@@ -24,12 +24,14 @@ const RateLimiter = require("./app/utilities/rateLimitHandler");
 const CorsHandler = require("./app/utilities/corsHandler");
 const cors = require("cors");
 const decryptMiddleware = require("./app/middleware/decryptMiddleware");
+// const swaggerHandler = require("./app/utilities/swaggerHandler");
 
 // app.use(CorsHandler.getCorsMiddleware());
 app.use(cors("*"));
 const ENV = CONSTANTS.nodeEnv || config.env;
 app.set("env", ENV);
 mongooseCon(app);
+// swaggerHandler.setup(app);
 app.use(device.capture());
 app.use(customResponses);
 app.use(lusca.xframe("SAMEORIGIN"));

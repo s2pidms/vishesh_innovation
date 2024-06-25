@@ -1,0 +1,61 @@
+<form [formGroup]="form" class="formCard card">
+    <div class="set-remaining-margin">
+        <div class="row form-header">
+            <div class="col heading">Currency Master [{{ this.action | titlecase }}]</div>
+        </div>
+        <div class="form-body">
+            <div class="row">
+                <div class="col">
+                    <label class="form-label">Currency Code <span class="text-danger">*</span></label>
+                    <input class="form-control" type="text" formControlName="currencyCode" readonly />
+                </div>
+                <div class="col">
+                    <label class="form-label">Currency Name <span class="text-danger">*</span></label>
+                    <input class="form-control" type="text" formControlName="currencyName" />
+                </div>
+                <div class="col">
+                    <label class="form-label">Symbol <span class="text-danger">*</span></label>
+                    <input class="form-control" type="text" formControlName="symbol" />
+                </div>
+            </div>
+            <div class="row">
+                <div class="col">
+                    <label class="form-label">Exchange Rate To USD <span class="text-danger">*</span></label>
+                    <input class="form-control" type="number" formControlName="exchangeRateToUSD" />
+                </div>
+                <div class="col">
+                    <label class="form-label">Sequence <span class="text-danger">*</span></label>
+                    <input class="form-control" type="number" formControlName="sequence" />
+                </div>
+                <div class="col">
+                    <label class="form-label">
+                        Status
+                        <span class="text-danger">*</span>
+                    </label>
+                    <div class="d-flex inputGroup skuForm">
+                        <select class="form-select statusSelectBorder" formControlName="status">
+                            <option [value]="null" selected disabled>Select Status</option>
+                            <option [value]="'Active'">Active</option>
+                            <option [value]="'Inactive'">Inactive</option>
+                        </select>
+                        <div class="input-group-text bg-white">
+                            <div class="col-md-auto my-4 align-self-center">
+                                <div *ngIf="form.value['status'] == 'Active'" class="statusActive"></div>
+                                <div *ngIf="form.value['status'] == 'Inactive'" class="statusInActive"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <hr *ngIf="action !== 'view'" class="row line-border" />
+        <div *ngIf="action !== 'view'" class="d-flex justify-content-center mb-3">
+            <div class="d-grid col-md-1 mx-5" [ngClass]="{'d-none': action == 'View'}">
+                <button type="button" class="btn btn-primary" (click)="reset()">Reset</button>
+            </div>
+            <div class="d-grid col-md-1" [ngClass]="{'d-none': action == 'View'}">
+                <button type="button" class="btn btn-primary" (click)="submit()">Save</button>
+            </div>
+        </div>
+    </div>
+</form>

@@ -2,7 +2,7 @@ const mongoose = require("mongoose");
 const Audit = require("../../controllers/v1/settings/audit/audit");
 const {JOB_CARD_ENTRY: SCHEMA_CONSTANT} = require("../../mocks/schemasConstant/productionConstant");
 const {getAndSetAutoIncrementNo} = require("../../controllers/v1/settings/autoIncrement/autoIncrement");
-const {paginatePlugin} = require("../plugins/paginatePlugin");
+const {paginatePlugin, reportPaginatePlugin} = require("../plugins/paginatePlugin");
 const {setTwoDecimal} = require("../../helpers/utility");
 const jobCardEntrySchema = mongoose.Schema(
     {
@@ -159,7 +159,59 @@ const jobCardEntrySchema = mongoose.Schema(
                 type: String,
                 required: false
             }
-        }
+        },
+        rejectionData: [
+            {
+                SN: {
+                    type: Number,
+                    required: false
+                },
+                rejectionType: {
+                    type: String,
+                    required: false
+                },
+                quantity: {
+                    type: Number,
+                    set: value => setTwoDecimal(value),
+                    required: false
+                },
+                percentage: {
+                    type: Number,
+                    set: value => setTwoDecimal(value),
+                    required: false
+                }
+            }
+        ],
+        rejectedTotalQty: {
+            type: Number,
+            set: value => setTwoDecimal(value),
+            required: false
+        },
+        rejectedPercent: {
+            type: Number,
+            set: value => setTwoDecimal(value),
+            required: false
+        },
+        rejectStatus: {
+            type: String,
+            required: false
+        },
+        rejectRemarks: [
+            {
+                defect: {
+                    type: String,
+                    required: false
+                },
+                remarks: {
+                    type: String,
+                    required: false
+                },
+                remarksBy: {
+                    type: String,
+                    required: false
+                }
+            }
+        ]
     },
     {
         timestamps: true,
@@ -179,6 +231,7 @@ jobCardEntrySchema.pre("save", async function (next) {
     next();
 });
 jobCardEntrySchema.plugin(paginatePlugin);
+jobCardEntrySchema.plugin(reportPaginatePlugin);
 const jobCardEntry = mongoose.model(SCHEMA_CONSTANT.COLLECTION_NAME, jobCardEntrySchema);
 
 module.exports = jobCardEntry;

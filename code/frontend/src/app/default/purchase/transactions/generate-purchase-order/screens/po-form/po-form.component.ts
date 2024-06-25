@@ -345,6 +345,9 @@ export class PoFormComponent implements OnInit {
                         }
                         this.f["POStatus"].enable();
                     }
+                    if (this.action == "amend") {
+                        this.f["PODate"].enable();
+                    }
                 });
         });
     }
