@@ -21,8 +21,8 @@ export class CurrencyMasterListComponent implements OnInit, OnDestroy {
     page: number = 1;
     pageSize: number = 8;
     collection: number = 0;
-    column: string = "createdAt";
-    direction: number = -1;
+    column: string = "currencyName";
+    direction: number = 1;
     search: string = "";
     tableData: CurrencyMaster[] = [];
     rolePermissionActions: any = LIST_DEFAULT_PERMISSION_ACTIONS;

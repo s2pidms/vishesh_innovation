@@ -186,6 +186,22 @@ export const SALES_FORECAST_REPORT_NAME = {
         ];
     }
 };
+export const FINISH_GOODS_REPORT_NAME = {
+    aodInventory: "AOD Inventory",
+    aodInventoryByCustomer: "AOD Inventory by Customer",
+    aodInventoryByProductCategory: "AOD Inventory by Product Category",
+    aodInventoryBySKUStage: "AOD Inventory by SKU Stage",
+    aodInventoryByLocation: "AOD Inventory by Location",
+    getAllReportName: function () {
+        return [
+            {label: "AOD Inventory", value: "AOD Inventory"},
+            {label: "AOD Inventory by Customer", value: "AOD Inventory by Customer"},
+            {label: "AOD Inventory by Product Category", value: "AOD Inventory by Product Category"},
+            {label: "AOD Inventory by SKU Stage", value: "AOD Inventory by SKU Stage"},
+            {label: "AOD Inventory by Location", value: "AOD Inventory by Location"}
+        ];
+    }
+};
 export const JOB_CARD_REPORT_NAME = {
     jobCard: "Job Card",
     jobCardByCustomer: "Job Card by Customer",

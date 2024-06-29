@@ -55,6 +55,13 @@ const routes: Routes = [
             {
                 path: "drn_summary",
                 loadChildren: () => import("./drn-summary/drn-summary.module").then(m => m.DRNSummaryModule)
+            },
+            {
+                path: "fg_inventory_report",
+                loadChildren: () =>
+                    import("./../../production/reports/fg-inventory-report/fg-inventory-report.module").then(
+                        m => m.FgInventoryReportModule
+                    )
             }
         ]
     }

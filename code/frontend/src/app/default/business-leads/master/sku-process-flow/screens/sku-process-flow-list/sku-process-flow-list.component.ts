@@ -24,6 +24,10 @@ export class SkuProcessFlowListComponent implements OnInit, OnDestroy {
     column: string = "SKUNo";
     direction: number = -1;
     search: string = "";
+    PFStatus: any = [];
+    productCategory: any = [];
+    statusOptions = [];
+    productCategories = [];
     tableData: ISKUProcessFlow[] = [];
     rolePermissionActions: any = LIST_DEFAULT_PERMISSION_ACTIONS;
     subscription!: Subscription;
@@ -57,6 +61,13 @@ export class SkuProcessFlowListComponent implements OnInit, OnDestroy {
     trackByFn(index: number, item: any) {
         return item?._id;
     }
+    reset() {
+        this.statusOptions = [];
+        this.productCategories = [];
+        this.PFStatus = "";
+        this.productCategory = "";
+        this.getAll();
+    }
 
     eventHeader(event: any) {
         switch (event.key) {
@@ -87,7 +98,9 @@ export class SkuProcessFlowListComponent implements OnInit, OnDestroy {
             search: this.search,
             column: this.column,
             direction: this.direction,
-            excel: excel
+            excel: excel,
+            PFStatus: this.PFStatus,
+            productCategory: this.productCategory
         };
         if (this.subscription) this.subscription.unsubscribe();
         this.subscription = this.skuProcessFlowService.getAll(payload).subscribe(success => {
@@ -98,6 +111,8 @@ export class SkuProcessFlowListComponent implements OnInit, OnDestroy {
             } else {
                 this.tableData = success?.rows;
                 this.totalAmounts = success?.totalAmounts;
+                this.statusOptions = success?.statusOptions;
+                this.productCategories = success?.productCategories;
                 this.collection = success.count;
             }
             this.spinner.hide();

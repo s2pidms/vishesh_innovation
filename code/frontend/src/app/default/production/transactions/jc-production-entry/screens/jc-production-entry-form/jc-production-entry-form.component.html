@@ -235,6 +235,8 @@
                                                     item.processOriginalName
                                                 )
                                                     ? "IPQC Log"
+                                                    : ["Generic IPQC Process"].includes(item?.qualityOriginalName)
+                                                    ? "IPQC Log"
                                                     : "IPQA Log"
                                             }}
                                         </button>
@@ -268,8 +270,13 @@
                 <hr class="row line-border" />
                 <div class="row">
                     <div class="col-6">
-                        <button class="plusIconSvg btn btn-primary me-1"></button>
-                        <button type="button" class="btn btn-primary px-4" (click)="openBatchInfoModal()">
+                        <button *ngIf="!['view'].includes(action)" class="plusIconSvg btn btn-primary me-1"></button>
+                        <button
+                            *ngIf="!['view'].includes(action)"
+                            type="button"
+                            class="btn btn-primary px-4"
+                            (click)="openBatchInfoModal()"
+                        >
                             Generate Report
                         </button>
                     </div>
@@ -281,6 +288,14 @@
                             (click)="skipIntegration()"
                         >
                             Save
+                        </button>
+                        <button
+                            *ngIf="['view'].includes(action)"
+                            type="button"
+                            class="btn btn-primary px-5"
+                            (click)="back()"
+                        >
+                            Back
                         </button>
                     </div>
                 </div>

@@ -193,11 +193,21 @@ exports.getById = asyncHandler(async (req, res) => {
                     foreignField: "_id",
                     pipeline: [
                         {
+                            $lookup: {
+                                from: "Supplier",
+                                localField: "supplierDetails.supplierId",
+                                foreignField: "_id",
+                                pipeline: [{$project: {supplierCode: 1, supplierName: 1}}, {$sort: {supplierCode: 1}}],
+                                as: "supplierInfo"
+                            }
+                        },
+                        {
                             $project: {
                                 itemCode: 1,
                                 itemName: 1,
                                 itemDescription: 1,
-                                UOM: "$orderInfoUOM"
+                                UOM: "$orderInfoUOM",
+                                supplierInfo: 1
                             }
                         }
                     ],
@@ -213,7 +223,18 @@ exports.getById = asyncHandler(async (req, res) => {
                     itemDescription: "$item.itemDescription",
                     UOM: "$item.UOM",
                     specificationInfo: 1,
-                    itemCategory: 1
+                    itemCategory: 1,
+                    supplierDetails: {
+                        $map: {
+                            input: {$range: [0, {$size: "$item.supplierInfo"}]},
+                            as: "index",
+                            in: {
+                                SN: {$add: ["$$index", 1]},
+                                supplierCode: {$arrayElemAt: ["$item.supplierInfo.supplierCode", "$$index"]},
+                                supplierName: {$arrayElemAt: ["$item.supplierInfo.supplierName", "$$index"]}
+                            }
+                        }
+                    }
                 }
             }
         ]);
@@ -225,6 +246,15 @@ exports.getById = asyncHandler(async (req, res) => {
                     }
                 },
                 {
+                    $lookup: {
+                        from: "Supplier",
+                        localField: "supplierDetails.supplierId",
+                        foreignField: "_id",
+                        pipeline: [{$project: {supplierCode: 1, supplierName: 1}}, {$sort: {supplierCode: 1}}],
+                        as: "supplierInfo"
+                    }
+                },
+                {
                     $project: {
                         item: "$_id",
                         itemCode: 1,
@@ -232,6 +262,21 @@ exports.getById = asyncHandler(async (req, res) => {
                         itemDescription: 1,
                         UOM: "$orderInfoUOM",
                         itemCategory: "$itemType",
+                        supplierDetails: {
+                            $map: {
+                                input: {$range: [0, {$size: "$supplierInfo"}]},
+                                as: "index",
+                                in: {
+                                    SN: {$add: ["$$index", 1]},
+                                    supplierCode: {
+                                        $arrayElemAt: ["$supplierInfo.supplierCode", "$$index"]
+                                    },
+                                    supplierName: {
+                                        $arrayElemAt: ["$supplierInfo.supplierName", "$$index"]
+                                    }
+                                }
+                            }
+                        },
                         _id: 0
                     }
                 }

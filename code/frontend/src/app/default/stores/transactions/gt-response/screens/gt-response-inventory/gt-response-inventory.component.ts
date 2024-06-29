@@ -13,7 +13,7 @@ export class GTResponseInventoryComponent implements OnInit {
     @Input() totalGTResponseQty: any = 0;
     FIFODetails: any = {};
     page: number = 1;
-    pageSize: number = 8;
+    pageSize: number = 6;
     direction: number = 1;
     search: string = "";
     constructor(public activeModal: NgbActiveModal, private toastService: ToastService) {}
@@ -27,7 +27,6 @@ export class GTResponseInventoryComponent implements OnInit {
     trackByFn(index: number, item: any) {
         return item?._id;
     }
-
 
     ngOnInit(): void {
         this.FIFODetails = JSON.parse(JSON.stringify(this.data));

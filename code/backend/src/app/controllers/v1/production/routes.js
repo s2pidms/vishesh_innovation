@@ -29,6 +29,9 @@ const packingIPQA = require("./qualityHouse/packingIPQA/routes");
 const stockCuttingIPQA = require("./qualityHouse/stockCuttingIPQA/routes");
 const throughPunchingIPQA = require("./qualityHouse/throughPunchingIPQA/routes");
 const weedingIPQA = require("./qualityHouse/weedingIPQA/routes");
+const genericIPQA = require("./qualityHouse/genericIPQA/routes");
+const genericIPQC = require("./qualityHouse/genericIPQC/routes");
+const genericProduction = require("./qualityHouse/genericProduction/routes");
 
 router.use("/goodsRequisition", GR);
 router.use("/FGCorrection", FGCorrection);
@@ -62,5 +65,8 @@ router.use("/packingIPQA", packingIPQA);
 router.use("/stockCuttingIPQA", stockCuttingIPQA);
 router.use("/throughPunchingIPQA", throughPunchingIPQA);
 router.use("/weedingIPQA", weedingIPQA);
+router.use("/genericIPQA", genericIPQA);
+router.use("/genericIPQC", genericIPQC);
+router.use("/genericProduction", genericProduction);
 
 module.exports = router;

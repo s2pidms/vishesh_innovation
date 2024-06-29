@@ -50,12 +50,25 @@ export class ProductSpecificationsListComponent implements OnInit, OnDestroy {
         this.getAll();
     }
 
+    // navigateTo(path: string, u: any, action: string) {
+    //     if (["Red", "Inactive"].includes(u.status) && action == "copy") {
+    //         return null;
+    //     } else {
+    //         this.router.navigate([path], {relativeTo: this.activatedRoute, queryParams: {id: u?._id, action}});
+    //         return;
+    //     }
+    // }
+
     navigateTo(path: string, u: any, action: string) {
-        if (["Red", "Inactive"].includes(u.status) && action == "copy") {
-            return null;
-        } else {
+        if (
+            (["Red"].includes(u.status) && action == "specification") ||
+            (["Inactive"].includes(u.status) && ["edit", "view"].includes(action)) ||
+            (u.status == "Active" && ["edit", "view", "copy"].includes(action))
+        ) {
             this.router.navigate([path], {relativeTo: this.activatedRoute, queryParams: {id: u?._id, action}});
             return;
+        } else {
+            return null;
         }
     }
     trackByFn(index: number, item: any) {

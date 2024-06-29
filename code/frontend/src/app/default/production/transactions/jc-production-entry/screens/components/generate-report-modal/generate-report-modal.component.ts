@@ -9,6 +9,7 @@ import {ToastService, UtilityService} from "@core/services";
 })
 export class GenerateReportModalComponent implements OnInit {
     @ViewChildren(NgbdSortableHeader) headers: QueryList<NgbdSortableHeader> | any;
+    @Input() action: any = "";
     @Input() generateReport: any = {};
     @Input() billFromLocationOptions: any = {};
 

@@ -20,3 +20,6 @@ export * from "./weedingIPQA.service";
 export * from "./punchingIPQA.service";
 export * from "./packingIPQA.service";
 export * from "./laminationIPQA.service";
+export * from "./genericIPQAProcess.service";
+export * from "./genericIPQCProcess.service";
+export * from "./genericProductionProcess.service";

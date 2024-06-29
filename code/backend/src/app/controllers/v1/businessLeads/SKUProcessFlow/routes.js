@@ -1,6 +1,16 @@
 const app = require("express")();
 const {validate} = require("../../../../middleware/validators");
-const {create, getAll, getById, update, deleteById, getAllMasterData, getBySKUId, getAllCopyFlowMasterData, createCopy} = require("./SKUProcessFlow");
+const {
+    create,
+    getAll,
+    getById,
+    update,
+    deleteById,
+    getAllMasterData,
+    getBySKUId,
+    getAllCopyFlowMasterData,
+    createCopy
+} = require("./SKUProcessFlow");
 
 app.post("/create", create);
 app.post("/createCopy", createCopy);

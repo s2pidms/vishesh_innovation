@@ -21,6 +21,13 @@ const routes: Routes = [
             import("./../quality-master/defect-list-configuration/defect-list-configuration.module").then(
                 m => m.DefectListConfigurationModule
             )
+    },
+    {
+        path: "process_list_configuration",
+        loadChildren: () =>
+            import("./process-list-configuration/process-list-configuration.module").then(
+                m => m.ProcessListConfigurationModule
+            )
     }
 ];
 

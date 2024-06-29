@@ -1,6 +1,5 @@
 const Model = require("../leavesApplicationModel");
-
-module.exports = {
+const LeavesApplicationRepository = {
     createDoc: async obj => {
         return await Model.create(obj);
     },
@@ -20,5 +19,9 @@ module.exports = {
     },
     deleteDoc: async match => {
         return await Model.deleteOne(match);
+    },
+    filteredLeaveAppList: async pipeline => {
+        return await Model.aggregate(pipeline);
     }
 };
+module.exports = LeavesApplicationRepository;

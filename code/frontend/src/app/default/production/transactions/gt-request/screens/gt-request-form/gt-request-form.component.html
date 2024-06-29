@@ -36,11 +36,11 @@
                     <label class="form-label"> From Department <span class="text-danger">*</span> </label>
                     <ng-select
                         [items]="masterData.departmentOptions"
-                        bindLabel="value"
-                        bindValue="label"
+                        bindLabel="label"
+                        bindValue="department"
                         [clearable]="false"
                         formControlName="fromDepartment"
-                        (change)="setToDepartmentValid($event)"
+                        (change)="setToDepartmentValid($event, 'From Department')"
                     >
                     </ng-select>
                 </div>
@@ -48,11 +48,11 @@
                     <label class="form-label"> To Department <span class="text-danger">*</span> </label>
                     <ng-select
                         [items]="masterData.departmentOptions"
-                        bindLabel="value"
-                        bindValue="label"
+                        bindLabel="label"
+                        bindValue="department"
                         [clearable]="false"
                         formControlName="toDepartment"
-                        (change)="setToDepartmentValid($event)"
+                        (change)="setToDepartmentValid($event, 'To Department')"
                     >
                     </ng-select>
                 </div>

@@ -197,5 +197,19 @@
         "url": "/default/production/reports/fg_correction_history",
         "items": [],
         "roles": []
+    },
+    {
+        "_id": "667fc2bb617031f1759c82fb",
+        "menuItemId": "64a6c1e33339d4dc9d8141a8",
+        "module": "Production",
+        "type": "REPORT",
+        "order": 14,
+        "isDisplay": false,
+        "title": "Finished Goods (FG)",
+        "displayName": "Finished Goods (FG)",
+        "disabled": false,
+        "url": "/default/production/reports/fg_inventory_report",
+        "items": [],
+        "roles": []
     }
 ]

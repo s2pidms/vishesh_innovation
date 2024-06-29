@@ -78,6 +78,17 @@
                             <button class="dropbtn"></button>
                             <div class="dropdown-content">
                                 <a
+                                    [class.disable]="['Active', 'Inactive'].includes(u.status)"
+                                    appAccessControl
+                                    [accessType]="rolePermissionActions.editAction"
+                                    href="javascript:void(0)"
+                                    (click)="navigateTo('../form', u, 'specification')"
+                                >
+                                    <i class="fa fa-pencil-square-o fa-lg me-2 text-primary" aria-hidden="true"></i>
+                                    + Specification
+                                </a>
+                                <a
+                                    [class.disable]="u.status === 'Red'"
                                     appAccessControl
                                     [accessType]="rolePermissionActions.viewAction"
                                     href="javascript:void(0)"
@@ -87,6 +98,7 @@
                                     View
                                 </a>
                                 <a
+                                    [class.disable]="u.status === 'Red'"
                                     appAccessControl
                                     [accessType]="rolePermissionActions.editAction"
                                     href="javascript:void(0)"

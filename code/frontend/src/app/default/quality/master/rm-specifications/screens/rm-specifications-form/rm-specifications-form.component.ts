@@ -13,10 +13,13 @@ import {RMSpecificationMasterService} from "@services/quality";
 import {ValidationService} from "@core/components";
 import {RM_SPECIFICATION_MASTER_FORM_ERRORS} from "@mocks/validations/quality/rmSpecification.validation";
 import {IRMSpecificationsMasterData} from "@mocks/models/quality/master";
+import {NgbModal} from "@ng-bootstrap/ng-bootstrap";
+import {ViewSupplierModalComponent} from "../components/view-supplier-modal/view-supplier-modal.component";
 
 @Component({
     selector: "app-rm-specifications-form",
-    templateUrl: "./rm-specifications-form.component.html"
+    templateUrl: "./rm-specifications-form.component.html",
+    styleUrls: ["./rm-specifications-form.component.scss"]
 })
 export class RmSpecificationsFormComponent implements OnInit {
     @ViewChildren(NgbdSortableHeader) headers: QueryList<NgbdSortableHeader> | any;
@@ -44,7 +47,8 @@ export class RmSpecificationsFormComponent implements OnInit {
         autoIncrementNo: "",
         itemCategoryListOptions: [],
         itemsListOptions: [],
-        specificationList: []
+        specificationList: [],
+        supplierInfo: []
     };
 
     form = new UntypedFormGroup({
@@ -71,7 +75,8 @@ export class RmSpecificationsFormComponent implements OnInit {
         private utilityService: UtilityService,
         private validationService: ValidationService,
         private activatedRoute: ActivatedRoute,
-        private location: Location
+        private location: Location,
+        private modalService: NgbModal
     ) {}
 
     ngOnInit(): void {
@@ -179,6 +184,7 @@ export class RmSpecificationsFormComponent implements OnInit {
         let payload = {
             itemCategories: this.masterData?.itemCategoryListOptions ? this.masterData?.itemCategoryListOptions : null
         };
+        this.spinner.show();
         this.rmSpecificationMasterService.getAllMasterData(payload).subscribe(result => {
             this.masterData = result;
             this.collection = this.masterData?.specificationList.length;
@@ -200,6 +206,7 @@ export class RmSpecificationsFormComponent implements OnInit {
                     if (Object.keys(success).length == 0) {
                         return;
                     }
+                    this.masterData.supplierInfo = success?.supplierDetails;
 
                     if (!success?.specificationInfo || success?.specificationInfo?.length == 0) {
                         this.masterData.specificationList = this.masterData.specificationList;
@@ -219,8 +226,6 @@ export class RmSpecificationsFormComponent implements OnInit {
                             // this.ESCPreviewArr = [...success.specificationInfo, ...specificationListData];
                         }
                     }
-
-                    console.log("success?.specificationInfo", success.specificationInfo);
 
                     if (
                         this.action == "view" &&
@@ -287,5 +292,25 @@ export class RmSpecificationsFormComponent implements OnInit {
                 }
             );
         }
+    }
+
+    openSupplierModelModal() {
+        const modalRef = this.modalService.open(ViewSupplierModalComponent, {
+            centered: true,
+            size: "lg",
+            backdrop: "static",
+            keyboard: false
+        });
+
+        modalRef.componentInstance.action = this.action;
+        modalRef.componentInstance.supplierInfo = this.masterData.supplierInfo;
+        modalRef.result.then(
+            (success: any) => {
+                // if (success) {
+                //     this.form.controls["generateReport"].setValue(success);
+                // }
+            },
+            (reason: any) => {}
+        );
     }
 }

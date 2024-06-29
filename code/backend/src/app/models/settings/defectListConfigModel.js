@@ -19,10 +19,6 @@ const defectListConfigSchema = mongoose.Schema(
             required: false,
             ref: "User"
         },
-        docType: {
-            type: String,
-            required: false
-        },
         SN: {
             type: Number,
             required: false

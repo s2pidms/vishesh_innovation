@@ -67,6 +67,8 @@ export class GTResponseFormComponent implements OnInit {
         location: new UntypedFormControl(null, [Validators.required]),
         toDepartment: new UntypedFormControl(null, [Validators.required]),
         fromDepartment: new UntypedFormControl(null),
+        fromDepartmentName: new UntypedFormControl(null),
+        toDepartmentName: new UntypedFormControl(null),
         status: new UntypedFormControl("Awaiting Approval"),
         remarks: new UntypedFormGroup({
             goodsIssuedBy: new UntypedFormControl(null),
@@ -153,6 +155,8 @@ export class GTResponseFormComponent implements OnInit {
         this.f["location"].setValue(event?.location);
         this.f["toDepartment"].setValue(event?.toDepartment);
         this.f["fromDepartment"].setValue(event?.fromDepartment);
+        this.f["fromDepartmentName"].setValue(event?.fromDepartmentName ?? event?.fromDepartment);
+        this.f["toDepartmentName"].setValue(event?.toDepartmentName ?? event?.toDepartment);
 
         this.spinner.show();
         this.gtResponseService.getItemByGTRequestId(event?._id).subscribe(success => {

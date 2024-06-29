@@ -6,6 +6,7 @@ export interface IProductSpecificationsMasterData {
     productCategories: ICommonData[];
     SKUOptions: ISKUList[];
     specificationList: ISpecificationList[];
+    customerInfo: ICustomerInfo[];
 }
 
 export interface ISKUList {
@@ -15,4 +16,10 @@ export interface ISKUList {
     SKUName: string;
     SKUDescription: string;
     primaryUnit: string;
+}
+
+export interface ICustomerInfo {
+    SN: number;
+    customerCode: string;
+    customerName: string;
 }

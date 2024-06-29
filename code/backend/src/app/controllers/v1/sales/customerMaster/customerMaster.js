@@ -19,6 +19,7 @@ const {B2B_CUSTOMER} = require("../../../../mocks/schemasConstant/salesConstant"
 const CustomerRepository = require("../../../../models/sales/repository/customerRepository");
 const validationJson = require("../../../../mocks/excelUploadColumn/validation.json");
 const AutoIncrementRepository = require("../../../../models/settings/repository/autoIncrementRepository");
+const {filteredCurrencyMasterList} = require("../../../../models/settings/repository/currencyMasterRepository");
 
 exports.getAll = asyncHandler(async (req, res) => {
     try {
@@ -152,7 +153,24 @@ exports.getAllMasterData = asyncHandler(async (req, res) => {
 });
 const dropDownOptions = async company => {
     try {
-        const currenciesOptions = await findAppParameterValue("Currency", company);
+        // const currenciesOptions = await findAppParameterValue("Currency", company);
+        const currenciesOptions = await filteredCurrencyMasterList([
+            {
+                $match: {
+                    company: ObjectId(company),
+                    status: OPTIONS.defaultStatus.ACTIVE
+                }
+            },
+            {
+                $sort: {sequence: 1}
+            },
+            {
+                $project: {
+                    currencyName: 1,
+                    symbol: 1
+                }
+            }
+        ]);
         const salesCategoryOptions = await findAppParameterValue("SALES_CATEGORY", company);
         const paymentTermsOptions = await getAllPaymentTerms(company);
         const zones = await findAppParameterValue("REGION_ZONES", company);
@@ -160,10 +178,10 @@ const dropDownOptions = async company => {
         const salesCountry = await getAllModuleMaster(company, "SALES_COUNTRY");
         return {
             salesCountry,
-            currenciesOptions: currenciesOptions.split(",").map(x => {
+            currenciesOptions: currenciesOptions.map(x => {
                 return {
-                    label: x,
-                    value: x
+                    label: x.currencyName,
+                    value: x.currencyName
                 };
             }),
             salesCategoryOptions: salesCategoryOptions.split(",").map(x => {

@@ -383,11 +383,11 @@ export class NpdRequestFormComponent implements OnInit {
         if (ev.target.value == "One time project") {
             this.form.controls["monthlyOffTakeQty"].setValue(null);
             this.form.controls["monthlyOffTakeQty"].disable();
-            this.form.get("monthlyOffTakeQty").clearValidators();
-            this.form.get("monthlyOffTakeQty").updateValueAndValidity();
+            // this.form.get("monthlyOffTakeQty").clearValidators();
+            // this.form.get("monthlyOffTakeQty").updateValueAndValidity();
         } else {
             this.form.controls["monthlyOffTakeQty"].enable();
-            this.form.controls["monthlyOffTakeQty"].setValidators([Validators.required]);
+            // this.form.controls["monthlyOffTakeQty"].setValidators([Validators.required]);
         }
     }
 

@@ -9,14 +9,50 @@ const ProcessMasterRepository = require("../../../../models/planning/repository/
 const SKUMasterRepository = require("../../../../models/sales/repository/SKUMasterRepository");
 const {getAllSKUCategory} = require("../../settings/SKUCategoryMaster/SKUCategoryMaster");
 const {filteredProductCategoryMasterList} = require("../../../../models/settings/repository/productCategoryRepository");
+const {filteredProcessListConfigList} = require("../../../../models/settings/repository/processListConfigRepository");
 
 exports.getAll = asyncHandler(async (req, res) => {
     try {
+        const {PFStatus = "All", productCategory = null} = req.query;
+        let SKUCategoryList = await getAllSKUCategory(req.user.company, null);
+        let productCategories = [];
+        if (SKUCategoryList.length > 0) {
+            productCategories = SKUCategoryList.map(x => {
+                return {
+                    label: x.displayProductCategoryName,
+                    value: x.displayProductCategoryName
+                };
+            });
+        } else {
+            productCategories = await filteredProductCategoryMasterList([
+                {
+                    $match: {
+                        company: ObjectId(req.user.company),
+                        categoryStatus: OPTIONS.defaultStatus.ACTIVE
+                    }
+                },
+                {$sort: {seq: 1}},
+                {
+                    $project: {
+                        displayProductCategoryName: 1
+                    }
+                }
+            ]);
+            productCategories = productCategories.map(x => {
+                return {
+                    label: x.displayProductCategoryName,
+                    value: x.displayProductCategoryName
+                };
+            });
+        }
         let project = getAllSKUProcessFlowAttributes();
         let pipeline = [
             {
                 $match: {
                     company: ObjectId(req.user.company),
+                    ...(!!productCategory && {
+                        productCategory: productCategory
+                    }),
                     isActive: "A"
                 }
             },
@@ -33,6 +69,13 @@ exports.getAll = asyncHandler(async (req, res) => {
             {
                 $addFields: {
                     PFStatus: {$cond: [{$gt: [{$size: "$SKUProcessFlow"}, 0]}, "Active", "Inactive"]}
+                }
+            },
+            {
+                $match: {
+                    ...(!!PFStatus && {
+                        PFStatus: PFStatus == "All" ? {$exists: true} : PFStatus
+                    })
                 }
             }
         ];
@@ -57,7 +100,15 @@ exports.getAll = asyncHandler(async (req, res) => {
             ]
         });
 
-        return res.success(rows);
+        return res.success({
+            ...rows,
+            productCategories,
+            statusOptions: [
+                {label: "Report by Status - Green", value: OPTIONS.defaultStatus.ACTIVE},
+                {label: "Report by Status - Red", value: OPTIONS.defaultStatus.INACTIVE},
+                {label: "Report by Product Category", value: "All"}
+            ]
+        });
     } catch (e) {
         console.error("getAll", e);
         const errors = MESSAGES.apiErrorStrings.SERVER_ERROR;
@@ -168,6 +219,25 @@ exports.getAllMasterData = asyncHandler(async (req, res) => {
                 }
             }
         ]);
+        // const processMasterList = await filteredProcessListConfigList([
+        //     {
+        //         $match: {
+        //             company: ObjectId(req.user.company)
+        //         }
+        //     },
+        //     {
+        //         $sort: {
+        //             SN: 1
+        //         }
+        //     },
+        //     {
+        //         $project: {
+        //             process: "$_id",
+        //             processName: 1,
+        //             sourceOfManufacturing: "$source"
+        //         }
+        //     }
+        // ]);
         return res.success({processMasterList});
     } catch (error) {
         console.error("getAllMasterData SKU Process Flow", error);
@@ -189,7 +259,9 @@ exports.getBySKUId = asyncHandler(async (req, res) => {
                     SKUNo: 1,
                     SKUName: 1,
                     SKUDescription: 1,
-                    productCategory: 1
+                    productCategory: 1,
+                    artWorkNo: 1,
+                    primaryUnit: 1
                 }
             },
             {
@@ -210,6 +282,8 @@ exports.getBySKUId = asyncHandler(async (req, res) => {
                     SKUName: 1,
                     SKUDescription: 1,
                     productCategory: 1,
+                    artWorkNo: 1,
+                    primaryUnit: 1,
                     PFDetails: "$SKUProcessFlow.PFDetails"
                 }
             }

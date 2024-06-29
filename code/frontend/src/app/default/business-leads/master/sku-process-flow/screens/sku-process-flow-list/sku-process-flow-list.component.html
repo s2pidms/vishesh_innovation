@@ -14,6 +14,46 @@
       </button>
   </div> -->
     <hr class="line-border mt-1" />
+    <div class="row my-4">
+        <div class="col-3 ms-3 ps-5 m-2 separate-row">
+            <ng-select
+                [items]="statusOptions"
+                bindLabel="label"
+                bindValue="value"
+                [(ngModel)]="PFStatus"
+                [clearable]="false"
+            >
+            </ng-select>
+        </div>
+
+        <div *ngIf="['All'].includes(PFStatus)" class="col-3 m-2 separate-image">
+            <!-- <label class="form-label">Product Category</label> -->
+            <span class="image-position mt-1">
+                <img src="./assets/new_icons/redstroke.svg" alt="" height="27" width="8" />
+            </span>
+            <ng-select
+                [items]="productCategories"
+                bindLabel="label"
+                bindValue="value"
+                [clearable]="false"
+                [(ngModel)]="productCategory"
+            >
+            </ng-select>
+        </div>
+        <div class="col-3 mt-1 separate-image">
+            <span class="image-position mt-1">
+                <img src="./assets/new_icons/redstroke.svg" alt="" height="27" width="8" />
+            </span>
+            <button type="button" class="btn btn-primary px-4 me-3" (click)="getAll()">Apply Filter</button>
+            <button type="button" class="btn btn-primary px-4" (click)="reset()">Clear Filter</button>
+        </div>
+        <div class="col text-end mt-1 pe-5">
+            <button type="button" (click)="openStatusSummaryModal()" class="btn btn-primary px-4 me-3">
+                Status Summary
+            </button>
+        </div>
+    </div>
+    <hr class="line-border" />
     <div class="table-responsive" style="min-height: 37rem">
         <app-setting-header
             [data]="{page,pageSize,collection,search,type: 'list', excelDisplay : 'none'}"
@@ -113,12 +153,12 @@
             </tbody>
         </table>
     </div>
-    <hr class="line-border" />
+    <!-- <hr class="line-border" />
     <div class="row mt-3 ms-1">
         <div class="col-12">
             <button class="btn btn-primary px-4" type="button" (click)="openStatusSummaryModal()">
                 Status Summary
             </button>
         </div>
-    </div>
+    </div> -->
 </div>

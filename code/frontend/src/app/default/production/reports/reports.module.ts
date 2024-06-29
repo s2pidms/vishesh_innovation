@@ -98,6 +98,11 @@ const routes: Routes = [
                     import("./../../purchase/reports/inventory-report/inventory-report.module").then(
                         m => m.InventoryReportModule
                     )
+            },
+            {
+                path: "fg_inventory_report",
+                loadChildren: () =>
+                    import("./fg-inventory-report/fg-inventory-report.module").then(m => m.FgInventoryReportModule)
             }
         ]
     }

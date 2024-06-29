@@ -16,7 +16,15 @@ const routes: Routes = [
             },
             {
                 path: "cost_sheet",
-                loadChildren: () => import("../../planning/reports/cost-sheet/cost-sheet.module").then(m => m.CostSheetModule)
+                loadChildren: () =>
+                    import("../../planning/reports/cost-sheet/cost-sheet.module").then(m => m.CostSheetModule)
+            },
+            {
+                path: "fg_inventory_report",
+                loadChildren: () =>
+                    import("./../../production/reports/fg-inventory-report/fg-inventory-report.module").then(
+                        m => m.FgInventoryReportModule
+                    )
             }
         ]
     }

@@ -115,6 +115,13 @@ const routes: Routes = [
             {
                 path: "stock_level",
                 loadChildren: () => import("./stock-level/stock-level.module").then(m => m.StockLevelModule)
+            },
+            {
+                path: "process_list_configuration",
+                loadChildren: () =>
+                    import(
+                        "./../../settings/master/planning/process-list-configuration/process-list-configuration.module"
+                    ).then(m => m.ProcessListConfigurationModule)
             }
         ]
     }

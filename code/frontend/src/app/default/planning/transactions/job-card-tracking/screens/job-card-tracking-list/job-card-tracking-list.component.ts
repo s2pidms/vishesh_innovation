@@ -20,8 +20,8 @@ export class JobCardTrackingListComponent implements OnInit {
     pageSize: number = 5;
     collection: number = 0;
     activeQualified: number = 0;
-    column: string = "jobCardNo";
-    direction: number = -1;
+    // column: string = "jobCardDate";
+    direction: number = 1;
     search: string = "";
     rolePermissionActions: any = LIST_DEFAULT_PERMISSION_ACTIONS;
     jobTrackingData: IJobCardTrackingMasterData[] = [];

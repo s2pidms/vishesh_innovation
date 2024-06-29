@@ -18,6 +18,7 @@ export class AppGlobalService {
     rolesPermission: any = [];
     labelsJSON: any = [];
     UOMUintMasterOptions: any = [];
+    currencyMaster: any = [];
     UOMDefaultValueOptions: any = [];
     salesUOMUintMasterOptions: any = [];
     cardData: any = [];
@@ -98,6 +99,7 @@ export class AppGlobalService {
         this.labelsJSON = data?.labelsJSON;
         this.UOMDefaultValueOptions = data?.UOMDefaultValue;
         this.UOMUintMasterOptions = data?.UOMUintMasterJSON;
+        this.currencyMaster = data?.currencyMaster;
         this.salesUOMUintMasterOptions = data?.salesUOMUintMaster;
 
         const menu = pickData["menuItems"]?.find((x: any) => x._id == id);

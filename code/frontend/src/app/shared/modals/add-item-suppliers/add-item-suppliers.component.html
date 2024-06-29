@@ -94,7 +94,7 @@
                                         </label>
                                         <div class="d-flex">
                                             <span class="input-group-text combine-INR text-secondary">
-                                                {{ "INR" | companyCurrency }}
+                                                {{  this.form.controls["supplierCurrency"].value | CustomerAndSupplierCurrency }}
                                                 <div class="vr ms-3"></div>
                                             </span>
                                             <input
@@ -145,7 +145,7 @@
                                         </label>
                                         <div class="d-flex">
                                             <span class="input-group-text combine-INR text-secondary">
-                                                {{ "INR" | companyCurrency }}
+                                                {{  this.form.controls["supplierCurrency"].value | CustomerAndSupplierCurrency }}
                                                 <div class="vr ms-3"></div>
                                             </span>
                                             <input

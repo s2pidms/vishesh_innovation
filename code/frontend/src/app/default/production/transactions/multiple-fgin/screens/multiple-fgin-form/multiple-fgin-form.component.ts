@@ -7,10 +7,20 @@ import {FinishedGoodsInwardEntryService} from "@services/stores";
 import {LIST_DEFAULT_PERMISSION_ACTIONS} from "@mocks/constant";
 import {IFinishedGoodsInwardArray, IFinishedGoodsInwardMasterData} from "@mocks/models/production/transactions";
 import {ProductCategoryModalComponent} from "src/app/default/sales/master/sku/screens/components";
+import {FgLogTrailModalComponent} from "../components";
+import {ConfirmDeleteComponent, DetailsOfCustomersListComponent} from "@shared/modals";
 
 @Component({
     selector: "app-multiple-fgin-form",
-    templateUrl: "./multiple-fgin-form.component.html"
+    templateUrl: "./multiple-fgin-form.component.html",
+    styles: [
+        `
+            .set-action {
+                margin-top: 0.6rem;
+                margin-right: 1.37rem !important;
+            }
+        `
+    ]
 })
 export class MultipleFginFormComponent implements OnInit {
     @ViewChildren(NgbdSortableHeader) headers: QueryList<NgbdSortableHeader> | any;
@@ -28,12 +38,16 @@ export class MultipleFginFormComponent implements OnInit {
     locationArr: any = [];
     // IFinishedGoodsInwardArray[]
     filterTableData: any = [];
+    selectedCustomerDetails: any = {};
+    customerOptions: any = [];
     userData: any = {};
     FGINDate = this.utilityService.getTodayDate("YYYY-MM-DD");
     productCategory = "";
     FGINNo = "";
-    location = "";
+    entryAuthorizedBy = "";
+    location: any = null;
     enteredBy = "";
+    customer = "";
     rolePermissionActions: any = LIST_DEFAULT_PERMISSION_ACTIONS;
     masterData: IFinishedGoodsInwardMasterData = {
         autoIncrementNo: "",
@@ -52,6 +66,7 @@ export class MultipleFginFormComponent implements OnInit {
     ngOnInit(): void {
         this.userData = this.storageService.get("IDMSAUser");
         this.enteredBy = this.userData.name;
+        this.entryAuthorizedBy = this.userData.name;
 
         this.getInitialData();
     }
@@ -64,7 +79,7 @@ export class MultipleFginFormComponent implements OnInit {
         this.productCategory = "";
         this.FGINNo = "";
         this.FGINDate = this.utilityService.getTodayDate("YYYY-MM-DD");
-        this.location = "";
+        this.location = null;
         this.collection = this.filterTableData.length;
         this.getInitialData();
     }
@@ -75,7 +90,8 @@ export class MultipleFginFormComponent implements OnInit {
             this.toastService.warning("At least one FGIN Entry is required");
             return;
         }
-        if (!location) {
+
+        if (!this.location) {
             this.toastService.warning("Location is Required");
             return;
         }
@@ -183,6 +199,76 @@ export class MultipleFginFormComponent implements OnInit {
         this.isPreview = false;
         this.filterTableData = this.ESCPreviewArr;
         this.collection = this.filterTableData.length;
+    }
+
+    openCustomersDetailsModal() {
+        const modalRef = this.modalService.open(DetailsOfCustomersListComponent, {
+            centered: true,
+            size: "xl",
+            backdrop: "static",
+            keyboard: false
+        });
+        modalRef.componentInstance.action = "create";
+        modalRef.componentInstance.selectedCustomerDetails = this.selectedCustomerDetails;
+        modalRef.componentInstance.customerOptions = this.customerOptions;
+        modalRef.componentInstance.customer = this.customer;
+
+        modalRef.result.then(
+            (success: any) => {
+                if (success) {
+                    console.log("success", success);
+                    this.selectedCustomerDetails = success?.selectedCustomerDetails;
+                    // this.form.controls["customer"].setValue(success?.selectedCustomerDetails?._id);
+                    // this.customerValueChange(this.selectedCustomerDetails);
+                }
+            },
+            (reason: any) => {}
+        );
+    }
+
+    openConfirmModal(id: any) {
+        const modalRef = this.modalService.open(ConfirmDeleteComponent, {
+            centered: true,
+            size: "md",
+            backdrop: "static",
+            keyboard: false
+        });
+
+        modalRef.componentInstance.heading = "Confirm Deletion";
+        modalRef.componentInstance.confirmText = `Confirm Deletion of HSN Code  ?`;
+        modalRef.result.then(
+            (success: any) => {
+                if (success.title == "Yes") {
+                    // this.delete(id);
+                }
+            },
+            (reason: any) => {}
+        );
+    }
+
+    openLogTrailModal() {
+        const modalRef = this.modalService.open(FgLogTrailModalComponent, {
+            centered: true,
+            size: "md",
+            backdrop: "static",
+            keyboard: false
+        });
+        modalRef.componentInstance.FGINDetails = {
+            FGINNo: this.FGINNo,
+            FGINDate: this.FGINDate,
+            entryAuthorizedBy: this.entryAuthorizedBy
+        };
+        modalRef.result.then(
+            (success: any) => {
+                if (success) {
+                    console.log("success", success);
+                    this.FGINNo = success?.FGINNo;
+                    this.FGINDate = success?.FGINDate;
+                    this.entryAuthorizedBy = success?.entryAuthorizedBy;
+                }
+            },
+            (reason: any) => {}
+        );
     }
 
     onSort({column, direction}: SortEvent) {

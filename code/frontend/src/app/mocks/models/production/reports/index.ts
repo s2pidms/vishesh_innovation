@@ -8,3 +8,4 @@ export * from "./GRFulfillmentStatus";
 export * from "./salesForecast";
 export * from "./GTRequestFulfillmentStatus";
 export * from "./FGInventoryForAllLocation";
+export * from "./finishGoods";

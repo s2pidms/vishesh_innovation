@@ -3,6 +3,7 @@ export interface IRMSpecificationsMasterData {
     itemCategoryListOptions: IItemCategoryList[];
     itemsListOptions: IItemsList[];
     specificationList: ISpecificationList[];
+    supplierInfo: ISupplierInfo[];
 }
 
 export interface IItemCategoryList {
@@ -30,4 +31,9 @@ export interface ISpecificationList {
     LTL: string;
     UTL: string;
     _id?: string;
+}
+export interface ISupplierInfo {
+    SN: number;
+    supplierCode: string;
+    supplierName: string;
 }

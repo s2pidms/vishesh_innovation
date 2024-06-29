@@ -1,13 +1,16 @@
 const asyncHandler = require("express-async-handler");
-const Model = require("../../../../models/stores/FGINModel");
 const MESSAGES = require("../../../../helpers/messages.options");
-const {getAllReportsAggregationFooter, outputDataReports} = require("../../../../helpers/utility");
-const {getMatchData} = require("../../../../helpers/global.options");
 const {default: mongoose} = require("mongoose");
 const {getCompanyLocations} = require("../../settings/company/company");
 const {getDateDiff, dateToAnyFormat, getEndDateTime, getStartDateTime} = require("../../../../helpers/dateTime");
 const FGINHelper = require("../../../../models/stores/helpers/FGINHelper");
 const FGINRepository = require("../../../../models/stores/repository/FGINRepository");
+const {filteredCustomerList} = require("../../../../models/sales/repository/customerRepository");
+const {filteredSKUMasterList} = require("../../../../models/sales/repository/SKUMasterRepository");
+const {getQMSMappingByModuleAndTitle} = require("../../settings/report-qms-mapping/report-qms-mapping");
+const {filteredProductCategoryMasterList} = require("../../../../models/settings/repository/productCategoryRepository");
+const {getAllSKUCategory} = require("../../settings/SKUCategoryMaster/SKUCategoryMaster");
+const {OPTIONS} = require("../../../../helpers/global.options");
 const ObjectId = mongoose.Types.ObjectId;
 
 exports.getAllReports = asyncHandler(async (req, res) => {
@@ -341,6 +344,176 @@ exports.getAllFGINValueFinanceReports = asyncHandler(async (req, res) => {
         });
     } catch (e) {
         console.error("getAllFGINValueFinanceReports", e);
+        const errors = MESSAGES.apiErrorStrings.SERVER_ERROR;
+        return res.serverError(errors);
+    }
+});
+
+exports.getAllFGInventoryReports = asyncHandler(async (req, res) => {
+    try {
+        let SKUCategoryList = await getAllSKUCategory(req.user.company, null);
+        let productCategories = [];
+        if (SKUCategoryList.length > 0) {
+            productCategories = SKUCategoryList.map(x => {
+                return {
+                    label: x.displayProductCategoryName,
+                    value: x.displayProductCategoryName
+                };
+            });
+        } else {
+            productCategories = await filteredProductCategoryMasterList([
+                {
+                    $match: {
+                        company: ObjectId(req.user.company),
+                        categoryStatus: OPTIONS.defaultStatus.ACTIVE
+                    }
+                },
+                {$sort: {seq: 1}},
+                {
+                    $project: {
+                        displayProductCategoryName: 1
+                    }
+                }
+            ]);
+            productCategories = productCategories.map(x => {
+                return {
+                    label: x.displayProductCategoryName,
+                    value: x.displayProductCategoryName
+                };
+            });
+        }
+        const locations = await getCompanyLocations(req.user.company);
+        let customerOptions = await filteredCustomerList([
+            {
+                $match: {
+                    isCustomerActive: "A",
+                    company: ObjectId(req.user.company)
+                }
+            },
+            {$sort: {customerName: 1}},
+            {
+                $project: {
+                    customerName: 1
+                }
+            }
+        ]);
+        const SKUOptions = await filteredSKUMasterList([
+            {$match: {company: ObjectId(req.user.company), isActive: "A"}},
+            {$project: {SKUStage: 1, productCategory: 1}}
+        ]);
+
+        const {toDate = null, location = null, SKUStage = null, customerId = null, category = null} = req.query;
+        let project = FGINHelper.getAllFGInventoryReportsAttributes();
+        let query = {
+            company: ObjectId(req.user.company),
+            FGINQuantity: {$gt: 0},
+            ...(!!location && {
+                location: location == "All" ? {$exists: true} : location
+            }),
+
+            ...(!!toDate && {
+                matchDate: {
+                    $lte: toDate
+                }
+            })
+        };
+        let pipeline = [
+            {
+                $addFields: {
+                    matchDate: {$dateToString: {format: "%Y-%m-%d", date: "$FGINDate"}},
+                    aging: {
+                        $cond: {
+                            if: {
+                                $or: [
+                                    {$eq: ["$expiryDate", null]},
+                                    {$gte: ["$expiryDate", {$add: [new Date(), 30 * 24 * 60 * 60 * 1000]}]}
+                                ]
+                            },
+                            then: "green",
+                            else: {
+                                $cond: {
+                                    if: {
+                                        $gt: ["$expiryDate", new Date()]
+                                    },
+                                    then: "yellow",
+                                    else: "red"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            {
+                $match: query
+            },
+            {
+                $lookup: {
+                    from: "SKUMaster",
+                    localField: "SKUId",
+                    foreignField: "_id",
+                    pipeline: [
+                        {
+                            $unwind: "$customerInfo"
+                        },
+                        {
+                            $project: {
+                                _id: 0,
+                                productCategory: 1,
+                                customerInfo: 1,
+                                SKUStage: 1
+                            }
+                        }
+                    ],
+                    as: "SKU"
+                }
+            },
+            {
+                $unwind: "$SKU"
+            },
+            {
+                $match: {
+                    ...(!!customerId && {
+                        "SKU.customerInfo.customer": ObjectId(customerId)
+                    }),
+                    ...(!!category && {
+                        "SKU.productCategory": category
+                    }),
+                    ...(!!SKUStage && {
+                        "SKU.SKUStage": SKUStage
+                    })
+                }
+            }
+        ];
+        const display = await getQMSMappingByModuleAndTitle(req.user.company, "Production", "Finish Goods (FG)");
+        let output = await FGINRepository.getAllReportsPaginate({
+            pipeline,
+            project,
+            queryParams: req.query,
+            groupValues: [
+                {
+                    $group: {
+                        _id: null,
+                        FGINQuantity: {$sum: "$FGINQuantity"}
+                    }
+                },
+                {
+                    $project: {
+                        totalFGINQuantity: {$round: ["$FGINQuantity", 2]},
+                        _id: 0
+                    }
+                }
+            ]
+        });
+        return res.success({
+            ...output,
+            customerOptions,
+            SKUOptions,
+            locations: locations.split(","),
+            display,
+            productCategoryOptions: productCategories
+        });
+    } catch (e) {
+        console.error("getAllFGInventoryReports", e);
         const errors = MESSAGES.apiErrorStrings.SERVER_ERROR;
         return res.serverError(errors);
     }

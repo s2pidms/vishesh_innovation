@@ -1,5 +1,5 @@
 const Model = require("../supplierModel");
-module.exports = {
+const SupplierRepository = {
     createDoc: async obj => {
         return await Model.create(obj);
     },
@@ -29,3 +29,5 @@ module.exports = {
         return await Model.aggregate(pipeline);
     }
 };
+
+module.exports = SupplierRepository;

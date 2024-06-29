@@ -8,3 +8,4 @@ export * from "./jce-disabled-ipqa-info.pipe";
 export * from "./uom-units-master.pipe";
 export * from "./sales-uom-units-master.pipe";
 export * from "./separateWords.pipe";
+export * from "./customer-supplier-currency.pipe";

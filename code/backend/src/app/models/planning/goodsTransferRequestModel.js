@@ -43,6 +43,14 @@ const goodsTransferRequestSchema = mongoose.Schema(
             type: String,
             required: false
         },
+        fromDepartmentName: {
+            type: String,
+            required: false
+        },
+        toDepartmentName: {
+            type: String,
+            required: false
+        },
         rejectRemarks: {
             type: String,
             required: false

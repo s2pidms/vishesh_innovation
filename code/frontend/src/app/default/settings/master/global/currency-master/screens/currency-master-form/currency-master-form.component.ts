@@ -5,11 +5,8 @@ import {ActivatedRoute} from "@angular/router";
 import {mergeMap, of} from "rxjs";
 import {NgbModal} from "@ng-bootstrap/ng-bootstrap";
 import {ToastService, UtilityService} from "@core/services";
-import {DEPARTMENT_MASTER_FORM_ERRORS} from "@mocks/validations/settings/departmentMaster.validation";
 import {ValidationService} from "@core/components";
 import {SpinnerService} from "@core/services";
-import {DepartmentMasterService} from "@services/settings";
-import {IDepartmentMasterData} from "@mocks/models/settings/masters";
 import {CurrencyMasterService} from "@services/settings/currencyMaster.service";
 import {ICurrencyMasterData} from "@mocks/models/settings/masters/currencyMasterData";
 import {CURRENCY_MASTER_FORM_ERRORS} from "@mocks/validations/settings/currencyMaster.validation";
@@ -41,9 +38,9 @@ export class CurrencyMasterFormComponent implements OnInit {
         currencyCode: new UntypedFormControl("", [Validators.required]),
         currencyName: new UntypedFormControl("", [Validators.required]),
         symbol: new UntypedFormControl("", [Validators.required]),
-        exchangeRateToUSD: new UntypedFormControl("", [Validators.required]),
-        sequence: new UntypedFormControl("", [Validators.required]),
-        status: new UntypedFormControl("")
+        exchangeRateToUSD: new UntypedFormControl(""),
+        sequence: new UntypedFormControl(""),
+        status: new UntypedFormControl("Active")
     });
 
     submitted = false;

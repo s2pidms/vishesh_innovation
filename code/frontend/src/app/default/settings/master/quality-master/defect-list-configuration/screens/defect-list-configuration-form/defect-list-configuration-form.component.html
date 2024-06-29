@@ -2,21 +2,21 @@
     <div class="set-remaining-margin">
         <div class="row form-header">
             <div class="col heading">
-                <label>{{ type }} List Configuration </label>
+                <label> Defect List Configuration </label>
             </div>
         </div>
         <div class="form-body pt-0">
             <div class="row mb-0">
                 <div class="col-4 border border-start-1 pt-4 pe-5">
-                    <div class="row pe-4 mt-4">
+                    <!-- <div class="row pe-4 mt-4">
                         <div class="col-12 pe-0">
                             <select class="form-select" [(ngModel)]="usePresetsAndNewCreate">
                                 <option [value]="'Use Presets'">Use Presets</option>
                                 <option [value]="'Create New'">Create New</option>
                             </select>
                         </div>
-                    </div>
-                    <form class="mt-5" (submit)="addDescription()">
+                    </div> -->
+                    <form class="mt-4" (submit)="addDescription()">
                         <div class="row pe-4 mt-4">
                             <div class="col-11 pe-0">
                                 <input
@@ -28,7 +28,11 @@
                                 />
                             </div>
                             <div class="col-1 d-flex align-items-end ps-0">
-                                <button class="plusIconSvg btn btn-primary" type="submit"></button>
+                                <button
+                                    style="padding: 1.4rem 1.4rem 1.4rem 1.4rem"
+                                    class="plusIconSvg btn btn-primary"
+                                    type="submit"
+                                ></button>
                             </div>
                         </div>
                     </form>
@@ -89,7 +93,7 @@
                                 <thead class="bg-primary">
                                     <tr class="text-white">
                                         <th>SN</th>
-                                        <th class="text-start">{{ type }} Name</th>
+                                        <th class="text-start">Defect Name</th>
                                         <!-- <th>Select</th> -->
                                         <th>Action</th>
                                     </tr>
@@ -106,8 +110,16 @@
                                     >
                                         <td>{{ i + 1 + (page - 1) * pageSize }}</td>
 
-                                        <td class="text-start">{{ u?.defectName }}</td>
-
+                                        <!-- <td class="text-start">{{ u?.defectName }}</td> -->
+                                        <td class="text-start" [style.width]="defectName.clientWidth" #defectName>
+                                            <span
+                                                class="pointer"
+                                                [ngbTooltip]="u.defectName"
+                                                [positionTarget]="defectName"
+                                            >
+                                                {{ u.defectName }}
+                                            </span>
+                                        </td>
                                         <!-- <td> 
                                             <input
                                                 class="form-check-input pointer"

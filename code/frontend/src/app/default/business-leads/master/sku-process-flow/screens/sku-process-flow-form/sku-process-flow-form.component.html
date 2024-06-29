@@ -2,7 +2,7 @@
     <div class="set-remaining-margin">
         <div class="row form-header">
             <div class="col heading ms-2">
-                <label class="">{{ action | titlecase }} Process Flow</label>
+                <label class="">{{ action | separateWords | titlecase }} Process Flow</label>
             </div>
         </div>
         <div class="form-body">
@@ -24,7 +24,7 @@
                 </div>
                 <div class="col-7">
                     <div class="row">
-                        <div class="col-5 pe-0">
+                        <div class="col-5">
                             <label class="form-label"
                                 >{{ "SKU Description" | labelTranslate }}
                                 <span class="text-danger"></span>
@@ -138,3 +138,218 @@
         </div>
     </div>
 </form>
+
+<!-- <div class="formCard card">
+    <div class="set-remaining-margin">
+        <div class="row form-header">
+            <div class="col heading">
+                <label> SKU Flow (Entry) </label>
+            </div>
+        </div>
+        <div class="form-body pt-0">
+            <div class="row mb-0">
+                <div class="col-5 border border-start-1 pt-4 px-5">
+                    <form [formGroup]="form" class="mt-4">
+                        <div class="row mt-4">
+                            <div class="col-4 pe-0 d-flex justify-content-between align-items-center">
+                                <label class="form-label"> SKU Number <span class="text-danger"> </span></label>
+                                <span class="text-secondary fs-5">&#9654;</span>
+                            </div>
+                            <div class="col-8 ps-3">
+                                <input
+                                    type="text"
+                                    class="form-control bg-white-smoke"
+                                    formControlName="SKUNo"
+                                    readonly
+                                />
+                            </div>
+                        </div>
+                        <div class="row mt-4">
+                            <div class="col-4 pe-0 d-flex justify-content-between align-items-center">
+                                <label class="form-label"> SKU Name <span class="text-danger"> </span></label>
+                                <span class="text-secondary fs-5">&#9654;</span>
+                            </div>
+                            <div class="col-8 ps-3">
+                                <input
+                                    type="text"
+                                    class="form-control bg-white-smoke"
+                                    formControlName="SKUName"
+                                    readonly
+                                />
+                            </div>
+                        </div>
+                        <div class="row mt-4">
+                            <div class="col-4 pe-0 d-flex justify-content-between align-items-center">
+                                <label class="form-label"> SKU Description <span class="text-danger"> </span></label>
+                                <span class="text-secondary fs-5">&#9654;</span>
+                            </div>
+                            <div class="col-8 ps-3">
+                                <input
+                                    type="text"
+                                    class="form-control bg-white-smoke"
+                                    formControlName="SKUDescription"
+                                    readonly
+                                />
+                            </div>
+                        </div>
+                        <div class="row mt-4">
+                            <div class="col-4 pe-0 d-flex justify-content-between align-items-center">
+                                <label class="form-label"> Drawing No. <span class="text-danger"> </span></label>
+                                <span class="text-secondary fs-5">&#9654;</span>
+                            </div>
+                            <div class="col-8 ps-3">
+                                <input
+                                    type="text"
+                                    class="form-control bg-white-smoke"
+                                    value="{{ form.controls['artWorkNo'].value }}"
+                                    readonly
+                                />
+                            </div>
+                        </div>
+                        <div class="row mt-4">
+                            <div class="col-4 pe-0 d-flex justify-content-between align-items-center">
+                                <label class="form-label"> UoM <span class="text-danger"> </span></label>
+                                <span class="text-secondary fs-5">&#9654;</span>
+                            </div>
+                            <div class="col-8 ps-3">
+                                <input
+                                    type="text"
+                                    class="form-control bg-white-smoke"
+                                    value="{{ form.controls['primaryUnit'].value | SalesUOMUnitMaster }}"
+                                    readonly
+                                />
+                            </div>
+                        </div>
+                        <div class="row mt-4">
+                            <div class="col-4 pe-0 d-flex justify-content-between align-items-center">
+                                <label class="form-label"> Product Category <span class="text-danger"> </span></label>
+                                <span class="text-secondary fs-5">&#9654;</span>
+                            </div>
+                            <div class="col-8 ps-3">
+                                <input
+                                    type="text"
+                                    class="form-control bg-white-smoke"
+                                    value="{{ form.controls['productCategory'].value }}"
+                                    readonly
+                                />
+                            </div>
+                        </div>
+                    </form>
+
+                    <div
+                        *ngIf="action != 'view'"
+                        style="margin-top: 9.8rem !important"
+                        class="row d-flex justify-content-center mb-1"
+                    >
+                        <div class="col-12">
+                            <button type="button" class="btn btn-primary px-4">Revisions</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-7 border border-start-1">
+                    <div class="row px-5 mt-4">
+                        <div class="row justify-content-between">
+                            <div class="col-3"></div>
+                            <div class="col-6 d-flex justify-content-center">
+                                <ngb-pagination
+                                    *ngIf="masterData.processMasterList.length > 0"
+                                    [collectionSize]="masterData.processMasterList.length"
+                                    [(page)]="page"
+                                    [pageSize]="pageSize"
+                                    [boundaryLinks]="false"
+                                >
+                                    <ng-template ngbPaginationPrevious>
+                                        <img src="./assets/new_icons/pagination_prev.svg" width="20rem" />
+                                    </ng-template>
+                                    <ng-template ngbPaginationNext>
+                                        <img src="./assets/new_icons/pagination_next.svg" width="20rem" />
+                                    </ng-template>
+                                    <ng-template ngbPaginationPages let-page let-pages="pages">
+                                        <li class="ngb-custom-pages-item align-self-center" *ngIf="pages.length > 0">
+                                            <span class="page-label me-2 ms-1">
+                                                Page {{ page }} of {{ pages[pages.length - 1] }}
+                                            </span>
+                                        </li>
+                                    </ng-template>
+                                </ngb-pagination>
+                            </div>
+                            <div class="col-3"></div>
+                        </div>
+                        <div style="min-height: 30rem" class="table-responsive">
+                            <table class="table table-bordered table-sticky mb-0">
+                                <thead class="bg-primary">
+                                    <tr class="text-white">
+                                        <th sortable="seq" (sort)="onSort($event)">Sequence</th>
+                                        <th class="text-start" sortable="processName" (sort)="onSort($event)">
+                                            Process Name
+                                        </th>
+                                        <th sortable="sourceOfManufacturing" (sort)="onSort($event)">Source</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr
+                                        *ngFor="
+                                            let item of masterData.processMasterList
+                                                | searchFi1ter : search
+                                                | slice : (page - 1) * pageSize : (page - 1) * pageSize + pageSize;
+                                            trackBy: trackByFn;
+                                            let i = index
+                                        "
+                                    >
+                                        <td>
+                                            <div class="d-flex justify-content-center">
+                                                <span *ngIf="['view', 'Converted to SKU'].includes(action)">
+                                                    {{ item?.seq }}
+                                                </span>
+                                                <input
+                                                    *ngIf="!['view', 'Converted to SKU'].includes(action)"
+                                                    class="form-control form-control-sm"
+                                                    type="number"
+                                                    [(ngModel)]="item.seq"
+                                                    [ngModelOptions]="{standalone: true}"
+                                                />
+                                            </div>
+                                        </td>
+                                        <td class="text-start" [style.width]="processName.clientWidth" #processName>
+                                            <span
+                                                class="pointer"
+                                                [ngbTooltip]="item.processName"
+                                                [positionTarget]="processName"
+                                            >
+                                                {{ item.processName }}
+                                            </span>
+                                        </td>
+                                        <td>{{ item.sourceOfManufacturing }}</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <hr *ngIf="action != 'view'" class="row line-border" />
+
+                    <div *ngIf="action != 'view'" class="row">
+                        <div class="col text-center">
+                            <div class="d-grid gap-2 d-md-block">
+                                <button type="button" class="btn btn-primary px-5 me-3" (click)="reset()">Reset</button>
+                                <button type="button" class="btn btn-primary px-3 me-1" (click)="ESCPreview()">
+                                    Esc
+                                </button>
+                                <button type="button" class="btn btn-primary px-4 me-3" (click)="preview()">
+                                    Preview
+                                </button>
+                                <button
+                                    class="btn btn-primary px-5"
+                                    type="button"
+                                    [disabled]="!isPreview"
+                                    (click)="submit()"
+                                >
+                                    Save
+                                </button>
+                            </div>
+                        </div>
+                    </div> 
+                </div>
+            </div>
+        </div>
+    </div>
+</div> -->

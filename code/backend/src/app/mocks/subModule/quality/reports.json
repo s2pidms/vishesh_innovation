@@ -110,5 +110,19 @@
         "url": "/default/quality/reports/MRN_details_report",
         "items": [],
         "roles": []
+    },
+    {
+        "_id": "667fce39cb63ebcf797ecc6a",
+        "menuItemId": "64a6c1e33339d4dc9d8141a9",
+        "module": "Quality",
+        "type": "REPORT",
+        "order": 9,
+        "isDisplay": false,
+        "title": "Finished Goods (FG)",
+        "displayName": "Finished Goods (FG)",
+        "disabled": false,
+        "url": "/default/quality/reports/fg_inventory_report",
+        "items": [],
+        "roles": []
     }
 ]

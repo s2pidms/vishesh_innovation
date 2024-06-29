@@ -318,9 +318,9 @@ export class EmployeeFormComponent implements OnInit {
                     }
                 });
 
-            this.menuTitleService.set({
-                type: this.action
-            });
+            // this.menuTitleService.set({
+            //     type: this.action
+            // });
         });
     }
 

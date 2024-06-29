@@ -25,6 +25,11 @@ const routes: Routes = [
     {
         path: "currency_master",
         loadChildren: () => import("./currency-master/currency-master.module").then(m => m.CurrencyMasterModule)
+    },
+    {
+        path: "inventory_department_master",
+        loadChildren: () =>
+            import("./inventory-department/inventory-department.module").then(m => m.InventoryDepartmentModule)
     }
 ];
 

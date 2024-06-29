@@ -1,14 +1,13 @@
 const Model = require("../userModel");
-
-module.exports = {
+const UserRepository = {
     createDoc: async obj => {
         return await Model.create(obj);
     },
     findOneDoc: async (match, project = {}) => {
         return await Model.findOne(match, project);
     },
-    findAndUpdateDoc: async (match, update) => {
-        return await Model.updateOne(match, update);
+    findAndUpdateDoc: async (match, update, options) => {
+        return await Model.updateOne(match, update, options);
     },
     findByIdAndUpdateDoc: async (id, update, options) => {
         return await Model.findByIdAndUpdate(id, update, options);
@@ -28,3 +27,4 @@ module.exports = {
         return await Model.deleteOne(match);
     }
 };
+module.exports = UserRepository;

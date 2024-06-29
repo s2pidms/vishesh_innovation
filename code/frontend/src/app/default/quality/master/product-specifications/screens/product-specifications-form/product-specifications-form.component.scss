@@ -1,0 +1,33 @@
+.fa {
+    font-size: 1.6rem !important;
+}
+
+.setStar {
+    padding-right: 5rem !important;
+}
+
+.pagination {
+    margin-bottom: 0 !important;
+}
+ngb-pagination ::ng-deep ul.pagination {
+    margin: 0 !important;
+}
+.page-label {
+    color: var(--bs-dark);
+    padding: 0 1rem;
+    font-size: 1.4rem;
+}
+ngb-pagination ::ng-deep ul > li:not(.active) > a {
+    border: none !important;
+    color: var(--bs-white) !important;
+    background-color: #ffffff !important;
+    box-shadow: none;
+}
+
+.form-control-sq {
+    margin: 0;
+    height: 2.3rem !important;
+    width: 4rem !important;
+    text-align: center;
+    box-shadow: rgba(0, 0, 0, 0.35) 0px 2px 5px;
+}

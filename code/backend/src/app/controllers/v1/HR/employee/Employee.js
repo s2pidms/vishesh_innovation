@@ -1,17 +1,12 @@
 const fs = require("fs");
-const Model = require("../../../../models/HR/employeeModel");
 const EmployeeRepository = require("../../../../models/HR/repository/employeeRepository");
-const userModel = require("../../../../models/settings/userModel");
-const roleModel = require("../../../../models/settings/roleModel");
 const MESSAGES = require("../../../../helpers/messages.options");
 const path = require("path");
-const {getAutoIncrementNumber} = require("../../../../helpers/utility");
-const {readExcel} = require("../../../../middleware/readExcel");
+const {getAutoIncrementNumber, removeFilesInError} = require("../../../../helpers/utility");
 const {generateCreateData} = require("../../../../helpers/global.options");
 const {findAppParameterValue} = require("../../settings/appParameter/appParameter");
 const {CONSTANTS} = require("../../../../../config/config");
 const {default: mongoose} = require("mongoose");
-const column = require("../../../../mocks/excelUploadColumn/employeeKeys.json");
 const {dateToAnyFormat, getEndDateTime, getStartDateTime} = require("../../../../helpers/dateTime");
 const {
     getAllEmployeeAttributes,
@@ -30,6 +25,8 @@ const {
     EMP_ACCOUNT_TYPE
 } = require("../../../../mocks/constantData");
 const {USER} = require("../../../../mocks/schemasConstant/settingsConstant");
+const UserRepository = require("../../../../models/settings/repository/userRepository");
+const RoleRepository = require("../../../../models/settings/repository/roleRepository");
 const ObjectId = mongoose.Types.ObjectId;
 // @desc    getAll Employee Record
 exports.getAll = async (req, res) => {
@@ -40,7 +37,10 @@ exports.getAll = async (req, res) => {
         }
         let pipeline = [
             {
-                $match: {empStatus: {$ne: "I"}, company: ObjectId(req.user.company)}
+                $match: {
+                    company: ObjectId(req.user.company)
+                    // empStatus: {$ne: "I"},
+                }
             },
             {
                 $addFields: {
@@ -74,8 +74,8 @@ exports.getAll = async (req, res) => {
 exports.create = async (req, res) => {
     try {
         const {empCode} = req.body;
-        const userExists = await userModel.findOne({email: empCode, company: req.user.company});
-        const employeeExists = await Model.findOne({
+        const userExists = await UserRepository.findOneDoc({email: empCode, company: req.user.company});
+        const employeeExists = await EmployeeRepository.findOneDoc({
             empCode,
             company: req.user.company
         });
@@ -198,7 +198,7 @@ exports.create = async (req, res) => {
             }
         }
         if (createdObj.isLogin == "true") {
-            let role = await roleModel.findOne({roleName: "Employee"});
+            let role = await RoleRepository.findOneDoc({roleName: "Employee"});
             let user = {
                 company: req.user.company,
                 createdBy: req.user.sub,
@@ -210,14 +210,13 @@ exports.create = async (req, res) => {
                 password: CONSTANTS.employeePassword,
                 isActive: true
             };
-            const createUser = await userModel.create(user);
+            const createUser = await UserRepository.createDoc(user);
             if (createUser) {
                 createdObj.userId = createUser._id;
             }
         }
         createdObj.empFullName = createdObj.empFirstName + " " + createdObj.empLastName;
-        const saveObj = new Model(createdObj);
-        const itemDetails = await saveObj.save();
+        const itemDetails = await EmployeeRepository.createDoc(createdObj);
         if (itemDetails) {
             return res.success({
                 message: MESSAGES.apiSuccessStrings.ADDED("Employee")
@@ -228,6 +227,18 @@ exports.create = async (req, res) => {
         }
     } catch (e) {
         console.error("create Employee", e);
+        if (req.files) {
+            removeFilesInError(req.files["empPhoto"]);
+            removeFilesInError(req.files["empResume"]);
+            removeFilesInError(req.files["empAadharCard"]);
+            removeFilesInError(req.files["empPanCard"]);
+            removeFilesInError(req.files["empExpCertificate"]);
+            removeFilesInError(req.files["empRelievingLetter"]);
+            removeFilesInError(req.files["uploadBankPassBook"]);
+            removeFilesInError(req.files["uploadBankCheckBook"]);
+            removeFilesInError(req.files["uploadOfferLetter"]);
+            removeFilesInError(req.files["uploadAppointmentLetter"]);
+        }
         const errors = MESSAGES.apiErrorStrings.SERVER_ERROR;
         return res.serverError(errors);
     }
@@ -236,7 +247,7 @@ exports.create = async (req, res) => {
 exports.update = async (req, res) => {
     try {
         const {empCode} = req.body;
-        let employee = await Model.findById(req.params.id);
+        let employee = await EmployeeRepository.getDocById(req.params.id);
         if (!employee) {
             if (
                 req.files["empPhoto"] &&
@@ -312,24 +323,24 @@ exports.update = async (req, res) => {
             return res.preconditionFailed(errors);
         }
         employee.updatedBy = req.user.sub;
-
-        employee.company = employee.company;
-
         if (req.body.empPermanentAddress) {
             req.body.empPermanentAddress = JSON.parse(req.body.empPermanentAddress);
         }
         if (req.body.empPresentAddress) {
             req.body.empPresentAddress = JSON.parse(req.body.empPresentAddress);
         }
-
+        if (employee.empStatus == "I" && req.body.empStatus == "A") {
+            req.body.empDateOfResignation = null;
+            req.body.reasonOfLeaving = null;
+        }
         employee = await generateCreateData(employee, req.body);
-        let createUser = await userModel.findOne({email: empCode, company: req.user.company});
+        let createUser = await UserRepository.findOneDoc({email: empCode, company: req.user.company});
 
         if (employee.isLogin) {
             if (!createUser) {
-                let role = await roleModel.findOne({roleName: "Employee"});
+                let role = await RoleRepository.findOneDoc({roleName: "Employee"});
                 const autoIncrementedNo = await getAndSetAutoIncrementNo(USER.AUTO_INCREMENT_DATA(), req.user.company);
-                let user = new userModel({
+                let user = {
                     company: req.user.company,
                     createdBy: req.user.sub,
                     updatedBy: req.user.sub,
@@ -339,14 +350,14 @@ exports.update = async (req, res) => {
                     email: empCode,
                     password: CONSTANTS.employeePassword,
                     isActive: true
-                });
-                createUser = await user.save();
+                };
+                createUser = await UserRepository.createDoc(user);
                 employee.userId = createUser?._id ?? null;
             }
         } else {
             if (createUser) {
                 if (createUser.isActive) {
-                    await userModel.updateOne(
+                    await UserRepository.findAndUpdateDoc(
                         {_id: createUser._id},
                         {
                             $set: {
@@ -479,6 +490,7 @@ exports.update = async (req, res) => {
             }
 
             employee["empFullName"] = employee["empFirstName"] + " " + employee["empLastName"];
+
             await employee.save();
             return res.success({
                 message: MESSAGES.apiSuccessStrings.UPDATE("Employee has been")
@@ -489,6 +501,18 @@ exports.update = async (req, res) => {
         }
     } catch (e) {
         console.error("update Employee", e);
+        if (req.files) {
+            removeFilesInError(req.files["empPhoto"]);
+            removeFilesInError(req.files["empResume"]);
+            removeFilesInError(req.files["empAadharCard"]);
+            removeFilesInError(req.files["empPanCard"]);
+            removeFilesInError(req.files["empExpCertificate"]);
+            removeFilesInError(req.files["empRelievingLetter"]);
+            removeFilesInError(req.files["uploadBankPassBook"]);
+            removeFilesInError(req.files["uploadBankCheckBook"]);
+            removeFilesInError(req.files["uploadOfferLetter"]);
+            removeFilesInError(req.files["uploadAppointmentLetter"]);
+        }
         const errors = MESSAGES.apiErrorStrings.SERVER_ERROR;
         return res.serverError(errors);
     }
@@ -496,9 +520,8 @@ exports.update = async (req, res) => {
 // @desc    deleteById Employee Record
 exports.deleteById = async (req, res) => {
     try {
-        const deleteItem = await Model.findById(req.params.id);
+        const deleteItem = await EmployeeRepository.deleteDoc({_id: req.params.id});
         if (deleteItem) {
-            await deleteItem.remove();
             return res.success({
                 message: MESSAGES.apiSuccessStrings.DELETED("Employee")
             });
@@ -562,7 +585,7 @@ const dropDownOptions = async company => {
 };
 exports.getById = async (req, res) => {
     try {
-        let existing = await Model.findById(req.params.id);
+        let existing = await EmployeeRepository.getDocById(req.params.id);
         if (!existing) {
             let errors = MESSAGES.apiSuccessStrings.DATA_NOT_EXISTS("Paid Holiday");
             return res.unprocessableEntity(errors);
@@ -614,7 +637,7 @@ exports.employeeExitReport = async (req, res) => {
 };
 
 exports.gradeStructure = async (req, res) => {
-    const rows = await Model.aggregate([
+    const rows = await EmployeeRepository.filteredEmployeeList([
         {
             $match: {
                 company: ObjectId(req.user.company),
@@ -642,8 +665,8 @@ exports.gradeStructure = async (req, res) => {
 exports.employeeDepartmentWiseStructure = async (req, res) => {
     try {
         const {employeeId} = req.query;
-        let emp = await Model.findById(employeeId);
-        const rows = await Model.aggregate([
+        let emp = await EmployeeRepository.getDocById(employeeId);
+        const rows = await EmployeeRepository.filteredEmployeeList([
             {
                 $match: {
                     $or: [{empDepartment: emp.empDepartment}, {empGrade: "1 - CEO/ED/MD"}],
@@ -674,7 +697,7 @@ exports.employeeDepartmentWiseStructure = async (req, res) => {
 };
 
 exports.findAllEmployees = async () => {
-    let rows = await Model.aggregate([
+    let rows = await EmployeeRepository.filteredEmployeeList([
         {$match: {empStatus: "A"}},
         {
             $project: {
@@ -699,7 +722,7 @@ exports.findAllEmployees = async () => {
 };
 exports.getEmployeeById = async employeeId => {
     try {
-        const employee = await Model.findOne({_id: employeeId});
+        const employee = await EmployeeRepository.findOneDoc({_id: employeeId});
         return employee;
     } catch (error) {
         console.error(error);
@@ -707,7 +730,7 @@ exports.getEmployeeById = async employeeId => {
 };
 exports.getEmployeeCounts = async company => {
     try {
-        const result = await Model.aggregate([
+        const result = await EmployeeRepository.filteredEmployeeList([
             {
                 $match: {
                     company: ObjectId(company),
@@ -736,63 +759,9 @@ exports.getEmployeeCounts = async company => {
     }
 };
 
-exports.uploadEmployeeFile = async (req, res) => {
-    try {
-        let fname = req.file.filename;
-        let jsonData = await readExcel(fname, column);
-        for (let i = 0; i < jsonData.length; i++) {
-            const ele = jsonData[i];
-            if (!!ele.empDOB) {
-                ele.empDOB = dateToAnyFormat(ele.empDOB, "MM/DD/YYYY");
-            } else {
-                ele.empDOB = null;
-            }
-            if (!!ele.empSpouseDOB) {
-                ele.empSpouseDOB = dateToAnyFormat(ele.empSpouseDOB, "MM/DD/YYYY");
-            } else {
-                ele.empSpouseDOB = null;
-            }
-            if (!!ele.empFatherDOB) {
-                ele.empFatherDOB = dateToAnyFormat(ele.empFatherDOB, "MM/DD/YYYY");
-            } else {
-                ele.empFatherDOB = null;
-            }
-            if (!!ele.empMotherDOB) {
-                ele.empMotherDOB = dateToAnyFormat(ele.empMotherDOB, "MM/DD/YYYY");
-            } else {
-                ele.empMotherDOB = null;
-            }
-            if (!!ele.empJoiningDate) {
-                ele.empJoiningDate = dateToAnyFormat(ele.empJoiningDate, "MM/DD/YYYY");
-            } else {
-                ele.empJoiningDate = null;
-            }
-        }
-        const arr = [];
-        let employeeData = jsonData.map(x => {
-            const {line1, line2, line3, state, city, pinCode, country, ...rest} = x;
-            let address = {
-                line1,
-                line2,
-                line3,
-                state,
-                city,
-                pinCode,
-                country
-            };
-            rest.empPermanentAddress = [address];
-            rest.empPresentAddress = [address];
-            return rest;
-        });
-    } catch (e) {
-        const errors = MESSAGES.apiErrorStrings.SERVER_ERROR;
-        throw new Error(e);
-    }
-};
-
 exports.getTotalNoOfEmployeesPerDay = async company => {
     const currentDate = dateToAnyFormat(new Date(), "YYYY-MM-DD");
-    const rows = await Model.aggregate([
+    const rows = await EmployeeRepository.filteredEmployeeList([
         {
             $addFields: {
                 matchDate: {$dateToString: {format: "%Y-%m-%d", date: "$createdAt"}}

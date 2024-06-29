@@ -1,15 +1,13 @@
 const asyncHandler = require("express-async-handler");
-const Model = require("../../../../models/HR/paidLeavesModel");
 const MESSAGES = require("../../../../helpers/messages.options");
-const {outputData, getAllAggregationFooter} = require("../../../../helpers/utility");
-const {generateCreateData, getMatchData, OPTIONS} = require("../../../../helpers/global.options");
+const {OPTIONS} = require("../../../../helpers/global.options");
 const {getAllPaidLeavesAttributes} = require("../../../../models/HR/helpers/paidLeavesHelper");
 const {default: mongoose} = require("mongoose");
 const {findAppParameterValue} = require("../../settings/appParameter/appParameter");
 const {getAndSetAutoIncrementNo} = require("../../settings/autoIncrement/autoIncrement");
 const {PAID_LEAVES} = require("../../../../mocks/schemasConstant/HRConstant");
 const {filteredEmployeeList} = require("../../../../models/HR/repository/employeeRepository");
-const {getAllPaidLeaveAggregate} = require("../../../../models/HR/repository/paidLeaveRepository");
+const PaidLeaveRepository = require("../../../../models/HR/repository/paidLeaveRepository");
 const ObjectId = mongoose.Types.ObjectId;
 
 exports.getAll = asyncHandler(async (req, res) => {
@@ -33,7 +31,7 @@ exports.getAll = asyncHandler(async (req, res) => {
             },
             {$unwind: "$employeeId"}
         ];
-        let rows = await getAllPaidLeaveAggregate({pipeline, project, queryParams: req.query});
+        let rows = await PaidLeaveRepository.getAllPaginate({pipeline, project, queryParams: req.query});
         return res.success(rows);
     } catch (e) {
         console.error("getAllPaidLeaves", e);
@@ -43,7 +41,7 @@ exports.getAll = asyncHandler(async (req, res) => {
 });
 exports.create = asyncHandler(async (req, res) => {
     try {
-        let existing = await Model.findOne(
+        let existing = await PaidLeaveRepository.findOneDoc(
             {
                 employeeId: req.body.employeeId
             },
@@ -59,8 +57,7 @@ exports.create = asyncHandler(async (req, res) => {
             updatedBy: req.user.sub,
             ...req.body
         };
-        const saveObj = new Model(createdObj);
-        const itemDetails = await saveObj.save();
+        const itemDetails = await PaidLeaveRepository.createDoc(createdObj);
         if (itemDetails) {
             return res.success({
                 message: MESSAGES.apiSuccessStrings.ADDED("Paid Leaves")
@@ -78,14 +75,13 @@ exports.create = asyncHandler(async (req, res) => {
 
 exports.update = asyncHandler(async (req, res) => {
     try {
-        let itemDetails = await Model.findById(req.params.id);
+        let itemDetails = await PaidLeaveRepository.getDocById(req.params.id);
         if (!itemDetails) {
             const errors = MESSAGES.apiErrorStrings.INVALID_REQUEST;
             return res.preconditionFailed(errors);
         }
-        itemDetails = await generateCreateData(itemDetails, req.body);
         itemDetails.updatedBy = req.user.sub;
-        itemDetails = await itemDetails.save();
+        itemDetails = await PaidLeaveRepository.updateDoc(itemDetails, req.body);
         return res.success({
             message: MESSAGES.apiSuccessStrings.UPDATE("Paid Leaves has been")
         });
@@ -98,9 +94,8 @@ exports.update = asyncHandler(async (req, res) => {
 
 exports.deleteById = asyncHandler(async (req, res) => {
     try {
-        const deleteItem = await Model.findById(req.params.id);
+        const deleteItem = await PaidLeaveRepository.deleteDoc({_id: req.params.id});
         if (deleteItem) {
-            await deleteItem.remove();
             return res.success({
                 message: MESSAGES.apiSuccessStrings.DELETED("Paid Leaves")
             });
@@ -117,7 +112,7 @@ exports.deleteById = asyncHandler(async (req, res) => {
 
 exports.getById = asyncHandler(async (req, res) => {
     try {
-        let existing = await Model.findById(req.params.id);
+        let existing = await PaidLeaveRepository.getDocById(req.params.id);
         if (!existing) {
             let errors = MESSAGES.apiSuccessStrings.DATA_NOT_EXISTS("Paid Leaves");
             return res.unprocessableEntity(errors);
@@ -162,7 +157,7 @@ exports.updatePaidLeaveOnLeaveApplication = async ({
     previousLeaves = 0
 }) => {
     try {
-        let itemDetails = await Model.findOne({employeeId: employeeId});
+        let itemDetails = await PaidLeaveRepository.findOneDoc({employeeId: employeeId});
         itemDetails.updatedBy = updatedBy;
         if (leaveType == "Paid Leaves") {
             if (status == OPTIONS.defaultStatus.SUBMITTED) {
@@ -192,7 +187,7 @@ exports.updatePaidLeaveOnLeaveApplication = async ({
 };
 exports.updatePaidLeaveOnEmpAttendance = asyncHandler(async ({employeeId, days, updatedBy}) => {
     try {
-        let itemDetails = await Model.findOne({employeeId: employeeId});
+        let itemDetails = await PaidLeaveRepository.findOneDoc({employeeId: employeeId});
         itemDetails.updatedBy = updatedBy;
         itemDetails.sickLeaveSL = +itemDetails.sickLeaveSL + +days;
         itemDetails = await itemDetails.save();
@@ -202,7 +197,7 @@ exports.updatePaidLeaveOnEmpAttendance = asyncHandler(async ({employeeId, days, 
 });
 exports.paidLeaveByEmpId = asyncHandler(async employeeId => {
     try {
-        let existing = await Model.findOne({employeeId: employeeId});
+        let existing = await PaidLeaveRepository.findOneDoc({employeeId: employeeId});
         return existing;
     } catch (e) {
         console.error("getById PaidLeaves", e);
@@ -210,7 +205,7 @@ exports.paidLeaveByEmpId = asyncHandler(async employeeId => {
 });
 exports.getLeaveByEmployeeId = async employeeId => {
     try {
-        const employee = await Model.findOne({employeeId: employeeId});
+        const employee = await PaidLeaveRepository.findOneDoc({employeeId: employeeId});
         return {
             casualLeaveCL: +employee?.casualLeaveCL ?? 0,
             sickLeaveSL: +employee?.sickLeaveSL ?? 0,
@@ -222,7 +217,7 @@ exports.getLeaveByEmployeeId = async employeeId => {
 };
 exports.getBalanceLeaveByEmployeeId = async employeeId => {
     try {
-        const employee = await Model.findOne({employeeId: employeeId});
+        const employee = await PaidLeaveRepository.findOneDoc({employeeId: employeeId});
         return employee
             ? +employee?.casualLeaveCL ?? 0 + +employee?.sickLeaveSL ?? 0 + +employee?.privilegeLeavePL ?? 0
             : 0;

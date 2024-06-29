@@ -418,7 +418,9 @@ exports.getAllMasterData = asyncHandler(async (req, res) => {
                     GTRequestDate: {$dateToString: {format: "%Y-%m-%d", date: "$GTRequestDate"}},
                     location: 1,
                     toDepartment: 1,
-                    fromDepartment: 1
+                    fromDepartment: 1,
+                    toDepartmentName: 1,
+                    fromDepartmentName: 1
                 }
             }
         ]);

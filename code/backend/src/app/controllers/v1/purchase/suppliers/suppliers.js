@@ -1,13 +1,7 @@
 const Model = require("../../../../models/purchase/supplierModel");
 const MESSAGES = require("../../../../helpers/messages.options");
-const {
-    outputData,
-    getAllAggregationFooter,
-    removeFile,
-    removeSingleFileInError,
-    getIncrementNumWithPrefix
-} = require("../../../../helpers/utility");
-const {generateCreateData, getMatchData, OPTIONS} = require("../../../../helpers/global.options");
+const {removeFile, removeSingleFileInError, getIncrementNumWithPrefix} = require("../../../../helpers/utility");
+const {OPTIONS} = require("../../../../helpers/global.options");
 const {findAppParameterValue} = require("../../settings/appParameter/appParameter");
 const {default: mongoose} = require("mongoose");
 const ObjectId = mongoose.Types.ObjectId;
@@ -25,6 +19,7 @@ const {SUPPLIER} = require("../../../../mocks/schemasConstant/purchaseConstant")
 const SupplierRepository = require("../../../../models/purchase/repository/supplierRepository");
 const {SUPPLIER_OPTIONS} = require("../../../../mocks/dropDownOptions");
 const AutoIncrementRepository = require("../../../../models/settings/repository/autoIncrementRepository");
+const {filteredCurrencyMasterList} = require("../../../../models/settings/repository/currencyMasterRepository");
 
 // @route   GET /purchase/suppliers/getAll
 exports.getAll = async (req, res) => {
@@ -82,8 +77,7 @@ exports.create = async (req, res) => {
                 createdObj["cpaFile"] = req.file.filename;
             }
         }
-        const saveObj = new Model(createdObj);
-        const itemDetails = await saveObj.save();
+        const itemDetails = await SupplierRepository.createDoc(createdObj);
         if (itemDetails) {
             return res.success({
                 message: MESSAGES.apiSuccessStrings.ADDED("Supplier")
@@ -104,7 +98,7 @@ exports.create = async (req, res) => {
 
 exports.update = async (req, res) => {
     try {
-        let itemDetails = await Model.findById(req.params.id);
+        let itemDetails = await SupplierRepository.getDocById(req.params.id);
         if (!itemDetails) {
             const errors = MESSAGES.apiErrorStrings.INVALID_REQUEST;
             return res.preconditionFailed(errors);
@@ -125,24 +119,13 @@ exports.update = async (req, res) => {
         if (req.body.supplierBankDetails) {
             req.body.supplierBankDetails = JSON.parse(req.body.supplierBankDetails);
         }
-        itemDetails = await generateCreateData(itemDetails, req.body);
-        if (req.body.supplierShippingAddress) {
-            itemDetails.supplierShippingAddress = req.body.supplierShippingAddress;
-        }
-        if (req.body.supplierContactMatrix) {
-            itemDetails.supplierContactMatrix = req.body.supplierContactMatrix;
-        }
-        if (req.body.supplierBankDetails) {
-            itemDetails.supplierBankDetails = req.body.supplierBankDetails;
-        }
         if (req.file && req.file.filename) {
             if (itemDetails.cpaFile) {
                 removeFile(`${req.file.destination}/${itemDetails.cpaFile}`);
             }
-            itemDetails.cpaFile = req.file.filename;
+            req.body.cpaFile = req.file.filename;
         }
-        itemDetails = await itemDetails.save();
-
+        itemDetails = await SupplierRepository.updateDoc(itemDetails, req.body);
         return res.success({
             message: MESSAGES.apiSuccessStrings.UPDATE("Supplier has been")
         });
@@ -159,9 +142,8 @@ exports.update = async (req, res) => {
 // @route   PUT /purchase/suppliers/delete/:id
 exports.deleteById = async (req, res) => {
     try {
-        const deleteItem = await Model.findById(req.params.id);
+        const deleteItem = await SupplierRepository.deleteDoc({_id: req.params.id});
         if (deleteItem) {
-            await deleteItem.remove();
             return res.success({
                 message: MESSAGES.apiSuccessStrings.DELETED("Supplier")
             });
@@ -179,7 +161,7 @@ exports.deleteById = async (req, res) => {
 // @route   GET /purchase/suppliers/getById/:id
 exports.getById = async (req, res) => {
     try {
-        let existing = await Model.findById(req.params.id);
+        let existing = await SupplierRepository.getDocById(req.params.id);
         if (!existing) {
             let errors = MESSAGES.apiSuccessStrings.DATA_NOT_EXISTS("Supplier");
             return res.unprocessableEntity(errors);
@@ -210,7 +192,24 @@ exports.getAllMasterData = async (req, res) => {
 const dropDownOptions = async company => {
     try {
         const paymentTermsOptions = await getAllPaymentTerms(company);
-        const currenciesOptions = await findAppParameterValue("Currency", company);
+        // const currenciesOptions = await findAppParameterValue("Currency", company);
+        const currenciesOptions = await filteredCurrencyMasterList([
+            {
+                $match: {
+                    company: ObjectId(company),
+                    status: OPTIONS.defaultStatus.ACTIVE
+                }
+            },
+            {
+                $sort: {sequence: 1}
+            },
+            {
+                $project: {
+                    currencyName: 1,
+                    symbol: 1
+                }
+            }
+        ]);
         const purchaseTypesOptions = await findAppParameterValue("PURCHASE_TYPE", company);
         const freightTermsOptions = await getAllModuleMaster(company, "FREIGHT_TERMS");
         const purchaseCountryOptions = await getAllModuleMaster(company, "PURCHASE_COUNTRY");
@@ -223,10 +222,10 @@ const dropDownOptions = async company => {
                     value: x.paymentDescription
                 };
             }),
-            currenciesOptions: currenciesOptions.split(",").map(x => {
+            currenciesOptions: currenciesOptions.map(x => {
                 return {
-                    label: x,
-                    value: x
+                    label: x.currencyName,
+                    value: x.currencyName
                 };
             }),
             purchaseTypesOptions: purchaseTypesOptions.split(",").map(x => {
@@ -296,20 +295,9 @@ exports.getAllSupplierCount = async company => {
     }
 };
 exports.getAllReports = async (req, res) => {
-    const purchaseTypes = await findAppParameterValue("PURCHASE_TYPE", req.user.company);
     try {
-        const {
-            search = null,
-            excel = "false",
-            page = 1,
-            pageSize = 10,
-            column = "createdAt",
-            direction = -1,
-            supplierPurchaseType = null,
-            state = null,
-            city = null
-        } = req.query;
-        let skip = Math.max(0, page - 1) * pageSize;
+        const purchaseTypes = await findAppParameterValue("PURCHASE_TYPE", req.user.company);
+        const {supplierPurchaseType = null, state = null, city = null} = req.query;
         let query = {
             company: ObjectId(req.user.company),
             ...(!!supplierPurchaseType && {
@@ -329,12 +317,7 @@ exports.getAllReports = async (req, res) => {
             })
         };
         let project = getAllSupplierReportsAttributes();
-        let match = await getMatchData(project, search);
-        let pagination = [];
-        if (excel == "false") {
-            pagination = [{$skip: +skip}, {$limit: +pageSize}];
-        }
-        let rows = await Model.aggregate([
+        let pipeline = [
             {
                 $addFields: {
                     supplierBillingAddress: {$first: "$supplierBillingAddress"}
@@ -349,9 +332,9 @@ exports.getAllReports = async (req, res) => {
                     supplierContactMatrix: {$first: "$supplierContactMatrix"}
                 }
             },
-            {$unwind: {path: "$supplierContactMatrix", preserveNullAndEmptyArrays: true}},
-            ...getAllAggregationFooter(project, match, column, direction, pagination)
-        ]);
+            {$unwind: {path: "$supplierContactMatrix", preserveNullAndEmptyArrays: true}}
+        ];
+        let rows = await SupplierRepository.getAllPaginate({pipeline, project, queryParams: req.query});
         return res.success({
             purchaseCategories: purchaseTypes.split(",").map(x => {
                 return {
@@ -359,7 +342,7 @@ exports.getAllReports = async (req, res) => {
                     value: x
                 };
             }),
-            ...outputData(rows)
+            ...rows
         });
     } catch (e) {
         console.error("getAllReports", e);

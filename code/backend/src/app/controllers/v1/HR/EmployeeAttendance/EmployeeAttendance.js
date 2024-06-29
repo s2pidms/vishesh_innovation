@@ -25,7 +25,7 @@ exports.create = asyncHandler(async (req, res) => {
     try {
         session.startTransaction();
         for await (const element of req.body) {
-            let itemDetails = await Model.findById(element._id);
+            let itemDetails = await EmployeeAttendanceRepository.getDocById(element._id);
             if (element._id && itemDetails) {
                 // update
                 itemDetails.updatedBy = req.user.sub;
@@ -47,8 +47,7 @@ exports.create = asyncHandler(async (req, res) => {
                     updatedBy: req.user.sub,
                     ...element
                 };
-                const saveObj = new Model(createdObj);
-                await saveObj.save();
+                await EmployeeAttendanceRepository.createDoc(createdObj);
             }
             await session.commitTransaction();
         }
@@ -65,15 +64,13 @@ exports.create = asyncHandler(async (req, res) => {
 // @desc    update EmployeeAttendance  Record
 exports.update = asyncHandler(async (req, res) => {
     try {
-        let itemDetails = await Model.findById(req.params.id);
+        let itemDetails = await EmployeeAttendanceRepository.getDocById(req.params.id);
         if (!itemDetails) {
             const errors = MESSAGES.apiErrorStrings.INVALID_REQUEST;
             return res.preconditionFailed(errors);
         }
         itemDetails.updatedBy = req.user.sub;
-        itemDetails = await generateCreateData(itemDetails, req.body);
-        itemDetails = await itemDetails.save();
-
+        itemDetails = await EmployeeAttendanceRepository.updateDoc(itemDetails, req.body);
         return res.success({
             message: MESSAGES.apiSuccessStrings.UPDATE("Employee Attendance has been")
         });
@@ -87,9 +84,8 @@ exports.update = asyncHandler(async (req, res) => {
 // @desc    deleteById EmployeeAttendance Record
 exports.deleteById = asyncHandler(async (req, res) => {
     try {
-        const deleteItem = await Model.findById(req.params.id);
+        const deleteItem = await EmployeeAttendanceRepository.deleteDoc({_id: req.params.id});
         if (deleteItem) {
-            await deleteItem.remove();
             return res.success({
                 message: MESSAGES.apiSuccessStrings.DELETED("Employee Attendance")
             });
@@ -107,7 +103,7 @@ exports.deleteById = asyncHandler(async (req, res) => {
 // @desc    getById EmployeeAttendance Record
 exports.getById = asyncHandler(async (req, res) => {
     try {
-        let existing = await Model.findById(req.params.id);
+        let existing = await EmployeeAttendanceRepository.getDocById(req.params.id);
         if (!existing) {
             let errors = MESSAGES.apiSuccessStrings.DATA_NOT_EXISTS("Employee Attendance");
             return res.unprocessableEntity(errors);
@@ -295,7 +291,7 @@ exports.getLastMonthAttendanceReport = async (company, employeeId) => {
                 $eq: new Date(getPreviousMonthStartDate(1))
             }
         };
-        let empAttendanceRecords = await Model.findOne(findQuery);
+        let empAttendanceRecords = await EmployeeAttendanceRepository.findOneDoc(findQuery);
         return empAttendanceRecords;
     } catch (error) {
         console.error("Error while fetching  Emp Attendance report ", error);

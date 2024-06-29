@@ -5,6 +5,7 @@ import {RmSpecificationsFormComponent} from "./screens/rm-specifications-form/rm
 import {RmSpecificationsListComponent} from "./screens/rm-specifications-list/rm-specifications-list.component";
 import {SharedModule} from "@shared/shared.module";
 import {SpecificationsStatusSummaryComponent} from "./screens/specifications-status-summary/specifications-status-summary.component";
+import { ViewSupplierModalComponent } from './screens/components/view-supplier-modal/view-supplier-modal.component';
 
 const routes: Routes = [
     {path: "", redirectTo: "list", pathMatch: "full"},
@@ -13,7 +14,7 @@ const routes: Routes = [
 ];
 
 @NgModule({
-    declarations: [RmSpecificationsFormComponent, RmSpecificationsListComponent, SpecificationsStatusSummaryComponent],
+    declarations: [RmSpecificationsFormComponent, RmSpecificationsListComponent, SpecificationsStatusSummaryComponent, ViewSupplierModalComponent],
     imports: [CommonModule, SharedModule, RouterModule.forChild(routes)]
 })
 export class RmSpecificationsModule {}

@@ -114,6 +114,5 @@ app.put(
 );
 app.delete("/delete/:id", validate("checkParamId"), deleteById);
 app.get("/getAllMasterData", getAllMasterData);
-app.post("/uploadEmployeeFile", upload.single("employee"), uploadEmployeeFile);
 
 module.exports = app;

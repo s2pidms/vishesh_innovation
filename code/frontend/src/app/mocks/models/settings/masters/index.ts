@@ -30,3 +30,5 @@ export * from "./productCategory";
 export * from "./mouldMaster";
 export * from "./mouldMasterData";
 export * from "./servicesChargesMasterData";
+export * from "./inventoryDepartmentMasterData";
+export * from "./inventoryDepartmentMaster";

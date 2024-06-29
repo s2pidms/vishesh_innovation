@@ -10,7 +10,7 @@ export interface IProcessMasterList {
 }
 export interface ProcessList {
     _id: string;
-    defectName: string;
+    processName: string;
 }
 
 export interface IAssetMasterList {

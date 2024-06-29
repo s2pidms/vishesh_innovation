@@ -1,6 +1,5 @@
 const Model = require("../roleModel");
-
-module.exports = {
+const RoleRepository = {
     createDoc: async obj => {
         return await Model.create(obj);
     },
@@ -27,3 +26,4 @@ module.exports = {
         return await Model.aggregate(pipeline);
     }
 };
+module.exports = RoleRepository;

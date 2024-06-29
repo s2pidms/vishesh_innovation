@@ -9,7 +9,7 @@ const {PROCESS_MASTER} = require("../../../../mocks/schemasConstant/planningCons
 const {getAndSetAutoIncrementNo} = require("../../settings/autoIncrement/autoIncrement");
 const ProcessRepository = require("../../../../models/planning/repository/processMasterRepository");
 const {filteredAssetMasterList} = require("../../../../models/finance/repository/assetMasterRepository");
-const {filteredDefectListConfigList} = require("../../../../models/settings/repository/defectListConfigRepository");
+const {filteredProcessListConfigList} = require("../../../../models/settings/repository/processListConfigRepository");
 const ObjectId = mongoose.Types.ObjectId;
 
 exports.getAll = asyncHandler(async (req, res) => {
@@ -158,11 +158,10 @@ exports.getAllMasterData = asyncHandler(async (req, res) => {
                 }
             }
         ]);
-        const processList = await filteredDefectListConfigList([
+        const processList = await filteredProcessListConfigList([
             {
                 $match: {
-                    company: ObjectId(req.user.company),
-                    docType: DEFECT_TYPES.PROCESS
+                    company: ObjectId(req.user.company)
                 }
             },
             {
@@ -172,7 +171,7 @@ exports.getAllMasterData = asyncHandler(async (req, res) => {
             },
             {
                 $project: {
-                    defectName: 1
+                    processName: 1
                 }
             }
         ]);

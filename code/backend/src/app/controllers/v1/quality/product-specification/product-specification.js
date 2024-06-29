@@ -199,6 +199,31 @@ exports.getById = asyncHandler(async (req, res) => {
                 }
             },
             {
+                $lookup: {
+                    from: "SKUMaster",
+                    localField: "SKU",
+                    foreignField: "_id",
+                    pipeline: [
+                        {
+                            $lookup: {
+                                from: "Customer",
+                                localField: "customerInfo.customer",
+                                foreignField: "_id",
+                                pipeline: [{$project: {customerCode: 1, customerName: 1}}],
+                                as: "customerInfo"
+                            }
+                        },
+                        {
+                            $project: {
+                                customerInfo: 1
+                            }
+                        }
+                    ],
+                    as: "SKUInfo"
+                }
+            },
+            {$unwind: "$SKUInfo"},
+            {
                 $project: {
                     productSpecificationCode: 1,
                     productCategory: 1,
@@ -208,7 +233,18 @@ exports.getById = asyncHandler(async (req, res) => {
                     SKUDescription: 1,
                     UOM: 1,
                     specificationInfo: 1,
-                    status: 1
+                    status: 1,
+                    customerDetails: {
+                        $map: {
+                            input: {$range: [0, {$size: "$SKUInfo.customerInfo"}]},
+                            as: "index",
+                            in: {
+                                SN: {$add: ["$$index", 1]},
+                                customerCode: {$arrayElemAt: ["$SKUInfo.customerInfo.customerCode", "$$index"]},
+                                customerName: {$arrayElemAt: ["$SKUInfo.customerInfo.customerName", "$$index"]}
+                            }
+                        }
+                    }
                 }
             }
         ]);
@@ -220,6 +256,15 @@ exports.getById = asyncHandler(async (req, res) => {
                     }
                 },
                 {
+                    $lookup: {
+                        from: "Customer",
+                        localField: "customerInfo.customer",
+                        foreignField: "_id",
+                        pipeline: [{$project: {customerCode: 1, customerName: 1}}],
+                        as: "customerInfo"
+                    }
+                },
+                {
                     $project: {
                         SKU: "$_id",
                         SKUNo: 1,
@@ -227,6 +272,17 @@ exports.getById = asyncHandler(async (req, res) => {
                         SKUDescription: 1,
                         UOM: "$primaryUnit",
                         productCategory: "$productCategory",
+                        customerDetails: {
+                            $map: {
+                                input: {$range: [0, {$size: "$customerInfo"}]},
+                                as: "index",
+                                in: {
+                                    SN: {$add: ["$$index", 1]},
+                                    customerCode: {$arrayElemAt: ["$customerInfo.customerCode", "$$index"]},
+                                    customerName: {$arrayElemAt: ["$customerInfo.customerName", "$$index"]}
+                                }
+                            }
+                        },
                         _id: 0
                     }
                 }

@@ -106,6 +106,18 @@
                 "disabled": false,
                 "url": "/default/settings/master/module_master/list/SBU",
                 "_id": "66793edd21b12675329a5b4c"
+            },
+            {
+                "menuItemId": "64a6c1e33339d4dc9d8141ae",
+                "module": "Settings",
+                "type": "MASTER",
+                "order": 8,
+                "isDisplay": false,
+                "title": "Inventory Department Master",
+                "displayName": "Inventory Department Master",
+                "disabled": false,
+                "url": "/default/settings/master/global/inventory_department_master/list",
+                "_id": "667bdc967894829ed9d235a6"
             }
         ],
         "roles": []
@@ -658,7 +670,7 @@
                 "title": "Process List Configuration",
                 "displayName": "Process List Configuration",
                 "disabled": false,
-                "url": "/default/settings/master/planning/defect_list_configuration/form/Process",
+                "url": "/default/settings/master/planning/process_list_configuration/form",
                 "_id": "667919c2b043bb7b1f166724"
             }
         ],

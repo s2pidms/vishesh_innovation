@@ -27,3 +27,5 @@ export * from "./mailConfiguration.service";
 export * from "./mailTrigger.service";
 export * from "./UOMUnitsMaster.service";
 export * from "./defectListConfig.service";
+export * from "./inventoryDepartmentMaster.service";
+export * from "./processListConfig.service";

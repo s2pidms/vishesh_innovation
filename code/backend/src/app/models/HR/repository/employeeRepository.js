@@ -1,5 +1,5 @@
 const Model = require("../employeeModel");
-module.exports = {
+const EmployeeRepository = {
     createDoc: async obj => {
         return await Model.create(obj);
     },
@@ -24,3 +24,4 @@ module.exports = {
         return await Model.aggregate(pipeline);
     }
 };
+module.exports = EmployeeRepository;

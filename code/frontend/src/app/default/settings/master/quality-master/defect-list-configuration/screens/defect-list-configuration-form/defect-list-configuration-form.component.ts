@@ -26,7 +26,7 @@ export class DefectListConfigurationFormComponent implements OnInit {
     moveUpDisable: boolean = false;
     moveDownDisable: boolean = false;
     type: any = "";
-    usePresetsAndNewCreate: any = "Create New";
+    // usePresetsAndNewCreate: any = "Create New";
     setRenameFlag: boolean = false;
 
     constructor(
@@ -47,17 +47,13 @@ export class DefectListConfigurationFormComponent implements OnInit {
             return;
         }
         this.SNNumber();
-        this.defectListDetails = this.defectListDetails.map((x: any) => {
-            x.docType = this.type;
-            return x;
-        });
 
         this.create(this.defectListDetails);
     }
 
     create(formData: any) {
         this.spinner.show();
-        this.defectListConfigService.createOrUpdate({formData, type: this.type}).subscribe(success => {
+        this.defectListConfigService.createOrUpdate(formData).subscribe(success => {
             this.submitted = false;
             this.spinner.hide();
             this.toastService.success(success.message);
@@ -136,13 +132,14 @@ export class DefectListConfigurationFormComponent implements OnInit {
     reset() {
         this.description = null;
         this.totalNoOfRows = null;
-        this.usePresetsAndNewCreate = "Create New";
+        // this.usePresetsAndNewCreate = "Create New";
         this.setRenameFlag = false;
-        this.defectListDetails = [];
+        // this.defectListDetails = [];
+        this.getInitialData();
     }
     setRename(item: any) {
         // let desc = this.defectListDetails?.find((x: any) => x.isChecked);
-        this.usePresetsAndNewCreate = "Use Presets";
+        // this.usePresetsAndNewCreate = "Use Presets";
         this.selectedDetails = item;
         this.setRenameFlag = true;
         this.description = item?.defectName;
@@ -153,12 +150,12 @@ export class DefectListConfigurationFormComponent implements OnInit {
             this.toastService.warning("Pls Enter Description !");
             return;
         }
-        if (!this.setRenameFlag && this.usePresetsAndNewCreate == "Use Presets") {
-            this.toastService.warning("If you want to edit the record plz click on Rename Action !");
-            return;
-        }
+        // if (!this.setRenameFlag && this.usePresetsAndNewCreate == "Use Presets") {
+        //     this.toastService.warning("If you want to edit the record plz click on Rename Action !");
+        //     return;
+        // }
 
-        if (this.usePresetsAndNewCreate == "Create New") {
+        if (!this.setRenameFlag) {
             if (this.defectListDetails.find((x: any) => x.defectName == this.description)) {
                 this.toastService.warning("the record you creating already exist !");
                 return;
@@ -170,8 +167,8 @@ export class DefectListConfigurationFormComponent implements OnInit {
             this.defectListDetails.push(obj);
             this.description = null;
             this.totalNoOfRows = this.defectListDetails?.length;
-            this.toastService.success("Record Created Successfully !");
-        } else if (this.setRenameFlag && this.usePresetsAndNewCreate == "Use Presets") {
+            this.toastService.success("Record Added Successfully !");
+        } else if (this.setRenameFlag) {
             if (this.defectListDetails.find((x: any) => x.defectName == this.description)) {
                 this.toastService.warning("the record you edit already exist !");
                 return;
@@ -260,15 +257,16 @@ export class DefectListConfigurationFormComponent implements OnInit {
 
     getInitialData() {
         this.spinner.show();
-        this.defectListConfigService.getAll({docType: this.type}).subscribe(result => {
+        this.defectListConfigService.getAll({}).subscribe(result => {
             console.log("result", result);
             if (result.length > 0) {
                 this.defectListDetails = result;
                 this.collection = this.defectListDetails?.length;
-                this.usePresetsAndNewCreate = "Use Presets";
-            } else {
-                this.usePresetsAndNewCreate = "Create New";
+                // this.usePresetsAndNewCreate = "Use Presets";
             }
+            // else {
+            //     this.usePresetsAndNewCreate = "Create New";
+            // }
             this.collection = this.defectListDetails?.length;
             this.totalNoOfRows = this.collection;
             this.spinner.hide();

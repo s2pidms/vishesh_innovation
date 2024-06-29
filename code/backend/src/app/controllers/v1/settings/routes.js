@@ -31,6 +31,8 @@ const SalesUOMUnitMaster = require("./SalesUOMUnitMaster/routes");
 const serviceCharges = require("./serviceCharges/routes");
 const currencyMaster = require("./currencyMaster/routes");
 const defectListConfig = require("./defectListConfig/routes");
+const inventoryDepartments = require("./inventoryDepartments/routes");
+const processListConfig = require("./processListConfig/routes");
 
 router.use("/user", user);
 router.use("/role", role);
@@ -64,5 +66,7 @@ router.use("/SalesUOMUnitMaster", SalesUOMUnitMaster);
 router.use("/serviceCharges", serviceCharges);
 router.use("/currencyMaster", currencyMaster);
 router.use("/defectListConfig", defectListConfig);
+router.use("/inventoryDepartments", inventoryDepartments);
+router.use("/processListConfig", processListConfig);
 
 module.exports = router;

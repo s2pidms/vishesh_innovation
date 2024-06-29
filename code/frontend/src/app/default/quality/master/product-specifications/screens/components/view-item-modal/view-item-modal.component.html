@@ -1,0 +1,50 @@
+<div class="modelPage">
+    <div class="modal-header">
+        <div class="heading">Customers List</div>
+        <div>
+            <button type="button" class="btn btn-cross btn-sm" aria-label="Close" (click)="this.activeModal.close()">
+                <i class="fa fa-times-circle" aria-hidden="true"></i>
+            </button>
+        </div>
+    </div>
+    <div class="container-fluid">
+        <div class="row">
+            <div class="px-5 mt-0">
+                <app-setting-header
+                    [data]="{page,pageSize,collection,search ,excelDisplay : 'none'}"
+                    (dataChange)="eventHeader($event)"
+                >
+                </app-setting-header>
+            </div>
+            <div style="min-height: 29rem" class="table-responsive px-5">
+                <table class="table table-bordered table-sticky">
+                    <thead class="bg-primary">
+                        <tr class="text-white">
+                            <th sortable="SN" (sort)="onSort($event)">SN</th>
+                            <th sortable="customerCode" (sort)="onSort($event)">Customer Code</th>
+                            <th class="text-start" sortable="customerName" (sort)="onSort($event)">Customer Name</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr
+                            *ngFor="
+                                let u of customerInfo
+                                    | searchFi1ter : search
+                                    | slice : (page - 1) * pageSize : (page - 1) * pageSize + pageSize;
+                                let i = index
+                            "
+                        >
+                            <td>{{ u?.SN }}</td>
+                            <td>{{ u?.customerCode }}</td>
+                            <td class="text-start" [style.width]="customerName.clientWidth" #customerName>
+                                <span class="pointer" [positionTarget]="customerName" [ngbTooltip]="u.customerName">
+                                    {{ u.customerName }}
+                                </span>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>

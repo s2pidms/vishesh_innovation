@@ -1,9 +1,8 @@
 const Model = require("../../../../models/HR/paidHolidayModel");
 const MESSAGES = require("../../../../helpers/messages.options");
-const {generateCreateData} = require("../../../../helpers/global.options");
 const {default: mongoose} = require("mongoose");
 const {getAllPaidHolidayAttributes} = require("../../../../models/HR/helpers/paidHolidayHelper.js");
-const {getAllPaidHolidayAggregate} = require("../../../../models/HR/repository/paidHolidayRepository.js");
+const PaidHolidayRepository = require("../../../../models/HR/repository/paidHolidayRepository.js");
 const ObjectId = mongoose.Types.ObjectId;
 
 // @desc    getAll PaidHoliday Record
@@ -19,7 +18,7 @@ exports.getAll = async (req, res) => {
                 }
             }
         ];
-        let rows = await getAllPaidHolidayAggregate({pipeline, project, queryParams: req.query});
+        let rows = await PaidHolidayRepository.getAllPaginate({pipeline, project, queryParams: req.query});
         return res.success(rows);
     } catch (e) {
         console.error("getAllPaidHolidays", e);
@@ -30,7 +29,7 @@ exports.getAll = async (req, res) => {
 // @desc    create PaidHoliday new Record
 exports.create = async (req, res) => {
     try {
-        let holidayExists = await Model.findOne({
+        let holidayExists = await PaidHolidayRepository.findOneDoc({
             holidayName: req.body.holidayName,
             company: req.user.company
         });
@@ -38,7 +37,7 @@ exports.create = async (req, res) => {
             let errors = MESSAGES.apiErrorStrings.Data_EXISTS("Paid Holiday");
             return res.preconditionFailed(errors);
         }
-        const holidays = await Model.countDocuments({});
+        const holidays = await PaidHolidayRepository.countDoc({});
         const serialNumber = holidays + 1;
         let createdObj = {
             company: req.user.company,
@@ -47,9 +46,7 @@ exports.create = async (req, res) => {
             ...req.body
         };
         createdObj.serialNumber = serialNumber;
-        const saveObj = new Model(createdObj);
-
-        const itemDetails = await saveObj.save();
+        const itemDetails = await PaidHolidayRepository.createDoc(createdObj);
         if (itemDetails) {
             return res.success({
                 message: MESSAGES.apiSuccessStrings.ADDED("Paid Holiday")
@@ -68,14 +65,13 @@ exports.create = async (req, res) => {
 // @desc    update PaidHoliday  Record
 exports.update = async (req, res) => {
     try {
-        let itemDetails = await Model.findById(req.params.id);
+        let itemDetails = await PaidHolidayRepository.getDocById(req.params.id);
         if (!itemDetails) {
             const errors = MESSAGES.apiErrorStrings.INVALID_REQUEST;
             return res.preconditionFailed(errors);
         }
         itemDetails.updatedBy = req.user.sub;
-        itemDetails = await generateCreateData(itemDetails, req.body);
-        itemDetails = await itemDetails.save();
+        itemDetails = await PaidHolidayRepository.updateDoc(itemDetails, req.body);
         return res.success({
             message: MESSAGES.apiSuccessStrings.UPDATE("Paid Holiday has been")
         });
@@ -89,9 +85,8 @@ exports.update = async (req, res) => {
 // @desc    deleteById PaidHoliday Record
 exports.deleteById = async (req, res) => {
     try {
-        const deleteItem = await Model.findById(req.params.id);
+        const deleteItem = await PaidHolidayRepository.deleteDoc({_id: req.params.id});
         if (deleteItem) {
-            await deleteItem.remove();
             return res.success({
                 message: MESSAGES.apiSuccessStrings.DELETED("Paid Holiday")
             });
@@ -122,18 +117,9 @@ exports.getById = async (req, res) => {
     }
 };
 
-// @desc    getAllHolidays PaidHoliday Record
-exports.getAllHolidays = async company => {
-    try {
-        let rows = await Model.find().sort({createdAt: -1});
-        return rows;
-    } catch (e) {
-        console.error("getAllHolidays", e);
-    }
-};
 exports.getCountOfHolidayOfMonth = async (startDate, endDate, company) => {
     try {
-        const count = await Model.aggregate([
+        const count = await PaidHolidayRepository.filteredPaidHolidayList([
             {
                 $addFields: {
                     matchDate: {$dateToString: {format: "%Y-%m-%d", date: "$holidayDate"}}
@@ -164,7 +150,7 @@ exports.getCountOfHolidayOfMonthWithLocations = async (startDate, endDate, compa
             officeCount: 0,
             officeFactoryCount: 0
         };
-        const count = await Model.aggregate([
+        const count = await PaidHolidayRepository.filteredPaidHolidayList([
             {
                 $match: {
                     company: ObjectId(company),

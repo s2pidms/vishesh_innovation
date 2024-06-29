@@ -40,3 +40,4 @@ export * from "./UploadDataForFGIN";
 export * from "./UploadDataForEmployeeMaster";
 export * from "./UploadDataForRMSpecification";
 export * from "./UploadDataForProductSpecification";
+export * from "./inventoryDepartmentMaster";

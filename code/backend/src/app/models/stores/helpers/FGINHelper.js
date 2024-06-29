@@ -45,7 +45,7 @@ exports.getAllFGINSummaryReportsAttributes = () => {
         FGINNo: 1,
         FGINDate: {$dateToString: {format: "%d-%m-%Y", date: "$FGINDate"}},
         manufacturingDate: {$dateToString: {format: "%d-%m-%Y", date: "$manufacturingDate"}},
-        expiryDate:  {$dateToString: {format: "%d-%m-%Y", date: "$expiryDate"}},
+        expiryDate: {$dateToString: {format: "%d-%m-%Y", date: "$expiryDate"}},
         FGINQuantity: 1,
         batchNo: 1,
         location: 1
@@ -100,5 +100,23 @@ exports.getAllFGINValueFinanceReportsAttributes = () => {
         FGINQuantity: {$toString: "$FGINQuantity"},
         expiryDate: 1,
         aging: "green"
+    };
+};
+
+exports.getAllFGInventoryReportsAttributes = () => {
+    return {
+        FGINDate: {$dateToString: {format: "%d-%m-%Y", date: "$FGINDate"}},
+        SKUName: 1,
+        SKUNo: 1,
+        SKUDescription: 1,
+        partNo: 1,
+        UOM: 1,
+        manufacturingDate: {$dateToString: {format: "%d-%m-%Y", date: "$manufacturingDate"}},
+        expiryDate: {$dateToString: {format: "%d-%m-%Y", date: "$expiryDate"}},
+        FGINQuantity: "$FGINQuantity",
+        batchNo: 1,
+        location: 1,
+        aging: 1,
+        SKU: 1
     };
 };

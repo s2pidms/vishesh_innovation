@@ -460,7 +460,7 @@ ng g m default/production/transactions/production-processes/screens/screen-makin
 ng g c default/production/transactions/production-processes/screens/stock-preparation/stock-preparation-form
 
 ng g c default/production/transactions/production-processes/screens/pp-ink-mixing/pp-ink-mixing-form
-ng g c default/production/transactions/production-processes/screens/pp-ink-mixing/pp-ink-mixing-batch
+ng g c default/production/transactions/multiple-fgin/screens/components/fg-log-trail-modal
 ng g c default/production/transactions/stock-cutting/stock-cutting-process
 ng g c default/planning/transactions/stock-cutting/stock-cutting-ppic-process
 ng g c default/planning/transactions/stock-cutting/log-entry-modal
@@ -476,6 +476,7 @@ ng g c default/planning/transactions/roll-to-roll-con/screens/confirm-output-mod
 
 ng g m default/supports/reports/ticket-details --route ticket_details --module=reports.module
 
+ng g m default/production/reports/fg-inventory-report --route fg_inventory_report --module=reports.module
 ng g m default/planning/reports/mrn-report-supplier-wise --route mrn_report_supplier_wise --module=reports.module
 ng g m default/planning/reports/mrn-report-item-wise --route mrn_report_item_wise --module=reports.module
 ng g m default/planning/reports/mrn-report-status-wise --route mrn_report_status_wise --module=reports.module
@@ -712,6 +713,10 @@ ng g m default/settings/master/global/currency-master --route currency_master --
 ng g c default/settings/master/global/currency-master/screens/currency-master-list
 ng g c default/settings/master/global/currency-master/screens/currency-master-form
 
+ng g m default/settings/master/global/inventory-department --route inventory_department_master --module=global.module
+ng g c default/settings/master/global/inventory-department/screens/inventory-department-list
+ng g c default/settings/master/global/inventory-department/screens/inventory-department-form
+
 ng g m default/sales/reports/sales-order-status --route sales_order_status --module=reports.module
 
 ng g m default/quality/master/PS-by-product-category --route  ps_by_product_category --module=master.module
@@ -780,6 +785,9 @@ ng g c default/settings/master/production/mould-master/screens/mould_master-form
 ng g m default/settings/master/planning/map-process-name --route map_process_name --module=planning.module
 ng g c default/settings/master/planning/map-process-name/screens/map_process_name_list
 
+ng g m default/settings/master/planning/process-list-configuration --route process_list_configuration --module=planning.module
+ng g c default/settings/master/planning/process-list-configuration/screens/process-list-configuration-form
+
 ng g m default/settings/master/sales/sales-uom-unit-master --route sales_uom_unit_master --module=sales.module
 ng g c default/settings/master/sales/sales-uom-unit-master/screens/sales_uom_unit_master_form
 ng g c default/settings/master/sales/sales-uom-unit-master/screens/sales_uom_unit_master_list
@@ -813,6 +821,10 @@ ng g c default/production/transactions/jc-production-entry/screens/lamination-lo
 ng g c default/production/transactions/jc-production-entry/screens/weeding-log-entry-model
 ng g c default/production/transactions/jc-production-entry/screens/punching-log-entry-model
 ng g c default/production/transactions/jc-production-entry/screens/packing-log-entry-model
+
+ng g c default/production/transactions/jc-production-entry/screens/components/generic-ipqa-process-model
+ng g c default/production/transactions/jc-production-entry/screens/components/generic-ipqc-process-model 
+ng g c default/production/transactions/jc-production-entry/screens/components/generic-production-process-model 
 
 
 
@@ -901,3 +913,6 @@ ng g c default/quality/transactions/rejection-summary/screens/components/status-
 
 ng g m default/settings/master/quality-master/defect-list-configuration --route defect_list_configuration --module=master.module
 ng g c default/settings/master/quality-master/defect-list-configuration/screens/defect-list-configuration-form
+
+ng g c default/quality/master/rm-specifications/screens/components/view-supplier-modal
+ng g c default/quality/master/product-specifications/screens/components/view-item-modal

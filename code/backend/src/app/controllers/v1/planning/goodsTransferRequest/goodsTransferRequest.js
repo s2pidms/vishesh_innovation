@@ -10,10 +10,12 @@ const {GOODS_TRANSFER_REQUEST} = require("../../../../mocks/schemasConstant/plan
 const GoodsTransferRequestRepository = require("../../../../models/planning/repository/goodsTransferRequestRepository");
 const {getCompanyLocations} = require("../../settings/company/company");
 const {getAllInventoryCorrectionByItems} = require("../../stores/Inventory/Inventory");
-const {filteredDepartmentList} = require("../../../../models/settings/repository/departmentRepository");
 const {OPTIONS} = require("../../../../helpers/global.options");
 const {getEndDateTime, getStartDateTime} = require("../../../../helpers/dateTime");
 const InventoryRepository = require("../../../../models/stores/repository/inventoryCorrectionRepository");
+const {
+    filteredInventoryDepartmentsList
+} = require("../../../../models/settings/repository/inventoryDepartmentsRepository");
 exports.getAll = asyncHandler(async (req, res) => {
     try {
         let project = getAllGoodsTransferRequestAttributes();
@@ -134,16 +136,17 @@ exports.getAllMasterData = asyncHandler(async (req, res) => {
             false
         );
         const locationOptions = await getCompanyLocations(req.user.company);
-        const departmentOptions = await filteredDepartmentList([
+        const departmentOptions = await filteredInventoryDepartmentsList([
             {
                 $match: {
-                    goodsTransferRequest: true,
-                    company: ObjectId(req.user.company)
+                    company: ObjectId(req.user.company),
+                    status: OPTIONS.defaultStatus.ACTIVE
                 }
             },
             {
                 $project: {
                     _id: 0,
+                    department: "$departmentType",
                     label: "$departmentName",
                     value: "$departmentName"
                 }

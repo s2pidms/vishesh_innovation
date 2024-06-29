@@ -26,5 +26,19 @@
         "url": "/default/finance/reports/cost_sheet",
         "items": [],
         "roles": []
+    },
+    {
+        "_id": "667fce8bcb63ebcf797ecc6c",
+        "menuItemId": "64a6c1e33339d4dc9d8141ad",
+        "module": "Finance",
+        "type": "REPORT",
+        "order": 3,
+        "isDisplay": false,
+        "title": "Finished Goods (FG)",
+        "displayName": "Finished Goods (FG)",
+        "disabled": false,
+        "url": "/default/finance/reports/fg_inventory_report",
+        "items": [],
+        "roles": []
     }
 ]

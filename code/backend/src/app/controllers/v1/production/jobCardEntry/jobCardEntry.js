@@ -289,7 +289,6 @@ exports.getAllMasterData = asyncHandler(async (req, res) => {
             {
                 $match: {
                     company: ObjectId(req.user.company),
-                    docType: DEFECT_TYPES.DEFECT
                 }
             },
             {

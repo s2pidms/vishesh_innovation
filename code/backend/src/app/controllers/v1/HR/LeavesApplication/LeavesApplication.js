@@ -1,6 +1,5 @@
 const asyncHandler = require("express-async-handler");
 const Model = require("../../../../models/HR/leavesApplicationModel");
-const Employee = require("../../../../models/HR/employeeModel");
 const MESSAGES = require("../../../../helpers/messages.options");
 const {generateCreateData, OPTIONS} = require("../../../../helpers/global.options");
 const {findAllEmployees} = require("../employee/Employee");
@@ -25,13 +24,15 @@ const {
 // const {getLeaveApplicationMailConfig} = require("./LeavesApplicationMail");
 const {getAndSetAutoIncrementNo} = require("../../settings/autoIncrement/autoIncrement");
 const {LEAVES_APPLICATION} = require("../../../../mocks/schemasConstant/HRConstant");
-const {findOnePaidLeave} = require("../../../../models/HR/repository/paidLeaveRepository");
+const PaidLeaveRepository = require("../../../../models/HR/repository/paidLeaveRepository");
 const {filteredEmployeeList} = require("../../../../models/HR/repository/employeeRepository");
 const {filteredPaidHolidayList} = require("../../../../models/HR/repository/paidHolidayRepository");
 const LeaveApplicationRepository = require("../../../../models/HR/repository/leaveApplicationRepository");
 const {HR_ADMIN_MAIL_CONST} = require("../../../../mocks/mailTriggerConstants");
 const MailTriggerRepository = require("../../../../models/settings/repository/mailTriggerRepository");
 const {findAppParameterValue} = require("../../settings/appParameter/appParameter");
+const LeavesApplicationRepository = require("../../../../models/HR/repository/leaveApplicationRepository");
+const EmployeeRepository = require("../../../../models/HR/repository/employeeRepository");
 const ObjectId = mongoose.Types.ObjectId;
 
 // @route   GET /settings/LeavesApplication/getAll
@@ -116,8 +117,7 @@ exports.create = async (req, res) => {
                 }
             ];
         }
-        const saveObj = new Model(createdObj);
-        const itemDetails = await saveObj.save();
+        const itemDetails = await LeaveApplicationRepository.createDoc(createdObj);
         if (itemDetails.leaveType != "Advance Leaves") {
             await updatePaidLeaveOnLeaveApplication({
                 updatedBy: itemDetails.updatedBy,
@@ -164,7 +164,7 @@ exports.create = async (req, res) => {
 // @route   PUT /settings/LeavesApplication/update/:id
 exports.update = async (req, res) => {
     try {
-        let itemDetails = await Model.findById(req.params.id);
+        let itemDetails = await LeaveApplicationRepository.getDocById(req.params.id);
         if (!itemDetails) {
             const errors = MESSAGES.apiErrorStrings.INVALID_REQUEST;
             return res.preconditionFailed(errors);
@@ -254,9 +254,8 @@ exports.update = async (req, res) => {
 // @route   PUT /settings/LeavesApplication/delete/:id
 exports.deleteById = async (req, res) => {
     try {
-        const deleteItem = await Model.findById(req.params.id);
+        const deleteItem = await LeaveApplicationRepository.deleteDoc({_id: req.params.id});
         if (deleteItem) {
-            await deleteItem.remove();
             return res.success({
                 message: MESSAGES.apiSuccessStrings.DELETED("Leaves Application")
             });
@@ -273,7 +272,7 @@ exports.deleteById = async (req, res) => {
 // @route   GET /settings/LeavesApplication/getById/:id
 exports.getById = async (req, res) => {
     try {
-        let existing = await Model.findById(req.params.id);
+        let existing = await LeaveApplicationRepository.getDocById(req.params.id);
         if (!existing) {
             let errors = MESSAGES.apiSuccessStrings.DATA_NOT_EXISTS("Leaves Application");
             return res.unprocessableEntity(errors);
@@ -543,7 +542,7 @@ exports.getAllReports = async (req, res) => {
 exports.getMonthlyLeaveApplicationData = async company => {
     const monthsArray = getFiscalMonthsName();
     const leavesData = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
-    const result = await Model.aggregate([
+    const result = await LeaveApplicationRepository.filteredLeaveAppList([
         {
             $addFields: {
                 matchFromDate: {$dateToString: {format: "%Y-%m-%d", date: "$fromDate"}},
@@ -643,7 +642,7 @@ exports.getMonthlyLeaveApplicationData = async company => {
     }
 };
 exports.getMonthLeaveApplicationData = async (startDate, endDate, company) => {
-    const result = await Model.aggregate([
+    const result = await LeaveApplicationRepository.filteredLeaveAppList([
         {
             $project: {
                 monthLeaves: 1,
@@ -711,7 +710,7 @@ exports.approvedLeaveApplicationOfEmployeesCount = async employeeId => {
                 empReportTo: mongoose.Types.ObjectId(employeeId)
             })
         };
-        let leaveApplications = await Employee.aggregate([
+        let leaveApplications = await EmployeeRepository.filteredEmployeeList([
             {$match: findQuery},
             {
                 $lookup: {
@@ -811,7 +810,7 @@ exports.approvedLeaveApplicationOfEmployees = async (req, res) => {
                 empReportTo: mongoose.Types.ObjectId(employeeId)
             })
         };
-        let leaveApplications = await Employee.aggregate([
+        let leaveApplications = await EmployeeRepository.filteredEmployeeList([
             {$match: findQuery},
             {
                 $lookup: {
@@ -883,7 +882,7 @@ exports.approvedLeaveApplicationOfEmployees = async (req, res) => {
 
 exports.updateOnLeaveAdjustment = async (req, res) => {
     try {
-        let itemDetails = await Model.findById(req.params.id);
+        let itemDetails = await LeaveApplicationRepository.getDocById(req.params.id);
         if (!itemDetails) {
             const errors = MESSAGES.apiErrorStrings.INVALID_REQUEST;
             return res.preconditionFailed(errors);
@@ -930,7 +929,7 @@ exports.updateOnLeaveAdjustment = async (req, res) => {
 
 exports.getTotalNoOfEmployeesOnLeavePerDay = async company => {
     const currentDate = dateToAnyFormat(new Date(), "YYYY-MM-DD");
-    const rows = await Model.aggregate([
+    const rows = await LeavesApplicationRepository.filteredLeaveAppList([
         {
             $addFields: {
                 matchDate: {$dateToString: {format: "%Y-%m-%d", date: "$applicationDate"}}
@@ -981,7 +980,7 @@ exports.updateOnCancel = asyncHandler(async (req, res) => {
             if (itemDetails.leaveType == "Advance Leaves") {
                 sickLeaveSL = itemDetails.leaveDays;
             }
-            let paidLeaves = await findOnePaidLeave({employeeId: employeeId});
+            let paidLeaves = await PaidLeaveRepository.findOneDoc({employeeId: employeeId});
             if (!itemDetails) {
                 const errors = MESSAGES.apiErrorStrings.INVALID_REQUEST;
                 return res.preconditionFailed(errors);

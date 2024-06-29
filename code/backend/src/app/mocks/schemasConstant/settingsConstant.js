@@ -388,3 +388,37 @@ exports.DEFECT_LIST_CONFIGURATION = {
     //     };
     // }
 };
+
+exports.INVENTORY_DEPARTMENT = {
+    COLLECTION_NAME: "InventoryDepartments",
+    ADDED_ACTION: "Inventory Departments created",
+    UPDATED_ACTION: "Inventory Departments updated"
+    // MODULE_NAME: "Inventory Departments",
+    // MODULE: "InventoryDepartments",
+    // MODULE_PREFIX: "null",
+    // AUTO_INCREMENT_DATA: function () {
+    //     return {
+    //         moduleName: this.MODULE_NAME,
+    //         module: this.MODULE,
+    //         company: null,
+    //         modulePrefix: this.MODULE_PREFIX
+    //     };
+    // }
+};
+
+exports.PROCESS_LIST_CONFIGURATION = {
+    COLLECTION_NAME: "ProcessListConfig",
+    ADDED_ACTION: "Process List Configuration created",
+    UPDATED_ACTION: "Process List Configuration updated",
+    MODULE_NAME: "Process List Configuration",
+    MODULE: "ProcessListConfig",
+    MODULE_PREFIX: "null",
+    AUTO_INCREMENT_DATA: function () {
+        return {
+            moduleName: this.MODULE_NAME,
+            module: this.MODULE,
+            company: null,
+            modulePrefix: this.MODULE_PREFIX
+        };
+    }
+};

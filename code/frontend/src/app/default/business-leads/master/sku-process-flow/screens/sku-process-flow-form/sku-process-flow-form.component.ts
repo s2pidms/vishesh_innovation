@@ -13,7 +13,8 @@ import {ISKUProcessFlowMasterData} from "@mocks/models/business-leads/masters";
 
 @Component({
     selector: "app-sku-process-flow-form",
-    templateUrl: "./sku-process-flow-form.component.html"
+    templateUrl: "./sku-process-flow-form.component.html",
+    styleUrls: ["./sku-process-flow-form.component.scss"]
 })
 export class SkuProcessFlowFormComponent implements OnInit {
     @ViewChildren(NgbdSortableHeader) headers: QueryList<NgbdSortableHeader> | any;
@@ -27,7 +28,6 @@ export class SkuProcessFlowFormComponent implements OnInit {
     column: string = "createdAt";
     direction: number = -1;
     ESCPreviewArr: any = [];
-    filterSKUList: any = [];
     itemCategoryList = "";
     skuList = "";
     action: string = "create";
@@ -44,6 +44,8 @@ export class SkuProcessFlowFormComponent implements OnInit {
         SKUNo: new UntypedFormControl(null),
         SKUName: new UntypedFormControl(null),
         SKUDescription: new UntypedFormControl(null),
+        // primaryUnit: new UntypedFormControl(null),
+        // artWorkNo: new UntypedFormControl(null),
         PFDetails: new UntypedFormControl([]),
         PFStatus: new UntypedFormControl(null)
     });

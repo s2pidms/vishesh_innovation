@@ -25,6 +25,7 @@
                     <th sortable="empAadharNo" (sort)="onSort($event)">Aadhar Card No.</th>
                     <th sortable="empPANNo" (sort)="onSort($event)">PAN Card No.</th>
                     <th sortable="empContactNo" (sort)="onSort($event)">Contact No.</th>
+                    <th sortable="empStatus" (sort)="onSort($event)">Status</th>
                     <th>Action</th>
                 </tr>
             </thead>
@@ -36,6 +37,12 @@
                     <td>{{ u?.empAadharNo }}</td>
                     <td>{{ u?.empPANNo }}</td>
                     <td>{{ u?.empContactNo }}</td>
+                    <td>
+                        <span class="d-flex justify-content-center">
+                            <div *ngIf="u.empStatus == 'A'" class="statusActive"></div>
+                            <div *ngIf="u.empStatus == 'I'" class="statusInActive"></div>
+                        </span>
+                    </td>
                     <td>
                         <div class="dropdown">
                             <button class="dropbtn"></button>

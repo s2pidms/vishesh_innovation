@@ -20,7 +20,8 @@ export class FinishedGoodsInwardEntryService {
         updatePath: (id: string) => `/stores/FGIN/update/${id}`,
         getByIdPath: (id: string) => `/stores/FGIN/getById/${id}`,
         deletePath: (id: string) => `/stores/FGIN/delete/${id}`,
-        getAllFGINValueReportsPath: "/stores/FGIN/getAllFGINValueFinanceReports"
+        getAllFGINValueReportsPath: "/stores/FGIN/getAllFGINValueFinanceReports",
+        getAllFGInventoryReportsPath: "/stores/FGIN/getAllFGInventoryReports"
     };
     constructor(private http: ApiService) {}
 
@@ -65,5 +66,8 @@ export class FinishedGoodsInwardEntryService {
     }
     getAllFGINValueFinanceReports(params: any) {
         return this.http.get(this.routes.getAllFGINValueReportsPath, params).pipe(map((res: any) => res));
+    }
+    getAllFGInventoryReports(params: any) {
+        return this.http.get(this.routes.getAllFGInventoryReportsPath, params).pipe(map((res: any) => res));
     }
 }

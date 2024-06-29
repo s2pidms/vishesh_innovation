@@ -290,7 +290,7 @@ exports.STAGE_INSPECTION = {
 exports.STAGE_INSPECTION_IPQA = {
     COLLECTION_NAME: "StageInspectionIPQA",
     ADDED_ACTION: "Stage Inspection IPQA created",
-    UPDATED_ACTION: "Stage Inspection IPQA updated",
+    UPDATED_ACTION: "Stage Inspection IPQA updated"
     // MODULE_NAME: "Stage Inspection IPQA",
     // MODULE: "StageInspectionIPQA",
     // MODULE_PREFIX: "null",
@@ -302,11 +302,11 @@ exports.STAGE_INSPECTION_IPQA = {
     //         modulePrefix: this.MODULE_PREFIX
     //     };
     // }
-}
+};
 exports.INK_MIXING_IPQA = {
     COLLECTION_NAME: "InkMixingLogIPQA",
     ADDED_ACTION: "Ink Mixing Log IPQA created",
-    UPDATED_ACTION: "Ink Mixing Log IPQA updated",
+    UPDATED_ACTION: "Ink Mixing Log IPQA updated"
     // MODULE_NAME: "Ink Mixing Log IPQA",
     // MODULE: "InkMixingLogIPQA",
     // MODULE_PREFIX: "null",
@@ -318,11 +318,11 @@ exports.INK_MIXING_IPQA = {
     //         modulePrefix: this.MODULE_PREFIX
     //     };
     // }
-}
+};
 exports.SCREEN_MAKING_IPQA = {
     COLLECTION_NAME: "ScreenMakingLogIPQA",
     ADDED_ACTION: "Screen Making Log IPQA created",
-    UPDATED_ACTION: "Screen Making Log IPQA updated",
+    UPDATED_ACTION: "Screen Making Log IPQA updated"
     // MODULE_NAME: "Screen Making Log IPQA",
     // MODULE: "ScreenMakingLogIPQA",
     // MODULE_PREFIX: "null",
@@ -334,11 +334,11 @@ exports.SCREEN_MAKING_IPQA = {
     //         modulePrefix: this.MODULE_PREFIX
     //     };
     // }
-}
+};
 exports.SCREEN_PRINTING_IPQA = {
     COLLECTION_NAME: "ScreenPrintingLogIPQA",
     ADDED_ACTION: "Screen Printing Log IPQA created",
-    UPDATED_ACTION: "Screen Printing Log IPQA updated",
+    UPDATED_ACTION: "Screen Printing Log IPQA updated"
     // MODULE_NAME: "Screen Printing Log IPQA",
     // MODULE: "ScreenPrintingLogIPQA",
     // MODULE_PREFIX: "null",
@@ -350,11 +350,11 @@ exports.SCREEN_PRINTING_IPQA = {
     //         modulePrefix: this.MODULE_PREFIX
     //     };
     // }
-}
+};
 exports.LAMINATION_IPQA = {
     COLLECTION_NAME: "LaminationIPQA",
     ADDED_ACTION: "Lamination IPQA created",
-    UPDATED_ACTION: "Lamination IPQA updated",
+    UPDATED_ACTION: "Lamination IPQA updated"
     // MODULE_NAME: "Lamination IPQA",
     // MODULE: "LaminationIPQA",
     // MODULE_PREFIX: "null",
@@ -366,11 +366,11 @@ exports.LAMINATION_IPQA = {
     //         modulePrefix: this.MODULE_PREFIX
     //     };
     // }
-}
+};
 exports.PACKING_IPQA = {
     COLLECTION_NAME: "PackingIPQA",
     ADDED_ACTION: "Packing IPQA created",
-    UPDATED_ACTION: "Packing IPQA updated",
+    UPDATED_ACTION: "Packing IPQA updated"
     // MODULE_NAME: "Packing IPQA",
     // MODULE: "PackingIPQA",
     // MODULE_PREFIX: "null",
@@ -382,11 +382,11 @@ exports.PACKING_IPQA = {
     //         modulePrefix: this.MODULE_PREFIX
     //     };
     // }
-}
+};
 exports.STOCK_CUTTING_IPQA = {
     COLLECTION_NAME: "StockCuttingIPQA",
     ADDED_ACTION: "StockCutting IPQA created",
-    UPDATED_ACTION: "StockCutting IPQA updated",
+    UPDATED_ACTION: "StockCutting IPQA updated"
     // MODULE_NAME: "StockCutting IPQA",
     // MODULE: "StockCuttingIPQA",
     // MODULE_PREFIX: "null",
@@ -398,11 +398,11 @@ exports.STOCK_CUTTING_IPQA = {
     //         modulePrefix: this.MODULE_PREFIX
     //     };
     // }
-}
+};
 exports.THROUGH_PUNCHING_IPQA = {
     COLLECTION_NAME: "ThroughPunchingIPQA",
     ADDED_ACTION: "Through Punching IPQA created",
-    UPDATED_ACTION: "Through Punching IPQA updated",
+    UPDATED_ACTION: "Through Punching IPQA updated"
     // MODULE_NAME: "Through Punching IPQA",
     // MODULE: "ThroughPunchingIPQA",
     // MODULE_PREFIX: "null",
@@ -414,11 +414,11 @@ exports.THROUGH_PUNCHING_IPQA = {
     //         modulePrefix: this.MODULE_PREFIX
     //     };
     // }
-}
+};
 exports.WEEDING_IPQA = {
     COLLECTION_NAME: "WeedingIPQA",
     ADDED_ACTION: "WEEDING IPQA created",
-    UPDATED_ACTION: "WEEDING IPQA updated",
+    UPDATED_ACTION: "WEEDING IPQA updated"
     // MODULE_NAME: "WEEDING IPQA",
     // MODULE: "WeedingIPQA",
     // MODULE_PREFIX: "null",
@@ -430,4 +430,52 @@ exports.WEEDING_IPQA = {
     //         modulePrefix: this.MODULE_PREFIX
     //     };
     // }
-}
+};
+exports.GENERIC_IPQA = {
+    COLLECTION_NAME: "GenericIPQA",
+    ADDED_ACTION: "Generic IPQA created",
+    UPDATED_ACTION: "Generic IPQA updated"
+    // MODULE_NAME: "WEEDING IPQA",
+    // MODULE: "WeedingIPQA",
+    // MODULE_PREFIX: "null",
+    // AUTO_INCREMENT_DATA: function () {
+    //     return {
+    //         moduleName: this.MODULE_NAME,
+    //         module: this.MODULE,
+    //         company: null,
+    //         modulePrefix: this.MODULE_PREFIX
+    //     };
+    // }
+};
+exports.GENERIC_IPQC = {
+    COLLECTION_NAME: "GenericIPQC",
+    ADDED_ACTION: "Generic IPQC created",
+    UPDATED_ACTION: "Generic IPQC updated"
+    // MODULE_NAME: "WEEDING IPQA",
+    // MODULE: "WeedingIPQA",
+    // MODULE_PREFIX: "null",
+    // AUTO_INCREMENT_DATA: function () {
+    //     return {
+    //         moduleName: this.MODULE_NAME,
+    //         module: this.MODULE,
+    //         company: null,
+    //         modulePrefix: this.MODULE_PREFIX
+    //     };
+    // }
+};
+exports.GENERIC_PRODUCTION = {
+    COLLECTION_NAME: "GenericProduction",
+    ADDED_ACTION: "Generic Production created",
+    UPDATED_ACTION: "Generic Production updated"
+    // MODULE_NAME: "WEEDING IPQA",
+    // MODULE: "WeedingIPQA",
+    // MODULE_PREFIX: "null",
+    // AUTO_INCREMENT_DATA: function () {
+    //     return {
+    //         moduleName: this.MODULE_NAME,
+    //         module: this.MODULE,
+    //         company: null,
+    //         modulePrefix: this.MODULE_PREFIX
+    //     };
+    // }
+};

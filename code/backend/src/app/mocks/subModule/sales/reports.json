@@ -281,5 +281,19 @@
         "url": "/default/sales/reports/dispatch_list",
         "items": [],
         "roles": []
+    },
+    {
+        "_id": "667fce0fcb63ebcf797ecc69",
+        "menuItemId": "64a6c1e33339d4dc9d8141a3",
+        "module": "Sales",
+        "type": "REPORT",
+        "order": 21,
+        "isDisplay": false,
+        "title": "Finished Goods (FG)",
+        "displayName": "Finished Goods (FG)",
+        "disabled": false,
+        "url": "/default/sales/reports/fg_inventory_report",
+        "items": [],
+        "roles": []
     }
 ]

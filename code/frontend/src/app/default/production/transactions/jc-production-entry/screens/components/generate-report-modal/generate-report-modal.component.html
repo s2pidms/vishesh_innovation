@@ -23,6 +23,7 @@
                             class="form-control"
                             [(ngModel)]="generateReport.batchInputQty"
                             (input)="setRejectQty()"
+                            [disabled]="['reject', 'approve', 'view'].includes(action)"
                         />
                     </div>
                 </div>
@@ -39,6 +40,7 @@
                             class="form-control"
                             [(ngModel)]="generateReport.batchOutputQty"
                             (input)="setRejectQty()"
+                            [disabled]="['reject', 'approve', 'view'].includes(action)"
                         />
                     </div>
                 </div>
@@ -50,7 +52,12 @@
                         <span class="ms-1 me-2 text-secondary">&#9654;</span>
                     </div>
                     <div class="col-6 ps-0 setInputMargin">
-                        <input type="number" class="form-control" [(ngModel)]="generateReport.batchRejQty" />
+                        <input
+                            type="number"
+                            class="form-control"
+                            [(ngModel)]="generateReport.batchRejQty"
+                            [disabled]="['reject', 'approve', 'view'].includes(action)"
+                        />
                     </div>
                 </div>
                 <div class="row mt-4">
@@ -61,7 +68,12 @@
                         <span class="ms-1 me-2 text-secondary">&#9654;</span>
                     </div>
                     <div class="col-6 ps-0 setInputMargin">
-                        <input type="date" class="form-control" [(ngModel)]="generateReport.jobCardClosureDate" />
+                        <input
+                            type="date"
+                            class="form-control"
+                            [(ngModel)]="generateReport.jobCardClosureDate"
+                            [disabled]="['reject', 'approve', 'view'].includes(action)"
+                        />
                     </div>
                 </div>
                 <div class="row mt-4">
@@ -72,7 +84,11 @@
                         <span class="ms-1 me-2 text-secondary">&#9654;</span>
                     </div>
                     <div class="col-6 ps-0 setInputMargin">
-                        <select class="form-select" [(ngModel)]="generateReport.location">
+                        <select
+                            [disabled]="['reject', 'approve', 'view'].includes(action)"
+                            class="form-select"
+                            [(ngModel)]="generateReport.location"
+                        >
                             <option [value]="null" selected disabled>Select Location</option>
                             <option [value]="item.value" *ngFor="let item of billFromLocationOptions">
                                 {{ item.label }}
@@ -80,7 +96,7 @@
                         </select>
                     </div>
                 </div>
-                <div class="row mt-4">
+                <div class="row mt-4 mb-2">
                     <div class="col-4 pe-0">
                         <label class="form-label"> Job Card Status <span class="text-danger"> * </span> </label>
                     </div>
@@ -88,7 +104,11 @@
                         <span class="ms-1 me-2 text-secondary">&#9654;</span>
                     </div>
                     <div class="col-6 ps-0 setInputMargin d-flex">
-                        <select class="form-select" [(ngModel)]="generateReport.checkoutStatus">
+                        <select
+                            [disabled]="['reject', 'approve', 'view'].includes(action)"
+                            class="form-select"
+                            [(ngModel)]="generateReport.checkoutStatus"
+                        >
                             <option [value]="null" selected disabled>Select Status</option>
                             <option value="Skip Integration">Skip Integration</option>
                             <option value="In-Process">In-Process</option>
@@ -110,8 +130,8 @@
             </div>
         </div>
 
-        <hr class="line-border my-4" />
-        <div class="row">
+        <hr *ngIf="!['reject', 'approve', 'view'].includes(action)" class="line-border mb-4" />
+        <div *ngIf="!['reject', 'approve', 'view'].includes(action)" class="row">
             <div class="col text-center mb-4">
                 <button class="btn bg-primary px-5" type="button" (click)="dismissModel()">Save & Close</button>
             </div>

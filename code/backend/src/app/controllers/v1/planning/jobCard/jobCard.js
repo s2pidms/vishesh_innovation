@@ -855,6 +855,7 @@ exports.getAllJobTrackingMasterData = asyncHandler(async (req, res) => {
                     preserveNullAndEmptyArrays: true
                 }
             },
+            {$sort: {jobCardDate: 1}},
             {
                 $project: {
                     _id: 0,
@@ -885,7 +886,7 @@ exports.getAllJobTrackingMasterData = asyncHandler(async (req, res) => {
                     jobCardEntry: "$jobCardEntry.productionEntry"
                 }
             },
-            {$sort: {jobCardNo: 1}}
+            
         ]);
         return res.success(jobTrackingData);
     } catch (error) {

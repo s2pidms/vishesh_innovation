@@ -14,10 +14,12 @@ import {PRODUCT_SPECIFICATION_MASTER_FORM_ERRORS} from "@mocks/validations/quali
 import {SpinnerService} from "@core/services";
 import {IProductSpecificationsMasterData} from "@mocks/models/quality/master";
 import {ProductCategoryModalComponent} from "src/app/default/sales/master/sku/screens/components";
+import {ViewItemModalComponent} from "../components/view-item-modal/view-item-modal.component";
 
 @Component({
     selector: "app-product-specifications-form",
-    templateUrl: "./product-specifications-form.component.html"
+    templateUrl: "./product-specifications-form.component.html",
+    styleUrls: ["./product-specifications-form.component.scss"]
 })
 export class ProductSpecificationsFormComponent implements OnInit {
     @ViewChildren(NgbdSortableHeader) headers: QueryList<NgbdSortableHeader> | any;
@@ -42,7 +44,8 @@ export class ProductSpecificationsFormComponent implements OnInit {
         autoIncrementNo: "",
         productCategories: [],
         SKUOptions: [],
-        specificationList: []
+        specificationList: [],
+        customerInfo: []
     };
 
     form = new UntypedFormGroup({
@@ -177,7 +180,6 @@ export class ProductSpecificationsFormComponent implements OnInit {
         this.productSpecificationMasterService.getAllMasterData({}).subscribe(result => {
             this.masterData = result;
             this.collection = this.masterData?.specificationList.length;
-            this.spinner.hide();
             this.activatedRoute.queryParams
                 .pipe(
                     mergeMap((params: any) => {
@@ -195,7 +197,7 @@ export class ProductSpecificationsFormComponent implements OnInit {
                     if (Object.keys(success).length == 0) {
                         return;
                     }
-
+                    this.masterData.customerInfo = success?.customerDetails;
                     if (!success?.specificationInfo || success?.specificationInfo?.length == 0) {
                         this.masterData.specificationList = this.masterData.specificationList;
                     } else {
@@ -299,6 +301,25 @@ export class ProductSpecificationsFormComponent implements OnInit {
                     this.form.controls["productCategory"].setValue(success?.selectedProductCategory);
                     this.getItems({value: success?.selectedProductCategory});
                 }
+            },
+            (reason: any) => {}
+        );
+    }
+    openCustomerModelModal() {
+        const modalRef = this.modalService.open(ViewItemModalComponent, {
+            centered: true,
+            size: "lg",
+            backdrop: "static",
+            keyboard: false
+        });
+
+        modalRef.componentInstance.action = this.action;
+        modalRef.componentInstance.customerInfo = this.masterData.customerInfo;
+        modalRef.result.then(
+            (success: any) => {
+                // if (success) {
+                //     this.form.controls["generateReport"].setValue(success);
+                // }
             },
             (reason: any) => {}
         );

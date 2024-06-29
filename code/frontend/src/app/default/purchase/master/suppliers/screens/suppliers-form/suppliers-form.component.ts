@@ -223,7 +223,7 @@ export class SuppliersFormComponent implements OnInit {
         } else if (SC == "Imports") {
             this.supplierBankInfo.controls["bankSwiftCode"].enable();
             this.form.controls["supplierCurrency"].enable();
-            this.form.controls["supplierCurrency"].setValue(null);
+            // this.form.controls["supplierCurrency"].setValue(null);
             this.form.controls["supplierPAN"].setValue(null);
             this.form.controls["GSTClassification"].setValue(null);
             this.form.controls["supplierGST"].setValue(null);

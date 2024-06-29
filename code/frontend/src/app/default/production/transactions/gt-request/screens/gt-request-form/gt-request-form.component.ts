@@ -68,6 +68,8 @@ export class GTRequestFormComponent implements OnInit {
         location: new UntypedFormControl(null, [Validators.required]),
         fromDepartment: new UntypedFormControl(null, [Validators.required]),
         toDepartment: new UntypedFormControl(null, [Validators.required]),
+        fromDepartmentName: new UntypedFormControl(null),
+        toDepartmentName: new UntypedFormControl(null),
         status: new UntypedFormControl("Awaiting Approval"),
         remarks: new UntypedFormGroup({
             reasonForGTRequest: new UntypedFormControl(null),
@@ -109,6 +111,7 @@ export class GTRequestFormComponent implements OnInit {
         }
         this.form.enable();
         let formData: any = this.form.value;
+        console.log("formData", formData);
 
         if (this.GTRequestDetailsArray?.length == 0) {
             this.toastService.warning(`At least one Goods Transfer Request (Intra) Item required!`);
@@ -264,9 +267,16 @@ export class GTRequestFormComponent implements OnInit {
         }
     }
 
-    setToDepartmentValid(event: any) {
+    setToDepartmentValid(event: any, departmentFlag = "") {
         let fromDepartment = this.f["fromDepartment"].value;
         let toDepartment = this.f["toDepartment"].value;
+
+        if (departmentFlag == "From Department") {
+            this.f["fromDepartmentName"].setValue(event?.value);
+        } else if (departmentFlag == "To Department") {
+            this.f["toDepartmentName"].setValue(event?.value);
+        }
+        console.log("event", event);
 
         if (fromDepartment == toDepartment) {
             this.toastService.warning("From Department should not be same as To Department ");

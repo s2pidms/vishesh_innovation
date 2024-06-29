@@ -107,6 +107,13 @@ const routes: Routes = [
     {
         path: "dispatch_list",
         loadChildren: () => import("./dispatch-list/dispatch-list.module").then(m => m.DispatchListModule)
+    },
+    {
+        path: "fg_inventory_report",
+        loadChildren: () =>
+            import("./../../production/reports/fg-inventory-report/fg-inventory-report.module").then(
+                m => m.FgInventoryReportModule
+            )
     }
 ];
 

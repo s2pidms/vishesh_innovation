@@ -14,6 +14,9 @@ import {JOB_CARD_ENTRY_FORM_ERRORS} from "@mocks/validations/production";
 import {NgbdSortableHeader, SortEvent} from "@shared/directives";
 import {
     GenerateReportModalComponent,
+    GenericIpqaProcessModelComponent,
+    GenericIpqcProcessModelComponent,
+    GenericProductionProcessModelComponent,
     InkMixingLogModalComponent,
     IpqaLogModelComponent,
     ScreenMakingLogFormComponent
@@ -93,7 +96,8 @@ export class JcProductionEntryFormComponent implements OnInit {
         Lamination: LaminationLogEntryModelComponent,
         "Through Punching": PunchingLogEntryModelComponent,
         Packing: PackingLogEntryModelComponent,
-        "Stage Inspection": StageInspectionProdEntryComponent
+        "Stage Inspection": StageInspectionProdEntryComponent,
+        "Generic Production Process": GenericProductionProcessModelComponent
     };
     componentModalIPQA: any = {
         "Stock Preparation IPQA": StockPreparationIPQAModalComponent,
@@ -105,7 +109,23 @@ export class JcProductionEntryFormComponent implements OnInit {
         "Lamination IPQA": LaminationLogEntryIPQAModalComponent,
         "Through Punching IPQA": PunchingLogEntryIPQAModalComponent,
         "Packing IPQA": PackingLogEntryIPQAModalComponent,
-        "Stage Inspection IPQA": StageInspectionIpqaEntryComponent
+        "Stage Inspection IPQA": StageInspectionIpqaEntryComponent,
+        "Generic IPQA Process": GenericIpqaProcessModelComponent,
+        "Generic IPQC Process": GenericIpqcProcessModelComponent
+    };
+    componentModalSizeIPQA: any = {
+        "Stock Preparation IPQA": "xl",
+        "Ink Mixing IPQA": "xl",
+        "Screen Making IPQA": "xl",
+        "Printing on CPI IPQA": "xl",
+        "Kiss-cutting IPQA": "xl",
+        "Weeding IPQA": "xl",
+        "Lamination IPQA": "xl",
+        "Through Punching IPQA": "xl",
+        "Packing IPQA": "xl",
+        "Stage Inspection IPQA": "xl",
+        "Generic IPQA Process": "lg",
+        "Generic IPQC Process": "xl"
     };
 
     componentModalSize: any = {
@@ -119,7 +139,8 @@ export class JcProductionEntryFormComponent implements OnInit {
         Lamination: "md",
         "Through Punching": "md",
         Packing: "md",
-        "Stage Inspection": "lg"
+        "Stage Inspection": "lg",
+        "Generic Production Process": "lg"
     };
 
     showSKUFlow: boolean = false;
@@ -183,7 +204,9 @@ export class JcProductionEntryFormComponent implements OnInit {
             this.toastService.warning("Drawing File Not Present");
         }
     }
-
+    back() {
+        this.location.back();
+    }
     // ngAfterViewInit() {
     //     this.modalService.open(InkMixingLogModalComponent, {
     //         centered: true,
@@ -272,6 +295,10 @@ export class JcProductionEntryFormComponent implements OnInit {
                     this.spinner.hide();
                     if (Object.keys(success).length == 0) {
                         return;
+                    }
+
+                    if (success.batchDate) {
+                        success.batchDate = this.utilityService.getFormatDate(success.batchDate, "YYYY-MM-DD");
                     }
                     // create form object by modifying
                     if (success.productionEntry) {
@@ -406,7 +433,8 @@ export class JcProductionEntryFormComponent implements OnInit {
                 SKUName: this.selectedJobCardDetails?.SKUName,
                 SKUDescription: this.selectedJobCardDetails?.SKUDescription,
                 UOM: this.selectedJobCardDetails?.UOM,
-                SKUBatchQty: this.selectedJobCardDetails?.batchQty
+                SKUBatchQty: this.selectedJobCardDetails?.batchQty,
+                processOriginalName: item?.processOriginalName
             };
             // modalRef.result.then(
             //     (success: any) => {},
@@ -418,7 +446,8 @@ export class JcProductionEntryFormComponent implements OnInit {
         if (this.componentModalIPQA[item.qualityOriginalName]) {
             const modalRef = this.modalService.open(this.componentModalIPQA[item.qualityOriginalName], {
                 centered: true,
-                size: "xl",
+                // size: "xl",
+                size: this.componentModalSizeIPQA[item.qualityOriginalName],
                 backdrop: "static",
                 keyboard: false
             });
@@ -435,7 +464,8 @@ export class JcProductionEntryFormComponent implements OnInit {
                 SKUName: this.selectedJobCardDetails?.SKUName,
                 SKUDescription: this.selectedJobCardDetails?.SKUDescription,
                 batchQty: this.selectedJobCardDetails?.batchQty,
-                UOM: this.selectedJobCardDetails?.UOM
+                UOM: this.selectedJobCardDetails?.UOM,
+                processOriginalName: item?.processOriginalName
             };
 
             // modalRef.componentInstance.shiftOptions = this.masterData.shiftOptions;

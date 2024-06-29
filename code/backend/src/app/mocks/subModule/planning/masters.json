@@ -466,5 +466,19 @@
         "url": "/default/planning/master/stock_level/list",
         "items": [],
         "roles": []
+    },
+    {
+        "_id": "667e92ca31e16fa83a7bf5b3",
+        "menuItemId": "64a6c1e33339d4dc9d8141a4",
+        "module": "Planning",
+        "type": "MASTER",
+        "order": 23,
+        "isDisplay": false,
+        "title": "Process List Configuration",
+        "displayName": "Process List Configuration",
+        "disabled": false,
+        "url": "/default/planning/master/process_list_configuration/form",
+        "items": [],
+        "roles": []
     }
 ]

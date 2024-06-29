@@ -238,7 +238,8 @@ const SKU_COST_SHEET_DETAILS = [
 const GOODS_TRANSFER_REQUEST_DEPT = {
     STORES: "Stores",
     PLANNING: "Planning",
-    PRODUCTION: "Production"
+    PRODUCTION: "Production",
+    QUALITY: "Quality",
 };
 const PPIC_STAGES = {
     R2R: "Roll To Roll",
@@ -283,6 +284,10 @@ const PROCESS = [
     {
         label: "Stage Inspection",
         value: "Stage Inspection"
+    },
+    {
+        label: "Generic Production Process",
+        value: "Generic Production Process"
     }
 ];
 const IPQA = [
@@ -321,6 +326,14 @@ const IPQA = [
     {
         label: "Stage Inspection IPQA",
         value: "Stage Inspection IPQA"
+    },
+    {
+        label: "Generic IPQA Process",
+        value: "Generic IPQA Process"
+    },
+    {
+        label: "Generic IPQC Process",
+        value: "Generic IPQC Process"
     }
 ];
 const EMP_GENDER = [

@@ -4,6 +4,9 @@ import {Routes, RouterModule} from "@angular/router";
 import {JcProductionEntryFormComponent} from "./screens/jc-production-entry-form/jc-production-entry-form.component";
 import {
     GenerateReportModalComponent,
+    GenericIpqaProcessModelComponent,
+    GenericIpqcProcessModelComponent,
+    GenericProductionProcessModelComponent,
     InkMixingLogModalComponent,
     IpqaLogModelComponent,
     ScreenMakingLogFormComponent
@@ -69,7 +72,10 @@ const routes: Routes = [
         StockCuttingIPQAModalComponent,
         WeedingLogEntryIPQAModalComponent,
         LaminationLogEntryIPQAModalComponent,
-        StockPreparationIPQAModalComponent
+        StockPreparationIPQAModalComponent,
+        GenericIpqaProcessModelComponent,
+        GenericIpqcProcessModelComponent,
+        GenericProductionProcessModelComponent
     ],
     imports: [CommonModule, RouterModule.forChild(routes), SharedModule]
 })

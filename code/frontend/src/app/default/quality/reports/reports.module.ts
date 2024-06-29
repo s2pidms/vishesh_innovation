@@ -50,6 +50,13 @@ const routes: Routes = [
             {
                 path: "MRN_details_report",
                 loadChildren: () => import("./mrn-details/mrn-details.module").then(m => m.MRNDetailsModule)
+            },
+            {
+                path: "fg_inventory_report",
+                loadChildren: () =>
+                    import("./../../production/reports/fg-inventory-report/fg-inventory-report.module").then(
+                        m => m.FgInventoryReportModule
+                    )
             }
         ]
     }

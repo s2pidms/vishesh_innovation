@@ -57,6 +57,14 @@ const goodsTransferResponseSchema = mongoose.Schema(
             type: String,
             required: false
         },
+        fromDepartmentName: {
+            type: String,
+            required: false
+        },
+        toDepartmentName: {
+            type: String,
+            required: false
+        },
         status: {
             type: String,
             required: false,

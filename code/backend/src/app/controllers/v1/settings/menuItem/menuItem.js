@@ -12,6 +12,7 @@ const {ObjectId} = require("../../../../../config/mongoose");
 const SalesUOMUnitMasterRepository = require("../../../../models/settings/repository/SalesUOMUnitMasterRepository");
 const {getAllModuleMaster} = require("../module-master/module-master");
 const MenuItemRepository = require("../../../../models/settings/repository/menuItemRepository");
+const CurrencyMasterRepository = require("../../../../models/settings/repository/currencyMasterRepository");
 
 exports.getAll = asyncHandler(async (req, res) => {
     try {
@@ -160,6 +161,23 @@ exports.getAllGlobalData = asyncHandler(async (req, res) => {
         const menuItems = await checkMenuItemInCacheBySystem(req.user.company, system);
         const userRoles = await User.getAllRoleByUserId(req.user.company, req.user.sub);
         const rolesPermission = await SubModulePermissions.getAllSubModulePermissions(userRoles);
+        const currencyMaster = await CurrencyMasterRepository.filteredCurrencyMasterList([
+            {
+                $match: {
+                    company: ObjectId(req.user.company),
+                    status: OPTIONS.defaultStatus.ACTIVE
+                }
+            },
+            {
+                $sort: {sequence: 1}
+            },
+            {
+                $project: {
+                    currencyName: 1,
+                    symbol: 1
+                }
+            }
+        ]);
         let roles = await getAllRoles(req.user.company, true);
         return res.success({
             menuItems,
@@ -168,7 +186,8 @@ exports.getAllGlobalData = asyncHandler(async (req, res) => {
             labelsJSON,
             UOMUintMasterJSON,
             salesUOMUintMaster,
-            UOMDefaultValue
+            UOMDefaultValue,
+            currencyMaster
         });
     } catch (e) {
         const errors = MESSAGES.apiErrorStrings.SERVER_ERROR;
